@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/06/2017 by li huang (last modified)
+!!!           05/10/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver
@@ -917,7 +917,7 @@
 ! bosonic frequency mesh
      complex(dp) :: mesh(nbfrq)
 
-! matsubara frequency exponents for create operators
+! matsubara frequency exponents for creation operators
      complex(dp) :: exps(nbfrq)
 
 ! matsubara frequency exponents for destroy operators
@@ -1105,7 +1105,7 @@
 ! bosonic frequency mesh
      complex(dp) :: mesh(nbfrq)
 
-! matsubara frequency exponents for create operators
+! matsubara frequency exponents for creation operators
      complex(dp) :: exps(nbfrq)
 
 ! matsubara frequency exponents for destroy operators

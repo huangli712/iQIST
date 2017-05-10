@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/10/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -227,7 +227,7 @@
 !!
 !! @var time_s
 !!
-!! imaginary time \tau_s of create operators
+!! imaginary time \tau_s of creation operators
 !!
      real(dp), public, save, allocatable :: time_s(:,:)
 
@@ -241,7 +241,7 @@
 !!
 !! @var exp_s
 !!
-!! exp(i\omega t), s means create operators
+!! exp(i\omega t), s means creation operators
 !!
      complex(dp), public, save, allocatable :: exp_s(:,:,:)
 

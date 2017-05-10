@@ -23,7 +23,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/10/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -347,7 +347,7 @@
 ! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
-! weight factor contributed by new create operator
+! weight factor contributed by new creation operator
      real(dp) :: ts_scr
 
 ! weight factor contributed by new destroy operator
@@ -415,7 +415,7 @@
 ! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
-! calculate the extra weight factor contributed by new create operator
+! calculate the extra weight factor contributed by new creation operator
      call cat_weight_factor(tau_start, ts_scr)
 
 ! calculate the extra weight factor contributed by new destroy operator
@@ -478,7 +478,7 @@
 ! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
-! weight factor contributed by old create operator
+! weight factor contributed by old creation operator
      real(dp) :: ts_scr
 
 ! weight factor contributed by old destroy operator
@@ -546,7 +546,7 @@
 ! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
-! calculate the extra weight factor contributed by old create operator
+! calculate the extra weight factor contributed by old creation operator
      call cat_weight_factor(tau_start, ts_scr)
 
 ! calculate the extra weight factor contributed by old destroy operator
@@ -609,13 +609,13 @@
 ! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
-! weight factor contributed by old create operator
+! weight factor contributed by old creation operator
      real(dp) :: ts1_scr
 
-! weight factor contributed by new create operator
+! weight factor contributed by new creation operator
      real(dp) :: ts2_scr
 
-! weight factor contributed by the create operators
+! weight factor contributed by the creation operators
      real(dp) :: ts12_scr
 
 ! segment overlap between flvr and other else flavors
@@ -687,13 +687,13 @@
 ! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
-! calculate the extra weight factor contributed by old create operator
+! calculate the extra weight factor contributed by old creation operator
      call cat_weight_factor(tau_start1, ts1_scr)
 
-! calculate the extra weight factor contributed by new create operator
+! calculate the extra weight factor contributed by new creation operator
      call cat_weight_factor(tau_start2, ts2_scr)
 
-! calculate the extra weight factor contributed by the create operators
+! calculate the extra weight factor contributed by the creation operators
      call cat_weight_kernel(1, dtau,   ts12_scr)
 
 ! evaluate total weight factor (screening part)
@@ -1921,7 +1921,7 @@
 ! init scr
      scr = zero
 
-! loop over create operator
+! loop over creation operator
      do i=1,norbs
          do j=1,rank(i)
              ts = time_s(index_s(j, i), i)

@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/08/2017 by li huang (last modified)
+!!!           05/10/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -1088,7 +1088,7 @@
      do flvr=1,norbs
          do it=1,rank(flvr)
 
-! contribution from create operators
+! contribution from creation operators
              dtau = time_s( index_s(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
                  call cat_weight_kernel(2, +dtau, daux)
@@ -1202,7 +1202,7 @@
 ! maximum number of operators in different flavor channels
      integer, intent(in) :: mrank
 
-! matsubara frequency exponents for create operators
+! matsubara frequency exponents for creation operators
      complex(dp), intent(out) :: caux1(nfaux,mrank)
 
 ! matsubara frequency exponents for destroy operators
@@ -1217,7 +1217,7 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! for create operators
+! for creation operators
      do is=1,rank(flvr)
          taus = time_s( index_s(is, flvr), flvr )
          caux1(:,is) = exp(-two * czi * pi * taus / beta)
