@@ -65,10 +65,14 @@
 !!
      integer, public, save :: isopt  = 1
 
-! control flag: the mode how to truncate the Hilbert space
-! if itrun == 1, don't truncate it
-! if itrun == 2, truncate high energy states
-     integer, public, save :: itrun  = 1
+!!
+!! @var iscut
+!!
+!! control flag: the mode how to truncate the Hilbert space
+!! if iscut == 1, don't truncate it
+!! if iscut == 2, truncate high energy states
+!!
+     integer, public, save :: iscut  = 1
 
 !!
 !! @var isbnd
