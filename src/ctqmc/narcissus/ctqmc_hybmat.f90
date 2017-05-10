@@ -269,8 +269,7 @@
 !!
 !! @sub cat_lshift_matrix
 !!
-!! update the mmat matrix and gmat matrix for left shifting old creation
-!! and annihilation operators
+!! update the mmat matrix and gmat matrix for shifting creation operator
 !!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, zero, czero
