@@ -73,10 +73,13 @@
          write(mystd,'(4X,2a)') 'density of states          / ', 'semicircular'
      endif ! back if ( myid == master ) block
 
+! task 1: calculate new hybridization function
+!-------------------------------------------------------------------------
 ! initialize htmp
      htmp = hybf
 
-! calculate new hybridization function using self-consistent condition
+! apply the self-consistent condition. here we consider a Hubbard model
+! on a bethe lattice. of course you can replace it with your implements
      call ctqmc_dmft_bethe(hybf, grnf)
 
 ! mixing new and old hybridization function: htmp and hybf
