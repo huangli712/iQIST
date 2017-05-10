@@ -308,7 +308,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     procedure( real(dp) ) :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
 ! loop index over operators
@@ -359,18 +359,18 @@
 ! calculate rvec by cubic spline interpolation
      do i=1,ckink
          if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) then
-             rvec(i) = -ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
+             rvec(i) = -ctqmc_eval_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
          else
-             rvec(i) =  ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
+             rvec(i) =  ctqmc_eval_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
          endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate lvec by cubic spline interpolation
      do j=1,ckink
          if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) then
-             lvec(j) = -ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
+             lvec(j) = -ctqmc_eval_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
          else
-             lvec(j) =  ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
+             lvec(j) =  ctqmc_eval_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
          endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
@@ -500,7 +500,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     procedure( real(dp) ) :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
 ! loop index over operators
@@ -551,18 +551,18 @@
 ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) then
-             lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
+             lvec(i) = -ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
-             lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
+             lvec(i) =  ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
          endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
      do j=1,ckink
          if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) then
-             rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
+             rvec(j) = -ctqmc_eval_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
-             rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
+             rvec(j) =  ctqmc_eval_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
          endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
@@ -763,7 +763,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     procedure( real(dp) ) :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
 ! loop index over operators
@@ -799,9 +799,9 @@
          do i=1,kaux
              tau_start = time_s(index_s(i, flvr), flvr)
              if ( tau_start < tau_end ) then
-                 mmat(i, j, flvr) = -ctqmc_make_htau(flvr, tau_start - tau_end + beta)
+                 mmat(i, j, flvr) = -ctqmc_eval_htau(flvr, tau_start - tau_end + beta)
              else
-                 mmat(i, j, flvr) =  ctqmc_make_htau(flvr, tau_start - tau_end)
+                 mmat(i, j, flvr) =  ctqmc_eval_htau(flvr, tau_start - tau_end)
              endif ! back if ( tau_start < tau_end ) block
          enddo ! over i={1,kaux} loop
      enddo ! over j={1,kaux} loop
@@ -859,7 +859,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     procedure( real(dp) ) :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
 ! loop index over operators
@@ -877,26 +877,26 @@
 ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end   ) then
-             lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end + beta)
+             lvec(i) = -ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end + beta)
          else
-             lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end)
+             lvec(i) =  ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end)
          endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end   ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
      do j=1,ckink
          if ( tau_start < time_e(index_e(j, flvr), flvr) ) then
-             rvec(j) = -ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr) + beta)
+             rvec(j) = -ctqmc_eval_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr) + beta)
          else
-             rvec(j) =  ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr))
+             rvec(j) =  ctqmc_eval_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr))
          endif ! back if ( tau_start < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! calculate deter_ratio by cubic spline interpolation
      if ( tau_start > tau_end ) then
-         deter_ratio =  ctqmc_make_htau(flvr, tau_start - tau_end)
+         deter_ratio =  ctqmc_eval_htau(flvr, tau_start - tau_end)
      else
-         deter_ratio = -ctqmc_make_htau(flvr, tau_start - tau_end + beta)
+         deter_ratio = -ctqmc_eval_htau(flvr, tau_start - tau_end + beta)
      endif ! back if ( tau_start > tau_end ) block
 
 ! calculate lspace and rspace
@@ -978,7 +978,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     procedure( real(dp) ) :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
 ! loop index over operators
@@ -992,18 +992,18 @@
 ! calculate rvec by cubic spline interpolation
      do i=1,ckink
          if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) then
-             rvec(i) = -ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
+             rvec(i) = -ctqmc_eval_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
          else
-             rvec(i) =  ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
+             rvec(i) =  ctqmc_eval_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
          endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate lvec by cubic spline interpolation
      do j=1,ckink
          if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) then
-             lvec(j) = -ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
+             lvec(j) = -ctqmc_eval_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
          else
-             lvec(j) =  ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
+             lvec(j) =  ctqmc_eval_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
          endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
@@ -1052,7 +1052,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     procedure( real(dp) ) :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
 ! loop index over operators
@@ -1066,18 +1066,18 @@
 ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) then
-             lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
+             lvec(i) = -ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
-             lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
+             lvec(i) =  ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
          endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
      do j=1,ckink
          if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) then
-             rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
+             rvec(j) = -ctqmc_eval_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
-             rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
+             rvec(j) =  ctqmc_eval_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
          endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
@@ -1119,7 +1119,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     procedure( real(dp) ) :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
 ! loop index over operators
@@ -1167,9 +1167,9 @@
          do i=1,kaux
              tau_start = time_s(index_s(i, up), up)
              if ( tau_start < tau_end ) then
-                 Dmm(i, j) = -ctqmc_make_htau(dn, tau_start - tau_end + beta)
+                 Dmm(i, j) = -ctqmc_eval_htau(dn, tau_start - tau_end + beta)
              else
-                 Dmm(i, j) =  ctqmc_make_htau(dn, tau_start - tau_end)
+                 Dmm(i, j) =  ctqmc_eval_htau(dn, tau_start - tau_end)
              endif ! back if ( tau_start < tau_end ) block
          enddo ! over i={1,kaux} loop
      enddo ! over j={1,kaux} loop
