@@ -199,10 +199,18 @@
 !!
      complex(dp), public, save, allocatable :: exp_e(:,:,:)
 
-! container for the empty (unoccupied) memory address index
+!!
+!! @var empty_s
+!!
+!! container for the empty (unoccupied) memory address index
+!!
      type (istack), public, save, allocatable :: empty_s(:)
 
-! container for the empty (unoccupied) memory address index
+!!
+!! @var empty_e
+!!
+!! container for the empty (unoccupied) memory address index
+!!
      type (istack), public, save, allocatable :: empty_e(:)
 
   end module ctqmc_clur
