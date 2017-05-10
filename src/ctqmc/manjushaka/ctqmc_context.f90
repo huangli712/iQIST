@@ -379,8 +379,12 @@
 !!>>> module ctqmc_umat                                                <<<
 !!========================================================================
 
-!!>>> containing auxiliary arrays used by continuous time quantum Monte
-!!>>> Carlo quantum impurity solver
+!!
+!! @mod ctqmc_umat
+!!
+!! containing auxiliary arrays used by continuous time quantum Monte
+!! Carlo quantum impurity solver
+!!
   module ctqmc_umat
      use constants, only : dp
 
