@@ -990,8 +990,7 @@
 !!
 !! @sub cat_lshift_detrat
 !!
-!! calculate the determinant ratio for left shifting old segment
-!! or anti-segment
+!! calculate the determinant ratio for shifting creation operator
 !!
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, one
