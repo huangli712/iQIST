@@ -475,9 +475,13 @@
      use control, only : nfreq
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, exp_s, exp_e
+     use context, only : index_s, index_e
+     use context, only : time_s
+     use context, only : exp_s, exp_e
      use context, only : rmesh
-     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : lspace, rspace
+     use context, only : lsaves, rsaves
+     use context, only : mmat, gmat
 
      implicit none
 
