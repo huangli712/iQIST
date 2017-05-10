@@ -82,14 +82,18 @@
 ! on a bethe lattice. of course you can replace it with your implements
      call ctqmc_dmft_bethe(hybf, grnf)
 
-! mixing new and old hybridization function: htmp and hybf
+! task 2: mix new and new hybridization function
+!-------------------------------------------------------------------------
+! mix htmp and hybf using linear mixer
      call s_mix_z(size(hybf), htmp, hybf, alpha)
 
+! task 3: calculate new bath weiss's function
+!-------------------------------------------------------------------------
 ! \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
      qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
      qmune = mune - qmune
 
-! calculate new bath weiss's function
+! apply dyson equation
 ! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
@@ -97,6 +101,7 @@
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
+! calculate inverse matrix
      do k=1,mfreq
          call s_inv_z(norbs, wssf(k,:,:))
      enddo ! over k={1,mfreq} loop
