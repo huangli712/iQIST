@@ -370,14 +370,19 @@
 !!
      integer, public, save :: ntime  = 1024
 
-! number of parts that the imaginary time axis is split
-!
-! note: all operators in the imaginary time axis are grouped into npart
-! parts according to their time values, in each Monte Carlo steps, only
-! those changed parts are carefully dealt with, not all the parts.
-!
-! note: 2\sqrt{3 <k> nband} ~ 4\sqrt{3 <k> nband} may be the optimal value
-! for npart to achieve maximum performance.
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!
+!! @var npart
+!!
+!! number of parts that the imaginary time axis is split. all operators
+!! in the imaginary time axis are grouped into npart parts according to
+!! their time values. in each Monte Carlo steps, only those changed parts
+!! are carefully dealt with, not all the parts
+!!
+!! 2\sqrt{3 <k> nband} ~ 4\sqrt{3 <k> nband} may be the optimal value
+!! for npart to achieve maximum performance
+!!
      integer, public, save :: npart  = 4
 
 !!
