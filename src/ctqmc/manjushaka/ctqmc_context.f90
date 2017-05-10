@@ -1005,7 +1005,11 @@
      return
   end subroutine ctqmc_allocate_memory_wmat
 
-!!>>> ctqmc_allocate_memory_smat: allocate memory for smat-related variables
+!!
+!! @sub ctqmc_allocate_memory_smat
+!!
+!! allocate memory for smat-related variables
+!!
   subroutine ctqmc_allocate_memory_smat()
      implicit none
 
