@@ -53,28 +53,6 @@
      integer, public, save :: isscf  = 1
 
 !!
-!! @var isopt
-!!
-!! control flag, define the efficient algorithm to calculate the trace
-!!
-!! if isopt == 1:
-!!     use divide-and-conquer algorithm and lazy trace evaluation
-!!
-!! if isopt == 2:
-!!     it is reserved for the future
-!!
-     integer, public, save :: isopt  = 1
-
-!!
-!! @var iscut
-!!
-!! control flag: the mode how to truncate the Hilbert space
-!! if iscut == 1, don't truncate it
-!! if iscut == 2, truncate high energy states
-!!
-     integer, public, save :: iscut  = 1
-
-!!
 !! @var isbnd
 !!
 !! control flag, define symmetry of the impurity model (band part)
@@ -99,6 +77,32 @@
 !!     enforce spin up = spin down
 !!
      integer, public, save :: isspn  = 1
+
+!!
+!! @var isopt
+!!
+!! control flag, define the efficient algorithm to calculate the trace
+!!
+!! if isopt == 1:
+!!     use divide-and-conquer algorithm and lazy trace evaluation
+!!
+!! if isopt == 2:
+!!     it is reserved for the future
+!!
+     integer, public, save :: isopt  = 1
+
+!!
+!! @var iscut
+!!
+!! control flag, define how to truncate the high energy states
+!!
+!! if iscut == 1:
+!!     don't truncate the high energy states
+!!
+!! if iscut == 2:
+!!     truncate high energy states dynamically
+!!
+     integer, public, save :: iscut  = 1
 
 !!
 !! @var isbin
