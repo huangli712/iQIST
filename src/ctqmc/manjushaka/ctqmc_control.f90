@@ -339,15 +339,21 @@
 !!
      integer, public, save :: nbfrq  = 8
 
-! number of matsubara frequency sampling by continuous time quantum Monte
-! Carlo quantum impurity solver
-!
-! note: the rest (mfreq - nfreq + 1 points) values are evaluated by using
-! Hubbard-I approximation
+!!
+!! @var nfreq
+!!
+!! number of matsubara frequencies sampled by continuous time quantum
+!! Monte Carlo quantum impurity solver directly. the values for the other
+!! points should be evaluated by using the other tricks
+!!
      integer, public, save :: nfreq  = 128
 
-! number of imaginary time slice sampling by continuous time quantum Monte
-! Carlo quantum impurity solver
+!!
+!! @var ntime
+!!
+!! number of imaginary time slices sampled by continuous time quantum
+!! Monte Carlo quantum impurity solver
+!!
      integer, public, save :: ntime  = 1024
 
 ! number of parts that the imaginary time axis is split
