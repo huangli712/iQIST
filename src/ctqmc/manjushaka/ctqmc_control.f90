@@ -396,8 +396,18 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
+!!
+!! @var Uc
+!!
+!! intra-orbital Coulomb interaction
+!!
      real(dp), public, save :: Uc    = 4.00_dp
 
+!!
+!! @var Jz
+!!
+!! Hund's exchange interaction in z axis
+!!
      real(dp), public, save :: Jz    = 0.00_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
