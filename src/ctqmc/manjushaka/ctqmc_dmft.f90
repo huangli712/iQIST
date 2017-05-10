@@ -6,13 +6,12 @@
 !!! source  : ctqmc_dmft.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang (created)
 !!!           05/10/2017 by li huang (last modified)
-!!! purpose : the self-consistent engine for dynamical mean field theory
-!!!           (DMFT) simulation. it is only suitable for hybridization
-!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
-!!!           quantum impurity solver plus bethe lattice model.
+!!! purpose : implement a hybridization expansion version continuous time
+!!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
+!!!           dynamical mean field theory (DMFT) self-consistent engine.
+!!!           it is designed for the Hubbard model on a Bethe lattice
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
