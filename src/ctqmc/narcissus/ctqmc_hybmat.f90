@@ -1086,13 +1086,13 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to right shift old segment or anti-segment (old index = ieo)
+! index address to shift annihilation operator (old index = ieo)
      integer, intent(in)   :: addr
 
-! imaginary time \tau_e for end point (the old one)
+! imaginary time \tau_e for annihilation operator (the old one)
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time \tau_e for end point (the new one)
+! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in)  :: tau_end2
 
 ! the desired determinant ratio
