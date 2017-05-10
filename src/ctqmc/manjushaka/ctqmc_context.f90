@@ -659,7 +659,12 @@
 !!>>> module context                                                   <<<
 !!========================================================================
 
-!!>>> containing memory management subroutines and define global variables
+!!
+!! @mod context
+!!
+!! containing memory management subroutines, which initialize all of the
+!! global variables and arrays
+!!
   module context
      use constants
      use control
@@ -1175,7 +1180,11 @@
      return
   end subroutine ctqmc_deallocate_memory_wmat
 
-!!>>> ctqmc_deallocate_memory_smat: deallocate memory for smat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_smat
+!!
+!! deallocate memory for smat-related variables
+!!
   subroutine ctqmc_deallocate_memory_smat()
      implicit none
 
