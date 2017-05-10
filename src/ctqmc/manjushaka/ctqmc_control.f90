@@ -414,9 +414,6 @@
 ! spin-flip term
      real(dp), public, save :: Js    = 0.00_dp
 
-! pair-hopping term
-     real(dp), public, save :: Jp    = 0.00_dp
-
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!
