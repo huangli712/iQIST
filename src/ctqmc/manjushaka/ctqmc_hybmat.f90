@@ -951,8 +951,12 @@
      return
   end subroutine cat_insert_detrat
 
-!!>>> cat_remove_detrat: calculate the determinant ratio for remove old
-!!>>> create and destroy operators
+!!
+!! @sub cat_remove_detrat
+!!
+!! calculate the determinant ratio for removing old creation and
+!! annihilation operators
+!!
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
      use constants, only : dp
 
@@ -964,8 +968,8 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)   :: is
      integer, intent(in)   :: ie
 
