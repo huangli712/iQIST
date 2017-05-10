@@ -396,13 +396,8 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
-! note: U, Uc, Uv, Jz, Js, and Jp are not used by this quantum impurity
-! solver actually. we keep them here is just for reference.
-
-! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 4.00_dp
 
-! Hund's exchange interaction in z axis (Jz = Js = Jp = J)
      real(dp), public, save :: Jz    = 0.00_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
