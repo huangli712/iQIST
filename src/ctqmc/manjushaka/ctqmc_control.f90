@@ -325,10 +325,8 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! number of matsubara frequency for the two-particle green's function
      integer, public, save :: nffrq  = 32
 
-! number of bosonic frequncy for the two-particle green's function
      integer, public, save :: nbfrq  = 8
 
 ! number of matsubara frequency sampling by continuous time quantum Monte
