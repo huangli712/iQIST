@@ -292,15 +292,15 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to left shift old creation operator
+! index address to shift creation operator
 ! iso and isn are for old and new indices, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
-! imaginary time \tau_s for create operator (the old one)
+! imaginary time \tau_s for creation operator (the old one)
      real(dp), intent(in) :: tau_start1
 
-! imaginary time \tau_s for create operator (the new one)
+! imaginary time \tau_s for creation operator (the new one)
      real(dp), intent(in) :: tau_start2
 
 ! previous calculated determinant ratio
