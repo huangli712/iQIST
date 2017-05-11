@@ -983,17 +983,16 @@
      implicit none
 
 ! allocate memory
-     allocate(hist(mkink),        stat=istat)
-
-     allocate(paux(  9  ),        stat=istat)
-     allocate(prob(ncfgs),        stat=istat)
-
-     allocate(nimp(norbs),        stat=istat)
+     allocate(hist(mkink),       stat=istat)
+     allocate(prob(ncfgs),       stat=istat)
+     allocate(paux(  9  ),       stat=istat)
+     allocate(nimp(norbs),       stat=istat)
      allocate(nmat(norbs,norbs), stat=istat)
-     allocate(knop(norbs),        stat=istat)
+
+     allocate(knop(norbs),       stat=istat)
      allocate(kmat(norbs,norbs), stat=istat)
-     allocate(lnop(norbs),        stat=istat)
-     allocate(rnop(norbs),        stat=istat)
+     allocate(lnop(norbs),       stat=istat)
+     allocate(rnop(norbs),       stat=istat)
      allocate(lrmm(norbs,norbs), stat=istat)
 
      allocate(g2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
