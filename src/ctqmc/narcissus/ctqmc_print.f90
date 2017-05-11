@@ -358,7 +358,7 @@
      integer, intent(in) :: iter
 
 ! according to the value of isscf, we can judge the self-consistent scheme
-! of the current code
+! of the current simulation
      if ( isscf /= 2 ) then
          write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< ONESHOT'
      else
