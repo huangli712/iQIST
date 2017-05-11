@@ -1177,6 +1177,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
+
      use context, only : g2pw
      use context, only : h2pw
      use context, only : rank, pref
@@ -1311,6 +1312,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
+
      use context, only : p2pw
      use context, only : rank
      use context, only : mmat
