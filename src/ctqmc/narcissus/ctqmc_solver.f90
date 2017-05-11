@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/09/2017 by li huang (last modified)
+!!!           05/12/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -591,86 +591,98 @@
      call cpu_time(time_begin) ! record starting time
 
 ! collect data from all children processes
-     call ctqmc_reduce_hist(hist_mpi, hist_err)
-     call ctqmc_reduce_prob(prob_mpi, prob_err)
-     call ctqmc_reduce_paux(paux_mpi, paux_err)
-     call ctqmc_reduce_nmat(nimp_mpi, nmat_mpi, nimp_err, nmat_err)
+     COLLECT_DATA: BLOCK
+ 
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
+         call ctqmc_reduce_prob(prob_mpi, prob_err)
+         call ctqmc_reduce_paux(paux_mpi, paux_err)
+         call ctqmc_reduce_nmat(nimp_mpi, nmat_mpi, nimp_err, nmat_err)
 
-     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
-     call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
-     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
+         call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
+         call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
-     call ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
-     call ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
-     call ctqmc_reduce_szpw(szpw_mpi, szpw_err)
+         call ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
+         call ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
+         call ctqmc_reduce_szpw(szpw_mpi, szpw_err)
 
-     call ctqmc_reduce_sp_t(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
-     call ctqmc_reduce_sp_w(sp_w_mpi, sp_w_err)
-     call ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
-     call ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
+         call ctqmc_reduce_sp_t(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
+         call ctqmc_reduce_sp_w(sp_w_mpi, sp_w_err)
+         call ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
+         call ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
 
-     call ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
-     call ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
+         call ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
+         call ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
+
+     END BLOCK COLLECT_DATA
 
 ! update original data and calculate the averages simultaneously
 ! average value section
-     hist = hist_mpi * one
-     prob = prob_mpi * real(nmonte) / real(nsweep)
-     paux = paux_mpi * real(nmonte) / real(nsweep)
-     nimp = nimp_mpi * real(nmonte) / real(nsweep)
-     nmat = nmat_mpi * real(nmonte) / real(nsweep)
+     AVERAGE_DATA: BLOCK
 
-     gtau = gtau_mpi * real(nmonte) / real(nsweep)
-     ftau = ftau_mpi * real(nmonte) / real(nsweep)
-     grnf = grnf_mpi * real(nmonte) / real(nsweep)
+         hist = hist_mpi * one
+         prob = prob_mpi * real(nmonte) / real(nsweep)
+         paux = paux_mpi * real(nmonte) / real(nsweep)
+         nimp = nimp_mpi * real(nmonte) / real(nsweep)
+         nmat = nmat_mpi * real(nmonte) / real(nsweep)
 
-     knop = knop_mpi * real(nmonte) / real(nsweep)
-     kmat = kmat_mpi * real(nmonte) / real(nsweep)
-     lnop = lnop_mpi * real(nmonte) / real(nsweep)
-     rnop = rnop_mpi * real(nmonte) / real(nsweep)
-     lrmm = lrmm_mpi * real(nmonte) / real(nsweep)
-     szpw = szpw_mpi * real(nmonte) / real(nsweep)
+         gtau = gtau_mpi * real(nmonte) / real(nsweep)
+         ftau = ftau_mpi * real(nmonte) / real(nsweep)
+         grnf = grnf_mpi * real(nmonte) / real(nsweep)
 
-     schi = schi_mpi * real(nmonte) / real(nsweep)
-     sp_t = sp_t_mpi * real(nmonte) / real(nsweep)
-     sp_w = sp_w_mpi * real(nmonte) / real(nsweep)
-     cchi = cchi_mpi * real(nmonte) / real(nsweep)
-     ch_t = ch_t_mpi * real(nmonte) / real(nsweep)
-     ch_w = ch_w_mpi * real(nmonte) / real(nsweep)
+         knop = knop_mpi * real(nmonte) / real(nsweep)
+         kmat = kmat_mpi * real(nmonte) / real(nsweep)
+         lnop = lnop_mpi * real(nmonte) / real(nsweep)
+         rnop = rnop_mpi * real(nmonte) / real(nsweep)
+         lrmm = lrmm_mpi * real(nmonte) / real(nsweep)
+         szpw = szpw_mpi * real(nmonte) / real(nsweep)
 
-     g2pw = g2pw_mpi * real(nmonte) / real(nsweep)
-     h2pw = h2pw_mpi * real(nmonte) / real(nsweep)
-     p2pw = p2pw_mpi * real(nmonte) / real(nsweep)
+         schi = schi_mpi * real(nmonte) / real(nsweep)
+         sp_t = sp_t_mpi * real(nmonte) / real(nsweep)
+         sp_w = sp_w_mpi * real(nmonte) / real(nsweep)
+         cchi = cchi_mpi * real(nmonte) / real(nsweep)
+         ch_t = ch_t_mpi * real(nmonte) / real(nsweep)
+         ch_w = ch_w_mpi * real(nmonte) / real(nsweep)
+
+         g2pw = g2pw_mpi * real(nmonte) / real(nsweep)
+         h2pw = h2pw_mpi * real(nmonte) / real(nsweep)
+         p2pw = p2pw_mpi * real(nmonte) / real(nsweep)
+
+     END BLOCK AVERAGE_DATA
 
 ! update original data and calculate the averages simultaneously
 ! error bar section
-     hist_err = hist_err * one
-     prob_err = prob_err * real(nmonte) / real(nsweep)
-     paux_err = paux_err * real(nmonte) / real(nsweep)
-     nimp_err = nimp_err * real(nmonte) / real(nsweep)
-     nmat_err = nmat_err * real(nmonte) / real(nsweep)
+     AVERAGE_ERROR: BLOCK
 
-     gtau_err = gtau_err * real(nmonte) / real(nsweep)
-     ftau_err = ftau_err * real(nmonte) / real(nsweep)
-     grnf_err = grnf_err * real(nmonte) / real(nsweep)
+         hist_err = hist_err * one
+         prob_err = prob_err * real(nmonte) / real(nsweep)
+         paux_err = paux_err * real(nmonte) / real(nsweep)
+         nimp_err = nimp_err * real(nmonte) / real(nsweep)
+         nmat_err = nmat_err * real(nmonte) / real(nsweep)
 
-     knop_err = knop_err * real(nmonte) / real(nsweep)
-     kmat_err = kmat_err * real(nmonte) / real(nsweep)
-     lnop_err = lnop_err * real(nmonte) / real(nsweep)
-     rnop_err = rnop_err * real(nmonte) / real(nsweep)
-     lrmm_err = lrmm_err * real(nmonte) / real(nsweep)
-     szpw_err = szpw_err * real(nmonte) / real(nsweep)
+         gtau_err = gtau_err * real(nmonte) / real(nsweep)
+         ftau_err = ftau_err * real(nmonte) / real(nsweep)
+         grnf_err = grnf_err * real(nmonte) / real(nsweep)
 
-     schi_err = schi_err * real(nmonte) / real(nsweep)
-     sp_t_err = sp_t_err * real(nmonte) / real(nsweep)
-     sp_w_err = sp_w_err * real(nmonte) / real(nsweep)
-     cchi_err = cchi_err * real(nmonte) / real(nsweep)
-     ch_t_err = ch_t_err * real(nmonte) / real(nsweep)
-     ch_w_err = ch_w_err * real(nmonte) / real(nsweep)
+         knop_err = knop_err * real(nmonte) / real(nsweep)
+         kmat_err = kmat_err * real(nmonte) / real(nsweep)
+         lnop_err = lnop_err * real(nmonte) / real(nsweep)
+         rnop_err = rnop_err * real(nmonte) / real(nsweep)
+         lrmm_err = lrmm_err * real(nmonte) / real(nsweep)
+         szpw_err = szpw_err * real(nmonte) / real(nsweep)
 
-     g2pw_err = g2pw_err * real(nmonte) / real(nsweep)
-     h2pw_err = h2pw_err * real(nmonte) / real(nsweep)
-     p2pw_err = p2pw_err * real(nmonte) / real(nsweep)
+         schi_err = schi_err * real(nmonte) / real(nsweep)
+         sp_t_err = sp_t_err * real(nmonte) / real(nsweep)
+         sp_w_err = sp_w_err * real(nmonte) / real(nsweep)
+         cchi_err = cchi_err * real(nmonte) / real(nsweep)
+         ch_t_err = ch_t_err * real(nmonte) / real(nsweep)
+         ch_w_err = ch_w_err * real(nmonte) / real(nsweep)
+
+         g2pw_err = g2pw_err * real(nmonte) / real(nsweep)
+         h2pw_err = h2pw_err * real(nmonte) / real(nsweep)
+         p2pw_err = p2pw_err * real(nmonte) / real(nsweep)
+
+     END BLOCK AVERAGE_ERROR
 
 ! try to evaluate the impurity green's function and self-energy function
 ! grnf, frnf, and sig2 would be updated there
