@@ -136,6 +136,9 @@
 !! if isort == 2:
 !!     using legendre orthogonal polynomial representation
 !!
+!! if isort == 3:
+!!     using intermediate (singular value decomposition) representation 
+!!
      integer, public, save :: isort  = 1
 
 !!
