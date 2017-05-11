@@ -795,7 +795,8 @@
 !! global variables and arrays
 !!
   module context
-     use constants
+     use constants, only : dp, zero, czero
+
      use control
 
      use ctqmc_core
