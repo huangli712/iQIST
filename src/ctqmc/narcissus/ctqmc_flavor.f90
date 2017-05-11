@@ -866,9 +866,11 @@
 !!
   subroutine cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink, cstat
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -1241,9 +1243,11 @@
 !!
   subroutine cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink, cstat
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -1454,9 +1458,11 @@
 !!
   subroutine cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
      use constants, only : dp, zero
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink, cstat
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -1632,9 +1638,11 @@
 !!
   subroutine cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
      use constants, only : dp, zero
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink, cstat
      use context, only : index_s, index_e
      use context, only : time_s, time_e
