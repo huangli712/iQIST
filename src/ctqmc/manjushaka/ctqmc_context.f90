@@ -571,7 +571,11 @@
 !::: ctqmc status variables                                            :::
 !-------------------------------------------------------------------------
 
-! current perturbation expansion order for different flavor channel
+!!
+!! @var rank
+!!
+!! current perturbation expansion order for different flavor channel
+!!
      integer,  public, save, allocatable :: rank(:)
 
 ! diagonal elements of current matrix product of flavor part
