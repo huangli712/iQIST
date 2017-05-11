@@ -87,10 +87,10 @@
 !-------------------------------------------------------------------------
 
 ! matrix trace of flavor part, current value
-     real(dp), public, save :: matrix_ptrace = zero
+     real(dp), public, save :: mptr = zero
 
 ! matrix trace of flavor part, proposed value
-     real(dp), public, save :: matrix_ntrace = zero
+     real(dp), public, save :: mntr = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, insert action counter                       :::
