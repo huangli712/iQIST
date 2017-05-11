@@ -601,9 +601,9 @@
              close(mytmp)
 
          else
-             if ( isscr == 99 ) then
+             if ( isscr == 3 ) then
                  call s_print_error('ctqmc_input_ktau_','solver.ktau.in does not exist')
-             endif ! back if ( isscr == 99 ) block
+             endif ! back if ( isscr == 3 ) block
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
