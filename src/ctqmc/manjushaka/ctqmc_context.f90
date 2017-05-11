@@ -508,13 +508,10 @@
 !!
      real(dp), public, save, allocatable :: kmat(:,:)
 
-! number of operators at left half axis, < k_l >
      real(dp), public, save, allocatable :: lmat(:)
 
-! number of operators at right half axis, < k_r >
      real(dp), public, save, allocatable :: rmat(:)
 
-! used to evaluate fidelity susceptibility, < k_l k_r >
      real(dp), public, save, allocatable :: lrmat(:,:)
 
 ! used to calculate two-particle green's function, real part
