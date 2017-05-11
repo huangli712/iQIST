@@ -968,10 +968,8 @@
      rmesh = zero
 
      pmesh = zero
-     qmesh = zero
 
      ppleg = zero
-     qqche = zero
 
      return
   end subroutine ctqmc_allocate_memory_mesh
