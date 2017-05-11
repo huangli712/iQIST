@@ -1434,6 +1434,7 @@
 
      use control, only : mkink
      use control, only : nprocs
+
      use context, only : hist
 
      implicit none
@@ -1497,6 +1498,7 @@
 
      use control, only : ncfgs
      use control, only : nprocs
+
      use context, only : prob
 
      implicit none
@@ -1559,6 +1561,7 @@
      use mmpi, only : mp_barrier
 
      use control, only : nprocs
+
      use context, only : paux
 
      implicit none
@@ -1622,6 +1625,7 @@
 
      use control, only : norbs
      use control, only : nprocs
+
      use context, only : nimp, nmat
 
      implicit none
@@ -1702,6 +1706,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
+
      use context, only : gtau
 
      implicit none
@@ -1766,6 +1771,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
+
      use context, only : ftau
 
      implicit none
@@ -1830,6 +1836,7 @@
      use control, only : norbs
      use control, only : mfreq
      use control, only : nprocs
+
      use context, only : grnf
 
      implicit none
@@ -1920,6 +1927,7 @@
      use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
+
      use context, only : knop, kmat
 
      implicit none
