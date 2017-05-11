@@ -1907,6 +1907,7 @@
      use constants, only : dp, zero
 
      use control, only : norbs
+
      use context, only : rank
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -2028,7 +2029,7 @@
                  cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
              endif ! back if ( typ == 2 ) block
 
-         case (99) ! dynamic interaction, realistic materials
+         case (4) ! dynamic interaction, realistic materials
              cur = ctqmc_eval_ktau(typ, tau)
 
      end select DYNAMIC_MODEL
