@@ -956,7 +956,7 @@
 
      allocate(lmesh(legrd),       stat=istat)
 
-     allocate(ppleg(legrd,lemax), stat=istat)
+     allocate(rep_l(legrd,lemax), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -969,7 +969,7 @@
 
      lmesh = zero
 
-     ppleg = zero
+     rep_l = zero
 
      return
   end subroutine ctqmc_allocate_memory_mesh
@@ -1257,7 +1257,7 @@
 
      if ( allocated(lmesh) )   deallocate(lmesh)
 
-     if ( allocated(ppleg) )   deallocate(ppleg)
+     if ( allocated(rep_l) )   deallocate(rep_l)
 
      return
   end subroutine ctqmc_deallocate_memory_mesh
