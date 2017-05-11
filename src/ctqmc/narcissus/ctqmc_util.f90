@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
+!!!           05/11/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -55,6 +55,7 @@
      use control, only : norbs
      use control, only : mfreq
      use control, only : ntime
+
      use context, only : tmesh, rmesh
 
      implicit none
@@ -109,6 +110,7 @@
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
+
      use context, only : tmesh, rmesh
 
      implicit none
@@ -213,6 +215,7 @@
      use constants, only : dp
 
      use control, only : ntime
+
      use context, only : tmesh
      use context, only : htau, hsed
 
@@ -250,6 +253,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : beta
+
      use context, only : tmesh
 
      implicit none
