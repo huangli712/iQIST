@@ -598,6 +598,7 @@
 
      use control, only : isobs
      use control, only : norbs
+
      use context, only : knop, kmat
      use context, only : rank
 
@@ -637,6 +638,7 @@
      use control, only : isobs
      use control, only : norbs
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : lnop, rnop, lrmm
@@ -714,6 +716,7 @@
      use control, only : nband, norbs
      use control, only : ntime
      use control, only : beta
+
      use context, only : tmesh
      use context, only : szpw
 
@@ -806,6 +809,7 @@
      use control, only : issus
      use control, only : nband, norbs
      use control, only : ntime
+
      use context, only : tmesh
      use context, only : schi, sp_t
 
@@ -895,6 +899,7 @@
      use control, only : nband, norbs
      use control, only : nbfrq
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : sp_w
@@ -1012,6 +1017,7 @@
      use control, only : issus
      use control, only : norbs
      use control, only : ntime
+
      use context, only : tmesh
      use context, only : cchi, ch_t
 
@@ -1083,6 +1089,7 @@
      use control, only : norbs
      use control, only : nbfrq
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : ch_w
