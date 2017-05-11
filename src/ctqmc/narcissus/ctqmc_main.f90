@@ -3,7 +3,7 @@
 !!!                                                                      !
 !!! A highly optimized hybridization expansion version continuous time   !
 !!! quantum Monte Carlo (CTQMC) quantum impurity solver plus a classic   !
-!!! dynamical mean field theory (DMFT) self-consistent engine.           !
+!!! dynamical mean field theory (DMFT) self-consistent engine            !
 !!!                                                                      !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
@@ -24,7 +24,7 @@
      use mmpi, only : mp_comm_size ! get number of processes
 
      use control, only : isscf     ! self-consistent calculation mode
-     use control, only : niter     ! number of self-consistent iteration
+     use control, only : niter     ! number of self-consistent iterations
      use control, only : nprocs    ! number of processes
      use control, only : myid      ! index of current process
      use control, only : master    ! index of master process
