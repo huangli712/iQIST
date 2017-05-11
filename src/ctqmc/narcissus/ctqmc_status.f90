@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
+!!!           05/11/2017 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
@@ -30,6 +30,7 @@
 
      use control, only : cname
      use control, only : norbs
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rank, stts
@@ -101,6 +102,7 @@
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
+
      use context, only : ckink, cstat
      use context, only : rank, stts
 
