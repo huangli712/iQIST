@@ -67,10 +67,19 @@
 !!
      integer, public, save  :: caves = 0
 
-! current status of spin-orbital coupling
-! if cssoc = 0, no spin-orbital coupling,
-! if cssoc = 1, atomic spin-orbital coupling
-! note: this variable is determined by atom.cix, do not setup it manually
+!!
+!! @var cssoc
+!!
+!! current status of spin-orbital coupling
+!!
+!! if cssoc == 0:
+!!     no spin-orbital coupling
+!!
+!! if cssoc == 1:
+!!     atomic spin-orbital coupling
+!!
+!! this variable is determined by atom.cix, do not setup it manually
+!!
      integer, public, save  :: cssoc = 0
 
 !-------------------------------------------------------------------------
