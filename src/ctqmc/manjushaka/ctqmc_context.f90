@@ -451,7 +451,11 @@
 !!
      real(dp), public, save, allocatable :: hist(:)
 
-! probability of eigenstates of local hamiltonian matrix
+!!
+!! @var prob
+!!
+!! probability of atomic eigenstates of local hamiltonian matrix
+!!
      real(dp), public, save, allocatable :: prob(:)
 
 ! auxiliary physical observables
