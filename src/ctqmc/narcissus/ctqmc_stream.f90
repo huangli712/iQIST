@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/09/2017 by li huang (last modified)
+!!!           05/11/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -640,16 +640,16 @@
      implicit none
 
 ! allocate memory for context module
-     call ctqmc_allocate_memory_clur()
+     call cat_alloc_clur()
 
-     call ctqmc_allocate_memory_mesh()
-     call ctqmc_allocate_memory_meat()
-     call ctqmc_allocate_memory_umat()
-     call ctqmc_allocate_memory_mmat()
+     call cat_alloc_mesh()
+     call cat_alloc_meat()
+     call cat_alloc_umat()
+     call cat_alloc_mmat()
 
-     call ctqmc_allocate_memory_gmat()
-     call ctqmc_allocate_memory_wmat()
-     call ctqmc_allocate_memory_smat()
+     call cat_alloc_gmat()
+     call cat_alloc_wmat()
+     call cat_alloc_smat()
 
      return
   end subroutine ctqmc_alloc_array
