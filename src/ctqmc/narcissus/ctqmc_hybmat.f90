@@ -178,6 +178,7 @@
 
      use control, only : nfreq
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : exp_s, exp_e
@@ -278,6 +279,7 @@
      use control, only : mkink
      use control, only : nfreq
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_e
@@ -294,7 +296,7 @@
      integer, intent(in)  :: flvr
 
 ! index address to shift creation operator
-! iso and isn are for old and new indices, respectively
+! iso and isn are old and new indices, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
