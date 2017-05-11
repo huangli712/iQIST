@@ -1254,7 +1254,6 @@
      if ( allocated(rmesh) )   deallocate(rmesh)
 
      if ( allocated(lmesh) )   deallocate(lmesh)
-
      if ( allocated(rep_l) )   deallocate(rep_l)
 
      return
