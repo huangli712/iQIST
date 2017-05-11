@@ -823,14 +823,14 @@
      public :: cat_alloc_smat
 
 ! declaration of module procedures: deallocate memory
-     public :: ctqmc_deallocate_memory_clur
-     public :: ctqmc_deallocate_memory_mesh
-     public :: ctqmc_deallocate_memory_meat
-     public :: ctqmc_deallocate_memory_umat
-     public :: ctqmc_deallocate_memory_mmat
-     public :: ctqmc_deallocate_memory_gmat
-     public :: ctqmc_deallocate_memory_wmat
-     public :: ctqmc_deallocate_memory_smat
+     public :: cat_free_clur
+     public :: cat_free_mesh
+     public :: cat_free_meat
+     public :: cat_free_umat
+     public :: cat_free_mmat
+     public :: cat_free_gmat
+     public :: cat_free_wmat
+     public :: cat_free_smat
 
   contains ! encapsulated functionality
 
@@ -1157,11 +1157,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_deallocate_memory_clur
+!! @sub cat_free_clur
 !!
 !! deallocate memory for clur-related variables
 !!
-  subroutine ctqmc_deallocate_memory_clur()
+  subroutine cat_free_clur()
      implicit none
 
 ! local variables
@@ -1186,14 +1186,14 @@
      if ( allocated(empty_e) ) deallocate(empty_e)
 
      return
-  end subroutine ctqmc_deallocate_memory_clur
+  end subroutine cat_free_clur
 
 !!
-!! @sub ctqmc_deallocate_memory_mesh
+!! @sub cat_free_mesh
 !!
 !! deallocate memory for mesh-related variables
 !!
-  subroutine ctqmc_deallocate_memory_mesh()
+  subroutine cat_free_mesh()
      implicit none
 
      if ( allocated(tmesh) )   deallocate(tmesh)
@@ -1203,14 +1203,14 @@
      if ( allocated(rep_l) )   deallocate(rep_l)
 
      return
-  end subroutine ctqmc_deallocate_memory_mesh
+  end subroutine cat_free_mesh
 
 !!
-!! @sub ctqmc_deallocate_memory_meat
+!! @sub cat_free_meat
 !!
 !! deallocate memory for meat-related variables
 !!
-  subroutine ctqmc_deallocate_memory_meat()
+  subroutine cat_free_meat()
      implicit none
 
      if ( allocated(hist) )    deallocate(hist)
@@ -1238,14 +1238,14 @@
      if ( allocated(p2pw) )    deallocate(p2pw)
 
      return
-  end subroutine ctqmc_deallocate_memory_meat
+  end subroutine cat_free_meat
 
 !!
-!! @sub ctqmc_deallocate_memory_umat
+!! @sub cat_free_umat
 !!
 !! deallocate memory for umat-related variables
 !!
-  subroutine ctqmc_deallocate_memory_umat()
+  subroutine cat_free_umat()
      implicit none
 
      if ( allocated(rank) )    deallocate(rank)
@@ -1263,14 +1263,14 @@
      if ( allocated(umat) )    deallocate(umat)
 
      return
-  end subroutine ctqmc_deallocate_memory_umat
+  end subroutine cat_free_umat
 
 !!
-!! @sub ctqmc_deallocate_memory_mmat
+!! @sub cat_free_mmat
 !!
 !! deallocate memory for mmat-related variables
 !!
-  subroutine ctqmc_deallocate_memory_mmat()
+  subroutine cat_free_mmat()
      implicit none
 
      if ( allocated(lspace) )  deallocate(lspace)
@@ -1284,14 +1284,14 @@
      if ( allocated(gmat)   )  deallocate(gmat  )
 
      return
-  end subroutine ctqmc_deallocate_memory_mmat
+  end subroutine cat_free_mmat
 
 !!
-!! @sub ctqmc_deallocate_memory_gmat
+!! @sub cat_free_gmat
 !!
 !! deallocate memory for gmat-related variables
 !!
-  subroutine ctqmc_deallocate_memory_gmat()
+  subroutine cat_free_gmat()
      implicit none
 
      if ( allocated(gtau) )    deallocate(gtau)
@@ -1301,14 +1301,14 @@
      if ( allocated(frnf) )    deallocate(frnf)
 
      return
-  end subroutine ctqmc_deallocate_memory_gmat
+  end subroutine cat_free_gmat
 
 !!
-!! @sub ctqmc_deallocate_memory_wmat
+!! @sub cat_free_wmat
 !!
 !! deallocate memory for wmat-related variables
 !!
-  subroutine ctqmc_deallocate_memory_wmat()
+  subroutine cat_free_wmat()
      implicit none
 
      if ( allocated(wtau) )    deallocate(wtau)
@@ -1319,20 +1319,20 @@
      if ( allocated(hybf) )    deallocate(hybf)
 
      return
-  end subroutine ctqmc_deallocate_memory_wmat
+  end subroutine cat_free_wmat
 
 !!
-!! @sub ctqmc_deallocate_memory_smat
+!! @sub cat_free_smat
 !!
 !! deallocate memory for smat-related variables
 !!
-  subroutine ctqmc_deallocate_memory_smat()
+  subroutine cat_free_smat()
      implicit none
 
      if ( allocated(sig1) )    deallocate(sig1)
      if ( allocated(sig2) )    deallocate(sig2)
 
      return
-  end subroutine ctqmc_deallocate_memory_smat
+  end subroutine cat_free_smat
 
   end module context
