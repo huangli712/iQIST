@@ -813,14 +813,14 @@
 !!========================================================================
 
 ! declaration of module procedures: allocate memory
-     public :: ctqmc_allocate_memory_clur
-     public :: ctqmc_allocate_memory_mesh
-     public :: ctqmc_allocate_memory_meat
-     public :: ctqmc_allocate_memory_umat
-     public :: ctqmc_allocate_memory_mmat
-     public :: ctqmc_allocate_memory_gmat
-     public :: ctqmc_allocate_memory_wmat
-     public :: ctqmc_allocate_memory_smat
+     public :: cat_alloc_clur
+     public :: cat_alloc_mesh
+     public :: cat_alloc_meat
+     public :: cat_alloc_umat
+     public :: cat_alloc_mmat
+     public :: cat_alloc_gmat
+     public :: cat_alloc_wmat
+     public :: cat_alloc_smat
 
 ! declaration of module procedures: deallocate memory
      public :: ctqmc_deallocate_memory_clur
@@ -839,11 +839,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_allocate_memory_clur
+!! @sub cat_alloc_clur
 !!
 !! allocate memory for clur-related variables
 !!
-  subroutine ctqmc_allocate_memory_clur()
+  subroutine cat_alloc_clur()
      implicit none
 
 ! local variables
@@ -865,7 +865,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+         call s_print_error('cat_alloc_clur','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -884,14 +884,14 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine ctqmc_allocate_memory_clur
+  end subroutine cat_alloc_clur
 
 !!
-!! @sub ctqmc_allocate_memory_mesh
+!! @sub cat_alloc_mesh
 !!
 !! allocate memory for mesh-related variables
 !!
-  subroutine ctqmc_allocate_memory_mesh()
+  subroutine cat_alloc_mesh()
      implicit none
 
 ! allocate memory
@@ -903,7 +903,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
+         call s_print_error('cat_alloc_mesh','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -914,14 +914,14 @@
      rep_l = zero
 
      return
-  end subroutine ctqmc_allocate_memory_mesh
+  end subroutine cat_alloc_mesh
 
 !!
-!! @sub ctqmc_allocate_memory_meat
+!! @sub cat_alloc_meat
 !!
 !! allocate memory for meat-related variables
 !!
-  subroutine ctqmc_allocate_memory_meat()
+  subroutine cat_alloc_meat()
      implicit none
 
 ! allocate memory
@@ -951,7 +951,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_meat','can not allocate enough memory')
+         call s_print_error('cat_alloc_meat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -980,14 +980,14 @@
      p2pw = czero
 
      return
-  end subroutine ctqmc_allocate_memory_meat
+  end subroutine cat_alloc_meat
 
 !!
-!! @sub ctqmc_allocate_memory_umat
+!! @sub cat_alloc_umat
 !!
 !! allocate memory for umat-related variables
 !!
-  subroutine ctqmc_allocate_memory_umat()
+  subroutine cat_alloc_umat()
      implicit none
 
 ! allocate memory
@@ -1007,7 +1007,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
+         call s_print_error('cat_alloc_umat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -1026,14 +1026,14 @@
      umat = zero
 
      return
-  end subroutine ctqmc_allocate_memory_umat
+  end subroutine cat_alloc_umat
 
 !!
-!! @sub ctqmc_allocate_memory_mmat
+!! @sub cat_alloc_mmat
 !!
 !! allocate memory for mmat-related variables
 !!
-  subroutine ctqmc_allocate_memory_mmat()
+  subroutine cat_alloc_mmat()
      implicit none
 
 ! allocate memory
@@ -1049,7 +1049,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_mmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -1064,14 +1064,14 @@
      gmat   = czero
 
      return
-  end subroutine ctqmc_allocate_memory_mmat
+  end subroutine cat_alloc_mmat
 
 !!
-!! @sub ctqmc_allocate_memory_gmat
+!! @sub cat_alloc_gmat
 !!
 !! allocate memory for gmat-related variables
 !!
-  subroutine ctqmc_allocate_memory_gmat()
+  subroutine cat_alloc_gmat()
      implicit none
 
 ! allocate memory
@@ -1083,7 +1083,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_gmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -1094,14 +1094,14 @@
      frnf = czero
 
      return
-  end subroutine ctqmc_allocate_memory_gmat
+  end subroutine cat_alloc_gmat
 
 !!
-!! @sub ctqmc_allocate_memory_wmat
+!! @sub cat_alloc_wmat
 !!
 !! allocate memory for wmat-related variables
 !!
-  subroutine ctqmc_allocate_memory_wmat()
+  subroutine cat_alloc_wmat()
      implicit none
 
 ! allocate memory
@@ -1114,7 +1114,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_wmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -1126,14 +1126,14 @@
      hybf = czero
 
      return
-  end subroutine ctqmc_allocate_memory_wmat
+  end subroutine cat_alloc_wmat
 
 !!
-!! @sub ctqmc_allocate_memory_smat
+!! @sub cat_alloc_smat
 !!
 !! allocate memory for smat-related variables
 !!
-  subroutine ctqmc_allocate_memory_smat()
+  subroutine cat_alloc_smat()
      implicit none
 
 ! allocate memory
@@ -1142,7 +1142,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
+         call s_print_error('cat_alloc_smat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -1150,7 +1150,7 @@
      sig2 = czero
 
      return
-  end subroutine ctqmc_allocate_memory_smat
+  end subroutine cat_alloc_smat
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
