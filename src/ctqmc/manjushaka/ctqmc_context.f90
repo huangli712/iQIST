@@ -529,9 +529,9 @@
 !!
      real(dp), public, save, allocatable :: lrmm(:,:)
 
-     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: g2pw(:,:,:,:,:)
 
-     real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: p2pw(:,:,:,:,:)
 
   end module ctqmc_meat
 
