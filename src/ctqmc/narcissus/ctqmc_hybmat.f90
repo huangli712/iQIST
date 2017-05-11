@@ -1256,7 +1256,5 @@
   subroutine cat_reload_detrat()
      implicit none
 
-     ERROR STOP
-
      return
   end subroutine cat_reload_detrat
