@@ -46,7 +46,11 @@
 !!
      integer, public, save  :: ckink = 0
 
-! sign change related with current diagram update operation
+!!
+!! @var csign
+!!
+!! sign change related with current diagram update operation
+!!
      integer, public, save  :: csign = 1
 
 ! counter for negative sign, used to measure the sign problem
