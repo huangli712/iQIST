@@ -998,7 +998,7 @@
      allocate(kkmat(norbs,norbs), stat=istat)
      allocate(lmat(norbs),        stat=istat)
      allocate(rmat(norbs),        stat=istat)
-     allocate(lrmat(norbs,norbs), stat=istat)
+     allocate(lrmm(norbs,norbs), stat=istat)
 
      allocate(g2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
@@ -1022,7 +1022,7 @@
      kkmat = zero
      lmat  = zero
      rmat  = zero
-     lrmat = zero
+     lrmm = zero
 
      g2_re = zero
      g2_im = zero
@@ -1287,7 +1287,7 @@
      if ( allocated(kkmat) )   deallocate(kkmat)
      if ( allocated(lmat)  )   deallocate(lmat )
      if ( allocated(rmat)  )   deallocate(rmat )
-     if ( allocated(lrmat) )   deallocate(lrmat)
+     if ( allocated(lrmm) )   deallocate(lrmm)
 
      if ( allocated(g2_re) )   deallocate(g2_re)
      if ( allocated(g2_im) )   deallocate(g2_im)
