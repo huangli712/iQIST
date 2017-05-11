@@ -480,10 +480,18 @@
 !!
      real(dp), public, save, allocatable :: paux(:)
 
-! impurity occupation number, < n_i >
+!!
+!! @var nimp
+!!
+!! impurity occupation number, < n_i >
+!!
      real(dp), public, save, allocatable :: nimp(:)
 
-! impurity double occupation number matrix, < n_i n_j >
+!!
+!! @var nmat
+!!
+!! impurity double occupation number matrix, < n_i n_j >
+!!
      real(dp), public, save, allocatable :: nmat(:,:)
 
 ! number of operators, < k >
