@@ -2106,6 +2106,7 @@
 
      use control, only : norbs
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rank, stts
@@ -2209,9 +2210,11 @@
 !!
   subroutine cat_make_segments(flvr, kink, anti)
      use constants, only : dp
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink
      use context, only : rank, stts
 
