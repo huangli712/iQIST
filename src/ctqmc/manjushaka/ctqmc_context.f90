@@ -53,10 +53,18 @@
 !!
      integer, public, save  :: csign = 1
 
-! counter for negative sign, used to measure the sign problem
+!!
+!! @var cnegs
+!!
+!! counter for negative sign, used to measure the sign problem
+!!
      integer, public, save  :: cnegs = 0
 
-! averaged sign values, used to measure the sign problem
+!!
+!! @var caves
+!!
+!! averaged sign values, used to measure the sign problem
+!!
      integer, public, save  :: caves = 0
 
 ! current status of spin-orbital coupling
