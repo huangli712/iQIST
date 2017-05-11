@@ -494,10 +494,8 @@
 !!
      real(dp), public, save, allocatable :: nmat(:,:)
 
-! number of operators, < k >
      real(dp), public, save, allocatable :: kmat(:)
 
-! square of number of operators, < k^2 >
      real(dp), public, save, allocatable :: kkmat(:,:)
 
 ! number of operators at left half axis, < k_l >
