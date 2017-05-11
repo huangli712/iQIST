@@ -2007,6 +2007,7 @@
      use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
+
      use context, only : lnop, rnop, lrmm
 
      implicit none
@@ -2098,6 +2099,7 @@
      use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
+
      use context, only : szpw
 
      implicit none
