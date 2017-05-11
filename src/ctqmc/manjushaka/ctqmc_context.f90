@@ -1260,10 +1260,8 @@
      if ( allocated(rmesh) )   deallocate(rmesh)
 
      if ( allocated(pmesh) )   deallocate(pmesh)
-     if ( allocated(qmesh) )   deallocate(qmesh)
 
      if ( allocated(ppleg) )   deallocate(ppleg)
-     if ( allocated(qqche) )   deallocate(qqche)
 
      return
   end subroutine ctqmc_deallocate_memory_mesh
