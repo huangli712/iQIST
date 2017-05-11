@@ -586,10 +586,8 @@
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
 
-! symmetry properties for correlated orbitals
-     integer,  public, save, allocatable :: symm(:)
+     integer, public, save, allocatable  :: symm(:)
 
-! impurity level for correlated orbitals
      real(dp), public, save, allocatable :: eimp(:)
 
 ! eigenvalues for local hamiltonian matrix
