@@ -955,7 +955,6 @@
      allocate(rmesh(mfreq),       stat=istat)
 
      allocate(lmesh(legrd),       stat=istat)
-
      allocate(rep_l(legrd,lemax), stat=istat)
 
 ! check the status
@@ -968,7 +967,6 @@
      rmesh = zero
 
      lmesh = zero
-
      rep_l = zero
 
      return
