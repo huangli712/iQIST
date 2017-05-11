@@ -576,7 +576,7 @@
 !!
 !! current perturbation expansion order for different flavor channel
 !!
-     integer,  public, save, allocatable :: rank(:)
+     integer, public, save, allocatable  :: rank(:)
 
 ! diagonal elements of current matrix product of flavor part
 ! it is used to calculate the probability of eigenstates
