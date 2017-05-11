@@ -23,7 +23,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
+!!!           05/11/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -44,9 +44,11 @@
 !!
   subroutine cat_insert_action(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
+
      use stack, only : istack_pop
 
      use control, only : nfreq
+
      use context, only : ckink
      use context, only : empty_s, empty_e
      use context, only : index_s, index_e
@@ -178,6 +180,7 @@
      use constants, only : dp
 
      use control, only : nfreq
+
      use context, only : ckink
      use context, only : index_s
      use context, only : time_s
@@ -243,6 +246,7 @@
      use constants, only : dp
 
      use control, only : nfreq
+
      use context, only : ckink
      use context, only : index_e
      use context, only : time_e
