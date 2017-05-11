@@ -1052,16 +1052,16 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     rank  = 0
+     rank = 0
 
-     diag  = zero
+     diag = zero
 
-     symm  = 0
+     symm = 0
 
-     eimp  = zero
-     eigs  = zero
-     naux  = zero
-     saux  = zero
+     eimp = zero
+     eigs = zero
+     naux = zero
+     saux = zero
 
      return
   end subroutine ctqmc_allocate_memory_umat
