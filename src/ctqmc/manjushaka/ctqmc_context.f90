@@ -995,7 +995,7 @@
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
      allocate(knop(norbs),        stat=istat)
-     allocate(kkmat(norbs,norbs), stat=istat)
+     allocate(kmat(norbs,norbs), stat=istat)
      allocate(lnop(norbs),        stat=istat)
      allocate(rnop(norbs),        stat=istat)
      allocate(lrmm(norbs,norbs), stat=istat)
@@ -1019,7 +1019,7 @@
      nmat  = zero
      nnmat = zero
      knop  = zero
-     kkmat = zero
+     kmat = zero
      lnop  = zero
      rnop  = zero
      lrmm = zero
@@ -1284,7 +1284,7 @@
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
      if ( allocated(knop)  )   deallocate(knop )
-     if ( allocated(kkmat) )   deallocate(kkmat)
+     if ( allocated(kmat) )   deallocate(kmat)
      if ( allocated(lnop)  )   deallocate(lnop )
      if ( allocated(rnop)  )   deallocate(rnop )
      if ( allocated(lrmm) )   deallocate(lrmm)
