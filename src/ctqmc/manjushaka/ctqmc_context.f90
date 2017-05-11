@@ -89,11 +89,15 @@
 !!
 !! @var mptr
 !!
-!! matrix trace of flavor part, current value
+!! matrix trace of the flavor part, current value
 !!
      real(dp), public, save :: mptr = zero
 
-! matrix trace of flavor part, proposed value
+!!
+!! @var mntr
+!!
+!! matrix trace of the flavor part, proposed value
+!!
      real(dp), public, save :: mntr = zero
 
 !-------------------------------------------------------------------------
