@@ -494,8 +494,18 @@
 !!
      real(dp), public, save, allocatable :: nmat(:,:)
 
+!!
+!! @var knop
+!!
+!! number of operators, < k >
+!!
      real(dp), public, save, allocatable :: knop(:)
 
+!!
+!! @var kmat
+!!
+!! crossing product of k_i and k_j, < k_i k_j >, i and j \in [1,norbs]
+!!
      real(dp), public, save, allocatable :: kmat(:,:)
 
 ! number of operators at left half axis, < k_l >
