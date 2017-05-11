@@ -993,7 +993,7 @@
      allocate(prob(ncfgs),        stat=istat)
 
      allocate(nimp(norbs),        stat=istat)
-     allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(nmat(norbs,norbs), stat=istat)
      allocate(knop(norbs),        stat=istat)
      allocate(kmat(norbs,norbs), stat=istat)
      allocate(lnop(norbs),        stat=istat)
@@ -1017,7 +1017,7 @@
      prob  = zero
 
      nimp  = zero
-     nnmat = zero
+     nmat = zero
      knop  = zero
      kmat = zero
      lnop  = zero
@@ -1282,7 +1282,7 @@
      if ( allocated(prob)  )   deallocate(prob )
 
      if ( allocated(nimp)  )   deallocate(nimp )
-     if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(nmat) )   deallocate(nmat)
      if ( allocated(knop)  )   deallocate(knop )
      if ( allocated(kmat) )   deallocate(kmat)
      if ( allocated(lnop)  )   deallocate(lnop )
