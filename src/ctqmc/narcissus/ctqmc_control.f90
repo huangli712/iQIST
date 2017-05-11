@@ -477,16 +477,16 @@
 !!
 !! screening frequency. its meaning depends on isscr
 !!
-!! if isscr ==  1:
+!! if isscr == 1:
 !!     wc is ignored
 !!
-!! if isscr ==  2:
+!! if isscr == 2:
 !!     wc just means the model parameter \omega^{'}
 !!
-!! if isscr ==  3
+!! if isscr == 3
 !!     wc just means the model parameter \omega_{c}
 !!
-!! if isscr == 99:
+!! if isscr == 4:
 !!     wc is ignored
 !!
      real(dp), public, save :: wc    = 1.00_dp
