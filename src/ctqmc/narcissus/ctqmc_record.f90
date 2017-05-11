@@ -2172,6 +2172,7 @@
      use control, only : nband
      use control, only : ntime
      use control, only : nprocs
+
      use context, only : schi, sp_t
 
      implicit none
@@ -2252,6 +2253,7 @@
      use control, only : nband
      use control, only : nbfrq
      use control, only : nprocs
+
      use context, only : sp_w
 
      implicit none
@@ -2320,6 +2322,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
+
      use context, only : cchi, ch_t
 
      implicit none
@@ -2400,6 +2403,7 @@
      use control, only : norbs
      use control, only : nbfrq
      use control, only : nprocs
+
      use context, only : ch_w
 
      implicit none
@@ -2472,6 +2476,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
+
      use context, only : g2pw
      use context, only : h2pw
 
@@ -2591,6 +2596,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
+
      use context, only : p2pw
 
      implicit none
