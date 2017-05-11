@@ -343,6 +343,7 @@
      use constants, only : dp
 
      use control, only : ntime
+
      use context, only : tmesh
      use context, only : ktau, ksed
      use context, only : ptau, psed
@@ -390,6 +391,7 @@
 
      use control, only : ntime
      use control, only : beta
+
      use context, only : tmesh
 
      implicit none
@@ -848,6 +850,7 @@
 
      use control, only : isscr
      use control, only : lc, wc
+
      use context, only : ptau
 
      implicit none
@@ -859,16 +862,16 @@
 ! evaluate Coulomb interaction shift
      select case ( isscr )
 
-         case (1)  ! static interaction
+         case (1) ! static interaction
              shift = zero
 
-         case (2)  ! dynamic interaction, plasmon pole model
+         case (2) ! dynamic interaction, plasmon pole model
              shift = two * lc * lc / wc
 
-         case (3)  ! dynamic interaction, ohmic model
+         case (3) ! dynamic interaction, ohmic model
              shift = two * lc * wc
 
-         case (99) ! dynamic interaction, realistic materials
+         case (4) ! dynamic interaction, realistic materials
              shift = two * ptau(1)
 
      end select
