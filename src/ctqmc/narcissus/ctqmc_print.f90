@@ -266,13 +266,15 @@
 !!
 !! @sub ctqmc_print_runtime
 !!
-!! print the runtime information, including physical observables and
+!! print the runtime information, including some physical observables and
 !! statistic data, only for reference
 !!
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
 
-     use control, only : nsweep, nmonte
+     use control, only : nsweep
+     use control, only : nmonte
+
      use context, only : ins_t, ins_a, ins_r
      use context, only : rmv_t, rmv_a, rmv_r
      use context, only : lsh_t, lsh_a, lsh_r
