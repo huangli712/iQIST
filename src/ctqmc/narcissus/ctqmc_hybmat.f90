@@ -480,6 +480,7 @@
      use control, only : mkink
      use control, only : nfreq
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_s
@@ -496,7 +497,7 @@
      integer, intent(in)  :: flvr
 
 ! index address to shift annihilation operator
-! ieo and ien are for old and new indices, respectively
+! ieo and ien are old and new indices, respectively
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
