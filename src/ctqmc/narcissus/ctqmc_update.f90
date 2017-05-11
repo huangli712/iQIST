@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/11/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver()
@@ -35,6 +35,7 @@
      use constants, only : zero
 
      use control, only : ntherm
+
      use context, only : ins_t, ins_a, ins_r
      use context, only : rmv_t, rmv_a, rmv_r
      use context, only : lsh_t, lsh_a, lsh_r
@@ -69,6 +70,7 @@
 !!
   subroutine ctqmc_try_walking(cstep)
      use constants, only : dp
+
      use spring, only : spring_sfmt_stream
 
      use control, only : nflip
@@ -80,43 +82,59 @@
 ! current QMC sweep steps
      integer, intent(in) :: cstep
 
+! random walking in C_Z space
+!-------------------------------------------------------------------------
+     C_Z_SPACE: BLOCK
+
 ! change the order of perturbation expansion series
-     if ( spring_sfmt_stream() < 0.9_dp ) then
-         if ( spring_sfmt_stream() > 0.5_dp ) then
-             call ctqmc_insert_kink()  ! insert one new kink
-         else
-             call ctqmc_remove_kink()  ! remove one old kink
-         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
+         if ( spring_sfmt_stream() < 0.9_dp ) then
+             if ( spring_sfmt_stream() > 0.5_dp ) then
+                 call ctqmc_insert_kink()  ! insert one new kink
+             else
+                 call ctqmc_remove_kink()  ! remove one old kink
+             endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
 ! do not change the order of perturbation expansion series
-     else
-         if ( spring_sfmt_stream() > 0.5_dp ) then
-             call ctqmc_lshift_kink()  ! shift the left  endpoints
          else
-             call ctqmc_rshift_kink()  ! shift the right endpoints
-         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
-     endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
+             if ( spring_sfmt_stream() > 0.5_dp ) then
+                 call ctqmc_lshift_kink()  ! shift the left  endpoints
+             else
+                 call ctqmc_rshift_kink()  ! shift the right endpoints
+             endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
+         endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
+
+     END BLOCK C_Z_SPACE
 
 ! numerical trick: perform global spin flip periodically
-     if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) then
-         if ( spring_sfmt_stream() < 0.9_dp ) then
-             call ctqmc_reflip_kink(1) ! flip intra-orbital spins one by one
-         else
-             call ctqmc_reflip_kink(2) ! flip intra-orbital spins globally
-         endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
-     endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
+!-------------------------------------------------------------------------
+     GLOBAL_REFLIP: BLOCK
 
-     if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
-         if ( spring_sfmt_stream() > 0.9_dp ) then
-             call ctqmc_reflip_kink(1) ! flip intra-orbital spins one by one
-         else
-             call ctqmc_reflip_kink(2) ! flip intra-orbital spins globally
-         endif ! back if ( spring_sfmt_stream() > 0.9_dp ) block
-     endif ! back if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) block
+         if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) then
+             if ( spring_sfmt_stream() < 0.9_dp ) then
+                 call ctqmc_reflip_kink(1) ! flip intra-orbital spins one by one
+             else
+                 call ctqmc_reflip_kink(2) ! flip intra-orbital spins globally
+             endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
+         endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
+
+         if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
+             if ( spring_sfmt_stream() > 0.9_dp ) then
+                 call ctqmc_reflip_kink(1) ! flip intra-orbital spins one by one
+             else
+                 call ctqmc_reflip_kink(2) ! flip intra-orbital spins globally
+             endif ! back if ( spring_sfmt_stream() > 0.9_dp ) block
+         endif ! back if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) block
+
+     END BLOCK GLOBAL_REFLIP
 
 ! numerical trick: perform global update periodically
-     if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
-         call ctqmc_reload_kink()
-     endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
+!-------------------------------------------------------------------------
+     GLOBAL_RELOAD: BLOCK
+
+         if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
+             call ctqmc_reload_kink()
+         endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
+
+     END BLOCK GLOBAL_RELOAD
 
      return
   end subroutine ctqmc_try_walking
