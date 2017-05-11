@@ -529,8 +529,18 @@
 !!
      real(dp), public, save, allocatable :: lrmm(:,:)
 
+!!
+!! @var g2pw
+!!
+!! two-particle green's function
+!!
      complex(dp), public, save, allocatable :: g2pw(:,:,:,:,:)
 
+!!
+!! @var p2pw
+!!
+!! particle-particle pairing susceptibility
+!!
      complex(dp), public, save, allocatable :: p2pw(:,:,:,:,:)
 
   end module ctqmc_meat
