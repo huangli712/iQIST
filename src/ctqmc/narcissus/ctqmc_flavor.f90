@@ -318,6 +318,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
+
      use context, only : eimp, umat
 
      implicit none
@@ -449,6 +450,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
+
      use context, only : eimp, umat
 
      implicit none
@@ -580,6 +582,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
+
      use context, only : eimp, umat
 
      implicit none
@@ -721,6 +724,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
+
      use context, only : eimp, umat
 
      implicit none
