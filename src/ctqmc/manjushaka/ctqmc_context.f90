@@ -451,6 +451,9 @@
 !!
      real(dp), public, save, allocatable :: hist(:)
 
+! probability of eigenstates of local hamiltonian matrix
+     real(dp), public, save, allocatable :: prob(:)
+
 ! auxiliary physical observables
 ! paux(01) : total energy, Etot
 ! paux(02) : potential engrgy, Epot
@@ -467,9 +470,6 @@
 ! perturbation expansion order. Of course, < K1 > is essential. It can be
 ! calculated from Ekin.
      real(dp), public, save, allocatable :: paux(:)
-
-! probability of eigenstates of local hamiltonian matrix
-     real(dp), public, save, allocatable :: prob(:)
 
 ! impurity occupation number, < n_i >
      real(dp), public, save, allocatable :: nmat(:)
