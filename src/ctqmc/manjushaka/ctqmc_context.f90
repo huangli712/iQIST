@@ -508,10 +508,25 @@
 !!
      real(dp), public, save, allocatable :: kmat(:,:)
 
+!!
+!! @var lnop
+!!
+!! number of operators at left half axis, < k_l >
+!!
      real(dp), public, save, allocatable :: lnop(:)
 
+!!
+!! @var rnop
+!!
+!! number of operators at right half axis, < k_r >
+!!
      real(dp), public, save, allocatable :: rnop(:)
 
+!!
+!! @var lrmm
+!!
+!! crossing product of k_l and k_r, < k_l k_r >
+!!
      real(dp), public, save, allocatable :: lrmm(:,:)
 
 ! used to calculate two-particle green's function, real part
