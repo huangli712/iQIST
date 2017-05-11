@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/09/2017 by li huang (last modified)
+!!!           05/11/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -47,11 +47,11 @@
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a)') cname//'_p'
+     write(mystd,'(2X,a)') cname//' (parallelized edition)'
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a)') cname//'_s'
+     write(mystd,'(2X,a)') cname//' (sequential edition)'
 
 # endif  /* MPI */
 
