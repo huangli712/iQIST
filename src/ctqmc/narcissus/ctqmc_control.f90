@@ -382,7 +382,7 @@
 !! in this code, nowadays the following flip schemes are supported:
 !!
 !! if nflip == 0:
-!!     means infinite long period to do flip. do not do the spin flip
+!!     means infinite long period to do flip. do not flip the spins
 !!
 !! if nflip >  0:
 !!     flip intra-orbital spins one by one (90%) and globally (10%)
@@ -458,16 +458,16 @@
 !!
 !! strength of dynamical screening effect. its meaning depends on isscr
 !!
-!! if isscr ==  1:
+!! if isscr == 1:
 !!     lc is ignored
 !!
-!! if isscr ==  2:
+!! if isscr == 2:
 !!     lc just means the model parameter \lambda
 !!
-!! if isscr ==  3:
+!! if isscr == 3:
 !!     lc just means the model parameter \alpha
 !!
-!! if isscr == 99
+!! if isscr == 4:
 !!     lc is ignored
 !!
      real(dp), public, save :: lc    = 1.00_dp
