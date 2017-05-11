@@ -345,14 +345,18 @@
      integer, public, save, allocatable  :: index_v(:)
 
 !!
-!! @type_v
+!! @var type_v
 !!
 !! resemble type of operators, 1 means creation operators, 0 means
 !! annihilation operators
 !!
      integer, public, save, allocatable  :: type_v(:)
 
-! to record flavor of operators, from 1 to norbs
+!!
+!! @var flvr_v
+!!
+!! resemble flavor of operators, from 1 to norbs
+!!
      integer, public, save, allocatable  :: flvr_v(:)
 
 ! imaginary time \tau for create and destroy operators
