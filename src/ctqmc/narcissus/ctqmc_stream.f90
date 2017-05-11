@@ -414,6 +414,7 @@
 
      use control, only : norbs
      use control, only : myid, master
+
      use context, only : symm, eimp
 
      implicit none
@@ -484,6 +485,7 @@
 
      use control, only : norbs
      use control, only : myid, master
+
      use context, only : umat
 
      implicit none
@@ -557,6 +559,7 @@
      use control, only : isscr
      use control, only : ntime
      use control, only : myid, master
+
      use context, only : ktau, ptau
      use context, only : umat
 
