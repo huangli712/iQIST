@@ -954,7 +954,7 @@
      allocate(tmesh(ntime),       stat=istat)
      allocate(rmesh(mfreq),       stat=istat)
 
-     allocate(pmesh(legrd),       stat=istat)
+     allocate(lmesh(legrd),       stat=istat)
 
      allocate(ppleg(legrd,lemax), stat=istat)
 
@@ -967,7 +967,7 @@
      tmesh = zero
      rmesh = zero
 
-     pmesh = zero
+     lmesh = zero
 
      ppleg = zero
 
@@ -1255,7 +1255,7 @@
      if ( allocated(tmesh) )   deallocate(tmesh)
      if ( allocated(rmesh) )   deallocate(rmesh)
 
-     if ( allocated(pmesh) )   deallocate(pmesh)
+     if ( allocated(lmesh) )   deallocate(lmesh)
 
      if ( allocated(ppleg) )   deallocate(ppleg)
 
