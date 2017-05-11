@@ -323,7 +323,11 @@
 
      implicit none
 
-! container for the empty (unoccupied) memory address index of operators
+!!
+!! @var empty_v
+!!
+!! container for the empty (unoccupied) memory address index of operators
+!!
      type (istack), public, save :: empty_v
 
 ! memory address index for the imaginary time \tau (auxiliary)
