@@ -481,10 +481,10 @@
      real(dp), public, save, allocatable :: paux(:)
 
 ! impurity occupation number, < n_i >
-     real(dp), public, save, allocatable :: nmat(:)
+     real(dp), public, save, allocatable :: nimp(:)
 
 ! impurity double occupation number matrix, < n_i n_j >
-     real(dp), public, save, allocatable :: nnmat(:,:)
+     real(dp), public, save, allocatable :: nmat(:,:)
 
 ! number of operators, < k >
      real(dp), public, save, allocatable :: kmat(:)
