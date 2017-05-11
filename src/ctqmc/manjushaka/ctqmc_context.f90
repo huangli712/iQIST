@@ -537,6 +537,13 @@
      complex(dp), public, save, allocatable :: g2pw(:,:,:,:,:)
 
 !!
+!! @var h2pw
+!!
+!! used to calculate irreducible vertex function
+!!
+     complex(dp), public, save, allocatable :: h2pw(:,:,:,:,:)
+
+!!
 !! @var p2pw
 !!
 !! particle-particle pairing susceptibility
