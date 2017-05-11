@@ -955,10 +955,8 @@
      allocate(rmesh(mfreq),       stat=istat)
 
      allocate(pmesh(legrd),       stat=istat)
-     allocate(qmesh(chgrd),       stat=istat)
 
      allocate(ppleg(legrd,lemax), stat=istat)
-     allocate(qqche(chgrd,chmax), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
