@@ -508,11 +508,11 @@
 !!
      real(dp), public, save, allocatable :: kmat(:,:)
 
-     real(dp), public, save, allocatable :: lmat(:)
+     real(dp), public, save, allocatable :: lnop(:)
 
-     real(dp), public, save, allocatable :: rmat(:)
+     real(dp), public, save, allocatable :: rnop(:)
 
-     real(dp), public, save, allocatable :: lrmat(:,:)
+     real(dp), public, save, allocatable :: lrmm(:,:)
 
 ! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
