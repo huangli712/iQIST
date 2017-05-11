@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
+!!!           05/12/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver
@@ -57,6 +57,7 @@
      use constants, only : one
 
      use control, only : mkink
+
      use context, only : ckink
      use context, only : hist
 
@@ -81,6 +82,7 @@
      use constants, only : one
 
      use control, only : norbs
+
      use context, only : prob
      use context, only : stts
 
@@ -130,6 +132,7 @@
 
      use control, only : nband, norbs
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -314,6 +317,7 @@
      use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rep_l
@@ -436,6 +440,7 @@
      use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rep_l
@@ -556,6 +561,7 @@
   subroutine ctqmc_record_grnf()
      use control, only : norbs
      use control, only : nfreq
+
      use context, only : gmat
      use context, only : grnf
 
