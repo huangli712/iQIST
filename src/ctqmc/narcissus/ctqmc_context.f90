@@ -360,7 +360,7 @@
 !! K = current perturbation expansion order * 2. the < K^2 >, < K^3 >,
 !! and < K^4 > can be used to calculate the skewness and kurtosis of the
 !! perturbation expansion order. of course, < K^1 > is essential. It can
-!! be evaluated from Ekin.
+!! be evaluated from Ekin
 !!
      real(dp), public, save, allocatable :: paux(:)
 
