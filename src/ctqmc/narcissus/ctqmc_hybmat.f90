@@ -784,6 +784,7 @@
 
      use control, only : nfreq
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : exp_s, exp_e
@@ -877,6 +878,7 @@
 
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -1002,6 +1004,7 @@
 
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_e
      use context, only : time_e
@@ -1080,6 +1083,7 @@
 
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s
      use context, only : time_s
@@ -1157,6 +1161,7 @@
      use constants, only : dp, zero, one
 
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rank
@@ -1250,6 +1255,8 @@
 !!
   subroutine cat_reload_detrat()
      implicit none
+
+     ERROR STOP
 
      return
   end subroutine cat_reload_detrat
