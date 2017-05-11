@@ -951,6 +951,7 @@
      use control, only : issus
      use control, only : nband
      use control, only : ntime
+
      use context, only : tmesh
 
      implicit none
@@ -1075,6 +1076,7 @@
      use control, only : issus
      use control, only : norbs
      use control, only : ntime
+
      use context, only : tmesh
 
      implicit none
@@ -1209,6 +1211,7 @@
      use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
+
      use context, only : grnf, frnf
 
      implicit none
@@ -1468,6 +1471,7 @@
      use control, only : norbs
      use control, only : niter
      use control, only : nwrite, nsweep
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rank
