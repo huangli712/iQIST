@@ -896,6 +896,7 @@
      use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
+
      use context, only : rep_l
 
      implicit none
@@ -977,6 +978,7 @@
      use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
+
      use context, only : rep_l
 
      implicit none
@@ -1065,6 +1067,7 @@
      use constants, only : dp, zero, two
 
      use control, only : norbs
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rank
@@ -1136,6 +1139,7 @@
 
      use control, only : isscr
      use control, only : norbs
+
      use context, only : index_e
      use context, only : time_e
      use context, only : rank, pref, umat
