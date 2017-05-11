@@ -64,15 +64,15 @@
      write(mystd,'(2X,a)') 'License: '//GPL3_VER
      write(mystd,*)
 
-     write(mystd,'(2X,a)') '>>> start running at '//date_time_string
+     write(mystd,'(2X,a)') 'start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores:', nprocs
+     write(mystd,'(2X,a,i4)') 'currently using cpu cores:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores:', 1
+     write(mystd,'(2X,a,i4)') 'currently using cpu cores:', 1
 
 # endif  /* MPI */
 
