@@ -149,6 +149,7 @@
 
      use control, only : norbs
      use control, only : myid, master
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rank, stts
@@ -240,11 +241,13 @@
 !!
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink, cstat
      use context, only : ins_t, ins_a, ins_r
      use context, only : rank, stts
@@ -368,10 +371,12 @@
 !!
   subroutine ctqmc_remove_kink()
      use constants, only : dp, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
      use control, only : beta
+
      use context, only : ckink, cstat
      use context, only : rmv_t, rmv_a, rmv_r
      use context, only : rank, stts
@@ -482,9 +487,11 @@
 !!
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
+
      use context, only : ckink, cstat
      use context, only : lsh_t, lsh_a, lsh_r
      use context, only : rank, stts
@@ -585,9 +592,11 @@
 !!
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
+
      use context, only : ckink, cstat
      use context, only : rsh_t, rsh_a, rsh_r
      use context, only : rank, stts
@@ -689,9 +698,11 @@
 !!
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : nband
+
      use context, only : rfl_t, rfl_a, rfl_r
      use context, only : rank
 
@@ -832,6 +843,7 @@
 !!
   subroutine ctqmc_reload_kink()
      use control, only : norbs
+
      use context, only : rank
 
      implicit none
@@ -845,7 +857,7 @@
 ! check the perturbation expansion order for current flavor channel
          if ( rank(flvr) == 0 ) CYCLE
 
-! regenerate the mmat matrix and gmat matrix from scratch
+! generate the mmat matrix and gmat matrix from scratch
          call cat_reload_matrix(flvr)
 
      enddo ! over flvr={1,norbs} loop
