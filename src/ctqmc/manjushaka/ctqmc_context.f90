@@ -330,13 +330,26 @@
 !!
      type (istack), public, save :: empty_v
 
-! memory address index for the imaginary time \tau (auxiliary)
+!!
+!! @var index_t
+!!
+!! memory address index for the imaginary time \tau (auxiliary)
+!!
      integer, public, save, allocatable  :: index_t(:)
 
-! memory address index for the imaginary time \tau
+!!
+!! @var index_v
+!!
+!! memory address index for the imaginary time \tau
+!!
      integer, public, save, allocatable  :: index_v(:)
 
-! to record type of operators, 1 means create operators, 0 means destroy operators
+!!
+!! @type_v
+!!
+!! resemble type of operators, 1 means creation operators, 0 means
+!! annihilation operators
+!!
      integer, public, save, allocatable  :: type_v(:)
 
 ! to record flavor of operators, from 1 to norbs
