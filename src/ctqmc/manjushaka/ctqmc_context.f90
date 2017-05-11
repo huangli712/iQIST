@@ -1281,11 +1281,9 @@
      if ( allocated(rnop)  )   deallocate(rnop )
      if ( allocated(lrmm) )   deallocate(lrmm)
 
-     if ( allocated(g2_re) )   deallocate(g2_re)
-     if ( allocated(g2_im) )   deallocate(g2_im)
-
-     if ( allocated(ps_re) )   deallocate(ps_re)
-     if ( allocated(ps_im) )   deallocate(ps_im)
+     if ( allocated(g2pw) )   deallocate(g2pw)
+     if ( allocated(h2pw) )   deallocate(h2pw)
+     if ( allocated(p2pw) )   deallocate(p2pw)
 
      return
   end subroutine ctqmc_deallocate_memory_meat
