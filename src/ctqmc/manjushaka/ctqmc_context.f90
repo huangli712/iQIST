@@ -458,21 +458,26 @@
 !!
      real(dp), public, save, allocatable :: prob(:)
 
-! auxiliary physical observables
-! paux(01) : total energy, Etot
-! paux(02) : potential engrgy, Epot
-! paux(03) : kinetic energy, Ekin
-! paux(04) : magnetic moment, < Sz >
-! paux(05) : average of occupation, < N > = < N^1 > = < N1 >
-! paux(06) : average of occupation square, < N^2 > = < N2 >
-! paux(07) : high order of K, < K^2 > = < K2 >
-! paux(08) : high order of K, < K^3 > = < K3 >
-! paux(09) : high order of K, < K^4 > = < K4 >
-!
-! note: K = current perturbation expansion order X 2. The < K2 >, < K3 >,
-! and < K4 > can be used to calculate the skewness and kurtosis of the
-! perturbation expansion order. Of course, < K1 > is essential. It can be
-! calculated from Ekin.
+!!
+!! @var paux
+!!
+!! auxiliary physical observables, it is a vector with size = 9
+!!
+!! paux(01) : total energy, Etot
+!! paux(02) : potential engrgy, Epot
+!! paux(03) : kinetic energy, Ekin
+!! paux(04) : local magnetic moment, < Sz >
+!! paux(05) : occupation number, < N > = < N^1 > = < N1 >
+!! paux(06) : square of occupation number, < N^2 > = < N2 >
+!! paux(07) : high order of K, < K^2 > = < K2 >
+!! paux(08) : high order of K, < K^3 > = < K3 >
+!! paux(09) : high order of K, < K^4 > = < K4 >
+!!
+!! K = current perturbation expansion order * 2. the < K^2 >, < K^3 >,
+!! and < K^4 > can be used to calculate the skewness and kurtosis of the
+!! perturbation expansion order. of course, < K^1 > is essential. It can
+!! be evaluated from Ekin
+!!
      real(dp), public, save, allocatable :: paux(:)
 
 ! impurity occupation number, < n_i >
