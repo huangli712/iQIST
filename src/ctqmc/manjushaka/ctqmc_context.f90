@@ -992,7 +992,7 @@
      allocate(paux(  9  ),        stat=istat)
      allocate(prob(ncfgs),        stat=istat)
 
-     allocate(nmat(norbs),        stat=istat)
+     allocate(nimp(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
      allocate(knop(norbs),        stat=istat)
      allocate(kmat(norbs,norbs), stat=istat)
@@ -1016,7 +1016,7 @@
      paux  = zero
      prob  = zero
 
-     nmat  = zero
+     nimp  = zero
      nnmat = zero
      knop  = zero
      kmat = zero
@@ -1281,7 +1281,7 @@
      if ( allocated(paux)  )   deallocate(paux )
      if ( allocated(prob)  )   deallocate(prob )
 
-     if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(nimp)  )   deallocate(nimp )
      if ( allocated(nnmat) )   deallocate(nnmat)
      if ( allocated(knop)  )   deallocate(knop )
      if ( allocated(kmat) )   deallocate(kmat)
