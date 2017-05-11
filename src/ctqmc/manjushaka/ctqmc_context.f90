@@ -359,10 +359,19 @@
 !!
      integer, public, save, allocatable  :: flvr_v(:)
 
-! imaginary time \tau for create and destroy operators
+!!
+!! @var time_v
+!!
+!! imaginary time \tau for creation and annihilation operators
+!!
      real(dp), public, save, allocatable :: time_v(:)
 
-! exp(-H\tau), exponent matrix for local hamiltonian multiply \tau (the last point)
+!!
+!! @var expt_t
+!!
+!! resemble exp(-H\tau), exponent matrix for local hamiltonian multiply
+!! \tau (the last point)
+!!
      real(dp), public, save, allocatable :: expt_t(:,:)
 
 ! exp(-H\tau), exponent matrix for local hamiltonian multiply \tau
