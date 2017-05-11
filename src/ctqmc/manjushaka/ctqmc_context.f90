@@ -370,11 +370,16 @@
 !! @var expt_t
 !!
 !! resemble exp(-H\tau), exponent matrix for local hamiltonian multiply
-!! \tau (the last point)
+!! imaginary time \tau (the last point)
 !!
      real(dp), public, save, allocatable :: expt_t(:,:)
 
-! exp(-H\tau), exponent matrix for local hamiltonian multiply \tau
+!!
+!! @var expt_v
+!!
+!! resemble exp(-H\tau), exponent matrix for local hamiltonian multiply
+!! imaginary time \tau
+!!
      real(dp), public, save, allocatable :: expt_v(:,:)
 
   end module ctqmc_flvr
