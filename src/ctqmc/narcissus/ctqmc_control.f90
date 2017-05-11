@@ -57,16 +57,16 @@
 !!
 !! control flag, define whether the Coulomb interaction U is dynamic
 !!
-!! if isscr ==  1:
+!! if isscr == 1:
 !!     static interaction
 !!
-!! if isscr ==  2:
+!! if isscr == 2:
 !!     dynamic interaction, for plasmon pole model
 !!
-!! if isscr ==  3:
+!! if isscr == 3:
 !!     dynamic interaction, for ohmic model
 !!
-!! if isscr == 99:
+!! if isscr == 4:
 !!     dynamic interaction, for realistic materials
 !!
      integer, public, save :: isscr  = 1
