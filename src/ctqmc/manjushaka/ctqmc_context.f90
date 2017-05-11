@@ -86,7 +86,11 @@
 !::: core variables: real, matrix trace                                :::
 !-------------------------------------------------------------------------
 
-! matrix trace of flavor part, current value
+!!
+!! @var mptr
+!!
+!! matrix trace of flavor part, current value
+!!
      real(dp), public, save :: mptr = zero
 
 ! matrix trace of flavor part, proposed value
