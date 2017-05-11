@@ -1007,12 +1007,11 @@
 
 ! initialize them
      hist = zero
-
-     paux = zero
      prob = zero
-
+     paux = zero
      nimp = zero
      nmat = zero
+
      knop = zero
      kmat = zero
      lnop = zero
