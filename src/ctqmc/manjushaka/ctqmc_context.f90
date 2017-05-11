@@ -494,9 +494,9 @@
 !!
      real(dp), public, save, allocatable :: nmat(:,:)
 
-     real(dp), public, save, allocatable :: kmat(:)
+     real(dp), public, save, allocatable :: knop(:)
 
-     real(dp), public, save, allocatable :: kkmat(:,:)
+     real(dp), public, save, allocatable :: kmat(:,:)
 
 ! number of operators at left half axis, < k_l >
      real(dp), public, save, allocatable :: lmat(:)
