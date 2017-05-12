@@ -359,7 +359,7 @@
      if ( isort == 1 ) step = real(ntime - 1) / beta
      if ( isort == 2 ) step = real(legrd - 1) / two
 
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+     FLVR_CYCLE: do flvr=1,norbs
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
@@ -410,10 +410,10 @@
                      curr = nint( daux * step ) + 1
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                     LEG_LOOP: do fleg=1,lemax
+                     LEG_CYCLE: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
-                     enddo LEG_LOOP ! over fleg={1,lemax} loop
+                     enddo LEG_CYCLE ! over fleg={1,lemax} loop
 
                  endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -421,7 +421,7 @@
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
      return
   end subroutine ctqmc_record_gtau
