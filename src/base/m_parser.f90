@@ -5,8 +5,8 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
-!!! purpose : this purpose of this module is to implement a generic and
+!!!           05/12/2017 by li huang (last modified)
+!!! purpose : the purpose of this module is to implement a generic and
 !!!           flexible config/input file reader and analyzer.
 !!! status  : unstable
 !!! comment : this module depends on linkedlist module
