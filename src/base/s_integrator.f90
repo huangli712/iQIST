@@ -6,8 +6,8 @@
 !!! type    : functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/20/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
-!!! purpose : these subroutines are used to do numerical integration with
+!!!           05/12/2017 by li huang (last modified)
+!!! purpose : these functions are used to do numerical integration with
 !!!           composite trapezoid or composite simpson algorithms.
 !!! status  : unstable
 !!! comment :
