@@ -804,6 +804,7 @@
 !!
   subroutine ctqmc_record_sp_t()
      use constants, only : dp, zero
+
      use spring, only : spring_sfmt_stream
 
      use control, only : issus
@@ -1012,6 +1013,7 @@
 !!
   subroutine ctqmc_record_ch_t()
      use constants, only : dp, zero
+
      use spring, only : spring_sfmt_stream
 
      use control, only : issus
@@ -1046,15 +1048,15 @@
 
 ! calculate oaux, obtain occupation status
      oaux = zero
-     TIME_LOOP: do i=1,ntime
+     TIME_CYCLE: do i=1,ntime
          do f1=1,norbs
              call cat_occupy_status(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
-     enddo TIME_LOOP ! over i={1,ntime} loop
+     enddo TIME_CYCLE ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
 
 ! calculate cchi and ch_t
-     do f1=1,norbs
+     FLVR_CYCLE: do f1=1,norbs
          do f2=1,norbs
              do i=1,num_try
                  m = ceiling( spring_sfmt_stream() * ntime )
@@ -1072,7 +1074,7 @@
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
          enddo ! over f2={1,norbs} loop
-     enddo ! over f1={1,norbs} loop
+     enddo FLVR_CYCLE ! over f1={1,norbs} loop
 
      return
   end subroutine ctqmc_record_ch_t
