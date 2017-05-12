@@ -14,7 +14,7 @@
 * Clean testing cases.
 * Clean tutorial files.
 * Update the building system.
-* Improve the code style and comments
+* Improve the code style and comments.
 
 ## v0.6.7 @ c14fdc4 // Jan 13, 2017
 
@@ -26,10 +26,10 @@
 * Add script/u_animator.py which can produce movie using the solver.diag.dat file.
 * Now the CT-QMC impurity solvers can output the solver.diag.dat file.
 * Now the HF-QMC impurity solver can output the solver.diag.dat file.
-* Optimize the algorithm for the calculation of spin-spin correlation function (time space)
-* Optimize the algorithm for the calculation of orbital-orbital correlation function (time space)
-* Implement the measurement of spin-spin correlation function (matsubara space)
-* Implement the measurement of orbital-orbital correlation function (matsubara space)
+* Optimize the algorithm for the calculation of spin-spin correlation function (time space).
+* Optimize the algorithm for the calculation of orbital-orbital correlation function (time space).
+* Implement the measurement of spin-spin correlation function (matsubara space).
+* Implement the measurement of orbital-orbital correlation function (matsubara space).
 * Improve the code styles, fix many typos in comments.
 * Add camellia component. **BUT IT DOES NOT WORK PROPERLY. DON'T USE IT!**
 * Add kurtosis and skewness features in azalea.
@@ -57,19 +57,19 @@
 * Re-design the Python and Fortran APIs.
 * Re-design the output file format.
 * Improve hibiscus to be compatible with the new file formats.
-* Fix a serious bug in hibiscus/toolbox/maketau.f90
+* Fix a serious bug in hibiscus/toolbox/maketau.f90.
 * Refine the examples/tutorials.
-* Improve the code style
+* Improve the code style.
 * Add <k^2> - <k>^2 support for gardenia.
 * Add <k^2> - <k>^2 support for narcissus.
 * Add <k^2> - <k>^2 support for lavender.
 * Add <k^2> - <k>^2 support for manjushaka.
-* Add <k^2> - <k>^2 support for script/u\_reader.py
+* Add <k^2> - <k>^2 support for script/u\_reader.py.
 * Add fidelity susceptibility support for gardenia.
 * Add fidelity susceptibility support for narcissus.
 * Add fidelity susceptibility support for lavender.
 * Add fidelity susceptibility support for manjushaka.
-* Add fidelity susceptibility support for script/u\_reader.py
+* Add fidelity susceptibility support for script/u\_reader.py.
 * Now the iQIST is compatible with the GNU gfortran compiler.
 * Add several templates for make.sys.
 
