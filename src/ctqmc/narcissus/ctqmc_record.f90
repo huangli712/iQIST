@@ -1140,7 +1140,7 @@
      enddo ! over i={1,norbs} loop
 
 ! calculate ch_w, it must be real
-     do f1=1,norbs
+     FLVR_CYCLE: do f1=1,norbs
          do f2=1,f1
              if ( oaux(f2) > zero ) then
                  do it=1,rank(f1)
@@ -1157,7 +1157,7 @@
                  ch_w(:,f1,f2) = ch_w(:,f2,f1)
              endif ! back if ( f1 /= f2 ) block
          enddo ! over f2={1,f1} loop
-     enddo ! over f1={1,norbs} loop
+     enddo FLVR_CYCLE ! over f1={1,norbs} loop
 
      return
   end subroutine ctqmc_record_ch_w
