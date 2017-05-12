@@ -837,15 +837,15 @@
 
 ! calculate oaux, obtain occupation status
      oaux = zero
-     TIME_LOOP: do i=1,ntime
+     TIME_CYCLE: do i=1,ntime
          do f1=1,norbs
              call cat_occupy_status(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
-     enddo TIME_LOOP ! over i={1,ntime} loop
+     enddo TIME_CYCLE ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
 
 ! calculate schi and sp_t
-     do f1=1,nband
+     FLVR_CYCLE: do f1=1,nband
          do i=1,num_try
              m = ceiling( spring_sfmt_stream() * ntime )
              if ( oaux(m,f1) > zero ) then
@@ -882,7 +882,7 @@
                  enddo ! over n={m+1,ntime} loop
              endif ! back if ( oaux(m,f1+nband) > zero ) block
          enddo ! over i={1,num_try} loop
-     enddo ! over f1={1,nband} loop
+     enddo FLVR_CYCLE ! over f1={1,nband} loop
 
      return
   end subroutine ctqmc_record_sp_t
@@ -949,7 +949,7 @@
 
 ! calculate sp_w, it must be real
 ! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
-     do f1=1,nband
+     FLVR_CYCLE: do f1=1,nband
          f2 = f1 + nband
 ! the contribution from oaux(f1) = one and oaux(f2) = one is zero
 ! the contribution from oaux(f1) = zero and oaux(f2) = zero is also zero
@@ -1000,7 +1000,7 @@
                  sp_w(:,f1) = sp_w(:,f1) + real( ( expe - exps ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f2) > zero .and. oaux(f1) < one ) block
-     enddo ! over f1={1,nband} loop
+     enddo FLVR_CYCLE ! over f1={1,nband} loop
 
      return
   end subroutine ctqmc_record_sp_w
