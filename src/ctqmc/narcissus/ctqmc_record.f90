@@ -1240,7 +1240,7 @@
 ! calculate g2aux and h2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP DO PRIVATE (flvr, is, ie, maux, naux, w2n, w1n, caux1, caux2)
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+     FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
          do is=1,rank(flvr)
@@ -1258,13 +1258,13 @@
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 !$OMP END DO
 
 ! calculate g2pw and h2pw
 !$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
-     CTQMC_ORBIT1_LOOP: do f1=1,norbs
-         CTQMC_ORBIT2_LOOP: do f2=1,f1
+     ORB1_CYCLE: do f1=1,norbs
+         ORB2_CYCLE: do f2=1,f1
 
              CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
 
@@ -1288,8 +1288,8 @@
 
              enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
-         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
-     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+         enddo ORB2_CYCLE ! over f2={1,f1} loop
+     enddo ORB1_CYCLE ! over f1={1,norbs} loop
 !$OMP END DO
 !$OMP END PARALLEL
 
