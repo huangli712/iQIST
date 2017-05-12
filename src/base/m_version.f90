@@ -5,8 +5,8 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/26/2017 by li huang (created)
-!!!           04/24/2017 by li huang (last modified)
-!!! purpose : the purpose of this module is to define a version string.
+!!!           05/12/2017 by li huang (last modified)
+!!! purpose : the purpose of this module is to define version strings.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
