@@ -1266,10 +1266,10 @@
      ORB1_CYCLE: do f1=1,norbs
          ORB2_CYCLE: do f2=1,f1
 
-             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+             WB_CYCLE: do wbn=1,nbfrq
 
-                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+                 WF1_CYCLE: do w2n=1,nffrq
+                     WF2_CYCLE: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
 
                          cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
@@ -1283,10 +1283,10 @@
                              cmeas = cmeas - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
                          h2pw(w3n,w2n,wbn,f2,f1) = h2pw(w3n,w2n,wbn,f2,f1) + cmeas / beta
-                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
+                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
 
-             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+             enddo WB_CYCLE ! over wbn={1,nbfrq} loop
 
          enddo ORB2_CYCLE ! over f2={1,f1} loop
      enddo ORB1_CYCLE ! over f1={1,norbs} loop
