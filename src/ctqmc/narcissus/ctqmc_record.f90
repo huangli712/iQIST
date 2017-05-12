@@ -750,7 +750,7 @@
 ! calculate saux, obtain Sz(\tau)
      oaux = zero
      saux = zero
-     TIME_LOOP: do i=1,ntime
+     TIME_CYCLE: do i=1,ntime
          do f1=1,norbs
              call cat_occupy_status(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
@@ -758,12 +758,12 @@
          do f2=1,nband
              saux(i,f2) = oaux(i,f2) - oaux(i,f2+nband)
          enddo ! over f2={1,nband} loop
-     enddo TIME_LOOP ! over i={1,ntime} loop
+     enddo TIME_CYCLE ! over i={1,ntime} loop
 
 ! accumulate szpw(1:4,1:nband)
 ! calculate \delta \tau
      step = ( tmesh(2) - tmesh(1) ) / 2.0
-     BAND_LOOP: do f2=1,nband
+     BAND_CYCLE: do f2=1,nband
 ! calculate sint using trapezoid algorithm
          sint = zero
          do i=1,ntime-1
@@ -775,7 +775,7 @@
          szpw(2,f2) = szpw(2,f2) + sint**2.0
          szpw(3,f2) = szpw(3,f2) + sint**3.0
          szpw(4,f2) = szpw(4,f2) + sint**4.0
-     enddo BAND_LOOP ! over f2={1,nband} loop
+     enddo BAND_CYCLE ! over f2={1,nband} loop
 
 ! accumulate szpw(1:4,nband+1)
 ! here we consider the contribution from all flavors
