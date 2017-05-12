@@ -164,7 +164,7 @@
 !-------------------------------------------------------------------------
 ! prepare sgmt array
 !-------------------------------------------------------------------------
-     SGMT_BLOCK: do flvr=1,norbs
+     SGMT_CYCLE: do flvr=1,norbs
 
 ! case 1: null occupation
          if      ( stts(flvr) == 0 ) then
@@ -194,13 +194,13 @@
 
          endif ! back if ( stts(flvr) == 0 ) block
 
-     enddo SGMT_BLOCK ! over flvr={1,norbs} loop
+     enddo SGMT_CYCLE ! over flvr={1,norbs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 ! prepare ovlp matrix
 !-------------------------------------------------------------------------
-     OVLP_BLOCK: do flvr=1,norbs
+     OVLP_CYCLE: do flvr=1,norbs
 
 ! case 1: null occupation
          if      ( stts(flvr) == 0 ) then
@@ -242,7 +242,7 @@
 
          endif ! back if ( stts(flvr) == 0 ) block
 
-     enddo OVLP_BLOCK ! over flvr={1,norbs} loop
+     enddo OVLP_CYCLE ! over flvr={1,norbs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate < K^4 >
