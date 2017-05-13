@@ -578,8 +578,12 @@
 !!
      integer, public, save, allocatable  :: rank(:)
 
-! diagonal elements of current matrix product of flavor part
-! it is used to calculate the probability of eigenstates
+!!
+!! @var diag
+!!
+!! diagonal elements of current matrix product of flavor part. it is used
+!! to calculate the probability of eigenstates
+!!
      real(dp), public, save, allocatable :: diag(:,:)
 
 !-------------------------------------------------------------------------
@@ -600,13 +604,25 @@
 !!
      real(dp), public, save, allocatable :: eimp(:)
 
-! eigenvalues for local hamiltonian matrix
+!!
+!! @var eigs
+!!
+!! eigenvalues for local hamiltonian matrix
+!!
      real(dp), public, save, allocatable :: eigs(:)
 
-! occupation number for the eigenstates of local hamiltonian matrix
+!!
+!! @var naux
+!!
+!! occupation number for the eigenstates of local hamiltonian matrix
+!!
      real(dp), public, save, allocatable :: naux(:)
 
-! total spin for the eigenstates of local hamiltonian matrix
+!!
+!! @var saux
+!!
+!! total spin for the eigenstates of local hamiltonian matrix
+!!
      real(dp), public, save, allocatable :: saux(:)
 
   end module ctqmc_umat
