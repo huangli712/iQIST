@@ -920,7 +920,11 @@
      return
   end subroutine ctqmc_allocate_memory_clur
 
-!!>>> ctqmc_allocate_memory_flvr: allocate memory for flvr-related variables
+!!
+!! @sub
+!!
+!! allocate memory for flvr-related variables
+!!
   subroutine ctqmc_allocate_memory_flvr()
      implicit none
 
