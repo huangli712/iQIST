@@ -6,13 +6,13 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/11/2017 by li huang (last modified)
+!!!           05/15/2017 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver, respectively.
 !!!           it can be used to save the computational time to reach the
-!!!           equilibrium state
+!!!           equilibrium state.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------

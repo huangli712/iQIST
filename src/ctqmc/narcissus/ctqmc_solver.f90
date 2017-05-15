@@ -6,11 +6,11 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/12/2017 by li huang (last modified)
+!!!           05/15/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
-!!!           random walk, measurement, and finalization algorithms
+!!!           random walk, measurement, and finalization algorithms.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
