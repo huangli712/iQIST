@@ -23,10 +23,10 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/11/2017 by li huang (last modified)
+!!!           05/15/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
-!!!           quantum impurity solver
+!!!           quantum impurity solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
