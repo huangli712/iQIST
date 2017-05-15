@@ -605,20 +605,17 @@
 ! loop index
      integer :: i
      integer :: j
-     integer :: k
 
 ! open data file: solver.frn.dat
      open(mytmp, file='solver.frn.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,norbs
-         do j=1,norbs
-             do k=1,mfreq
-                 write(mytmp,'(2i6,5f16.8)') i, j, rmesh(k), frnf(k,j,i), czero
-             enddo ! over k={1,mfreq} loop
-             write(mytmp,*) ! write empty lines
-             write(mytmp,*)
-         enddo ! over j={1,norbs} loop
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), frnf(j,i,i), czero
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
 ! close data file
