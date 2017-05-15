@@ -14,11 +14,11 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/11/2017 by li huang (last modified)
+!!!           05/15/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
-!!!           mean field theory (DMFT) self-consistent engine
+!!!           mean field theory (DMFT) self-consistent engine.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
