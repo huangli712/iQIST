@@ -997,7 +997,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: k
 
 ! loop index for legendre polynomial
      integer  :: fleg
@@ -1020,11 +1019,9 @@
      STD_BLOCK: if ( isort == 1 ) then
          raux = real(ntime) / (beta * beta)
          do i=1,norbs
-             do j=1,norbs
-                 do k=1,ntime
-                     faux(k,j,i) = ftau(k,j,i) * raux
-                 enddo ! over k={1,ntime} loop
-             enddo ! over j={1,norbs} loop
+             do j=1,ntime
+                 faux(j,i,i) = ftau(j,i,i) * raux
+             enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
      endif STD_BLOCK ! back if ( isort == 1 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1035,16 +1032,14 @@
      LEG_BLOCK: if ( isort == 2 ) then
          step = real(legrd - 1) / two
          do i=1,norbs
-             do j=1,norbs
-                 do k=1,ntime
-                     raux = two * tmesh(k) / beta
-                     curr = nint(raux * step) + 1
-                     do fleg=1,lemax
-                         raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
-                         faux(k,j,i) = faux(k,j,i) + raux * ftau(fleg,j,i)
-                     enddo ! over fleg={1,lemax} loop
-                 enddo ! over k={1,ntime} loop
-             enddo ! over j={1,norbs} loop
+             do j=1,ntime
+                 raux = two * tmesh(j) / beta
+                 curr = nint(raux * step) + 1
+                 do fleg=1,lemax
+                     raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
+                     faux(j,i,i) = faux(j,i,i) + raux * ftau(fleg,i,i)
+                 enddo ! over fleg={1,lemax} loop
+             enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
