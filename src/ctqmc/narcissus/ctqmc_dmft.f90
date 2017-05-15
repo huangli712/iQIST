@@ -7,11 +7,11 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/11/2017 by li huang (last modified)
+!!!           05/15/2017 by li huang (last modified)
 !!! purpose : implement a hybridization expansion version continuous time
 !!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
 !!!           dynamical mean field theory (DMFT) self-consistent engine.
-!!!           it is designed for the Hubbard model on a Bethe lattice
+!!!           it is designed for the Hubbard model on a Bethe lattice.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
