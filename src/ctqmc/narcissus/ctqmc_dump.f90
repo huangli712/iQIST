@@ -298,6 +298,7 @@
      use control, only : isbin
      use control, only : norbs
      use control, only : ntime
+     use control, only : nsweep, nwrite
 
      use context, only : tmesh
 
@@ -313,6 +314,12 @@
      integer  :: i
      integer  :: j
 
+! whether we need to write the solver.green.dat file from scratch
+     integer  :: reset = 1
+
+! counter for data bins
+     integer, save :: nbins = 0
+
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
      real(dp) :: gbar(ntime,norbs,norbs)
@@ -321,12 +328,22 @@
      call ctqmc_make_gtau(tmesh, gtau, gaux)
      call ctqmc_make_gtau(tmesh, gerr, gbar)
 
+! determine reset and nbins
+     if ( nbins == nsweep / nwrite ) then
+         nbins = 1 ! reset the counter to 1
+         reset = 2 ! we have to reset the file
+     else
+         nbins = nbins + 1
+         reset = 1 ! don't need to reset the file
+     endif ! back if ( nbins == nsweep / nwrite ) block
+     print *, isbin, nsweep/nwrite, nbins, reset
+
 ! open data file: solver.green.dat
-     if ( isbin == 1 ) then
+     if ( isbin == 1 .or. reset == 2 ) then
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
      else
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
-     endif ! back if ( isbin == 1 ) block
+     endif ! back if ( isbin == 1 .or. reset == 2 ) block
 
 ! write it
      do i=1,norbs
