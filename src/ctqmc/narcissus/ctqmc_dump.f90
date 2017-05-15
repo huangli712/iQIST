@@ -314,9 +314,6 @@
      integer  :: i
      integer  :: j
 
-! whether we need to write the solver.green.dat file from scratch
-     integer  :: reset = 1
-
 ! counter for data bins
      integer, save :: nbins = 0
 
@@ -331,19 +328,16 @@
 ! determine reset and nbins
      if ( nbins == nsweep / nwrite + 1 ) then
          nbins = 1 ! reset the counter to 1
-         reset = 2 ! we have to reset the file
      else
          nbins = nbins + 1
-         reset = 1 ! don't need to reset the file
      endif ! back if ( nbins == nsweep / nwrite + 1 ) block
-     print *, isbin, nsweep/nwrite, nbins, reset
 
 ! open data file: solver.green.dat
-     if ( isbin == 1 .or. reset == 2 ) then
+     if ( isbin == 1 .or. nbins == 1 ) then
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
      else
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
-     endif ! back if ( isbin == 1 .or. reset == 2 ) block
+     endif ! back if ( isbin == 1 .or. nbins == 1 ) block
 
 ! write it
      do i=1,norbs
