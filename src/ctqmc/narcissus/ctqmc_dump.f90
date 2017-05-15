@@ -329,13 +329,13 @@
      call ctqmc_make_gtau(tmesh, gerr, gbar)
 
 ! determine reset and nbins
-     if ( nbins == nsweep / nwrite ) then
+     if ( nbins == nsweep / nwrite + 1 ) then
          nbins = 1 ! reset the counter to 1
          reset = 2 ! we have to reset the file
      else
          nbins = nbins + 1
          reset = 1 ! don't need to reset the file
-     endif ! back if ( nbins == nsweep / nwrite ) block
+     endif ! back if ( nbins == nsweep / nwrite + 1 ) block
      print *, isbin, nsweep/nwrite, nbins, reset
 
 ! open data file: solver.green.dat
