@@ -378,7 +378,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: k
 
 ! scaled auxiliary correlation function
      real(dp) :: faux(ntime,norbs,norbs)
@@ -393,13 +392,11 @@
 
 ! write it
      do i=1,norbs
-         do j=1,norbs
-             do k=1,ntime
-                 write(mytmp,'(3i6,3f12.6)') i, j, k, tmesh(k), faux(k,j,i), fbar(k,j,i)
-             enddo ! over k={1,ntime} loop
-             write(mytmp,*) ! write empty lines
-             write(mytmp,*)
-         enddo ! over j={1,norbs} loop
+         do j=1,ntime
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), faux(j,i,i), fbar(j,i,i)
+         enddo ! over j={1,ntime} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
 ! close data file
