@@ -247,16 +247,9 @@
 ! impurity green's function
      complex(dp), intent(in)  :: grnf(mfreq,norbs,norbs)
 
-! local variables
-! loop index over orbitals
-     integer :: i
-     integer :: j
-
-     do i=1,norbs
-         do j=1,norbs
-             hybf(:,j,i) = part * part * grnf(:,j,i)
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
+! self-consistent condition is
+!    Delta = t^2 G
+     hybf = part * part * grnf
 
      return
   end subroutine ctqmc_dmft_bethe
