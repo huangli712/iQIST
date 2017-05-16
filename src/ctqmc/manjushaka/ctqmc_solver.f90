@@ -428,7 +428,7 @@
          call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
          gtau = gtau * real(caves)
 
-! the date need to be scaled properly before written
+! the data need to be scaled properly before written
          hist_mpi = hist_mpi * one
          hist_err = hist_err * one
          gtau_mpi = gtau_mpi * real(nmonte)
@@ -439,10 +439,8 @@
 !!========================================================================
 
 ! symmetrize the impurity green's function over spin or over bands
-         if ( issun == 2 .or. isspn == 1 ) then
-             call ctqmc_symm_gtau(symm, gtau_mpi)
-             call ctqmc_symm_gtau(symm, gtau_err)
-         endif ! back if ( issun == 2 .or. isspn == 1 ) block
+         call ctqmc_symm_gtau(symm, gtau_mpi)
+         call ctqmc_symm_gtau(symm, gtau_err)
 
 !!========================================================================
 !!>>> writing immediate results                                        <<<
@@ -455,7 +453,7 @@
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
+             call ctqmc_dump_gtau(gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
