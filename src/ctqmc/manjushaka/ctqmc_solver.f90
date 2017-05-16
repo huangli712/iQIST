@@ -136,8 +136,8 @@
      real(dp), allocatable :: rmat_err(:)
 
 ! used to evaluate fidelity susceptibility < k_l k_r >, for mpi case
-     real(dp), allocatable :: lrmat_mpi(:,:)
-     real(dp), allocatable :: lrmat_err(:,:)
+     real(dp), allocatable :: lrmm_mpi(:,:)
+     real(dp), allocatable :: lrmm_err(:,:)
 
 ! note: for the two-particle quantities, we don't measure the error bars
 ! used to measure two-particle green's function, real part, for mpi case
@@ -177,8 +177,8 @@
      allocate(lmat_err(norbs),             stat=istat)
      allocate(rmat_mpi(norbs),             stat=istat)
      allocate(rmat_err(norbs),             stat=istat)
-     allocate(lrmat_mpi(norbs,norbs),      stat=istat)
-     allocate(lrmat_err(norbs,norbs),      stat=istat)
+     allocate(lrmm_mpi(norbs,norbs),      stat=istat)
+     allocate(lrmm_err(norbs,norbs),      stat=istat)
      allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
@@ -487,11 +487,11 @@
 
 ! collect the fidelity susceptibility data from lmat to lmat_mpi
 ! collect the fidelity susceptibility data from rmat to rmat_mpi
-! collect the fidelity susceptibility data from lrmat to lrmat_mpi
+! collect the fidelity susceptibility data from lrmm to lrmm_mpi
      lmat  = lmat  / real(caves)
      rmat  = rmat  / real(caves)
-     lrmat = lrmat / real(caves)
-     call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
+     lrmm = lrmm / real(caves)
+     call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmm_mpi, lmat_err, rmat_err, lrmm_err)
 
 ! collect the two-particle green's function from g2_re to g2_re_mpi
 ! collect the two-particle green's function from g2_im to g2_im_mpi
@@ -524,7 +524,7 @@
      kkmat = kkmat_mpi * real(nmonte)
      lmat  = lmat_mpi  * real(nmonte)
      rmat  = rmat_mpi  * real(nmonte)
-     lrmat = lrmat_mpi * real(nmonte)
+     lrmm = lrmm_mpi * real(nmonte)
 
      g2_re = g2_re_mpi * real(nmonte)
      g2_im = g2_im_mpi * real(nmonte)
@@ -545,7 +545,7 @@
      kkmat_err = kkmat_err * real(nmonte)
      lmat_err  = lmat_err  * real(nmonte)
      rmat_err  = rmat_err  * real(nmonte)
-     lrmat_err = lrmat_err * real(nmonte)
+     lrmm_err = lrmm_err * real(nmonte)
 
      gtau_err  = gtau_err  * real(ncarlo)
      grnf_err  = grnf_err  * real(nmonte)
@@ -608,9 +608,9 @@
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
      endif ! back if ( myid == master ) block
 
-! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
+! write out the final fidelity susceptibility data, lmat, rmat, and lrmm
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
+         call ctqmc_dump_lmat(lmat, rmat, lrmm, lmat_err, rmat_err, lrmm_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
@@ -674,8 +674,8 @@
      deallocate(lmat_err )
      deallocate(rmat_mpi )
      deallocate(rmat_err )
-     deallocate(lrmat_mpi)
-     deallocate(lrmat_err)
+     deallocate(lrmm_mpi)
+     deallocate(lrmm_err)
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
      deallocate(ps_re_mpi)
