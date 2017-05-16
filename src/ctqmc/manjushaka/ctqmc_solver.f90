@@ -44,8 +44,6 @@
      use control, only : nmonte
      use control, only : myid, master
 
-     use context, only : caves
-     use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat
      use context, only : kmat, kkmat
@@ -54,6 +52,7 @@
      use context, only : symm, naux, saux
      use context, only : gtau, grnf
      use context, only : sig2
+     use context, only : caves
 
      implicit none
 
