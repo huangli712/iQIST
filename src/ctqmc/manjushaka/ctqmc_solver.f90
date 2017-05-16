@@ -218,26 +218,24 @@
 !!>>> starting quantum impurity solver                                 <<<
 !!========================================================================
 
-! print the header of continuous time quantum Monte Carlo quantum impurity solver
+! print the header of continuous time quantum Monte Carlo quantum impurity
+! solver. it contains important information about the control parameters
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
-         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
-         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
-         write(mystd,*)
+         call ctqmc_print_control()
      endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> initializing quantum impurity solver                             <<<
 !!========================================================================
 
-! init the continuous time quantum Monte Carlo quantum impurity solver
-! setup the key variables
+! init or reset the continuous time quantum Monte Carlo quantum impurity
+! solver, the key variables and arrays should be prepared here
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
-     call ctqmc_solver_init()
+     call ctqmc_reset_array()
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time infornopion
