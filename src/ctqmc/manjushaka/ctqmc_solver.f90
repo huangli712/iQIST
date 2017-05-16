@@ -291,6 +291,16 @@
 ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
+         write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING BEGINS'
+         select case (iswor)
+
+             case (1)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z)'
+
+             case (2)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z U C_G)'
+
+         end select
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
