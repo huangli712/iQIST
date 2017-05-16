@@ -19,9 +19,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_print_header: print the startup information for continuous
-!!>>> time quantum Monte Carlo quantum impurity solver plus dynamical
-!!>>> mean field theory self-consistent engine
+!!
+!! @sub ctqmc_print_header
+!!
+!! print the startup information for continuous time quantum Monte Carlo
+!! quantum impurity solver plus dynamical mean field theory engine
+!!
   subroutine ctqmc_print_header()
      use constants, only : mystd
 
