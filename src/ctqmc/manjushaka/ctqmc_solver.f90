@@ -680,9 +680,24 @@
 !!>>> saving quantum impurity solver                                   <<<
 !!========================================================================
 
+! start to save the diagrammatic information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'quantum impurity solver saving'
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_begin) ! record starting time
+
 ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_end) ! record ending time
+
+! print the time information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
      endif ! back if ( myid == master ) block
 
 !!========================================================================
