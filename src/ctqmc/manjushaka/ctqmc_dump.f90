@@ -305,18 +305,19 @@
 !!
 !! write out impurity green's function in imaginary time space
 !!
-  subroutine ctqmc_dump_gtau(tmesh, gtau, gerr)
+  subroutine ctqmc_dump_gtau(gtau, gerr)
      use constants, only : dp, mytmp
 
+     use control, only : isbin
      use control, only : norbs
      use control, only : ntime
+     use control, only : nsweep, nwrite
+
+     use context, only : tmesh
 
      implicit none
 
 ! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
      real(dp), intent(in) :: gerr(ntime,norbs,norbs)
@@ -325,6 +326,9 @@
 ! loop index
      integer  :: i
      integer  :: j
+
+! counter for data bins
+     integer, save :: nbins = 0
 
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
