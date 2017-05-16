@@ -524,13 +524,13 @@
 
      call cpu_time(time_begin) ! record starting time
 
-     prob  = prob  / real(caves)
-     nmat  = nmat  / real(caves)
-     nnmat = nnmat / real(caves)
-     kmat  = kmat  / real(caves)
-     kkmat = kkmat / real(caves)
-     lnop  = lnop  / real(caves)
-     rnop  = rnop  / real(caves)
+     prob = prob / real(caves)
+     nimp = nimp / real(caves)
+     nmat = nmat / real(caves)
+     knop = knop / real(caves)
+     kmat = kmat / real(caves)
+     lnop = lnop / real(caves)
+     rnop = rnop / real(caves)
      lrmm = lrmm / real(caves)
      g2_re = g2_re / real(caves)
      g2_im = g2_im / real(caves)
@@ -551,10 +551,11 @@
          call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
          call ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
-         call ctqmc_reduce_lnop(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
+         call ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
+         call ctqmc_reduce_szpw(szpw_mpi, szpw_err)
 
-         call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-         call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+         call ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
+         call ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
 
      END BLOCK COLLECT_DATA
 
