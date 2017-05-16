@@ -1,16 +1,19 @@
 !!!-----------------------------------------------------------------------
 !!! project : manjushaka
-!!! program : ctqmc_dump_gtau
-!!!           ctqmc_dump_wtau
-!!!           ctqmc_dump_htau
-!!!           ctqmc_dump_grnf
-!!!           ctqmc_dump_wssf
-!!!           ctqmc_dump_hybf
-!!!           ctqmc_dump_sigf
-!!!           ctqmc_dump_hub1
-!!!           ctqmc_dump_hist
+!!! program : ctqmc_dump_hist
 !!!           ctqmc_dump_prob
-!!!           ctqmc_dump_nmat
+!!!           ctqmc_dump_paux
+!!!           ctqmc_dump_nmat <<<---
+!!!           ctqmc_dump_gtau
+!!!           ctqmc_dump_ftau
+!!!           ctqmc_dump_htau
+!!!           ctqmc_dump_wtau <<<---
+!!!           ctqmc_dump_grnf
+!!!           ctqmc_dump_frnf
+!!!           ctqmc_dump_hybf
+!!!           ctqmc_dump_wssf
+!!!           ctqmc_dump_sigf <<<---
+!!!           ctqmc_dump_hub1
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lmat
 !!!           ctqmc_dump_twop
