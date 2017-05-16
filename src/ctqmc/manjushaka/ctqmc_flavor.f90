@@ -1523,7 +1523,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     is = i
-     call ctqmc_make_search( is, nsize, tau_start )
+     call cat_find_operator( is, nsize, tau_start )
 
 ! determine ie
 !<     i = 1
@@ -1531,7 +1531,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     ie = i
-     call ctqmc_make_search( ie, nsize, tau_end )
+     call cat_find_operator( ie, nsize, tau_end )
 
 ! adjust ie further, since we remove create operator firstly, and then
 ! remove destroy operator
@@ -1663,7 +1663,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     iso = i
-     call ctqmc_make_search( iso, nsize, tau_start1 )
+     call cat_find_operator( iso, nsize, tau_start1 )
 
 ! determine isn
      isn = 1
@@ -1824,7 +1824,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     ieo = i
-     call ctqmc_make_search( ieo, nsize, tau_end1 )
+     call cat_find_operator( ieo, nsize, tau_end1 )
 
 ! determine ien
      ien = 1
@@ -2548,9 +2548,9 @@
      return
   end subroutine cat_comp_operator
 
-!!>>> ctqmc_make_search: determine index address of operators in the
+!!>>> cat_find_operator: determine index address of operators in the
 !!>>> flavor part using bisection algorithm
-  subroutine ctqmc_make_search(addr, ndim, time)
+  subroutine cat_find_operator(addr, ndim, time)
      use constants, only : dp
 
      use context, only : index_v, time_v
@@ -2599,7 +2599,7 @@
      endif ! back if ( time_v( index_v(khi) ) == time ) block
 
      return
-  end subroutine ctqmc_make_search
+  end subroutine cat_find_operator
 
 !!========================================================================
 !!>>> service layer: utility subroutines to build colour and flavor    <<<
