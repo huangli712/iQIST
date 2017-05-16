@@ -143,6 +143,9 @@
 !! if isort == 2:
 !!     using legendre orthogonal polynomial representation
 !!
+!! if isort == 3:
+!!     using intermediate (singular value decomposition) representation 
+!!
      integer, public, save :: isort  = 1
 
 !!
@@ -399,7 +402,7 @@
 !! in this code, nowadays the following flip schemes are supported:
 !!
 !! if nflip == 0:
-!!     means infinite long period to do flip. do not do the spin flip
+!!     means infinite long period to do flip. do not flip the spins
 !!
 !! if nflip >  0:
 !!     flip intra-orbital spins one by one (90%) and globally (10%)
