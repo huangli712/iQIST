@@ -114,9 +114,13 @@
      return
   end subroutine ctqmc_print_footer
 
-!!>>> ctqmc_print_summary: print the running parameters, only for reference
+!!
+!! @sub ctqmc_print_summary
+!!
+!! print the running parameters, only for reference
+!!
   subroutine ctqmc_print_summary()
-     use constants, only : mystd, ev2k
+     use constants, only : mystd
 
      use control ! ALL
 
