@@ -572,34 +572,29 @@
 ! update original data
      UPDATE_DATA: BLOCK
 
-         hist = hist_mpi * one
-         prob = prob_mpi * real(nmonte)
-         paux = paux_mpi * real(nmonte)
-         nimp = nimp_mpi * real(nmonte)
-         nmat = nmat_mpi * real(nmonte)
+         hist = hist_mpi
+         prob = prob_mpi
+         paux = paux_mpi
+         nimp = nimp_mpi
+         nmat = nmat_mpi
 
-         gtau = gtau_mpi * real(nmonte)
-         grnf = grnf_mpi * real(nmonte)
+         gtau = gtau_mpi
+         grnf = grnf_mpi
 
-         knop = knop_mpi * real(nmonte)
-         kmat = kmat_mpi * real(nmonte)
-         lnop = lnop_mpi * real(nmonte)
-         rnop = rnop_mpi * real(nmonte)
-         lrmm = lrmm_mpi * real(nmonte)
-         szpw = szpw_mpi * real(nmonte)
+         knop = knop_mpi
+         kmat = kmat_mpi
+         lnop = lnop_mpi
+         rnop = rnop_mpi
+         lrmm = lrmm_mpi
+         szpw = szpw_mpi
 
-         g2pw = g2pw_mpi * real(nmonte)
-         h2pw = h2pw_mpi * real(nmonte)
-         p2pw = p2pw_mpi * real(nmonte)
+         g2pw = g2pw_mpi
+         h2pw = h2pw_mpi
+         p2pw = p2pw_mpi
 
      END BLOCK UPDATE_DATA
 
-! build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the impurity green's function can be obtained by
-! using dyson's equation finally
-     call ctqmc_make_hub1()
+     call ctqmc_make_hub2()
 
 !!========================================================================
 !!>>> symmetrizing final results                                       <<<
