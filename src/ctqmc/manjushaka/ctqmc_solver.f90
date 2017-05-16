@@ -44,7 +44,7 @@
      use control, only : nmonte              ! interval for measurement
      use control, only : myid, master        ! mpi environment
                                              !
-     use context, only : caves
+     use context, only : caves               ! averaged sign values 
                                              !
      use context, only : hist                ! histogram
      use context, only : prob                ! atomic eigenstate probability
