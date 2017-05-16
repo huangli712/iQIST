@@ -20,9 +20,6 @@
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
-!!!           ctqmc_lazy_ztrace
-!!!           ctqmc_retrieve_ztrace
-!!!           ctqmc_make_evolve <<<---
 !!!           ctqmc_make_equate
 !!!           ctqmc_make_search <<<---
 !!!           ctqmc_make_colour
