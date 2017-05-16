@@ -326,7 +326,7 @@
 !!
 !! @var empty_v
 !!
-!! container for the empty (unoccupied) memory address index of operators
+!! container for the empty (unoccupied) memory address index
 !!
      type (istack), public, save :: empty_v
 
