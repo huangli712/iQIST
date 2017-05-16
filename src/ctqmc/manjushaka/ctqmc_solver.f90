@@ -67,7 +67,7 @@
      implicit none
 
 ! external arguments
-! current self-consistent iteration number
+! current iteration number for self-consistent cycle
      integer, intent(in) :: iter
 
 ! local variables
@@ -81,11 +81,10 @@
 ! current QMC sweeping steps
      integer  :: cstep
 
-! control flag, whether the solver is checked periodically
-! cflag = 0  , do not check the quantum impurity solver
-! cflag = 1  , check the quantum impurity solver periodically
-! cflag = 99 , the quantum impurity solver is out of control
-! cflag = 100, the quantum impurity solver has reached convergence
+! control flag, whether the solver should be checked periodically
+! cflag = 0 , do not check the quantum impurity solver
+! cflag = 1 , check the quantum impurity solver periodically
+! cflag = 99, the quantum impurity solver is out of control
      integer  :: cflag
 
 ! starting time
