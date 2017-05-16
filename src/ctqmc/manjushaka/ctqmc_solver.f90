@@ -168,6 +168,8 @@
      allocate(hist_err(mkink),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
      allocate(prob_err(ncfgs),             stat=istat)
+     allocate(paux_mpi(  9  ),             stat=istat)
+     allocate(paux_err(  9  ),             stat=istat)
      allocate(nmat_mpi(norbs),             stat=istat)
      allocate(nmat_err(norbs),             stat=istat)
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
