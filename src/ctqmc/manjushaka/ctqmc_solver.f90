@@ -155,11 +155,11 @@
      complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
 
-! impurity green's function, imaginary time axis, for mpi case
-     real(dp), allocatable :: gtau_mpi(:,:,:)
-     real(dp), allocatable :: gtau_err(:,:,:)
+! impurity green's function in imaginary time axis
+     real(dp), allocatable    :: gtau_mpi(:,:,:)
+     real(dp), allocatable    :: gtau_err(:,:,:)
 
-! impurity green's function, matsubara frequency axis, for mpi case
+! impurity green's function in matsubara frequency axis
      complex(dp), allocatable :: grnf_mpi(:,:,:)
      complex(dp), allocatable :: grnf_err(:,:,:)
 
