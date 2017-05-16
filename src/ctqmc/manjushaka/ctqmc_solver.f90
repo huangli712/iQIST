@@ -44,10 +44,15 @@
      use control, only : nmonte
      use control, only : myid, master
 
-     use context, only : hist, prob
-     use context, only : nmat, nnmat
-     use context, only : kmat, kkmat
-     use context, only : lmat, rmat, lrmat
+     use context, only : hist
+     use context, only : prob
+     use context, only : paux
+     use context, only : nimp, nmat
+
+     use context, only : knop, kmat
+     use context, only : lnop, rnop, lrmm
+     use context, only : szpw
+
      use context, only : g2_re, g2_im, ps_re, ps_im
      use context, only : symm, naux, saux
      use context, only : gtau, grnf
