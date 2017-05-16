@@ -15,8 +15,16 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
-!!>>> continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> core subroutines for quantum impurity solver                     <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_impurity_solver
+!!
+!! core engine for hybridization expansion version continuous time quantum
+!! Monte Carlo quantum impurity solver
+!!
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
 
