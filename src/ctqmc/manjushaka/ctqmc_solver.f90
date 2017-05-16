@@ -265,20 +265,20 @@
      endif ! back if ( myid == master ) block
 
 !!========================================================================
-!!>>> warmming quantum impurity solver                                 <<<
+!!>>> warming quantum impurity solver                                  <<<
 !!========================================================================
 
-! warmup the continuous time quantum Monte Carlo quantum impurity solver,
+! warmup the continuous time quantum Monte Carlo quantum impurity solver
 ! in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
-     call ctqmc_diagram_warmming()
-     call cpu_time(time_end)   ! record ending   time
+     call ctqmc_try_warming()
+     call cpu_time(time_end) ! record ending time
 
-! print the time infornopion
+! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
