@@ -44,6 +44,8 @@
      use control, only : nmonte
      use control, only : myid, master
 
+     use context, only : caves
+
      use context, only : hist
      use context, only : prob
      use context, only : paux
@@ -57,10 +59,10 @@
      use context, only : h2pw
      use context, only : p2pw
 
-     use context, only : symm, naux, saux
-     use context, only : gtau, grnf
+     use context, only : symm
+     use context, only : gtau
+     use context, only : grnf
      use context, only : sig2
-     use context, only : caves
 
      implicit none
 
