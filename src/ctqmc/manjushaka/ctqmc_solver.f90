@@ -119,13 +119,13 @@
      real(dp), allocatable :: nmat_mpi(:,:)
      real(dp), allocatable :: nmat_err(:,:)
 
-! number of operators < k >, for mpi case
-     real(dp), allocatable :: kmat_mpi(:)
-     real(dp), allocatable :: kmat_err(:)
+! number of operators, < k >
+     real(dp), allocatable :: knop_mpi(:)
+     real(dp), allocatable :: knop_err(:)
 
-! square of number of operators < k^2 >, for mpi case
-     real(dp), allocatable :: kkmat_mpi(:,:)
-     real(dp), allocatable :: kkmat_err(:,:)
+! crossing product of k_i and k_j, < k_i k_j >
+     real(dp), allocatable :: kmat_mpi(:,:)
+     real(dp), allocatable :: kmat_err(:,:)
 
 ! number of operators at left half axis < k_l >, for mpi case
      real(dp), allocatable :: lmat_mpi(:)
