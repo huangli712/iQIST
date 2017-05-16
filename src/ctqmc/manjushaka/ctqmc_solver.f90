@@ -547,20 +547,14 @@
          call ctqmc_reduce_paux(paux_mpi, paux_err)
          call ctqmc_reduce_nmat(nimp_mpi, nmat_mpi, nimp_err, nmat_err)
 
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
+         call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
-     call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
+         call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
+         call ctqmc_reduce_lnop(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
 
-     call ctqmc_reduce_lnop(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
-
-
-     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-
-
-     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
-
-     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
-
-     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+         call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
+         call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
      END BLOCK COLLECT_DATA
 
