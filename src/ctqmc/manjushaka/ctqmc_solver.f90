@@ -470,7 +470,7 @@
 ! record ending time for this iteration
          call cpu_time(time_end)
 
-! calculate timing infornopion
+! calculate timing information
          time_cur = time_end - time_begin
          time_sum = time_sum + time_cur
          time_begin = time_end
@@ -676,7 +676,7 @@
 !!>>> saving quantum impurity solver                                   <<<
 !!========================================================================
 
-! save the perturbation expansion series infornopion to the disk file
+! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
      endif ! back if ( myid == master ) block
