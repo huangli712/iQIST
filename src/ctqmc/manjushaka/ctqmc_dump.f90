@@ -834,10 +834,10 @@
 ! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
      do i=1,norbs
-         write(mytmp,'(i6,4f12.6)') i, lmat(i), rmat(i), lerr(i), rerr(i)
+         write(mytmp,'(i6,4f12.6)') i, lnop(i), rnop(i), lerr(i), rerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'l_sum', sum( lmat ), sum( lerr )
-     write(mytmp,'(a6,2f12.6)') 'r_sum', sum( rmat ), sum( rerr )
+     write(mytmp,'(a6,2f12.6)') 'l_sum', sum( lnop ), sum( lerr )
+     write(mytmp,'(a6,2f12.6)') 'r_sum', sum( rnop ), sum( rerr )
 
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
@@ -852,7 +852,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_lmat
+  end subroutine ctqmc_dump_lrmm
 
 !!
 !! @sub ctqmc_dump_szpw
