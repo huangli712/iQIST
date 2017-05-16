@@ -837,6 +837,59 @@
      return
   end subroutine ctqmc_dump_lmat
 
+!!
+!! @sub ctqmc_dump_szpw
+!!
+!! write out the powers of local magnetization, which can be used to
+!! calculate the binder cumulant
+!!
+  subroutine ctqmc_dump_szpw(szpw, serr)
+     use constants, only : dp, mytmp
+
+     use control, only : isobs
+     use control, only : nband, norbs
+
+     implicit none
+
+! external arguments
+! powers of local magnetization
+     real(dp), intent(in) :: szpw(4,norbs)
+     real(dp), intent(in) :: serr(4,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! check if we need to dump the powers of local magnetization data
+! to solver.szpw.dat
+     if ( .not. btest(isobs, 3) ) RETURN
+
+! open data file: solver.szpw.dat
+     open(mytmp, file='solver.szpw.dat', form='formatted', status='unknown')
+
+! write it
+     do j=1,nband
+         write(mytmp,'(a,i6)') '# flvr:', j
+         do i=1,4
+             write(mytmp,'(i4,2f12.6)') i, szpw(i,j), serr(i,j)
+         enddo ! over i={1,4} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over j={1,nband} loop
+     write(mytmp,'(a,i6)') '# flvr:', 8888
+     do i=1,4
+         write(mytmp,'(i4,2f12.6)') i, szpw(i,nband+1), serr(i,nband+1)
+     enddo ! over i={1,4} loop
+     write(mytmp,*) ! write empty lines
+     write(mytmp,*)
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_szpw
+
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
 !!>>> full (reducible) vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
