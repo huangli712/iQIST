@@ -334,6 +334,10 @@
                  call ctqmc_record_prob()
              endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
+! record the auxiliary physical observables
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_paux()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 
 ! record the impurity (double) occupation number matrix and other
