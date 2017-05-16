@@ -13,11 +13,12 @@
 !!!           ctqmc_dump_hybf
 !!!           ctqmc_dump_wssf
 !!!           ctqmc_dump_sigf <<<---
-!!!           ctqmc_dump_hub1
 !!!           ctqmc_dump_kmat
-!!!           ctqmc_dump_lmat
+!!!           ctqmc_dump_lrmm
+!!!           ctqmc_dump_szpw <<<---
 !!!           ctqmc_dump_twop
-!!!           ctqmc_dump_pair
+!!!           ctqmc_dump_pair <<<---
+!!!           ctqmc_dump_diag <<<---
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
