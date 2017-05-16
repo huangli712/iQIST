@@ -928,7 +928,7 @@
   end subroutine cat_alloc_clur
 
 !!
-!! @sub
+!! @sub cat_alloc_flvr
 !!
 !! allocate memory for flvr-related variables
 !!
