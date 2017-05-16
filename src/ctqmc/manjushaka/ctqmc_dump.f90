@@ -675,20 +675,22 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
-!!>>> frequency space
-  subroutine ctqmc_dump_sigf(rmesh, sigf)
+!!
+!! @sub ctqmc_dump_sigf
+!!
+!! write out self-energy function in matsubara frequency space
+!!
+  subroutine ctqmc_dump_sigf(sigf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
      use control, only : mfreq
 
+     use context, only : rmesh
+
      implicit none
 
 ! external arguments
-! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
-
 ! self-energy function
      complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
 
