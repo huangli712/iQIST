@@ -308,46 +308,6 @@
      return
   end subroutine ctqmc_dump_gtau
 
-!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
-!!>>> time space
-  subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants, only : dp, zero, mytmp
-
-     use control, only : norbs
-     use control, only : ntime
-
-     implicit none
-
-! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! bath weiss's function
-     real(dp), intent(in) :: wtau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.weiss.dat
-     open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,norbs
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_wtau
-
 !!>>> ctqmc_dump_htau: write out hybridization function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
@@ -387,6 +347,46 @@
 
      return
   end subroutine ctqmc_dump_htau
+
+!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
+!!>>> time space
+  subroutine ctqmc_dump_wtau(tmesh, wtau)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : ntime
+
+     implicit none
+
+! external arguments
+! imaginary time mesh
+     real(dp), intent(in) :: tmesh(ntime)
+
+! bath weiss's function
+     real(dp), intent(in) :: wtau(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.weiss.dat
+     open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,ntime
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
+         enddo ! over j={1,ntime} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_wtau
 
 !!========================================================================
 !!>>> dump data on matsubara frequency axis                            <<<
