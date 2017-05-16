@@ -890,6 +890,14 @@
      return
   end subroutine ctqmc_dump_szpw
 
+!!========================================================================
+!!>>> dump data of physical observables 4                              <<<
+!!========================================================================
+
+!!========================================================================
+!!>>> dump data of physical observables 5                              <<<
+!!========================================================================
+
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
 !!>>> full (reducible) vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
