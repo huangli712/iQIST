@@ -90,12 +90,14 @@
 
 ! task 3: calculate new bath weiss's function
 !-------------------------------------------------------------------------
-! \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
+! determine effective chemical potential using
+!     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
+! where N is the number of bands
      qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
      qmune = mune - qmune
 
-! apply dyson equation
-! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
+! apply dyson equation to get G^{-1}_0
+!     G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
              wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
