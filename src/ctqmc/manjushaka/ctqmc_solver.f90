@@ -127,11 +127,11 @@
      real(dp), allocatable :: kmat_mpi(:,:)
      real(dp), allocatable :: kmat_err(:,:)
 
-! number of operators at left half axis < k_l >, for mpi case
+! number of operators at left half axis, < k_l >
      real(dp), allocatable :: lnop_mpi(:)
      real(dp), allocatable :: lnop_err(:)
 
-! number of operators at right half axis < k_r >, for mpi case
+! number of operators at right half axis, < k_r >
      real(dp), allocatable :: rnop_mpi(:)
      real(dp), allocatable :: rnop_err(:)
 
