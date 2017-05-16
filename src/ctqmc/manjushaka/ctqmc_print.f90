@@ -9,13 +9,12 @@
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           05/16/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
-!!!           -consistent engine
+!!!           -consistent engine.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
