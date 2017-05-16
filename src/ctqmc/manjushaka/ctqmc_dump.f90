@@ -403,8 +403,11 @@
      return
   end subroutine ctqmc_dump_ftau
 
-!!>>> ctqmc_dump_htau: write out hybridization function in imaginary
-!!>>> time space
+!!
+!! @sub ctqmc_dump_htau
+!!
+!! write out hybridization function in imaginary time space
+!!
   subroutine ctqmc_dump_htau(tmesh, htau)
      use constants, only : dp, zero, mytmp
 
