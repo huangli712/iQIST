@@ -273,18 +273,20 @@
 !! @sub ctqmc_print_runtime
 !!
 !! print the runtime information, including some physical observables and
+!! statistic data, only for reference
 !!
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : dp, one, half, mystd
 
-     use control, only : cname
-     use control, only : nsweep, nmonte
+     use control, only : nsweep
+     use control, only : nmonte
+
      use context, only : cnegs, caves
-     use context, only : insert_tcount, insert_accept, insert_reject
-     use context, only : remove_tcount, remove_accept, remove_reject
-     use context, only : lshift_tcount, lshift_accept, lshift_reject
-     use context, only : rshift_tcount, rshift_accept, rshift_reject
-     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : ins_t, ins_a, ins_r
+     use context, only : remove_t, remove_a, remove_r
+     use context, only : lshift_t, lshift_a, lshift_r
+     use context, only : rshift_t, rshift_a, rshift_r
+     use context, only : reflip_t, reflip_a, reflip_r
      use context, only : paux
 
      implicit none
