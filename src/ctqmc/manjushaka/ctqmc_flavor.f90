@@ -250,12 +250,6 @@
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ie == nsize + 1 ) block
 
-!-------------------------------------------------------------------------
-! stage 3: evaluate trace ratio
-!-------------------------------------------------------------------------
-! evaluate trace_ratio
-     trace_ratio = matrix_ntrace / matrix_ptrace
-
      return
   end subroutine cat_insert_ztrace
 
