@@ -423,18 +423,17 @@
 !!
 !! write out hybridization function in imaginary time space
 !!
-  subroutine ctqmc_dump_htau(tmesh, htau)
+  subroutine ctqmc_dump_htau(htau)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
      use control, only : ntime
 
+     use context, only : tmesh
+
      implicit none
 
 ! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
 ! hybridization function
      real(dp), intent(in) :: htau(ntime,norbs,norbs)
 
