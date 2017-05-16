@@ -192,8 +192,8 @@
      use control, only : cname               ! code name
                                              !
      use control, only : isscf               ! control running scheme
-     use control, only : isscr               ! control dynamic interaction
      use control, only : isbnd, isspn        ! control symmetry
+     use control, only : isopt, iscut        ! control optimized algorithms
      use control, only : isbin, iswor, isort ! control measurement tricks
      use control, only : isobs, issus, isvrt ! control physical observables
 
