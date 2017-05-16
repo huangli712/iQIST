@@ -115,9 +115,9 @@
      real(dp), allocatable :: nimp_mpi(:)
      real(dp), allocatable :: nimp_err(:)
 
-! impurity double occupation number matrix, for mpi case
-     real(dp), allocatable :: nnmat_mpi(:,:)
-     real(dp), allocatable :: nnmat_err(:,:)
+! impurity double occupation number matrix, < n_i n_j >
+     real(dp), allocatable :: nmat_mpi(:,:)
+     real(dp), allocatable :: nmat_err(:,:)
 
 ! number of operators < k >, for mpi case
      real(dp), allocatable :: kmat_mpi(:)
