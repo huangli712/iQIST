@@ -111,9 +111,9 @@
      real(dp), allocatable :: paux_mpi(:)
      real(dp), allocatable :: paux_err(:)
 
-! impurity occupation number matrix, for mpi case
-     real(dp), allocatable :: nmat_mpi(:)
-     real(dp), allocatable :: nmat_err(:)
+! impurity occupation number
+     real(dp), allocatable :: nimp_mpi(:)
+     real(dp), allocatable :: nimp_err(:)
 
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
