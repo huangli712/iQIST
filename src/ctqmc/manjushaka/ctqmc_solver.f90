@@ -550,7 +550,7 @@
          call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
          call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
-         call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
+         call ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
          call ctqmc_reduce_lnop(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
 
          call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
