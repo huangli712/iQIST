@@ -79,9 +79,12 @@
      return
   end subroutine ctqmc_print_header
 
-!!>>> ctqmc_print_footer: print the ending information for continuous time
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
-!!>>> theory self-consistent engine
+!!
+!! @sub ctqmc_print_footer
+!!
+!! print the ending information for continuous time quantum Monte Carlo
+!! quantum impurity solver plus dynamical mean field theory engine
+!!
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
 
@@ -89,6 +92,7 @@
 
      implicit none
 
+! local variables
 ! string for current date and time
      character (len = 20) :: date_time_string
 
