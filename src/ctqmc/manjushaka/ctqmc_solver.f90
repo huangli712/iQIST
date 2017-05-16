@@ -30,11 +30,11 @@
 
      use control, only : cname               ! code name
                                              !
-     use control, only : iswor
-     use control, only : isobs
-     use control, only : issus
-     use control, only : isvrt
-
+     use control, only : iswor               ! worm algorithm
+     use control, only : isobs               ! control physical observables
+     use control, only : issus               ! control spin and charge susceptibility
+     use control, only : isvrt               ! control two-particle quantities
+                                             !
      use control, only : nband, norbs, ncfgs ! size of model hamiltonian
      use control, only : mkink
      use control, only : mfreq
