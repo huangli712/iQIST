@@ -524,20 +524,29 @@
 
      call cpu_time(time_begin) ! record starting time
 
-     prob = prob / real(caves)
-     paux = paux / real(caves)
-     nimp = nimp / real(caves)
-     nmat = nmat / real(caves)
-     knop = knop / real(caves)
-     kmat = kmat / real(caves)
-     lnop = lnop / real(caves)
-     rnop = rnop / real(caves)
-     lrmm = lrmm / real(caves)
-     g2pw = g2pw / real(caves)
-     h2pw = h2pw / real(caves)
-     p2pw = p2pw / real(caves)
-     gtau = gtau / real(caves)
-     grnf = grnf / real(caves)
+! prepare data before mpi reduce
+     PREPARE_DATA: BLOCK
+
+         hist = hist / one
+         prob = prob / real(caves)
+         paux = paux / one
+         nimp = nimp / real(caves)
+         nmat = nmat / real(caves)
+
+         gtau = gtau / real(caves)
+         grnf = grnf / real(caves)
+
+         knop = knop / real(caves)
+         kmat = kmat / real(caves)
+         lnop = lnop / real(caves)
+         rnop = rnop / real(caves)
+         lrmm = lrmm / real(caves)
+
+         g2pw = g2pw / real(caves)
+         h2pw = h2pw / real(caves)
+         p2pw = p2pw / real(caves)
+
+     END BLOCK PREPARE_DATA
 
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
@@ -559,6 +568,10 @@
 
      END BLOCK COLLECT_DATA
 
+! update original data and calculate the averages simultaneously
+! average value section
+     AVERAGE_DATA: BLOCK
+
      hist = hist_mpi * one
      prob = prob_mpi * real(nmonte)
 
@@ -577,8 +590,12 @@
      gtau = gtau_mpi * real(nmonte)
      grnf = grnf_mpi * real(nmonte)
 
+     END BLOCK AVERAGE_DATA
+
 ! update original data and calculate the averages simultaneously
 ! error bar section
+     AVERAGE_ERROR: BLOCK
+
      hist_err  = hist_err  * one
      prob_err  = prob_err  * real(ncarlo)
 
