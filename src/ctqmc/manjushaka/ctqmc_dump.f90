@@ -1091,8 +1091,16 @@
      return
   end subroutine ctqmc_dump_pair
 
-!!>>> ctqmc_diagram_plotting: write out a snapshot for the current diagram
-!!>>> configuration, the results can be used to make a dynamical video.
+!!========================================================================
+!!>>> dump data of diagrammatic configuration                          <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_dump_diag
+!!
+!! write out a snapshot for the current diagram configuration, the results
+!! can be used to make a dynamical video.
+!!
   subroutine ctqmc_diagram_plotting(iter, cstep)
      use constants, only : mystd, mytmp
 
