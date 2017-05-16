@@ -78,27 +78,24 @@
 
 ! external arguments
 ! current flavor channel
-     integer, intent(in)   :: flvr
+     integer, intent(in)  :: flvr
 
-! index address to insert new create and destroy operators
-! is and ie are for create and destroy operators, respectively
-     integer, intent(in)   :: is
-     integer, intent(in)   :: ie
+! index address to insert new creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
+     integer, intent(in)  :: is
+     integer, intent(in)  :: ie
 
-! imaginary time point of the new create operator
-     real(dp), intent(in)  :: tau_start
+! imaginary time point of the new creation operator
+     real(dp), intent(in) :: tau_start
 
-! imaginary time point of the new destroy operator
-     real(dp), intent(in)  :: tau_end
-
-! ratio between old and new configurations, the local trace part
-     real(dp), intent(out) :: trace_ratio
+! imaginary time point of the new annihilation operator
+     real(dp), intent(in) :: tau_end
 
 ! local variables
 ! loop index over operators
      integer  :: i
 
-! memory address for new create and destroy operators
+! memory address for new creation and annihilation operators
      integer  :: as
      integer  :: ae
 
@@ -124,12 +121,12 @@
      enddo ! over i={1,nsize} loop
 
 !-------------------------------------------------------------------------
-! stage 1: insert a create operator, trial step
+! stage 1: insert a creation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for create operator
+! get memory address for creation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
 
-! store basic data for new create operator
+! store basic data for new creation operator
      time_v(as) = tau_start
      flvr_v(as) = flvr
      type_v(as) = 1
@@ -139,18 +136,18 @@
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize,is,-1} loop
 
-! store the memory address for create operator
+! store the memory address for creation operator
      index_t(is) = as
 
 ! evaluate previous imaginary time interval
-     if ( is ==         1 ) then ! the imaginary time of create operator is the smallest
+     if ( is ==         1 ) then ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_t(is) ) - zero
      else
          t_prev = time_v( index_t(is) ) - time_v( index_t(is-1) )
      endif ! back if ( is == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( is == nsize + 1 ) then ! the imaginary time of create operator is the largest
+     if ( is == nsize + 1 ) then ! the imaginary time of creation operator is the largest
          t_next = beta - time_v( index_t(is) )
      else
          t_next = time_v( index_t(is+1) ) - time_v( index_t(is) )
@@ -282,7 +279,7 @@
      integer, intent(in)   :: is
      integer, intent(in)   :: ie
 
-! imaginary time point of the old create operator
+! imaginary time point of the old creation operator
      real(dp), intent(in)  :: tau_start
 
 ! imaginary time point of the old destroy operator
@@ -321,9 +318,9 @@
      enddo ! over i={1,nsize} loop
 
 !-------------------------------------------------------------------------
-! stage 1: remove create operator, trial step
+! stage 1: remove creation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for old create operator
+! get memory address for old creation operator
      as = index_t(is)
 
 ! remove the unused index address from index_t
@@ -333,14 +330,14 @@
      index_t(nsize) = 0
 
 ! evaluate previous imaginary time interval
-     if ( is == 1     ) then ! the imaginary time of create operator is the smallest
+     if ( is == 1     ) then ! the imaginary time of creation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_t(is-1) )
      endif ! back if ( is == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( is == nsize ) then ! the imaginary time of create operator is the largest
+     if ( is == nsize ) then ! the imaginary time of creation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_t(is)   )
@@ -455,15 +452,15 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift existing create operator
-! iso and isn are for old and new create operators, respectively
+! index address to shift existing creation operator
+! iso and isn are for old and new creation operators, respectively
      integer, intent(in)   :: iso
      integer, intent(in)   :: isn
 
-! imaginary time point of the old create operator
+! imaginary time point of the old creation operator
      real(dp), intent(in)  :: tau_start1
 
-! imaginary time point of the new create operator
+! imaginary time point of the new creation operator
      real(dp), intent(in)  :: tau_start2
 
 ! ratio between old and new configurations, the local trace part
@@ -473,10 +470,10 @@
 ! loop index over operators
      integer  :: i
 
-! memory address for old and new create operators
+! memory address for old and new creation operators
      integer  :: as
 
-! index address for old create operator
+! index address for old creation operator
      integer  :: iso_t
 
 ! total number of operators
@@ -491,19 +488,19 @@
      nsize = istack_getrest( empty_v )
 
 ! copy index_v to index_t
-! since we do not shift the create operator actually at this stage, so
+! since we do not shift the creation operator actually at this stage, so
 ! index_v can not be overwritten here
      do i=1,nsize
          index_t(i) = index_v(i)
      enddo ! over i={1,nsize} loop
 
 !-------------------------------------------------------------------------
-! stage 1: shift old create operator, trial step
+! stage 1: shift old creation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for create operator
+! get memory address for creation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
 
-! store basic data for new create operator
+! store basic data for new creation operator
      time_v(as) = tau_start2
      flvr_v(as) = flvr
      type_v(as) = 1
@@ -519,11 +516,11 @@
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize-1,isn,-1} loop
 
-! store the memory address for create operator
+! store the memory address for creation operator
      index_t(isn) = as
 
 ! evaluate previous imaginary time interval
-     if ( isn == 1 ) then ! the imaginary time of create operator is the smallest
+     if ( isn == 1 ) then ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_t(isn) ) - zero
      else
          t_prev = time_v( index_t(isn) ) - time_v( index_t(isn-1) )
@@ -765,7 +762,7 @@
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
-! imaginary time point of the new create operator
+! imaginary time point of the new creation operator
      real(dp), intent(out) :: tau_start
 
 ! imaginary time point of the new destroy operator
@@ -782,7 +779,7 @@
      is = 1
      ie = 1
 
-! select imaginary time of the new create operator randomly
+! select imaginary time of the new creation operator randomly
 ! check tau_start is necessary
      have = 99
      creator :   do while ( have > 0 )
@@ -861,13 +858,13 @@
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
-! imaginary time point of the old create operator
+! imaginary time point of the old creation operator
      real(dp), intent(out) :: tau_start
 
 ! imaginary time point of the old destroy operator
      real(dp), intent(out) :: tau_end
 
-! randomly select index address, which is used to access the create operators
+! randomly select index address, which is used to access the creation operators
      is = ceiling( spring_sfmt_stream() * ckink )
 
 ! randomly select index address, which is used to access the destroy operators
@@ -903,34 +900,34 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift old create operator
+! index address to shift old creation operator
 ! iso and isn are for old and new indices, respectively
      integer, intent(out)  :: iso
      integer, intent(out)  :: isn
 
-! imaginary time point of the selected create operator (the old one)
+! imaginary time point of the selected creation operator (the old one)
      real(dp), intent(out) :: tau_start1
 
-! imaginary time point of the selected create operator (the new one)
+! imaginary time point of the selected creation operator (the new one)
      real(dp), intent(out) :: tau_start2
 
 ! local variables
 ! determine if tau_start2 is collided with existed operators
      integer  :: have
 
-! imaginary time of previous create operator
+! imaginary time of previous creation operator
      real(dp) :: tau_prev
 
-! imaginary time of next create operator
+! imaginary time of next creation operator
      real(dp) :: tau_next
 
-! randomly select index address, which is used to access the create operators
+! randomly select index address, which is used to access the creation operators
      iso = ceiling( spring_sfmt_stream() * ckink )
 
 ! evaluate tau_start1
      tau_start1 = time_s( index_s(iso, flvr), flvr )
 
-! determine imaginary time and index address for new create operator
+! determine imaginary time and index address for new creation operator
      have = 99
      creator : do while ( have > 0 )
          if ( ckink == 1 ) then
@@ -1084,7 +1081,7 @@
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time \tau_s for create operator
+! imaginary time \tau_s for creation operator
      real(dp), intent(in) :: tau_start
 
 ! imaginary time \tau_e for destroy operator
@@ -1184,7 +1181,7 @@
   end subroutine cat_remove_colour
 
 !!>>> cat_lshift_colour: update the perturbation expansion series for
-!!>>> lshift an old create operators in the colour part actually
+!!>>> lshift an old creation operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
      use constants, only : dp
 
@@ -1199,18 +1196,18 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for lshift old create operator
+! index address for lshift old creation operator
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
-! imaginary time \tau_s for create operator (the new one)
+! imaginary time \tau_s for creation operator (the new one)
      real(dp), intent(in) :: tau_start
 
 ! local variables
 ! loop index over operators and frequencies
      integer  :: i
 
-! memory address for new create operator
+! memory address for new creation operator
      integer  :: as
 
 ! dummy variables, \tau_s * \omega
@@ -1330,7 +1327,7 @@
 ! whether the new create and destroy operators can be inserted diagrammatically
      logical, intent(out) :: ladd
 
-! imaginary time point of the new create operator
+! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start
 
 ! imaginary time point of the new destroy operator
@@ -1404,7 +1401,7 @@
          endif ! back if ( tau_end < time_v( index_v(1) ) ) block
      endif ! back if ( nsize > 0 ) block
 
-! adjust ie further, since we insert create operator firstly, and then
+! adjust ie further, since we insert creation operator firstly, and then
 ! insert destroy operator
      if ( tau_start < tau_end ) then
          ie = ie + 1
@@ -1442,7 +1439,7 @@
              do i=1,nsize+2
                  counter = counter + 1
 
-! meet the new create operator
+! meet the new creation operator
                  if      ( i == pis ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
@@ -1497,7 +1494,7 @@
 ! whether the old create and destroy operators can be removed diagrammatically
      logical, intent(out) :: lrmv
 
-! imaginary time point of the old create operator
+! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start
 
 ! imaginary time point of the old destroy operator
@@ -1552,7 +1549,7 @@
 !<     ie = i
      call cat_find_operator( ie, nsize, tau_end )
 
-! adjust ie further, since we remove create operator firstly, and then
+! adjust ie further, since we remove creation operator firstly, and then
 ! remove destroy operator
      if ( tau_start < tau_end ) then
          ie = ie - 1
@@ -1610,7 +1607,7 @@
   end subroutine try_remove_flavor
 
 !!>>> try_lshift_flavor: determine index addresses for the old and new
-!!>>> create operators in the flavor part, and then determine whether it
+!!>>> creation operators in the flavor part, and then determine whether it
 !!>>> can be shifted diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
      use constants, only : dp
@@ -1626,18 +1623,18 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing create operator
-! iso and isn are for old and new create operators, respectively
+! index address to shift existing creation operator
+! iso and isn are for old and new creation operators, respectively
      integer, intent(out) :: iso
      integer, intent(out) :: isn
 
-! whether the old create operators can be shifted diagrammatically
+! whether the old creation operators can be shifted diagrammatically
      logical, intent(out) :: lshf
 
-! imaginary time point of the old create operator
+! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start1
 
-! imaginary time point of the new create operator
+! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start2
 
 ! local variables
@@ -1648,7 +1645,7 @@
      integer :: m
      integer :: n
 
-! pseudo-index address for old and new create operators, respectively
+! pseudo-index address for old and new creation operators, respectively
      integer :: piso
      integer :: pisn
 
@@ -1739,10 +1736,10 @@
              do i=1,nsize+1
                  counter = counter + 1
 
-! meet the old create operator
+! meet the old creation operator
                  if      ( i == piso ) then
                      idead = idead + 1
-! meet the new create operator
+! meet the new creation operator
                  else if ( i == pisn ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
@@ -1958,7 +1955,7 @@
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time point of the new create operator
+! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start
 
 ! imaginary time point of the new destroy operator
@@ -1981,15 +1978,15 @@
      real(dp) :: t_next
 
 !-------------------------------------------------------------------------
-! stage 1: insert a create operator
+! stage 1: insert a creation operator
 !-------------------------------------------------------------------------
 ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for create operator
+! get memory address for creation operator
      call istack_pop( empty_v, as )
 
-! store basic data for new create operator
+! store basic data for new creation operator
      time_v(as) = tau_start
      flvr_v(as) = flvr
      type_v(as) = 1
@@ -1999,18 +1996,18 @@
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize,is,-1} loop
 
-! store the memory address for create operator
+! store the memory address for creation operator
      index_v(is) = as
 
 ! evaluate previous imaginary time interval
-     if ( is ==         1 ) then ! the imaginary time of create operator is the smallest
+     if ( is ==         1 ) then ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_v(is) ) - zero
      else
          t_prev = time_v( index_v(is) ) - time_v( index_v(is-1) )
      endif ! back if ( is == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( is == nsize + 1 ) then ! the imaginary time of create operator is the largest
+     if ( is == nsize + 1 ) then ! the imaginary time of creation operator is the largest
          t_next = beta - time_v( index_v(is) )
      else
          t_next = time_v( index_v(is+1) ) - time_v( index_v(is) )
@@ -2121,7 +2118,7 @@
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time point of the old create operator
+! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start
 
 ! imaginary time point of the old destroy operator
@@ -2144,12 +2141,12 @@
      real(dp) :: t_next
 
 !-------------------------------------------------------------------------
-! stage 1: remove create operator
+! stage 1: remove creation operator
 !-------------------------------------------------------------------------
 ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for old create operator
+! get memory address for old creation operator
      as = index_v(is)
 
 ! push the memory address back to the empty_v stack
@@ -2162,14 +2159,14 @@
      index_v(nsize) = 0
 
 ! evaluate previous imaginary time interval
-     if ( is == 1     ) then ! the imaginary time of create operator is the smallest
+     if ( is == 1     ) then ! the imaginary time of creation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_v(is-1) )
      endif ! back if ( is == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( is == nsize ) then ! the imaginary time of create operator is the largest
+     if ( is == nsize ) then ! the imaginary time of creation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_v(is)   )
@@ -2243,7 +2240,7 @@
      ae = ie
 
 ! in principle, destroy operator should be removed at first, but in fact,
-! we remove create operator at first. in order to treat csign correctly,
+! we remove creation operator at first. in order to treat csign correctly,
 ! we need to recover the original scheme, so ae is restored at first.
 ! please refer to try_remove_flavor().
      if ( tau_start < tau_end ) then
@@ -2262,7 +2259,7 @@
      return
   end subroutine cat_remove_flavor
 
-!!>>> cat_lshift_flavor: shift the old create operator in the flavor part
+!!>>> cat_lshift_flavor: shift the old creation operator in the flavor part
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
      use constants, only : dp, zero
      use stack, only : istack_getrest
@@ -2279,22 +2276,22 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing create operator
-! iso and isn are for old and new create operators, respectively
+! index address to shift existing creation operator
+! iso and isn are for old and new creation operators, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
-! imaginary time point of the new create operator
+! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start2
 
 ! local variables
 ! loop index over operators
      integer  :: i
 
-! memory address for old and new create operators
+! memory address for old and new creation operators
      integer  :: as
 
-! index address for old create operator
+! index address for old creation operator
      integer  :: iso_t
 
 ! total number of operators
@@ -2309,12 +2306,12 @@
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
-! stage 1: shift old create operator
+! stage 1: shift old creation operator
 !-------------------------------------------------------------------------
-! get memory address for create operator
+! get memory address for creation operator
      as = index_v(iso)
 
-! store basic data for new create operator
+! store basic data for new creation operator
      time_v(as) = tau_start2
      flvr_v(as) = flvr
      type_v(as) = 1
@@ -2330,11 +2327,11 @@
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize-1,isn,-1} loop
 
-! store the memory address for create operator
+! store the memory address for creation operator
      index_v(isn) = as
 
 ! evaluate previous imaginary time interval
-     if ( isn == 1 ) then ! the imaginary time of create operator is the smallest
+     if ( isn == 1 ) then ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_v(isn) ) - zero
      else
          t_prev = time_v( index_v(isn) ) - time_v( index_v(isn-1) )
@@ -2704,7 +2701,7 @@
 
      do i=1,kink
 
-! determine index address, create operator first, and then destroy operator
+! determine index address, creation operator first, and then destroy operator
          is = 2 * i -1
          ie = 2 * i
 
