@@ -360,6 +360,11 @@
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
+! record the auxiliary correlation function to calculate self-energy function
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_ftau()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
 ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
