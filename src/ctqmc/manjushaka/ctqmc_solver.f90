@@ -592,6 +592,7 @@
          nmat = nmat_mpi
 
          gtau = gtau_mpi
+         ftau = ftau_mpi
          grnf = grnf_mpi
 
          knop = knop_mpi
@@ -639,6 +640,11 @@
      call ctqmc_symm_gtau(symm, gtau_err)
      call ctqmc_symm_grnf(symm, grnf)
      call ctqmc_symm_grnf(symm, grnf_err)
+
+! symmetrize the auxiliary correlation function over spin or over bands
+     call ctqmc_symm_gtau(symm, ftau)
+     call ctqmc_symm_gtau(symm, ftau_err)
+     call ctqmc_symm_grnf(symm, frnf)
 
 ! symmetrize the self-energy function over spin or over bands
      call ctqmc_symm_grnf(symm, sig2)
