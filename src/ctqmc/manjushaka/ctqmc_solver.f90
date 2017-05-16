@@ -487,7 +487,7 @@
 !!>>> escaping quantum impurity solver                                 <<<
 !!========================================================================
 
-! if the quantum impurity solver is out of control or reaches convergence
+! if the quantum impurity solver is out of control
          if ( cflag == 99 ) then
              EXIT MC_SWEEP ! jump out the iteration
          endif ! back if ( cflag == 99 ) block
@@ -497,6 +497,21 @@
 !!========================================================================
 !!>>> ending main iteration                                            <<<
 !!========================================================================
+
+! end simulation
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING STOPS'
+         select case (iswor)
+
+             case (1)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z)'
+
+             case (2)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z U C_G)'
+
+         end select
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> reducing final results                                           <<<
