@@ -36,8 +36,11 @@
 !!>>> dump data of physical observables 1                              <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_dump_hist
+!!
+!! write out the histogram for perturbation expansion series
+!!
   subroutine ctqmc_dump_hist(hist, herr)
      use constants, only : dp, mytmp
 
