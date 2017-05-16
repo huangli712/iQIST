@@ -542,8 +542,8 @@
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
 
-     call ctqmc_reduce_hist(hist_mpi, hist_err)
-     call ctqmc_reduce_prob(prob_mpi, prob_err)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
+         call ctqmc_reduce_prob(prob_mpi, prob_err)
 
 
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
