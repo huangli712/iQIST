@@ -652,35 +652,14 @@
 ! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
 
-! write out the final histogram data, hist
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
-     endif ! back if ( myid == master ) block
 
-! write out the final probability data, prob
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_prob(prob, naux, saux, prob_err)
-     endif ! back if ( myid == master ) block
-
-! write out the final (double) occupation matrix data, nmat and nnmat
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
-     endif ! back if ( myid == master ) block
-
-! write out the final < k^2 > - < k >^2 data, kmat and kkmat
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
-     endif ! back if ( myid == master ) block
-
-! write out the final fidelity susceptibility data, lnop, rnop, and lrmm
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_lnop(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
-     endif ! back if ( myid == master ) block
 
-! write out the final two-particle green's function data, g2_re and g2_im
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_twop(g2_re, g2_im)
-     endif ! back if ( myid == master ) block
 
 ! write out the final particle-particle pair susceptibility data, ps_re and ps_im
      if ( myid == master ) then ! only master node can do it
