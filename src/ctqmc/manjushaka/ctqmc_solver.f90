@@ -339,9 +339,7 @@
                  call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-
-! record the impurity (double) occupation number matrix and other
-! auxiliary physical observables
+! record the impurity (double) occupation number matrix
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
