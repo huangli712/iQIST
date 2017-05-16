@@ -277,16 +277,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i6,2f12.6)') i, nmat(i), nerr(i)
+         write(mytmp,'(i6,2f12.6)') i, nimp(i), nerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'sup', sum( nmat(1:nband) ), sum( nerr(1:nband) )
-     write(mytmp,'(a6,2f12.6)') 'sdn', sum( nmat(nband+1:norbs) ), sum( nerr(nband+1:norbs) )
-     write(mytmp,'(a6,2f12.6)') 'sum', sum( nmat(1:norbs) ), sum( nerr(1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sup', sum( nimp(1:nband) ), sum( nerr(1:nband) )
+     write(mytmp,'(a6,2f12.6)') 'sdn', sum( nimp(nband+1:norbs) ), sum( nerr(nband+1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sum', sum( nimp(1:norbs) ), sum( nerr(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,2f12.6)') i, j, nnmat(i,j), nnerr(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, nmat(i,j), nbar(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
