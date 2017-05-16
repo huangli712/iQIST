@@ -559,21 +559,20 @@
 
      END BLOCK COLLECT_DATA
 
-     hist  = hist_mpi  * one
-     prob  = prob_mpi  * real(ncarlo)
+     hist = hist_mpi * one
+     prob = prob_mpi * real(nmonte)
 
-     nmat  = nmat_mpi  * real(nmonte)
-     nnmat = nnmat_mpi * real(nmonte)
-     kmat  = kmat_mpi  * real(nmonte)
-     kkmat = kkmat_mpi * real(nmonte)
-     lnop  = lnop_mpi  * real(nmonte)
-     rnop  = rnop_mpi  * real(nmonte)
+     nimp = nimp_mpi * real(nmonte)
+     nmat = nmat_mpi * real(nmonte)
+     knop = kmat_mpi * real(nmonte)
+     kmat = kmat_mpi * real(nmonte)
+     lnop = lnop_mpi * real(nmonte)
+     rnop = rnop_mpi * real(nmonte)
      lrmm = lrmm_mpi * real(nmonte)
 
-     g2_re = g2_re_mpi * real(nmonte)
-     g2_im = g2_im_mpi * real(nmonte)
-     ps_re = ps_re_mpi * real(nmonte)
-     ps_im = ps_im_mpi * real(nmonte)
+     g2pw = g2pw_mpi * real(nmonte)
+     h2pw = h2pw_mpi * real(nmonte)
+     p2pw = p2pw_mpi * real(nmonte)
 
      gtau  = gtau_mpi  * real(ncarlo)
      grnf  = grnf_mpi  * real(nmonte)
