@@ -210,6 +210,41 @@
      return
   end subroutine ctqmc_dump_prob
 
+!!
+!! @sub ctqmc_dump_paux
+!!
+!! write out the auxiliary physical observables
+!!
+  subroutine ctqmc_dump_paux(paux, perr)
+     use constants, only : dp, mytmp
+
+     implicit none
+
+! external arguments
+! auxiliary physical observables
+     real(dp), intent(in) :: paux(9)
+     real(dp), intent(in) :: perr(9)
+
+! open data file: solver.paux.dat
+     open(mytmp, file='solver.paux.dat', form='formatted', status='unknown')
+
+! write it
+     write(mytmp,'(a,2f12.6)') 'etot :', paux(1), perr(1)
+     write(mytmp,'(a,2f12.6)') 'epot :', paux(2), perr(2)
+     write(mytmp,'(a,2f12.6)') 'ekin :', paux(3), perr(3)
+     write(mytmp,'(a,2f12.6)') '<Sz> :', paux(4), perr(4)
+     write(mytmp,'(a,2f12.6)') '<N1> :', paux(5), perr(5)
+     write(mytmp,'(a,2f12.6)') '<N2> :', paux(6), perr(6)
+     write(mytmp,'(a,2e12.4)') '<K2> :', paux(7), perr(7)
+     write(mytmp,'(a,2e12.4)') '<K3> :', paux(8), perr(8)
+     write(mytmp,'(a,2e12.4)') '<K4> :', paux(9), perr(9)
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_paux
+
 !!>>> ctqmc_dump_nmat: write out the occupation matrix and double
 !!>>> occupation matrix
   subroutine ctqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
