@@ -181,6 +181,92 @@
      return
   end subroutine ctqmc_print_summary
 
+!!
+!! @sub ctqmc_print_control
+!!
+!! print the control parameters, only for reference
+!!
+  subroutine ctqmc_print_control()
+     use constants, only : mystd
+
+     use control, only : cname               ! code name
+                                             !
+     use control, only : isscf               ! control running scheme
+     use control, only : isscr               ! control dynamic interaction
+     use control, only : isbnd, isspn        ! control symmetry
+     use control, only : isbin, iswor, isort ! control measurement tricks
+     use control, only : isobs, issus, isvrt ! control physical observables
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+
+! predefined strings for control parameters
+     character (len = 4) :: scf(2) = ['nscf', 'scf']
+     character (len = 7) :: scr(4) = ['static', 'dyn_ppm', 'dyn_om', 'dyn_rm']
+     character (len = 3) :: bnd(2) = ['no', 'yes']
+     character (len = 3) :: spn(2) = ['no', 'yes']
+     character (len = 3) :: bin(2) = ['no', 'yes']
+     character (len = 3) :: wor(2) = ['no', 'yes']
+     character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
+     character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
+     character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
+     character (len = 4) :: vrt(3) = ['none', 'twop', 'pair']
+
+! predefined strings for control parameters
+     character (len = 99) :: str_obs
+     character (len = 99) :: str_sus
+     character (len = 99) :: str_vrt
+
+! build str_obs according to isobs
+     str_obs = ''
+     do i=1,size(obs)
+         if ( btest(isobs, i-1) ) then
+             str_obs = ( trim( str_obs ) // ' ' // trim( obs(i) ) )
+         endif ! back if ( btest(isobs, i-1) ) block
+     enddo ! over i={1,size(obs)} loop
+     str_obs = adjustl(str_obs)
+
+! build str_sus according to issus
+     str_sus = ''
+     do i=1,size(sus)
+         if ( btest(issus, i-1) ) then
+             str_sus = ( trim( str_sus ) // ' ' // trim( sus(i) ) )
+         endif ! back if ( btest(issus, i-1) ) block
+     enddo ! over i={1,size(sus)} loop
+     str_sus = adjustl(str_sus)
+
+! build str_vrt according to isvrt
+     str_vrt = ''
+     do i=1,size(vrt)
+         if ( btest(isvrt, i-1) ) then
+             str_vrt = ( trim( str_vrt ) // ' ' // trim( vrt(i) ) )
+         endif ! back if ( btest(isvrt, i-1) ) block
+     enddo ! over i={1,size(vrt)} loop
+     str_vrt = adjustl(str_vrt)
+
+! write control parameters
+     write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
+
+     write(mystd,'(4X,a,i4,3X,2a)') 'self-consistent scheme  /', isscf, '/ ', scf(isscf)
+     write(mystd,'(4X,a,i4,3X,2a)') 'dynamic interaction     /', isscr, '/ ', scr(isscr)
+     write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (band part)    /', isbnd, '/ ', bnd(isbnd)
+     write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (spin part)    /', isspn, '/ ', spn(isspn)
+     write(mystd,'(4X,a,i4,3X,2a)') 'data binning            /', isbin, '/ ', bin(isbin)
+     write(mystd,'(4X,a,i4,3X,2a)') 'worm algorithm          /', iswor, '/ ', wor(iswor)
+     write(mystd,'(4X,a,i4,3X,2a)') 'advanced basis          /', isort, '/ ', ort(isort)
+
+     write(mystd,'(4X,a,i4,3X,2a)') 'fidelity susceptibility /', isobs, '/ ', trim(str_obs)
+     write(mystd,'(4X,a,i4,3X,2a)') 'sp/ch susceptibility    /', issus, '/ ', trim(str_sus)
+     write(mystd,'(4X,a,i4,3X,2a)') 'two-particle quantities /', isvrt, '/ ', trim(str_vrt)
+
+     write(mystd,*)
+
+     return
+  end subroutine ctqmc_print_control
+
 !!>>> ctqmc_print_runtime: print the runtime information, including physical
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
