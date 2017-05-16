@@ -1042,6 +1042,7 @@
      lnop = zero
      rnop = zero
      lrmm = zero
+     szpw = zero
 
      g2pw = czero
      h2pw = czero
@@ -1059,16 +1060,16 @@
      implicit none
 
 ! allocate memory
-     allocate(rank(norbs),        stat=istat)
+     allocate(rank(norbs),       stat=istat)
 
-     allocate(diag(ncfgs,  2  ),  stat=istat)
+     allocate(diag(ncfgs,  2  ), stat=istat)
 
-     allocate(symm(norbs),        stat=istat)
+     allocate(symm(norbs),       stat=istat)
 
-     allocate(eimp(norbs),        stat=istat)
-     allocate(eigs(ncfgs),        stat=istat)
-     allocate(naux(ncfgs),        stat=istat)
-     allocate(saux(ncfgs),        stat=istat)
+     allocate(eimp(norbs),       stat=istat)
+     allocate(eigs(ncfgs),       stat=istat)
+     allocate(naux(ncfgs),       stat=istat)
+     allocate(saux(ncfgs),       stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1302,6 +1303,7 @@
      if ( allocated(lnop) )    deallocate(lnop)
      if ( allocated(rnop) )    deallocate(rnop)
      if ( allocated(lrmm) )    deallocate(lrmm)
+     if ( allocated(szpw) )    deallocate(szpw)
 
      if ( allocated(g2pw) )    deallocate(g2pw)
      if ( allocated(h2pw) )    deallocate(h2pw)
@@ -1318,16 +1320,16 @@
   subroutine cat_free_umat()
      implicit none
 
-     if ( allocated(rank)  )   deallocate(rank )
+     if ( allocated(rank) )    deallocate(rank)
 
-     if ( allocated(diag)  )   deallocate(diag )
+     if ( allocated(diag) )    deallocate(diag)
 
-     if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(symm) )    deallocate(symm)
 
-     if ( allocated(eimp)  )   deallocate(eimp )
-     if ( allocated(eigs)  )   deallocate(eigs )
-     if ( allocated(naux)  )   deallocate(naux )
-     if ( allocated(saux)  )   deallocate(saux )
+     if ( allocated(eimp) )    deallocate(eimp)
+     if ( allocated(eigs) )    deallocate(eigs)
+     if ( allocated(naux) )    deallocate(naux)
+     if ( allocated(saux) )    deallocate(saux)
 
      return
   end subroutine cat_free_umat
