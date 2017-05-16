@@ -332,11 +332,18 @@
 
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
-     real(dp) :: gtmp(ntime,norbs,norbs)
+     real(dp) :: gbar(ntime,norbs,norbs)
 
-! evaluate gaux and gtmp at first
+! evaluate gaux and gbar at first
      call ctqmc_make_gtau(tmesh, gtau, gaux)
-     call ctqmc_make_gtau(tmesh, gerr, gtmp)
+     call ctqmc_make_gtau(tmesh, gerr, gbar)
+
+! determine reset and nbins
+     if ( nbins == nsweep / nwrite + 1 ) then
+         nbins = 1 ! reset the counter to 1
+     else
+         nbins = nbins + 1
+     endif ! back if ( nbins == nsweep / nwrite + 1 ) block
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
