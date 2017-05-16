@@ -785,11 +785,15 @@
      return
   end subroutine ctqmc_dump_kmat
 
-!!>>> ctqmc_dump_lmat: write out the fidelity susceptibility
-  subroutine ctqmc_dump_lmat(lmat, rmat, lrmat, lerr, rerr, lrerr)
+!!
+!! @sub ctqmc_dump_lrmm
+!!
+!! write out the fidelity susceptibility
+!!
+  subroutine ctqmc_dump_lrmm(lnop, rnop, lrmm, lerr, rerr, lree)
      use constants, only : dp, mytmp
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : norbs
 
      implicit none
@@ -804,8 +808,8 @@
      real(dp), intent(in) :: rerr(norbs)
 
 ! used to evaluate fidelity susceptibility, < k_l k_r >
-     real(dp), intent(in) :: lrmat(norbs,norbs)
-     real(dp), intent(in) :: lrerr(norbs,norbs)
+     real(dp), intent(in) :: lrmm(norbs,norbs)
+     real(dp), intent(in) :: lree(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -817,8 +821,8 @@
      real(dp) :: f_err
 
 ! calculate f_val and f_err
-     f_val = sum( lrmat ) - sum( lmat ) * sum( rmat )
-     f_err = sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
+     f_val = sum( lrmm ) - sum( lmat ) * sum( rmat )
+     f_err = sum( lree ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
 
 ! check if we need to dump the fidelity susceptibility data
 ! to solver.lmat.dat
@@ -838,10 +842,10 @@
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,2f12.6)') i, j, lrmat(i,j), lrerr(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, lrmm(i,j), lree(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmat ), sum( lrerr )
+     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmm ), sum( lree )
      write(mytmp,'(a6,2f12.6)') 'fidel', f_val, f_err
 
 ! close data file
