@@ -18,13 +18,12 @@
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           05/16/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
-!!!           -consistent engine to disk files
+!!!           -consistent engine to external files.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
