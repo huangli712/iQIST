@@ -28,6 +28,11 @@
   subroutine ctqmc_print_header()
      use constants, only : mystd
 
+     use version, only : FULL_VER
+     use version, only : AUTH_VER
+     use version, only : MAIL_VER
+     use version, only : GPL3_VER
+
      use control, only : cname
      use control, only : nprocs
 
