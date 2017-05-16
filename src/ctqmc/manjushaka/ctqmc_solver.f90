@@ -99,11 +99,11 @@
 ! time consuming by total iteration
      real(dp) :: time_sum
 
-! histogram for perturbation expansion series, for mpi case
+! histogram for perturbation expansion series
      real(dp), allocatable :: hist_mpi(:)
      real(dp), allocatable :: hist_err(:)
 
-! probability of atomic states, for mpi case
+! probability of atomic eigenstates
      real(dp), allocatable :: prob_mpi(:)
      real(dp), allocatable :: prob_err(:)
 
