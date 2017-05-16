@@ -280,8 +280,8 @@
      implicit none
 
 ! external arguments
-! index address to remove old create and annihilation operators
-! is and ie are for create and annihilation operators, respectively
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
@@ -295,7 +295,7 @@
 ! loop index over operators
      integer  :: i
 
-! memory address for old create and annihilation operators
+! memory address for old creation and annihilation operators
      integer  :: as
      integer  :: ae
 
