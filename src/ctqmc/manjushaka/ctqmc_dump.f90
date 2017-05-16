@@ -487,11 +487,14 @@
   end subroutine ctqmc_dump_wtau
 
 !!========================================================================
-!!>>> dump data on matsubara frequency axis                            <<<
+!!>>> dump data of physical observables 2: over matsubara frequency    <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
-!!>>> frequency space
+!!
+!! @sub ctqmc_dump_grnf
+!!
+!! write out impurity green's function in matsubara frequency space
+!!
   subroutine ctqmc_dump_grnf(rmesh, grnf, gerr)
      use constants, only : dp, mytmp
 
@@ -532,6 +535,48 @@
 
      return
   end subroutine ctqmc_dump_grnf
+
+!!
+!! @sub ctqmc_dump_frnf
+!!
+!! write out auxiliary correlation function in matsubara frequency space
+!!
+  subroutine ctqmc_dump_frnf(frnf)
+     use constants, only : dp, czero, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+
+     use context, only : rmesh
+
+     implicit none
+
+! external arguments
+! auxiliary correlation function
+     complex(dp), intent(in) :: frnf(mfreq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.frn.dat
+     open(mytmp, file='solver.frn.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), frnf(j,i,i), czero
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_frnf
 
 !!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
 !!>>> frequency space
