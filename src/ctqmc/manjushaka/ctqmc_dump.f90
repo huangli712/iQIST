@@ -435,48 +435,6 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
-!!>>> frequency space
-  subroutine ctqmc_dump_wssf(rmesh, wssf)
-     use constants, only : dp, zero, mytmp
-
-     use control, only : norbs
-     use control, only : mfreq
-
-     implicit none
-
-! external arguments
-! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
-
-! bath weiss's function
-     complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.wss.dat
-     open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,norbs
-         do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-              real(wssf(j,i,i)), aimag(wssf(j,i,i)), &
-                                         zero, zero
-         enddo ! over j={1,mfreq} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_wssf
-
 !!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
@@ -518,6 +476,48 @@
 
      return
   end subroutine ctqmc_dump_hybf
+
+!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
+!!>>> frequency space
+  subroutine ctqmc_dump_wssf(rmesh, wssf)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+
+     implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(mfreq)
+
+! bath weiss's function
+     complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.wss.dat
+     open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
+              real(wssf(j,i,i)), aimag(wssf(j,i,i)), &
+                                         zero, zero
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_wssf
 
 !!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
 !!>>> frequency space
