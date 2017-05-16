@@ -383,18 +383,22 @@
 !!>>> sampling the physical observables 4 (optional)                   <<<
 !!========================================================================
 
+! the following physical observables are measured optionally (by issus)
 
+!!========================================================================
+!!>>> sampling the physical observables 5 (optional)                   <<<
+!!========================================================================
 
-
+! the following physical observables are measured optionally (by isvrt)
 ! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_twop()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
-! record the particle-particle pair susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+! record the particle-particle pairing susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
                  call ctqmc_record_pair()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
