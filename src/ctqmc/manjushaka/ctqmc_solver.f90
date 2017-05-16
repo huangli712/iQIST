@@ -139,6 +139,10 @@
      real(dp), allocatable :: lrmm_mpi(:,:)
      real(dp), allocatable :: lrmm_err(:,:)
 
+! powers of local magnetization, < S^n_z>
+     real(dp), allocatable :: szpw_mpi(:,:)
+     real(dp), allocatable :: szpw_err(:,:)
+
 ! note: for the two-particle quantities, we don't measure the error bars
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
