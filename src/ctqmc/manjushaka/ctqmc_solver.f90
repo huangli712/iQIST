@@ -617,11 +617,9 @@
 
      call cpu_time(time_begin) ! record starting time
 
-! symmetrize the occupation number matrix (nmat) over spin or over bands
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_nmat(symm, nmat)
-         call ctqmc_symm_nmat(symm, nmat_err)
-     endif ! back if ( issun == 2 .or. isspn == 1 ) block
+! symmetrize the occupation number matrix over spin or over bands
+     call ctqmc_symm_nimp(symm, nimp)
+     call ctqmc_symm_nimp(symm, nimp_err)
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
