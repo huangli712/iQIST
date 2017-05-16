@@ -3,6 +3,7 @@
 !!! program : ctqmc_print_header
 !!!           ctqmc_print_footer
 !!!           ctqmc_print_summary
+!!!           ctqmc_print_control
 !!!           ctqmc_print_runtime
 !!!           ctqmc_print_it_info
 !!! source  : ctqmc_print.f90
