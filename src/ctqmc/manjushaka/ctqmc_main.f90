@@ -1,9 +1,10 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
 !!! MANJUSHAKA @ iQIST                                                   !
 !!!                                                                      !
-!!! A test program for dynamical mean field theory (DMFT) self-consistent!
-!!! engine plus hybridization expansion version continuous time quantum  !
-!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! A highly optimized hybridization expansion version continuous time   !
+!!! quantum Monte Carlo (CTQMC) quantum impurity solver plus a classic   !
+!!! dynamical mean field theory (DMFT) self-consistent engine            !
+!!!                                                                      !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!!           Yilin Wang (at IOP/CAS)                                    !
 !!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
@@ -22,7 +23,7 @@
      use mmpi, only : mp_comm_size ! get number of processes
 
      use control, only : isscf     ! self-consistent calculation mode
-     use control, only : niter     ! number of self-consistent iteration
+     use control, only : niter     ! number of self-consistent iterations
      use control, only : nprocs    ! number of processes
      use control, only : myid      ! index of current process
      use control, only : master    ! index of master process
@@ -50,6 +51,8 @@
 
 # endif  /* MPI */
 
+     CTQMC_WAKEUP: BLOCK
+
 ! print the welcome messages
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
@@ -68,6 +71,8 @@
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
      endif ! back if ( myid == master ) block
+
+     END BLOCK CTQMC_WAKEUP
 
 !!========================================================================
 !!>>> DMFT ITERATION BEGIN                                             <<<
