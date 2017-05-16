@@ -473,9 +473,11 @@
 ! calculate timing information
          time_cur = time_end - time_begin
          time_sum = time_sum + time_cur
+
+! reset timer
          time_begin = time_end
 
-! print out the result
+! print out the timing result
          if ( myid == master ) then ! only master node can do it
              call s_time_analyzer(time_cur, time_sum)
              write(mystd,*)
@@ -486,11 +488,11 @@
 !!========================================================================
 
 ! if the quantum impurity solver is out of control or reaches convergence
-         if ( cflag == 99 .or. cflag == 100 ) then
-             EXIT CTQMC_MAIN_ITERATION ! jump out the iteration
-         endif ! back if ( cflag == 99 .or. cflag == 100 ) block
+         if ( cflag == 99 ) then
+             EXIT MC_SWEEP ! jump out the iteration
+         endif ! back if ( cflag == 99 ) block
 
-     enddo CTQMC_MAIN_ITERATION ! over i={1,nsweep} loop
+     enddo MC_SWEEP ! over i={1,nsweep} loop
 
 !!========================================================================
 !!>>> ending main iteration                                            <<<
