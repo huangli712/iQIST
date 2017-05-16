@@ -7,11 +7,11 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
+!!!           05/16/2017 by li huang (last modified)
 !!! purpose : implement a hybridization expansion version continuous time
 !!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
 !!!           dynamical mean field theory (DMFT) self-consistent engine.
-!!!           it is designed for the Hubbard model on a Bethe lattice
+!!!           it is designed for the Hubbard model on a Bethe lattice.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -29,7 +29,8 @@
      use control, only : nband, norbs
      use control, only : mfreq
      use control, only : Uc, Jz
-     use control, only : mune, alpha
+     use control, only : mune
+     use control, only : alpha
      use control, only : myid, master
 
      use context, only : rmesh
@@ -69,7 +70,7 @@
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine running'
-         write(mystd,'(4X,2a)') 'general lattice model      / ', 'Hubbard model'
+         write(mystd,'(4X,2a)') 'interacting lattice model  / ', 'Hubbard model'
          write(mystd,'(4X,2a)') 'density of states          / ', 'semicircular'
      endif ! back if ( myid == master ) block
 
@@ -82,7 +83,7 @@
 ! on a bethe lattice. of course you can replace it with your implements
      call ctqmc_dmft_bethe(hybf, grnf)
 
-! task 2: mix new and new hybridization function
+! task 2: mix old and new hybridization functions
 !-------------------------------------------------------------------------
 ! mix htmp and hybf using linear mixer
      call s_mix_z(size(hybf), htmp, hybf, alpha)
