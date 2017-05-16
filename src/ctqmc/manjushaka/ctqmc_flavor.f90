@@ -20,21 +20,21 @@
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
-!!!           ctqmc_make_equate
-!!!           ctqmc_make_search <<<---
+!!!           cat_comp_operator
+!!!           cat_find_operator <<<---
 !!!           ctqmc_make_colour
+!!!           cat_make_ 
 !!!           ctqmc_make_flavor <<<---
-!!!           ctqmc_make_display<<<---
+!!!           cat_disp_diagrams <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
-!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           05/16/2017 by li huang (last modified)
+!!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
-!!!           Monte Carlo (CTQMC) quantum impurity solver.
-!!!           the following subroutines deal with the operators traces only.
+!!!           Monte Carlo (CTQMC) quantum impurity solver. the following
+!!!           subroutines deal with the operators traces only.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -768,7 +768,7 @@
      have = 99
      creator :   do while ( have > 0 )
          tau_start = spring_sfmt_stream() * beta
-         call ctqmc_make_equate(flvr, tau_start, have)
+         call cat_comp_operator(flvr, tau_start, have)
      enddo creator ! over do while loop
 
 ! select imaginary time of the new destroy operator randomly
@@ -776,7 +776,7 @@
      have = 99
      destroyer : do while ( have > 0 )
          tau_end = spring_sfmt_stream() * beta
-         call ctqmc_make_equate(flvr, tau_end  , have)
+         call cat_comp_operator(flvr, tau_end  , have)
 ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
@@ -947,7 +947,7 @@
          endif ! back if ( ckink == 1 ) block
 
 ! check tau_start2 is necessary
-         call ctqmc_make_equate(flvr, tau_start2, have)
+         call cat_comp_operator(flvr, tau_start2, have)
      enddo creator ! over do while loop
 
      return
@@ -1034,7 +1034,7 @@
          endif ! back if ( ckink == 1 ) block
 
 ! check tau_end2 is necessary
-         call ctqmc_make_equate(flvr, tau_end2, have)
+         call cat_comp_operator(flvr, tau_end2, have)
      enddo destroyer ! over do while loop
 
      return
@@ -2503,9 +2503,9 @@
 !!>>> service layer: utility subroutines to look up in the flavor      <<<
 !!========================================================================
 
-!!>>> ctqmc_make_equate: to determine whether there exists an operator
+!!>>> cat_comp_operator: to determine whether there exists an operator
 !!>>> whose imaginary time is equal to time
-  subroutine ctqmc_make_equate(flvr, time, have)
+  subroutine cat_comp_operator(flvr, time, have)
      use constants, only : dp, epss
 
      use context, only : ckink
@@ -2546,7 +2546,7 @@
      enddo ! over i={1,ckink} loop
 
      return
-  end subroutine ctqmc_make_equate
+  end subroutine cat_comp_operator
 
 !!>>> ctqmc_make_search: determine index address of operators in the
 !!>>> flavor part using bisection algorithm
