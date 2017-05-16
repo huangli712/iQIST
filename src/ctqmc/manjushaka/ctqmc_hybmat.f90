@@ -21,7 +21,7 @@
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
 !!!           subroutines mainly deal with the \mathscr{M} matrix: mmat,
-!!!           and \mathscr{G} matrix: gmat
+!!!           and \mathscr{G} matrix: gmat.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -41,6 +41,7 @@
 
      use control, only : nfreq
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : exp_s, exp_e
@@ -177,6 +178,7 @@
 
      use control, only : nfreq
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : exp_s, exp_e
@@ -277,6 +279,7 @@
      use control, only : mkink
      use control, only : nfreq
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_e
@@ -293,7 +296,7 @@
      integer, intent(in)  :: flvr
 
 ! index address to shift creation operator
-! iso and isn are for old and new indices, respectively
+! iso and isn are old and new indices, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
@@ -477,6 +480,7 @@
      use control, only : mkink
      use control, only : nfreq
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_s
@@ -493,7 +497,7 @@
      integer, intent(in)  :: flvr
 
 ! index address to shift annihilation operator
-! ieo and ien are for old and new indices, respectively
+! ieo and ien are old and new indices, respectively
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
@@ -681,6 +685,7 @@
 
      use control, only : mkink
      use control, only : nfreq
+
      use context, only : empty_s, empty_e
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -773,6 +778,7 @@
 
      use control, only : nfreq
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : exp_s, exp_e
@@ -866,6 +872,7 @@
 
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -991,6 +998,7 @@
 
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_e
      use context, only : time_e
@@ -1069,6 +1077,7 @@
 
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink
      use context, only : index_s
      use context, only : time_s
@@ -1146,6 +1155,7 @@
      use constants, only : dp, zero, one
 
      use control, only : beta
+
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rank
