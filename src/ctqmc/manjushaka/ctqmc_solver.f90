@@ -143,18 +143,17 @@
      real(dp), allocatable :: szpw_mpi(:,:)
      real(dp), allocatable :: szpw_err(:,:)
 
-! note: for the two-particle quantities, we don't measure the error bars
-! used to measure two-particle green's function, real part, for mpi case
-     real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
+! two-particle green's function
+     complex(dp), allocatable :: g2pw_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: g2pw_err(:,:,:,:,:)
 
-! used to measure two-particle green's function, imaginary part, for mpi case
-     real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
+! irreducible vertex function
+     complex(dp), allocatable :: h2pw_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: h2pw_err(:,:,:,:,:)
 
-! used to measure particle-particle pair susceptibility, real part, for mpi case
-     real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
-
-! used to measure particle-particle pair susceptibility, imaginary part, for mpi case
-     real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
+! particle-particle pairing susceptibility
+     complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
