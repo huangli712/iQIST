@@ -87,18 +87,18 @@
 !-------------------------------------------------------------------------
 
 !!
-!! @var mptr
+!! @var c_mtr
 !!
-!! matrix trace of the flavor part, current value
+!! matrix trace of the flavor part, old (current) value
 !!
      real(dp), public, save :: c_mtr = zero
 
 !!
-!! @var mntr
+!! @var n_mtr
 !!
-!! matrix trace of the flavor part, proposed value
+!! matrix trace of the flavor part, new (proposed) value
 !!
-     real(dp), public, save :: p_mtr = zero
+     real(dp), public, save :: n_mtr = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, insert action counter                       :::
