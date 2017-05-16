@@ -135,7 +135,7 @@
      real(dp), allocatable :: rnop_mpi(:)
      real(dp), allocatable :: rnop_err(:)
 
-! used to evaluate fidelity susceptibility < k_l k_r >, for mpi case
+! crossing product of k_l and k_r, < k_l k_r >
      real(dp), allocatable :: lrmm_mpi(:,:)
      real(dp), allocatable :: lrmm_err(:,:)
 
