@@ -921,7 +921,7 @@
 !! write out the two-particle green's function and full (reducible) vertex
 !! function, the improved estimator was used to improve the accuracy
 !!
-  subroutine ctqmc_dump_twop(g2_re, g2_im)
+  subroutine ctqmc_dump_twop(g2pw, h2pw, gerr, herr)
      use constants, only : dp, czero, mytmp
 
      use control, only : isvrt
@@ -1047,8 +1047,12 @@
      return
   end subroutine ctqmc_dump_twop
 
-!!>>> ctqmc_dump_pair: write out the particle-particle pair susceptibility
-  subroutine ctqmc_dump_pair(ps_re, ps_im)
+!!
+!! @sub ctqmc_dump_pair
+!!
+!! write out the particle-particle pairing susceptibility
+!!
+  subroutine ctqmc_dump_pair(p2pw, perr)
      use constants, only : dp, mytmp
 
      use control, only : isvrt
@@ -1058,11 +1062,9 @@
      implicit none
 
 ! external arguments
-! particle-particle pair susceptibility, real part
-     real(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! particle-particle pair susceptibility, imaginary part
-     real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
+! particle-particle pairing susceptibility
+     complex(dp), intent(in) :: p2pw(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: perr(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -1075,6 +1077,8 @@
      integer :: n
 
 ! dummy integer variables
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
      integer :: it
      integer :: jt
 
