@@ -1101,7 +1101,7 @@
 !! write out a snapshot for the current diagram configuration, the results
 !! can be used to make a dynamical video.
 !!
-  subroutine ctqmc_diagram_plotting(iter, cstep)
+  subroutine ctqmc_dump_diag(iter, cstep)
      use constants, only : mystd, mytmp
 
      use control, only : norbs
@@ -1156,4 +1156,4 @@
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
 
      return
-  end subroutine ctqmc_diagram_plotting
+  end subroutine ctqmc_dump_diag
