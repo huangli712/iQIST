@@ -126,8 +126,6 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') cname//' >>> parameters list:'
-
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
      write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'issus :', issus
