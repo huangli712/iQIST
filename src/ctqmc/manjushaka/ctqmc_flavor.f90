@@ -259,7 +259,7 @@
 !! calculate the trace ratio for removing old creation and annihilation
 !! operators on perturbation expansion series
 !!
-  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
+  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
