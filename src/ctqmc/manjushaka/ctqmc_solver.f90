@@ -662,6 +662,7 @@
 
          call ctqmc_dump_kmat(knop, kmat, knop_err, kmat_err)
          call ctqmc_dump_lnop(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
+         call ctqmc_dump_szpw(szpw, szpw_err)
 
          call ctqmc_dump_twop(g2_re, g2_im)
          call ctqmc_dump_pair(ps_re, ps_im)
