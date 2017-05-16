@@ -283,10 +283,10 @@
 
      use context, only : cnegs, caves
      use context, only : ins_t, ins_a, ins_r
-     use context, only : remove_t, remove_a, remove_r
-     use context, only : lshift_t, lshift_a, lshift_r
-     use context, only : rshift_t, rshift_a, rshift_r
-     use context, only : reflip_t, reflip_a, reflip_r
+     use context, only : rmv_t, rmv_a, rmv_r
+     use context, only : lsh_t, lsh_a, lsh_r
+     use context, only : rsh_t, rsh_a, rsh_r
+     use context, only : rfl_t, rfl_a, rfl_r
      use context, only : paux
 
      implicit none
