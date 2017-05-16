@@ -544,9 +544,8 @@
 
          call ctqmc_reduce_hist(hist_mpi, hist_err)
          call ctqmc_reduce_prob(prob_mpi, prob_err)
-
-
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
+         call ctqmc_reduce_paux(paux_mpi, paux_err)
+         call ctqmc_reduce_nmat(nimp_mpi, nmat_mpi, nimp_err, nmat_err)
 
 
      call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
