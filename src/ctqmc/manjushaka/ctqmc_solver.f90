@@ -36,20 +36,20 @@
      use control, only : isvrt               ! control two-particle quantities
                                              !
      use control, only : nband, norbs, ncfgs ! size of model hamiltonian
-     use control, only : mkink
-     use control, only : mfreq
-     use control, only : nffrq, nbfrq
-     use control, only : ntime
-     use control, only : nsweep, nwrite
-     use control, only : nmonte
-     use control, only : myid, master
-
+     use control, only : mkink               ! perturbation expansion order
+     use control, only : mfreq               ! matsubara frequency
+     use control, only : nffrq, nbfrq        ! fermionic and bosonic frequencies
+     use control, only : ntime               ! imaginary time slice
+     use control, only : nsweep, nwrite      ! monte carlo sampling
+     use control, only : nmonte              ! interval for measurement
+     use control, only : myid, master        ! mpi environment
+                                             !
      use context, only : caves
-
-     use context, only : hist
-     use context, only : prob
-     use context, only : paux
-     use context, only : nimp, nmat
+                                             !
+     use context, only : hist                ! histogram
+     use context, only : prob                ! atomic eigenstate probability
+     use context, only : paux                ! auxiliary physical observables
+     use context, only : nimp, nmat          ! occupation and double occupation
 
      use context, only : knop, kmat
      use context, only : lnop, rnop, lrmm
