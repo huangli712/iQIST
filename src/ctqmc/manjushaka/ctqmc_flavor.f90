@@ -282,17 +282,14 @@
 ! external arguments
 ! index address to remove old create and annihilation operators
 ! is and ie are for create and annihilation operators, respectively
-     integer, intent(in)   :: is
-     integer, intent(in)   :: ie
+     integer, intent(in)  :: is
+     integer, intent(in)  :: ie
 
 ! imaginary time point of the old creation operator
-     real(dp), intent(in)  :: tau_start
+     real(dp), intent(in) :: tau_start
 
 ! imaginary time point of the old annihilation operator
-     real(dp), intent(in)  :: tau_end
-
-! ratio between old and new configurations, the local trace part
-     real(dp), intent(out) :: trace_ratio
+     real(dp), intent(in) :: tau_end
 
 ! local variables
 ! loop index over operators
@@ -430,12 +427,6 @@
              expt_v( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ie == nsize ) block
-
-!-------------------------------------------------------------------------
-! stage 3: evaluate trace ratio
-!-------------------------------------------------------------------------
-! evaluate trace_ratio
-     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_remove_ztrace
