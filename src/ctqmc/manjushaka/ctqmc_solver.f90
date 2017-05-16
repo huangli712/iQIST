@@ -529,7 +529,7 @@
 
          hist = hist / one
          prob = prob / real(caves)
-         paux = paux / one
+         paux = paux / real(caves)
          nimp = nimp / real(caves)
          nmat = nmat / real(caves)
 
@@ -575,6 +575,7 @@
 
          hist = hist_mpi * one
          prob = prob_mpi * real(nmonte)
+         paux = paux_mpi * real(nmonte)
          nimp = nimp_mpi * real(nmonte)
          nmat = nmat_mpi * real(nmonte)
 
