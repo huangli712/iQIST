@@ -545,6 +545,7 @@
          nmat = nmat * real(nmonte) / real(caves)
 
          gtau = gtau * real(nmonte) / real(caves)
+         ftau = ftau * real(nmonte) / real(caves)
          grnf = grnf * real(nmonte) / real(caves)
 
          knop = knop * real(nmonte) / real(caves)
