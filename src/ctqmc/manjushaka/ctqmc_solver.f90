@@ -172,8 +172,9 @@
      allocate(paux_err(  9  ),             stat=istat)
      allocate(nimp_mpi(norbs),             stat=istat)
      allocate(nimp_err(norbs),             stat=istat)
-     allocate(nnmat_mpi(norbs,norbs),      stat=istat)
-     allocate(nnmat_err(norbs,norbs),      stat=istat)
+     allocate(nmat_mpi(norbs,norbs),       stat=istat)
+     allocate(nmat_err(norbs,norbs),       stat=istat)
+
      allocate(kmat_mpi(norbs),             stat=istat)
      allocate(kmat_err(norbs),             stat=istat)
      allocate(kkmat_mpi(norbs,norbs),      stat=istat)
