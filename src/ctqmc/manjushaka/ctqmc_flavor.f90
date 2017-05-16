@@ -58,11 +58,14 @@
 !!
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, zero
-     use stack, only : istack_getrest, istack_gettop, istack_getter
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
 
      use control, only : ncfgs
      use control, only : beta
-     use context, only : matrix_ptrace, matrix_ntrace
+
      use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
