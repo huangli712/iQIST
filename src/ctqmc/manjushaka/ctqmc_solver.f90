@@ -107,6 +107,10 @@
      real(dp), allocatable :: prob_mpi(:)
      real(dp), allocatable :: prob_err(:)
 
+! auxiliary physical observables
+     real(dp), allocatable :: paux_mpi(:)
+     real(dp), allocatable :: paux_err(:)
+
 ! impurity occupation number matrix, for mpi case
      real(dp), allocatable :: nmat_mpi(:)
      real(dp), allocatable :: nmat_err(:)
