@@ -325,8 +325,16 @@
 !!>>> sampling the physical observables 1 (always)                     <<<
 !!========================================================================
 
+! the following physical observables are always measured
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
+
+! record the probability of atomic eigenstates
+             if ( mod(cstep, ncarlo) == 0 ) then
+                 call ctqmc_record_prob()
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+
+
 
 ! record the impurity (double) occupation number matrix and other
 ! auxiliary physical observables
@@ -339,10 +347,7 @@
                  call ctqmc_record_grnf()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the probability of eigenstates
-             if ( mod(cstep, ncarlo) == 0 ) then
-                 call ctqmc_record_prob()
-             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+
 
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, ncarlo) == 0 ) then
