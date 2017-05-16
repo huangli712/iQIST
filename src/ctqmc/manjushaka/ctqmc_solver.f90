@@ -517,55 +517,44 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
-! collect the histogram data from hist to hist_mpi
-     call ctqmc_reduce_hist(hist_mpi, hist_err)
+! start to collect data
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'quantum impurity solver reducing'
+     endif ! back if ( myid == master ) block
 
-! collect the probability data from prob to prob_mpi
+     call cpu_time(time_begin) ! record starting time
+
+     call ctqmc_reduce_hist(hist_mpi, hist_err)
      prob  = prob  / real(caves)
      call ctqmc_reduce_prob(prob_mpi, prob_err)
 
-! collect the occupation matrix data from nmat to nmat_mpi
-! collect the double occupation matrix data from nnmat to nnmat_mpi
      nmat  = nmat  / real(caves)
      nnmat = nnmat / real(caves)
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
-! collect the < k^2 > - < k >^2 data from kmat to kmat_mpi
-! collect the < k^2 > - < k >^2 data from kkmat to kkmat_mpi
      kmat  = kmat  / real(caves)
      kkmat = kkmat / real(caves)
      call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
 
-! collect the fidelity susceptibility data from lnop to lnop_mpi
-! collect the fidelity susceptibility data from rnop to rnop_mpi
-! collect the fidelity susceptibility data from lrmm to lrmm_mpi
      lnop  = lnop  / real(caves)
      rnop  = rnop  / real(caves)
      lrmm = lrmm / real(caves)
      call ctqmc_reduce_lnop(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
 
-! collect the two-particle green's function from g2_re to g2_re_mpi
-! collect the two-particle green's function from g2_im to g2_im_mpi
      g2_re = g2_re / real(caves)
      g2_im = g2_im / real(caves)
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the pair susceptibility from ps_re to ps_re_mpi
-! collect the pair susceptibility from ps_im to ps_im_mpi
      ps_re = ps_re / real(caves)
      ps_im = ps_im / real(caves)
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
-! collect the impurity green's function data from gtau to gtau_mpi
      gtau  = gtau  / real(caves)
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
-! collect the impurity green's function data from grnf to grnf_mpi
      grnf  = grnf  / real(caves)
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
-! update original data and calculate the averages simultaneously
-! average value section
      hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo)
 
