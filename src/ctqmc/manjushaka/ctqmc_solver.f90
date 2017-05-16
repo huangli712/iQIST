@@ -304,12 +304,16 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-     CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
+!!========================================================================
+!!>>> visiting perturbation expansion series                           <<<
+!!========================================================================
+
+     MC_SWEEP: do i=1,nsweep,nwrite
 
 ! record start time
          call cpu_time(time_begin)
 
-         CTQMC_DUMP_ITERATION: do j=1, nwrite
+         MC_WRITE: do j=1, nwrite
 
 !!========================================================================
 !!>>> sampling perturbation expansion series                           <<<
