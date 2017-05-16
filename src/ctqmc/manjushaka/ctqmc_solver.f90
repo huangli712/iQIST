@@ -652,17 +652,18 @@
 ! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
-
-         call ctqmc_dump_prob(prob, naux, saux, prob_err)
+         call ctqmc_dump_prob(prob, prob_err)
          call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
+
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
+         call ctqmc_dump_sigf(rmesh, sig2)
+
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
          call ctqmc_dump_lnop(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
 
          call ctqmc_dump_twop(g2_re, g2_im)
          call ctqmc_dump_pair(ps_re, ps_im)
-         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
-         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
-         call ctqmc_dump_sigf(rmesh, sig2)
      endif ! back if ( myid == master ) block
 
 !!========================================================================
