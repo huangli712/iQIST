@@ -363,20 +363,28 @@
 !!>>> sampling the physical observables 3 (optional)                   <<<
 !!========================================================================
 
-! record the < k^2 > - < k >^2
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
+! the following physical observables are measured optionally (by isobs)
+! record the kinetic energy fluctuation
+             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) then
                  call ctqmc_record_kmat()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) block
 
 ! record the fidelity susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
-                 call ctqmc_record_lnop()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
+             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) then
+                 call ctqmc_record_lrmm()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) block
 
-! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
-                 CONTINUE
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
+! record the powers of local magnetization
+             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) then
+                 call ctqmc_record_szpw()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) block
+
+!!========================================================================
+!!>>> sampling the physical observables 4 (optional)                   <<<
+!!========================================================================
+
+
+
 
 ! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
