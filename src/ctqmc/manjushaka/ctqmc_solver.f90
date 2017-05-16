@@ -660,7 +660,7 @@
          call ctqmc_dump_grnf(grnf, grnf_err)
          call ctqmc_dump_sigf(sig2)
 
-         call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
+         call ctqmc_dump_kmat(knop, kmat, knop_err, kmat_err)
          call ctqmc_dump_lnop(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
 
          call ctqmc_dump_twop(g2_re, g2_im)
