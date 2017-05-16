@@ -716,6 +716,9 @@
      deallocate(hist_err )
      deallocate(prob_mpi )
      deallocate(prob_err )
+     deallocate(paux_mpi )
+     deallocate(paux_err )
+
      deallocate(nmat_mpi )
      deallocate(nmat_err )
      deallocate(nnmat_mpi)
