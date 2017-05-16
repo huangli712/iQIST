@@ -525,6 +525,7 @@
      call cpu_time(time_begin) ! record starting time
 
      prob = prob / real(caves)
+     paux = paux / real(caves)
      nimp = nimp / real(caves)
      nmat = nmat / real(caves)
      knop = knop / real(caves)
@@ -532,12 +533,11 @@
      lnop = lnop / real(caves)
      rnop = rnop / real(caves)
      lrmm = lrmm / real(caves)
-     g2_re = g2_re / real(caves)
-     g2_im = g2_im / real(caves)
-     ps_re = ps_re / real(caves)
-     ps_im = ps_im / real(caves)
-     gtau  = gtau  / real(caves)
-     grnf  = grnf  / real(caves)
+     g2pw = g2pw / real(caves)
+     h2pw = h2pw / real(caves)
+     p2pw = p2pw / real(caves)
+     gtau = gtau / real(caves)
+     grnf = grnf / real(caves)
 
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
