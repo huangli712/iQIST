@@ -565,7 +565,6 @@
 !!>>> dump data of physical observables                                <<<
 !!========================================================================
 
-
 !!>>> ctqmc_dump_kmat: write out the < k > and < k^2 >
   subroutine ctqmc_dump_kmat(kmat, kkmat, kerr, kkerr)
      use constants, only : dp, one, two, mytmp
@@ -883,3 +882,62 @@
 
      return
   end subroutine ctqmc_dump_pair
+
+!!>>> ctqmc_diagram_plotting: write out a snapshot for the current diagram
+!!>>> configuration, the results can be used to make a dynamical video.
+  subroutine ctqmc_diagram_plotting(iter, cstep)
+     use constants, only : mystd, mytmp
+
+     use control, only : norbs
+     use control, only : niter
+     use control, only : nwrite, nsweep
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+
+     implicit none
+
+! external arguments
+! current self-consistent iteration number
+     integer, intent(in) :: iter
+
+! current QMC sweeping steps
+     integer, intent(in) :: cstep
+
+! local variables
+! loop index for the flavor
+     integer :: i
+
+! loop index for the operator pair
+     integer :: j
+
+! setup the internal criterion
+     if ( nsweep/nwrite < 100 ) RETURN
+
+! write the snapshot
+! open data file: solver.diag.dat
+     open(mytmp, file='solver.diag.dat', form='formatted', status='unknown', position='append')
+
+! write diagram info
+     write(mytmp,'(2(a,i4))') '>> cur_iter:', iter, ' tot_iter:', niter
+     write(mytmp,'(2(a,i4))') '>> cur_diag:', cstep/nwrite, ' tot_diag:', nsweep/nwrite
+
+! write the position of operators
+     do i=1,norbs
+         write(mytmp,'(2(a,i4))') '# flvr:', i, ' rank:', rank(i)
+         do j=1,rank(i)
+             write(mytmp,'(i4,2f16.8)') i, time_s( index_s(j, i), i ), time_e( index_e(j, i), i )
+         enddo ! over j={1,rank(i)} loop
+     enddo ! over i={1,norbs} loop
+
+! write two blank lines
+     write(mytmp,*)
+     write(mytmp,*)
+
+! close data file
+     close(mytmp)
+
+! write the message to the terminal
+     write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
+
+     return
+  end subroutine ctqmc_diagram_plotting
