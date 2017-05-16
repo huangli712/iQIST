@@ -758,7 +758,7 @@
 
 ! check if we need to dump the < k > and < k^2 > data
 ! to solver.kmat.dat
-     if ( .not. btest(issus, 5) ) RETURN
+     if ( .not. btest(isobs, 1) ) RETURN
 
 ! open data file: solver.kmat.dat
      open(mytmp, file='solver.kmat.dat', form='formatted', status='unknown')
@@ -766,7 +766,7 @@
 ! write it
      write(mytmp,'(a)') '# <  k  > data:'
      do i=1,norbs
-         write(mytmp,'(i6,2f12.6)') i, kmat(i), kerr(i)
+         write(mytmp,'(i6,2f12.6)') i, knop(i), kerr(i)
      enddo ! over i={1,norbs} loop
      write(mytmp,'(a6,2f12.6)') 'k_sum', sum( kmat ), sum( kerr )
 
