@@ -800,14 +800,14 @@
 
 ! external arguments
 ! number of operators at left half axis, < k_l >
-     real(dp), intent(in) :: lmat(norbs)
+     real(dp), intent(in) :: lnop(norbs)
      real(dp), intent(in) :: lerr(norbs)
 
 ! number of operators at right half axis, < k_r >
-     real(dp), intent(in) :: rmat(norbs)
+     real(dp), intent(in) :: rnop(norbs)
      real(dp), intent(in) :: rerr(norbs)
 
-! used to evaluate fidelity susceptibility, < k_l k_r >
+! crossing product of k_l and k_r, < k_l k_r >
      real(dp), intent(in) :: lrmm(norbs,norbs)
      real(dp), intent(in) :: lree(norbs,norbs)
 
@@ -821,15 +821,15 @@
      real(dp) :: f_err
 
 ! calculate f_val and f_err
-     f_val = sum( lrmm ) - sum( lmat ) * sum( rmat )
-     f_err = sum( lree ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
+     f_val = sum( lrmm ) - sum( lnop ) * sum( rnop )
+     f_err = sum( lree ) - sum( rnop ) * sum( lerr ) - sum( lnop ) * sum( rerr )
 
 ! check if we need to dump the fidelity susceptibility data
-! to solver.lmat.dat
-     if ( .not. btest(issus, 6) ) RETURN
+! to solver.lrmm.dat
+     if ( .not. btest(isobs, 2) ) RETURN
 
-! open data file: solver.lmat.dat
-     open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
+! open data file: solver.lrmm.dat
+     open(mytmp, file='solver.lrmm.dat', form='formatted', status='unknown')
 
 ! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
