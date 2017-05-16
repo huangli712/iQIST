@@ -20,11 +20,10 @@
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
+!!!           cat_create_colour 
+!!!           cat_create_flavor <<<---
 !!!           cat_comp_operator
 !!!           cat_find_operator <<<---
-!!!           ctqmc_make_colour
-!!!           cat_make_ 
-!!!           ctqmc_make_flavor <<<---
 !!!           cat_disp_diagrams <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
