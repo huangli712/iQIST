@@ -322,7 +322,7 @@
              call ctqmc_try_walking(cstep)
 
 !!========================================================================
-!!>>> sampling the physical observables                                <<<
+!!>>> sampling the physical observables 1 (always)                     <<<
 !!========================================================================
 
 ! record the histogram for perturbation expansion series
