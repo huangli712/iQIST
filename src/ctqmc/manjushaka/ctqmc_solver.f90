@@ -5,12 +5,12 @@
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
-!!! purpose : the main subroutine for the hybridization expansion version
+!!!           05/16/2017 by li huang (last modified)
+!!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!!!           solver
+!!!           solver. they implement the initialization, thermalization,
+!!!           random walk, measurement, and finalization algorithms.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
