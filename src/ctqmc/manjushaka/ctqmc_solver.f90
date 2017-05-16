@@ -704,7 +704,8 @@
 !!>>> finishing quantum impurity solver                                <<<
 !!========================================================================
 
-! print the footer of continuous time quantum Monte Carlo quantum impurity solver
+! print the footer of continuous time quantum Monte Carlo quantum impurity
+! solver. to tell the user it is over
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
