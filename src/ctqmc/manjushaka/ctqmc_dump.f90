@@ -681,7 +681,7 @@
 !! write out self-energy function in matsubara frequency space
 !!
   subroutine ctqmc_dump_sigf(sigf)
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp, czero, mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -705,9 +705,7 @@
 ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-              real(sigf(j,i,i)), aimag(sigf(j,i,i)), &
-                                         zero, zero
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), sigf(j,i,i), czero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
