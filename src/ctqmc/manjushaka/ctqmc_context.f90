@@ -530,6 +530,13 @@
      real(dp), public, save, allocatable :: lrmm(:,:)
 
 !!
+!! @var szpw
+!!
+!! powers of the local magnetization, < S^n_z>
+!!
+     real(dp), public, save, allocatable :: szpw(:,:)
+
+!!
 !! @var g2pw
 !!
 !! two-particle green's function
