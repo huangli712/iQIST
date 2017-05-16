@@ -189,12 +189,12 @@
      nsize = nsize + 1
 
 !-------------------------------------------------------------------------
-! stage 2: insert a destroy operator, trial step
+! stage 2: insert a annihilation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for destroy operator
+! get memory address for annihilation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
 
-! store basic data for new destroy operator
+! store basic data for new annihilation operator
      time_v(ae) = tau_end
      flvr_v(ae) = flvr
      type_v(ae) = 0
@@ -204,18 +204,18 @@
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize,ie,-1} loop
 
-! store the memory address for destroy operator
+! store the memory address for annihilation operator
      index_t(ie) = ae
 
 ! evaluate previous imaginary time interval
-     if ( ie ==         1 ) then ! the imaginary time of destroy operator is the smallest
+     if ( ie ==         1 ) then ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_t(ie) ) - zero
      else
          t_prev = time_v( index_t(ie) ) - time_v( index_t(ie-1) )
      endif ! back if ( ie == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( ie == nsize + 1 ) then ! the imaginary time of destroy operator is the largest
+     if ( ie == nsize + 1 ) then ! the imaginary time of annihilation operator is the largest
          t_next = beta - time_v( index_t(ie) )
      else
          t_next = time_v( index_t(ie+1) ) - time_v( index_t(ie) )
@@ -260,7 +260,7 @@
   end subroutine cat_insert_ztrace
 
 !!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
-!!>>> and destroy operators on perturbation expansion series
+!!>>> and annihilation operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
@@ -274,15 +274,15 @@
      implicit none
 
 ! external arguments
-! index address to remove old create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to remove old create and annihilation operators
+! is and ie are for create and annihilation operators, respectively
      integer, intent(in)   :: is
      integer, intent(in)   :: ie
 
 ! imaginary time point of the old creation operator
      real(dp), intent(in)  :: tau_start
 
-! imaginary time point of the old destroy operator
+! imaginary time point of the old annihilation operator
      real(dp), intent(in)  :: tau_end
 
 ! ratio between old and new configurations, the local trace part
@@ -292,7 +292,7 @@
 ! loop index over operators
      integer  :: i
 
-! memory address for old create and destroy operators
+! memory address for old create and annihilation operators
      integer  :: as
      integer  :: ae
 
@@ -375,9 +375,9 @@
      nsize = nsize - 1
 
 !-------------------------------------------------------------------------
-! stage 2: remove destroy operator, trial step
+! stage 2: remove annihilation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for old destroy operator
+! get memory address for old annihilation operator
      ae = index_t(ie)
 
 ! remove the unused index address from index_t
@@ -387,14 +387,14 @@
      index_t(nsize) = 0
 
 ! evaluate previous imaginary time interval
-     if ( ie == 1     ) then ! the imaginary time of destroy operator is the smallest
+     if ( ie == 1     ) then ! the imaginary time of annihilation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_t(ie-1) )
      endif ! back if ( ie == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( ie == nsize ) then ! the imaginary time of destroy operator is the largest
+     if ( ie == nsize ) then ! the imaginary time of annihilation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_t(ie)   )
@@ -603,15 +603,15 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift existing destroy operator
-! ieo and ien are for old and new destroy operators, respectively
+! index address to shift existing annihilation operator
+! ieo and ien are for old and new annihilation operators, respectively
      integer, intent(in)   :: ieo
      integer, intent(in)   :: ien
 
-! imaginary time point of the old destroy operator
+! imaginary time point of the old annihilation operator
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time point of the new destroy operator
+! imaginary time point of the new annihilation operator
      real(dp), intent(in)  :: tau_end2
 
 ! ratio between old and new configurations, the local trace part
@@ -621,10 +621,10 @@
 ! loop index over operators
      integer  :: i
 
-! memory address for old and new destroy operators
+! memory address for old and new annihilation operators
      integer  :: ae
 
-! index address for old destroy operator
+! index address for old annihilation operator
      integer  :: ieo_t
 
 ! total number of operators
@@ -639,19 +639,19 @@
      nsize = istack_getrest( empty_v )
 
 ! copy index_v to index_t
-! since we do not shift the destroy operator actually at this stage, so
+! since we do not shift the annihilation operator actually at this stage, so
 ! index_v can not be overwritten here
      do i=1,nsize
          index_t(i) = index_v(i)
      enddo ! over i={1,nsize} loop
 
 !-------------------------------------------------------------------------
-! stage 1: shift old destroy operator, trial step
+! stage 1: shift old annihilation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for destroy operator
+! get memory address for annihilation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ae )
 
-! store basic data for new destroy operator
+! store basic data for new annihilation operator
      time_v(ae) = tau_end2
      flvr_v(ae) = flvr
      type_v(ae) = 0
@@ -667,11 +667,11 @@
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize-1,ien,-1} loop
 
-! store the memory address for destroy operator
+! store the memory address for annihilation operator
      index_t(ien) = ae
 
 ! evaluate previous imaginary time interval
-     if ( ien == 1 ) then ! the imaginary time of destroy operator is the smallest
+     if ( ien == 1 ) then ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_t(ien) ) - zero
      else
          t_prev = time_v( index_t(ien) ) - time_v( index_t(ien-1) )
@@ -740,7 +740,7 @@
 !!>>> service layer: update perturbation expansion series A            <<<
 !!========================================================================
 
-!!>>> try_insert_colour: generate create and destroy operators for selected
+!!>>> try_insert_colour: generate create and annihilation operators for selected
 !!>>> flavor channel randomly, and then determinte their index address for
 !!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
@@ -757,15 +757,15 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to insert new create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to insert new create and annihilation operators
+! is and ie are for create and annihilation operators, respectively
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
 ! imaginary time point of the new creation operator
      real(dp), intent(out) :: tau_start
 
-! imaginary time point of the new destroy operator
+! imaginary time point of the new annihilation operator
      real(dp), intent(out) :: tau_end
 
 ! local variables
@@ -787,7 +787,7 @@
          call cat_comp_operator(flvr, tau_start, have)
      enddo creator ! over do while loop
 
-! select imaginary time of the new destroy operator randomly
+! select imaginary time of the new annihilation operator randomly
 ! check tau_end is necessary
      have = 99
      destroyer : do while ( have > 0 )
@@ -853,21 +853,21 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to remove old create and annihilation operators
+! is and ie are for create and annihilation operators, respectively
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
 ! imaginary time point of the old creation operator
      real(dp), intent(out) :: tau_start
 
-! imaginary time point of the old destroy operator
+! imaginary time point of the old annihilation operator
      real(dp), intent(out) :: tau_end
 
 ! randomly select index address, which is used to access the creation operators
      is = ceiling( spring_sfmt_stream() * ckink )
 
-! randomly select index address, which is used to access the destroy operators
+! randomly select index address, which is used to access the annihilation operators
      ie = ceiling( spring_sfmt_stream() * ckink )
 
 ! evaluate tau_start and tau_end respectively
@@ -987,34 +987,34 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift old destroy operator
+! index address to shift old annihilation operator
 ! ieo and ien are for old and new indices, respectively
      integer, intent(out)  :: ieo
      integer, intent(out)  :: ien
 
-! imaginary time point of the selected destroy operator (the old one)
+! imaginary time point of the selected annihilation operator (the old one)
      real(dp), intent(out) :: tau_end1
 
-! imaginary time point of the selected destroy operator (the new one)
+! imaginary time point of the selected annihilation operator (the new one)
      real(dp), intent(out) :: tau_end2
 
 ! local variables
 ! determine if tau_end2 is collided with existed operators
      integer  :: have
 
-! imaginary time of previous destroy operator
+! imaginary time of previous annihilation operator
      real(dp) :: tau_prev
 
-! imaginary time of next destroy operator
+! imaginary time of next annihilation operator
      real(dp) :: tau_next
 
-! randomly select index address, which is used to access the destroy operators
+! randomly select index address, which is used to access the annihilation operators
      ieo = ceiling( spring_sfmt_stream() * ckink )
 
 ! evaluate tau_end1
      tau_end1 = time_e( index_e(ieo, flvr), flvr )
 
-! determine imaginary time and index address for new destroy operator
+! determine imaginary time and index address for new annihilation operator
      have = 99
      destroyer : do while ( have > 0 )
          if ( ckink == 1 ) then
@@ -1061,7 +1061,7 @@
 !!========================================================================
 
 !!>>> cat_insert_colour: update the perturbation expansion series for
-!!>>> insert new create and destroy operators in the colour part actually
+!!>>> insert new create and annihilation operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
      use stack, only : istack_pop
@@ -1077,21 +1077,21 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for insert new create and destroy operators
+! index address for insert new create and annihilation operators
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
 ! imaginary time \tau_s for creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time \tau_e for destroy operator
+! imaginary time \tau_e for annihilation operator
      real(dp), intent(in) :: tau_end
 
 ! local variables
 ! loop index over operators and frequencies
      integer  :: i
 
-! memory address for new create and destroy operators
+! memory address for new create and annihilation operators
      integer  :: as
      integer  :: ae
 
@@ -1133,7 +1133,7 @@
   end subroutine cat_insert_colour
 
 !!>>> cat_remove_colour: update the perturbation expansion series for
-!!>>> remove old create and destroy operators in the colour part actually
+!!>>> remove old create and annihilation operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
      use stack, only : istack_push
 
@@ -1146,7 +1146,7 @@
 ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address for remove old create and destroy operators
+! index address for remove old create and annihilation operators
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
@@ -1154,7 +1154,7 @@
 ! loop index over operators
      integer :: i
 
-! memory address for old create and destroy operators
+! memory address for old create and annihilation operators
      integer :: as
      integer :: ae
 
@@ -1240,7 +1240,7 @@
   end subroutine cat_lshift_colour
 
 !!>>> cat_rshift_colour: update the perturbation expansion series for
-!!>>> rshift an old destroy operators in the colour part actually
+!!>>> rshift an old annihilation operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
      use constants, only : dp
 
@@ -1255,18 +1255,18 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for rshift old destroy operator
+! index address for rshift old annihilation operator
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time \tau_e for destroy operator (the new one)
+! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in) :: tau_end
 
 ! local variables
 ! loop index over operators and frequencies
      integer  :: i
 
-! memory address for new destroy operator
+! memory address for new annihilation operator
      integer  :: ae
 
 ! dummy variables, \tau_e * \omega
@@ -1303,7 +1303,7 @@
 !!========================================================================
 
 !!>>> try_insert_flavor: determine index addresses for the new create and
-!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> annihilation operators in the flavor part, and then determine whether
 !!>>> they can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
      use constants, only : dp
@@ -1319,18 +1319,18 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to insert new create and annihilation operators
+! is and ie are for create and annihilation operators, respectively
      integer, intent(out) :: is
      integer, intent(out) :: ie
 
-! whether the new create and destroy operators can be inserted diagrammatically
+! whether the new create and annihilation operators can be inserted diagrammatically
      logical, intent(out) :: ladd
 
 ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the new destroy operator
+! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end
 
 ! local variables
@@ -1341,7 +1341,7 @@
      integer :: m
      integer :: n
 
-! pseudo-index address for create and destroy operators, respectively
+! pseudo-index address for create and annihilation operators, respectively
      integer :: pis
      integer :: pie
 
@@ -1402,7 +1402,7 @@
      endif ! back if ( nsize > 0 ) block
 
 ! adjust ie further, since we insert creation operator firstly, and then
-! insert destroy operator
+! insert annihilation operator
      if ( tau_start < tau_end ) then
          ie = ie + 1
      endif ! back if ( tau_start < tau_end ) block
@@ -1444,7 +1444,7 @@
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 1
-! meet the new destroy operator
+! meet the new annihilation operator
                  else if ( i == pie ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
@@ -1473,7 +1473,7 @@
   end subroutine try_insert_flavor
 
 !!>>> try_remove_flavor: determine index addresses for the new create and
-!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> annihilation operators in the flavor part, and then determine whether
 !!>>> they can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
      use constants, only : dp
@@ -1486,18 +1486,18 @@
      implicit none
 
 ! external arguments
-! index address to remove old create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to remove old create and annihilation operators
+! is and ie are for create and annihilation operators, respectively
      integer, intent(out) :: is
      integer, intent(out) :: ie
 
-! whether the old create and destroy operators can be removed diagrammatically
+! whether the old create and annihilation operators can be removed diagrammatically
      logical, intent(out) :: lrmv
 
 ! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the old destroy operator
+! imaginary time point of the old annihilation operator
      real(dp), intent(in) :: tau_end
 
 ! local variables
@@ -1508,7 +1508,7 @@
      integer :: m
      integer :: n
 
-! pseudo-index address for create and destroy operators, respectively
+! pseudo-index address for create and annihilation operators, respectively
      integer :: pis
      integer :: pie
 
@@ -1550,7 +1550,7 @@
      call cat_find_operator( ie, nsize, tau_end )
 
 ! adjust ie further, since we remove creation operator firstly, and then
-! remove destroy operator
+! remove annihilation operator
      if ( tau_start < tau_end ) then
          ie = ie - 1
      endif ! back if ( tau_start < tau_end ) block
@@ -1768,7 +1768,7 @@
   end subroutine try_lshift_flavor
 
 !!>>> try_rshift_flavor: determine index addresses for the old and new
-!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> annihilation operators in the flavor part, and then determine whether
 !!>>> it can be shifted diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
      use constants, only : dp
@@ -1784,18 +1784,18 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing destroy operator
-! ieo and ien are for old and new destroy operators, respectively
+! index address to shift existing annihilation operator
+! ieo and ien are for old and new annihilation operators, respectively
      integer, intent(out) :: ieo
      integer, intent(out) :: ien
 
-! whether the old destroy operators can be shifted diagrammatically
+! whether the old annihilation operators can be shifted diagrammatically
      logical, intent(out) :: rshf
 
-! imaginary time point of the old destroy operator
+! imaginary time point of the old annihilation operator
      real(dp), intent(in) :: tau_end1
 
-! imaginary time point of the new destroy operator
+! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end2
 
 ! local variables
@@ -1806,7 +1806,7 @@
      integer :: m
      integer :: n
 
-! pseudo-index address for old and new destroy operators, respectively
+! pseudo-index address for old and new annihilation operators, respectively
      integer :: pieo
      integer :: pien
 
@@ -1897,10 +1897,10 @@
              do i=1,nsize+1
                  counter = counter + 1
 
-! meet the old destroy operator
+! meet the old annihilation operator
                  if      ( i == pieo ) then
                      idead = idead + 1
-! meet the new destroy operator
+! meet the new annihilation operator
                  else if ( i == pien ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
@@ -1932,7 +1932,7 @@
 !!>>> service layer: update perturbation expansion series D            <<<
 !!========================================================================
 
-!!>>> cat_insert_flavor: insert new create and destroy operators in the
+!!>>> cat_insert_flavor: insert new create and annihilation operators in the
 !!>>> flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, zero
@@ -1950,22 +1950,22 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to insert new create and annihilation operators
+! is and ie are for create and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
 ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the new destroy operator
+! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end
 
 ! local variables
 ! loop index over operators
      integer  :: i
 
-! memory address for new create and destroy operators
+! memory address for new create and annihilation operators
      integer  :: as
      integer  :: ae
 
@@ -2034,15 +2034,15 @@
      endif ! back if ( is == nsize + 1 ) block
 
 !-------------------------------------------------------------------------
-! stage 2: insert a destroy operator
+! stage 2: insert a annihilation operator
 !-------------------------------------------------------------------------
 ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for destroy operator
+! get memory address for annihilation operator
      call istack_pop( empty_v, ae )
 
-! store basic data for new destroy operator
+! store basic data for new annihilation operator
      time_v(ae) = tau_end
      flvr_v(ae) = flvr
      type_v(ae) = 0
@@ -2052,18 +2052,18 @@
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize,ie,-1} loop
 
-! store the memory address for destroy operator
+! store the memory address for annihilation operator
      index_v(ie) = ae
 
 ! evaluate previous imaginary time interval
-     if ( ie ==         1 ) then ! the imaginary time of destroy operator is the smallest
+     if ( ie ==         1 ) then ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_v(ie) ) - zero
      else
          t_prev = time_v( index_v(ie) ) - time_v( index_v(ie-1) )
      endif ! back if ( ie == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( ie == nsize + 1 ) then ! the imaginary time of destroy operator is the largest
+     if ( ie == nsize + 1 ) then ! the imaginary time of annihilation operator is the largest
          t_next = beta - time_v( index_v(ie) )
      else
          t_next = time_v( index_v(ie+1) ) - time_v( index_v(ie) )
@@ -2098,7 +2098,7 @@
      return
   end subroutine cat_insert_flavor
 
-!!>>> cat_remove_flavor: remove old create and destroy operators in the
+!!>>> cat_remove_flavor: remove old create and annihilation operators in the
 !!>>> flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
      use constants, only : dp, zero
@@ -2113,22 +2113,22 @@
      implicit none
 
 ! external arguments
-! index address to remove old create and destroy operators
-! is and ie are for create and destroy operators, respectively
+! index address to remove old create and annihilation operators
+! is and ie are for create and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
 ! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the old destroy operator
+! imaginary time point of the old annihilation operator
      real(dp), intent(in) :: tau_end
 
 ! local variables
 ! loop index over operators
      integer  :: i
 
-! memory address for old create and destroy operators
+! memory address for old create and annihilation operators
      integer  :: as
      integer  :: ae
 
@@ -2187,12 +2187,12 @@
      endif ! back if ( is == nsize ) block
 
 !-------------------------------------------------------------------------
-! stage 2: remove destroy operator
+! stage 2: remove annihilation operator
 !-------------------------------------------------------------------------
 ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for old destroy operator
+! get memory address for old annihilation operator
      ae = index_v(ie)
 
 ! push the memory address back to the empty_v stack
@@ -2205,14 +2205,14 @@
      index_v(nsize) = 0
 
 ! evaluate previous imaginary time interval
-     if ( ie == 1     ) then ! the imaginary time of destroy operator is the smallest
+     if ( ie == 1     ) then ! the imaginary time of annihilation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_v(ie-1) )
      endif ! back if ( ie == 1 ) block
 
 ! evaluate next imaginary time interval
-     if ( ie == nsize ) then ! the imaginary time of destroy operator is the largest
+     if ( ie == nsize ) then ! the imaginary time of annihilation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_v(ie)   )
@@ -2239,7 +2239,7 @@
      as = is
      ae = ie
 
-! in principle, destroy operator should be removed at first, but in fact,
+! in principle, annihilation operator should be removed at first, but in fact,
 ! we remove creation operator at first. in order to treat csign correctly,
 ! we need to recover the original scheme, so ae is restored at first.
 ! please refer to try_remove_flavor().
@@ -2247,7 +2247,7 @@
          ae = ae + 1
      endif ! back if ( tau_start < tau_end ) block
 
-! it is assumed that destroy operator is removed at first, so as should be
+! it is assumed that annihilation operator is removed at first, so as should be
 ! adjusted if needed
      if ( tau_start > tau_end ) then
          as = as - 1
@@ -2387,7 +2387,7 @@
      return
   end subroutine cat_lshift_flavor
 
-!!>>> cat_rshift_flavor: shift the old destroy operator in the flavor part
+!!>>> cat_rshift_flavor: shift the old annihilation operator in the flavor part
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
      use constants, only : dp, zero
      use stack, only : istack_getrest
@@ -2404,22 +2404,22 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing destroy operator
-! iso and isn are for old and new destroy operators, respectively
+! index address to shift existing annihilation operator
+! iso and isn are for old and new annihilation operators, respectively
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time point of the new destroy operator
+! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end2
 
 ! local variables
 ! loop index over operators
      integer  :: i
 
-! memory address for old and new destroy operators
+! memory address for old and new annihilation operators
      integer  :: ae
 
-! index address for old destroy operator
+! index address for old annihilation operator
      integer  :: ieo_t
 
 ! total number of operators
@@ -2434,12 +2434,12 @@
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
-! stage 1: shift old destroy operator
+! stage 1: shift old annihilation operator
 !-------------------------------------------------------------------------
-! get memory address for destroy operator
+! get memory address for annihilation operator
      ae = index_v(ieo)
 
-! store basic data for new destroy operator
+! store basic data for new annihilation operator
      time_v(ae) = tau_end2
      flvr_v(ae) = flvr
      type_v(ae) = 0
@@ -2455,11 +2455,11 @@
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize-1,ien,-1} loop
 
-! store the memory address for destroy operator
+! store the memory address for annihilation operator
      index_v(ien) = ae
 
 ! evaluate previous imaginary time interval
-     if ( ien == 1 ) then ! the imaginary time of destroy operator is the smallest
+     if ( ien == 1 ) then ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_v(ien) ) - zero
      else
          t_prev = time_v( index_v(ien) ) - time_v( index_v(ien-1) )
@@ -2693,15 +2693,15 @@
 ! loop index for operator pair
      integer  :: i
 
-! index address for create and destroy operators
+! index address for create and annihilation operators
      integer  :: is, ie
 
-! \tau_s and \tau_e for create and destroy operators
+! \tau_s and \tau_e for create and annihilation operators
      real(dp) :: ts, te
 
      do i=1,kink
 
-! determine index address, creation operator first, and then destroy operator
+! determine index address, creation operator first, and then annihilation operator
          is = 2 * i -1
          ie = 2 * i
 
