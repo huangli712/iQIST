@@ -574,8 +574,8 @@
      h2pw = h2pw_mpi * real(nmonte)
      p2pw = p2pw_mpi * real(nmonte)
 
-     gtau  = gtau_mpi  * real(ncarlo)
-     grnf  = grnf_mpi  * real(nmonte)
+     gtau = gtau_mpi * real(nmonte)
+     grnf = grnf_mpi * real(nmonte)
 
 ! update original data and calculate the averages simultaneously
 ! error bar section
