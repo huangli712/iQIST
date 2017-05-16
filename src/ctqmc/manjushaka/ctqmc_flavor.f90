@@ -56,7 +56,7 @@
 !! calculate the trace ratio for inserting new creation and annihilation
 !! operators on perturbation expansion series
 !!
-  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
+  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
