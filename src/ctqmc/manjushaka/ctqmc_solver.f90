@@ -188,10 +188,13 @@
      allocate(szpw_mpi(  4  ,norbs),       stat=istat)
      allocate(szpw_err(  4  ,norbs),       stat=istat)
 
-     allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(p2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(p2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
