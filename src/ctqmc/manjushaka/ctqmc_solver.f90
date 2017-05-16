@@ -313,7 +313,7 @@
 ! record start time
          call cpu_time(time_begin)
 
-         MC_WRITE: do j=1, nwrite
+         MC_WRITE: do j=1,nwrite
 
 !!========================================================================
 !!>>> sampling perturbation expansion series                           <<<
@@ -323,7 +323,7 @@
              cstep = cstep + 1
 
 ! sampling the perturbation expansion feynman diagrams randomly
-             call ctqmc_diagram_sampling(cstep)
+             call ctqmc_try_walking(cstep)
 
 !!========================================================================
 !!>>> sampling the physical observables                                <<<
