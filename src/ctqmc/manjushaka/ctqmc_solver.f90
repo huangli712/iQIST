@@ -128,12 +128,12 @@
      real(dp), allocatable :: kmat_err(:,:)
 
 ! number of operators at left half axis < k_l >, for mpi case
-     real(dp), allocatable :: lmat_mpi(:)
-     real(dp), allocatable :: lmat_err(:)
+     real(dp), allocatable :: lnop_mpi(:)
+     real(dp), allocatable :: lnop_err(:)
 
 ! number of operators at right half axis < k_r >, for mpi case
-     real(dp), allocatable :: rmat_mpi(:)
-     real(dp), allocatable :: rmat_err(:)
+     real(dp), allocatable :: rnop_mpi(:)
+     real(dp), allocatable :: rnop_err(:)
 
 ! used to evaluate fidelity susceptibility < k_l k_r >, for mpi case
      real(dp), allocatable :: lrmm_mpi(:,:)
@@ -173,10 +173,10 @@
      allocate(kmat_err(norbs),             stat=istat)
      allocate(kkmat_mpi(norbs,norbs),      stat=istat)
      allocate(kkmat_err(norbs,norbs),      stat=istat)
-     allocate(lmat_mpi(norbs),             stat=istat)
-     allocate(lmat_err(norbs),             stat=istat)
-     allocate(rmat_mpi(norbs),             stat=istat)
-     allocate(rmat_err(norbs),             stat=istat)
+     allocate(lnop_mpi(norbs),             stat=istat)
+     allocate(lnop_err(norbs),             stat=istat)
+     allocate(rnop_mpi(norbs),             stat=istat)
+     allocate(rnop_err(norbs),             stat=istat)
      allocate(lrmm_mpi(norbs,norbs),      stat=istat)
      allocate(lrmm_err(norbs,norbs),      stat=istat)
      allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
@@ -235,7 +235,7 @@
      call ctqmc_solver_init()
      call cpu_time(time_end)   ! record ending   time
 
-! print the time information
+! print the time infornopion
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -246,7 +246,7 @@
 !!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver further
-! retrieving the time series information produced by previous running
+! retrieving the time series infornopion produced by previous running
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
      endif ! back if ( myid == master ) block
@@ -255,7 +255,7 @@
      call ctqmc_retrieve_status()
      call cpu_time(time_end)   ! record ending   time
 
-! print the time information
+! print the time infornopion
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -275,7 +275,7 @@
      call ctqmc_diagram_warmming()
      call cpu_time(time_end)   ! record ending   time
 
-! print the time information
+! print the time infornopion
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -348,7 +348,7 @@
 
 ! record the fidelity susceptibility
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
-                 call ctqmc_record_lmat()
+                 call ctqmc_record_lnop()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
 
 ! record nothing
@@ -436,7 +436,7 @@
 ! record ending time for this iteration
          call cpu_time(time_end)
 
-! calculate timing information
+! calculate timing infornopion
          time_cur = time_end - time_begin
          time_sum = time_sum + time_cur
          time_begin = time_end
@@ -485,13 +485,13 @@
      kkmat = kkmat / real(caves)
      call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
 
-! collect the fidelity susceptibility data from lmat to lmat_mpi
-! collect the fidelity susceptibility data from rmat to rmat_mpi
+! collect the fidelity susceptibility data from lnop to lnop_mpi
+! collect the fidelity susceptibility data from rnop to rnop_mpi
 ! collect the fidelity susceptibility data from lrmm to lrmm_mpi
-     lmat  = lmat  / real(caves)
-     rmat  = rmat  / real(caves)
+     lnop  = lnop  / real(caves)
+     rnop  = rnop  / real(caves)
      lrmm = lrmm / real(caves)
-     call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmm_mpi, lmat_err, rmat_err, lrmm_err)
+     call ctqmc_reduce_lnop(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
 
 ! collect the two-particle green's function from g2_re to g2_re_mpi
 ! collect the two-particle green's function from g2_im to g2_im_mpi
@@ -522,8 +522,8 @@
      nnmat = nnmat_mpi * real(nmonte)
      kmat  = kmat_mpi  * real(nmonte)
      kkmat = kkmat_mpi * real(nmonte)
-     lmat  = lmat_mpi  * real(nmonte)
-     rmat  = rmat_mpi  * real(nmonte)
+     lnop  = lnop_mpi  * real(nmonte)
+     rnop  = rnop_mpi  * real(nmonte)
      lrmm = lrmm_mpi * real(nmonte)
 
      g2_re = g2_re_mpi * real(nmonte)
@@ -543,8 +543,8 @@
      nnmat_err = nnmat_err * real(nmonte)
      kmat_err  = kmat_err  * real(nmonte)
      kkmat_err = kkmat_err * real(nmonte)
-     lmat_err  = lmat_err  * real(nmonte)
-     rmat_err  = rmat_err  * real(nmonte)
+     lnop_err  = lnop_err  * real(nmonte)
+     rnop_err  = rnop_err  * real(nmonte)
      lrmm_err = lrmm_err * real(nmonte)
 
      gtau_err  = gtau_err  * real(ncarlo)
@@ -608,9 +608,9 @@
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
      endif ! back if ( myid == master ) block
 
-! write out the final fidelity susceptibility data, lmat, rmat, and lrmm
+! write out the final fidelity susceptibility data, lnop, rnop, and lrmm
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_lmat(lmat, rmat, lrmm, lmat_err, rmat_err, lrmm_err)
+         call ctqmc_dump_lnop(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
@@ -642,7 +642,7 @@
 !!>>> saving quantum impurity solver                                   <<<
 !!========================================================================
 
-! save the perturbation expansion series information to the disk file
+! save the perturbation expansion series infornopion to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
      endif ! back if ( myid == master ) block
@@ -670,10 +670,10 @@
      deallocate(kmat_err )
      deallocate(kkmat_mpi)
      deallocate(kkmat_err)
-     deallocate(lmat_mpi )
-     deallocate(lmat_err )
-     deallocate(rmat_mpi )
-     deallocate(rmat_err )
+     deallocate(lnop_mpi )
+     deallocate(lnop_err )
+     deallocate(rnop_mpi )
+     deallocate(rnop_err )
      deallocate(lrmm_mpi)
      deallocate(lrmm_err)
      deallocate(g2_re_mpi)
