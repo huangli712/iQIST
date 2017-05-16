@@ -656,9 +656,9 @@
          call ctqmc_dump_paux(paux, paux_err)
          call ctqmc_dump_nmat(nimp, nmat, nimp_err, nmat_err)
 
-         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
-         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
-         call ctqmc_dump_sigf(rmesh, sig2)
+         call ctqmc_dump_gtau(gtau, gtau_err)
+         call ctqmc_dump_grnf(grnf, grnf_err)
+         call ctqmc_dump_sigf(sig2)
 
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
          call ctqmc_dump_lnop(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
