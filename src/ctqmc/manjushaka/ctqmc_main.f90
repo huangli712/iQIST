@@ -110,13 +110,17 @@
 !!>>> DMFT ITERATION END                                               <<<
 !!========================================================================
 
+     CTQMC_SLEEP: BLOCK
+
 ! deallocate memory spaces
-     call ctqmc_final_array()
+         call ctqmc_final_array()
 
 ! print the ending messages
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_print_footer()
-     endif ! back if ( myid == master ) block
+         if ( myid == master ) then ! only master node can do it
+             call ctqmc_print_footer()
+         endif ! back if ( myid == master ) block
+
+     END BLOCK CTQMC_SLEEP
 
 ! finalize mpi envirnoment
 # if defined (MPI)
