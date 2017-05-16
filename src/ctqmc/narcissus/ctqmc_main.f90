@@ -8,11 +8,8 @@
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
 !!! comment : this impurity solver is based on segment picture formalism !
-!!!           the dynamical screening effect is included                 !
 !!!           any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
-
-
 
 !!========================================================================
   PROGRAM CTQMC_MAIN !                                                 <<<
