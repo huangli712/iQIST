@@ -712,21 +712,27 @@
      endif ! back if ( myid == master ) block
 
 ! deallocate memory
-     deallocate(hist_mpi )
-     deallocate(hist_err )
-     deallocate(prob_mpi )
-     deallocate(prob_err )
-     deallocate(paux_mpi )
-     deallocate(paux_err )
+     deallocate(hist_mpi)
+     deallocate(hist_err)
+     deallocate(prob_mpi)
+     deallocate(prob_err)
+     deallocate(paux_mpi)
+     deallocate(paux_err)
+     deallocate(nimp_mpi)
+     deallocate(nimp_err)
+     deallocate(nmat_mpi)
+     deallocate(nmat_err)
 
-     deallocate(nmat_mpi )
-     deallocate(nmat_err )
-     deallocate(nnmat_mpi)
-     deallocate(nnmat_err)
-     deallocate(kmat_mpi )
-     deallocate(kmat_err )
-     deallocate(kkmat_mpi)
-     deallocate(kkmat_err)
+     deallocate(gtau_mpi)
+     deallocate(gtau_err)
+     deallocate(grnf_mpi)
+     deallocate(grnf_err)
+
+     deallocate(knop_mpi)
+     deallocate(knop_err)
+     deallocate(kmat_mpi)
+     deallocate(kmat_err)
+
      deallocate(lnop_mpi )
      deallocate(lnop_err )
      deallocate(rnop_mpi )
@@ -737,10 +743,7 @@
      deallocate(g2_im_mpi)
      deallocate(ps_re_mpi)
      deallocate(ps_im_mpi)
-     deallocate(gtau_mpi )
-     deallocate(gtau_err )
-     deallocate(grnf_mpi )
-     deallocate(grnf_err )
+
 
      return
   end subroutine ctqmc_impurity_solver
