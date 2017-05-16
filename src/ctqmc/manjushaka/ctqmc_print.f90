@@ -303,7 +303,7 @@
      real(dp) :: raux
 
 ! about iteration number
-     write(mystd,'(2X,a,i3,2(a,i10))') cname//' >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
+     write(mystd,'(4X,a,i3,2(a,i10))') '>>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
      raux = real(caves) / nmonte
@@ -311,8 +311,8 @@
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / raux, 'epot :', paux(2) / raux
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / raux, '<Sz> :', paux(4) / raux
      write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / raux, '<N2> :', paux(6) / raux
-     write(mystd,'(2(4X,a,e10.5))') '<K2> :', paux(7) / raux, '<K3> :', paux(8) / raux
-     write(mystd,'(1(4X,a,e10.5))') '<K4> :', paux(9) / raux
+     write(mystd,'(2(4X,a,e10.3))') '<K2> :', paux(7) / raux, '<K3> :', paux(8) / raux
+     write(mystd,'(1(4X,a,e10.3))') '<K4> :', paux(9) / raux
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
