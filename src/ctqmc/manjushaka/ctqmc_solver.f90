@@ -751,8 +751,15 @@
      return
   end subroutine ctqmc_impurity_solver
 
-!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
-!!>>> on ctqmc_diagram_sampling() subroutine
+!!========================================================================
+!!>>> debug subroutines for quantum impurity solver                    <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_impurity_tester
+!!
+!! debug subroutine, please try to active it on the ctqmc_walking()
+!!
   subroutine ctqmc_impurity_tester()
      use constants ! ALL
 
