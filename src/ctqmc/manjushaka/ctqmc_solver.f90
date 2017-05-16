@@ -621,22 +621,14 @@
      call ctqmc_symm_nimp(symm, nimp)
      call ctqmc_symm_nimp(symm, nimp_err)
 
-! symmetrize the impurity green's function (gtau) over spin or over bands
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_gtau(symm, gtau)
-         call ctqmc_symm_gtau(symm, gtau_err)
-     endif ! back if ( issun == 2 .or. isspn == 1 ) block
+! symmetrize the impurity green's function over spin or over bands
+     call ctqmc_symm_gtau(symm, gtau)
+     call ctqmc_symm_gtau(symm, gtau_err)
+     call ctqmc_symm_grnf(symm, grnf)
+     call ctqmc_symm_grnf(symm, grnf_err)
 
-! symmetrize the impurity green's function (grnf) over spin or over bands
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_grnf(symm, grnf)
-         call ctqmc_symm_grnf(symm, grnf_err)
-     endif ! back if ( issun == 2 .or. isspn == 1 ) block
-
-! symmetrize the impurity self-energy function (sig2) over spin or over bands
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_grnf(symm, sig2)
-     endif ! back if ( issun == 2 .or. isspn == 1 ) block
+! symmetrize the self-energy function over spin or over bands
+     call ctqmc_symm_grnf(symm, sig2)
 
 !!========================================================================
 !!>>> writing final results                                            <<<
