@@ -705,10 +705,14 @@
   end subroutine ctqmc_dump_sigf
 
 !!========================================================================
-!!>>> dump data of physical observables                                <<<
+!!>>> dump data of physical observables 3                              <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_kmat: write out the < k > and < k^2 >
+!!
+!! @sub ctqmc_dump_kmat
+!!
+!! write out the kinetic energy fluctuation
+!!
   subroutine ctqmc_dump_kmat(kmat, kkmat, kerr, kkerr)
      use constants, only : dp, one, two, mytmp
 
