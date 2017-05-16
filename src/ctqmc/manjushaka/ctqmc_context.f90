@@ -1019,6 +1019,7 @@
      allocate(lnop(norbs),       stat=istat)
      allocate(rnop(norbs),       stat=istat)
      allocate(lrmm(norbs,norbs), stat=istat)
+     allocate(szpw(  4  ,norbs), stat=istat)
 
      allocate(g2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
