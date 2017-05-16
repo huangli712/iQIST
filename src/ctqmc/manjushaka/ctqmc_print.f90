@@ -252,9 +252,10 @@
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
 
      write(mystd,'(4X,a,i4,3X,2a)') 'self-consistent scheme  /', isscf, '/ ', scf(isscf)
-     write(mystd,'(4X,a,i4,3X,2a)') 'dynamic interaction     /', isscr, '/ ', scr(isscr)
      write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (band part)    /', isbnd, '/ ', bnd(isbnd)
      write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (spin part)    /', isspn, '/ ', spn(isspn)
+     write(mystd,'(4X,a,i4,3X,2a)') 'fast trace evaluation   /', isopt, '/ ', opt(isopt)
+     write(mystd,'(4X,a,i4,3X,2a)') 'dynamic truncation      /', iscut, '/ ', cut(iscut)
      write(mystd,'(4X,a,i4,3X,2a)') 'data binning            /', isbin, '/ ', bin(isbin)
      write(mystd,'(4X,a,i4,3X,2a)') 'worm algorithm          /', iswor, '/ ', wor(iswor)
      write(mystd,'(4X,a,i4,3X,2a)') 'advanced basis          /', isort, '/ ', ort(isort)
