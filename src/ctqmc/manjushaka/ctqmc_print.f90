@@ -269,8 +269,11 @@
      return
   end subroutine ctqmc_print_control
 
-!!>>> ctqmc_print_runtime: print the runtime information, including physical
-!!>>> observables and statistic data, only for reference
+!!
+!! @sub ctqmc_print_runtime
+!!
+!! print the runtime information, including some physical observables and
+!!
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : dp, one, half, mystd
 
