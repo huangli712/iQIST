@@ -590,6 +590,39 @@
 
      call cpu_time(time_begin) ! record starting time
 
+! calculate the average values
+     AVERAGE_DATA: BLOCK
+
+         hist = hist * one
+         prob = prob * real(nmonte) / real(nsweep)
+         paux = paux * real(nmonte) / real(nsweep)
+         nimp = nimp * real(nmonte) / real(nsweep)
+         nmat = nmat * real(nmonte) / real(nsweep)
+
+         gtau = gtau * real(nmonte) / real(nsweep)
+         ftau = ftau * real(nmonte) / real(nsweep)
+         grnf = grnf * real(nmonte) / real(nsweep)
+
+         knop = knop * real(nmonte) / real(nsweep)
+         kmat = kmat * real(nmonte) / real(nsweep)
+         lnop = lnop * real(nmonte) / real(nsweep)
+         rnop = rnop * real(nmonte) / real(nsweep)
+         lrmm = lrmm * real(nmonte) / real(nsweep)
+         szpw = szpw * real(nmonte) / real(nsweep)
+
+         schi = schi * real(nmonte) / real(nsweep)
+         sp_t = sp_t * real(nmonte) / real(nsweep)
+         sp_w = sp_w * real(nmonte) / real(nsweep)
+         cchi = cchi * real(nmonte) / real(nsweep)
+         ch_t = ch_t * real(nmonte) / real(nsweep)
+         ch_w = ch_w * real(nmonte) / real(nsweep)
+
+         g2pw = g2pw * real(nmonte) / real(nsweep)
+         h2pw = h2pw * real(nmonte) / real(nsweep)
+         p2pw = p2pw * real(nmonte) / real(nsweep)
+
+     END BLOCK AVERAGE_DATA
+
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
 
@@ -616,73 +649,38 @@
 
      END BLOCK COLLECT_DATA
 
-! update original data and calculate the averages simultaneously
-! average value section
-     AVERAGE_DATA: BLOCK
+! update original data
+     UPDATE_DATA: BLOCK
 
-         hist = hist_mpi * one
-         prob = prob_mpi * real(nmonte) / real(nsweep)
-         paux = paux_mpi * real(nmonte) / real(nsweep)
-         nimp = nimp_mpi * real(nmonte) / real(nsweep)
-         nmat = nmat_mpi * real(nmonte) / real(nsweep)
+         hist = hist_mpi
+         prob = prob_mpi
+         paux = paux_mpi
+         nimp = nimp_mpi
+         nmat = nmat_mpi
 
-         gtau = gtau_mpi * real(nmonte) / real(nsweep)
-         ftau = ftau_mpi * real(nmonte) / real(nsweep)
-         grnf = grnf_mpi * real(nmonte) / real(nsweep)
+         gtau = gtau_mpi
+         ftau = ftau_mpi
+         grnf = grnf_mpi
 
-         knop = knop_mpi * real(nmonte) / real(nsweep)
-         kmat = kmat_mpi * real(nmonte) / real(nsweep)
-         lnop = lnop_mpi * real(nmonte) / real(nsweep)
-         rnop = rnop_mpi * real(nmonte) / real(nsweep)
-         lrmm = lrmm_mpi * real(nmonte) / real(nsweep)
-         szpw = szpw_mpi * real(nmonte) / real(nsweep)
+         knop = knop_mpi
+         kmat = kmat_mpi
+         lnop = lnop_mpi
+         rnop = rnop_mpi
+         lrmm = lrmm_mpi
+         szpw = szpw_mpi
 
-         schi = schi_mpi * real(nmonte) / real(nsweep)
-         sp_t = sp_t_mpi * real(nmonte) / real(nsweep)
-         sp_w = sp_w_mpi * real(nmonte) / real(nsweep)
-         cchi = cchi_mpi * real(nmonte) / real(nsweep)
-         ch_t = ch_t_mpi * real(nmonte) / real(nsweep)
-         ch_w = ch_w_mpi * real(nmonte) / real(nsweep)
+         schi = schi_mpi
+         sp_t = sp_t_mpi
+         sp_w = sp_w_mpi
+         cchi = cchi_mpi
+         ch_t = ch_t_mpi
+         ch_w = ch_w_mpi
 
-         g2pw = g2pw_mpi * real(nmonte) / real(nsweep)
-         h2pw = h2pw_mpi * real(nmonte) / real(nsweep)
-         p2pw = p2pw_mpi * real(nmonte) / real(nsweep)
+         g2pw = g2pw_mpi
+         h2pw = h2pw_mpi
+         p2pw = p2pw_mpi
 
-     END BLOCK AVERAGE_DATA
-
-! update original data and calculate the averages simultaneously
-! error bar section
-     AVERAGE_ERROR: BLOCK
-
-         hist_err = hist_err * one
-         prob_err = prob_err * real(nmonte) / real(nsweep)
-         paux_err = paux_err * real(nmonte) / real(nsweep)
-         nimp_err = nimp_err * real(nmonte) / real(nsweep)
-         nmat_err = nmat_err * real(nmonte) / real(nsweep)
-
-         gtau_err = gtau_err * real(nmonte) / real(nsweep)
-         ftau_err = ftau_err * real(nmonte) / real(nsweep)
-         grnf_err = grnf_err * real(nmonte) / real(nsweep)
-
-         knop_err = knop_err * real(nmonte) / real(nsweep)
-         kmat_err = kmat_err * real(nmonte) / real(nsweep)
-         lnop_err = lnop_err * real(nmonte) / real(nsweep)
-         rnop_err = rnop_err * real(nmonte) / real(nsweep)
-         lrmm_err = lrmm_err * real(nmonte) / real(nsweep)
-         szpw_err = szpw_err * real(nmonte) / real(nsweep)
-
-         schi_err = schi_err * real(nmonte) / real(nsweep)
-         sp_t_err = sp_t_err * real(nmonte) / real(nsweep)
-         sp_w_err = sp_w_err * real(nmonte) / real(nsweep)
-         cchi_err = cchi_err * real(nmonte) / real(nsweep)
-         ch_t_err = ch_t_err * real(nmonte) / real(nsweep)
-         ch_w_err = ch_w_err * real(nmonte) / real(nsweep)
-
-         g2pw_err = g2pw_err * real(nmonte) / real(nsweep)
-         h2pw_err = h2pw_err * real(nmonte) / real(nsweep)
-         p2pw_err = p2pw_err * real(nmonte) / real(nsweep)
-
-     END BLOCK AVERAGE_ERROR
+     END BLOCK UPDATE_DATA
 
 ! try to evaluate the impurity green's function and self-energy function
 ! grnf, frnf, and sig2 would be updated there
