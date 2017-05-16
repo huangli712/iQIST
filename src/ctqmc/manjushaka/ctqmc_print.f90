@@ -180,16 +180,6 @@
 
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
 
-     write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
-     write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
-     write(mystd,'(2(4X,a,i10))')   'nmonte:', nmonte , 'ncarlo:', ncarlo
-
-     write(mystd,'(2(4X,a,f10.5))') 'U     :', U      , 'Uc    :', Uc
-     write(mystd,'(2(4X,a,f10.5))') 'Js    :', Js     , 'Uv    :', Uv
-     write(mystd,'(2(4X,a,f10.5))') 'Jp    :', Jp     , 'Jz    :', Jz
-     write(mystd,'(2(4X,a,f10.5))') 'mune  :', mune   , 'beta  :', beta
-     write(mystd,'(2(4X,a,f10.5))') 'part  :', part   , 'temp  :', ev2k/beta
-
      write(mystd,*)
 
      return
