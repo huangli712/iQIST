@@ -460,20 +460,22 @@
      return
   end subroutine ctqmc_dump_htau
 
-!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
-!!>>> time space
-  subroutine ctqmc_dump_wtau(tmesh, wtau)
+!!
+!! @sub ctqmc_dump_wtau
+!!
+!! write out bath weiss's function in imaginary time space
+!!
+  subroutine ctqmc_dump_wtau(wtau)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
      use control, only : ntime
 
+     use context, only : tmesh
+
      implicit none
 
 ! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
 ! bath weiss's function
      real(dp), intent(in) :: wtau(ntime,norbs,norbs)
 
