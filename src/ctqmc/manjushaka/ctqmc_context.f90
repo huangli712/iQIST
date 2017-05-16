@@ -49,7 +49,7 @@
 !!
 !! @var csign
 !!
-!! sign change related with current diagram update operation
+!! sign change related with current update operation
 !!
      integer, public, save  :: csign = 1
 
@@ -91,14 +91,14 @@
 !!
 !! matrix trace of the flavor part, current value
 !!
-     real(dp), public, save :: mptr = zero
+     real(dp), public, save :: c_mtr = zero
 
 !!
 !! @var mntr
 !!
 !! matrix trace of the flavor part, proposed value
 !!
-     real(dp), public, save :: mntr = zero
+     real(dp), public, save :: p_mtr = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, insert action counter                       :::
