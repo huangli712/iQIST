@@ -38,9 +38,12 @@
      use control, only : nband, norbs, ncfgs ! size of model hamiltonian
      use control, only : mkink
      use control, only : mfreq
-     use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
-     use control, only : Uc, Jz
+     use control, only : nffrq, nbfrq
+     use control, only : ntime
+     use control, only : nsweep, nwrite
+     use control, only : nmonte
      use control, only : myid, master
+
      use context, only : caves
      use context, only : tmesh, rmesh
      use context, only : hist, prob
