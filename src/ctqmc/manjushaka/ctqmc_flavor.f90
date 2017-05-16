@@ -261,12 +261,20 @@
 !!
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end)
      use constants, only : dp, zero
-     use stack, only : istack_getrest, istack_gettop, istack_getter
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
 
      use control, only : ncfgs
      use control, only : beta
-     use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+
+     use context, only : empty_v
+     use context, only : index_t, index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
      use context, only : eigs
 
      implicit none
