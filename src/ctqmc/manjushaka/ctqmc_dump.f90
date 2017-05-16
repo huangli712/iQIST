@@ -352,6 +352,57 @@
      return
   end subroutine ctqmc_dump_gtau
 
+!!
+!! @sub ctqmc_dump_ftau
+!!
+!! write out auxiliary correlation function in imaginary time space
+!!
+  subroutine ctqmc_dump_ftau(ftau, ferr)
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
+     use control, only : ntime
+
+     use context, only : tmesh
+
+     implicit none
+
+! external arguments
+! auxiliary correlation function
+     real(dp), intent(in) :: ftau(ntime,norbs,norbs)
+     real(dp), intent(in) :: ferr(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! scaled auxiliary correlation function
+     real(dp) :: faux(ntime,norbs,norbs)
+     real(dp) :: fbar(ntime,norbs,norbs)
+
+! evaluate faux and fbar at first
+     call ctqmc_make_ftau(tmesh, ftau, faux)
+     call ctqmc_make_ftau(tmesh, ferr, fbar)
+
+! open data file: solver.fcorr.dat
+     open(mytmp, file='solver.fcorr.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,ntime
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), faux(j,i,i), fbar(j,i,i)
+         enddo ! over j={1,ntime} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_ftau
+
 !!>>> ctqmc_dump_htau: write out hybridization function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
