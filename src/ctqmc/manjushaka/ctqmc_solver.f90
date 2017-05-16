@@ -630,6 +630,14 @@
 ! symmetrize the self-energy function over spin or over bands
      call ctqmc_symm_grnf(symm, sig2)
 
+     call cpu_time(time_end) ! record ending time
+
+! print the time information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
 !!========================================================================
 !!>>> writing final results                                            <<<
 !!========================================================================
