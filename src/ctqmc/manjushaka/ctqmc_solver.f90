@@ -541,6 +541,7 @@
          lnop = lnop / real(caves)
          rnop = rnop / real(caves)
          lrmm = lrmm / real(caves)
+         szpw = szpw / real(caves)
 
          g2pw = g2pw / real(caves)
          h2pw = h2pw / real(caves)
