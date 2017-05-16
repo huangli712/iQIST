@@ -661,11 +661,19 @@
          call ctqmc_dump_sigf(sig2)
 
          call ctqmc_dump_kmat(knop, kmat, knop_err, kmat_err)
-         call ctqmc_dump_lnop(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
+         call ctqmc_dump_lrmm(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
          call ctqmc_dump_szpw(szpw, szpw_err)
 
          call ctqmc_dump_twop(g2pw, h2pw, g2pw_err, h2pw_err)
          call ctqmc_dump_pair(p2pw, p2pw_err)
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_end) ! record ending time
+
+! print the time information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
      endif ! back if ( myid == master ) block
 
 !!========================================================================
