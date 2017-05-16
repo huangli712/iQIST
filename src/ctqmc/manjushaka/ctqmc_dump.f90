@@ -768,15 +768,15 @@
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, knop(i), kerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'k_sum', sum( kmat ), sum( kerr )
+     write(mytmp,'(a6,2f12.6)') 'k_sum', sum( knop ), sum( kerr )
 
      write(mytmp,'(a)') '# < k^2 > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,2f12.6)') i, j, kkmat(i,j), kbar(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, kmat(i,j), kbar(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'kksum', sum( kkmat ), sum( kbar )
+     write(mytmp,'(a6,2f12.6)') 'kksum', sum( kmat ), sum( kbar )
      write(mytmp,'(a6,2f12.6)') 'final', f_val, f_err
 
 ! close data file
