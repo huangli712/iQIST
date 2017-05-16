@@ -214,13 +214,6 @@
      time_cur = zero
      time_sum = zero
 
-! setup nsweep
-! whether it is time to enter QMC data accumulating mode
-     if ( iter == 999 ) then
-         nsweep = nsweep * 10
-         nwrite = nwrite * 10
-     endif ! back if ( iter == 999 ) block
-
 !!========================================================================
 !!>>> starting quantum impurity solver                                 <<<
 !!========================================================================
