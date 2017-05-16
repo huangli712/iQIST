@@ -524,38 +524,43 @@
 
      call cpu_time(time_begin) ! record starting time
 
+     prob  = prob  / real(caves)
+     nmat  = nmat  / real(caves)
+     nnmat = nnmat / real(caves)
+     kmat  = kmat  / real(caves)
+     kkmat = kkmat / real(caves)
+     lnop  = lnop  / real(caves)
+     rnop  = rnop  / real(caves)
+     lrmm = lrmm / real(caves)
+     g2_re = g2_re / real(caves)
+     g2_im = g2_im / real(caves)
+     ps_re = ps_re / real(caves)
+     ps_im = ps_im / real(caves)
+     gtau  = gtau  / real(caves)
+     grnf  = grnf  / real(caves)
+
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
 
      call ctqmc_reduce_hist(hist_mpi, hist_err)
-     prob  = prob  / real(caves)
      call ctqmc_reduce_prob(prob_mpi, prob_err)
 
-     nmat  = nmat  / real(caves)
-     nnmat = nnmat / real(caves)
+
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
-     kmat  = kmat  / real(caves)
-     kkmat = kkmat / real(caves)
+
      call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
 
-     lnop  = lnop  / real(caves)
-     rnop  = rnop  / real(caves)
-     lrmm = lrmm / real(caves)
      call ctqmc_reduce_lnop(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
 
-     g2_re = g2_re / real(caves)
-     g2_im = g2_im / real(caves)
+
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-     ps_re = ps_re / real(caves)
-     ps_im = ps_im / real(caves)
+
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
-     gtau  = gtau  / real(caves)
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
-     grnf  = grnf  / real(caves)
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
      END BLOCK COLLECT_DATA
