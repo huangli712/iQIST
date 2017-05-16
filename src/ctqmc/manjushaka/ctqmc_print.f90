@@ -154,8 +154,6 @@
      write(mystd,'(4X,a,i10,  a4,a10)') 'ncfgs  /', ncfgs , '/', 'integer'
      write(mystd,'(4X,a,f10.5,a4,a10)') 'Uc     /', Uc    , '/', ' double'
      write(mystd,'(4X,a,f10.5,a4,a10)') 'Jz     /', Jz    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'lc     /', lc    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'wc     /', wc    , '/', ' double'
      write(mystd,'(4X,a,f10.5,a4,a10)') 'mune   /', mune  , '/', ' double'
      write(mystd,'(4X,a,f10.5,a4,a10)') 'beta   /', beta  , '/', ' double'
      write(mystd,'(4X,a,f10.5,a4,a10)') 'part   /', part  , '/', ' double'
@@ -174,14 +172,10 @@
      write(mystd,'(4X,a,i10,  a4,a10)') 'nflip  /', nflip , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'ntherm /', ntherm, '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'nsweep /', nsweep, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nclean /', nclean, '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'nwrite /', nwrite, '/', 'integer'
+     write(mystd,'(4X,a,i10,  a4,a10)') 'nclean /', nclean, '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'nmonte /', nmonte, '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'ncarlo /', ncarlo, '/', 'integer'
-
-     write(mystd,'(2(4X,a,i10))')   'ifast :', ifast  , 'itrun :', itrun 
-
-     write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
 
      write(mystd,*)
 
