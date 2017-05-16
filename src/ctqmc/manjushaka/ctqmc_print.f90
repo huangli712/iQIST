@@ -176,10 +176,6 @@
      write(mystd,'(4X,a,i10,  a4,a10)') 'nmonte /', nmonte, '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'ncarlo /', ncarlo, '/', 'integer'
 
-     write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
-     write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
-     write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'issus :', issus
-     write(mystd,'(1(4X,a,i10))')   'isvrt :', isvrt
      write(mystd,'(2(4X,a,i10))')   'ifast :', ifast  , 'itrun :', itrun 
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
