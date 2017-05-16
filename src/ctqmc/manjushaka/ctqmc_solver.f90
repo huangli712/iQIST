@@ -411,6 +411,11 @@
              call ctqmc_print_runtime(iter, cstep)
          endif ! back if ( myid == master ) block
 
+! write out the snapshot for the current configuration if necessary
+         if ( myid == master ) then ! only master node can do it
+             call ctqmc_dump_diag(iter, cstep)
+         endif ! back if ( myid == master ) block
+
 !!========================================================================
 !!>>> reducing immediate results                                       <<<
 !!========================================================================
@@ -423,9 +428,11 @@
          call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
          gtau = gtau * real(caves)
 
-! gtau_mpi need to be scaled properly before written
-         gtau_mpi = gtau_mpi * real(ncarlo)
-         gtau_err = gtau_err * real(ncarlo)
+! the date need to be scaled properly before written
+         hist_mpi = hist_mpi * one
+         hist_err = hist_err * one
+         gtau_mpi = gtau_mpi * real(nmonte)
+         gtau_err = gtau_err * real(nmonte)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
