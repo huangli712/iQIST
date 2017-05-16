@@ -1,10 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : manjushaka
 !!! program : ctqmc_impurity_solver
-!!!           ctqmc_diagram_warmming
-!!!           ctqmc_diagram_sampling
-!!!           ctqmc_diagram_checking
-!!!           ctqmc_diagram_plotting
 !!!           ctqmc_impurity_tester
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
