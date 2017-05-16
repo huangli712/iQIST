@@ -50,19 +50,19 @@
      use context, only : prob                ! atomic eigenstate probability
      use context, only : paux                ! auxiliary physical observables
      use context, only : nimp, nmat          ! occupation and double occupation
-
-     use context, only : knop, kmat
-     use context, only : lnop, rnop, lrmm
-     use context, only : szpw
-
-     use context, only : g2pw
-     use context, only : h2pw
-     use context, only : p2pw
-
-     use context, only : symm
-     use context, only : gtau
-     use context, only : grnf
-     use context, only : sig2
+                                             !
+     use context, only : knop, kmat          ! kinetic energy fluctuation
+     use context, only : lnop, rnop, lrmm    ! fidelity susceptibility
+     use context, only : szpw                ! binder cumulant
+                                             !
+     use context, only : g2pw                ! two-particle green's function
+     use context, only : h2pw                ! irreducible vertex function
+     use context, only : p2pw                ! pairing susceptibility
+                                             !
+     use context, only : symm                ! symmetry vector
+     use context, only : gtau                ! imaginary time green's function
+     use context, only : grnf                ! matsubara green's function
+     use context, only : sig2                ! matsubara self-energy function
 
      implicit none
 
