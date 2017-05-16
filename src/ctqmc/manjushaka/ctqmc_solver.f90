@@ -183,8 +183,10 @@
      allocate(lnop_err(norbs),             stat=istat)
      allocate(rnop_mpi(norbs),             stat=istat)
      allocate(rnop_err(norbs),             stat=istat)
-     allocate(lrmm_mpi(norbs,norbs),      stat=istat)
-     allocate(lrmm_err(norbs,norbs),      stat=istat)
+     allocate(lrmm_mpi(norbs,norbs),       stat=istat)
+     allocate(lrmm_err(norbs,norbs),       stat=istat)
+     allocate(szpw_mpi(  4  ,norbs),       stat=istat)
+     allocate(szpw_err(  4  ,norbs),       stat=istat)
 
      allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
