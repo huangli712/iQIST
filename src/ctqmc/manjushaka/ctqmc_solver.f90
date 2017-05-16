@@ -35,8 +35,9 @@
      use control, only : issus
      use control, only : isvrt
 
-     use control, only : nband, nspin, norbs, ncfgs
-     use control, only : mkink, mfreq
+     use control, only : nband, norbs, ncfgs
+     use control, only : mkink
+     use control, only : mfreq
      use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : myid, master
