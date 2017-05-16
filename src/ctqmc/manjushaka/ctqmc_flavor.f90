@@ -42,8 +42,20 @@
 !!>>> service layer: evaluate ztrace ratio                             <<<
 !!========================================================================
 
-!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create
-!!>>> and destroy operators on perturbation expansion series
+!!
+!! note:
+!!
+!! actually, the following subroutines don't calculate the ztrace ratio.
+!! they just prepare the essential data structures and arrays for the
+!! calculation of ztrace ratio 
+!!
+
+!!
+!! @sub cat_insert_ztrace
+!!
+!! calculate the trace ratio for inserting new creation and annihilation
+!! operators on perturbation expansion series
+!!
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
