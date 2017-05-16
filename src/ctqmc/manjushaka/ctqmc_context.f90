@@ -15,7 +15,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/10/2017 by li huang (last modified)
+!!!           05/16/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -716,11 +716,27 @@
      real(dp), public, save, allocatable :: gtau(:,:,:)
 
 !!
+!! @var ftau
+!!
+!! auxiliary correlation function in imaginary time axis, used to measure
+!! self-energy function, F(\tau)
+!!
+     real(dp), public, save, allocatable :: ftau(:,:,:)
+
+!!
 !! @var grnf
 !!
 !! impurity green's function in matsubara frequency axis
 !!
      complex(dp), public, save, allocatable :: grnf(:,:,:)
+
+!!
+!! @var frnf
+!!
+!! auxiliary correlation function in matsubara frequency axis, used to
+!! measure self-energy function, F(i\omega)
+!!
+     complex(dp), public, save, allocatable :: frnf(:,:,:)
 
   end module ctqmc_gmat
 
