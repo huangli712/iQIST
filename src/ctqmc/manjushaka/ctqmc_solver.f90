@@ -524,30 +524,30 @@
 
      call cpu_time(time_begin) ! record starting time
 
-! prepare data before mpi reduce
-     PREPARE_DATA: BLOCK
+! calculate the average values
+     AVERAGE_DATA: BLOCK
 
-         hist = hist / one
-         prob = prob / real(caves)
-         paux = paux / real(caves)
-         nimp = nimp / real(caves)
-         nmat = nmat / real(caves)
+         hist = hist * one
+         prob = prob * real(nmonte) / real(caves)
+         paux = paux * real(nmonte) / real(caves)
+         nimp = nimp * real(nmonte) / real(caves)
+         nmat = nmat * real(nmonte) / real(caves)
 
-         gtau = gtau / real(caves)
-         grnf = grnf / real(caves)
+         gtau = gtau * real(nmonte) / real(caves)
+         grnf = grnf * real(nmonte) / real(caves)
 
-         knop = knop / real(caves)
-         kmat = kmat / real(caves)
-         lnop = lnop / real(caves)
-         rnop = rnop / real(caves)
-         lrmm = lrmm / real(caves)
-         szpw = szpw / real(caves)
+         knop = knop * real(nmonte) / real(caves)
+         kmat = kmat * real(nmonte) / real(caves)
+         lnop = lnop * real(nmonte) / real(caves)
+         rnop = rnop * real(nmonte) / real(caves)
+         lrmm = lrmm * real(nmonte) / real(caves)
+         szpw = szpw * real(nmonte) / real(caves)
 
-         g2pw = g2pw / real(caves)
-         h2pw = h2pw / real(caves)
-         p2pw = p2pw / real(caves)
+         g2pw = g2pw * real(nmonte) / real(caves)
+         h2pw = h2pw * real(nmonte) / real(caves)
+         p2pw = p2pw * real(nmonte) / real(caves)
 
-     END BLOCK PREPARE_DATA
+     END BLOCK AVERAGE_DATA
 
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
@@ -569,9 +569,8 @@
 
      END BLOCK COLLECT_DATA
 
-! update original data and calculate the averages simultaneously
-! average value section
-     AVERAGE_DATA: BLOCK
+! update original data
+     UPDATE_DATA: BLOCK
 
          hist = hist_mpi * one
          prob = prob_mpi * real(nmonte)
@@ -593,25 +592,7 @@
          h2pw = h2pw_mpi * real(nmonte)
          p2pw = p2pw_mpi * real(nmonte)
 
-     END BLOCK AVERAGE_DATA
-
-! update original data and calculate the averages simultaneously
-! error bar section
-     AVERAGE_ERROR: BLOCK
-
-     hist_err  = hist_err  * one
-     prob_err  = prob_err  * real(ncarlo)
-
-     nmat_err  = nmat_err  * real(nmonte)
-     nnmat_err = nnmat_err * real(nmonte)
-     kmat_err  = kmat_err  * real(nmonte)
-     kkmat_err = kkmat_err * real(nmonte)
-     lnop_err  = lnop_err  * real(nmonte)
-     rnop_err  = rnop_err  * real(nmonte)
-     lrmm_err = lrmm_err * real(nmonte)
-
-     gtau_err  = gtau_err  * real(ncarlo)
-     grnf_err  = grnf_err  * real(nmonte)
+     END BLOCK UPDATE_DATA
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
