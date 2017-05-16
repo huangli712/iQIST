@@ -201,6 +201,8 @@
 
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      allocate(gtau_err(ntime,norbs,norbs), stat=istat)
+     allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
+     allocate(ftau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
 
