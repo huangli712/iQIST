@@ -351,11 +351,16 @@
      return
   end subroutine ctqmc_print_runtime
 
-!!>>> ctqmc_print_it_info: print the iteration information to the screen
+!!
+!! @sub ctqmc_print_it_info
+!!
+!! print the iteration information to the screen
+!!
   subroutine ctqmc_print_it_info(iter)
      use constants, only : mystd
 
      use control, only : cname
+     use control, only : isscf
 
      implicit none
 
@@ -363,13 +368,13 @@
 ! current iteration number
      integer, intent(in) :: iter
 
-! according to the value of iter, we can judge whether the impurity solver
-! is in the binning mode.
-     if ( iter /= 999 ) then
-         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
+! according to the value of isscf, we can judge the self-consistent scheme
+! of the current simulation
+     if ( isscf /= 2 ) then
+         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< ONESHOT'
      else
-         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
-     endif ! back if ( iter /= 999 ) block
+         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< LOOPING'
+     endif ! back if ( isscf /= 2 ) block
 
      return
   end subroutine ctqmc_print_it_info
