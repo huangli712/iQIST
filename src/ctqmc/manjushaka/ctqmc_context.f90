@@ -1155,8 +1155,10 @@
 
 ! allocate memory
      allocate(gtau(ntime,norbs,norbs), stat=istat)
+     allocate(ftau(ntime,norbs,norbs), stat=istat)
 
      allocate(grnf(mfreq,norbs,norbs), stat=istat)
+     allocate(frnf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1165,8 +1167,10 @@
 
 ! initialize them
      gtau = zero
+     ftau = zero
 
      grnf = czero
+     frnf = czero
 
      return
   end subroutine cat_alloc_gmat
@@ -1380,8 +1384,10 @@
      implicit none
 
      if ( allocated(gtau) )    deallocate(gtau)
+     if ( allocated(ftau) )    deallocate(ftau)
 
      if ( allocated(grnf) )    deallocate(grnf)
+     if ( allocated(frnf) )    deallocate(frnf)
 
      return
   end subroutine cat_free_gmat
