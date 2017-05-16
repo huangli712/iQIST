@@ -524,6 +524,9 @@
 
      call cpu_time(time_begin) ! record starting time
 
+! collect data from all children processes
+     COLLECT_DATA: BLOCK
+
      call ctqmc_reduce_hist(hist_mpi, hist_err)
      prob  = prob  / real(caves)
      call ctqmc_reduce_prob(prob_mpi, prob_err)
@@ -554,6 +557,8 @@
 
      grnf  = grnf  / real(caves)
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+
+     END BLOCK COLLECT_DATA
 
      hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo)
