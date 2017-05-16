@@ -111,7 +111,7 @@
      real(dp), allocatable :: paux_mpi(:)
      real(dp), allocatable :: paux_err(:)
 
-! impurity occupation number
+! impurity occupation number, < n_i >
      real(dp), allocatable :: nimp_mpi(:)
      real(dp), allocatable :: nimp_err(:)
 
