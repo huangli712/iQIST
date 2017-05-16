@@ -653,6 +653,7 @@
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
          call ctqmc_dump_prob(prob, prob_err)
+         call ctqmc_dump_paux(paux, paux_err)
          call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
 
          call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
