@@ -579,18 +579,19 @@
          nimp = nimp_mpi * real(nmonte)
          nmat = nmat_mpi * real(nmonte)
 
-         knop = kmat_mpi * real(nmonte)
+         gtau = gtau_mpi * real(nmonte)
+         grnf = grnf_mpi * real(nmonte)
+
+         knop = knop_mpi * real(nmonte)
          kmat = kmat_mpi * real(nmonte)
          lnop = lnop_mpi * real(nmonte)
          rnop = rnop_mpi * real(nmonte)
          lrmm = lrmm_mpi * real(nmonte)
+         szpw = szpw_mpi * real(nmonte)
 
          g2pw = g2pw_mpi * real(nmonte)
          h2pw = h2pw_mpi * real(nmonte)
          p2pw = p2pw_mpi * real(nmonte)
-
-         gtau = gtau_mpi * real(nmonte)
-         grnf = grnf_mpi * real(nmonte)
 
      END BLOCK AVERAGE_DATA
 
