@@ -330,18 +330,28 @@
              call ctqmc_record_hist()
 
 ! record the probability of atomic eigenstates
-             if ( mod(cstep, ncarlo) == 0 ) then
+             if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_prob()
-             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the impurity (double) occupation number matrix
+! record the impurity (double) occupation number (matrix)
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+!!========================================================================
+!!>>> sampling the physical observables 2 (always)                     <<<
+!!========================================================================
+
+! the following physical observables are always measured
+! record the impurity green's function in imaginary time space
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in matsubara frequency space
@@ -351,10 +361,7 @@
 
 
 
-! record the impurity green's function in imaginary time space
-             if ( mod(cstep, ncarlo) == 0 ) then
-                 call ctqmc_record_gtau()
-             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
