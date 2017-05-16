@@ -610,6 +610,13 @@
 !!>>> symmetrizing final results                                       <<<
 !!========================================================================
 
+! start to symmetrize data
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'quantum impurity solver symmetrizing'
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_begin) ! record starting time
+
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
