@@ -94,7 +94,7 @@
      real(dp) :: time_end
 
 ! time consuming by current iteration
-     real(dp) :: time_iter
+     real(dp) :: time_cur
 
 ! time consuming by total iteration
      real(dp) :: time_niter
@@ -195,7 +195,7 @@
      cflag = 1
 
 ! setup timer
-     time_iter = zero
+     time_cur = zero
      time_niter = zero
 
 ! setup nsweep
@@ -433,13 +433,13 @@
          call cpu_time(time_end)
 
 ! calculate timing information
-         time_iter = time_end - time_begin
-         time_niter = time_niter + time_iter
+         time_cur = time_end - time_begin
+         time_niter = time_niter + time_cur
          time_begin = time_end
 
 ! print out the result
          if ( myid == master ) then ! only master node can do it
-             call s_time_analyzer(time_iter, time_niter)
+             call s_time_analyzer(time_cur, time_niter)
              write(mystd,*)
          endif ! back if ( myid == master ) block
 
