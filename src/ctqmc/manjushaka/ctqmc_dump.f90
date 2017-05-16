@@ -1082,9 +1082,9 @@
      integer :: it
      integer :: jt
 
-! check if we need to dump the particle-particle pair susceptibility
+! check if we need to dump the particle-particle pairing susceptibility
 ! to solver.pair.dat
-     if ( .not. btest(isvrt, 3) ) RETURN
+     if ( .not. btest(isvrt, 2) ) RETURN
 
 ! open data file: solver.pair.dat
      open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
@@ -1098,10 +1098,8 @@
                  write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
                      do i=1,nffrq
-! jt: \omega, unit is \pi/\beta
-! it: \omega', unit is \pi/\beta
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,2f16.8)') jt, it, ps_re(i,j,k,n,m), ps_im(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') jt, it, p2pw(i,j,k,n,m), perr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
