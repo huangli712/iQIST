@@ -359,14 +359,9 @@
                  call ctqmc_record_grnf()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-
-
-
-
-! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
-                 CONTINUE
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
+!!========================================================================
+!!>>> sampling the physical observables 3 (optional)                   <<<
+!!========================================================================
 
 ! record the < k^2 > - < k >^2
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
