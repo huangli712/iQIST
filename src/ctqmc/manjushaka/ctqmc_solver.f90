@@ -97,7 +97,7 @@
      real(dp) :: time_cur
 
 ! time consuming by total iteration
-     real(dp) :: time_niter
+     real(dp) :: time_sum
 
 ! histogram for perturbation expansion series, for mpi case
      real(dp), allocatable :: hist_mpi(:)
@@ -196,7 +196,7 @@
 
 ! setup timer
      time_cur = zero
-     time_niter = zero
+     time_sum = zero
 
 ! setup nsweep
 ! whether it is time to enter QMC data accumulating mode
@@ -434,12 +434,12 @@
 
 ! calculate timing information
          time_cur = time_end - time_begin
-         time_niter = time_niter + time_cur
+         time_sum = time_sum + time_cur
          time_begin = time_end
 
 ! print out the result
          if ( myid == master ) then ! only master node can do it
-             call s_time_analyzer(time_cur, time_niter)
+             call s_time_analyzer(time_cur, time_sum)
              write(mystd,*)
          endif ! back if ( myid == master ) block
 
