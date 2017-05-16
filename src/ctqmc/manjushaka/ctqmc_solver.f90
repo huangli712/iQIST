@@ -60,8 +60,8 @@
      use context, only : p2pw                ! pairing susceptibility
                                              !
      use context, only : symm                ! symmetry vector
-     use context, only : gtau                ! imaginary time green's function
-     use context, only : grnf                ! matsubara green's function
+     use context, only : gtau, ftau          ! imaginary time green's function
+     use context, only : grnf, frnf          ! matsubara green's function
      use context, only : sig2                ! matsubara self-energy function
 
      implicit none
