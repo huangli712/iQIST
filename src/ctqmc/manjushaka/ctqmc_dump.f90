@@ -297,11 +297,14 @@
   end subroutine ctqmc_dump_nmat
 
 !!========================================================================
-!!>>> dump data on imaginary time axis                                 <<<
+!!>>> dump data of physical observables 2: over imaginary time         <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
-!!>>> time space
+!!
+!! @sub ctqmc_dump_gtau
+!!
+!! write out impurity green's function in imaginary time space
+!!
   subroutine ctqmc_dump_gtau(tmesh, gtau, gerr)
      use constants, only : dp, mytmp
 
