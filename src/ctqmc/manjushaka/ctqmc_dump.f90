@@ -1107,7 +1107,9 @@
      use control, only : norbs
      use control, only : niter
      use control, only : nwrite, nsweep
-     use context, only : index_s, index_e, time_s, time_e
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank
 
      implicit none
@@ -1127,7 +1129,7 @@
      integer :: j
 
 ! setup the internal criterion
-     if ( nsweep/nwrite < 100 ) RETURN
+     if ( nsweep / nwrite < 100 ) RETURN
 
 ! write the snapshot
 ! open data file: solver.diag.dat
