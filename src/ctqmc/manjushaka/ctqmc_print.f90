@@ -129,7 +129,6 @@
      write(mystd,'(2X,a)') 'configuration parameters for global control'
      write(mystd,'(2X,a)') '----------------------------------------------------'
      write(mystd,'(4X,a,i10,  a4,a10)') 'isscf  /', isscf , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isscr  /', isscr , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'isbnd  /', isbnd , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'isspn  /', isspn , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'isopt  /', isopt , '/', 'integer'
