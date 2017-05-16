@@ -53,7 +53,10 @@
      use context, only : lnop, rnop, lrmm
      use context, only : szpw
 
-     use context, only : g2_re, g2_im, ps_re, ps_im
+     use context, only : g2pw
+     use context, only : h2pw
+     use context, only : p2pw
+
      use context, only : symm, naux, saux
      use context, only : gtau, grnf
      use context, only : sig2
