@@ -20,7 +20,7 @@
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
-!!!           cat_create_colour 
+!!!           cat_create_colour
 !!!           cat_create_flavor <<<---
 !!!           cat_comp_operator
 !!!           cat_find_operator <<<---
@@ -47,7 +47,7 @@
 !!
 !! actually, the following subroutines don't calculate the ztrace ratio.
 !! they just prepare the essential data structures and arrays for the
-!! calculation of ztrace ratio 
+!! calculation of ztrace ratio
 !!
 
 !!
