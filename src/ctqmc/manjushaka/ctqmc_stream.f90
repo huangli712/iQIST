@@ -155,8 +155,6 @@
 
              call p_get('lemax' , lemax )
              call p_get('legrd' , legrd )
-             call p_get('chmax' , chmax )
-             call p_get('chgrd' , chgrd )
 
              call p_get('mkink' , mkink )
              call p_get('mfreq' , mfreq )
@@ -165,6 +163,7 @@
              call p_get('nbfrq' , nbfrq )
              call p_get('nfreq' , nfreq )
              call p_get('ntime' , ntime )
+
              call p_get('npart' , npart )
              call p_get('nflip' , nflip )
              call p_get('ntherm', ntherm)
