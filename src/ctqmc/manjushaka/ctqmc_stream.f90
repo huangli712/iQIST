@@ -252,6 +252,19 @@
 !! quantum impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_model()
+     implicit none
+
+! build various meshes (tmesh, rmesh, lmesh, and rep_l)
+     call ctqmc_input_mesh_()
+
+! build initial hybridization function (hybf)
+     call ctqmc_input_hybf_()
+
+! build symmetry vector and impurity level (symm and eimp)
+     call ctqmc_input_eimp_()
+
+! build atomic eigenvalue matrix (a lot of stuffs)
+     call ctqmc_input_atom_()
 
      return
   end subroutine ctqmc_setup_model
