@@ -599,13 +599,12 @@
 
 !!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
 !!>>> operators on perturbation expansion series
-  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
+  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
      use control, only : ncfgs
      use control, only : beta
-     use context, only : matrix_ptrace, matrix_ntrace
      use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
