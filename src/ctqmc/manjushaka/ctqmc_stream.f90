@@ -297,10 +297,10 @@
 ! build matsubara frequency mesh: rmesh
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
-! build mesh for legendre polynomial in [-1,1]
+! build mesh for legendre orthogonal polynomial in [-1,1]
      call s_linspace_d(-one, one, legrd, lmesh)
 
-! build legendre polynomial in [-1,1]
+! build legendre orthogonal polynomial in [-1,1]
      call s_legendre(lemax, legrd, lmesh, rep_l)
 
      return
