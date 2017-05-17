@@ -439,7 +439,10 @@
 !!
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2)
      use constants, only : dp, zero
-     use stack, only : istack_getrest, istack_gettop, istack_getter
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
 
      use control, only : ncfgs
      use control, only : beta
