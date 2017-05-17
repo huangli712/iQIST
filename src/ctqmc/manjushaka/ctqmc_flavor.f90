@@ -759,9 +759,13 @@
 !!>>> service layer: update perturbation expansion series A            <<<
 !!========================================================================
 
-!!>>> try_insert_colour: generate create and annihilation operators for selected
-!!>>> flavor channel randomly, and then determinte their index address for
-!!>>> the colour (determinant) part
+!!
+!! @sub try_insert_colour
+!!
+!! try to generate creation and annihilation operators for selected flavor
+!! channel randomly, and then determinte their index address for the
+!! colour (determinant) part
+!!
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
      use spring, only : spring_sfmt_stream
