@@ -440,8 +440,8 @@
 
 ! after we know the total number of sectors, we can allocate memory
 ! for sectors, only for master node
-         call ctqmc_allocate_memory_sect()
-         call ctqmc_allocate_memory_part()
+         call cat_alloc_sect()
+         call cat_alloc_part()
 
 ! read each sector's information
          do i=1,nsect
@@ -458,7 +458,7 @@
                               sectors(i)%ps
 
 ! allocate the memory for sectors(i), only for master node
-             call ctqmc_allocate_memory_one_sect(sectors(i))
+             call cat_alloc_one_sect(sectors(i))
 
 ! read the next index
              read(mytmp,*) ! skip the header
@@ -492,7 +492,7 @@
                      sectors(i)%fmat(j,k)%n = j4
                      sectors(i)%fmat(j,k)%m = j5
 ! allocate memory for F-matrix, only for master node
-                     call ctqmc_allocate_memory_one_fmat(sectors(i)%fmat(j,k))
+                     call cat_alloc_one_fmat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
                      sectors(i)%fmat(j,k)%val = zero
                      do m=1,n
@@ -569,8 +569,8 @@
 
 ! allocate memory for sectors, only for children nodes
      if ( myid /= master ) then
-         call ctqmc_allocate_memory_sect()
-         call ctqmc_allocate_memory_part()
+         call cat_alloc_sect()
+         call cat_alloc_part()
      endif ! back if ( myid /= master ) block
 
 ! broadcast sectors from master node to all children nodes
@@ -593,7 +593,7 @@
 
 ! allocate memory for t_sector structure, only for children nodes
          if ( myid /= master ) then
-             call ctqmc_allocate_memory_one_sect(sectors(i))
+             call cat_alloc_one_sect(sectors(i))
          endif ! back if ( myid /= master ) block
 
 ! setup barrier
@@ -624,7 +624,7 @@
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(m)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                     call ctqmc_allocate_memory_one_fmat(sectors(i)%fmat(j,k))
+                     call cat_alloc_one_fmat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
 
 ! setup barrier
@@ -667,17 +667,17 @@
      implicit none
 
 ! allocate memory for context module
-     call ctqmc_allocate_memory_clur()
-     call ctqmc_allocate_memory_flvr()
+     call cat_alloc_clur()
+     call cat_alloc_flvr()
 
-     call ctqmc_allocate_memory_mesh()
-     call ctqmc_allocate_memory_meat()
-     call ctqmc_allocate_memory_umat()
-     call ctqmc_allocate_memory_mmat()
+     call cat_alloc_mesh()
+     call cat_alloc_meat()
+     call cat_alloc_umat()
+     call cat_alloc_mmat()
 
-     call ctqmc_allocate_memory_gmat()
-     call ctqmc_allocate_memory_wmat()
-     call ctqmc_allocate_memory_smat()
+     call cat_alloc_gmat()
+     call cat_alloc_wmat()
+     call cat_alloc_smat()
 
      return
   end subroutine ctqmc_alloc_array
