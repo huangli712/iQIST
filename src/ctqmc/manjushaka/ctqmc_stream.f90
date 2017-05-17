@@ -900,16 +900,17 @@
      nimp = zero
      nmat = zero
 
-! init < k^2 > - < k >^2 array
-     knop    = zero
-     kmat   = zero
+! init kinetic energy fluctuation
+     knop = zero
+     kmat = zero
 
-! init fidelity susceptibility array
-     lnop    = zero
-     rnop    = zero
-     lrmm   = zero
+! init fidelity susceptibility
+     lnop = zero
+     rnop = zero
+     lrmm = zero
 
-
+! init powers of local magnetization
+     szpw = zero
 
 
 
