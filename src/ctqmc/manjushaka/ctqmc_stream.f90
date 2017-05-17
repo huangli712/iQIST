@@ -126,14 +126,16 @@
 
 ! extract parameters
              call p_get('isscf' , isscf )
-             call p_get('issun' , issun )
+             call p_get('isbnd' , isbnd )
              call p_get('isspn' , isspn )
+             call p_get('isopt' , isopt )
+             call p_get('iscut' , iscut )
              call p_get('isbin' , isbin )
+             call p_get('iswor' , iswor )
              call p_get('isort' , isort )
+             call p_get('isobs' , isobs )
              call p_get('issus' , issus )
              call p_get('isvrt' , isvrt )
-             call p_get('ifast' , ifast )
-             call p_get('itrun' , itrun )
 
              call p_get('nband' , nband )
              call p_get('nspin' , nspin )
