@@ -868,8 +868,6 @@
 
 ! init expt
      expt_v  = zero
-
-
      do i=1,ncfgs
          expt_t(i, 1) = exp( - eigs(i) * beta )
          expt_t(i, 2) = exp( - eigs(i) * beta )
@@ -877,10 +875,7 @@
          expt_t(i, 4) = exp( - eigs(i) * beta )
      enddo ! over i={1,ncfgs} loop
 
-
-
-
-! init empty_v stack structure
+! init stack
      call istack_clean( empty_v )
      do j=mkink,1,-1
          call istack_push( empty_v, j )
