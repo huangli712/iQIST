@@ -71,13 +71,12 @@
      alpha  = 0.70_dp   ! mixing parameter for self-consistent iterations
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!!========================================================================
-!!>>> setup common variables for quantum impurity model                <<<
-!!========================================================================
-     nband  = 1            ! number of correlated bands
-     nspin  = 2            ! number of spin projection
-     norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
-     ncfgs  = 2**norbs     ! number of atomic states
+! setup common variables for quantum impurity model
+!-------------------------------------------------------------------------
+     nband  = 1         ! number of correlated bands
+     nspin  = 2         ! number of spin projection
+     norbs  = 2         ! number of correlated orbitals (= nband * nspin)
+     ncfgs  = 4         ! number of atomic states
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
      Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
