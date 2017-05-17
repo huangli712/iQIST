@@ -947,16 +947,22 @@
      gtau = zero
      ftau = zero
 
-! init impurity green's function
+! init matsubara impurity green's function
      grnf = czero
      frnf = czero
 
+!>>> ctqmc_wmat module
+!-------------------------------------------------------------------------
+! some variables have been initialized at ctqmc_setup_model()
+
+! init imaginary time bath weiss's function
+     wtau = zero
+
+! init matsubara bath weiss's function
+     wssf = czero
 
 
 
-
-! init imaginary time bath weiss's function array
-     wtau    = zero
 
 
 ! init matrix_ntrace and matrix_ptrace
@@ -967,8 +973,6 @@
 
 
 
-! init bath weiss's function array
-     wssf    = czero
 
 ! init self-energy function array
 ! note: sig1 should not be reinitialized here, since it is used to keep
