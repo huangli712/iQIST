@@ -908,10 +908,13 @@
      return
   end subroutine try_remove_colour
 
-!!>>> try_lshift_colour: select index address isn for selected flavor
-!!>>> channel randomly, and then determine its imaginary time points,
-!!>>> shift it randomly, and then evaluate its final index address for
-!!>>> the colour (determinant) part
+!!
+!! @sub try_lshift_colour
+!!
+!! try to select index address isn for selected flavor channel randomly,
+!! and then determine its imaginary time points, shift it randomly, and
+!! then evaluate its final index address for the colour (determinant) part
+!!
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
