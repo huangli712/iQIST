@@ -325,6 +325,22 @@
      use context, only : rmesh
      use context, only : hybf
 
+     implicit none
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+
+! used to check whether the input file (solver.hyb.in) exists
+     logical  :: exists
+
+! dummy real variables
+     real(dp) :: rtmp
+     real(dp) :: r1, r2
+     real(dp) :: i1, i2
+
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
