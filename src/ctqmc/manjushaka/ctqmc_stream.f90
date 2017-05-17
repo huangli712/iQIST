@@ -919,20 +919,33 @@
 ! init particle-particle pairing susceptibility
      p2pw = czero
 
+!>>> ctqmc_umat module
+!-------------------------------------------------------------------------
+! some variables have been initialized at ctqmc_setup_model()
 
+! init rank
+     rank = 0
 
+! init diag
+     diag = zero
 
-! init rank  array
-     rank    = 0
-     diag    = zero
-
+!>>> ctqmc_mmat module
+!-------------------------------------------------------------------------
 ! init M-matrix related array
-     mmat    = zero
-     lspace  = zero
-     rspace  = zero
+     mmat   = zero
+     lspace = zero
+     rspace = zero
 
+! init G-matrix related array
+     gmat   = czero
+     lsaves = czero
+     rsaves = czero
+
+!>>> ctqmc_gmat module
+!-------------------------------------------------------------------------
 ! init imaginary time impurity green's function array
-     gtau    = zero
+     gtau = zero
+     ftau = zero
 
 ! init imaginary time bath weiss's function array
      wtau    = zero
@@ -942,10 +955,7 @@
      matrix_ntrace = sum( expt_t(:, 1) )
      matrix_ptrace = sum( expt_t(:, 2) )
 
-! init G-matrix related array
-     gmat    = czero
-     lsaves  = czero
-     rsaves  = czero
+
 
 ! init impurity green's function array
      grnf    = czero
