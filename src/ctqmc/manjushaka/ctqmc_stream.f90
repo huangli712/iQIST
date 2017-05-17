@@ -341,9 +341,12 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
-! using the analytical equation at non-interaction limit, and then
-! build initial hybridization function using self-consistent condition
+! build initial green's function using the analytical expression at
+! non-interaction limit:
+!     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
+! and then build initial hybridization function using self-consistent
+! condition for bethe lattice:
+!     \Delta = t^2 * G
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
          hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
