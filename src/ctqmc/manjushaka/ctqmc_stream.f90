@@ -484,6 +484,7 @@
 
      integer :: i,j,k,m,n
      integer :: j1, j2, j3, j4, j5
+     integer :: ver
 
      real(dp) :: r1, r2
      logical :: exists
