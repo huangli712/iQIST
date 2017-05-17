@@ -961,7 +961,7 @@
 
 ! determine imaginary time and index address for new creation operator
      have = 99
-     CREATION_BLOCK : do while ( have > 0 )
+     CREATION_BLOCK: do while ( have > 0 )
          if ( ckink == 1 ) then
              isn = 1
              tau_start2 = spring_sfmt_stream() * beta
@@ -1037,7 +1037,7 @@
      real(dp), intent(out) :: tau_end2
 
 ! local variables
-! determine if tau_end2 is collided with existed operators
+! determine if tau_end2 is collided with existing operators
      integer  :: have
 
 ! imaginary time of previous annihilation operator
@@ -1054,7 +1054,7 @@
 
 ! determine imaginary time and index address for new annihilation operator
      have = 99
-     destroyer : do while ( have > 0 )
+     ANNIHILATION_BLOCK: do while ( have > 0 )
          if ( ckink == 1 ) then
              ien = 1
              tau_end2 = spring_sfmt_stream() * beta
@@ -1089,7 +1089,7 @@
 
 ! check tau_end2 is necessary
          call cat_search_colour(flvr, tau_end2, have)
-     enddo destroyer ! over do while loop
+     enddo ANNIHILATION_BLOCK ! over do while loop
 
      return
   end subroutine try_rshift_colour
