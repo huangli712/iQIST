@@ -78,16 +78,12 @@
      norbs  = 2         ! number of correlated orbitals
      ncfgs  = 4         ! number of atomic eigenstates
 !-------------------------------------------------------------------------
-     U      = 4.00_dp      ! U : average Coulomb interaction
-     Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
-     Uv     = 4.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
-     Jz     = 0.00_dp      ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
-     Js     = 0.00_dp      ! Js: spin-flip term
-     Jp     = 0.00_dp      ! Jp: pair-hopping term
+     Uc     = 4.00_dp   ! intra-orbital Coulomb interaction
+     Jz     = 0.00_dp   ! Hund's exchange interaction in z axis
 !-------------------------------------------------------------------------
-     mune   = 2.00_dp      ! chemical potential or fermi level
-     beta   = 8.00_dp      ! inversion of temperature
-     part   = 0.50_dp      ! coupling parameter t for Hubbard model
+     mune   = 2.00_dp   ! chemical potential or fermi level
+     beta   = 8.00_dp   ! inversion of temperature
+     part   = 0.50_dp   ! hopping parameter t for Hubbard model
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
