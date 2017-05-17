@@ -881,25 +881,20 @@
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
 
+!>>> ctqmc_mesh module
+!-------------------------------------------------------------------------
+! the variables have been initialized at ctqmc_setup_model()
 
-
-
-
-
-! init rank  array
-     rank    = 0
-
-
-
+!>>> ctqmc_meat module
+!-------------------------------------------------------------------------
 ! init hist  array
      hist    = zero
 
-! init auxiliary physical observables
-     paux    = zero
-
 ! init probability for atomic states
      prob    = zero
-     diag    = zero
+
+! init auxiliary physical observables
+     paux    = zero
 
 ! init occupation number array
      nmat    = zero
@@ -913,6 +908,19 @@
      lmat    = zero
      rmat    = zero
      lrmat   = zero
+
+
+
+
+
+
+! init rank  array
+     rank    = 0
+
+     diag    = zero
+
+
+
 
 ! init two-particle green's function
      g2_re   = zero
