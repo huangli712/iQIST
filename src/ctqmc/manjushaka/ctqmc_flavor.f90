@@ -110,6 +110,10 @@
      real(dp) :: t_prev
      real(dp) :: t_next
 
+! check tau_start and tau_end, to eliminate the warning from compiler
+     call s_assert( tau_start > zero )
+     call s_assert( tau_end   > zero )
+
 ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
