@@ -926,10 +926,6 @@
      rank    = 0
      diag    = zero
 
-
-
-
-
 ! init M-matrix related array
      mmat    = zero
      lspace  = zero
@@ -945,10 +941,6 @@
 ! init matrix_ntrace and matrix_ptrace
      matrix_ntrace = sum( expt_t(:, 1) )
      matrix_ptrace = sum( expt_t(:, 2) )
-
-! for complex arrays
-!-------------------------------------------------------------------------
-
 
 ! init G-matrix related array
      gmat    = czero
