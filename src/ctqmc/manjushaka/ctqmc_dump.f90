@@ -119,6 +119,14 @@
 ! start index of sectors
      integer  :: indx
 
+! dummy arrays, used to store spin of eigenstates
+     real(dp) :: stmp1(ncfgs)
+     real(dp) :: stmp2(ncfgs)
+
+! probability of sectors
+     real(dp) :: psect(nsect)
+     real(dp) :: pserr(nsect)
+
 ! probability of occupation number distribution
      real(dp) :: oprob(0:norbs)
      real(dp) :: operr(0:norbs) ! error bar
@@ -126,14 +134,6 @@
 ! probability of net spin distribution
      real(dp) :: sprob(ncfgs)
      real(dp) :: sperr(ncfgs) ! error bar
-
-! probability of sectors
-     real(dp) :: psect(nsect)
-     real(dp) :: pserr(nsect)
-
-! dummy arrays, used to store spin of eigenstates
-     real(dp) :: stmp1(ncfgs)
-     real(dp) :: stmp2(ncfgs)
 
 ! sort all the spin values
      stmp1 = saux
@@ -150,15 +150,6 @@
          endif ! back if ( stmp2(ns) < stmp1(i) ) block
      enddo ! over i={2,ncfgs} loop
 
-! evaluate oprob
-     oprob = zero
-     operr = zero
-     do i=1,ncfgs
-         j = int( naux(i) )
-         oprob(j) = oprob(j) + prob(i)
-         operr(j) = operr(j) + perr(i)
-     enddo ! over i={1,ncfgs} loop
-
 ! evaluate psect
      psect = zero
      pserr = zero
@@ -170,16 +161,26 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
-
+! evaluate oprob
+     oprob = zero
+     operr = zero
+     do i=1,ncfgs
+         j = int( naux(i) )
+         oprob(j) = oprob(j) + prob(i)
+         operr(j) = operr(j) + perr(i)
+     enddo ! over i={1,ncfgs} loop
 
 ! evaluate sprob
      sprob = zero
+     sperr = zero
      do i=1,ncfgs
-         do j=1,ns
+         SCAN_CYCLE: do j=1,ns
              if ( abs( stmp2(j) - saux(i) ) < eps6 ) then
-                 sprob(j) = sprob(j) + prob(i); EXIT
+                 sprob(j) = sprob(j) + prob(i)
+                 sperr(j) = sperr(j) + perr(i)
+                 EXIT SCAN_CYCLE
              endif ! back if ( abs( stmp2(j) - saux(i) ) < eps6 ) block
-         enddo ! over j={1,ns} loop
+         enddo SCAN_CYCLE ! over j={1,ns} loop
      enddo ! over i={1,ncfgs} loop
 
 ! open data file: solver.prob.dat
@@ -195,17 +196,17 @@
      do i=1,nsect
          write(mytmp,'(i6,3f12.6)') i, real( sectors(i)%nele ), psect(i), pserr(i)
      enddo ! over i={1,nsect} loop
-     write(mytmp,'(a6,12X,2f12.6)') 'sum', sum(psect), sum(pserr)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(psect)
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i6,2f12.6)') i + 1, real(i), oprob(i)
+         write(mytmp,'(i6,3f12.6)') i + 1, real(i), oprob(i), operr(i)
      enddo ! over i={0,norbs} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=1,ns
-         write(mytmp,'(i6,2f12.6)') i, stmp2(i), sprob(i)
+         write(mytmp,'(i6,3f12.6)') i, stmp2(i), sprob(i), sperr(i)
      enddo ! over i={1,ns} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
