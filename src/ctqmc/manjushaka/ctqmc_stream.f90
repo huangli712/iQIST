@@ -86,13 +86,10 @@
      part   = 0.50_dp   ! hopping parameter t for Hubbard model
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!!========================================================================
-!!>>> setup common variables for quantum impurity solver               <<<
-!!========================================================================
+! setup common variables for quantum impurity solver
+!-------------------------------------------------------------------------
      lemax  = 32           ! maximum order for legendre polynomial
      legrd  = 20001        ! number of mesh points for legendre polynomial
-     chmax  = 32           ! maximum order for chebyshev polynomial
-     chgrd  = 20001        ! number of mesh points for chebyshev polynomial
 !-------------------------------------------------------------------------
      mkink  = 1024         ! maximum perturbation expansions order
      mfreq  = 8193         ! maximum number of matsubara frequency
