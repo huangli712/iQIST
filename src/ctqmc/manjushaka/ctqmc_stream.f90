@@ -648,8 +648,19 @@
      return
   end subroutine ctqmc_setup_model
 
-!!>>> ctqmc_setup_array: allocate memory for global variables and then
-!!>>> initialize them
+!!========================================================================
+!!>>> config quantum impurity model                                    <<<
+!!========================================================================
+
+!!========================================================================
+!!>>> manage memory for quantum impurity solver                        <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_alloc_array
+!!
+!! allocate memory for global variables and then initialize them
+!!
   subroutine ctqmc_alloc_array()
      use context ! ALL
 
