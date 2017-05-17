@@ -976,11 +976,6 @@
      matrix_ntrace = sum( expt_t(:, 1) )
      matrix_ptrace = sum( expt_t(:, 2) )
 
-
-
-
-
-
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
@@ -1001,17 +996,16 @@
      saved_p = zero
      saved_n = zero
 
-! fourier transformation hybridization function from matsubara frequency
-! space to imaginary time space
+!>>> postprocess hybridization function
+!-------------------------------------------------------------------------
+! fourier hybridization function from frequency space to time space
      call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_gtau(symm, htau)
-     endif ! back if ( issun == 2 .or. isspn == 1 ) block
+     call ctqmc_symm_gtau(symm, htau)
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
-     call ctqmc_make_hsed(tmesh, htau, hsed)
+     call ctqmc_eval_hsed(htau, hsed)
 
 ! dump the necessary files
 !-------------------------------------------------------------------------
