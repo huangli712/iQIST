@@ -944,7 +944,7 @@
      real(dp), intent(out) :: tau_start2
 
 ! local variables
-! determine if tau_start2 is collided with existed operators
+! determine if tau_start2 is collided with existing operators
      integer  :: have
 
 ! imaginary time of previous creation operator
@@ -961,7 +961,7 @@
 
 ! determine imaginary time and index address for new creation operator
      have = 99
-     creator : do while ( have > 0 )
+     CREATION_BLOCK : do while ( have > 0 )
          if ( ckink == 1 ) then
              isn = 1
              tau_start2 = spring_sfmt_stream() * beta
@@ -996,7 +996,7 @@
 
 ! check tau_start2 is necessary
          call cat_search_colour(flvr, tau_start2, have)
-     enddo creator ! over do while loop
+     enddo CREATION_BLOCK ! over do while loop
 
      return
   end subroutine try_lshift_colour
