@@ -1007,16 +1007,12 @@
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_eval_hsed(htau, hsed)
 
-! dump the necessary files
+!>>> dump the necessary files
 !-------------------------------------------------------------------------
-! write out the hybridization function in matsubara frequency axis
+! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
-     endif ! back if ( myid == master ) block
-
-! write out the hybridization function on imaginary time axis
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_htau(tmesh, htau)
+         call ctqmc_dump_hybf(hybf)
+         call ctqmc_dump_htau(htau)
      endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce
@@ -1028,8 +1024,11 @@
      return
   end subroutine ctqmc_reset_array
 
-!!>>> ctqmc_final_array: garbage collection for this program, please refer
-!!>>> to ctqmc_setup_array
+!!
+!! @sub ctqmc_final_array
+!!
+!! garbage collection for this code, please refer to ctqmc_alloc_array
+!!
   subroutine ctqmc_final_array()
      use context ! ALL
 
