@@ -53,15 +53,15 @@
 !-------------------------------------------------------------------------
      isscf  = 1         ! self-consistent scheme
      isbnd  = 1         ! symmetry (band part)
-     isspn  = 1         ! symmetry (band part)
+     isspn  = 1         ! symmetry (spin part)
      isopt  = 1         ! fast trace evaluation
      iscut  = 1         ! dynamic truncation
      isbin  = 1         ! data binning
      iswor  = 1         ! worm algorithm
-     isort  = 1         ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
-     isobs  = 1
-     issus  = 1         ! without suscept.    (1) or with susceptibility  (2)
-     isvrt  = 1         ! without vertex      (1) or with vertex function (2)
+     isort  = 1         ! advanced basis
+     isobs  = 1         ! various physical observables
+     issus  = 1         ! charge/spin susceptibility
+     isvrt  = 1         ! two particle green's function
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
