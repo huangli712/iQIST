@@ -993,6 +993,65 @@
 ! irreducible vertex function data to solver.g2pw.dat and solver.h2pw.dat
      if ( .not. btest(isvrt, 1) ) RETURN
 
+! task 1: dump two-particle green's function
+!-------------------------------------------------------------------------
+
+! open data file: solver.g2pw.dat
+     open(mytmp, file='solver.g2pw.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,4f16.8)') jt, it, g2pw(i,j,k,n,m), gerr(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+! task 2: dump irreducible vertex function
+!-------------------------------------------------------------------------
+
+! open data file: solver.h2pw.dat
+     open(mytmp, file='solver.h2pw.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,4f16.8)') jt, it, h2pw(i,j,k,n,m), herr(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+! task 3: dump irreducible vertex function
+!-------------------------------------------------------------------------
+
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
 
@@ -1005,17 +1064,21 @@
                  write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
-! evaluate g2 and g1
+! evaluate g2
                      if ( j <= nffrq/2 ) then
                          g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
                      else
                          g2 = grnf(j-nffrq/2,m,m)
                      endif ! back if ( j <= nffrq/2 ) block
+
+! evaluate g1 and fw
                      p = j + k - 1
                      if ( p <= nffrq/2 ) then
                          g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
+                         fw = dconjg( frnf(nffrq/2-p+1,m,m) )
                      else
                          g1 = grnf(p-nffrq/2,m,m)
+                         fw = frnf(p-nffrq/2,m,m)
                      endif ! back if ( p <= nffrq/2 ) block
 
                      do i=1,nffrq
