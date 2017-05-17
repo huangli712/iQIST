@@ -240,29 +240,6 @@
      return
   end subroutine ctqmc_setup_param
 
-!!>>> ctqmc_setup_array: allocate memory for global variables and then
-!!>>> initialize them
-  subroutine ctqmc_alloc_array()
-     use context ! ALL
-
-     implicit none
-
-! allocate memory for context module
-     call ctqmc_allocate_memory_clur()
-     call ctqmc_allocate_memory_flvr()
-
-     call ctqmc_allocate_memory_mesh()
-     call ctqmc_allocate_memory_meat()
-     call ctqmc_allocate_memory_umat()
-     call ctqmc_allocate_memory_mmat()
-
-     call ctqmc_allocate_memory_gmat()
-     call ctqmc_allocate_memory_wmat()
-     call ctqmc_allocate_memory_smat()
-
-     return
-  end subroutine ctqmc_alloc_array
-
 !!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
 !!>>> Carlo quantum impurity solver plus dynamical mean field theory
 !!>>> self-consistent engine
@@ -670,6 +647,29 @@
 
      return
   end subroutine ctqmc_setup_model
+
+!!>>> ctqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
+  subroutine ctqmc_alloc_array()
+     use context ! ALL
+
+     implicit none
+
+! allocate memory for context module
+     call ctqmc_allocate_memory_clur()
+     call ctqmc_allocate_memory_flvr()
+
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
+     call ctqmc_allocate_memory_umat()
+     call ctqmc_allocate_memory_mmat()
+
+     call ctqmc_allocate_memory_gmat()
+     call ctqmc_allocate_memory_wmat()
+     call ctqmc_allocate_memory_smat()
+
+     return
+  end subroutine ctqmc_alloc_array
 
 !!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
 !!>>> Carlo quantum impurity solver
