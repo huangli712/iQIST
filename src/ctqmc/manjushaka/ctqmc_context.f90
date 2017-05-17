@@ -15,7 +15,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           05/17/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -371,6 +371,10 @@
 !!
 !! resemble exp(-H\tau), exponent matrix for local hamiltonian multiply
 !! imaginary time \tau (the last point)
+!!     expt_t(:,1) : used to store trial  e^{ -(\beta - \tau_n) \cdot H }
+!!     expt_t(:,2) : used to store normal e^{ -(\beta - \tau_n) \cdot H }
+!!     expt_t(:,3) : used to store e^{ -\beta \cdot H } persistently
+!!     expt_t(:,4) : reserved, not used so far
 !!
      real(dp), public, save, allocatable :: expt_t(:,:)
 
