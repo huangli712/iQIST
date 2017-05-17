@@ -808,22 +808,22 @@
 ! select imaginary time of the new creation operator randomly
 ! check tau_start is necessary
      have = 99
-     creator :   do while ( have > 0 )
+     CREATION_CYCLE : do while ( have > 0 )
          tau_start = spring_sfmt_stream() * beta
          call cat_search_colour(flvr, tau_start, have)
-     enddo creator ! over do while loop
+     enddo CREATION_CYCLE ! over do while loop
 
 ! select imaginary time of the new annihilation operator randomly
 ! check tau_end is necessary
      have = 99
-     destroyer : do while ( have > 0 )
+     ANNIHILATION_CYCLE : do while ( have > 0 )
          tau_end = spring_sfmt_stream() * beta
-         call cat_search_colour(flvr, tau_end  , have)
+         call cat_search_colour(flvr, tau_end, have)
 ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
          endif ! back if ( abs( tau_start - tau_end ) < epss ) block
-     enddo destroyer ! over do while loop
+     enddo ANNIHILATION_CYCLE ! over do while loop
 
 ! determine the new position (index address, is) of tau_start in time_s
      if ( ckink > 0 ) then
