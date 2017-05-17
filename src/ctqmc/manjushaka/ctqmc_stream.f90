@@ -295,25 +295,6 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build imaginary time tau mesh: tmesh
-     call s_linspace_d(zero, beta, ntime, tmesh)
-
-! build matsubara frequency mesh: rmesh
-     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
-
-! build mesh for legendre polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, pmesh)
-
-! build mesh for chebyshev polynomial in [-1,1]
-     call s_linspace_d(-one, one, chgrd, qmesh)
-
-! build legendre polynomial in [-1,1]
-     call s_legendre(lemax, legrd, pmesh, ppleg)
-
-! build chebyshev polynomial in [-1,1]
-! note: it is second kind chebyshev polynomial
-     call s_chebyshev(chmax, chgrd, qmesh, qqche)
-
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
@@ -666,6 +647,26 @@
 !! try to create various meshes, including time mesh, frequency mesh etc
 !!
   subroutine ctqmc_input_mesh_()
+     implicit none
+
+! build imaginary time tau mesh: tmesh
+     call s_linspace_d(zero, beta, ntime, tmesh)
+
+! build matsubara frequency mesh: rmesh
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
+
+! build mesh for legendre polynomial in [-1,1]
+     call s_linspace_d(-one, one, legrd, pmesh)
+
+! build mesh for chebyshev polynomial in [-1,1]
+     call s_linspace_d(-one, one, chgrd, qmesh)
+
+! build legendre polynomial in [-1,1]
+     call s_legendre(lemax, legrd, pmesh, ppleg)
+
+! build chebyshev polynomial in [-1,1]
+! note: it is second kind chebyshev polynomial
+     call s_chebyshev(chmax, chgrd, qmesh, qqche)
 
      return
   end subroutine ctqmc_input_mesh_
