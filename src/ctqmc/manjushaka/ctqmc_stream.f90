@@ -252,51 +252,6 @@
 !! quantum impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_model()
-     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
-     use mmpi, only : mp_bcast, mp_barrier
-
-     use control, only : norbs, ncfgs
-     use control, only : lemax, legrd, chmax, chgrd
-     use control, only : mfreq
-     use control, only : ntime
-     use control, only : U
-     use control, only : mune, beta, part
-     use control, only : myid, master
-     use context, only : cssoc
-     use context, only : tmesh, rmesh, pmesh, qmesh, ppleg, qqche
-     use context, only : symm, eimp, eigs, naux, saux
-     use context, only : hybf
-
-     use m_sect ! ALL
-     use m_part ! ALL
-
-     implicit none
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-     integer  :: k
-     integer  :: m
-     integer  :: n
-
-! version of file 'atom.cix'
-     integer  :: ver
-
-! dummy integer variables
-     integer  :: j1, j2, j3, j4, j5
-
-! used to check whether the input file (solver.hyb.in or solver.eimp.in
-! or atom.cix) exists
-     logical  :: exists
-
-! dummy real variables
-     real(dp) :: rtmp
-     real(dp) :: r1, r2
-     real(dp) :: i1, i2
-
-
-
 
      return
   end subroutine ctqmc_setup_model
