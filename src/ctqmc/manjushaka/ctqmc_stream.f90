@@ -961,7 +961,14 @@
 ! init matsubara bath weiss's function
      wssf = czero
 
+!>>> ctqmc_smat module
+!-------------------------------------------------------------------------
+! sig1 should not be reinitialized here, since it is used to keep the
+! persistency of self-energy function
 
+! init self-energy function
+!<     sig1 = czero
+     sig2 = czero
 
 
 
@@ -973,12 +980,6 @@
 
 
 
-
-! init self-energy function array
-! note: sig1 should not be reinitialized here, since it is used to keep
-! the persistency of self-energy function
-!<     sig1    = czero
-     sig2    = czero
 
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
