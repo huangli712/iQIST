@@ -33,8 +33,13 @@
 !! impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_param()
-     use parser, only : p_create, p_parse, p_get, p_destroy
-     use mmpi, only : mp_bcast, mp_barrier
+     use parser, only : p_create
+     use parser, only : p_parse
+     use parser, only : p_get
+     use parser, only : p_destroy
+
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
 
      use control ! ALL
 
@@ -44,9 +49,8 @@
 ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
-!!========================================================================
-!!>>> setup general control flags                                      <<<
-!!========================================================================
+! setup general control flags
+!-------------------------------------------------------------------------
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
