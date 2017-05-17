@@ -887,18 +887,18 @@
 
 !>>> ctqmc_meat module
 !-------------------------------------------------------------------------
-! init hist  array
-     hist    = zero
+! init histogram
+     hist = zero
 
-! init probability for atomic states
-     prob    = zero
+! init probability for atomic eigenstates
+     prob = zero
 
 ! init auxiliary physical observables
-     paux    = zero
+     paux = zero
 
-! init occupation number array
-     nimp    = zero
-     nmat   = zero
+! init occupation number
+     nimp = zero
+     nmat = zero
 
 ! init < k^2 > - < k >^2 array
      knop    = zero
