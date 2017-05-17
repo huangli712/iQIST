@@ -88,24 +88,24 @@
 
 ! setup common variables for quantum impurity solver
 !-------------------------------------------------------------------------
-     lemax  = 32           ! maximum order for legendre polynomial
-     legrd  = 20001        ! number of mesh points for legendre polynomial
+     lemax  = 32        ! maximum expansion order for legendre polynomial
+     legrd  = 20001     ! number of mesh points for legendre polynomial
 !-------------------------------------------------------------------------
-     mkink  = 1024         ! maximum perturbation expansions order
-     mfreq  = 8193         ! maximum number of matsubara frequency
+     mkink  = 1024      ! maximum perturbation expansions order
+     mfreq  = 8193      ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
-     nffrq  = 32           ! number of matsubara frequency for the two-particle green's function
-     nbfrq  = 8            ! number of bosonic frequncy for the two-particle green's function
-     nfreq  = 128          ! maximum number of matsubara frequency sampling by quantum impurity solver
-     ntime  = 1024         ! number of time slice
-     npart  = 4            ! number of parts that the imaginary time axis is split
-     nflip  = 20000        ! flip period for spin up and spin down states
-     ntherm = 200000       ! maximum number of thermalization steps
-     nsweep = 20000000     ! maximum number of quantum Monte Carlo sampling steps
-     nwrite = 2000000      ! output period
-     nclean = 100000       ! clean update period
-     nmonte = 10           ! how often to sampling the gmat and nmat
-     ncarlo = 10           ! how often to sampling the gtau and prob
+     nffrq  = 32        ! number of matsubara frequency for the two-particle green's function
+     nbfrq  = 8         ! number of bosonic frequncy for the two-particle green's function
+     nfreq  = 128       ! maximum number of matsubara frequency sampling by quantum impurity solver
+     ntime  = 1024      ! number of time slice
+     npart  = 4         ! number of parts that the imaginary time axis is split
+     nflip  = 20000     ! flip period for spin up and spin down states
+     ntherm = 200000    ! maximum number of thermalization steps
+     nsweep = 20000000  ! maximum number of quantum Monte Carlo sampling steps
+     nwrite = 2000000   ! output period
+     nclean = 100000    ! clean update period
+     nmonte = 10        ! how often to sampling the gmat and nmat
+     ncarlo = 10        ! how often to sampling the gtau and prob
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in input file if possible, only master node can do it
