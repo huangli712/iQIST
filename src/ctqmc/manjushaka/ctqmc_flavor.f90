@@ -808,7 +808,7 @@
 ! select imaginary time of the new creation operator randomly
 ! check tau_start is necessary
      have = 99
-     CREATION_CYCLE : do while ( have > 0 )
+     CREATION_CYCLE: do while ( have > 0 )
          tau_start = spring_sfmt_stream() * beta
          call cat_search_colour(flvr, tau_start, have)
      enddo CREATION_CYCLE ! over do while loop
@@ -816,7 +816,7 @@
 ! select imaginary time of the new annihilation operator randomly
 ! check tau_end is necessary
      have = 99
-     ANNIHILATION_CYCLE : do while ( have > 0 )
+     ANNIHILATION_CYCLE: do while ( have > 0 )
          tau_end = spring_sfmt_stream() * beta
          call cat_search_colour(flvr, tau_end, have)
 ! we need to ensure tau_start is not equal to tau_end
@@ -826,7 +826,7 @@
      enddo ANNIHILATION_CYCLE ! over do while loop
 
 ! determine the new position (index address, is) of tau_start in time_s
-     if ( ckink > 0 ) then
+     CREATION_BLOCK: if ( ckink > 0 ) then
          if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) then
              is = 1
          else if ( tau_start > time_s(index_s(ckink, flvr), flvr) ) then
@@ -838,10 +838,10 @@
              enddo ! over do while loop
              is = i
          endif ! back if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) block
-     endif ! back if ( ckink > 0 ) block
+     endif CREATION_BLOCK ! back if ( ckink > 0 ) block
 
 ! determine the new position (index address, ie) of tau_end in time_e
-     if ( ckink > 0 ) then
+     ANNIHILATION_BLOCK: if ( ckink > 0 ) then
          if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) then
              ie = 1
          else if ( tau_end > time_e(index_e(ckink, flvr), flvr) ) then
@@ -853,12 +853,7 @@
              enddo ! over do while loop
              ie = i
          endif ! back if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) block
-     endif ! back if ( ckink > 0 ) block
-
-! check the validity of tau_start and tau_end
-     if ( abs( tau_start - tau_end ) < epss ) then
-         call s_print_error('try_insert_colour','tau_start is equal to tau_end')
-     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
+     endif ANNIHILATION_BLOCK ! back if ( ckink > 0 ) block
 
      return
   end subroutine try_insert_colour
