@@ -797,8 +797,40 @@
      cnegs = 0
      caves = 0
 
+! init statistics variables
+     insert_tcount = zero
+     insert_accept = zero
+     insert_reject = zero
 
+     remove_tcount = zero
+     remove_accept = zero
+     remove_reject = zero
 
+     lshift_tcount = zero
+     lshift_accept = zero
+     lshift_reject = zero
+
+     rshift_tcount = zero
+     rshift_accept = zero
+     rshift_reject = zero
+
+     reflip_tcount = zero
+     reflip_accept = zero
+     reflip_reject = zero
+
+!>>> ctqmc_clur module
+!-------------------------------------------------------------------------
+! init index
+     index_s = 0
+     index_e = 0
+
+! init time
+     time_s  = zero
+     time_e  = zero
+
+! init exponent
+     exp_s   = czero
+     exp_e   = czero
 
 ! for stack data structure
 !-------------------------------------------------------------------------
@@ -823,34 +855,7 @@
 
 
 
-! for real variables
-!-------------------------------------------------------------------------
-! init statistics variables
-     insert_tcount = zero
-     insert_accept = zero
-     insert_reject = zero
 
-     remove_tcount = zero
-     remove_accept = zero
-     remove_reject = zero
-
-     lshift_tcount = zero
-     lshift_accept = zero
-     lshift_reject = zero
-
-     rshift_tcount = zero
-     rshift_accept = zero
-     rshift_reject = zero
-
-     reflip_tcount = zero
-     reflip_accept = zero
-     reflip_reject = zero
-
-! for integer arrays
-!-------------------------------------------------------------------------
-! init index array
-     index_s = 0
-     index_e = 0
 
      index_t = 0
      index_v = 0
@@ -864,11 +869,6 @@
 ! init rank  array
      rank    = 0
 
-! for real arrays
-!-------------------------------------------------------------------------
-! init time  array
-     time_s  = zero
-     time_e  = zero
 
      time_v  = zero
 
@@ -935,9 +935,7 @@
 
 ! for complex arrays
 !-------------------------------------------------------------------------
-! init exponent array exp_s and exp_e
-     exp_s   = czero
-     exp_e   = czero
+
 
 ! init G-matrix related array
      gmat    = czero
