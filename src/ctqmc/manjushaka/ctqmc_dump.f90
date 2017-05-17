@@ -91,10 +91,12 @@
 !!
 !! write out the probability of atomic eigenstates of local hamiltonian
 !!
-  subroutine ctqmc_dump_prob(prob, naux, saux, perr)
+  subroutine ctqmc_dump_prob(prob, perr)
      use constants, only : dp, zero, eps6, mytmp
 
      use control, only : norbs, ncfgs
+
+     use context, only : naux, saux
 
      use m_sect, only : nsect
      use m_sect, only : sectors
@@ -105,12 +107,6 @@
 ! probability data of eigenstates
      real(dp), intent(in) :: prob(ncfgs)
      real(dp), intent(in) :: perr(ncfgs)
-
-! occupation number of eigenstates
-     real(dp), intent(in) :: naux(ncfgs)
-
-! net spin of eigenstates
-     real(dp), intent(in) :: saux(ncfgs)
 
 ! local variables
 ! loop index
@@ -125,35 +121,19 @@
 
 ! probability of occupation number distribution
      real(dp) :: oprob(0:norbs)
-
-! dummy arrays, used to store spin of eigenstates
-     real(dp) :: stmp1(ncfgs)
-     real(dp) :: stmp2(ncfgs)
+     real(dp) :: operr(0:norbs) ! error bar
 
 ! probability of net spin distribution
      real(dp) :: sprob(ncfgs)
+     real(dp) :: sperr(ncfgs) ! error bar
 
 ! probability of sectors
      real(dp) :: psect(nsect)
      real(dp) :: pserr(nsect)
 
-! evaluate psect
-     psect = zero
-     pserr = zero
-     do i=1,nsect
-         indx = sectors(i)%istart
-         do j=1,sectors(i)%ndim
-             psect(i) = psect(i) + prob(indx+j-1)
-             pserr(i) = pserr(i) + perr(indx+j-1)
-         enddo ! over j={1,sectors(i)%ndim} loop
-     enddo ! over i={1,nsect} loop
-
-! evaluate oprob
-     oprob = zero
-     do i=1,ncfgs
-         j = int( naux(i) )
-         oprob(j) = oprob(j) + prob(i)
-     enddo ! over i={1,ncfgs} loop
+! dummy arrays, used to store spin of eigenstates
+     real(dp) :: stmp1(ncfgs)
+     real(dp) :: stmp2(ncfgs)
 
 ! sort all the spin values
      stmp1 = saux
@@ -169,6 +149,28 @@
              stmp2(ns) = stmp1(i)
          endif ! back if ( stmp2(ns) < stmp1(i) ) block
      enddo ! over i={2,ncfgs} loop
+
+! evaluate oprob
+     oprob = zero
+     operr = zero
+     do i=1,ncfgs
+         j = int( naux(i) )
+         oprob(j) = oprob(j) + prob(i)
+         operr(j) = operr(j) + perr(i)
+     enddo ! over i={1,ncfgs} loop
+
+! evaluate psect
+     psect = zero
+     pserr = zero
+     do i=1,nsect
+         indx = sectors(i)%istart
+         do j=1,sectors(i)%ndim
+             psect(i) = psect(i) + prob(indx+j-1)
+             pserr(i) = pserr(i) + perr(indx+j-1)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
+
+
 
 ! evaluate sprob
      sprob = zero
