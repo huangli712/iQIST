@@ -917,7 +917,7 @@
      h2pw = czero
 
 ! init particle-particle pairing susceptibility
-     p2pw = zero
+     p2pw = czero
 
 
 
