@@ -207,12 +207,8 @@
      call mp_bcast( ncfgs , master )
      call mp_barrier()
 
-     call mp_bcast( U     , master )
      call mp_bcast( Uc    , master )
-     call mp_bcast( Uv    , master )
      call mp_bcast( Jz    , master )
-     call mp_bcast( Js    , master )
-     call mp_bcast( Jp    , master )
      call mp_barrier()
 
      call mp_bcast( mune  , master )
