@@ -23,7 +23,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           05/17/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -86,8 +86,11 @@
      return
   end subroutine ctqmc_dump_hist
 
-!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
-!!>>> hamiltonian matrix
+!!
+!! @sub ctqmc_dump_prob
+!!
+!! write out the probability of atomic eigenstates of local hamiltonian
+!!
   subroutine ctqmc_dump_prob(prob, naux, saux, perr)
      use constants, only : dp, zero, eps6, mytmp
 
