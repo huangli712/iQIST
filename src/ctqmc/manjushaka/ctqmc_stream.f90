@@ -297,6 +297,155 @@
 
 
 
+
+     return
+  end subroutine ctqmc_setup_model
+
+!!========================================================================
+!!>>> config quantum impurity model                                    <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_input_mesh_
+!!
+!! try to create various meshes, including time mesh, frequency mesh etc
+!!
+  subroutine ctqmc_input_mesh_()
+     implicit none
+
+! build imaginary time tau mesh: tmesh
+     call s_linspace_d(zero, beta, ntime, tmesh)
+
+! build matsubara frequency mesh: rmesh
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
+
+! build mesh for legendre polynomial in [-1,1]
+     call s_linspace_d(-one, one, legrd, pmesh)
+
+! build mesh for chebyshev polynomial in [-1,1]
+     call s_linspace_d(-one, one, chgrd, qmesh)
+
+! build legendre polynomial in [-1,1]
+     call s_legendre(lemax, legrd, pmesh, ppleg)
+
+! build chebyshev polynomial in [-1,1]
+! note: it is second kind chebyshev polynomial
+     call s_chebyshev(chmax, chgrd, qmesh, qqche)
+
+     return
+  end subroutine ctqmc_input_mesh_
+
+!!
+!! @sub ctqmc_input_hybf_
+!!
+!! try to build initial hybridization function from solver.hyb.in
+!!
+  subroutine ctqmc_input_hybf_()
+
+! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
+! using the analytical equation at non-interaction limit, and then
+! build initial hybridization function using self-consistent condition
+     do i=1,mfreq
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+     enddo ! over i={1,mfreq} loop
+
+! read in initial hybridization function if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'solver.hyb.in', exist = exists)
+
+! find input file: solver.hyb.in, read it
+         if ( exists .eqv. .true. ) then
+
+             hybf = czero ! reset it to zero
+
+! read in hybridization function from solver.hyb.in
+             open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
+             do i=1,norbs
+                 do j=1,mfreq
+                     read(mytmp,*) k, rtmp, r1, i1, r2, i2
+                     hybf(j,i,i) = dcmplx(r1,i1)
+                 enddo ! over j={1,mfreq} loop
+                 read(mytmp,*) ! skip two lines
+                 read(mytmp,*)
+             enddo ! over i={1,norbs} loop
+             close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+
+! since the hybridization function may be updated in master node, it is
+! important to broadcast it from root to all children processes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(hybf, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
+
+     return
+  end subroutine ctqmc_input_hybf_
+
+!!
+!! @sub ctqmc_input_eimp_
+!!
+!! try to build orbital symmetry and impurity level from solver.eimp.in
+!!
+  subroutine ctqmc_input_eimp_()
+
+! setup initial symm
+     symm = 1
+
+! setup initial eimp
+     eimp = zero
+
+! read in impurity level and orbital symmetry if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'solver.eimp.in', exist = exists)
+
+! find input file: solver.eimp.in, read it
+         if ( exists .eqv. .true. ) then
+
+! read in impurity level from solver.eimp.in
+             open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
+             do i=1,norbs
+                 read(mytmp,*) k, eimp(i), symm(i)
+             enddo ! over i={1,norbs} loop
+             close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+
+! broadcast eimp and symm from master node to all children nodes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(eimp, master)
+
+! broadcast data
+     call mp_bcast(symm, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
+
+     return
+  end subroutine ctqmc_input_eimp_
+
+  subroutine ctqmc_input_atom_()
 ! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
@@ -547,151 +696,7 @@
 # endif  /* MPI */
 
      return
-  end subroutine ctqmc_setup_model
-
-!!========================================================================
-!!>>> config quantum impurity model                                    <<<
-!!========================================================================
-
-!!
-!! @sub ctqmc_input_mesh_
-!!
-!! try to create various meshes, including time mesh, frequency mesh etc
-!!
-  subroutine ctqmc_input_mesh_()
-     implicit none
-
-! build imaginary time tau mesh: tmesh
-     call s_linspace_d(zero, beta, ntime, tmesh)
-
-! build matsubara frequency mesh: rmesh
-     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
-
-! build mesh for legendre polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, pmesh)
-
-! build mesh for chebyshev polynomial in [-1,1]
-     call s_linspace_d(-one, one, chgrd, qmesh)
-
-! build legendre polynomial in [-1,1]
-     call s_legendre(lemax, legrd, pmesh, ppleg)
-
-! build chebyshev polynomial in [-1,1]
-! note: it is second kind chebyshev polynomial
-     call s_chebyshev(chmax, chgrd, qmesh, qqche)
-
-     return
-  end subroutine ctqmc_input_mesh_
-
-!!
-!! @sub ctqmc_input_hybf_
-!!
-!! try to build initial hybridization function from solver.hyb.in
-!!
-  subroutine ctqmc_input_hybf_()
-
-! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
-! using the analytical equation at non-interaction limit, and then
-! build initial hybridization function using self-consistent condition
-     do i=1,mfreq
-         call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
-         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
-     enddo ! over i={1,mfreq} loop
-
-! read in initial hybridization function if available
-!-------------------------------------------------------------------------
-     if ( myid == master ) then ! only master node can do it
-         exists = .false.
-
-! inquire about file's existence
-         inquire (file = 'solver.hyb.in', exist = exists)
-
-! find input file: solver.hyb.in, read it
-         if ( exists .eqv. .true. ) then
-
-             hybf = czero ! reset it to zero
-
-! read in hybridization function from solver.hyb.in
-             open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
-             do i=1,norbs
-                 do j=1,mfreq
-                     read(mytmp,*) k, rtmp, r1, i1, r2, i2
-                     hybf(j,i,i) = dcmplx(r1,i1)
-                 enddo ! over j={1,mfreq} loop
-                 read(mytmp,*) ! skip two lines
-                 read(mytmp,*)
-             enddo ! over i={1,norbs} loop
-             close(mytmp)
-
-         endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! since the hybridization function may be updated in master node, it is
-! important to broadcast it from root to all children processes
-# if defined (MPI)
-
-! broadcast data
-     call mp_bcast(hybf, master)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif  /* MPI */
-
-     return
-  end subroutine ctqmc_input_hybf_
-
-!!
-!! @sub ctqmc_input_eimp_
-!!
-!! try to build orbital symmetry and impurity level from solver.eimp.in
-!!
-  subroutine ctqmc_input_eimp_()
-
-! setup initial symm
-     symm = 1
-
-! setup initial eimp
-     eimp = zero
-
-! read in impurity level and orbital symmetry if available
-!-------------------------------------------------------------------------
-     if ( myid == master ) then ! only master node can do it
-         exists = .false.
-
-! inquire about file's existence
-         inquire (file = 'solver.eimp.in', exist = exists)
-
-! find input file: solver.eimp.in, read it
-         if ( exists .eqv. .true. ) then
-
-! read in impurity level from solver.eimp.in
-             open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
-             do i=1,norbs
-                 read(mytmp,*) k, eimp(i), symm(i)
-             enddo ! over i={1,norbs} loop
-             close(mytmp)
-
-         endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! broadcast eimp and symm from master node to all children nodes
-# if defined (MPI)
-
-! broadcast data
-     call mp_bcast(eimp, master)
-
-! broadcast data
-     call mp_bcast(symm, master)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif  /* MPI */
-
-     return
-  end subroutine ctqmc_input_eimp_
+  end subroutine ctqmc_input_atom_
 
 !!========================================================================
 !!>>> manage memory for quantum impurity solver                        <<<
