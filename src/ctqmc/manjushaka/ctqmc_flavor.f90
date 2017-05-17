@@ -638,9 +638,6 @@
 ! imaginary time point of the new annihilation operator
      real(dp), intent(in)  :: tau_end2
 
-! ratio between old and new configurations, the local trace part
-     real(dp), intent(out) :: trace_ratio
-
 ! local variables
 ! loop index over operators
      integer  :: i
