@@ -818,25 +818,25 @@
      caves = 0
 
 ! init statistics variables
-     insert_tcount = zero
-     insert_accept = zero
-     insert_reject = zero
+     ins_t = zero
+     ins_a = zero
+     ins_r = zero
 
-     remove_tcount = zero
-     remove_accept = zero
-     remove_reject = zero
+     rmv_t = zero
+     rmv_a = zero
+     rmv_r = zero
 
-     lshift_tcount = zero
-     lshift_accept = zero
-     lshift_reject = zero
+     lsh_t = zero
+     lsh_a = zero
+     lsh_r = zero
 
-     rshift_tcount = zero
-     rshift_accept = zero
-     rshift_reject = zero
+     rsh_t = zero
+     rsh_a = zero
+     rsh_r = zero
 
-     reflip_tcount = zero
-     reflip_accept = zero
-     reflip_reject = zero
+     rfl_t = zero
+     rfl_a = zero
+     rfl_r = zero
 
 !>>> ctqmc_clur module
 !-------------------------------------------------------------------------
