@@ -1001,10 +1001,13 @@
      return
   end subroutine try_lshift_colour
 
-!!>>> try_rshift_colour: select index address ien for selected flavor
-!!>>> channel randomly, and then determine its imaginary time points,
-!!>>> shift it randomly, and then evaluate its final index address for
-!!>>> the colour (determinant) part
+!!
+!! @sub try_rshift_colour
+!!
+!! try to select index address ien for selected flavor channel randomly,
+!! and then determine its imaginary time points, shift it randomly, and
+!! then evaluate its final index address for the colour (determinant) part
+!!
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
