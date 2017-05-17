@@ -64,6 +64,13 @@
      isvrt  = 1         ! two-particle green's function
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+! setup common variables for dynamical mean field theory
+!-------------------------------------------------------------------------
+     niter  = 20        ! maximum number of self-consistent iterations
+!-------------------------------------------------------------------------
+     alpha  = 0.70_dp   ! mixing parameter for self-consistent iterations
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 !!========================================================================
 !!>>> setup common variables for quantum impurity model                <<<
 !!========================================================================
@@ -71,7 +78,6 @@
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
-     niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
      Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
@@ -83,7 +89,6 @@
      mune   = 2.00_dp      ! chemical potential or fermi level
      beta   = 8.00_dp      ! inversion of temperature
      part   = 0.50_dp      ! coupling parameter t for Hubbard model
-     alpha  = 0.70_dp      ! mixing parameter for self-consistent engine
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
