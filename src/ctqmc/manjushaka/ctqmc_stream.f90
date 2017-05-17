@@ -943,9 +943,17 @@
 
 !>>> ctqmc_gmat module
 !-------------------------------------------------------------------------
-! init imaginary time impurity green's function array
+! init imaginary time impurity green's function
      gtau = zero
      ftau = zero
+
+! init impurity green's function
+     grnf = czero
+     frnf = czero
+
+
+
+
 
 ! init imaginary time bath weiss's function array
      wtau    = zero
@@ -957,8 +965,7 @@
 
 
 
-! init impurity green's function array
-     grnf    = czero
+
 
 ! init bath weiss's function array
      wssf    = czero
