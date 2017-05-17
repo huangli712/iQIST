@@ -291,24 +291,17 @@
 
      implicit none
 
-! build imaginary time tau mesh: tmesh
+! build imaginary time mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build mesh for legendre polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, pmesh)
-
-! build mesh for chebyshev polynomial in [-1,1]
-     call s_linspace_d(-one, one, chgrd, qmesh)
+     call s_linspace_d(-one, one, legrd, lmesh)
 
 ! build legendre polynomial in [-1,1]
-     call s_legendre(lemax, legrd, pmesh, ppleg)
-
-! build chebyshev polynomial in [-1,1]
-! note: it is second kind chebyshev polynomial
-     call s_chebyshev(chmax, chgrd, qmesh, qqche)
+     call s_legendre(lemax, legrd, lmesh, rep_l)
 
      return
   end subroutine ctqmc_input_mesh_
