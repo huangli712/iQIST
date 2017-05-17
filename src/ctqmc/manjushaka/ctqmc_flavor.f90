@@ -22,7 +22,7 @@
 !!!           cat_rshift_flavor <<<---
 !!!           cat_create_colour
 !!!           cat_create_flavor <<<---
-!!!           cat_comp_operator
+!!!           cat_search_colour
 !!!           cat_find_operator <<<---
 !!!           cat_disp_diagrams <<<---
 !!! source  : ctqmc_flavor.f90
@@ -783,8 +783,8 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to insert new create and annihilation operators
-! is and ie are for create and annihilation operators, respectively
+! index address to insert new creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
@@ -798,7 +798,7 @@
 ! loop index over operators
      integer :: i
 
-! determine if tau_start or tau_end is collided with existed operators
+! determine if tau_start or tau_end is collided with existing operators
      integer :: have
 
 ! initialize is and ie
@@ -810,7 +810,7 @@
      have = 99
      creator :   do while ( have > 0 )
          tau_start = spring_sfmt_stream() * beta
-         call cat_comp_operator(flvr, tau_start, have)
+         call cat_search_colour(flvr, tau_start, have)
      enddo creator ! over do while loop
 
 ! select imaginary time of the new annihilation operator randomly
@@ -818,7 +818,7 @@
      have = 99
      destroyer : do while ( have > 0 )
          tau_end = spring_sfmt_stream() * beta
-         call cat_comp_operator(flvr, tau_end  , have)
+         call cat_search_colour(flvr, tau_end  , have)
 ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
@@ -989,7 +989,7 @@
          endif ! back if ( ckink == 1 ) block
 
 ! check tau_start2 is necessary
-         call cat_comp_operator(flvr, tau_start2, have)
+         call cat_search_colour(flvr, tau_start2, have)
      enddo creator ! over do while loop
 
      return
@@ -1076,7 +1076,7 @@
          endif ! back if ( ckink == 1 ) block
 
 ! check tau_end2 is necessary
-         call cat_comp_operator(flvr, tau_end2, have)
+         call cat_search_colour(flvr, tau_end2, have)
      enddo destroyer ! over do while loop
 
      return
@@ -2545,9 +2545,9 @@
 !!>>> service layer: utility subroutines to look up in the flavor      <<<
 !!========================================================================
 
-!!>>> cat_comp_operator: to determine whether there exists an operator
+!!>>> cat_search_colour: to determine whether there exists an operator
 !!>>> whose imaginary time is equal to time
-  subroutine cat_comp_operator(flvr, time, have)
+  subroutine cat_search_colour(flvr, time, have)
      use constants, only : dp, epss
 
      use context, only : ckink
@@ -2588,7 +2588,7 @@
      enddo ! over i={1,ckink} loop
 
      return
-  end subroutine cat_comp_operator
+  end subroutine cat_search_colour
 
 !!>>> cat_find_operator: determine index address of operators in the
 !!>>> flavor part using bisection algorithm
