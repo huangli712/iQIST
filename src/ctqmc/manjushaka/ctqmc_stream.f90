@@ -939,20 +939,20 @@
      implicit none
 
 ! deallocate memory for context module
-     call ctqmc_deallocate_memory_clur()
-     call ctqmc_deallocate_memory_flvr()
+     call cat_free_clur()
+     call cat_free_flvr()
 
-     call ctqmc_deallocate_memory_mesh()
-     call ctqmc_deallocate_memory_meat()
-     call ctqmc_deallocate_memory_umat()
-     call ctqmc_deallocate_memory_mmat()
+     call cat_free_mesh()
+     call cat_free_meat()
+     call cat_free_umat()
+     call cat_free_mmat()
 
-     call ctqmc_deallocate_memory_gmat()
-     call ctqmc_deallocate_memory_wmat()
-     call ctqmc_deallocate_memory_smat()
+     call cat_free_gmat()
+     call cat_free_wmat()
+     call cat_free_smat()
 
-     call ctqmc_deallocate_memory_sect()
-     call ctqmc_deallocate_memory_part()
+     call cat_free_sect()
+     call cat_free_part()
 
      return
   end subroutine ctqmc_final_array
