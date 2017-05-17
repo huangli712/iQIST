@@ -752,12 +752,6 @@
          expt_t( i, 1 ) = exp ( -eigs(i) * (beta - t_next) )
      enddo ! over i={1,ncfgs} loop
 
-!-------------------------------------------------------------------------
-! stage 3: evaluate trace ratio
-!-------------------------------------------------------------------------
-! evaluate trace_ratio
-     trace_ratio = matrix_ntrace / matrix_ptrace
-
      return
   end subroutine cat_rshift_ztrace
 
