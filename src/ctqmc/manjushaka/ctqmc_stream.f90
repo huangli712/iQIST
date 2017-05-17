@@ -758,11 +758,14 @@
 !! impurity solver
 !!
   subroutine ctqmc_reset_array()
-     use constants, only : zero, czero
-     use spring, only : spring_sfmt_init
-     use stack, only : istack_clean, istack_push
+     use constants, only : zero, czero, mystd
 
-     use control ! ALL
+     use spring, only : spring_sfmt_init
+     use stack, only : istack_clean
+     use stack, only : istack_push
+
+     use control, only : myid, master
+
      use context ! ALL
 
      use m_sect  ! ALL
@@ -786,6 +789,17 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
+!>>> ctqmc_core module
+!-------------------------------------------------------------------------
+! init global variables
+     ckink = 0
+     csign = 1
+     cnegs = 0
+     caves = 0
+
+
+
+
 ! for stack data structure
 !-------------------------------------------------------------------------
 ! init empty_s and empty_e stack structure
@@ -807,13 +821,7 @@
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
 
-! for integer variables
-!-------------------------------------------------------------------------
-! init global variables
-     ckink   = 0
-     csign   = 1
-     cnegs   = 0
-     caves   = 0
+
 
 ! for real variables
 !-------------------------------------------------------------------------
