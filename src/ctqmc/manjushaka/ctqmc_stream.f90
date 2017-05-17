@@ -61,7 +61,7 @@
      isort  = 1         ! advanced basis
      isobs  = 1         ! various physical observables
      issus  = 1         ! charge/spin susceptibility
-     isvrt  = 1         ! two particle green's function
+     isvrt  = 1         ! two-particle green's function
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
