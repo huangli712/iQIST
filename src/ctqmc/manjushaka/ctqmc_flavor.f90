@@ -880,8 +880,8 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old create and annihilation operators
-! is and ie are for create and annihilation operators, respectively
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
@@ -891,10 +891,9 @@
 ! imaginary time point of the old annihilation operator
      real(dp), intent(out) :: tau_end
 
-! randomly select index address, which is used to access the creation operators
+! randomly select index address, which is used to access the creation
+! and annihilation operators
      is = ceiling( spring_sfmt_stream() * ckink )
-
-! randomly select index address, which is used to access the annihilation operators
      ie = ceiling( spring_sfmt_stream() * ckink )
 
 ! evaluate tau_start and tau_end respectively
