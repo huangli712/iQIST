@@ -437,7 +437,7 @@
 !! calculate the trace ratio for shifting old creation operator on
 !! perturbation expansion series
 !!
-  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
+  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
