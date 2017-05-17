@@ -403,6 +403,25 @@
 !! try to build orbital symmetry and impurity level from solver.eimp.in
 !!
   subroutine ctqmc_input_eimp_()
+     use constants, only : zero, mytmp
+
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
+
+     use control, only : norbs
+     use control, only : myid, master
+
+     use context, only : symm, eimp
+
+     implicit none
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! used to check whether the input file (solver.eimp.in) exists
+     logical  :: exists
 
 ! setup initial symm
      symm = 1
