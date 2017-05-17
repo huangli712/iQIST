@@ -137,23 +137,21 @@
              call p_get('issus' , issus )
              call p_get('isvrt' , isvrt )
 
+             call p_get('niter' , niter )
+
+             call p_get('alpha' , alpha )
+
              call p_get('nband' , nband )
              call p_get('nspin' , nspin )
              call p_get('norbs' , norbs )
              call p_get('ncfgs' , ncfgs )
-             call p_get('niter' , niter )
 
-             call p_get('U'     , U     )
              call p_get('Uc'    , Uc    )
-             call p_get('Uv'    , Uv    )
              call p_get('Jz'    , Jz    )
-             call p_get('Js'    , Js    )
-             call p_get('Jp'    , Jp    )
 
              call p_get('mune'  , mune  )
              call p_get('beta'  , beta  )
              call p_get('part'  , part  )
-             call p_get('alpha' , alpha )
 
              call p_get('lemax' , lemax )
              call p_get('legrd' , legrd )
