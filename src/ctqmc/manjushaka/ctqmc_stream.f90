@@ -1032,7 +1032,7 @@
      endif ! back if ( myid == master ) block
 
      return
-  end subroutine ctqmc_solver_init
+  end subroutine ctqmc_reset_array
 
 !!>>> ctqmc_final_array: garbage collection for this program, please refer
 !!>>> to ctqmc_setup_array
