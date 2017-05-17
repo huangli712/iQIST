@@ -23,7 +23,7 @@
 !!!           cat_create_colour
 !!!           cat_create_flavor <<<---
 !!!           cat_search_colour
-!!!           cat_find_operator <<<---
+!!!           cat_search_flavor <<<---
 !!!           cat_disp_diagrams <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
@@ -1565,7 +1565,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     is = i
-     call cat_find_operator( is, nsize, tau_start )
+     call cat_search_flavor( is, nsize, tau_start )
 
 ! determine ie
 !<     i = 1
@@ -1573,7 +1573,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     ie = i
-     call cat_find_operator( ie, nsize, tau_end )
+     call cat_search_flavor( ie, nsize, tau_end )
 
 ! adjust ie further, since we remove creation operator firstly, and then
 ! remove annihilation operator
@@ -1705,7 +1705,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     iso = i
-     call cat_find_operator( iso, nsize, tau_start1 )
+     call cat_search_flavor( iso, nsize, tau_start1 )
 
 ! determine isn
      isn = 1
@@ -1866,7 +1866,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     ieo = i
-     call cat_find_operator( ieo, nsize, tau_end1 )
+     call cat_search_flavor( ieo, nsize, tau_end1 )
 
 ! determine ien
      ien = 1
@@ -2590,9 +2590,9 @@
      return
   end subroutine cat_search_colour
 
-!!>>> cat_find_operator: determine index address of operators in the
+!!>>> cat_search_flavor: determine index address of operators in the
 !!>>> flavor part using bisection algorithm
-  subroutine cat_find_operator(addr, ndim, time)
+  subroutine cat_search_flavor(addr, ndim, time)
      use constants, only : dp
 
      use context, only : index_v, time_v
@@ -2641,7 +2641,7 @@
      endif ! back if ( time_v( index_v(khi) ) == time ) block
 
      return
-  end subroutine cat_find_operator
+  end subroutine cat_search_flavor
 
 !!========================================================================
 !!>>> service layer: utility subroutines to build colour and flavor    <<<
