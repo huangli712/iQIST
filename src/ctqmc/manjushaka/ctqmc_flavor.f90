@@ -1098,8 +1098,12 @@
 !!>>> service layer: update perturbation expansion series B            <<<
 !!========================================================================
 
-!!>>> cat_insert_colour: update the perturbation expansion series for
-!!>>> insert new create and annihilation operators in the colour part actually
+!!
+!! @sub cat_insert_colour
+!!
+!! update the perturbation expansion series for inserting new creation
+!! and annihilation operators in the colour part actually
+!!
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
      use stack, only : istack_pop
