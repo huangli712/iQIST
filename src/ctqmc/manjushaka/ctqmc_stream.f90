@@ -469,6 +469,25 @@
   end subroutine ctqmc_input_eimp_
 
   subroutine ctqmc_input_atom_()
+     use constants, only : dp
+
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
+
+     use control
+     use context
+
+     use m_sect
+     use m_part
+
+     implicit none
+
+     integer :: i,j,k,m,n
+     integer :: j1, j2, j3, j4, j5
+
+     real(dp) :: r1, r2
+     logical :: exists
+
 ! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
