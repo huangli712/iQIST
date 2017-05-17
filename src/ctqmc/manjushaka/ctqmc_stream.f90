@@ -818,25 +818,11 @@
      caves = 0
 
 ! init statistics variables
-     ins_t = zero
-     ins_a = zero
-     ins_r = zero
-
-     rmv_t = zero
-     rmv_a = zero
-     rmv_r = zero
-
-     lsh_t = zero
-     lsh_a = zero
-     lsh_r = zero
-
-     rsh_t = zero
-     rsh_a = zero
-     rsh_r = zero
-
-     rfl_t = zero
-     rfl_a = zero
-     rfl_r = zero
+     ins_t = zero; ins_a = zero; ins_r = zero
+     rmv_t = zero; rmv_a = zero; rmv_r = zero
+     lsh_t = zero; lsh_a = zero; lsh_r = zero
+     rsh_t = zero; rsh_a = zero; rsh_r = zero
+     rfl_t = zero; rfl_a = zero; rfl_r = zero
 
 !>>> ctqmc_clur module
 !-------------------------------------------------------------------------
@@ -852,9 +838,7 @@
      exp_s   = czero
      exp_e   = czero
 
-! for stack data structure
-!-------------------------------------------------------------------------
-! init empty_s and empty_e stack structure
+! init stack
      do i=1,norbs
          call istack_clean( empty_s(i) )
          call istack_clean( empty_e(i) )
@@ -867,6 +851,35 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
+!>>> ctqmc_flvr module
+!-------------------------------------------------------------------------
+! init index
+     index_t = 0
+     index_v = 0
+
+! init type
+     type_v  = 1
+
+! init flvr
+     flvr_v  = 1
+
+! init time
+     time_v  = zero
+
+! init expt
+     expt_v  = zero
+
+
+     do i=1,ncfgs
+         expt_t(i, 1) = exp( - eigs(i) * beta )
+         expt_t(i, 2) = exp( - eigs(i) * beta )
+         expt_t(i, 3) = exp( - eigs(i) * beta )
+         expt_t(i, 4) = exp( - eigs(i) * beta )
+     enddo ! over i={1,ncfgs} loop
+
+
+
+
 ! init empty_v stack structure
      call istack_clean( empty_v )
      do j=mkink,1,-1
@@ -877,20 +890,11 @@
 
 
 
-     index_t = 0
-     index_v = 0
-
-! init type  array
-     type_v  = 1
-
-! init flvr  array
-     flvr_v  = 1
 
 ! init rank  array
      rank    = 0
 
 
-     time_v  = zero
 
 ! init hist  array
      hist    = zero
@@ -934,20 +938,6 @@
 ! init imaginary time bath weiss's function array
      wtau    = zero
 
-! init exponent array expt_v
-     expt_v  = zero
-
-! init exponent array expt_t
-! expt_t(:,1) : used to store trial  e^{ -(\beta - \tau_n) \cdot H }
-! expt_t(:,2) : used to store normal e^{ -(\beta - \tau_n) \cdot H }
-! expt_t(:,3) : used to store e^{ -\beta \cdot H } persistently
-! expt_t(:,4) : conserved, not used so far
-     do i=1,ncfgs
-         expt_t(i, 1) = exp( - eigs(i) * beta )
-         expt_t(i, 2) = exp( - eigs(i) * beta )
-         expt_t(i, 3) = exp( - eigs(i) * beta )
-         expt_t(i, 4) = exp( - eigs(i) * beta )
-     enddo ! over i={1,ncfgs} loop
 
 ! init matrix_ntrace and matrix_ptrace
      matrix_ntrace = sum( expt_t(:, 1) )
