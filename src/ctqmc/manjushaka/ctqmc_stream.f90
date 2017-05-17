@@ -178,26 +178,33 @@
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
-! since config parameters may be updated in master node, it is important
+! since config parameters may be updated in master node, it is crucial
 ! to broadcast config parameters from root to all children processes
 # if defined (MPI)
 
      call mp_bcast( isscf , master )
-     call mp_bcast( issun , master )
+     call mp_bcast( isbnd , master )
      call mp_bcast( isspn , master )
+     call mp_bcast( isopt , master )
+     call mp_bcast( iscut , master )
      call mp_bcast( isbin , master )
+     call mp_bcast( iswor , master )
      call mp_bcast( isort , master )
+     call mp_bcast( isobs , master )
      call mp_bcast( issus , master )
      call mp_bcast( isvrt , master )
-     call mp_bcast( ifast , master )
-     call mp_bcast( itrun , master )
+     call mp_barrier()
+
+     call mp_bcast( niter , master )
+     call mp_barrier()
+
+     call mp_bcast( alpha , master )
      call mp_barrier()
 
      call mp_bcast( nband , master )
      call mp_bcast( nspin , master )
      call mp_bcast( norbs , master )
      call mp_bcast( ncfgs , master )
-     call mp_bcast( niter , master )
      call mp_barrier()
 
      call mp_bcast( U     , master )
@@ -211,7 +218,6 @@
      call mp_bcast( mune  , master )
      call mp_bcast( beta  , master )
      call mp_bcast( part  , master )
-     call mp_bcast( alpha , master )
      call mp_barrier()
 
      call mp_bcast( lemax , master )
