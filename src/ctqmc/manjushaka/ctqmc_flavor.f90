@@ -29,7 +29,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           05/17/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -121,7 +121,7 @@
      enddo ! over i={1,nsize} loop
 
 !-------------------------------------------------------------------------
-! stage 1: insert a creation operator, trial step
+! stage 1: insert creation operator, trial step
 !-------------------------------------------------------------------------
 ! get memory address for creation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
@@ -189,7 +189,7 @@
      nsize = nsize + 1
 
 !-------------------------------------------------------------------------
-! stage 2: insert a annihilation operator, trial step
+! stage 2: insert annihilation operator, trial step
 !-------------------------------------------------------------------------
 ! get memory address for annihilation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
