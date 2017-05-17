@@ -751,9 +751,13 @@
      return
   end subroutine ctqmc_alloc_array
 
-!!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
-!!>>> Carlo quantum impurity solver
-  subroutine ctqmc_solver_init()
+!!
+!! @sub ctqmc_reset_array
+!!
+!! reset the key variables for continuous time quantum Monte Carlo quantum
+!! impurity solver
+!!
+  subroutine ctqmc_reset_array()
      use constants, only : zero, czero
      use spring, only : spring_sfmt_init
      use stack, only : istack_clean, istack_push
