@@ -768,11 +768,14 @@
 !!
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
 
      implicit none
 
