@@ -1106,11 +1106,16 @@
 !!
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
+
      use stack, only : istack_pop
 
      use control, only : nfreq
+
      use context, only : ckink
-     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : empty_s, empty_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : exp_s, exp_e
      use context, only : rmesh
 
      implicit none
