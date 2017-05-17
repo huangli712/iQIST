@@ -1010,11 +1010,14 @@
 !!
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink
-     use context, only : index_e, time_e
+     use context, only : index_e
+     use context, only : time_e
 
      implicit none
 
