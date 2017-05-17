@@ -295,54 +295,6 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
-! using the analytical equation at non-interaction limit, and then
-! build initial hybridization function using self-consistent condition
-     do i=1,mfreq
-         call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
-         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
-     enddo ! over i={1,mfreq} loop
-
-! read in initial hybridization function if available
-!-------------------------------------------------------------------------
-     if ( myid == master ) then ! only master node can do it
-         exists = .false.
-
-! inquire about file's existence
-         inquire (file = 'solver.hyb.in', exist = exists)
-
-! find input file: solver.hyb.in, read it
-         if ( exists .eqv. .true. ) then
-
-             hybf = czero ! reset it to zero
-
-! read in hybridization function from solver.hyb.in
-             open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
-             do i=1,norbs
-                 do j=1,mfreq
-                     read(mytmp,*) k, rtmp, r1, i1, r2, i2
-                     hybf(j,i,i) = dcmplx(r1,i1)
-                 enddo ! over j={1,mfreq} loop
-                 read(mytmp,*) ! skip two lines
-                 read(mytmp,*)
-             enddo ! over i={1,norbs} loop
-             close(mytmp)
-
-         endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! since the hybridization function may be updated in master node, it is
-! important to broadcast it from root to all children processes
-# if defined (MPI)
-
-! broadcast data
-     call mp_bcast(hybf, master)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif  /* MPI */
 
 ! setup initial symm
      symm = 1
@@ -677,6 +629,56 @@
 !! try to build initial hybridization function from solver.hyb.in
 !!
   subroutine ctqmc_input_hybf_()
+
+! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
+! using the analytical equation at non-interaction limit, and then
+! build initial hybridization function using self-consistent condition
+     do i=1,mfreq
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+     enddo ! over i={1,mfreq} loop
+
+! read in initial hybridization function if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'solver.hyb.in', exist = exists)
+
+! find input file: solver.hyb.in, read it
+         if ( exists .eqv. .true. ) then
+
+             hybf = czero ! reset it to zero
+
+! read in hybridization function from solver.hyb.in
+             open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
+             do i=1,norbs
+                 do j=1,mfreq
+                     read(mytmp,*) k, rtmp, r1, i1, r2, i2
+                     hybf(j,i,i) = dcmplx(r1,i1)
+                 enddo ! over j={1,mfreq} loop
+                 read(mytmp,*) ! skip two lines
+                 read(mytmp,*)
+             enddo ! over i={1,norbs} loop
+             close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+
+! since the hybridization function may be updated in master node, it is
+! important to broadcast it from root to all children processes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(hybf, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
+
      return
   end subroutine ctqmc_input_hybf_
 
