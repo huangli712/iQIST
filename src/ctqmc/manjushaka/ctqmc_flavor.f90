@@ -459,18 +459,18 @@
 
 ! external arguments
 ! current flavor channel
-     integer, intent(in)   :: flvr
+     integer, intent(in)  :: flvr
 
 ! index address to shift existing creation operator
 ! iso and isn are for old and new creation operators, respectively
-     integer, intent(in)   :: iso
-     integer, intent(in)   :: isn
+     integer, intent(in)  :: iso
+     integer, intent(in)  :: isn
 
 ! imaginary time point of the old creation operator
-     real(dp), intent(in)  :: tau_start1
+     real(dp), intent(in) :: tau_start1
 
 ! imaginary time point of the new creation operator
-     real(dp), intent(in)  :: tau_start2
+     real(dp), intent(in) :: tau_start2
 
 ! local variables
 ! loop index over operators
