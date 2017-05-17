@@ -605,7 +605,10 @@
 !!
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
-     use stack, only : istack_getrest, istack_gettop, istack_getter
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
 
      use control, only : ncfgs
      use control, only : beta
