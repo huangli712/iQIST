@@ -980,15 +980,6 @@
 ! full vertex function, \gamma
      complex(dp) :: chig
 
-!! two-particle green's function, full record
-!     complex(dp) :: chit
-!
-!! two-particle green's function, disconnected part
-!     complex(dp) :: chi0
-!
-!! two-particle green's function, connected part
-!     complex(dp) :: chii
-
 ! check whether we need to dump the two-particle green's function and
 ! irreducible vertex function data to solver.g2pw.dat and solver.h2pw.dat
      if ( .not. btest(isvrt, 1) ) RETURN
