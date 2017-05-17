@@ -961,23 +961,33 @@
      integer :: n
 
 ! dummy integer variables
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
      integer :: it
      integer :: jt
 
-! dummy complex(dp) variables, used to store the correct green's function
+! dummy complex(dp) variables
+! they are used to store the impurity green's function
+     complex(dp) :: fw
      complex(dp) :: g1
      complex(dp) :: g2
      complex(dp) :: g3
      complex(dp) :: g4
 
-! two-particle green's function, full record
-     complex(dp) :: chit
+! two-particle green's function, connected part, \chi_{irr}
+     complex(dp) :: chic
 
-! two-particle green's function, disconnected part
-     complex(dp) :: chi0
+! full vertex function, \gamma
+     complex(dp) :: chig
 
-! two-particle green's function, connected part
-     complex(dp) :: chii
+!! two-particle green's function, full record
+!     complex(dp) :: chit
+!
+!! two-particle green's function, disconnected part
+!     complex(dp) :: chi0
+!
+!! two-particle green's function, connected part
+!     complex(dp) :: chii
 
 ! check if we need to dump the two-particle green's function and vertex
 ! function data to solver.twop.dat
