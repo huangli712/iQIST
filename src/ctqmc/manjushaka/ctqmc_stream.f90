@@ -897,17 +897,17 @@
      paux    = zero
 
 ! init occupation number array
-     nmat    = zero
-     nnmat   = zero
+     nimp    = zero
+     nmat   = zero
 
 ! init < k^2 > - < k >^2 array
-     kmat    = zero
-     kkmat   = zero
+     knop    = zero
+     kmat   = zero
 
 ! init fidelity susceptibility array
-     lmat    = zero
-     rmat    = zero
-     lrmat   = zero
+     lnop    = zero
+     rnop    = zero
+     lrmm   = zero
 
 
 
