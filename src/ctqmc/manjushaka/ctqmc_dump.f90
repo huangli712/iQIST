@@ -1083,12 +1083,14 @@
 
                      do i=1,nffrq
 
-! evaluate g3 and g4
+! evaluate g3
                          if ( i <= nffrq/2 ) then
                              g3 = dconjg( grnf(nffrq/2-i+1,n,n) )
                          else
                              g3 = grnf(i-nffrq/2,n,n)
                          endif ! back if ( i <= nffrq/2 ) block
+
+! evaluate g4
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
                              g4 = dconjg( grnf(nffrq/2-q+1,n,n))
