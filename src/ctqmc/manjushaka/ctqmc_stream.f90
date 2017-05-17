@@ -97,15 +97,16 @@
      nffrq  = 32        ! number of fermionic frequency
      nbfrq  = 8         ! number of bosonic frequncy
      nfreq  = 128       ! number of sampled matsubara frequency points
-     ntime  = 1024      ! number of time slice
-     npart  = 4         ! number of parts that the imaginary time axis is split
+     ntime  = 1024      ! number of time slices
+!-------------------------------------------------------------------------
+     npart  = 4         ! number of parts that the time axis is split
      nflip  = 20000     ! flip period for spin up and spin down states
-     ntherm = 200000    ! maximum number of thermalization steps
-     nsweep = 20000000  ! maximum number of quantum Monte Carlo sampling steps
+     ntherm = 200000    ! number of thermalization steps
+     nsweep = 20000000  ! number of Monte Carlo sweeping steps
      nwrite = 2000000   ! output period
      nclean = 100000    ! clean update period
-     nmonte = 10        ! how often to sampling the gmat and nmat
-     ncarlo = 10        ! how often to sampling the gtau and prob
+     nmonte = 10        ! how often to sample the observables
+     ncarlo = 10        ! how often to sample the observables
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in input file if possible, only master node can do it
