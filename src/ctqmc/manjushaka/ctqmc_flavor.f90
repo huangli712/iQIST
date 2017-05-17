@@ -858,9 +858,13 @@
      return
   end subroutine try_insert_colour
 
-!!>>> try_remove_colour: select index address is and ie for selected
-!!>>> flavor channel randomly, and then determine their imaginary time
-!!>>> points for the colour (determinant) part
+!!
+!! @sub try_remove_colour
+!!
+!! try to select index address is and ie for selected flavor channel
+!! randomly, and then determine their imaginary time points for the
+!! colour (determinant) part
+!!
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
      use spring, only : spring_sfmt_stream
