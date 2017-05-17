@@ -597,8 +597,12 @@
      return
   end subroutine cat_lshift_ztrace
 
-!!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
-!!>>> operators on perturbation expansion series
+!!
+!! @sub cat_rshift_ztrace
+!!
+!! calculate the trace ratio for shifting old annihilation operators on
+!! perturbation expansion series
+!!
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
