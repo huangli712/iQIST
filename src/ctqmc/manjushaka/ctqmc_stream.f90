@@ -912,24 +912,23 @@
 ! init powers of local magnetization
      szpw = zero
 
+! init two-particle green's function
+     g2pw = czero
+     h2pw = czero
+
+! init particle-particle pairing susceptibility
+     p2pw = zero
+
 
 
 
 ! init rank  array
      rank    = 0
-
      diag    = zero
 
 
 
 
-! init two-particle green's function
-     g2_re   = zero
-     g2_im   = zero
-
-! init particle-particle pair susceptibility
-     ps_re   = zero
-     ps_im   = zero
 
 ! init M-matrix related array
      mmat    = zero
