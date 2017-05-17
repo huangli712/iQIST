@@ -312,6 +312,18 @@
 !! try to build initial hybridization function from solver.hyb.in
 !!
   subroutine ctqmc_input_hybf_()
+     use constants, only : dp, one, two, czi, czero, mytmp
+
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : part
+     use control, only : myid, master
+
+     use context, only : rmesh
+     use context, only : hybf
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
