@@ -51,13 +51,13 @@
 
 ! setup general control flags
 !-------------------------------------------------------------------------
-     isscf  = 1         ! non-self-consistent (1) or self-consistent mode (2)
-     isbnd  = 1         ! without symmetry    (1) or with symmetry   mode (2)
-     isspn  = 1         ! spin projection, PM (1) or AFM             mode (2)
-     isopt  = 1
-     iscut  = 1
-     isbin  = 1         ! without binning     (1) or with binning    mode (2)
-     iswor  = 1
+     isscf  = 1         ! self-consistent scheme
+     isbnd  = 1         ! symmetry (band part)
+     isspn  = 1         ! symmetry (band part)
+     isopt  = 1         ! fast trace evaluation
+     iscut  = 1         ! dynamic truncation
+     isbin  = 1         ! data binning
+     iswor  = 1         ! worm algorithm
      isort  = 1         ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isobs  = 1
      issus  = 1         ! without suscept.    (1) or with susceptibility  (2)
