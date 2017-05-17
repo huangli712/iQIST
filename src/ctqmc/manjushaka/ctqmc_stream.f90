@@ -228,6 +228,8 @@
      call mp_bcast( nbfrq , master )
      call mp_bcast( nfreq , master )
      call mp_bcast( ntime , master )
+     call mp_barrier()
+
      call mp_bcast( npart , master )
      call mp_bcast( nflip , master )
      call mp_bcast( ntherm, master )
