@@ -91,8 +91,8 @@
      lemax  = 32        ! maximum expansion order for legendre polynomial
      legrd  = 20001     ! number of mesh points for legendre polynomial
 !-------------------------------------------------------------------------
-     mkink  = 1024      ! maximum perturbation expansions order
-     mfreq  = 8193      ! maximum number of matsubara frequency
+     mkink  = 1024      ! maximum perturbation expansion order
+     mfreq  = 8193      ! maximum number of matsubara frequency points
 !-------------------------------------------------------------------------
      nffrq  = 32        ! number of matsubara frequency for the two-particle green's function
      nbfrq  = 8         ! number of bosonic frequncy for the two-particle green's function
