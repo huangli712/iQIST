@@ -443,12 +443,13 @@
 ! read in impurity level from solver.eimp.in
              open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
              do i=1,norbs
-                 read(mytmp,*) k, eimp(i), symm(i)
+                 read(mytmp,*) j, eimp(i), symm(i)
              enddo ! over i={1,norbs} loop
              close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast eimp and symm from master node to all children nodes
 # if defined (MPI)
