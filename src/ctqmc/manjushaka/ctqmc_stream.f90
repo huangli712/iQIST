@@ -245,9 +245,12 @@
      return
   end subroutine ctqmc_setup_param
 
-!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
-!!>>> Carlo quantum impurity solver plus dynamical mean field theory
-!!>>> self-consistent engine
+!!
+!! @sub ctqmc_setup_model
+!!
+!! setup quantum impurity model for continuous time quantum Monte Carlo
+!! quantum impurity solver and dynamical mean field theory kernel
+!!
   subroutine ctqmc_setup_model()
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
@@ -656,6 +659,18 @@
 !!========================================================================
 !!>>> config quantum impurity model                                    <<<
 !!========================================================================
+
+!!
+!! @sub ctqmc_input_mesh_
+!!
+!! try to create various meshes, including time mesh, frequency mesh etc
+!!
+  subroutine ctqmc_input_mesh_()
+
+     return
+  end subroutine ctqmc_input_mesh_
+
+
 
 !!========================================================================
 !!>>> manage memory for quantum impurity solver                        <<<
