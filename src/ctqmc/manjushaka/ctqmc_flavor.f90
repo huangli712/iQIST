@@ -20,16 +20,16 @@
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
-!!!           cat_create_colour
-!!!           cat_create_flavor <<<---
 !!!           cat_search_colour
 !!!           cat_search_flavor <<<---
+!!!           cat_create_colour
+!!!           cat_create_flavor <<<---
 !!!           cat_disp_diagrams <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/17/2017 by li huang (last modified)
+!!!           05/18/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
