@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/17/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -786,10 +786,10 @@
 !-------------------------------------------------------------------------
 ! some variables have been initialized at ctqmc_setup_model()
 
-! init rank array
+! init rank
      rank = 0
 
-! init stts array
+! init stts
      stts = 0
 
 ! init prefactor for improved estimator
