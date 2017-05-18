@@ -678,12 +678,12 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new create and annihilation operators
-! is and ie are for create and annihilation operators, respectively
+! index address to insert new creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(out) :: is
      integer, intent(out) :: ie
 
-! whether the new create and annihilation operators can be inserted diagrammatically
+! whether the new creation and annihilation operators can be inserted
      logical, intent(out) :: ladd
 
 ! imaginary time point of the new creation operator
@@ -700,14 +700,14 @@
      integer :: m
      integer :: n
 
-! pseudo-index address for create and annihilation operators, respectively
+! pseudo-index address for creation and annihilation operators, respectively
      integer :: pis
      integer :: pie
 
 ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether current subspace can survive
+! dummy variables, used to check whether the current subspace can survive
      integer :: idead
 
 ! dummy variables, used to resolve spin up and spin down states
@@ -726,15 +726,15 @@
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
-! stage 1: determine is and ie, where are they ?
+! stage 1: determine is and ie, where are they?
 !-------------------------------------------------------------------------
 ! determine is
      is = 1
-     if ( nsize > 0 ) then
+     CREATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_start < time_v( index_v(1)     ) ) then
-             is = 1          ! it is the first operator
+             is = 1         ! it is the first operator
          else if ( tau_start > time_v( index_v(nsize) ) ) then
-             is = nsize + 1  ! it is the last  operator
+             is = nsize + 1 ! it is the last  operator
          else
              i = 1
              do while ( time_v( index_v(i) ) < tau_start )
@@ -742,15 +742,15 @@
              enddo ! over do while loop
              is = i
          endif ! back if ( tau_start < time_v( index_v(1) ) ) block
-     endif ! back if ( nsize > 0 ) block
+     endif CREATION_BLOCK ! back if ( nsize > 0 ) block
 
 ! determine ie
      ie = 1
-     if ( nsize > 0 ) then
+     ANNIHILATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_end < time_v( index_v(1)     ) ) then
-             ie = 1          ! it is the first operator
+             ie = 1         ! it is the first operator
          else if ( tau_end > time_v( index_v(nsize) ) ) then
-             ie = nsize + 1  ! it is the last  operator
+             ie = nsize + 1 ! it is the last  operator
          else
              i = 1
              do while ( time_v( index_v(i) ) < tau_end )
@@ -758,7 +758,7 @@
              enddo ! over do while loop
              ie = i
          endif ! back if ( tau_end < time_v( index_v(1) ) ) block
-     endif ! back if ( nsize > 0 ) block
+     endif ANNIHILATION_BLOCK ! back if ( nsize > 0 ) block
 
 ! adjust ie further, since we insert creation operator firstly, and then
 ! insert annihilation operator
@@ -767,7 +767,7 @@
      endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
-! stage 2: determine ladd, whether we can get them ?
+! stage 2: determine ladd, whether we can get them?
 !-------------------------------------------------------------------------
 ! for the spin-orbital coupling case, we can not lookup the operators
 ! series quickly
