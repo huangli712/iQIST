@@ -326,7 +326,7 @@
   subroutine ctqmc_symm_nimp(symm, nimp)
      use constants, only : dp, zero, two
 
-     use control, only : issun, isspn
+     use control, only : isbnd, isspn
      use control, only : nband, norbs
 
      implicit none
@@ -336,7 +336,7 @@
      integer, intent(in) :: symm(norbs)
 
 ! occupation number
-     real(dp), intent(inout) :: nmat(norbs)
+     real(dp), intent(inout) :: nimp(norbs)
 
 ! local variables
 ! loop index over bands
@@ -356,15 +356,15 @@
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals which symm index are identity
-     if ( issun == 2 ) then
+! perform symmetrization for those orbitals with the same symmetry
+     if ( isbnd == 2 ) then
          do ibnd=1,norbs
              if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
                  raux = zero
 
                  do jbnd=1,norbs                ! gather the data
                      if ( symm(jbnd) == ibnd ) then
-                         raux = raux + nmat(jbnd)
+                         raux = raux + nimp(jbnd)
                      endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
 
@@ -372,24 +372,24 @@
 
                  do jbnd=1,norbs                ! setup it
                      if ( symm(jbnd) == ibnd ) then
-                         nmat(jbnd) = raux
+                         nimp(jbnd) = raux
                      endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
              endif ! back if ( hist(ibnd) > 0 ) block
          enddo ! over ibnd={1,norbs} loop
-     endif ! back if ( issun == 2 ) block
+     endif ! back if ( isbnd == 2 ) block
 
-! symmetrize nmat over spin
-     if ( isspn == 1 ) then
+! symmetrize nimp over spin
+     if ( isspn == 2 ) then
          do jbnd=1,nband
-             raux = ( nmat(jbnd) + nmat(jbnd+nband) ) / two
-             nmat(jbnd) = raux
-             nmat(jbnd+nband) = raux
+             raux = ( nimp(jbnd) + nimp(jbnd+nband) ) / two
+             nimp(jbnd) = raux
+             nimp(jbnd+nband) = raux
          enddo ! over jbnd={1,nband} loop
-     endif ! back if ( isspn == 1 ) block
+     endif ! back if ( isspn == 2 ) block
 
      return
-  end subroutine ctqmc_symm_nmat
+  end subroutine ctqmc_symm_nimp
 
 !!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
 !!>>> only the diagonal elements are taken into considerations
