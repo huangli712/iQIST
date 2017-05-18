@@ -224,11 +224,14 @@
   end subroutine ctqmc_record_nmat
 
 !!========================================================================
-!!>>> measure physical observables                                     <<<
+!!>>> measure physical observables 2                                   <<<
 !!========================================================================
 
-!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
-!!>>> time axis
+!!
+!! @sub ctqmc_record_gtau
+!!
+!! record the impurity green's function in imaginary time axis
+!!
   subroutine ctqmc_record_gtau()
      use constants, only : dp, zero, one, two, pi
 
