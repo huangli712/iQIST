@@ -79,7 +79,7 @@
 
      rfl_t = zero
      rfl_a = zero
-     reflip_reject = zero
+     rfl_r = zero
 
      return
   end subroutine ctqmc_try_warming
@@ -772,7 +772,7 @@
      use stack, only : istack_getrest
 
      use control, only : nband, norbs
-     use context, only : rfl_t, rfl_a, reflip_reject
+     use context, only : rfl_t, rfl_a, rfl_r
      use context, only : empty_v, index_t, index_v, flvr_v
      use context, only : rank, symm
 
@@ -827,7 +827,7 @@
      if ( nsize == 0 ) then
 !<         call s_print_exception('ctqmc_reflip_kink','can not reflip any operators')
          rfl_t = rfl_t + one
-         reflip_reject = reflip_reject + one
+         rfl_r = rfl_r + one
          RETURN
      endif ! back if ( nsize == 0 ) block
 
@@ -906,7 +906,7 @@
          if ( pass .eqv. .true. ) then
              rfl_a = rfl_a + one
          else
-             reflip_reject = reflip_reject + one
+             rfl_r = rfl_r + one
          endif ! back if ( pass .eqv. .true. ) block
 
      else if ( cflip == 2 ) then ! cflip = 2, local flip
@@ -982,7 +982,7 @@
              if ( pass .eqv. .true. ) then
                  rfl_a = rfl_a + one
              else
-                 reflip_reject = reflip_reject + one
+                 rfl_r = rfl_r + one
              endif ! back if ( pass .eqv. .true. ) block
 
          enddo ! over flvr={1,nband} loop
@@ -1069,7 +1069,7 @@
          if ( pass .eqv. .true. ) then
              rfl_a = rfl_a + one
          else
-             reflip_reject = reflip_reject + one
+             rfl_r = rfl_r + one
          endif ! back if ( pass .eqv. .true. ) block
 
      endif ! back if ( cflip == 1 ) block
