@@ -2677,7 +2677,7 @@
   end subroutine cat_rshift_ztrace
 
 !!========================================================================
-!!>>> service layer: utility subroutines to look up in the flavor      <<<
+!!>>> service layer: quickly look up in the colour and flavor parts    <<<
 !!========================================================================
 
 !!>>> cat_search_colour: to determine whether there exists an operator
