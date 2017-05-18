@@ -1819,15 +1819,26 @@
      return
   end subroutine cat_lshift_flavor
 
-!!>>> cat_rshift_flavor: shift the old annihilation operator in the flavor part
+!!
+!! @sub cat_rshift_flavor
+!!
+!! shift old annihilation operator in the flavor part
+!!
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
      use constants, only : dp, zero
+
      use stack, only : istack_getrest
 
      use control, only : ncfgs
      use control, only : beta
+
      use context, only : csign
-     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+     use context, only : empty_v
+     use context, only : index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
      use context, only : eigs
 
      implicit none
