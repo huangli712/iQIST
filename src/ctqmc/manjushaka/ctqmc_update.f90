@@ -397,22 +397,22 @@
 ! current flavor channel for both band and spin
      integer  :: flvr
 
-! index address to remove old create and destroy operators
-! is and ie are for create and destroy operators, respectively
-! cis and cie are for the colour part, and fis and fie are for the flavor part
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
+! cis (cie) is for the colour part, while fis (fie) is for the flavor part
      integer  :: cis, cie
      integer  :: fis, fie
 
-! transition probability for remove old create and destroy operators
+! transition probability
      real(dp) :: p
 
 ! random number
      real(dp) :: r
 
-! \tau_s, imaginary time point of the create operator
+! \tau_s, imaginary time point of the creation operator
      real(dp) :: tau_start
 
-! \tau_e, imaginary time point of the destroy operator
+! \tau_e, imaginary time point of the annihilation operator
      real(dp) :: tau_end
 
 ! ratio between old and new configurations, the local trace part
