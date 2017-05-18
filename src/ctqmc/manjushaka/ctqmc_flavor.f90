@@ -1333,11 +1333,16 @@
 !!>>> service layer: update perturbation expansion series D            <<<
 !!========================================================================
 
-!!>>> cat_insert_flavor: insert new create and annihilation operators in the
-!!>>> flavor part
+!!
+!! @sub cat_insert_flavor
+!!
+!! insert new creation and annihilation operators in the flavor part
+!!
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, zero
-     use stack, only : istack_getrest, istack_pop
+
+     use stack, only : istack_getrest
+     use stack, only : istack_pop
 
      use control, only : ncfgs
      use control, only : beta
