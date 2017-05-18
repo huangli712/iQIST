@@ -770,7 +770,7 @@
 ! stage 2: determine ladd, whether we can get them?
 !-------------------------------------------------------------------------
 ! for the spin-orbital coupling case, we can not lookup the operators
-! series quickly
+! series quickly. return immediately
      if ( cssoc == 1 ) then
          ladd = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
@@ -783,8 +783,8 @@
      endif ! back if ( tau_start > tau_end ) block
 
 ! loop over all the subspace
-     do m=0,nband
-         do n=0,nband
+     FLVR1_CYCLE: do m=0,nband
+         FLVR2_CYCLE: do n=0,nband
 
 ! construct current subspace
              nupdn(1) = m
@@ -795,7 +795,7 @@
              counter = 0
 
 ! loop over all the operators, simulate their actions on subspace
-             do i=1,nsize+2
+             OPERATOR_LOOP: do i=1,nsize+2
                  counter = counter + 1
 
 ! meet the new creation operator
@@ -815,9 +815,11 @@
                  endif ! back if ( i == pis ) block
 
 ! determine whether the final subspace is valid yet
-                 if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) EXIT
+                 if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
+                     EXIT OPERATOR_LOOP ! this subspace is dead
+                 endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
                  idead = idead + 1
-             enddo ! over i={1,nsize+2} loop
+             enddo OPERATOR_LOOP ! over i={1,nsize+2} loop
 
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
@@ -825,8 +827,8 @@
                  ladd = .true.; RETURN
              endif ! back if ( idead == nsize + 2 ) block
 
-         enddo ! over n={0,nband} loop
-     enddo ! over m={0,nband} loop
+         enddo FLVR2_CYCLE ! over n={0,nband} loop
+     enddo FLVR1_CYCLE ! over m={0,nband} loop
 
      return
   end subroutine try_insert_flavor
