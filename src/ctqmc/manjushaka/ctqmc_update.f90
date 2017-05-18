@@ -21,9 +21,16 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
-!!>>> perturbation expansion series to achieve thermodynamics stable
-!!>>> equilibrium state
+!!========================================================================
+!!>>> service layer: updating perturbation expansion series 1          <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_try_warming
+!!
+!! perform thermalization or warmup on the perturbation expansion series
+!! to achieve thermodynamics stable equilibrium state
+!!
   subroutine ctqmc_diagram_warmming()
      use constants, only : zero
 
