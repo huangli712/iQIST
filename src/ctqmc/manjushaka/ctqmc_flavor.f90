@@ -2793,9 +2793,12 @@
 !!>>> service layer: build trial colour and flavor parts               <<<
 !!========================================================================
 
-!!>>> ctqmc_make_colour: generate perturbation expansion series for the
-!!>>> colour (determinant) part, it should be synchronized with the
-!!>>> flavor part
+!!
+!! @sub ctqmc_make_colour
+!!
+!! try to generate perturbation expansion series for the colour part, it
+!! should be synchronized with the flavor part
+!!
   subroutine ctqmc_make_colour(flvr, kink)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
