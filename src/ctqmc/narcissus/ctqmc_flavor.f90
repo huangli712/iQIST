@@ -1,6 +1,10 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : cat_insert_colour
+!!! program : try_insert_colour
+!!!           try_remove_colour
+!!!           try_lshift_colour
+!!!           try_rshift_colour <<<---
+!!!           cat_insert_colour
 !!!           cat_remove_colour
 !!!           cat_lshift_colour
 !!!           cat_rshift_colour <<<---
@@ -8,10 +12,6 @@
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
 !!!           cat_rshift_ztrace <<<---
-!!!           try_insert_colour
-!!!           try_remove_colour
-!!!           try_lshift_colour
-!!!           try_rshift_colour <<<---
 !!!           cat_occupy_status <<<---
 !!!           cat_weight_factor
 !!!           cat_weight_kernel <<<---
