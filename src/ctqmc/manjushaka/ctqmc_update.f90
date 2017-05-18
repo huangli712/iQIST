@@ -50,7 +50,7 @@
 
 ! warm up the diagram series
      do i=1,ntherm
-         call ctqmc_diagram_sampling(i)
+         call ctqmc_try_walking(i)
      enddo ! over i={1,ntherm} loop
 
 ! reset cnegs
@@ -83,9 +83,7 @@
      return
   end subroutine ctqmc_try_warming
 
-!!>>> ctqmc_diagram_sampling: visit the perturbation expansion diagrams
-!!>>> randomly
-  subroutine ctqmc_diagram_sampling(cstep)
+  subroutine ctqmc_try_walking(cstep)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
 
@@ -136,7 +134,7 @@
      endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      return
-  end subroutine ctqmc_diagram_sampling
+  end subroutine ctqmc_try_walking
 
 !!>>> ctqmc_diagram_checking: checking whether the quantum impurity
 !!>>> solver is consistent internally
