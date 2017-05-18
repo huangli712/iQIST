@@ -1362,8 +1362,8 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new create and annihilation operators
-! is and ie are for create and annihilation operators, respectively
+! index address to insert new creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
@@ -1377,7 +1377,7 @@
 ! loop index over operators
      integer  :: i
 
-! memory address for new create and annihilation operators
+! memory address for new creation and annihilation operators
      integer  :: as
      integer  :: ae
 
@@ -1390,7 +1390,7 @@
      real(dp) :: t_next
 
 !-------------------------------------------------------------------------
-! stage 1: insert a creation operator
+! stage 1: insert creation operator
 !-------------------------------------------------------------------------
 ! determine nsize
      nsize = istack_getrest( empty_v )
@@ -1446,7 +1446,7 @@
      endif ! back if ( is == nsize + 1 ) block
 
 !-------------------------------------------------------------------------
-! stage 2: insert a annihilation operator
+! stage 2: insert annihilation operator
 !-------------------------------------------------------------------------
 ! determine nsize
      nsize = istack_getrest( empty_v )
