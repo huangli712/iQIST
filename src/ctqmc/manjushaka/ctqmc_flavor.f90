@@ -2794,12 +2794,12 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_make_colour
+!! @sub cat_create_colour
 !!
 !! try to generate perturbation expansion series for the colour part, it
 !! should be synchronized with the flavor part
 !!
-  subroutine ctqmc_make_colour(flvr, kink)
+  subroutine cat_create_colour(flvr, kink)
      use constants, only : dp
 
      use spring, only : spring_sfmt_stream
@@ -2815,7 +2815,7 @@
 ! current flavor channel
      integer, intent(in) :: flvr
 
-! number of operator pair
+! number of operator pairs
      integer, intent(in) :: kink
 
 ! local variables
@@ -2846,13 +2846,14 @@
      rank(flvr) = ckink
 
      return
-  end subroutine ctqmc_make_colour
+  end subroutine cat_create_colour
 
-!!>>> ctqmc_make_flavor: generate perturbation expansion series for the
+!!
+!! @sub cat_create_flavor: generate perturbation expansion series for the
 !!>>> flavor (operator trace) part, it should be synchronized with the
 !!>>> colour part.
-!!>>> note: ctqmc_make_colour() must be called beforehand
-  subroutine ctqmc_make_flavor(flvr, kink)
+!!>>> note: cat_create_colour() must be called beforehand
+  subroutine cat_create_flavor(flvr, kink)
      use constants, only : dp
 
      use context, only : index_s, index_e, time_s, time_e
@@ -2892,7 +2893,7 @@
      enddo ! over i={1,kink} loop
 
      return
-  end subroutine ctqmc_make_flavor
+  end subroutine cat_create_flavor
 
 !!========================================================================
 !!>>> service layer: utility subroutines to show the colour and flavor <<<
