@@ -926,7 +926,7 @@
      endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
-! stage 2: determine lrmv, whether we can kick off them ?
+! stage 2: determine lrmv, whether we can kick off them?
 !-------------------------------------------------------------------------
 ! for the spin-orbital coupling case, we can not lookup the operators
 ! series quickly. return immediately
@@ -1053,7 +1053,7 @@
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
-! stage 1: determine iso and isn, where are they ?
+! stage 1: determine iso and isn, where are they?
 !-------------------------------------------------------------------------
 ! determine iso
 !<     i = 1
@@ -1065,7 +1065,7 @@
 
 ! determine isn
      isn = 1
-     if ( nsize > 0 ) then
+     CREATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_start2 < time_v( index_v(1)     ) ) then
              isn = 1          ! it is the first operator
          else if ( tau_start2 > time_v( index_v(nsize) ) ) then
@@ -1077,7 +1077,7 @@
              enddo ! over do while loop
              isn = i
          endif ! back if ( tau_start2 < time_v( index_v(1) ) ) block
-     endif ! back if ( nsize > 0 ) block
+     endif CREATION_BLOCK ! back if ( nsize > 0 ) block
 
 ! adjust isn further
      if ( tau_start1 < tau_start2 ) then
@@ -1085,10 +1085,10 @@
      endif ! back if ( tau_start1 < tau_start2 ) block
 
 !-------------------------------------------------------------------------
-! stage 2: determine lshf, whether we can shift it ?
+! stage 2: determine lshf, whether we can shift it?
 !-------------------------------------------------------------------------
 ! for the spin-orbital coupling case, we can not lookup the operators
-! series quickly
+! series quickly. return immediately
      if ( cssoc == 1 ) then
          lshf = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
