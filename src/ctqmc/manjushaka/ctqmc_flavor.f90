@@ -2903,8 +2903,12 @@
 !!>>> service layer: display the colour and flavor parts               <<<
 !!========================================================================
 
-!!>>> cat_disp_diagrams: display operators information (include colour
-!!>>> and flavor parts) on the screen, only used to debug the code
+!!
+!! @sub cat_disp_diagrams
+!!
+!! display operators information (include colour and flavor parts) on the
+!! screen, only used to debug the code
+!!
   subroutine cat_disp_diagrams(show_type)
      use constants, only : mystd
      use stack, only : istack_getrest
