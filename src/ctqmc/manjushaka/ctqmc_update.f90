@@ -75,7 +75,7 @@
 
      rshift_tcount = zero
      rshift_accept = zero
-     rshift_reject = zero
+     rsh_r = zero
 
      reflip_tcount = zero
      reflip_accept = zero
@@ -636,7 +636,7 @@
 
      use control, only : norbs
      use context, only : ckink, csign, cnegs
-     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rshift_tcount, rshift_accept, rsh_r
      use context, only : rank
 
      implicit none
@@ -688,7 +688,7 @@
      if ( ckink == 0 ) then
 !<         call s_print_exception('ctqmc_rshift_kink','can not rshift any operators')
          rshift_tcount = rshift_tcount + one
-         rshift_reject = rshift_reject + one
+         rsh_r = rsh_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
      endif ! back if ( ckink == 0 ) block
@@ -758,7 +758,7 @@
      if ( pass .eqv. .true. ) then
          rshift_accept = rshift_accept + one
      else
-         rshift_reject = rshift_reject + one
+         rsh_r = rsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
