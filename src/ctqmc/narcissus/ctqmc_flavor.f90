@@ -3,7 +3,7 @@
 !!! program : cat_insert_colour
 !!!           cat_remove_colour
 !!!           cat_lshift_colour
-!!!           cat_rshift_action <<<---
+!!!           cat_rshift_colour <<<---
 !!!           cat_insert_ztrace
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
@@ -237,12 +237,12 @@
   end subroutine cat_lshift_colour
 
 !!
-!! @sub cat_rshift_action
+!! @sub cat_rshift_colour
 !!
 !! update the perturbation expansion series for right shifting old segment
 !! or anti-segment
 !!
-  subroutine cat_rshift_action(flvr, ieo, ien, tau_end)
+  subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
      use constants, only : dp
 
      use control, only : nfreq
@@ -300,7 +300,7 @@
      enddo ! over i={1,nfreq} loop
 
      return
-  end subroutine cat_rshift_action
+  end subroutine cat_rshift_colour
 
 !!========================================================================
 !!>>> service layer: evaluate ztrace ratio                             <<<
