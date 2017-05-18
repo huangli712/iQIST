@@ -1021,10 +1021,15 @@
      return
   end subroutine ctqmc_reflip_kink
 
-!!>>> ctqmc_reload_kink: global update all operators in the perturbation
-!!>>> expansion series
+!!
+!! @sub ctqmc_reload_kink
+!!
+!! reload all creation and annihilation operators in the perturbation
+!! expansion series, then rebuild all related global matrices from scratch
+!!
   subroutine ctqmc_reload_kink()
      use control, only : norbs
+
      use context, only : rank
 
      implicit none
@@ -1035,11 +1040,10 @@
 
      do flvr=1,norbs
 
-! check the perturbation expansion order ( number of existing create or
-! destroy operators ) for current flavor channel
+! check the perturbation expansion order for current flavor channel
          if ( rank(flvr) == 0 ) CYCLE
 
-! regenerate the mmat matrix and gmat matrix from scratch
+! generate the mmat matrix and gmat matrix from scratch
          call cat_reload_matrix(flvr)
 
      enddo ! over flvr={1,norbs} loop
