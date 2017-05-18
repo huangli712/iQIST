@@ -36,7 +36,15 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
+!!========================================================================
+!!>>> measure physical observables 1                                   <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_record_hist
+!!
+!! record the histogram of perturbation expansion series
+!!
   subroutine ctqmc_record_hist()
      use constants, only : one
 
