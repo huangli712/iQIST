@@ -1179,8 +1179,12 @@
      return
   end subroutine cat_insert_colour
 
-!!>>> cat_remove_colour: update the perturbation expansion series for
-!!>>> remove old create and annihilation operators in the colour part actually
+!!
+!! @sub cat_remove_colour
+!!
+!! update the perturbation expansion series for removing old creation
+!! and annihilation operators in the colour part actually
+!!
   subroutine cat_remove_colour(flvr, is, ie)
      use stack, only : istack_push
 
