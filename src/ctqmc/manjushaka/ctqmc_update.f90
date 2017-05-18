@@ -62,7 +62,7 @@
 
 ! reinit statistics variables
      ins_t = zero
-     insert_accept = zero
+     ins_a = zero
      insert_reject = zero
 
      remove_tcount = zero
@@ -215,7 +215,7 @@
      use control, only : mkink
      use control, only : beta
      use context, only : ckink, csign, cnegs
-     use context, only : ins_t, insert_accept, insert_reject
+     use context, only : ins_t, ins_a, insert_reject
      use context, only : rank
 
      implicit none
@@ -341,7 +341,7 @@
 ! update the insert statistics
      ins_t = ins_t + one
      if ( pass .eqv. .true. ) then
-         insert_accept = insert_accept + one
+         ins_a = ins_a + one
      else
          insert_reject = insert_reject + one
      endif ! back if ( pass .eqv. .true. ) block
