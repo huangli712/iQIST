@@ -391,12 +391,16 @@
      return
   end subroutine ctqmc_symm_nimp
 
-!!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
-!!>>> only the diagonal elements are taken into considerations
+!!
+!! @sub ctqmc_symm_gtau
+!!
+!! symmetrize the gtau according to symm vector. only the diagonal
+!! elements are taken into considerations
+!!
   subroutine ctqmc_symm_gtau(symm, gtau)
      use constants, only : dp, zero, two
 
-     use control, only : issun, isspn
+     use control, only : isbnd, isspn
      use control, only : nband, norbs
      use control, only : ntime
 
@@ -414,7 +418,7 @@
      integer  :: ibnd
      integer  :: jbnd
 
-! loop index over imaginary-time points
+! loop index over imaginary time points
      integer  :: ktau
 
 ! dummy variables
@@ -430,8 +434,8 @@
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals which symm index are identity
-     if ( issun == 2 ) then
+! perform symmetrization for those orbitals with the same symmetry
+     if ( isbnd == 2 ) then
          do ktau=1,ntime
              do ibnd=1,norbs
                  if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
@@ -453,10 +457,10 @@
                  endif ! back if ( hist(ibnd) > 0 ) block
              enddo ! over ibnd={1,norbs} loop
          enddo ! over ktau={1,ntime} loop
-     endif ! back if ( issun == 2 ) block
+     endif ! back if ( isbnd == 2 ) block
 
 ! symmetrize gtau over spin
-     if ( isspn == 1 ) then
+     if ( isspn == 2 ) then
          do ktau=1,ntime
              do jbnd=1,nband
                  raux = ( gtau(ktau,jbnd,jbnd) + gtau(ktau,jbnd+nband,jbnd+nband) ) / two
@@ -464,7 +468,7 @@
                  gtau(ktau,jbnd+nband,jbnd+nband) = raux
              enddo ! over jbnd={1,nband} loop
          enddo ! over ktau={1,ntime} loop
-     endif ! back if ( isspn == 1 ) block
+     endif ! back if ( isspn == 2 ) block
 
      return
   end subroutine ctqmc_symm_gtau
