@@ -606,68 +606,38 @@
 ! initialize gaux
      gaux = zero
 
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
+     STD_BLOCK: if ( isort == 1 ) then
+         raux = real(ntime) / (beta * beta)
+         do i=1,norbs
+             do j=1,ntime
+                 gaux(j,i,i) = gtau(j,i,i) * raux
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
+     endif STD_BLOCK ! back if ( isort == 1 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,ntime
-             gaux(j,i,i) = gtau(j,i,i) * raux
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
-
-
-!!>>> cat_make_gtau2: build impurity green's function using legendre
-!!>>> polynomial representation
-  subroutine cat_make_gtau2()
-     implicit none
-
-! integral kernel
-     real(dp) :: ker1(lemax)
-
-! build kernel function at first
-     ker1 = one; call cat_make_kpm(lemax, ker1)
-
-! reconstruct green's function
-     step = real(legrd - 1) / two
-     do i=1,norbs
-         do j=1,ntime
-             raux = two * tmesh(j) / beta
-             curr = nint(raux * step) + 1
-             do fleg=1,lemax
-                 raux = sqrt(two * fleg - 1) / (beta * beta) * ker1(fleg)
-                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i) * ppleg(curr,fleg)
-             enddo ! over fleg={1,lemax} loop
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
+     LEG_BLOCK: if ( isort == 2 ) then
+         step = real(legrd - 1) / two
+         do i=1,norbs
+             do j=1,ntime
+                 raux = two * tmesh(j) / beta
+                 curr = nint(raux * step) + 1
+                 do fleg=1,lemax
+                     raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
+                     gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i)
+                 enddo ! over fleg={1,lemax} loop
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
-  end subroutine cat_make_gtau2
-
-!!>>> cat_make_gtau3: build impurity green's function using chebyshev
-!!>>> polynomial representation
-  subroutine cat_make_gtau3()
-     implicit none
-
-! integral kernel
-     real(dp) :: ker2(chmax)
-
-! build kernel function at first
-     ker2 = one; call cat_make_kpm(chmax, ker2)
-
-! reconstruct green's function
-     step = real(chgrd - 1) / two
-     do i=1,norbs
-         do j=1,ntime
-             raux = two * tmesh(j) / beta
-             curr = nint(raux * step) + 1
-             do fche=1,chmax
-                 raux = two / (beta * beta) * ker2(fche)
-                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fche,i,i) * qqche(curr,fche)
-             enddo ! over fche={1,chmax} loop
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
 !!========================================================================
