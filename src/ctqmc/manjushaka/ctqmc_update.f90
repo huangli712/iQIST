@@ -63,7 +63,7 @@
 ! reinit statistics variables
      ins_t = zero
      ins_a = zero
-     insert_reject = zero
+     ins_r = zero
 
      remove_tcount = zero
      remove_accept = zero
@@ -215,7 +215,7 @@
      use control, only : mkink
      use control, only : beta
      use context, only : ckink, csign, cnegs
-     use context, only : ins_t, ins_a, insert_reject
+     use context, only : ins_t, ins_a, ins_r
      use context, only : rank
 
      implicit none
@@ -267,7 +267,7 @@
      if ( ckink == mkink ) then
 !<         call s_print_exception('ctqmc_insert_kink','can not insert any operators')
          ins_t = ins_t + one
-         insert_reject = insert_reject + one
+         ins_r = ins_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
      endif ! back if ( ckink == mkink ) block
@@ -343,7 +343,7 @@
      if ( pass .eqv. .true. ) then
          ins_a = ins_a + one
      else
-         insert_reject = insert_reject + one
+         ins_r = ins_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
