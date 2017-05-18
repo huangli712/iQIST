@@ -1264,7 +1264,7 @@
 ! stage 2: determine rshf, whether we can shift it?
 !-------------------------------------------------------------------------
 ! for the spin-orbital coupling case, we can not lookup the operators
-! series quickly
+! series quickly. return immediately
      if ( cssoc == 1 ) then
          rshf = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
@@ -1279,8 +1279,8 @@
      endif ! back if ( tau_end1 < tau_end2 ) block
 
 ! loop over all the subspace
-     do m=0,nband
-         do n=0,nband
+     FLVR1_CYCLE: do m=0,nband
+         FLVR2_CYCLE: do n=0,nband
 
 ! construct current subspace
              nupdn(1) = m
@@ -1291,7 +1291,7 @@
              counter = 0
 
 ! loop over all the operators, simulate their actions on subspace
-             do i=1,nsize+1
+             OPERATOR_LOOP: do i=1,nsize+1
                  counter = counter + 1
 
 ! meet the old annihilation operator
@@ -1302,16 +1302,20 @@
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) - 1
-                     if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) EXIT
+                     if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
+                         EXIT OPERATOR_LOOP ! this subspace is dead
+                     endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
                      idead = idead + 1
 ! meet other existing operators
                  else
                      iupdn = ( flvr_v( index_v(counter) ) - 1 ) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 2 * type_v( index_v(counter) ) - 1
-                     if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) EXIT
+                     if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
+                         EXIT OPERATOR_LOOP ! this subspace is dead
+                     endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
                      idead = idead + 1
                  endif ! back if ( i == pieo ) block
-             enddo ! over i={1,nsize+1} loop
+             enddo OPERATOR_LOOP ! over i={1,nsize+1} loop
 
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
@@ -1319,8 +1323,8 @@
                  rshf = .true.; RETURN
              endif ! back if ( idead == nsize + 1 ) block
 
-         enddo ! over n={0,nband} loop
-     enddo ! over m={0,nband} loop
+         enddo FLVR2_CYCLE ! over n={0,nband} loop
+     enddo FLVR1_CYCLE ! over m={0,nband} loop
 
      return
   end subroutine try_rshift_flavor
