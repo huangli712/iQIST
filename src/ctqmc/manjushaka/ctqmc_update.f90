@@ -811,9 +811,8 @@
 
 ! external arguments
 ! control flag
-! if cflip = 1, flip inter-orbital spins randomly;
-! if cflip = 2, flip intra-orbital spins one by one;
-! if cflip = 3, flip intra-orbital spins globally
+! if cflip = 1, flip intra-orbital spins one by one
+! if cflip = 2, flip intra-orbital spins globally
      integer, intent(in) :: cflip
 
 ! local variables
@@ -824,7 +823,8 @@
      integer  :: i
 
 ! selected flavor pairs
-     integer  :: fup, fdn
+     integer  :: fup
+     integer  :: fdn
 
 ! loop index for flavor channel
      integer  :: flvr
@@ -835,7 +835,7 @@
 ! total number of operators
      integer  :: nsize
 
-! transition probability for global spin flip
+! transition probability
      real(dp) :: p
 
 ! random number
