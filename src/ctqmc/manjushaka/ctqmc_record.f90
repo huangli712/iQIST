@@ -88,6 +88,9 @@
      return
   end subroutine ctqmc_record_prob
 
+  subroutine ctqmc_record_paux()
+  end subroutine ctqmc_record_paux
+
 !!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
