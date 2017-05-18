@@ -2911,11 +2911,19 @@
 !!
   subroutine cat_disp_diagrams(show_type)
      use constants, only : mystd
+
      use stack, only : istack_getrest
 
      use control, only : norbs, ncfgs
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : empty_v
+     use context, only : index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
      use context, only : rank
 
      implicit none
