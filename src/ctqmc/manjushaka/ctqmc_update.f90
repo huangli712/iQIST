@@ -77,7 +77,7 @@
      rsh_a = zero
      rsh_r = zero
 
-     reflip_tcount = zero
+     rfl_t = zero
      reflip_accept = zero
      reflip_reject = zero
 
@@ -772,7 +772,7 @@
      use stack, only : istack_getrest
 
      use control, only : nband, norbs
-     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : rfl_t, reflip_accept, reflip_reject
      use context, only : empty_v, index_t, index_v, flvr_v
      use context, only : rank, symm
 
@@ -826,7 +826,7 @@
 ! not need to perform global flip if there are no operators at all
      if ( nsize == 0 ) then
 !<         call s_print_exception('ctqmc_reflip_kink','can not reflip any operators')
-         reflip_tcount = reflip_tcount + one
+         rfl_t = rfl_t + one
          reflip_reject = reflip_reject + one
          RETURN
      endif ! back if ( nsize == 0 ) block
@@ -902,7 +902,7 @@
          endif ! back if ( pass .eqv. .true. ) block
 
 ! update the reflip statistics
-         reflip_tcount = reflip_tcount + one
+         rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
              reflip_accept = reflip_accept + one
          else
@@ -978,7 +978,7 @@
              endif ! back if ( pass .eqv. .true. ) block
 
 ! update the reflip statistics
-             reflip_tcount = reflip_tcount + one
+             rfl_t = rfl_t + one
              if ( pass .eqv. .true. ) then
                  reflip_accept = reflip_accept + one
              else
@@ -1065,7 +1065,7 @@
          endif ! back if ( pass .eqv. .true. ) block
 
 ! update the reflip statistics
-         reflip_tcount = reflip_tcount + one
+         rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
              reflip_accept = reflip_accept + one
          else
