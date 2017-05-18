@@ -31,7 +31,7 @@
 !! perform thermalization or warmup on the perturbation expansion series
 !! to achieve thermodynamics stable equilibrium state
 !!
-  subroutine ctqmc_diagram_warmming()
+  subroutine ctqmc_try_warming()
      use constants, only : zero
 
      use control, only : ntherm
@@ -81,7 +81,7 @@
      reflip_reject = zero
 
      return
-  end subroutine ctqmc_diagram_warmming
+  end subroutine ctqmc_try_warming
 
 !!>>> ctqmc_diagram_sampling: visit the perturbation expansion diagrams
 !!>>> randomly
