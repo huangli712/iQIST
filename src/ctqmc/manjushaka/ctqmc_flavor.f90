@@ -1162,9 +1162,11 @@
 !!
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
      use constants, only : dp
+
      use stack, only : istack_getrest
 
      use control, only : nband
+
      use context, only : cssoc
      use context, only : empty_v, index_v, type_v, flvr_v, time_v, time_v
 
