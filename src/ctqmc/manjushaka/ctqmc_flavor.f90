@@ -1,10 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : manjushaka
-!!! program : cat_insert_ztrace
-!!!           cat_remove_ztrace
-!!!           cat_lshift_ztrace
-!!!           cat_rshift_ztrace <<<---
-!!!           try_insert_colour
+!!! program : try_insert_colour
 !!!           try_remove_colour
 !!!           try_lshift_colour
 !!!           try_rshift_colour <<<---
@@ -20,6 +16,10 @@
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
+!!!           cat_insert_ztrace
+!!!           cat_remove_ztrace
+!!!           cat_lshift_ztrace
+!!!           cat_rshift_ztrace <<<---
 !!!           cat_search_colour
 !!!           cat_search_flavor <<<---
 !!!           cat_create_colour
