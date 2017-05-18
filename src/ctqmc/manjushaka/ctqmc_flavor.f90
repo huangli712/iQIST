@@ -917,7 +917,7 @@
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     ie = i
-     call cat_search_flavor( ie, nsize, tau_end )
+     call cat_search_flavor( ie, nsize, tau_end   )
 
 ! adjust ie further, since we remove creation operator firstly, and then
 ! remove annihilation operator
@@ -2734,24 +2734,25 @@
 !!
 !! @sub cat_search_flavor
 !!
-!! try to determine index address of operators in the flavor part using
+!! try to determine index address of operator in the flavor part using
 !! the bisection algorithm
 !!
   subroutine cat_search_flavor(addr, ndim, time)
      use constants, only : dp
 
-     use context, only : index_v, time_v
+     use context, only : index_v
+     use context, only : time_v
 
      implicit none
 
 ! external arguments
-! index address of operators
+! index address of operator
      integer, intent(out) :: addr
 
-! number of operators
+! total number of operators
      integer, intent(in)  :: ndim
 
-! imaginary time of operators
+! imaginary time of operator
      real(dp), intent(in) :: time
 
 ! local variables
