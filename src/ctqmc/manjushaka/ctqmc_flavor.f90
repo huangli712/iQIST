@@ -833,9 +833,13 @@
      return
   end subroutine try_insert_flavor
 
-!!>>> try_remove_flavor: determine index addresses for the new create and
-!!>>> annihilation operators in the flavor part, and then determine whether
-!!>>> they can be inserted diagrammatically
+!!
+!! @sub try_remove_flavor
+!!
+!! try to determine index addresses for the old creation and annihilation
+!! operators in the flavor part, and then determine whether they can be
+!! removed diagrammatically
+!!
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
      use constants, only : dp
      use stack, only : istack_getrest
