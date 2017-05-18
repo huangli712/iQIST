@@ -62,18 +62,10 @@
 
 ! reinit statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
-     rmv_t = zero
-     rmv_a = zero
-     rmv_r = zero
-     lsh_t = zero
-     lsh_a = zero
-     lsh_r = zero
-     rsh_t = zero
-     rsh_a = zero
-     rsh_r = zero
-     rfl_t = zero
-     rfl_a = zero
-     rfl_r = zero
+     rmv_t = zero; rmv_a = zero; rmv_r = zero
+     lsh_t = zero; lsh_a = zero; lsh_r = zero
+     rsh_t = zero; rsh_a = zero; rsh_r = zero
+     rfl_t = zero; rfl_a = zero; rfl_r = zero
 
      return
   end subroutine ctqmc_try_warming
