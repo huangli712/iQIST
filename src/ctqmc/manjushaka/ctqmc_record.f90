@@ -403,10 +403,11 @@
   subroutine ctqmc_record_kmat()
      use constants, only : dp
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : norbs
+
      use context, only : csign
-     use context, only : kmat, kkmat
+     use context, only : knop, kmat
      use context, only : rank
 
      implicit none
@@ -417,33 +418,39 @@
      integer :: j
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 5) )
+     call s_assert( btest(isobs, 1) )
 
-! since rank means the number of operator pairs,
-! so we have to multiply it with two
+! since rank means the number of operator pairs, so we have to multiply
+! it with two
      do i=1,norbs
-         kmat(i) = kmat(i) + rank(i) * 2.0_dp * csign
+         knop(i) = knop(i) + rank(i) * 2.0_dp * csign
      enddo ! over i={1,norbs} loop
 
-     do i=1,norbs
-         do j=1,norbs
-             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j) * 4.0_dp * csign
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
+     do j=1,norbs
+         do i=1,norbs
+             kmat(i,j) = kmat(i,j) + rank(i) * rank(j) * 4.0_dp * csign
+         enddo ! over i={1,norbs} loop
+     enddo ! over j={1,norbs} loop
 
      return
   end subroutine ctqmc_record_kmat
 
-!!>>> ctqmc_record_lmat: record the fidelity susceptibility
-  subroutine ctqmc_record_lmat()
+!!
+!! @sub ctqmc_record_lrmm
+!!
+!! record the fidelity susceptibility
+!!
+  subroutine ctqmc_record_lrmm()
      use constants, only : dp, zero, one, two
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : norbs
      use control, only : beta
+
      use context, only : csign
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : lmat, rmat, lrmat
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : lnop, rnop, lrmm
      use context, only : rank
 
      implicit none
@@ -466,7 +473,7 @@
      real(dp) :: kr(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 6) )
+     call s_assert( btest(isobs, 2) )
 
 ! init k_l and k_r
      kl = zero
@@ -492,18 +499,18 @@
      enddo ! over flvr={1,norbs} loop
 
 ! add contribution to < k_l > and < k_r >
-     lmat = lmat + kl * csign
-     rmat = rmat + kr * csign
+     lnop = lnop + kl * csign
+     rnop = rnop + kr * csign
 
 ! add contribution to < k_l k_r >
      do flvr=1,norbs
          do i=1,norbs
-             lrmat(i,flvr) = lrmat(i,flvr) + kl(i) * kr(flvr) * csign
+             lrmm(i,flvr) = lrmm(i,flvr) + kl(i) * kr(flvr) * csign
          enddo ! over i={1,norbs} loop
      enddo ! over flvr={1,norbs} loop
 
      return
-  end subroutine ctqmc_record_lmat
+  end subroutine ctqmc_record_lrmm
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
