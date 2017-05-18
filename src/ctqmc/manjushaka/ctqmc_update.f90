@@ -66,7 +66,7 @@
      ins_r = zero
 
      remove_tcount = zero
-     remove_accept = zero
+     rmv_a = zero
      rmv_r = zero
 
      lshift_tcount = zero
@@ -358,7 +358,7 @@
      use control, only : norbs
      use control, only : beta
      use context, only : ckink, csign, cnegs
-     use context, only : remove_tcount, remove_accept, rmv_r
+     use context, only : remove_tcount, rmv_a, rmv_r
      use context, only : rank
 
      implicit none
@@ -484,7 +484,7 @@
 ! update the remove statistics
      remove_tcount = remove_tcount + one
      if ( pass .eqv. .true. ) then
-         remove_accept = remove_accept + one
+         rmv_a = rmv_a + one
      else
          rmv_r = rmv_r + one
      endif ! back if ( pass .eqv. .true. ) block
