@@ -1534,8 +1534,8 @@
      implicit none
 
 ! external arguments
-! index address to remove old create and annihilation operators
-! is and ie are for create and annihilation operators, respectively
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
@@ -1549,7 +1549,7 @@
 ! loop index over operators
      integer  :: i
 
-! memory address for old create and annihilation operators
+! memory address for old creation and annihilation operators
      integer  :: as
      integer  :: ae
 
@@ -1660,10 +1660,10 @@
      as = is
      ae = ie
 
-! in principle, annihilation operator should be removed at first, but in fact,
-! we remove creation operator at first. in order to treat csign correctly,
-! we need to recover the original scheme, so ae is restored at first.
-! please refer to try_remove_flavor().
+! in principle, annihilation operator should be removed at first, but in
+! fact, we remove creation operator at first. in order to treat csign
+! correctly, we need to recover the original scheme, so ae is restored at
+! first. please refer to try_remove_flavor()
      if ( tau_start < tau_end ) then
          ae = ae + 1
      endif ! back if ( tau_start < tau_end ) block
