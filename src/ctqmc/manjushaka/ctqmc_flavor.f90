@@ -2867,22 +2867,23 @@
 ! current flavor channel
      integer, intent(in) :: flvr
 
-! number of operator pair
+! number of operator pairs
      integer, intent(in) :: kink
 
 ! local variables
 ! loop index for operator pair
      integer  :: i
 
-! index address for create and annihilation operators
+! index address for creation and annihilation operators
      integer  :: is, ie
 
-! \tau_s and \tau_e for create and annihilation operators
+! \tau_s and \tau_e for creation and annihilation operators
      real(dp) :: ts, te
 
      do i=1,kink
 
-! determine index address, creation operator first, and then annihilation operator
+! try to determine index address, the creation operator first, and then
+! the annihilation operator
          is = 2 * i -1
          ie = 2 * i
 
