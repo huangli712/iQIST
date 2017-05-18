@@ -888,13 +888,12 @@
                  endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
-! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
+! make a copy of index_v, index_t is need by ctqmc_lazy_ztrace()
              do i=1,nsize
                  index_t(i) = index_v(i)
              enddo ! over i={1,nsize} loop
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part, by lazy trace evaluation
+! calculate the transition ratio for the local trace part
              r = spring_sfmt_stream()
              ratup = p
              call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
@@ -905,7 +904,7 @@
 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! swap global variables between spin up and spin down states
+! exchange global variables between spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
 ! update the operators trace
