@@ -11,7 +11,7 @@
 !!!           try_insert_colour
 !!!           try_remove_colour
 !!!           try_lshift_colour
-!!!           cat_rshift_flavor <<<---
+!!!           try_rshift_colour <<<---
 !!!           cat_occupy_status <<<---
 !!!           cat_weight_factor
 !!!           cat_weight_kernel <<<---
@@ -1632,11 +1632,11 @@
   end subroutine try_lshift_colour
 
 !!
-!! @sub cat_rshift_flavor
+!! @sub try_rshift_colour
 !!
 !! determine \tau_e1 and \tau_e2 for rshifting old segment or anti-segment
 !!
-  subroutine cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
+  subroutine try_rshift_colour(flvr, ieo, ien, ring, tau_end1, tau_end2)
      use constants, only : dp, zero
 
      use spring, only : spring_sfmt_stream
@@ -1809,7 +1809,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
-  end subroutine cat_rshift_flavor
+  end subroutine try_rshift_colour
 
 !!========================================================================
 !!>>> service layer: calculate occupation status for current flavor    <<<
