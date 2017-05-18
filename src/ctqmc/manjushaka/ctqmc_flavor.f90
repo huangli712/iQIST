@@ -1668,8 +1668,8 @@
          ae = ae + 1
      endif ! back if ( tau_start < tau_end ) block
 
-! it is assumed that annihilation operator is removed at first, so as should be
-! adjusted if needed
+! it is assumed that annihilation operator is removed at first, so as
+! should be adjusted if needed
      if ( tau_start > tau_end ) then
          as = as - 1
      endif ! back if ( tau_start > tau_end ) block
