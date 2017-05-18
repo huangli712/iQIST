@@ -313,7 +313,7 @@
 ! (3) if tau_start is valid, determine tau_end, tau_max, is, and ie
 !     consistently, and set ladd to .true.
 ! (4) if tau_start is not valid, set ladd to .false.
-     call cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
+     call try_insert_colour(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
 
 ! calculate the transition ratio for the local trace part
      if ( ladd .eqv. .true. ) then
@@ -437,7 +437,7 @@
 ! (2) tau_start is obtained by is
 ! (3) determine ie
 ! (4) tau_end and tau_max are evaluated carefully according to is and ie
-     call cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
+     call try_remove_colour(flvr, is, ie, anti, tau_start, tau_end, tau_max)
 
 ! calculate the transition ratio for the local trace part
      call cat_remove_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
@@ -548,7 +548,7 @@
 ! (3) based on the existing segments, we determine tau_start2 and related
 !     index isn
 ! (4) finally ring is evaluated
-     call cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
+     call try_lshift_colour(flvr, iso, isn, ring, tau_start1, tau_start2)
 
 ! calculate the transition ratio for the local trace part
      call cat_lshift_ztrace(flvr, ring, tau_start1, tau_start2, trace_ratio)
@@ -653,7 +653,7 @@
 ! (3) based on the existing segments, we determine tau_end2 and related
 !     index ien
 ! (4) finally ring is evaluated
-     call cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
+     call try_rshift_colour(flvr, ieo, ien, ring, tau_end1, tau_end2)
 
 ! calculate the transition ratio for the local trace part
      call cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
