@@ -723,17 +723,22 @@
   end subroutine ctqmc_make_ftau
 
 !!========================================================================
-!!>>> build auxiliary two-particle related variables                   <<<
+!!>>> two-particle green's function                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_make_prod: try to calculate the product of matsubara
-!!>>> frequency exponents exp(i \omega_n \tau)
+!!
+!! @sub ctqmc_make_prod
+!!
+!! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
+!!
   subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp, two, pi, czi
 
      use control, only : nffrq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank
 
      implicit none
@@ -748,10 +753,10 @@
 ! maximum number of operators in different flavor channels
      integer, intent(in) :: mrank
 
-! matsubara frequency exponents for create operators
+! matsubara frequency exponents for creation operators
      complex(dp), intent(out) :: caux1(nfaux,mrank)
 
-! matsubara frequency exponents for destroy operators
+! matsubara frequency exponents for annihilation operators
      complex(dp), intent(out) :: caux2(nfaux,mrank)
 
 ! local variables
@@ -763,7 +768,7 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! for create operators
+! for creation operators
      do is=1,rank(flvr)
          taus = time_s( index_s(is, flvr), flvr )
          caux1(:,is) = exp(-two * czi * pi * taus / beta)
@@ -771,7 +776,7 @@
          caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * czi * pi * taus / beta)
      enddo ! over is={1,rank(flvr)} loop
 
-! for destroy operators
+! for annihilation operators
      do ie=1,rank(flvr)
          taue = time_e( index_e(ie, flvr), flvr )
          caux2(:,ie) = exp(+two * czi * pi * taue / beta)
@@ -783,33 +788,32 @@
   end subroutine ctqmc_make_prod
 
 !!========================================================================
-!!>>> build self-energy function                                       <<<
+!!>>> self-energy function                                             <<<
 !!========================================================================
 
-!!>>> ctqmc_make_hub1: build atomic green's function and self-energy
-!!>>> function using improved Hubbard-I approximation, and then make
-!!>>> interpolation for self-energy function between low frequency QMC
-!!>>> data and high frequency Hubbard-I approximation data, the full
-!!>>> impurity green's function can be obtained by using dyson's equation
-!!>>> finally
-  subroutine ctqmc_make_hub1()
-     use constants, only : dp, zero, one, czi, czero
+!!
+!! @sub ctqmc_make_hub2
+!!
+!! first of all, build impurity green's function and auxiliary correlation
+!! function via fast fourier transformation (if isort == 1) or analytical
+!! formula (if isort == 2). and then, the self-energy function is obtained
+!! by using the improved estimator trick
+!!
+  subroutine ctqmc_make_hub2()
+     use constants, only : dp, zero, one, two, pi, czi, czero
 
+     use control, only : isort
      use control, only : norbs
+     use control, only : lemax
      use control, only : mfreq
      use control, only : nfreq
-     use control, only : mune
-     use control, only : myid, master
-     use context, only : rmesh
-     use context, only : prob
-     use context, only : eimp, eigs
-     use context, only : grnf
-     use context, only : hybf
-     use context, only : sig2
+     use control, only : ntime
+     use control, only : beta
 
-     use m_sect, only : nsect
-     use m_sect, only : sectors
-     use m_sect, only : sectoff
+     use context, only : tmesh
+     use context, only : gtau, ftau
+     use context, only : grnf, frnf
+     use context, only : sig2
 
      implicit none
 
@@ -818,151 +822,94 @@
      integer  :: i
      integer  :: j
      integer  :: k
-     integer  :: l
-     integer  :: m
-     integer  :: n
 
-! start index of sectors
-     integer  :: indx1
-     integer  :: indx2
+! dummy real variables
+     real(dp) :: ob
 
-! dummy integer variables
-     integer  :: start
+! spherical Bessel functions
+     real(dp) :: jaux(mfreq,lemax)
 
-! dummy real variables, used to interpolate self-energy function
-     real(dp) :: ob, oe
-     real(dp) :: d0, d1
+! imaginary time green's function
+     real(dp) :: gaux(ntime,norbs,norbs)
 
-! dummy complex variables, used to interpolate self-energy function
-     complex(dp) :: cb, ce
-     complex(dp) :: sinf
+! imaginary time auxiliary correlation function
+     real(dp) :: faux(ntime,norbs,norbs)
 
-! dummy imurity green's function: G^{-1}
-     complex(dp) :: gaux(norbs,norbs)
+! unitary transformation matrix for legendre orthogonal polynomial
+     complex(dp) :: taux(mfreq,lemax)
 
-! atomic green's function and self-energy function in Hubbard-I approximation
-     complex(dp) :: ghub(mfreq,norbs)
-     complex(dp) :: shub(mfreq,norbs)
+! used to backup the sampled impurity green's function
+     complex(dp) :: gtmp(nfreq,norbs,norbs)
 
-! calculate atomic green's function using Hubbard-I approximation
-     ghub = czero
-     do i=1,norbs
-         do j=1,nsect
-             l = sectors(j)%next(i,0)
-             if ( l == -1 ) CYCLE
-             if ( sectoff(j) .eqv. .true. .or. sectoff(l) .eqv. .true. ) CYCLE
-             indx1 = sectors(j)%istart
-             indx2 = sectors(l)%istart
-             do n=1,sectors(j)%ndim
-                 do m=1,sectors(l)%ndim
-                     ob = sectors(j)%fmat(i,0)%val(m,n) ** 2 * (prob(indx2+m-1) + prob(indx1+n-1))
-                     do k=1,mfreq
-                         cb = czi * rmesh(k) + eigs(indx2+m-1) - eigs(indx1+n-1)
-                         ghub(k,i) = ghub(k,i) + ob / cb
-                     enddo ! over k={1,mfreq} loop
-                 enddo ! over m={1,sectors(l)%ndim} loop
-             enddo ! over n={1,sectors(j)%ndim} loop
-         enddo ! over j={1,nsect} loop
-     enddo ! over i={1,norbs} loop
+! task 1: backup the sampled impurity green's function
+!-------------------------------------------------------------------------
+     gtmp = grnf(1:nfreq,:,:)
 
-! calculate atomic self-energy function using dyson's equation
+! task 2: build impurity green's function and auxiliary correlation function
+!-------------------------------------------------------------------------
+! using fast fourier transformation
+     STD_BLOCK: if ( isort == 1 ) then
+
+         call ctqmc_make_gtau(tmesh, gtau, gaux)
+         call ctqmc_four_htau(gaux, grnf)
+         call ctqmc_make_ftau(tmesh, ftau, faux)
+         call ctqmc_four_htau(faux, frnf)
+
+     endif STD_BLOCK ! back if ( isort == 1 ) block
+
+! task 3: build impurity green's function and auxiliary correlation function
+!-------------------------------------------------------------------------
+! special consideration must be taken for legendre representation, we can
+! calculate grnf and frnf directly by using legendre coefficients, instead
+! of performing fourier transformation
+     LEG_BLOCK: if ( isort == 2 ) then
+
+! 3.1 build spherical Bessel functions: jaux
+         jaux = zero
+         do k=1,mfreq
+             ob = (two * k - one) * pi / two
+             call s_sbessel(lemax-1, ob, jaux(k,:))
+         enddo ! over k={1,mfreq} loop
+
+! 3.2 build unitary transformation matrix: taux
+         taux = czero
+         do i=1,lemax
+             do k=1,mfreq
+                 ob = (-one)**(k - 1) * sqrt(two * i - one)
+                 taux(k,i) = jaux(k,i) * ob * ( czi**i )
+             enddo ! over k={1,mfreq} loop
+         enddo ! over i={1,lemax} loop
+         taux = taux / beta
+
+! 3.3 rebuild impurity green's function on matsubara frequency
+!     using orthogonal polynomial representation, G(i\omega)
+!
+! 3.4 rebuild auxiliary correlation function on matsubara frequency
+!     using orthogonal polynomial representation, F(i\omega)
+         grnf = czero
+         frnf = czero
+         do i=1,norbs
+             do j=1,lemax
+                 do k=1,mfreq
+                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i)
+                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i)
+                 enddo ! over k={1,mfreq} loop
+             enddo ! over j={1,lemax} loop
+         enddo ! over i={1,norbs} loop
+
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
+
+! task 4: build final self-energy function by using improved estimator
+!-------------------------------------------------------------------------
      do i=1,norbs
          do k=1,mfreq
-             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
-         enddo ! over k={1,mfreq} loop
+             sig2(k,i,i) = frnf(k,i,i) / grnf(k,i,i)
+         enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
 
-! dump the ghub and shub, only for reference, only the master node can do it
-     if ( myid == master ) then
-         call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif ! back if ( myid == master ) block
-
-! build self-energy function at low frequency region
+! task 5: restore the sampled impurity green's function
 !-------------------------------------------------------------------------
-! filter grnf to suppress the fluctuation of its real part
-!-------------------------------------------------------------------------
-!<     do k=1,nfreq
-!<         do i=1,norbs
-!<             ob =  real( grnf(k,i,i) )
-!<             oe = aimag( grnf(k,i,i) )
-!<             grnf(k,i,i) = dcmplx( zero, oe )
-!<         enddo ! over i={1,norbs} loop
-!<     enddo ! over k={1,nfreq} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     do k=1,nfreq
-         gaux = grnf(k,:,:)
-         call s_inv_z(norbs, gaux)
-         do i=1,norbs
-             sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
-         enddo ! over i={1,norbs} loop
-     enddo ! over k={1,nfreq} loop
-!-------------------------------------------------------------------------
-! filter sig2 to suppress the fluctuation of its imaginary part
-!-------------------------------------------------------------------------
-     do k=1,16
-         do i=1,norbs
-             call ctqmc_smth_sigf( sig2(1:nfreq,i,i) ) ! smooth it 16 times
-         enddo ! over i={1,norbs} loop
-     enddo ! over k={1,16} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! interpolates self-energy function between low energy QMC data and high
-! energy Hubbard-I approximation
-     do i=1,norbs
-
-! determine the base point, its value is calculated by using five points
-         cb = czero
-         do k=nfreq-4,nfreq
-             cb = cb + sig2(k,i,i)
-         enddo ! over k={nfreq-4,nfreq} loop
-
-         cb = cb / real(5)
-         ob = rmesh(nfreq-2)
-
-! step A: for the imaginary part
-! determine the intermediate region [nfreq+1,start] at first
-         start = 0
-         do k=nfreq+1,mfreq
-             start = k
-             d0 = aimag( shub(k,i) - cb ) / ( rmesh(k) - ob )
-             d1 = aimag( shub(k,i) - shub(k-1,i) ) / ( rmesh(k) - rmesh(k-1) )
-             if ( abs( d0 - d1 ) < 0.02_dp ) EXIT
-         enddo ! over k={nfreq+1,mfreq} loop
-
-! we just constrain start \in [nfreq + 32, nfreq + 128]
-         if ( start - nfreq <  32 ) start = nfreq +  32
-         if ( start - nfreq > 128 ) start = nfreq + 128
-
-         ce = shub(start,i)
-         oe = rmesh(start)
-
-! deal with the intermediate region, using linear interpolation
-         do k=nfreq+1,start
-             sig2(k,i,i) = dcmplx( zero, aimag(cb) + aimag( ce - cb ) * ( rmesh(k) - ob ) / ( oe - ob ) )
-         enddo ! over k={nfreq+1,start} loop
-
-! deal with the tail region, using atomic self-energy function directly
-         do k=start+1,mfreq
-             sig2(k,i,i) = dcmplx( zero, aimag( shub(k,i) ) )
-         enddo ! over k={start+1,mfreq} loop
-
-! step B: for the real part
-         sinf = shub(mfreq,i)
-         do k=nfreq+1,mfreq
-             sig2(k,i,i) = sig2(k,i,i) + real(sinf) + ( ob / rmesh(k) )**2 * real( cb - sinf )
-         enddo ! over k={nfreq+1,mfreq} loop
-
-     enddo ! over i={1,norbs} loop
-
-! calculate final impurity green's function using dyson's equation
-     do k=1,mfreq
-         gaux = czero
-         do i=1,norbs
-             gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
-         enddo ! over i={1,norbs} loop
-         call s_inv_z(norbs, gaux)
-         grnf(k,:,:) = gaux
-     enddo ! over k={1,mfreq} loop
+     grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
 
      return
-  end subroutine ctqmc_make_hub1
+  end subroutine ctqmc_make_hub2
