@@ -10,7 +10,7 @@
 !!!           cat_rshift_ztrace <<<---
 !!!           try_insert_colour
 !!!           try_remove_colour
-!!!           cat_lshift_flavor
+!!!           try_lshift_colour
 !!!           cat_rshift_flavor <<<---
 !!!           cat_occupy_status <<<---
 !!!           cat_weight_factor
@@ -1452,11 +1452,11 @@
   end subroutine try_remove_colour
 
 !!
-!! @sub cat_lshift_flavor
+!! @sub try_lshift_colour
 !!
 !! determine \tau_s1 and \tau_s2 for lshifting old segment or anti-segment
 !!
-  subroutine cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
+  subroutine try_lshift_colour(flvr, iso, isn, ring, tau_start1, tau_start2)
      use constants, only : dp, zero
 
      use spring, only : spring_sfmt_stream
@@ -1629,7 +1629,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
-  end subroutine cat_lshift_flavor
+  end subroutine try_lshift_colour
 
 !!
 !! @sub cat_rshift_flavor
