@@ -1321,7 +1321,7 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for rshift old annihilation operator
+! index address for shifting old annihilation operator
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
