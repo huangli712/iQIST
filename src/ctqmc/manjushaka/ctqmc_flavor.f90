@@ -1232,14 +1232,21 @@
      return
   end subroutine cat_remove_colour
 
-!!>>> cat_lshift_colour: update the perturbation expansion series for
-!!>>> lshift an old creation operators in the colour part actually
+!!
+!! @sub cat_lshift_colour
+!!
+!! update the perturbation expansion series for shifting old creation
+!! operator in the colour part actually
+!!
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
      use constants, only : dp
 
      use control, only : nfreq
+
      use context, only : ckink
-     use context, only : index_s, time_s, exp_s
+     use context, only : index_s
+     use context, only : time_s
+     use context, only : exp_s
      use context, only : rmesh
 
      implicit none
@@ -1248,7 +1255,7 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for lshift old creation operator
+! index address for shifting old creation operator
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
@@ -1291,14 +1298,21 @@
      return
   end subroutine cat_lshift_colour
 
-!!>>> cat_rshift_colour: update the perturbation expansion series for
-!!>>> rshift an old annihilation operators in the colour part actually
+!!
+!! @sub cat_rshift_colour
+!!
+!! update the perturbation expansion series for shifting old annihilation
+!! operator in the colour part actually
+!!
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
      use constants, only : dp
 
      use control, only : nfreq
+
      use context, only : ckink
-     use context, only : index_e, time_e, exp_e
+     use context, only : index_e
+     use context, only : time_e
+     use context, only : exp_e
      use context, only : rmesh
 
      implicit none
