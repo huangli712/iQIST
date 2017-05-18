@@ -367,14 +367,20 @@
      return
   end subroutine ctqmc_insert_kink
 
-!!>>> ctqmc_remove_kink: remove old create and destroy operators in the
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_remove_kink
+!!
+!! remove old creation and annihilation operators in the perturbation
+!! expansion series
+!!
   subroutine ctqmc_remove_kink()
      use constants, only : dp, zero, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
      use control, only : beta
+
      use context, only : ckink, csign, cnegs
      use context, only : rmv_t, rmv_a, rmv_r
      use context, only : rank
@@ -382,7 +388,7 @@
      implicit none
 
 ! local variables
-! whether the old create and destroy operators can be removed diagrammatically
+! whether the old creation and annihilation operators can be removed
      logical  :: lrmv
 
 ! whether the update operation is accepted
