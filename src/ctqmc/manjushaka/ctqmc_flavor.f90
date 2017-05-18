@@ -1680,7 +1680,11 @@
      return
   end subroutine cat_remove_flavor
 
-!!>>> cat_lshift_flavor: shift the old creation operator in the flavor part
+!!
+!! @sub cat_lshift_flavor
+!!
+!! shift old creation operator in the flavor part
+!!
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
      use constants, only : dp, zero
      use stack, only : istack_getrest
