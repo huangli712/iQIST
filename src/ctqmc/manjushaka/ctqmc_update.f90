@@ -65,7 +65,7 @@
      ins_a = zero
      ins_r = zero
 
-     remove_tcount = zero
+     rmv_t = zero
      rmv_a = zero
      rmv_r = zero
 
@@ -358,7 +358,7 @@
      use control, only : norbs
      use control, only : beta
      use context, only : ckink, csign, cnegs
-     use context, only : remove_tcount, rmv_a, rmv_r
+     use context, only : rmv_t, rmv_a, rmv_r
      use context, only : rank
 
      implicit none
@@ -409,7 +409,7 @@
      ckink = rank(flvr)
      if ( ckink == 0 ) then
 !<         call s_print_exception('ctqmc_remove_kink','can not remove any operators')
-         remove_tcount = remove_tcount + one
+         rmv_t = rmv_t + one
          rmv_r = rmv_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
@@ -482,7 +482,7 @@
      endif ! back if ( csign < 0 ) block
 
 ! update the remove statistics
-     remove_tcount = remove_tcount + one
+     rmv_t = rmv_t + one
      if ( pass .eqv. .true. ) then
          rmv_a = rmv_a + one
      else
