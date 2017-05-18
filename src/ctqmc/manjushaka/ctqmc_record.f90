@@ -648,7 +648,11 @@
      return
   end subroutine ctqmc_record_twop
 
-!!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
+!!
+!! @sub ctqmc_record_pair
+!!
+!! record the particle-particle pairing susceptibility
+!!
   subroutine ctqmc_record_pair()
      use constants, only : dp, czero
 
@@ -656,8 +660,9 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
+
      use context, only : csign
-     use context, only : ps_re, ps_im
+     use context, only : p2pw
      use context, only : rank
      use context, only : mmat
 
@@ -684,7 +689,7 @@
 ! used to store the element of mmat matrix
      real(dp) :: maux
 
-! dummy complex(dp) variables, used to calculate the ps_re and ps_im
+! dummy complex(dp) variables, used to calculate the p2pw
      complex(dp) :: cmeas
 
 ! dummy complex(dp) arrays, used to store the intermediate results
@@ -693,7 +698,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 3) )
+     call s_assert( btest(isvrt, 2) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -708,7 +713,7 @@
 ! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP DO PRIVATE (flvr, is, ie, maux, w2n, w1n, caux1, caux2)
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+     FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
          do is=1,rank(flvr)
@@ -724,33 +729,32 @@
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 !$OMP END DO
 
-! calculate ps_re and ps_im
+! calculate p2pw
 !$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
-     CTQMC_ORBIT1_LOOP: do f1=1,norbs
-         CTQMC_ORBIT2_LOOP: do f2=1,f1
+     ORB1_CYCLE: do f1=1,norbs
+         ORB2_CYCLE: do f2=1,f1
 
-             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+             WB_CYCLE: do wbn=1,nbfrq
 
-                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+                 WF1_CYCLE: do w2n=1,nffrq
+                     WF2_CYCLE: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
 
                          cmeas = czero
                          if ( f1 /= f2 ) then
                              cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
                          endif ! back if ( f1 == f2 ) block
-                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) * csign / beta
-                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) * csign / beta
-                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+                         p2pw(w3n,w2n,wbn,f2,f1) = p2pw(w3n,w2n,wbn,f2,f1) + cmeas * csign / beta
+                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
+                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
 
-             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+             enddo WB_CYCLE ! over wbn={1,nbfrq} loop
 
-         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
-     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+         enddo ORB2_CYCLE ! over f2={1,f1} loop
+     enddo ORB1_CYCLE ! over f1={1,norbs} loop
 !$OMP END DO
 !$OMP END PARALLEL
 
