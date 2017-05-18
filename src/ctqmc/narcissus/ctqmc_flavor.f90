@@ -2,7 +2,7 @@
 !!! project : narcissus
 !!! program : cat_insert_colour
 !!!           cat_remove_colour
-!!!           cat_lshift_action
+!!!           cat_lshift_colour
 !!!           cat_rshift_action <<<---
 !!!           cat_insert_ztrace
 !!!           cat_remove_ztrace
@@ -171,12 +171,12 @@
   end subroutine cat_remove_colour
 
 !!
-!! @sub cat_lshift_action
+!! @sub cat_lshift_colour
 !!
 !! update the perturbation expansion series for left shifting old segment
 !! or anti-segment
 !!
-  subroutine cat_lshift_action(flvr, iso, isn, tau_start)
+  subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
      use constants, only : dp
 
      use control, only : nfreq
@@ -234,7 +234,7 @@
      enddo ! over i={1,nfreq} loop
 
      return
-  end subroutine cat_lshift_action
+  end subroutine cat_lshift_colour
 
 !!
 !! @sub cat_rshift_action
