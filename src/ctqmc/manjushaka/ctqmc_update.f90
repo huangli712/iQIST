@@ -799,13 +799,13 @@
 
      use stack, only : istack_getrest
 
-     use control, only : nband, norbs
+     use control, only : nband
 
      use context, only : rfl_t, rfl_a, rfl_r
      use context, only : empty_v
      use context, only : index_t, index_v
      use context, only : flvr_v
-     use context, only : rank, symm
+     use context, only : rank
 
      implicit none
 
