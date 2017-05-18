@@ -580,7 +580,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 1) .and. .not. btest(isvrt, 2) )
+     call s_assert( btest(isvrt, 1) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
