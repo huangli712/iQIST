@@ -949,7 +949,7 @@
 ! calculate the transition ratio for the determinant part, spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
-! calculate the transition probability for global spin flip
+! calculate the transition probability
              p = p * ( ratup * ratdn )
 
          enddo ! over flvr={1,nband} loop
@@ -969,8 +969,7 @@
              index_t(i) = index_v(i)
          enddo ! over i={1,nsize} loop
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part, by lazy trace evaluation
+! calculate the transition ratio for the local trace part
          r = spring_sfmt_stream()
          ratup = p
          call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
@@ -986,7 +985,7 @@
 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! swap global variables between spin up and spin down states
+! exchange global variables between spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              enddo ! over flvr={1,nband} loop
@@ -1007,12 +1006,9 @@
                  endif ! back if ( flvr <= nband ) block
              enddo ! over i={1,nsize} loop
 
-! print exception information
-!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
-
          endif ! back if ( pass .eqv. .true. ) block
 
-! update the reflip statistics
+! update monte carlo statistics
          rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
              rfl_a = rfl_a + one
