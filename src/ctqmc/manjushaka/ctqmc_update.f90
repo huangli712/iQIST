@@ -943,12 +943,10 @@
 ! get fup and fdn
              fup = flvr; fdn = flvr + nband
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin up case
+! calculate the transition ratio for the determinant part, spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin dn case
+! calculate the transition ratio for the determinant part, spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
 ! calculate the transition probability for global spin flip
