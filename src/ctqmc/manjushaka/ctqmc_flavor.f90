@@ -1153,9 +1153,13 @@
      return
   end subroutine try_lshift_flavor
 
-!!>>> try_rshift_flavor: determine index addresses for the old and new
-!!>>> annihilation operators in the flavor part, and then determine whether
-!!>>> it can be shifted diagrammatically
+!!
+!! @sub try_rshift_flavor
+!!
+!! try to determine index addresses for the old and new annihilation
+!! operators in the flavor part, and then determine whether it can be
+!! shifted diagrammatically
+!!
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
      use constants, only : dp
      use stack, only : istack_getrest
