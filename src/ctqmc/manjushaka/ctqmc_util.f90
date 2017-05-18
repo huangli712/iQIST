@@ -234,21 +234,24 @@
      return
   end function ctqmc_eval_htau
 
-!!>>> ctqmc_make_hsed: calculate the second order derivates of hybridization
-!!>>> function on imaginary time space
-  subroutine ctqmc_make_hsed(tmesh, htau, hsed)
+!!
+!! @sub ctqmc_eval_hsed
+!!
+!! calculate the second order derivates of hybridization function on
+!! imaginary time space
+!!
+  subroutine ctqmc_eval_hsed(htau, hsed)
      use constants, only : dp, zero
 
      use control, only : norbs
      use control, only : ntime
      use control, only : beta
 
+     use context, only : tmesh
+
      implicit none
 
 ! external arguments
-! imaginary time axis
-     real(dp), intent(in)  :: tmesh(ntime)
-
 ! hybridization function on imaginary time axis
      real(dp), intent(in)  :: htau(ntime,norbs,norbs)
 
@@ -309,14 +312,18 @@
      enddo ! over j={1,norbs} loop
 
      return
-  end subroutine ctqmc_make_hsed
+  end subroutine ctqmc_eval_hsed
 
 !!========================================================================
-!!>>> symmetrize physical observables                                  <<<
+!!>>> symmetrize operation                                             <<<
 !!========================================================================
 
-!!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
-  subroutine ctqmc_symm_nmat(symm, nmat)
+!!
+!! @sub ctqmc_symm_nimp
+!!
+!! symmetrize the occupation number array, nimp, according to symm vector
+!!
+  subroutine ctqmc_symm_nimp(symm, nimp)
      use constants, only : dp, zero, two
 
      use control, only : issun, isspn
