@@ -964,7 +964,7 @@
                      endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
                      idead = idead + 1
                  endif ! back if ( i == pis .or. i == pie ) block
-             enddo ! over i={1,nsize} loop
+             enddo OPERATOR_LOOP ! over i={1,nsize} loop
 
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
@@ -1139,7 +1139,7 @@
                      endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
                      idead = idead + 1
                  endif ! back if ( i == piso ) block
-             enddo ! over i={1,nsize+1} loop
+             enddo OPERATOR_LOOP ! over i={1,nsize+1} loop
 
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
