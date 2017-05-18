@@ -305,7 +305,7 @@
 
 ! calculate the transition ratio for the local trace part
      if ( ladd .eqv. .true. ) then
-         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
+         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end)
      else
          trace_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
@@ -428,11 +428,9 @@
 ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order ( number of existing create or
-! destroy operators ) for current flavor channel
+! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call s_print_exception('ctqmc_remove_kink','can not remove any operators')
          rmv_t = rmv_t + one
          rmv_r = rmv_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
