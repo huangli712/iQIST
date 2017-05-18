@@ -29,12 +29,187 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
 !!!           05/18/2017 by li huang (last modified)
-!!! purpose : measure, record, and postprocess the important observables
-!!!           produced by the hybridization expansion version continuous
-!!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
+!!! purpose : measure and collect physical observables produced by the
+!!!           hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
+  subroutine ctqmc_record_hist()
+     use constants, only : one
+
+     use control, only : mkink
+     use context, only : ckink, csign, caves
+     use context, only : hist
+
+     implicit none
+
+! record current sign as a byproduct
+     caves = caves + csign
+
+! note: if ckink == 0, we record its count in hist(mkink)
+     if ( ckink > 0 ) then
+         hist(ckink) = hist(ckink) + one
+     else
+         hist(mkink) = hist(mkink) + one
+     endif ! back if ( ckink > 0 ) block
+
+     return
+  end subroutine ctqmc_record_hist
+
+!!>>> ctqmc_record_prob: record the probability of atomic states
+  subroutine ctqmc_record_prob()
+     use control, only : ncfgs
+     use context, only : csign, matrix_ptrace
+     use context, only : prob
+     use context, only : diag
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+
+     do i=1,ncfgs
+         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
+     enddo ! over i={1,ncfgs} loop
+
+     return
+  end subroutine ctqmc_record_prob
+
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
+!!>>> matrix, and auxiliary physical observables simulataneously
+  subroutine ctqmc_record_nmat()
+     use constants, only : dp, zero, two
+
+     use control, only : norbs, ncfgs
+     use control, only : U, mune, beta
+     use context, only : ckink, csign, matrix_ptrace
+     use context, only : paux, nmat, nnmat
+     use context, only : diag, eigs
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+
+     implicit none
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! start index of sectors
+     integer  :: indx
+
+! current occupation number and Sz
+     real(dp) :: nele
+     real(dp) :: sz
+
+! current probability for eigenstates
+     real(dp) :: cprob(ncfgs)
+
+! current probability for sectors
+     real(dp) :: sprob(nsect)
+
+! evaluate cprob at first, it is current atomic probability
+     do i=1,ncfgs
+         cprob(i) = diag(i,2) / matrix_ptrace
+     enddo ! over i={1,ncfgs} loop
+
+! evaluate sprob, it is current sector prob
+     sprob = zero
+     do i=1,nsect
+         indx = sectors(i)%istart
+         do j=1,sectors(i)%ndim
+             sprob(i) = sprob(i) + cprob(indx+j-1)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
+
+! evaluate the total occupation number
+! this algorithm is somewhat rough, not very accurate
+     nele = zero
+     do i=1,nsect
+         nele = nele + sectors(i)%nele * sprob(i)
+     enddo ! over i={1,nsect} loop
+
+! evaluate the total Sz
+! this algorithm is somewhat rough, and only useful when the Sz quantum
+! number is used to generate the atom.cix
+     sz = zero
+     do i=1,nsect
+         sz = sz + sectors(i)%sz * sprob(i)
+     enddo ! over i={1,nsect} loop
+
+! evaluate occupation matrix: < n_i >
+! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
+!-------------------------------------------------------------------------
+     nmat = zero
+! this feature will not be implemented for majushaka code
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate double occupation matrix: < n_i n_j >
+! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
+!-------------------------------------------------------------------------
+     nnmat = zero
+! this feature will not be implemented for manjushaka code
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^4>
+!-------------------------------------------------------------------------
+     paux(9) = paux(9) + ( ckink * two )**4
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^3>
+!-------------------------------------------------------------------------
+     paux(8) = paux(8) + ( ckink * two )**3
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^2>
+!-------------------------------------------------------------------------
+     paux(7) = paux(7) + ( ckink * two )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + csign * nele ** 2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + csign * nele
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate spin magnetization: < Sz >
+!-------------------------------------------------------------------------
+     paux(4) = paux(4) + csign * sz
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate kinetic energy: ekin
+! equation : -T < k >
+!-------------------------------------------------------------------------
+     paux(3) = paux(3) - csign * real(ckink * norbs) / beta
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate potential energy: epot
+! it is < H_{loc} > in fact, not equal to the definition in azalea project
+! equation : \sum_m P_m E_m
+! note: here U denotes as energy zero point
+!-------------------------------------------------------------------------
+     do i=1,ncfgs
+         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + U )
+     enddo ! over i={1,ncfgs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate total energy: etot
+! equation : E_{tot} = < H_{loc} > - T < k > + \mu N
+!-------------------------------------------------------------------------
+     paux(1) = paux(2) + paux(3) + mune * nele
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     return
+  end subroutine ctqmc_record_nmat
 
 !!========================================================================
 !!>>> measure physical observables                                     <<<
@@ -280,180 +455,7 @@
      return
   end subroutine ctqmc_record_grnf
 
-!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
-  subroutine ctqmc_record_hist()
-     use constants, only : one
 
-     use control, only : mkink
-     use context, only : ckink, csign, caves
-     use context, only : hist
-
-     implicit none
-
-! record current sign as a byproduct
-     caves = caves + csign
-
-! note: if ckink == 0, we record its count in hist(mkink)
-     if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + one
-     else
-         hist(mkink) = hist(mkink) + one
-     endif ! back if ( ckink > 0 ) block
-
-     return
-  end subroutine ctqmc_record_hist
-
-!!>>> ctqmc_record_prob: record the probability of atomic states
-  subroutine ctqmc_record_prob()
-     use control, only : ncfgs
-     use context, only : csign, matrix_ptrace
-     use context, only : prob
-     use context, only : diag
-
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-
-     do i=1,ncfgs
-         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
-     enddo ! over i={1,ncfgs} loop
-
-     return
-  end subroutine ctqmc_record_prob
-
-!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
-!!>>> matrix, and auxiliary physical observables simulataneously
-  subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero, two
-
-     use control, only : norbs, ncfgs
-     use control, only : U, mune, beta
-     use context, only : ckink, csign, matrix_ptrace
-     use context, only : paux, nmat, nnmat
-     use context, only : diag, eigs
-
-     use m_sect, only : nsect
-     use m_sect, only : sectors
-
-     implicit none
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! start index of sectors
-     integer  :: indx
-
-! current occupation number and Sz
-     real(dp) :: nele
-     real(dp) :: sz
-
-! current probability for eigenstates
-     real(dp) :: cprob(ncfgs)
-
-! current probability for sectors
-     real(dp) :: sprob(nsect)
-
-! evaluate cprob at first, it is current atomic probability
-     do i=1,ncfgs
-         cprob(i) = diag(i,2) / matrix_ptrace
-     enddo ! over i={1,ncfgs} loop
-
-! evaluate sprob, it is current sector prob
-     sprob = zero
-     do i=1,nsect
-         indx = sectors(i)%istart
-         do j=1,sectors(i)%ndim
-             sprob(i) = sprob(i) + cprob(indx+j-1)
-         enddo ! over j={1,sectors(i)%ndim} loop
-     enddo ! over i={1,nsect} loop
-
-! evaluate the total occupation number
-! this algorithm is somewhat rough, not very accurate
-     nele = zero
-     do i=1,nsect
-         nele = nele + sectors(i)%nele * sprob(i)
-     enddo ! over i={1,nsect} loop
-
-! evaluate the total Sz
-! this algorithm is somewhat rough, and only useful when the Sz quantum
-! number is used to generate the atom.cix
-     sz = zero
-     do i=1,nsect
-         sz = sz + sectors(i)%sz * sprob(i)
-     enddo ! over i={1,nsect} loop
-
-! evaluate occupation matrix: < n_i >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
-!-------------------------------------------------------------------------
-     nmat = zero
-! this feature will not be implemented for majushaka code
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate double occupation matrix: < n_i n_j >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
-!-------------------------------------------------------------------------
-     nnmat = zero
-! this feature will not be implemented for manjushaka code
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <K^4>
-!-------------------------------------------------------------------------
-     paux(9) = paux(9) + ( ckink * two )**4
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <K^3>
-!-------------------------------------------------------------------------
-     paux(8) = paux(8) + ( ckink * two )**3
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <K^2>
-!-------------------------------------------------------------------------
-     paux(7) = paux(7) + ( ckink * two )**2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <N^2>
-!-------------------------------------------------------------------------
-     paux(6) = paux(6) + csign * nele ** 2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <N^1>
-!-------------------------------------------------------------------------
-     paux(5) = paux(5) + csign * nele
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate spin magnetization: < Sz >
-!-------------------------------------------------------------------------
-     paux(4) = paux(4) + csign * sz
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate kinetic energy: ekin
-! equation : -T < k >
-!-------------------------------------------------------------------------
-     paux(3) = paux(3) - csign * real(ckink * norbs) / beta
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate potential energy: epot
-! it is < H_{loc} > in fact, not equal to the definition in azalea project
-! equation : \sum_m P_m E_m
-! note: here U denotes as energy zero point
-!-------------------------------------------------------------------------
-     do i=1,ncfgs
-         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + U )
-     enddo ! over i={1,ncfgs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate total energy: etot
-! equation : E_{tot} = < H_{loc} > - T < k > + \mu N
-!-------------------------------------------------------------------------
-     paux(1) = paux(2) + paux(3) + mune * nele
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-     return
-  end subroutine ctqmc_record_nmat
 
 !!>>> ctqmc_record_kmat: record the < k^2 > - < k >^2
   subroutine ctqmc_record_kmat()
