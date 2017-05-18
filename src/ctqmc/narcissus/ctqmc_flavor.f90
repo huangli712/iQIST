@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : cat_insert_action
+!!! program : cat_insert_colour
 !!!           cat_remove_action
 !!!           cat_lshift_action
 !!!           cat_rshift_action <<<---
@@ -37,12 +37,12 @@
 !!========================================================================
 
 !!
-!! @sub cat_insert_action
+!! @sub cat_insert_colour
 !!
 !! update the perturbation expansion series for inserting new segment
 !! or anti-segment
 !!
-  subroutine cat_insert_action(flvr, is, ie, tau_start, tau_end)
+  subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
 
      use stack, only : istack_pop
@@ -115,7 +115,7 @@
      enddo ! over i={1,nfreq} loop
 
      return
-  end subroutine cat_insert_action
+  end subroutine cat_insert_colour
 
 !!
 !! @sub cat_remove_action
@@ -2251,13 +2251,13 @@
 ! build segments or anti-segments
      if ( anti .eqv. .false. ) then
          do i=1,kink
-             call cat_insert_action( flvr, i, i, time(2*i-1), time(2*i) )
+             call cat_insert_colour( flvr, i, i, time(2*i-1), time(2*i) )
              ckink = i
          enddo ! over i={1,kink} loop
          stts(flvr) = 1
      else
          do i=1,kink
-             call cat_insert_action( flvr, i, i, time(2*i), time(2*i-1) )
+             call cat_insert_colour( flvr, i, i, time(2*i), time(2*i-1) )
              ckink = i
          enddo ! over i={1,kink} loop
          stts(flvr) = 2
