@@ -2858,7 +2858,8 @@
   subroutine cat_create_flavor(flvr, kink)
      use constants, only : dp
 
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
 
      implicit none
 
