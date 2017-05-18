@@ -394,7 +394,7 @@
 ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel for both band and spin
+! current flavor channel
      integer  :: flvr
 
 ! index address to remove old creation and annihilation operators
@@ -512,13 +512,18 @@
      return
   end subroutine ctqmc_remove_kink
 
-!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation
-!!>>> expansion series
+!!
+!! @sub ctqmc_lshift_kink
+!!
+!! shift old creation operators in the perturbation expansion series
+!!
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, zero, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
+
      use context, only : ckink, csign, cnegs
      use context, only : lsh_t, lsh_a, lsh_r
      use context, only : rank
@@ -526,31 +531,31 @@
      implicit none
 
 ! local variables
-! whether the old create operators can be shifted diagrammatically
+! whether the old creation operators can be shifted diagrammatically
      logical  :: lshf
 
 ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel for both band and spin
+! current flavor channel
      integer  :: flvr
 
-! index address to shift old create operators
+! index address to shift old creation operators
 ! iso and isn are for old and new indices, respectively
-! ciso and cisn are for the colour part, and fiso and fisn are for the flavor part
+! ciso (cisn) is for the colour part, while fiso (fisn) is for the flavor part
      integer  :: ciso, cisn
      integer  :: fiso, fisn
 
-! transition probability for shift old create operators
+! transition probability
      real(dp) :: p
 
 ! random number
      real(dp) :: r
 
-! \tau_s, imaginary time point of the old create operator
+! \tau_s, imaginary time point of the old creation operator
      real(dp) :: tau_start1
 
-! \tau_s, imaginary time point of the new create operator
+! \tau_s, imaginary time point of the new creation operator
      real(dp) :: tau_start2
 
 ! ratio between old and new configurations, the local trace part
