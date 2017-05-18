@@ -317,7 +317,7 @@
          deter_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! we will determine the pass by lazy trace evalution
+! we will determine the pass by lazy trace evaluation
 ! if ladd is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * ( beta / real( ckink + 1 ) ) ** 2
@@ -462,7 +462,7 @@
          deter_ratio = zero
      endif ! back if ( lrmv .eqv. .true. ) block
 
-! we will determine the pass by lazy trace evalution
+! we will determine the pass by lazy trace evaluation
 ! if lrmv is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * ( real( ckink ) / beta ) ** 2
@@ -478,9 +478,8 @@
 ! update the flavor part of perturbation expansion series
          call cat_remove_flavor(fis, fie, tau_start, tau_end)
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_remove_colour() subroutine is invoked internally to update the colour
-! part of perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series (colour part) are updated as well
          call cat_remove_matrix(flvr, cis, cie)
 
 ! update the operators trace
@@ -500,10 +499,9 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_remove_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
-! update the remove statistics
+! update monte carlo statistics
      rmv_t = rmv_t + one
      if ( pass .eqv. .true. ) then
          rmv_a = rmv_a + one
