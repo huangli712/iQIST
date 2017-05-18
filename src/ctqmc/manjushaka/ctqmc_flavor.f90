@@ -1189,7 +1189,8 @@
      use stack, only : istack_push
 
      use context, only : ckink
-     use context, only : empty_s, empty_e, index_s, index_e
+     use context, only : empty_s, empty_e
+     use context, only : index_s, index_e
 
      implicit none
 
@@ -1197,7 +1198,7 @@
 ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address for remove old create and annihilation operators
+! index address for removing old creation and annihilation operators
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
@@ -1205,7 +1206,7 @@
 ! loop index over operators
      integer :: i
 
-! memory address for old create and annihilation operators
+! memory address for old creation and annihilation operators
      integer :: as
      integer :: ae
 
