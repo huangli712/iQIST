@@ -74,7 +74,7 @@
      lsh_r = zero
 
      rshift_tcount = zero
-     rshift_accept = zero
+     rsh_a = zero
      rsh_r = zero
 
      reflip_tcount = zero
@@ -636,7 +636,7 @@
 
      use control, only : norbs
      use context, only : ckink, csign, cnegs
-     use context, only : rshift_tcount, rshift_accept, rsh_r
+     use context, only : rshift_tcount, rsh_a, rsh_r
      use context, only : rank
 
      implicit none
@@ -756,7 +756,7 @@
 ! update the rshift statistics
      rshift_tcount = rshift_tcount + one
      if ( pass .eqv. .true. ) then
-         rshift_accept = rshift_accept + one
+         rsh_a = rsh_a + one
      else
          rsh_r = rsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
