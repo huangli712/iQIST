@@ -1346,8 +1346,14 @@
 
      use control, only : ncfgs
      use control, only : beta
+
      use context, only : csign
-     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+     use context, only : empty_v
+     use context, only : index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
      use context, only : eigs
 
      implicit none
