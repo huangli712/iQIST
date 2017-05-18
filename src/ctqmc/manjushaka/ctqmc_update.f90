@@ -229,11 +229,13 @@
 !!
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
      use control, only : mkink
      use control, only : beta
+
      use context, only : ckink, csign, cnegs
      use context, only : ins_t, ins_a, ins_r
      use context, only : rank
@@ -241,31 +243,31 @@
      implicit none
 
 ! local variables
-! whether the new create and destroy operators can be inserted diagrammatically
+! whether the new creation and annihilation operators can be inserted
      logical  :: ladd
 
 ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel for both band and spin
+! current flavor channel
      integer  :: flvr
 
-! index address to insert new create and destroy operators
-! is and ie are for create and destroy operators, respectively
-! cis and cie are for the colour part, and fis and fie are for the flavor part
+! index address to insert new creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
+! cis (cie) is for the colour part, while fis (fie) is for the flavor part
      integer  :: cis, cie
      integer  :: fis, fie
 
-! transition probability for insert new create and destroy operators
+! transition probability
      real(dp) :: p
 
 ! random number
      real(dp) :: r
 
-! \tau_s, imaginary time point of the create operator
+! \tau_s, imaginary time point of the creation operator
      real(dp) :: tau_start
 
-! \tau_e, imaginary time point of the destroy operator
+! \tau_e, imaginary time point of the annihilation operator
      real(dp) :: tau_end
 
 ! ratio between old and new configurations, the local trace part
@@ -281,36 +283,34 @@
 ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order ( number of existing create or
-! destroy operators ) for current flavor channel
+! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-!<         call s_print_exception('ctqmc_insert_kink','can not insert any operators')
          ins_t = ins_t + one
          ins_r = ins_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
      endif ! back if ( ckink == mkink ) block
 
+! try to generate new configuration (colour part)
 ! randomly generate tau_start and tau_end at selected flvr channel, and
 ! then determine index address cis and cie for them
      call try_insert_colour(flvr, cis, cie, tau_start, tau_end)
 
+! try to generate new configuration (flavor part)
 ! fast look up the flavor part of perturbation expansion series, determine
 ! corresponding fis and fie, and determine whether the operators trace is
 ! not equal to zero
      call try_insert_flavor(flvr, fis, fie, tau_start, tau_end, ladd)
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part
+! calculate the transition ratio for the local trace part
      if ( ladd .eqv. .true. ) then
          call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part
+! calculate the transition ratio for the determinant part
      if ( ladd .eqv. .true. ) then
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
@@ -330,9 +330,8 @@
 ! if the update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_insert_colour() subroutine is invoked internally to update the colour
-! part of perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series (colour part) are updated as well
          call cat_insert_matrix(flvr, cis, cie, tau_start, tau_end, deter_ratio)
 
 ! update the flavor part of perturbation expansion series
@@ -355,10 +354,9 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_insert_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
-! update the insert statistics
+! update monte carlo statistics
      ins_t = ins_t + one
      if ( pass .eqv. .true. ) then
          ins_a = ins_a + one
