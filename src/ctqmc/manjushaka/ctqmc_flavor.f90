@@ -1967,7 +1967,8 @@
 !!
 !! actually, the following subroutines don't calculate the ztrace ratio.
 !! they just prepare the essential data structures and arrays for the
-!! calculation of ztrace ratio
+!! calculation of ztrace ratio. for the calculation of ztrace ratio, pls
+!! see the subroutines in ctqmc_ztrace.f90
 !!
 
 !!
