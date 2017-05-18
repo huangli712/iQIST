@@ -935,7 +935,9 @@
 
          enddo ! over flvr={1,nband} loop
 
-     else if ( cflip == 3 ) then ! cflip = 3, global flip
+! case 2: cflip = 2, global flip
+!-------------------------------------------------------------------------
+     else
          do flvr=1,nband
 
 ! get fup and fdn
