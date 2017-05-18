@@ -9,7 +9,7 @@
 !!!           cat_lshift_ztrace
 !!!           cat_rshift_ztrace <<<---
 !!!           try_insert_colour
-!!!           cat_remove_flavor
+!!!           try_remove_colour
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
 !!!           cat_occupy_status <<<---
@@ -1236,12 +1236,12 @@
   end subroutine try_insert_colour
 
 !!
-!! @sub cat_remove_flavor
+!! @sub try_remove_colour
 !!
 !! determine \tau_s, \tau_e and \tau_max for removing old segment
 !! or anti-segment
 !!
-  subroutine cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
+  subroutine try_remove_colour(flvr, is, ie, anti, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
 
      use spring, only : spring_sfmt_stream
@@ -1449,7 +1449,7 @@
      endif ! back if ( anti .eqv. .false. ) block
 
      return
-  end subroutine cat_remove_flavor
+  end subroutine try_remove_colour
 
 !!
 !! @sub cat_lshift_flavor
