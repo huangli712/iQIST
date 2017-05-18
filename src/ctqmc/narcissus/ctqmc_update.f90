@@ -96,9 +96,9 @@
 ! do not change the order of perturbation expansion series
          else
              if ( spring_sfmt_stream() > 0.5_dp ) then
-                 call ctqmc_lshift_kink()  ! shift the left  endpoints
+                 call ctqmc_lshift_kink()  ! shift the creation operators
              else
-                 call ctqmc_rshift_kink()  ! shift the right endpoints
+                 call ctqmc_rshift_kink()  ! shift the annihilation operators
              endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
          endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
 
