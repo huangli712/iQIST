@@ -16,7 +16,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/18/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -134,7 +134,7 @@
      enddo ! over j={1,ckink+1} loop
 
 ! update the perturbation expansion series
-     call cat_insert_action(flvr, is, ie, tau_start, tau_end)
+     call cat_insert_colour(flvr, is, ie, tau_start, tau_end)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero
@@ -251,7 +251,7 @@
      enddo ! over j={1,is-1} loop
 
 ! update the perturbation expansion series
-     call cat_remove_action(flvr, is, ie)
+     call cat_remove_colour(flvr, is, ie)
 
 ! only for debug
 !<     do i=1,ckink
@@ -437,7 +437,7 @@
      endif ! back if ( isn /= iso ) block
 
 ! update the perturbation expansion series
-     call cat_lshift_action(flvr, iso, isn, tau_start2)
+     call cat_lshift_colour(flvr, iso, isn, tau_start2)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero
@@ -638,7 +638,7 @@
      endif ! back if ( ien /= ieo ) block
 
 ! update the perturbation expansion series
-     call cat_rshift_action(flvr, ieo, ien, tau_end2)
+     call cat_rshift_colour(flvr, ieo, ien, tau_end2)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero
