@@ -204,7 +204,7 @@
 !! evaluate the matrix elements for mmat matrix using cubic spline
 !! interpolation method
 !!
-  function ctqmc_make_htau(flvr, dtau) result(val)
+  function ctqmc_eval_htau(flvr, dtau) result(val)
      use constants, only : dp
 
      use control, only : ntime
@@ -232,7 +232,7 @@
      val = s_spl_funct(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
 
      return
-  end function ctqmc_make_htau
+  end function ctqmc_eval_htau
 
 !!>>> ctqmc_make_hsed: calculate the second order derivates of hybridization
 !!>>> function on imaginary time space
