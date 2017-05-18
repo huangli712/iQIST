@@ -233,16 +233,18 @@
 !! record the impurity green's function in imaginary time axis
 !!
   subroutine ctqmc_record_gtau()
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp, zero, one, two
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
+
      use context, only : csign
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : ppleg, qqche
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rep_l
      use context, only : rank
      use context, only : mmat
      use context, only : gtau
@@ -260,9 +262,6 @@
 ! loop index for legendre polynomial
      integer  :: fleg
 
-! loop index for chebyshev polynomial
-     integer  :: fche
-
 ! index for imaginary time \tau
      integer  :: curr
 
@@ -273,30 +272,16 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! length betweem taus and taue
+! distance betweem taus and taue
      real(dp) :: dtau
      real(dp) :: daux
 
 ! interval for imaginary time slice
      real(dp) :: step
 
-! select measurement method
-     select case ( isort )
-
-         case (1, 4)
-             call cat_record_gtau1()
-
-         case (2, 5)
-             call cat_record_gtau2()
-
-         case (3, 6)
-             call cat_record_gtau3()
-
-     end select
-
-     return
-
-  contains
+! evaluate step at first
+     if ( isort == 1 ) step = real(ntime - 1) / beta
+     if ( isort == 2 ) step = real(legrd - 1) / two
 
 !!>>> cat_record_gtau1: record impurity green's function using normal
 !!>>> representation
