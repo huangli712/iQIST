@@ -437,25 +437,25 @@
          RETURN
      endif ! back if ( ckink == 0 ) block
 
+! try to generate new configuration (colour part)
 ! randomly generate cis and cie at selected flvr channel, and then determine
 ! tau_start and tau_end for them
      call try_remove_colour(flvr, cis, cie, tau_start, tau_end)
 
+! try to generate new configuration (flavor part)
 ! fast look up the flavor part of perturbation expansion series, determine
 ! corresponding fis and fie, and determine whether the operators trace is
 ! not equal to zero
      call try_remove_flavor(fis, fie, tau_start, tau_end, lrmv)
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part
+! calculate the transition ratio for the local trace part
      if ( lrmv .eqv. .true. ) then
-         call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
+         call cat_remove_ztrace(fis, fie, tau_start, tau_end)
      else
          trace_ratio = zero
      endif ! back if ( lrmv .eqv. .true. ) block
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part
+! calculate the transition ratio for the determinant part
      if ( lrmv .eqv. .true. ) then
          call cat_remove_detrat(flvr, cis, cie, deter_ratio)
      else
