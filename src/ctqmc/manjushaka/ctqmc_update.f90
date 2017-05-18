@@ -67,7 +67,7 @@
 
      remove_tcount = zero
      remove_accept = zero
-     remove_reject = zero
+     rmv_r = zero
 
      lshift_tcount = zero
      lshift_accept = zero
@@ -358,7 +358,7 @@
      use control, only : norbs
      use control, only : beta
      use context, only : ckink, csign, cnegs
-     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : remove_tcount, remove_accept, rmv_r
      use context, only : rank
 
      implicit none
@@ -410,7 +410,7 @@
      if ( ckink == 0 ) then
 !<         call s_print_exception('ctqmc_remove_kink','can not remove any operators')
          remove_tcount = remove_tcount + one
-         remove_reject = remove_reject + one
+         rmv_r = rmv_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
      endif ! back if ( ckink == 0 ) block
@@ -486,7 +486,7 @@
      if ( pass .eqv. .true. ) then
          remove_accept = remove_accept + one
      else
-         remove_reject = remove_reject + one
+         rmv_r = rmv_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
