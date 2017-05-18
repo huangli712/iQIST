@@ -1,9 +1,9 @@
 !!!-----------------------------------------------------------------------
 !!! project : manjushaka
-!!! program : ctqmc_make_htau
-!!!           ctqmc_make_hsed
-!!!           ctqmc_four_htau
-!!!           ctqmc_four_hybf
+!!! program : ctqmc_four_htau
+!!!           ctqmc_four_hybf <<<---
+!!!           ctqmc_eval_htau
+!!!           ctqmc_eval_hsed <<<---
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf
