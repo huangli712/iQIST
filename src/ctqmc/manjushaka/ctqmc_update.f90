@@ -649,13 +649,18 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation
-!!>>> expansion series
+!!
+!! @sub ctqmc_rshift_kink
+!!
+!! shift old annihilation operators in the perturbation expansion series
+!!
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, zero, one
+
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
+
      use context, only : ckink, csign, cnegs
      use context, only : rsh_t, rsh_a, rsh_r
      use context, only : rank
@@ -663,31 +668,31 @@
      implicit none
 
 ! local variables
-! whether the old destroy operators can be shifted diagrammatically
+! whether the old annihilation operators can be shifted diagrammatically
      logical  :: rshf
 
 ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel for both band and spin
+! current flavor channel
      integer  :: flvr
 
-! index address to shift old destroy operators
+! index address to shift old annihilation operators
 ! ieo and ien are for old and new indices, respectively
-! cieo and cien are for the colour part, and fieo and fien are for the flavor part
+! cieo (cien) is for the colour part, while fieo (fien) is for the flavor part
      integer  :: cieo, cien
      integer  :: fieo, fien
 
-! transition probability for shift old destroy operators
+! transition probability
      real(dp) :: p
 
 ! random number
      real(dp) :: r
 
-! \tau_e, imaginary time point of the old destroy operator
+! \tau_e, imaginary time point of the old annihilation operator
      real(dp) :: tau_end1
 
-! \tau_e, imaginary time point of the new destroy operator
+! \tau_e, imaginary time point of the new annihilation operator
      real(dp) :: tau_end2
 
 ! ratio between old and new configurations, the local trace part
@@ -703,43 +708,41 @@
 ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order ( number of existing create or
-! destroy operators ) for current flavor channel
+! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any operators')
          rsh_t = rsh_t + one
          rsh_r = rsh_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
      endif ! back if ( ckink == 0 ) block
 
+! try to generate new configuration (colour part)
 ! at first, we select cieo randomly, and then obtain tau_end1. according
 ! to the existing operators, we determine tau_end2 and related index cien
      call try_rshift_colour(flvr, cieo, cien, tau_end1, tau_end2)
 
+! try to generate new configuration (flavor part)
 ! fast look up the flavor part of perturbation expansion series, determine
 ! corresponding fieo and fien, and determine whether the operators trace is
 ! not equal to zero
      call try_rshift_flavor(flvr, fieo, fien, tau_end1, tau_end2, rshf)
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part
+! calculate the transition ratio for the local trace part
      if ( rshf .eqv. .true. ) then
-         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
+         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2)
      else
          trace_ratio = zero
      endif ! back if ( rshf .eqv. .true. ) block
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part
+! calculate the transition ratio for the determinant part
      if ( rshf .eqv. .true. ) then
          call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
      else
          deter_ratio = zero
      endif ! back if ( rshf .eqv. .true. ) block
 
-! we will determine the pass by lazy trace evalution
+! we will determine the pass by lazy trace evaluation
 ! if rshf is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * one
@@ -755,9 +758,8 @@
 ! update the flavor part of perturbation expansion series
          call cat_rshift_flavor(flvr, fieo, fien, tau_end2)
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_rshift_colour() subroutine is invoked internally to update the colour
-! part of perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series (colour part) are updated as well
          call cat_rshift_matrix(flvr, cieo, cien, tau_end1, tau_end2, deter_ratio)
 
 ! update the operators trace
@@ -771,10 +773,9 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_rshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
-! update the rshift statistics
+! update monte carlo statistics
      rsh_t = rsh_t + one
      if ( pass .eqv. .true. ) then
          rsh_a = rsh_a + one
@@ -785,8 +786,12 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!!>>> ctqmc_reflip_kink: perform a global update, exchange the states
-!!>>> between spin up and spin down, it maybe useful for magnetic systems
+!!
+!! @sub ctqmc_reflip_kink
+!!
+!! perform a global update, exchange the states between spin up and spin
+!! down, it maybe useful for magnetic systems
+!!
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
