@@ -2900,12 +2900,12 @@
   end subroutine cat_create_flavor
 
 !!========================================================================
-!!>>> service layer: utility subroutines to show the colour and flavor <<<
+!!>>> service layer: display the colour and flavor parts               <<<
 !!========================================================================
 
-!!>>> ctqmc_make_display: display operators information (include colour
+!!>>> cat_disp_diagrams: display operators information (include colour
 !!>>> and flavor parts) on the screen, only used to debug the code
-  subroutine ctqmc_make_display(show_type)
+  subroutine cat_disp_diagrams(show_type)
      use constants, only : mystd
      use stack, only : istack_getrest
 
@@ -2979,4 +2979,4 @@
      endif ! back if ( show_type == 1 ) block
 
      return
-  end subroutine ctqmc_make_display
+  end subroutine cat_disp_diagrams
