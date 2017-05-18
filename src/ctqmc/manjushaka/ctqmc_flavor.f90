@@ -842,21 +842,26 @@
 !!
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
      use constants, only : dp
+
      use stack, only : istack_getrest
 
      use control, only : nband
+
      use context, only : cssoc
-     use context, only : empty_v, index_v, type_v, flvr_v
+     use context, only : empty_v
+     use context, only : index_v
+     use context, only : type_v
+     use context, only : flvr_v
 
      implicit none
 
 ! external arguments
-! index address to remove old create and annihilation operators
-! is and ie are for create and annihilation operators, respectively
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(out) :: is
      integer, intent(out) :: ie
 
-! whether the old create and annihilation operators can be removed diagrammatically
+! whether the old creation and annihilation operators can be removed
      logical, intent(out) :: lrmv
 
 ! imaginary time point of the old creation operator
@@ -873,7 +878,7 @@
      integer :: m
      integer :: n
 
-! pseudo-index address for create and annihilation operators, respectively
+! pseudo-index address for creation and annihilation operators, respectively
      integer :: pis
      integer :: pie
 
@@ -896,7 +901,7 @@
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
-! stage 1: determine is and ie, where are they ?
+! stage 1: determine is and ie, where are they?
 !-------------------------------------------------------------------------
 ! determine is
 !<     i = 1
