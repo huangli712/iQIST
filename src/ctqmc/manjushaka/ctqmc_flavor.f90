@@ -2691,7 +2691,8 @@
      use constants, only : dp, epss
 
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
 
      implicit none
 
@@ -2713,19 +2714,19 @@
      have = 0
 
 ! loop over all the operators belongs to current flavor
-     do i=1,ckink
+     OPERATOR_LOOP: do i=1,ckink
 
-! check creators, if meet it, return 1
+! check creation operators, if meet it, return 1
          if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) then
-             have = 1; EXIT
+             have = 1; EXIT OPERATOR_LOOP
          endif ! back if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) block
 
-! check destroyers, if meet it, return 2
+! check annihilation operators, if meet it, return 2
          if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) then
-             have = 2; EXIT
+             have = 2; EXIT OPERATOR_LOOP
          endif ! back if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) block
 
-     enddo ! over i={1,ckink} loop
+     enddo OPERATOR_LOOP ! over i={1,ckink} loop
 
      return
   end subroutine cat_search_colour
