@@ -1168,7 +1168,12 @@
      use control, only : nband
 
      use context, only : cssoc
-     use context, only : empty_v, index_v, type_v, flvr_v, time_v, time_v
+     use context, only : empty_v
+     use context, only : index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : time_v
 
      implicit none
 
