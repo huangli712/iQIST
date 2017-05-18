@@ -49,6 +49,7 @@
      use constants, only : one
 
      use control, only : mkink
+
      use context, only : ckink, csign, caves
      use context, only : hist
 
@@ -57,7 +58,7 @@
 ! record current sign as a byproduct
      caves = caves + csign
 
-! note: if ckink == 0, we record its count in hist(mkink)
+! if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
          hist(ckink) = hist(ckink) + one
      else
