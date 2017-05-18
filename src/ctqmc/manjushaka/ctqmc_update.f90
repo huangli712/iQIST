@@ -923,12 +923,9 @@
                      endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
                  enddo ! over i={1,nsize} loop
 
-! print exception information
-!<                 call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
-
              endif ! back if ( pass .eqv. .true. ) block
 
-! update the reflip statistics
+! update monte carlo statistics
              rfl_t = rfl_t + one
              if ( pass .eqv. .true. ) then
                  rfl_a = rfl_a + one
