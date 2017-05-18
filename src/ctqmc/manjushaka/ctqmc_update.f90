@@ -156,7 +156,9 @@
 
      use control, only : norbs
      use control, only : myid, master
-     use context, only : index_s, index_e, time_s, time_e
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : index_v, time_v
      use context, only : rank
 
@@ -171,7 +173,7 @@
      integer :: i
      integer :: j
 
-     if ( cflag == 1 ) then
+     if ( cflag == 1 ) then ! if cflag /= 1, nothing to do
 
 ! check time order of operators in colour part
          do i=1,norbs
