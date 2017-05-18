@@ -1167,14 +1167,21 @@
      return
   end subroutine ctqmc_reduce_ftau
 
-!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
+!!
+!! @sub ctqmc_reduce_grnf
+!!
+!! reduce the grnf from all children processes
+!!
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
-     use mmpi, only : mp_allreduce, mp_barrier
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : mfreq
      use control, only : nprocs
+
      use context, only : grnf
 
      implicit none
@@ -1186,16 +1193,16 @@
 
 ! local variables
 ! used to store the real and imaginary parts of impurity green's function
-     real(dp), allocatable :: re_err(:,:,:)
-     real(dp), allocatable :: im_err(:,:,:)
+     real(dp), allocatable :: g_re_err(:,:,:)
+     real(dp), allocatable :: g_im_err(:,:,:)
 
 ! allocate memory
-     allocate(re_err(mfreq,norbs,norbs))
-     allocate(im_err(mfreq,norbs,norbs))
+     allocate(g_re_err(mfreq,norbs,norbs))
+     allocate(g_im_err(mfreq,norbs,norbs))
 
-! initialize re_err and im_err
-     re_err = zero
-     im_err = zero
+! initialize g_re_err and g_im_err
+     g_re_err = zero
+     g_im_err = zero
 
 ! initialize grnf_mpi and grnf_err
      grnf_mpi = czero
@@ -1223,8 +1230,8 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
-     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, g_re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, g_im_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1233,76 +1240,89 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
-         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final grnf_err
-     grnf_err = re_err + im_err * czi
+     grnf_err = g_re_err + g_im_err * czi
 
 ! deallocate memory
-     deallocate(re_err)
-     deallocate(im_err)
+     deallocate(g_re_err)
+     deallocate(g_im_err)
 
      return
   end subroutine ctqmc_reduce_grnf
 
+!!========================================================================
+!!>>> reduce physical observables 3                                    <<<
+!!========================================================================
 
-
-!!>>> ctqmc_reduce_kmat: reduce the kmat and kkmat from all children processes
-  subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
+!!
+!! @sub ctqmc_reduce_kmat
+!!
+!! reduce the knop and kmat from all children processes
+!!
+  subroutine ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
 
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
-     use context, only : kmat, kkmat
+
+     use context, only : knop, kmat
 
      implicit none
 
 ! external arguments
 ! number of operators
-     real(dp), intent(out) :: kmat_mpi(norbs)
-     real(dp), intent(out) :: kmat_err(norbs)
+     real(dp), intent(out) :: knop_mpi(norbs)
+     real(dp), intent(out) :: knop_err(norbs)
 
-! square of number of operators
-     real(dp), intent(out) :: kkmat_mpi(norbs,norbs)
-     real(dp), intent(out) :: kkmat_err(norbs,norbs)
+! crossing product of k_i and k_j
+     real(dp), intent(out) :: kmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: kmat_err(norbs,norbs)
 
-! initialize kmat_mpi and kkmat_mpi, kmat_err and kkmat_err
+! check whether this observable has been measured
+     if ( .not. btest(isobs, 1) ) RETURN
+
+! initialize knop_mpi and kmat_mpi, knop_err and kmat_err
+     knop_mpi = zero
      kmat_mpi = zero
-     kkmat_mpi = zero
 
+     knop_err = zero
      kmat_err = zero
-     kkmat_err = zero
 
-! build kmat_mpi and kkmat_mpi, collect data from all children processes
+! build knop_mpi and kmat_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
+     call mp_allreduce(knop, knop_mpi)
      call mp_allreduce(kmat, kmat_mpi)
-     call mp_allreduce(kkmat, kkmat_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
+     knop_mpi = knop
      kmat_mpi = kmat
-     kkmat_mpi = kkmat
 
 # endif /* MPI */
 
 ! calculate the average
+     knop_mpi = knop_mpi / real(nprocs)
      kmat_mpi = kmat_mpi / real(nprocs)
-     kkmat_mpi = kkmat_mpi / real(nprocs)
 
-! build kmat_err and kkmat_err, collect data from all children processes
+! build knop_err and kmat_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
+     call mp_allreduce((knop - knop_mpi)**2, knop_err)
      call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
-     call mp_allreduce((kkmat - kkmat_mpi)**2, kkmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1311,78 +1331,89 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
+         knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
          kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
-         kkmat_err = sqrt( kkmat_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_kmat
 
-!!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
-  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
+!!
+!! @sub ctqmc_reduce_lrmm
+!!
+!! reduce the lnop, rnop, and lrmm from all children processes
+!!
+  subroutine ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
 
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
-     use context, only : lmat, rmat, lrmat
+
+     use context, only : lnop, rnop, lrmm
 
      implicit none
 
 ! external arguments
 ! number of operators at left half axis
-     real(dp), intent(out) :: lmat_mpi(norbs)
-     real(dp), intent(out) :: lmat_err(norbs)
+     real(dp), intent(out) :: lnop_mpi(norbs)
+     real(dp), intent(out) :: lnop_err(norbs)
 
 ! number of operators at right half axis
-     real(dp), intent(out) :: rmat_mpi(norbs)
-     real(dp), intent(out) :: rmat_err(norbs)
+     real(dp), intent(out) :: rnop_mpi(norbs)
+     real(dp), intent(out) :: rnop_err(norbs)
 
-! used to evaluate fidelity susceptibility
-     real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
-     real(dp), intent(out) :: lrmat_err(norbs,norbs)
+! crossing product of k_l and k_r
+     real(dp), intent(out) :: lrmm_mpi(norbs,norbs)
+     real(dp), intent(out) :: lrmm_err(norbs,norbs)
 
-! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
-! initialize lmat_err, rmat_err, and lrmat_err
-     lmat_mpi = zero
-     rmat_mpi = zero
-     lrmat_mpi = zero
+! check whether this observable has been measured
+     if ( .not. btest(isobs, 2) ) RETURN
 
-     lmat_err = zero
-     rmat_err = zero
-     lrmat_err = zero
+! initialize lnop_mpi, rnop_mpi, and lrmm_mpi
+! initialize lnop_err, rnop_err, and lrmm_err
+     lnop_mpi = zero
+     rnop_mpi = zero
+     lrmm_mpi = zero
 
-! build lmat_mpi, rmat_mpi, and lrmat_mpi, collect data from all children processes
+     lnop_err = zero
+     rnop_err = zero
+     lrmm_err = zero
+
+! build lnop_mpi, rnop_mpi, and lrmm_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(lmat, lmat_mpi)
-     call mp_allreduce(rmat, rmat_mpi)
-     call mp_allreduce(lrmat, lrmat_mpi)
+     call mp_allreduce(lnop, lnop_mpi)
+     call mp_allreduce(rnop, rnop_mpi)
+     call mp_allreduce(lrmm, lrmm_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     lmat_mpi = lmat
-     rmat_mpi = rmat
-     lrmat_mpi = lrmat
+     lnop_mpi = lnop
+     rnop_mpi = rnop
+     lrmm_mpi = lrmm
 
 # endif /* MPI */
 
 ! calculate the average
-     lmat_mpi = lmat_mpi / real(nprocs)
-     rmat_mpi = rmat_mpi / real(nprocs)
-     lrmat_mpi = lrmat_mpi / real(nprocs)
+     lnop_mpi = lnop_mpi / real(nprocs)
+     rnop_mpi = rnop_mpi / real(nprocs)
+     lrmm_mpi = lrmm_mpi / real(nprocs)
 
-! build lmat_err, rmat_err, and lrmat_err, collect data from all children processes
+! build lnop_err, rnop_err, and lrmm_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((lmat - lmat_mpi)**2, lmat_err)
-     call mp_allreduce((rmat - rmat_mpi)**2, rmat_err)
-     call mp_allreduce((lrmat - lrmat_mpi)**2, lrmat_err)
+     call mp_allreduce((lnop - lnop_mpi)**2, lnop_err)
+     call mp_allreduce((rnop - rnop_mpi)**2, rnop_err)
+     call mp_allreduce((lrmm - lrmm_mpi)**2, lrmm_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1391,13 +1422,89 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         lmat_err = sqrt( lmat_err / real( nprocs * ( nprocs - 1 ) ) )
-         rmat_err = sqrt( rmat_err / real( nprocs * ( nprocs - 1 ) ) )
-         lrmat_err = sqrt( lrmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
+         rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
+         lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_lmat
+  end subroutine ctqmc_reduce_lrmm
+
+!!
+!! @sub ctqmc_reduce_szpw
+!!
+!! reduce the szpw from all children processes
+!!
+  subroutine ctqmc_reduce_szpw(szpw_mpi, szpw_err)
+     use constants, only : dp, zero
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : isobs
+     use control, only : norbs
+     use control, only : nprocs
+
+     use context, only : szpw
+
+     implicit none
+
+! external arguments
+! powers of local magnetization, orbital-resolved
+     real(dp), intent(out) :: szpw_mpi(4,norbs)
+     real(dp), intent(out) :: szpw_err(4,norbs)
+
+! check whether this observable has been measured
+     if ( .not. btest(isobs, 3) ) RETURN
+
+! initialize szpw_mpi and szpw_err
+     szpw_mpi = zero
+     szpw_err = zero
+
+! build szpw_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(szpw, szpw_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     szpw_mpi = szpw
+
+# endif /* MPI */
+
+! calculate the average
+     szpw_mpi = szpw_mpi / real(nprocs)
+
+! build szpw_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((szpw - szpw_mpi)**2, szpw_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+     return
+  end subroutine ctqmc_reduce_szpw
+
+!!========================================================================
+!!>>> reduce physical observables 4                                    <<<
+!!========================================================================
+
+
+
+
 
 !!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
 !!>>> children processes
