@@ -112,21 +112,26 @@
      END BLOCK C_Z_SPACE
 
 ! numerical trick: perform global spin flip periodically
-     if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) then
-         if ( spring_sfmt_stream() < 0.8_dp ) then
-             call ctqmc_reflip_kink(2) ! flip intra-orbital spins one by one
-         else
-             call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
-     endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
+!-------------------------------------------------------------------------
+     GLOBAL_REFLIP: BLOCK
 
-     if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
-         if ( spring_sfmt_stream() < 0.8_dp ) then
-             call ctqmc_reflip_kink(1) ! flip inter-orbital spins randomly
-         else
-             call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
-     endif ! back if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) block
+         if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) then
+             if ( spring_sfmt_stream() < 0.9_dp ) then
+                 call ctqmc_reflip_kink(1) ! flip intra-orbital spins one by one
+             else
+                 call ctqmc_reflip_kink(2) ! flip intra-orbital spins globally
+             endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
+         endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
+
+         if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
+             if ( spring_sfmt_stream() > 0.9_dp ) then
+                 call ctqmc_reflip_kink(1) ! flip intra-orbital spins randomly
+             else
+                 call ctqmc_reflip_kink(2) ! flip intra-orbital spins globally
+             endif ! back if ( spring_sfmt_stream() > 0.9_dp ) block
+         endif ! back if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) block
+
+     END BLOCK GLOBAL_REFLIP
 
 ! numerical trick: perform global update periodically
      if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
