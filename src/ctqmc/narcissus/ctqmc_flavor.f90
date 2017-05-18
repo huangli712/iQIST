@@ -1,7 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
 !!! program : cat_insert_colour
-!!!           cat_remove_action
+!!!           cat_remove_colour
 !!!           cat_lshift_action
 !!!           cat_rshift_action <<<---
 !!!           cat_insert_ztrace
@@ -118,12 +118,12 @@
   end subroutine cat_insert_colour
 
 !!
-!! @sub cat_remove_action
+!! @sub cat_remove_colour
 !!
 !! update the perturbation expansion series for removing old segment
 !! or anti-segment
 !!
-  subroutine cat_remove_action(flvr, is, ie)
+  subroutine cat_remove_colour(flvr, is, ie)
      use stack, only : istack_push
 
      use context, only : ckink
@@ -168,7 +168,7 @@
      index_e(ckink, flvr) = 0
 
      return
-  end subroutine cat_remove_action
+  end subroutine cat_remove_colour
 
 !!
 !! @sub cat_lshift_action
