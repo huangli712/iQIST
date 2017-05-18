@@ -1102,6 +1102,71 @@
      return
   end subroutine ctqmc_reduce_gtau
 
+!!
+!! @sub ctqmc_reduce_ftau
+!!
+!! reduce the ftau from all children processes
+!!
+  subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
+     use constants, only : dp, zero
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+
+     use context, only : ftau
+
+     implicit none
+
+! external arguments
+! auxiliary correlation function, F(\tau)
+     real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: ftau_err(ntime,norbs,norbs)
+
+! initialize ftau_mpi and ftau_err
+     ftau_mpi = zero
+     ftau_err = zero
+
+! build ftau_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ftau, ftau_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ftau_mpi = ftau
+
+# endif /* MPI */
+
+! calculate the average
+     ftau_mpi = ftau_mpi / real(nprocs)
+
+! build ftau_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((ftau - ftau_mpi)**2, ftau_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+     return
+  end subroutine ctqmc_reduce_ftau
+
 !!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
