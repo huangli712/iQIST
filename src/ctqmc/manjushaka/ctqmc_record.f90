@@ -283,17 +283,9 @@
      if ( isort == 1 ) step = real(ntime - 1) / beta
      if ( isort == 2 ) step = real(legrd - 1) / two
 
-!!>>> cat_record_gtau1: record impurity green's function using normal
-!!>>> representation
-  subroutine cat_record_gtau1()
-     implicit none
+     FLVR_CYCLE: do flvr=1,norbs
 
-! evaluate step at first
-     step = real(ntime - 1) / beta
-
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-
-! get imaginary time value for create and destroy operators
+! get imaginary time value for creation and annihilation operators
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
 
@@ -310,53 +302,30 @@
                  if ( dtau < zero ) then
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
+
+!-------------------------------------------------------------------------
+! using standard representation
+!-------------------------------------------------------------------------
+                 STD_BLOCK: if ( isort == 1 ) then
 
 ! determine index for imaginary time
-                 curr = nint( dtau * step ) + 1
+                     curr = nint( dtau * step ) + 1
 
 ! special tricks for the first point and the last point
-                 if ( curr == 1 .or. curr == ntime ) then
-                     maux = two * maux
-                 endif ! back if ( curr == 1 .or. curr == ntime ) block
+                     if ( curr == 1 .or. curr == ntime ) then
+                         maux = two * maux
+                     endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                 gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
+                     gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
-             enddo ! over ie={1,rank(flvr)} loop
-         enddo ! over is={1,rank(flvr)} loop
+                 endif STD_BLOCK ! back if ( isort == 1 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
-
-     return
-  end subroutine cat_record_gtau1
-
-!!>>> cat_record_gtau2: record impurity green's function using legendre
-!!>>> polynomial representation
-  subroutine cat_record_gtau2()
-     implicit none
-
-! evaluate step at first
-     step = real(legrd - 1) / two
-
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-
-! get imaginary time value for create and destroy operators
-         do is=1,rank(flvr)
-             taus = time_s( index_s(is, flvr), flvr )
-
-             do ie=1,rank(flvr)
-                 taue = time_e( index_e(ie, flvr), flvr )
-
-! evaluate dtau
-                 dtau = taue - taus
-
-! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
-
-! adjust dtau, keep it stay in (zero, beta)
-                 if ( dtau < zero ) then
-                     dtau = dtau + beta
-                 endif ! back if ( dtau < zero ) block
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
+                 LEG_BLOCK: if ( isort == 2 ) then
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
