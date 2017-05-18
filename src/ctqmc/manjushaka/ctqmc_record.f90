@@ -328,79 +328,46 @@
                  LEG_BLOCK: if ( isort == 2 ) then
 
 ! convert dtau in [0,\beta] to daux in [0,2]
-                 daux = two * dtau / beta
+                     daux = two * dtau / beta
 
 ! determine index for legendre polynomial interval
-                 curr = nint( daux * step ) + 1
+                     curr = nint( daux * step ) + 1
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                 CTQMC_FLALEG_LOOP: do fleg=1,lemax
-                     dtau = sqrt(two * fleg - 1) * ppleg(curr,fleg)
-                     gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
-                 enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+                     LEG_CYCLE: do fleg=1,lemax
+                         dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
+                         gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
+                     enddo LEG_CYCLE ! over fleg={1,lemax} loop
+
+                 endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
      return
-  end subroutine cat_record_gtau2
-
-!!>>> cat_record_gtau3: record impurity green's function using chebyshev
-!!>>> polynomial representation
-  subroutine cat_record_gtau3()
-     implicit none
-
-! evaluate step at first
-     step = real(chgrd - 1) / two
-
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-
-! get imaginary time value for create and destroy operators
-         do is=1,rank(flvr)
-             taus = time_s( index_s(is, flvr), flvr )
-
-             do ie=1,rank(flvr)
-                 taue = time_e( index_e(ie, flvr), flvr )
-
-! evaluate dtau
-                 dtau = taue - taus
-
-! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
-
-! adjust dtau, keep it stay in (zero, beta)
-                 if ( dtau < zero ) then
-                     dtau = dtau + beta
-                 endif ! back if ( dtau < zero ) block
-
-! convert dtau in [0,\beta] to daux in [0,2]
-                 daux = two * dtau / beta
-
-! determine index for chebyshev polynomial interval
-                 curr = nint( daux * step ) + 1
-
-! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                 CTQMC_FLACHE_LOOP: do fche=1,chmax
-                     dtau = (two / pi) * sqrt(one - (daux - one)**2) * qqche(curr,fche)
-                     gtau(fche, flvr, flvr) = gtau(fche, flvr, flvr) - maux * dtau
-                 enddo CTQMC_FLACHE_LOOP ! over fche={1,chmax} loop
-
-             enddo ! over ie={1,rank(flvr)} loop
-         enddo ! over is={1,rank(flvr)} loop
-
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
-
-     return
-  end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
-!!>>> frequency space
+!!
+!! @sub ctqmc_record_ftau
+!!
+!! record the auxiliary correlation function in imaginary time axis.
+!! latter, we will use it to compute the self-energy function
+!!
+  subroutine ctqmc_record_ftau()
+  end subroutine ctqmc_record_ftau
+
+!!
+!! @sub ctqmc_record_grnf
+!!
+!! record the impurity green's function in matsubara frequency space
+!!
   subroutine ctqmc_record_grnf()
      use control, only : norbs
      use control, only : nfreq
+
      use context, only : csign
      use context, only : gmat
      use context, only : grnf
@@ -414,7 +381,7 @@
 ! loop index for flavor channel
      integer :: flvr
 
-! note: only the first nfreq points of grnf are modified
+! only the first nfreq points of grnf are modified
      do flvr=1,norbs
          do ifrq=1,nfreq
              grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + csign * gmat(ifrq, flvr, flvr)
@@ -424,9 +391,15 @@
      return
   end subroutine ctqmc_record_grnf
 
+!!========================================================================
+!!>>> measure physical observables 3                                   <<<
+!!========================================================================
 
-
-!!>>> ctqmc_record_kmat: record the < k^2 > - < k >^2
+!!
+!! @sub ctqmc_record_kmat
+!!
+!! record the kinetic energy fluctuation < k^2 > - < k >^2
+!!
   subroutine ctqmc_record_kmat()
      use constants, only : dp
 
