@@ -1,26 +1,17 @@
 !!!-----------------------------------------------------------------------
 !!! project : manjushaka
-!!! program : ctqmc_insert_kink
+!!! program : ctqmc_try_warming
+!!!           ctqmc_try_walking
+!!!           ctqmc_try_warning <<<---
+!!!           ctqmc_insert_kink
 !!!           ctqmc_remove_kink
 !!!           ctqmc_lshift_kink
 !!!           ctqmc_rshift_kink
 !!!           ctqmc_reflip_kink
 !!!           ctqmc_reload_kink <<<---
-!!!           cat_insert_matrix
-!!!           cat_remove_matrix
-!!!           cat_lshift_matrix
-!!!           cat_rshift_matrix
-!!!           cat_reflip_matrix
-!!!           cat_reload_matrix <<<---
-!!!           cat_insert_detrat
-!!!           cat_remove_detrat
-!!!           cat_lshift_detrat
-!!!           cat_rshift_detrat
-!!!           cat_reflip_detrat <<<---
 !!! source  : ctqmc_update.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang (created)
 !!!           08/17/2015 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
