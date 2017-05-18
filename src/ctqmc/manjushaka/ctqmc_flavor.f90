@@ -978,9 +978,13 @@
      return
   end subroutine try_remove_flavor
 
-!!>>> try_lshift_flavor: determine index addresses for the old and new
-!!>>> creation operators in the flavor part, and then determine whether it
-!!>>> can be shifted diagrammatically
+!!
+!! @sub try_lshift_flavor
+!!
+!! try to determine index addresses for the old and new creation
+!! operators in the flavor part, and then determine whether it can be
+!! shifted diagrammatically
+!!
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
      use constants, only : dp
      use stack, only : istack_getrest
