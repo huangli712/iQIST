@@ -640,6 +640,88 @@
      return
   end subroutine ctqmc_make_gtau
 
+!!
+!! @sub ctqmc_make_ftau
+!!
+!! build auxiliary correlation function using different representation
+!!
+  subroutine ctqmc_make_ftau(tmesh, ftau, faux)
+     use constants, only : dp, zero, two
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd
+     use control, only : ntime
+     use control, only : beta
+
+     use context, only : rep_l
+
+     implicit none
+
+! external arguments
+! imaginary time mesh
+     real(dp), intent(in)  :: tmesh(ntime)
+
+! auxiliary correlation function/orthogonal polynomial coefficients
+     real(dp), intent(in)  :: ftau(ntime,norbs,norbs)
+
+! calculated auxiliary correlation function
+     real(dp), intent(out) :: faux(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! loop index for legendre polynomial
+     integer  :: fleg
+
+! index for imaginary time \tau
+     integer  :: curr
+
+! interval for imaginary time slice
+     real(dp) :: step
+
+! dummy variables
+     real(dp) :: raux
+
+! initialize faux
+     faux = zero
+
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
+     STD_BLOCK: if ( isort == 1 ) then
+         raux = real(ntime) / (beta * beta)
+         do i=1,norbs
+             do j=1,ntime
+                 faux(j,i,i) = ftau(j,i,i) * raux
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
+     endif STD_BLOCK ! back if ( isort == 1 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
+     LEG_BLOCK: if ( isort == 2 ) then
+         step = real(legrd - 1) / two
+         do i=1,norbs
+             do j=1,ntime
+                 raux = two * tmesh(j) / beta
+                 curr = nint(raux * step) + 1
+                 do fleg=1,lemax
+                     raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
+                     faux(j,i,i) = faux(j,i,i) + raux * ftau(fleg,i,i)
+                 enddo ! over fleg={1,lemax} loop
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     return
+  end subroutine ctqmc_make_ftau
+
 !!========================================================================
 !!>>> build auxiliary two-particle related variables                   <<<
 !!========================================================================
