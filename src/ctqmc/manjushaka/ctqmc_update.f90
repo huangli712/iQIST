@@ -571,43 +571,41 @@
 ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order ( number of existing create or
-! destroy operators ) for current flavor channel
+! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call s_print_exception('ctqmc_lshift_kink','can not lshift any operators')
          lsh_t = lsh_t + one
          lsh_r = lsh_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
      endif ! back if ( ckink == 0 ) block
 
+! try to generate new configuration (colour part)
 ! at first, we select ciso randomly, and then obtain tau_start1. according
 ! to the existing operators, we determine tau_start2 and related index cisn
      call try_lshift_colour(flvr, ciso, cisn, tau_start1, tau_start2)
 
+! try to generate new configuration (flavor part)
 ! fast look up the flavor part of perturbation expansion series, determine
 ! corresponding fiso and fisn, and determine whether the operators trace is
 ! not equal to zero
      call try_lshift_flavor(flvr, fiso, fisn, tau_start1, tau_start2, lshf)
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part
+! calculate the transition ratio for the local trace part
      if ( lshf .eqv. .true. ) then
-         call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
+         call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2)
      else
          trace_ratio = zero
      endif ! back if ( lshf .eqv. .true. ) block
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part
+! calculate the transition ratio for the determinant part
      if ( lshf .eqv. .true. ) then
          call cat_lshift_detrat(flvr, ciso, tau_start1, tau_start2, deter_ratio)
      else
          deter_ratio = zero
      endif ! back if ( lshf .eqv. .true. ) block
 
-! we will determine the pass by lazy trace evalution
+! we will determine the pass by lazy trace evaluation
 ! if lshf is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * one
@@ -623,9 +621,8 @@
 ! update the flavor part of perturbation expansion series
          call cat_lshift_flavor(flvr, fiso, fisn, tau_start2)
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_lshift_colour() subroutine is invoked internally to update the colour
-! part of perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series (colour part) are updated as well
          call cat_lshift_matrix(flvr, ciso, cisn, tau_start1, tau_start2, deter_ratio)
 
 ! update the operators trace
@@ -639,10 +636,9 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_lshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
-! update the lshift statistics
+! update monte carlo statistics
      lsh_t = lsh_t + one
      if ( pass .eqv. .true. ) then
          lsh_a = lsh_a + one
