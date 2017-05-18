@@ -78,7 +78,7 @@
      rsh_r = zero
 
      rfl_t = zero
-     reflip_accept = zero
+     rfl_a = zero
      reflip_reject = zero
 
      return
@@ -772,7 +772,7 @@
      use stack, only : istack_getrest
 
      use control, only : nband, norbs
-     use context, only : rfl_t, reflip_accept, reflip_reject
+     use context, only : rfl_t, rfl_a, reflip_reject
      use context, only : empty_v, index_t, index_v, flvr_v
      use context, only : rank, symm
 
@@ -904,7 +904,7 @@
 ! update the reflip statistics
          rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
-             reflip_accept = reflip_accept + one
+             rfl_a = rfl_a + one
          else
              reflip_reject = reflip_reject + one
          endif ! back if ( pass .eqv. .true. ) block
@@ -980,7 +980,7 @@
 ! update the reflip statistics
              rfl_t = rfl_t + one
              if ( pass .eqv. .true. ) then
-                 reflip_accept = reflip_accept + one
+                 rfl_a = rfl_a + one
              else
                  reflip_reject = reflip_reject + one
              endif ! back if ( pass .eqv. .true. ) block
@@ -1067,7 +1067,7 @@
 ! update the reflip statistics
          rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
-             reflip_accept = reflip_accept + one
+             rfl_a = rfl_a + one
          else
              reflip_reject = reflip_reject + one
          endif ! back if ( pass .eqv. .true. ) block
