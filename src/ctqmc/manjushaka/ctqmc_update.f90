@@ -136,8 +136,6 @@
      return
   end subroutine ctqmc_try_walking
 
-!!>>> ctqmc_diagram_checking: checking whether the quantum impurity
-!!>>> solver is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
      use constants, only : mystd
 
