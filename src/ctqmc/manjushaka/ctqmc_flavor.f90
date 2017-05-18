@@ -2790,7 +2790,7 @@
   end subroutine cat_search_flavor
 
 !!========================================================================
-!!>>> service layer: utility subroutines to build colour and flavor    <<<
+!!>>> service layer: build trial colour and flavor parts               <<<
 !!========================================================================
 
 !!>>> ctqmc_make_colour: generate perturbation expansion series for the
