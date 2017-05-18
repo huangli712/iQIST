@@ -71,7 +71,7 @@
 !!>>> ctqmc_record_prob: record the probability of atomic states
   subroutine ctqmc_record_prob()
      use control, only : ncfgs
-     use context, only : csign, matrix_ptrace
+     use context, only : csign, c_mtr
      use context, only : prob
      use context, only : diag
 
@@ -82,7 +82,7 @@
      integer :: i
 
      do i=1,ncfgs
-         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
+         prob(i) = prob(i) + csign * diag(i,2) / c_mtr
      enddo ! over i={1,ncfgs} loop
 
      return
@@ -97,9 +97,9 @@
      use constants, only : dp, zero, two
 
      use control, only : norbs, ncfgs
-     use control, only : U, mune, beta
-     use context, only : ckink, csign, matrix_ptrace
-     use context, only : paux, nmat, nnmat
+     use control, only : Uc, mune, beta
+     use context, only : ckink, csign, c_mtr
+     use context, only : paux, nimp, nmat
      use context, only : diag, eigs
 
      use m_sect, only : nsect
@@ -127,7 +127,7 @@
 
 ! evaluate cprob at first, it is current atomic probability
      do i=1,ncfgs
-         cprob(i) = diag(i,2) / matrix_ptrace
+         cprob(i) = diag(i,2) / c_mtr
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate sprob, it is current sector prob
@@ -157,14 +157,14 @@
 ! evaluate occupation matrix: < n_i >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     nmat = zero
+     nimp = zero
 ! this feature will not be implemented for majushaka code
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate double occupation matrix: < n_i n_j >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     nnmat = zero
+     nmat = zero
 ! this feature will not be implemented for manjushaka code
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -210,7 +210,7 @@
 ! note: here U denotes as energy zero point
 !-------------------------------------------------------------------------
      do i=1,ncfgs
-         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + U )
+         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + Uc )
      enddo ! over i={1,ncfgs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

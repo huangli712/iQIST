@@ -613,9 +613,9 @@
 ! zero point in U
          r1 = minval(eigs)
          r2 = maxval(eigs)
-         U  = r1 + one ! here we choose the minimum as zero point
+         Uc = r1 + one ! here we choose the minimum as zero point
          do i=1,ncfgs
-             eigs(i) = eigs(i) - U
+             eigs(i) = eigs(i) - Uc
          enddo ! over i={1,ncfgs} loop
 
 ! check validity of eigs
@@ -631,7 +631,7 @@
 # if defined (MPI)
 
 ! broadcast data
-     call mp_bcast(U,     master)
+     call mp_bcast(Uc,    master)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -784,7 +784,7 @@
      use stack, only : istack_clean
      use stack, only : istack_push
 
-     use control, only : myid, master
+     use control, only : iscut, myid, master
 
      use context ! ALL
 
@@ -972,16 +972,16 @@
 
 
 
-! init matrix_ntrace and matrix_ptrace
-     matrix_ntrace = sum( expt_t(:, 1) )
-     matrix_ptrace = sum( expt_t(:, 2) )
+! init n_mtr and c_mtr
+     n_mtr = sum( expt_t(:, 1) )
+     c_mtr = sum( expt_t(:, 2) )
 
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
-     if ( itrun == 2 ) then
+     if ( iscut == 2 ) then
          call cat_trun_sector()
-     endif ! back if ( itrun == 2 ) block
+     endif ! back if ( iscut == 2 ) block
 
 ! init m_part module
      nop     = 0

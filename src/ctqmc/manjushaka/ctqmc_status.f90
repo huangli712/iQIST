@@ -103,12 +103,12 @@
      use constants, only : dp, zero, epss, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : itrun
+     use control, only : iscut
      use control, only : norbs
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
-     use context, only : ckink, csign, cnegs, matrix_ntrace
+     use context, only : ckink, csign, cnegs, n_mtr
      use context, only : rank
 
      implicit none
@@ -168,8 +168,8 @@
      if ( exists .eqv. .false. ) RETURN
 
 ! if high energy states are dynamically truncated, the trace of saved
-! diagramm may be zero, so we don't retrieve it for itrun == 2
-     if ( itrun == 2 ) RETURN
+! diagramm may be zero, so we don't retrieve it for iscut == 2
+     if ( iscut == 2 ) RETURN
 
 ! read solver.status.dat, only master node can do it
      if ( myid == master ) then
@@ -255,7 +255,7 @@
 
 ! update the matrix trace for product of F matrix and time evolution operators
      i = 2 * sum(rank) ! get total number of operators
-     call ctqmc_retrieve_ztrace(i, matrix_ntrace)
+     call ctqmc_retrieve_ztrace(i, n_mtr)
 
 ! update the operators trace
      call ctqmc_make_evolve()
@@ -264,10 +264,10 @@
      csign = 1
      cnegs = 0
 
-! finally, it is essential to check the validity of matrix_ntrace
-     if ( abs( matrix_ntrace - zero ) < epss ) then
+! finally, it is essential to check the validity of n_mtr
+     if ( abs( n_mtr - zero ) < epss ) then
          call s_print_exception('ctqmc_retrieve_status','very dangerous! ztrace maybe too small')
-     endif ! back if ( abs( matrix_ntrace - zero ) < epss ) block
+     endif ! back if ( abs( n_mtr - zero ) < epss ) block
 
      return
   end subroutine ctqmc_retrieve_status

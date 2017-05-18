@@ -795,8 +795,8 @@
 ! please insert your debug code here
 !-------------------------------------------------------------------------
 
-     call ctqmc_make_display(1)
-     call ctqmc_make_display(2)
+     call cat_disp_diagrams(1)
+     call cat_disp_diagrams(2)
      call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return

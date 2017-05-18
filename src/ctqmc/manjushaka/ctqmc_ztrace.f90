@@ -109,13 +109,13 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: ctqmc_allocate_memory_one_fmat
-     public :: ctqmc_allocate_memory_one_sect
-     public :: ctqmc_allocate_memory_sect
+     public :: cat_alloc_one_fmat
+     public :: cat_alloc_one_sect
+     public :: cat_alloc_sect
 
-     public :: ctqmc_deallocate_memory_one_fmat
-     public :: ctqmc_deallocate_memory_one_sect
-     public :: ctqmc_deallocate_memory_sect
+     public :: cat_free_one_fmat
+     public :: cat_free_one_sect
+     public :: cat_free_sect
 
      public :: cat_make_string
      public :: cat_trun_sector
@@ -126,8 +126,8 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_allocate_memory_one_fmat: allocate memory for one F-matrix
-  subroutine ctqmc_allocate_memory_one_fmat(mat)
+!!>>> cat_alloc_one_fmat: allocate memory for one F-matrix
+  subroutine cat_alloc_one_fmat(mat)
      implicit none
 
 ! external variables
@@ -139,17 +139,17 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_one_fmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_one_fmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize it
      mat%val = zero
 
      return
-  end subroutine ctqmc_allocate_memory_one_fmat
+  end subroutine cat_alloc_one_fmat
 
-!!>>> ctqmc_allocate_memory_one_sect: allocate memory for one sector
-  subroutine ctqmc_allocate_memory_one_sect(sect)
+!!>>> cat_alloc_one_sect: allocate memory for one sector
+  subroutine cat_alloc_one_sect(sect)
      implicit none
 
 ! external variables
@@ -171,7 +171,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_one_sect','can not allocate enough memory')
+         call s_print_error('cat_alloc_one_sect','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -189,10 +189,10 @@
      enddo ! over i={1,sect%nops} loop
 
      return
-  end subroutine ctqmc_allocate_memory_one_sect
+  end subroutine cat_alloc_one_sect
 
-!!>>> ctqmc_allocate_memory_sect: allocate memory for sector related variables
-  subroutine ctqmc_allocate_memory_sect()
+!!>>> cat_alloc_sect: allocate memory for sector related variables
+  subroutine cat_alloc_sect()
      implicit none
 
 ! local variables
@@ -205,7 +205,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
+         call s_print_error('cat_alloc_sect','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -221,14 +221,14 @@
      sectoff = .false.
 
      return
-  end subroutine ctqmc_allocate_memory_sect
+  end subroutine cat_alloc_sect
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_deallocate_memory_one_fmat: deallocate memory for one F-matrix
-  subroutine ctqmc_deallocate_memory_one_fmat(mat)
+!!>>> cat_free_one_fmat: deallocate memory for one F-matrix
+  subroutine cat_free_one_fmat(mat)
      implicit none
 
 ! external variables
@@ -238,10 +238,10 @@
      if ( allocated(mat%val) ) deallocate(mat%val)
 
      return
-  end subroutine ctqmc_deallocate_memory_one_fmat
+  end subroutine cat_free_one_fmat
 
-!!>>> ctqmc_deallocate_memory_one_sect: deallocate memory for one sector
-  subroutine ctqmc_deallocate_memory_one_sect(sect)
+!!>>> cat_free_one_sect: deallocate memory for one sector
+  subroutine cat_free_one_sect(sect)
      implicit none
 
 ! external variables
@@ -262,18 +262,18 @@
      if ( allocated(sect%fmat) ) then
          do i=1,sect%nops
              do j=0,1
-                 call ctqmc_deallocate_memory_one_fmat(sect%fmat(i,j))
+                 call cat_free_one_fmat(sect%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,sect%nops} loop
          deallocate(sect%fmat)
      endif ! back if ( allocated(sect%fmat) ) block
 
      return
-  end subroutine ctqmc_deallocate_memory_one_sect
+  end subroutine cat_free_one_sect
 
-!!>>> ctqmc_deallocate_memory_sect: deallocate memory for sector
+!!>>> cat_free_sect: deallocate memory for sector
 !!>>> related variables
-  subroutine ctqmc_deallocate_memory_sect()
+  subroutine cat_free_sect()
      implicit none
 
 ! local variables
@@ -284,7 +284,7 @@
 ! then, deallocate memory of the sectors itself
      if ( allocated(sectors) ) then
          do i=1,nsect
-             call ctqmc_deallocate_memory_one_sect(sectors(i))
+             call cat_free_one_sect(sectors(i))
          enddo ! over i={1,nsect} loop
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
@@ -292,7 +292,7 @@
      if ( allocated(sectoff) )  deallocate(sectoff)
 
      return
-  end subroutine ctqmc_deallocate_memory_sect
+  end subroutine cat_free_sect
 
 !!========================================================================
 !!>>> core service subroutines                                         <<<
@@ -573,8 +573,8 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: ctqmc_allocate_memory_part
-     public :: ctqmc_deallocate_memory_part
+     public :: cat_alloc_part
+     public :: cat_free_part
 
      public :: cat_make_npart
      public :: cat_make_trace
@@ -585,8 +585,8 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_allocate_memory_part: allocate memory for part related variables
-  subroutine ctqmc_allocate_memory_part()
+!!>>> cat_alloc_part: allocate memory for part related variables
+  subroutine cat_alloc_part()
      implicit none
 
 ! allocate memory
@@ -604,7 +604,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_part','can not allocate enough memory')
+         call s_print_error('cat_alloc_part','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -621,14 +621,14 @@
      saved_n = zero
 
      return
-  end subroutine ctqmc_allocate_memory_part
+  end subroutine cat_alloc_part
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_deallocate_memory_part: deallocate memory for part related variables
-  subroutine ctqmc_deallocate_memory_part()
+!!>>> cat_free_part: deallocate memory for part related variables
+  subroutine cat_free_part()
      implicit none
 
      if ( allocated(nop)     ) deallocate(nop    )
@@ -644,7 +644,7 @@
      if ( allocated(saved_n) ) deallocate(saved_n)
 
      return
-  end subroutine ctqmc_deallocate_memory_part
+  end subroutine cat_free_part
 
 !!========================================================================
 !!>>> core service subroutines                                         <<<
@@ -991,7 +991,7 @@
 
      use control, only : ncfgs
      use control, only : mkink
-     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : c_mtr, n_mtr
      use context, only : index_t, index_v, expt_t, expt_v
      use context, only : diag
 
@@ -1151,7 +1151,7 @@
 ! acceptance ratio, and then we check whether pmax < r. if it is true,
 ! reject this move immediately
      sbound = sum( btrace(1:nlive) )
-     pmax = abs(ratio) * abs(sbound / matrix_ptrace)
+     pmax = abs(ratio) * abs(sbound / c_mtr)
      if ( pmax < r ) then
          pass = .false.; p = zero; RETURN
      endif ! back if ( pmax < r ) block
@@ -1175,8 +1175,8 @@
              cumsum = cumsum + abs( strace(i) )
              sbound = sbound - btrace(i)
 ! calculate pmax and pmin
-             pmax = abs(ratio) * abs( (cumsum + sbound) / matrix_ptrace )
-             pmin = abs(ratio) * abs( (cumsum - sbound) / matrix_ptrace )
+             pmax = abs(ratio) * abs( (cumsum + sbound) / c_mtr )
+             pmin = abs(ratio) * abs( (cumsum - sbound) / c_mtr )
 ! check whether pmax < r
              if ( pmax < r ) then
                  pass = .false.; p = zero; RETURN
@@ -1193,9 +1193,9 @@
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
 ! anyway, we have to calculate the final transition probability (p), and
-! update matrix_ntrace and pass.
-     matrix_ntrace = sum(strace(1:nlive))
-     p = ratio * (matrix_ntrace / matrix_ptrace)
+! update n_mtr and pass.
+     n_mtr = sum(strace(1:nlive))
+     p = ratio * (n_mtr / c_mtr)
      pass = ( min(one, abs(p)) > r )
 
 ! store the diagonal elements of final product in diag(:,1)
@@ -1298,7 +1298,7 @@
 !!>>> modified part
   subroutine ctqmc_make_evolve()
      use control, only : npart
-     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : c_mtr, n_mtr
      use context, only : diag
 
      use m_sect, only : nsect
@@ -1312,7 +1312,7 @@
      integer :: j
 
 ! update the operator traces
-     matrix_ptrace = matrix_ntrace
+     c_mtr = n_mtr
 
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
