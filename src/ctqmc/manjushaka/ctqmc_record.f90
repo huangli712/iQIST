@@ -957,60 +957,67 @@
      return
   end subroutine ctqmc_reduce_paux
 
-!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
-  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
+!!
+!! @sub ctqmc_reduce_nmat
+!!
+!! reduce the nimp and nmat from all children processes
+!!
+  subroutine ctqmc_reduce_nmat(nimp_mpi, nmat_mpi, nimp_err, nmat_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nprocs
-     use context, only : nmat, nnmat
+
+     use context, only : nimp, nmat
 
      implicit none
 
 ! external arguments
-! occupation number matrix
-     real(dp), intent(out) :: nmat_mpi(norbs)
-     real(dp), intent(out) :: nmat_err(norbs)
+! occupation number
+     real(dp), intent(out) :: nimp_mpi(norbs)
+     real(dp), intent(out) :: nimp_err(norbs)
 
 ! double occupation number matrix
-     real(dp), intent(out) :: nnmat_mpi(norbs,norbs)
-     real(dp), intent(out) :: nnmat_err(norbs,norbs)
+     real(dp), intent(out) :: nmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: nmat_err(norbs,norbs)
 
-! initialize nmat_mpi and nnmat_mpi, nmat_err and nnmat_err
+! initialize nimp_mpi and nmat_mpi, nimp_err and nmat_err
+     nimp_mpi = zero
      nmat_mpi = zero
-     nnmat_mpi = zero
 
+     nimp_err = zero
      nmat_err = zero
-     nnmat_err = zero
 
-! build nmat_mpi and nnmat_mpi, collect data from all children processes
+! build nimp_mpi and nmat_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
+     call mp_allreduce(nimp, nimp_mpi)
      call mp_allreduce(nmat, nmat_mpi)
-     call mp_allreduce(nnmat, nnmat_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
+     nimp_mpi = nimp
      nmat_mpi = nmat
-     nnmat_mpi = nnmat
 
 # endif /* MPI */
 
 ! calculate the average
+     nimp_mpi = nimp_mpi / real(nprocs)
      nmat_mpi = nmat_mpi / real(nprocs)
-     nnmat_mpi = nnmat_mpi / real(nprocs)
 
-! build nmat_err and nnmat_err, collect data from all children processes
+! build nimp_err and nmat_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
+     call mp_allreduce((nimp - nimp_mpi)**2, nimp_err)
      call mp_allreduce((nmat - nmat_mpi)**2, nmat_err)
-     call mp_allreduce((nnmat - nnmat_mpi)**2, nnmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1019,16 +1026,22 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
+         nimp_err = sqrt( nimp_err / real( nprocs * ( nprocs - 1 ) ) )
          nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
-         nnmat_err = sqrt( nnmat_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_nmat
 
+!!========================================================================
+!!>>> reduce physical observables 2                                    <<<
+!!========================================================================
 
-
-!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
+!!
+!! @sub ctqmc_reduce_gtau
+!!
+!! reduce the gtau from all children processes
+!!
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
