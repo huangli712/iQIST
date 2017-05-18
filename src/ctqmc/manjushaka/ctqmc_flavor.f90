@@ -2849,10 +2849,12 @@
   end subroutine cat_create_colour
 
 !!
-!! @sub cat_create_flavor: generate perturbation expansion series for the
-!!>>> flavor (operator trace) part, it should be synchronized with the
-!!>>> colour part.
-!!>>> note: cat_create_colour() must be called beforehand
+!! @sub cat_create_flavor:
+!!
+!! try to generate perturbation expansion series for the flavor part, it
+!! should be synchronized with the colour part. note cat_create_colour()
+!! subroutine must be called beforehand
+!!
   subroutine cat_create_flavor(flvr, kink)
      use constants, only : dp
 
