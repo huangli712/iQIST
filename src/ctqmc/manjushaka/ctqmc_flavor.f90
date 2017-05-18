@@ -1186,7 +1186,7 @@
      integer, intent(out) :: ieo
      integer, intent(out) :: ien
 
-! whether the old annihilation operators can be shifted diagrammatically
+! whether the old annihilation operator can be shifted diagrammatically
      logical, intent(out) :: rshf
 
 ! imaginary time point of the old annihilation operator
@@ -1210,7 +1210,7 @@
 ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether current subspace can survive
+! dummy variables, used to check whether the current subspace can survive
      integer :: idead
 
 ! dummy variables, used to resolve spin up and spin down states
@@ -1229,7 +1229,7 @@
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
-! stage 1: determine ieo and ien, where are they ?
+! stage 1: determine ieo and ien, where are they?
 !-------------------------------------------------------------------------
 ! determine ieo
 !<     i = 1
@@ -1241,7 +1241,7 @@
 
 ! determine ien
      ien = 1
-     if ( nsize > 0 ) then
+     ANNIHILATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_end2 < time_v( index_v(1)     ) ) then
              ien = 1          ! it is the first operator
          else if ( tau_end2 > time_v( index_v(nsize) ) ) then
@@ -1253,7 +1253,7 @@
              enddo ! over do while loop
              ien = i
          endif ! back if ( tau_end2 < time_v( index_v(1) ) ) block
-     endif ! back if ( nsize > 0 ) block
+     endif ANNIHILATION_BLOCK ! back if ( nsize > 0 ) block
 
 ! adjust ien further
      if ( tau_end1 < tau_end2 ) then
@@ -1261,7 +1261,7 @@
      endif ! back if ( tau_end1 < tau_end2 ) block
 
 !-------------------------------------------------------------------------
-! stage 2: determine rshf, whether we can shift it ?
+! stage 2: determine rshf, whether we can shift it?
 !-------------------------------------------------------------------------
 ! for the spin-orbital coupling case, we can not lookup the operators
 ! series quickly
