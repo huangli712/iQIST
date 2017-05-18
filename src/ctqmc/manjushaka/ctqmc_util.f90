@@ -76,7 +76,7 @@
      do i=1,norbs
          do j=1,norbs
 
-! copy the imaginary-time data to raux
+! copy the imaginary time data to raux
              raux = htau(:,j,i)
 
 ! call the service layer
@@ -91,8 +91,11 @@
      return
   end subroutine ctqmc_four_htau
 
-!!>>> ctqmc_four_hybf: fourier hybf to htau, from matsubara frequency to
-!!>>> imaginary time
+!!
+!! @sub ctqmc_four_hybf
+!!
+!! fourier hybf to htau, from matsubara frequency to imaginary time
+!!
   subroutine ctqmc_four_hybf(hybf, htau)
      use constants, only : dp, zero, czero, eps6
 
@@ -100,6 +103,7 @@
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
+
      use context, only : tmesh, rmesh
 
      implicit none
