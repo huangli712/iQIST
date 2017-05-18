@@ -218,11 +218,15 @@
   end subroutine ctqmc_try_warning
 
 !!========================================================================
-!!>>> driver layer: updating perturbation expansion series             <<<
+!!>>> service layer: updating perturbation expansion series 2          <<<
 !!========================================================================
 
-!!>>> ctqmc_insert_kink: insert new create and destroy operators in the
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_insert_kink
+!!
+!! insert new creation and annihilation operators in the perturbation
+!! expansion series
+!!
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
