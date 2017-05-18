@@ -35,12 +35,13 @@
      use constants, only : zero
 
      use control, only : ntherm
+
      use context, only : cnegs, caves
-     use context, only : insert_tcount, insert_accept, insert_reject
-     use context, only : remove_tcount, remove_accept, remove_reject
-     use context, only : lshift_tcount, lshift_accept, lshift_reject
-     use context, only : rshift_tcount, rshift_accept, rshift_reject
-     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : ins_t, ins_a, ins_r
+     use context, only : remove_t, remove_a, remove_r
+     use context, only : lshift_t, lshift_a, lshift_r
+     use context, only : rshift_t, rshift_a, rshift_r
+     use context, only : reflip_t, reflip_a, reflip_r
 
      implicit none
 
@@ -136,7 +137,7 @@
      return
   end subroutine ctqmc_try_walking
 
-  subroutine ctqmc_diagram_checking(cflag)
+  subroutine ctqmc_try_warning(cflag)
      use constants, only : mystd
 
      use control, only : norbs
@@ -189,7 +190,7 @@
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: error?'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
+                 call s_print_error('ctqmc_try_warning','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
              endif ! back if ( cflag == 99 ) block
@@ -198,7 +199,7 @@
      endif ! back if ( cflag == 1 ) block
 
      return
-  end subroutine ctqmc_diagram_checking
+  end subroutine ctqmc_try_warning
 
 !!========================================================================
 !!>>> driver layer: updating perturbation expansion series             <<<
