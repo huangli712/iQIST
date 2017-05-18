@@ -794,12 +794,17 @@
 !!
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, zero, one
+
      use spring, only : spring_sfmt_stream
+
      use stack, only : istack_getrest
 
      use control, only : nband, norbs
+
      use context, only : rfl_t, rfl_a, rfl_r
-     use context, only : empty_v, index_t, index_v, flvr_v
+     use context, only : empty_v
+     use context, only : index_t, index_v
+     use context, only : flvr_v
      use context, only : rank, symm
 
      implicit none
