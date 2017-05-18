@@ -2582,6 +2582,723 @@
   end subroutine cat_rshift_flavor
 
 !!========================================================================
+!!>>> service layer: evaluate ztrace ratio                             <<<
+!!========================================================================
+
+!!
+!! note:
+!!
+!! actually, the following subroutines don't calculate the ztrace ratio.
+!! they just prepare the essential data structures and arrays for the
+!! calculation of ztrace ratio
+!!
+
+!!
+!! @sub cat_insert_ztrace
+!!
+!! calculate the trace ratio for inserting new creation and annihilation
+!! operators on perturbation expansion series
+!!
+  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end)
+     use constants, only : dp, zero
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
+
+     use control, only : ncfgs
+     use control, only : beta
+
+     use context, only : empty_v
+     use context, only : index_t, index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
+     use context, only : eigs
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)  :: flvr
+
+! index address to insert new creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
+     integer, intent(in)  :: is
+     integer, intent(in)  :: ie
+
+! imaginary time point of the new creation operator
+     real(dp), intent(in) :: tau_start
+
+! imaginary time point of the new annihilation operator
+     real(dp), intent(in) :: tau_end
+
+! local variables
+! loop index over operators
+     integer  :: i
+
+! memory address for new creation and annihilation operators
+     integer  :: as
+     integer  :: ae
+
+! total number of operators
+     integer  :: nsize
+
+! memory address for the rightmost time evolution operator
+     integer  :: ilast
+
+! imaginary time interval for two successive operators
+! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     real(dp) :: t_prev
+     real(dp) :: t_next
+
+! check tau_start and tau_end, to eliminate the warning from compiler
+     call s_assert( tau_start > zero )
+     call s_assert( tau_end   > zero )
+
+! determine nsize at first, get total number of operators
+     nsize = istack_getrest( empty_v )
+
+! copy index_v to index_t
+! since we do not insert the two operators actually at this stage, so
+! index_v can not be overwritten here
+     do i=1,nsize
+         index_t(i) = index_v(i)
+     enddo ! over i={1,nsize} loop
+
+!-------------------------------------------------------------------------
+! stage 1: insert creation operator, trial step
+!-------------------------------------------------------------------------
+! get memory address for creation operator
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
+
+! store basic data for new creation operator
+     time_v(as) = tau_start
+     flvr_v(as) = flvr
+     type_v(as) = 1
+
+! shift index_t to make an empty room
+     do i=nsize,is,-1
+         index_t(i+1) = index_t(i)
+     enddo ! over i={nsize,is,-1} loop
+
+! store the memory address for creation operator
+     index_t(is) = as
+
+! evaluate previous imaginary time interval
+     if ( is ==         1 ) then ! the imaginary time of creation operator is the smallest
+         t_prev = time_v( index_t(is) ) - zero
+     else
+         t_prev = time_v( index_t(is) ) - time_v( index_t(is-1) )
+     endif ! back if ( is == 1 ) block
+
+! evaluate next imaginary time interval
+     if ( is == nsize + 1 ) then ! the imaginary time of creation operator is the largest
+         t_next = beta - time_v( index_t(is) )
+     else
+         t_next = time_v( index_t(is+1) ) - time_v( index_t(is) )
+     endif ! back if ( is == nsize + 1 ) block
+
+! evaluate ilast
+! if is == nsize + 1, index_t(is+1) is not indexed (i.e, equal to 0),
+! so we store the rightmost time evolution operator at expt_t
+     if ( is == nsize + 1 ) then
+         ilast = 1
+! the closest operator need to be modified as well
+     else
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
+         time_v( ilast ) = time_v( index_t(is+1) )
+         flvr_v( ilast ) = flvr_v( index_t(is+1) )
+         type_v( ilast ) = type_v( index_t(is+1) )
+         index_t(is+1) = ilast
+     endif ! back if ( is == nsize + 1 ) block
+
+! update the expt_v and expt_t, matrix of time evolution operator
+     do i=1,ncfgs
+         expt_v( i, as ) = exp ( -eigs(i) * t_prev )
+     enddo ! over i={1,ncfgs} loop
+
+     if ( is == nsize + 1 ) then
+         do i=1,ncfgs
+             expt_t( i, ilast ) = exp ( -eigs(i) * t_next )
+         enddo ! over i={1,ncfgs} loop
+     else
+         do i=1,ncfgs
+             expt_v( i, ilast ) = exp ( -eigs(i) * t_next )
+         enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             expt_t( i,   1   ) = expt_t( i,   2   )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( is == nsize + 1 ) block
+
+! update nsize
+     nsize = nsize + 1
+
+!-------------------------------------------------------------------------
+! stage 2: insert annihilation operator, trial step
+!-------------------------------------------------------------------------
+! get memory address for annihilation operator
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
+
+! store basic data for new annihilation operator
+     time_v(ae) = tau_end
+     flvr_v(ae) = flvr
+     type_v(ae) = 0
+
+! shift index_t to make an empty room
+     do i=nsize,ie,-1
+         index_t(i+1) = index_t(i)
+     enddo ! over i={nsize,ie,-1} loop
+
+! store the memory address for annihilation operator
+     index_t(ie) = ae
+
+! evaluate previous imaginary time interval
+     if ( ie ==         1 ) then ! the imaginary time of annihilation operator is the smallest
+         t_prev = time_v( index_t(ie) ) - zero
+     else
+         t_prev = time_v( index_t(ie) ) - time_v( index_t(ie-1) )
+     endif ! back if ( ie == 1 ) block
+
+! evaluate next imaginary time interval
+     if ( ie == nsize + 1 ) then ! the imaginary time of annihilation operator is the largest
+         t_next = beta - time_v( index_t(ie) )
+     else
+         t_next = time_v( index_t(ie+1) ) - time_v( index_t(ie) )
+     endif ! back if ( ie == nsize + 1 ) block
+
+! evaluate ilast
+! if ie == nsize + 1, index_t(ie+1) is not indexed (i.e, equal to 0),
+! so we store the rightmost time evolution operator at expt_t
+     if ( ie == nsize + 1 ) then
+         ilast = 1
+! the closest operator need to be modified as well
+     else
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 3, ilast )
+         time_v( ilast ) = time_v( index_t(ie+1) )
+         flvr_v( ilast ) = flvr_v( index_t(ie+1) )
+         type_v( ilast ) = type_v( index_t(ie+1) )
+         index_t(ie+1) = ilast
+     endif ! back if ( ie == nsize + 1 ) block
+
+! update the expt_v and expt_t, matrix of time evolution operator
+     do i=1,ncfgs
+         expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
+     enddo ! over i={1,ncfgs} loop
+
+     if ( ie == nsize + 1 ) then
+         do i=1,ncfgs
+             expt_t( i, ilast ) = exp ( -eigs(i) * t_next )
+         enddo ! over i={1,ncfgs} loop
+     else
+         do i=1,ncfgs
+             expt_v( i, ilast ) = exp ( -eigs(i) * t_next )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( ie == nsize + 1 ) block
+
+     return
+  end subroutine cat_insert_ztrace
+
+!!
+!! @sub cat_remove_ztrace
+!!
+!! calculate the trace ratio for removing old creation and annihilation
+!! operators on perturbation expansion series
+!!
+  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end)
+     use constants, only : dp, zero
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
+
+     use control, only : ncfgs
+     use control, only : beta
+
+     use context, only : empty_v
+     use context, only : index_t, index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
+     use context, only : eigs
+
+     implicit none
+
+! external arguments
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
+     integer, intent(in)  :: is
+     integer, intent(in)  :: ie
+
+! imaginary time point of the old creation operator
+     real(dp), intent(in) :: tau_start
+
+! imaginary time point of the old annihilation operator
+     real(dp), intent(in) :: tau_end
+
+! local variables
+! loop index over operators
+     integer  :: i
+
+! memory address for old creation and annihilation operators
+     integer  :: as
+     integer  :: ae
+
+! total number of operators
+     integer  :: nsize
+
+! memory address for the rightmost time evolution operator
+     integer  :: ilast
+
+! imaginary time interval for two successive operators
+! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     real(dp) :: t_prev
+     real(dp) :: t_next
+
+! check tau_start and tau_end, to eliminate the warning from compiler
+     call s_assert( tau_start > zero )
+     call s_assert( tau_end   > zero )
+
+! determine nsize at first, get total number of operators
+     nsize = istack_getrest( empty_v )
+
+! copy index_v to index_t
+! since we do not remove the two operators actually at this stage, so
+! index_v can not be overwritten here
+     do i=1,nsize
+         index_t(i) = index_v(i)
+     enddo ! over i={1,nsize} loop
+
+!-------------------------------------------------------------------------
+! stage 1: remove creation operator, trial step
+!-------------------------------------------------------------------------
+! get memory address for old creation operator
+     as = index_t(is)
+
+! remove the unused index address from index_t
+     do i=is,nsize-1
+         index_t(i) = index_t(i+1)
+     enddo ! over i={is,nsize-1} loop
+     index_t(nsize) = 0
+
+! evaluate previous imaginary time interval
+     if ( is == 1     ) then ! the imaginary time of creation operator is the smallest
+         t_prev = zero
+     else
+         t_prev = time_v( index_t(is-1) )
+     endif ! back if ( is == 1 ) block
+
+! evaluate next imaginary time interval
+     if ( is == nsize ) then ! the imaginary time of creation operator is the largest
+         t_next = beta
+     else
+         t_next = time_v( index_t(is)   )
+     endif ! back if ( is == nsize ) block
+
+! evaluate ilast
+! if is == nsize, index_t(is) is not indexed (i.e, equal to 0),
+! so we store the rightmost time evolution operator at expt_t
+     if ( is == nsize ) then
+         ilast = 1
+! the closest operator need to be modified as well
+     else
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ilast )
+         time_v( ilast ) = time_v( index_t(is) )
+         flvr_v( ilast ) = flvr_v( index_t(is) )
+         type_v( ilast ) = type_v( index_t(is) )
+         index_t(is) = ilast
+     endif ! back if ( is == nsize ) block
+
+! update the expt_v and expt_t, matrix of time evolution operator
+     if ( is == nsize ) then
+         do i=1,ncfgs
+             expt_t( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
+         enddo ! over i={1,ncfgs} loop
+     else
+         do i=1,ncfgs
+             expt_v( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
+         enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             expt_t( i, 1 ) = expt_t( i, 2 )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( is == nsize ) block
+
+! update nsize
+     nsize = nsize - 1
+
+!-------------------------------------------------------------------------
+! stage 2: remove annihilation operator, trial step
+!-------------------------------------------------------------------------
+! get memory address for old annihilation operator
+     ae = index_t(ie)
+
+! remove the unused index address from index_t
+     do i=ie,nsize-1
+         index_t(i) = index_t(i+1)
+     enddo ! over i={ie,nsize-1} loop
+     index_t(nsize) = 0
+
+! evaluate previous imaginary time interval
+     if ( ie == 1     ) then ! the imaginary time of annihilation operator is the smallest
+         t_prev = zero
+     else
+         t_prev = time_v( index_t(ie-1) )
+     endif ! back if ( ie == 1 ) block
+
+! evaluate next imaginary time interval
+     if ( ie == nsize ) then ! the imaginary time of annihilation operator is the largest
+         t_next = beta
+     else
+         t_next = time_v( index_t(ie)   )
+     endif ! back if ( ie == nsize ) block
+
+! evaluate ilast
+! if ie == nsize, index_t(ie) is not indexed (i.e, equal to 0),
+! so we store the rightmost time evolution operator at expt_t
+     if ( ie == nsize ) then
+         ilast = 1
+! the closest operator need to be modified as well
+     else
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
+         time_v( ilast ) = time_v( index_t(ie) )
+         flvr_v( ilast ) = flvr_v( index_t(ie) )
+         type_v( ilast ) = type_v( index_t(ie) )
+         index_t(ie) = ilast
+     endif ! back if ( ie == nsize ) block
+
+! update the expt_v and expt_t, matrix of time evolution operator
+     if ( ie == nsize ) then
+         do i=1,ncfgs
+             expt_t( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
+         enddo ! over i={1,ncfgs} loop
+     else
+         do i=1,ncfgs
+             expt_v( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( ie == nsize ) block
+
+     return
+  end subroutine cat_remove_ztrace
+
+!!
+!! @sub cat_lshift_ztrace
+!!
+!! calculate the trace ratio for shifting old creation operator on
+!! perturbation expansion series
+!!
+  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2)
+     use constants, only : dp, zero
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
+
+     use control, only : ncfgs
+     use control, only : beta
+
+     use context, only : empty_v
+     use context, only : index_t, index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
+     use context, only : eigs
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)  :: flvr
+
+! index address to shift existing creation operator
+! iso and isn are for old and new creation operators, respectively
+     integer, intent(in)  :: iso
+     integer, intent(in)  :: isn
+
+! imaginary time point of the old creation operator
+     real(dp), intent(in) :: tau_start1
+
+! imaginary time point of the new creation operator
+     real(dp), intent(in) :: tau_start2
+
+! local variables
+! loop index over operators
+     integer  :: i
+
+! memory address for old and new creation operators
+     integer  :: as
+
+! index address for old creation operator
+     integer  :: iso_t
+
+! total number of operators
+     integer  :: nsize
+
+! imaginary time interval for two successive operators
+! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     real(dp) :: t_prev
+     real(dp) :: t_next
+
+! check tau_start1 and tau_start2, to eliminate the warning from compiler
+     call s_assert( tau_start1 > zero )
+     call s_assert( tau_start2 > zero )
+
+! determine nsize at first, get total number of operators
+     nsize = istack_getrest( empty_v )
+
+! copy index_v to index_t
+! since we do not shift the creation operator actually at this stage, so
+! index_v can not be overwritten here
+     do i=1,nsize
+         index_t(i) = index_v(i)
+     enddo ! over i={1,nsize} loop
+
+!-------------------------------------------------------------------------
+! stage 1: shift old creation operator, trial step
+!-------------------------------------------------------------------------
+! get memory address for creation operator
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
+
+! store basic data for new creation operator
+     time_v(as) = tau_start2
+     flvr_v(as) = flvr
+     type_v(as) = 1
+
+! remove the unused index address from index_t
+     do i=iso,nsize-1
+         index_t(i) = index_t(i+1)
+     enddo ! over i={iso,nsize-1} loop
+     index_t(nsize) = 0
+
+! shift index_t to make an empty room
+     do i=nsize-1,isn,-1
+         index_t(i+1) = index_t(i)
+     enddo ! over i={nsize-1,isn,-1} loop
+
+! store the memory address for creation operator
+     index_t(isn) = as
+
+! evaluate previous imaginary time interval
+     if ( isn == 1 ) then ! the imaginary time of creation operator is the smallest
+         t_prev = time_v( index_t(isn) ) - zero
+     else
+         t_prev = time_v( index_t(isn) ) - time_v( index_t(isn-1) )
+     endif ! back if ( isn == 1 ) block
+
+! update the expt_v, matrix of time evolution operator
+     do i=1,ncfgs
+         expt_v( i, as ) = exp ( -eigs(i) * t_prev )
+     enddo ! over i={1,ncfgs} loop
+
+!-------------------------------------------------------------------------
+! stage 2: auxiliary tasks
+!-------------------------------------------------------------------------
+! its neighbor needs to be changes as well.
+! makes a copy of time and type, and changes time evolution operator
+     if ( isn < nsize ) then
+         t_next = time_v( index_t(isn+1) ) - time_v( index_t(isn) )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, as )
+         time_v(as) = time_v( index_t(isn+1) )
+         flvr_v(as) = flvr_v( index_t(isn+1) )
+         type_v(as) = type_v( index_t(isn+1) )
+         index_t(isn+1) = as
+         do i=1,ncfgs
+             expt_v( i, as ) = exp ( -eigs(i) * t_next )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( isn < nsize ) block
+
+! the operator closest to the old place needs to be changed as well
+     if ( iso < nsize .and. iso /= isn ) then
+         if ( iso > isn ) then
+             iso_t = iso + 1
+         else
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_t(iso_t) ) - zero
+         else
+             t_prev = time_v( index_t(iso_t) ) - time_v( index_t(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 2, as )
+         time_v(as) = time_v( index_t(iso_t) )
+         flvr_v(as) = flvr_v( index_t(iso_t) )
+         type_v(as) = type_v( index_t(iso_t) )
+         index_t(iso_t) = as
+         do i=1,ncfgs
+             expt_v( i, as ) = exp ( -eigs(i) * t_prev )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( iso < nsize .and. iso /= isn ) block
+
+! update the final time evolution operator
+     t_next = time_v( index_t(nsize) )
+     do i=1,ncfgs
+         expt_t( i, 1 ) = exp ( -eigs(i) * ( beta - t_next ) )
+     enddo ! over i={1,ncfgs} loop
+
+     return
+  end subroutine cat_lshift_ztrace
+
+!!
+!! @sub cat_rshift_ztrace
+!!
+!! calculate the trace ratio for shifting old annihilation operators on
+!! perturbation expansion series
+!!
+  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2)
+     use constants, only : dp, zero
+
+     use stack, only : istack_getrest
+     use stack, only : istack_gettop
+     use stack, only : istack_getter
+
+     use control, only : ncfgs
+     use control, only : beta
+
+     use context, only : empty_v
+     use context, only : index_t, index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
+     use context, only : expt_t, expt_v
+     use context, only : eigs
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)   :: flvr
+
+! index address to shift existing annihilation operator
+! ieo and ien are for old and new annihilation operators, respectively
+     integer, intent(in)   :: ieo
+     integer, intent(in)   :: ien
+
+! imaginary time point of the old annihilation operator
+     real(dp), intent(in)  :: tau_end1
+
+! imaginary time point of the new annihilation operator
+     real(dp), intent(in)  :: tau_end2
+
+! local variables
+! loop index over operators
+     integer  :: i
+
+! memory address for old and new annihilation operators
+     integer  :: ae
+
+! index address for old annihilation operator
+     integer  :: ieo_t
+
+! total number of operators
+     integer  :: nsize
+
+! imaginary time interval for two successive operators
+! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     real(dp) :: t_prev
+     real(dp) :: t_next
+
+! check tau_end1 and tau_end2, to eliminate the warning from compiler
+     call s_assert( tau_end1 > zero )
+     call s_assert( tau_end2 > zero )
+
+! determine nsize at first, get total number of operators
+     nsize = istack_getrest( empty_v )
+
+! copy index_v to index_t
+! since we do not shift the annihilation operator actually at this stage, so
+! index_v can not be overwritten here
+     do i=1,nsize
+         index_t(i) = index_v(i)
+     enddo ! over i={1,nsize} loop
+
+!-------------------------------------------------------------------------
+! stage 1: shift old annihilation operator, trial step
+!-------------------------------------------------------------------------
+! get memory address for annihilation operator
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ae )
+
+! store basic data for new annihilation operator
+     time_v(ae) = tau_end2
+     flvr_v(ae) = flvr
+     type_v(ae) = 0
+
+! remove the unused index address from index_t
+     do i=ieo,nsize-1
+         index_t(i) = index_t(i+1)
+     enddo ! over i={ieo,nsize-1} loop
+     index_t(nsize) = 0
+
+! shift index_t to make an empty room
+     do i=nsize-1,ien,-1
+         index_t(i+1) = index_t(i)
+     enddo ! over i={nsize-1,ien,-1} loop
+
+! store the memory address for annihilation operator
+     index_t(ien) = ae
+
+! evaluate previous imaginary time interval
+     if ( ien == 1 ) then ! the imaginary time of annihilation operator is the smallest
+         t_prev = time_v( index_t(ien) ) - zero
+     else
+         t_prev = time_v( index_t(ien) ) - time_v( index_t(ien-1) )
+     endif ! back if ( ien == 1 ) block
+
+! update the expt_v, matrix of time evolution operator
+     do i=1,ncfgs
+         expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
+     enddo ! over i={1,ncfgs} loop
+
+!-------------------------------------------------------------------------
+! stage 2: auxiliary tasks
+!-------------------------------------------------------------------------
+! its neighbor needs to be changes as well.
+! makes a copy of time and type, and changes time evolution operator
+     if ( ien < nsize ) then
+         t_next = time_v( index_t(ien+1) ) - time_v( index_t(ien) )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ae )
+         time_v(ae) = time_v( index_t(ien+1) )
+         flvr_v(ae) = flvr_v( index_t(ien+1) )
+         type_v(ae) = type_v( index_t(ien+1) )
+         index_t(ien+1) = ae
+         do i=1,ncfgs
+             expt_v( i, ae ) = exp ( -eigs(i) * t_next )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( ien < nsize ) block
+
+! the operator closest to the old place needs to be changed as well
+     if ( ieo < nsize .and. ieo /= ien ) then
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
+         else
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_t(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_t(ieo_t) ) - time_v( index_t(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
+         time_v(ae) = time_v( index_t(ieo_t) )
+         flvr_v(ae) = flvr_v( index_t(ieo_t) )
+         type_v(ae) = type_v( index_t(ieo_t) )
+         index_t(ieo_t) = ae
+         do i=1,ncfgs
+             expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( ieo < nsize .and. ieo /= ien ) block
+
+! update the final time evolution operator
+     t_next = time_v( index_t(nsize) )
+     do i=1,ncfgs
+         expt_t( i, 1 ) = exp ( -eigs(i) * (beta - t_next) )
+     enddo ! over i={1,ncfgs} loop
+
+     return
+  end subroutine cat_rshift_ztrace
+
+!!========================================================================
 !!>>> service layer: utility subroutines to look up in the flavor      <<<
 !!========================================================================
 
