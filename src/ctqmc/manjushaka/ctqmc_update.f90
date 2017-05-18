@@ -70,8 +70,8 @@
      rmv_r = zero
 
      lsh_t = zero
-     lshift_accept = zero
-     lshift_reject = zero
+     lsh_a = zero
+     lsh_r = zero
 
      rshift_tcount = zero
      rshift_accept = zero
@@ -500,7 +500,7 @@
 
      use control, only : norbs
      use context, only : ckink, csign, cnegs
-     use context, only : lsh_t, lshift_accept, lshift_reject
+     use context, only : lsh_t, lsh_a, lsh_r
      use context, only : rank
 
      implicit none
@@ -552,7 +552,7 @@
      if ( ckink == 0 ) then
 !<         call s_print_exception('ctqmc_lshift_kink','can not lshift any operators')
          lsh_t = lsh_t + one
-         lshift_reject = lshift_reject + one
+         lsh_r = lsh_r + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
      endif ! back if ( ckink == 0 ) block
@@ -620,9 +620,9 @@
 ! update the lshift statistics
      lsh_t = lsh_t + one
      if ( pass .eqv. .true. ) then
-         lshift_accept = lshift_accept + one
+         lsh_a = lsh_a + one
      else
-         lshift_reject = lshift_reject + one
+         lsh_r = lsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
