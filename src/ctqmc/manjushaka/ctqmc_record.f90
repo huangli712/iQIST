@@ -763,146 +763,8 @@
   end subroutine ctqmc_record_pair
 
 !!========================================================================
-!!>>> reduce physical observables                                      <<<
+!!>>> reduce physical observables 1                                    <<<
 !!========================================================================
-
-!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
-  subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
-     use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
-
-     use control, only : norbs
-     use control, only : ntime
-     use control, only : nprocs
-     use context, only : gtau
-
-     implicit none
-
-! external arguments
-! impurity green's function
-     real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
-     real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
-
-! initialize gtau_mpi and gtau_err
-     gtau_mpi = zero
-     gtau_err = zero
-
-! build gtau_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(gtau, gtau_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     gtau_mpi = gtau
-
-# endif /* MPI */
-
-! calculate the average
-     gtau_mpi = gtau_mpi / real(nprocs)
-
-! build gtau_err, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif /* MPI */
-
-! calculate standard deviation
-     if ( nprocs > 1 ) then
-         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
-
-     return
-  end subroutine ctqmc_reduce_gtau
-
-!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
-  subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
-     use constants, only : dp, zero, czero, czi
-     use mmpi, only : mp_allreduce, mp_barrier
-
-     use control, only : norbs
-     use control, only : mfreq
-     use control, only : nprocs
-     use context, only : grnf
-
-     implicit none
-
-! external arguments
-! impurity green's function
-     complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
-     complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
-
-! local variables
-! used to store the real and imaginary parts of impurity green's function
-     real(dp), allocatable :: re_err(:,:,:)
-     real(dp), allocatable :: im_err(:,:,:)
-
-! allocate memory
-     allocate(re_err(mfreq,norbs,norbs))
-     allocate(im_err(mfreq,norbs,norbs))
-
-! initialize re_err and im_err
-     re_err = zero
-     im_err = zero
-
-! initialize grnf_mpi and grnf_err
-     grnf_mpi = czero
-     grnf_err = czero
-
-! build grnf_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(grnf, grnf_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     grnf_mpi = grnf
-
-# endif /* MPI */
-
-! calculate the average
-     grnf_mpi = grnf_mpi / real(nprocs)
-
-! build grnf_err, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
-     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif /* MPI */
-
-! calculate standard deviation
-     if ( nprocs > 1 ) then
-         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
-         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
-
-! construct the final grnf_err
-     grnf_err = re_err + im_err * czi
-
-! deallocate memory
-     deallocate(re_err)
-     deallocate(im_err)
-
-     return
-  end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
@@ -1086,6 +948,148 @@
 
      return
   end subroutine ctqmc_reduce_nmat
+
+
+
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
+  subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
+
+     implicit none
+
+! external arguments
+! impurity green's function
+     real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
+
+! initialize gtau_mpi and gtau_err
+     gtau_mpi = zero
+     gtau_err = zero
+
+! build gtau_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(gtau, gtau_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     gtau_mpi = gtau
+
+# endif /* MPI */
+
+! calculate the average
+     gtau_mpi = gtau_mpi / real(nprocs)
+
+! build gtau_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+     return
+  end subroutine ctqmc_reduce_gtau
+
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
+  subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+     use constants, only : dp, zero, czero, czi
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
+
+     implicit none
+
+! external arguments
+! impurity green's function
+     complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
+     complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
+
+! local variables
+! used to store the real and imaginary parts of impurity green's function
+     real(dp), allocatable :: re_err(:,:,:)
+     real(dp), allocatable :: im_err(:,:,:)
+
+! allocate memory
+     allocate(re_err(mfreq,norbs,norbs))
+     allocate(im_err(mfreq,norbs,norbs))
+
+! initialize re_err and im_err
+     re_err = zero
+     im_err = zero
+
+! initialize grnf_mpi and grnf_err
+     grnf_mpi = czero
+     grnf_err = czero
+
+! build grnf_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(grnf, grnf_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     grnf_mpi = grnf
+
+# endif /* MPI */
+
+! calculate the average
+     grnf_mpi = grnf_mpi / real(nprocs)
+
+! build grnf_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
+         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+! construct the final grnf_err
+     grnf_err = re_err + im_err * czi
+
+! deallocate memory
+     deallocate(re_err)
+     deallocate(im_err)
+
+     return
+  end subroutine ctqmc_reduce_grnf
+
+
 
 !!>>> ctqmc_reduce_kmat: reduce the kmat and kkmat from all children processes
   subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
