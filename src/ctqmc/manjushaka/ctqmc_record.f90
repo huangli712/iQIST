@@ -766,13 +766,20 @@
 !!>>> reduce physical observables 1                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
+!!
+!! @sub ctqmc_reduce_hist
+!!
+!! reduce the hist from all children processes
+!!
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : mkink
      use control, only : nprocs
+
      use context, only : hist
 
      implicit none
