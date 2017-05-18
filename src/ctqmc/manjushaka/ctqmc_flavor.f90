@@ -1124,7 +1124,7 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for insert new create and annihilation operators
+! index address for inserting new creation and annihilation operators
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
@@ -1138,7 +1138,7 @@
 ! loop index over operators and frequencies
      integer  :: i
 
-! memory address for new create and annihilation operators
+! memory address for new creation and annihilation operators
      integer  :: as
      integer  :: ae
 
