@@ -885,7 +885,7 @@
 ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether current subspace can survive
+! dummy variables, used to check whether the current subspace can survive
      integer :: idead
 
 ! dummy variables, used to resolve spin up and spin down states
@@ -987,11 +987,17 @@
 !!
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
      use constants, only : dp
+
      use stack, only : istack_getrest
 
      use control, only : nband
+
      use context, only : cssoc
-     use context, only : empty_v, index_v, type_v, flvr_v, time_v
+     use context, only : empty_v
+     use context, only : index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
 
      implicit none
 
@@ -1004,7 +1010,7 @@
      integer, intent(out) :: iso
      integer, intent(out) :: isn
 
-! whether the old creation operators can be shifted diagrammatically
+! whether the old creation operator can be shifted diagrammatically
      logical, intent(out) :: lshf
 
 ! imaginary time point of the old creation operator
@@ -1028,7 +1034,7 @@
 ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether current subspace can survive
+! dummy variables, used to check whether the current subspace can survive
      integer :: idead
 
 ! dummy variables, used to resolve spin up and spin down states
