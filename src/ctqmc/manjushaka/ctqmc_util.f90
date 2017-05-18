@@ -564,14 +564,15 @@
 !! build imaginary time green's function using different representation
 !!
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp, zero, two
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
-     use context, only : ppleg, qqche
+
+     use context, only : rep_l
 
      implicit none
 
@@ -585,15 +586,6 @@
 ! calculated impurity green's function
      real(dp), intent(out) :: gaux(ntime,norbs,norbs)
 
-! local parameters
-! scheme of integral kernel used to damp the Gibbs oscillation
-! damp = 0, Dirichlet   mode
-! damp = 1, Jackson     mode, preferred
-! damp = 2, Lorentz     mode
-! damp = 3, Fejer       mode
-! damp = 4, Wang-Zunger mode
-     integer, parameter :: damp = 0
-
 ! local variables
 ! loop index
      integer  :: i
@@ -601,9 +593,6 @@
 
 ! loop index for legendre polynomial
      integer  :: fleg
-
-! loop index for chebyshev polynomial
-     integer  :: fche
 
 ! index for imaginary time \tau
      integer  :: curr
@@ -617,76 +606,6 @@
 ! initialize gaux
      gaux = zero
 
-! select calculation method
-     select case ( isort )
-
-         case (1, 4)
-             call cat_make_gtau1()
-
-         case (2, 5)
-             call cat_make_gtau2()
-
-         case (3, 6)
-             call cat_make_gtau3()
-
-     end select
-
-     return
-
-  contains
-
-!!>>> cat_make_kpm: build the integral kernel function
-  subroutine cat_make_kpm(kdim, kern)
-     implicit none
-
-! external arguments
-! dimension of integral kernel function
-     integer, intent(in)   :: kdim
-
-! integral kernel function
-     real(dp), intent(out) :: kern(kdim)
-
-! local variables
-! loop index
-     integer :: kcur
-
-     kern = zero
-     do kcur=1,kdim
-         select case ( damp )
-
-! Dirichlet mode
-             case (0)
-                 kern(kcur) = one
-
-! Jackson mode
-             case (1)
-                 i = kcur - 1
-                 curr = kdim + 1
-                 raux = pi * i / curr
-                 kern(kcur) = ( (curr-i) * cos(raux) + sin(raux) / tan(pi/curr) ) / curr
-
-! Lorentz mode
-             case (2)
-                 kern(kcur) = sinh( one - (kcur - one) / real( kdim ) ) / sinh(one)
-
-! Fejer mode
-             case (3)
-                 kern(kcur) = one - ( kcur - one ) / real( kdim )
-
-! Wang-Zunger mode
-             case (4)
-                 kern(kcur) = exp( - ( (kcur - one) / real( kdim ) )**4 )
-
-         end select
-     enddo ! over kcur={1,kdim} loop
-
-     return
-  end subroutine cat_make_kpm
-
-!!>>> cat_make_gtau1: build impurity green's function using normal
-!!>>> representation
-  subroutine cat_make_gtau1()
-     implicit none
 
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
@@ -695,8 +614,6 @@
          enddo ! over j={1,ntime} loop
      enddo ! over i={1,norbs} loop
 
-     return
-  end subroutine cat_make_gtau1
 
 !!>>> cat_make_gtau2: build impurity green's function using legendre
 !!>>> polynomial representation
