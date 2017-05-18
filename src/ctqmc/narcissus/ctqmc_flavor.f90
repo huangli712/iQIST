@@ -8,7 +8,7 @@
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
 !!!           cat_rshift_ztrace <<<---
-!!!           cat_insert_flavor
+!!!           try_insert_colour
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor <<<---
@@ -859,12 +859,12 @@
 !!========================================================================
 
 !!
-!! @sub cat_insert_flavor
+!! @sub try_insert_colour
 !!
 !! determine \tau_s, \tau_e and \tau_max for inserting new segment
 !! or anti-segment
 !!
-  subroutine cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
+  subroutine try_insert_colour(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
 
      use spring, only : spring_sfmt_stream
@@ -1233,7 +1233,7 @@
      endif ! back if ( anti .eqv. .false. ) block
 
      return
-  end subroutine cat_insert_flavor
+  end subroutine try_insert_colour
 
 !!
 !! @sub cat_remove_flavor
