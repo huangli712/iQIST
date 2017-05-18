@@ -2680,8 +2680,13 @@
 !!>>> service layer: quickly look up in the colour and flavor parts    <<<
 !!========================================================================
 
-!!>>> cat_search_colour: to determine whether there exists an operator
-!!>>> whose imaginary time is equal to time
+!!
+!! @sub cat_search_colour
+!!
+!! try to determine whether there exists an operator whose imaginary time
+!! is equal to the given input parameter 'time'. clearly, it is working
+!! in the colour part
+!!
   subroutine cat_search_colour(flvr, time, have)
      use constants, only : dp, epss
 
