@@ -60,7 +60,7 @@
 ! reset caves
      caves = 0
 
-! reinit statistics variables
+! reset statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
      rmv_t = zero; rmv_a = zero; rmv_r = zero
      lsh_t = zero; lsh_a = zero; lsh_r = zero
@@ -125,7 +125,7 @@
 
          if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
              if ( spring_sfmt_stream() > 0.9_dp ) then
-                 call ctqmc_reflip_kink(1) ! flip intra-orbital spins randomly
+                 call ctqmc_reflip_kink(1) ! flip intra-orbital spins one by one
              else
                  call ctqmc_reflip_kink(2) ! flip intra-orbital spins globally
              endif ! back if ( spring_sfmt_stream() > 0.9_dp ) block
@@ -134,9 +134,14 @@
      END BLOCK GLOBAL_REFLIP
 
 ! numerical trick: perform global update periodically
-     if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
-         call ctqmc_reload_kink()
-     endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
+!-------------------------------------------------------------------------
+     GLOBAL_RELOAD: BLOCK
+
+         if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
+             call ctqmc_reload_kink()
+         endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
+
+     END BLOCK GLOBAL_RELOAD
 
      return
   end subroutine ctqmc_try_walking
