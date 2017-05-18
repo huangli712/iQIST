@@ -13,12 +13,10 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : provide basic infrastructure (elementary updating subroutines)
-!!!           for hybridization expansion version continuous time quantum
-!!!           Monte Carlo (CTQMC) quantum impurity solver.
-!!!           the following subroutines mainly deal with the \mathscr{M}
-!!!           matrix: mmat, and \mathscr{G} matrix: gmat.
+!!!           05/18/2017 by li huang (last modified)
+!!! purpose : basic update actions for the hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver. they are called by ctqmc_impurity_solver().
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
