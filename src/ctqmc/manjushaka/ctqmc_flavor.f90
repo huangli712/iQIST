@@ -2731,8 +2731,12 @@
      return
   end subroutine cat_search_colour
 
-!!>>> cat_search_flavor: determine index address of operators in the
-!!>>> flavor part using bisection algorithm
+!!
+!! @sub cat_search_flavor
+!!
+!! try to determine index address of operators in the flavor part using
+!! the bisection algorithm
+!!
   subroutine cat_search_flavor(addr, ndim, time)
      use constants, only : dp
 
