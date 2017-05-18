@@ -2801,9 +2801,11 @@
 !!
   subroutine ctqmc_make_colour(flvr, kink)
      use constants, only : dp
+
      use spring, only : spring_sfmt_stream
 
      use control, only : beta
+
      use context, only : ckink
      use context, only : rank
 
