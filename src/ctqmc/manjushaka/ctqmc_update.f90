@@ -146,6 +146,11 @@
      return
   end subroutine ctqmc_try_walking
 
+!!
+!! @sub ctqmc_try_warning
+!!
+!! checking whether the quantum impurity solver is consistent internally
+!!
   subroutine ctqmc_try_warning(cflag)
      use constants, only : mystd
 
