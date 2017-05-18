@@ -7,7 +7,6 @@
 !!!           ctqmc_symm_nimp
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf <<<---
-!!!           ctqmc_smth_sigf <<<---
 !!!           ctqmc_make_gtau
 !!!           ctqmc_make_ftau <<<---
 !!!           ctqmc_make_prod <<<---
@@ -473,12 +472,16 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
-!!>>> only the diagonal elements are taken into considerations
+!!
+!! @sub ctqmc_symm_grnf
+!!
+!! symmetrize the grnf according to symm vector. only the diagonal
+!! elements are taken into considerations
+!!
   subroutine ctqmc_symm_grnf(symm, grnf)
      use constants, only : dp, two, czero
 
-     use control, only : issun, isspn
+     use control, only : isbnd, isspn
      use control, only : nband, norbs
      use control, only : mfreq
 
@@ -512,8 +515,8 @@
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals which symm index are identity
-     if ( issun == 2 ) then
+! perform symmetrization for those orbitals with the same symmetry
+     if ( isbnd == 2 ) then
          do kfrq=1,mfreq
              do ibnd=1,norbs
                  if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
@@ -535,10 +538,10 @@
                  endif ! back if ( hist(ibnd) > 0 ) block
              enddo ! over ibnd={1,norbs} loop
          enddo ! over kfrq={1,mfreq} loop
-     endif ! back if ( issun == 2 ) block
+     endif ! back if ( isbnd == 2 ) block
 
 ! symmetrize grnf over spin
-     if ( isspn == 1 ) then
+     if ( isspn == 2 ) then
          do kfrq=1,mfreq
              do jbnd=1,nband
                  caux = ( grnf(kfrq,jbnd,jbnd) + grnf(kfrq,jbnd+nband,jbnd+nband) ) / two
@@ -546,82 +549,10 @@
                  grnf(kfrq,jbnd+nband,jbnd+nband) = caux
              enddo ! over jbnd={1,nband} loop
          enddo ! over kfrq={1,mfreq} loop
-     endif ! back if ( isspn == 1 ) block
+     endif ! back if ( isspn == 2 ) block
 
      return
   end subroutine ctqmc_symm_grnf
-
-!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
-!!>>> frequency region
-  subroutine ctqmc_smth_sigf(sigf)
-     use constants, only : dp, czero
-
-     use control, only : nfreq
-
-     implicit none
-
-! external arguments
-! impurity self-energy function to be smoothen
-     complex(dp), intent(inout) :: sigf(nfreq)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-     integer  :: k
-
-! smooth radius
-     integer  :: lrad
-     integer  :: srad
-
-! imaginary part of self-energy function
-     real(dp) :: ti
-
-! real part of self-energy function
-     real(dp) :: tr
-
-! dummy variables for addition
-     complex(dp) :: saux
-
-! dummy self-energy function
-     complex(dp) :: stmp(nfreq)
-
-! determine smooth radius
-     lrad = nfreq / 4  ! large radius
-     srad = nfreq / 16 ! small radius
-
-! |---------|---------|----------------------|
-! 1         lrad      2*lrad                 nfreq
-! deal with [1,lrad], head part
-     do k=1,lrad
-         stmp(k) = sigf(k)
-     enddo ! over k={1,lrad} loop
-
-! deal with [lrad+1,2*lrad], intermediate part
-     do i=1,lrad
-         k = lrad + i
-         saux = czero
-         do j=-srad,srad
-             saux = saux + sigf(k+j)
-         enddo ! over j={-srad,srad} loop
-         stmp(k) = saux / real(2 * srad + 1)
-         stmp(k) = ( (lrad - i) * sigf(k) + i * stmp(k) ) / real(lrad)
-     enddo ! over i={1,lrad} loop
-
-! deal with [nfreq-2*lrad+1,nfreq], tail part
-     do k=nfreq-2*lrad+1,nfreq
-         tr =  real( stmp(nfreq-2*lrad) )
-         ti = aimag( stmp(nfreq-2*lrad) ) * real(nfreq - 2 * lrad) / real(k)
-         stmp(k) = dcmplx(tr,ti)
-     enddo ! over k={nfreq-2*lrad+1,nfreq} loop
-
-! copy stmp to sigf
-     do k=1,nfreq
-         sigf(k) = stmp(k)
-     enddo ! over k={1,nfreq} loop
-
-     return
-  end subroutine ctqmc_smth_sigf
 
 !!========================================================================
 !!>>> postprocess physical observables                                 <<<
