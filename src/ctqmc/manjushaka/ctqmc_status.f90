@@ -11,7 +11,7 @@
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver, respectively.
-!!!           it can be used to save the computational time to achieve the
+!!!           it can be used to save the computational time to reach the
 !!!           equilibrium state.
 !!! status  : unstable
 !!! comment :
