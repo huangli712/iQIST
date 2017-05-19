@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -126,57 +126,58 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'configuration parameters for global control'
+     write(mystd,'(2X,a)') 'configuration parameters -> core control'
      write(mystd,'(2X,a)') '----------------------------------------------------'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isscf  /', isscf , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isscr  /', isscr , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isbnd  /', isbnd , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isspn  /', isspn , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isbin  /', isbin , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'iswor  /', iswor , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isort  /', isort , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isobs  /', isobs , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'issus  /', issus , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isvrt  /', isvrt , '/', 'integer'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isscf  /', isscf , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isscr  /', isscr , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isbnd  /', isbnd , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isspn  /', isspn , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isbin  /', isbin , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'iswor  /', iswor , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isort  /', isort , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isobs  /', isobs , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'issus  /', issus , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isvrt  /', isvrt , 'type / i'
 
-     write(mystd,'(2X,a)') 'configuration parameters for self-consistent engine'
+     write(mystd,'(2X,a)') 'configuration parameters -> dmft engine'
      write(mystd,'(2X,a)') '----------------------------------------------------'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'niter  /', niter , '/', 'integer'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'alpha  /', alpha , '/', ' double'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'niter  /', niter , '/', 'i'
+     write(mystd,'(4X,a8,f10.5,2X,a8)') 'alpha  /', alpha , '/', 'd'
 
-     write(mystd,'(2X,a)') 'configuration parameters for quantum impurity model'
+     write(mystd,'(2X,a)') 'configuration parameters -> quantum impurity model'
      write(mystd,'(2X,a)') '----------------------------------------------------'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nband  /', nband , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nspin  /', nspin , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'norbs  /', norbs , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ncfgs  /', ncfgs , '/', 'integer'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'Uc     /', Uc    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'Jz     /', Jz    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'lc     /', lc    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'wc     /', wc    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'mune   /', mune  , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'beta   /', beta  , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'part   /', part  , '/', ' double'
+     write(mystd,'(4X,a,i10,  2a4)') 'nband  /', nband , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nspin  /', nspin , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'norbs  /', norbs , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'ncfgs  /', ncfgs , '/', 'i'
+     write(mystd,'(4X,a,f10.5,2a4)') 'Uc     /', Uc    , '/', 'd'
+     write(mystd,'(4X,a,f10.5,2a4)') 'Jz     /', Jz    , '/', 'd'
+     write(mystd,'(4X,a,f10.5,2a4)') 'lc     /', lc    , '/', 'd'
+     write(mystd,'(4X,a,f10.5,2a4)') 'wc     /', wc    , '/', 'd'
+     write(mystd,'(4X,a,f10.5,2a4)') 'mune   /', mune  , '/', 'd'
+     write(mystd,'(4X,a,f10.5,2a4)') 'beta   /', beta  , '/', 'd'
+     write(mystd,'(4X,a,f10.5,2a4)') 'part   /', part  , '/', 'd'
 
-     write(mystd,'(2X,a)') 'configuration parameters for quantum impurity solver'
+     write(mystd,'(2X,a)') 'configuration parameters -> quantum impurity solver'
      write(mystd,'(2X,a)') '----------------------------------------------------'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'lemax  /', lemax , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'legrd  /', legrd , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'mkink  /', mkink , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'mfreq  /', mfreq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nffrq  /', nffrq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nbfrq  /', nbfrq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nfreq  /', nfreq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ntime  /', ntime , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nflip  /', nflip , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ntherm /', ntherm, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nsweep /', nsweep, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nwrite /', nwrite, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nclean /', nclean, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nmonte /', nmonte, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ncarlo /', ncarlo, '/', 'integer'
+     write(mystd,'(4X,a,i10,  2a4)') 'lemax  /', lemax , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'legrd  /', legrd , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'mkink  /', mkink , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'mfreq  /', mfreq , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nffrq  /', nffrq , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nbfrq  /', nbfrq , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nfreq  /', nfreq , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'ntime  /', ntime , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nflip  /', nflip , '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'ntherm /', ntherm, '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nsweep /', nsweep, '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nwrite /', nwrite, '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nclean /', nclean, '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'nmonte /', nmonte, '/', 'i'
+     write(mystd,'(4X,a,i10,  2a4)') 'ncarlo /', ncarlo, '/', 'i'
 
      write(mystd,*)
+     STOP
 
      return
   end subroutine ctqmc_print_summary
