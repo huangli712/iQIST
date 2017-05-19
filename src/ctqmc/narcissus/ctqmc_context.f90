@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -54,10 +54,10 @@
 !!     it means null occupation case
 !!
 !! if cstat = 1:
-!!     it means partial occupation case, segment scheme
+!!     it means partial occupation case (segment scheme)
 !!
 !! if cstat = 2:
-!!     it means partial occupation case, anti-segment scheme
+!!     it means partial occupation case (anti-segment scheme)
 !!
 !! if cstat = 3:
 !!     it means full occupation case
@@ -71,21 +71,21 @@
 !!
 !! @var ins_t
 !!
-!! insert kink (operators pair) statistics: total insert count
+!! insert kink (operators pair) statistics: total count
 !!
      real(dp), public, save :: ins_t = zero
 
 !!
 !! @var ins_a
 !!
-!! insert kink (operators pair) statistics: total accepted insert count
+!! insert kink (operators pair) statistics: accepted count
 !!
      real(dp), public, save :: ins_a = zero
 
 !!
 !! @var ins_r
 !!
-!! insert kink (operators pair) statistics: total rejected insert count
+!! insert kink (operators pair) statistics: rejected count
 !!
      real(dp), public, save :: ins_r = zero
 
@@ -96,21 +96,21 @@
 !!
 !! @var rmv_t
 !!
-!! remove kink (operators pair) statistics: total remove count
+!! remove kink (operators pair) statistics: total count
 !!
      real(dp), public, save :: rmv_t = zero
 
 !!
 !! @var rmv_a
 !!
-!! remove kink (operators pair) statistics: total accepted remove count
+!! remove kink (operators pair) statistics: accepted count
 !!
      real(dp), public, save :: rmv_a = zero
 
 !!
 !! @var rmv_r
 !!
-!! remove kink (operators pair) statistics: total rejected remove count
+!! remove kink (operators pair) statistics: rejected count
 !!
      real(dp), public, save :: rmv_r = zero
 
@@ -121,21 +121,21 @@
 !!
 !! @var lsh_t
 !!
-!! lshift kink (operators pair) statistics: total lshift count
+!! lshift kink (operators pair) statistics: total count
 !!
      real(dp), public, save :: lsh_t = zero
 
 !!
 !! @var lsh_a
 !!
-!! lshift kink (operators pair) statistics: total accepted lshift count
+!! lshift kink (operators pair) statistics: accepted count
 !!
      real(dp), public, save :: lsh_a = zero
 
 !!
 !! @var lsh_r
 !!
-!! lshift kink (operators pair) statistics: total rejected lshift count
+!! lshift kink (operators pair) statistics: rejected count
 !!
      real(dp), public, save :: lsh_r = zero
 
@@ -146,21 +146,21 @@
 !!
 !! @var rsh_t
 !!
-!! rshift kink (operators pair) statistics: total rshift count
+!! rshift kink (operators pair) statistics: total count
 !!
      real(dp), public, save :: rsh_t = zero
 
 !!
 !! @var rsh_a
 !!
-!! rshift kink (operators pair) statistics: total accepted rshift count
+!! rshift kink (operators pair) statistics: accepted count
 !!
      real(dp), public, save :: rsh_a = zero
 
 !!
 !! @var rsh_r
 !!
-!! rshift kink (operators pair) statistics: total rejected rshift count
+!! rshift kink (operators pair) statistics: rejected count
 !!
      real(dp), public, save :: rsh_r = zero
 
@@ -171,21 +171,21 @@
 !!
 !! @var rfl_t
 !!
-!! reflip kink (operators pair) statistics: total reflip count
+!! reflip kink (operators pair) statistics: total count
 !!
      real(dp), public, save :: rfl_t = zero
 
 !!
 !! @var rfl_a
 !!
-!! reflip kink (operators pair) statistics: total accepted reflip count
+!! reflip kink (operators pair) statistics: accepted count
 !!
      real(dp), public, save :: rfl_a = zero
 
 !!
 !! @var rfl_r
 !!
-!! reflip kink (operators pair) statistics: total rejected reflip count
+!! reflip kink (operators pair) statistics: rejected count
 !!
      real(dp), public, save :: rfl_r = zero
 
