@@ -1,33 +1,19 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-## Standard tests
+## Standard tests: NARCISSUS @ iQIST
 
-Our impurity solver: NARCISSUS @ iQIST
+* S011 // 1-band model, density-density interaction (static )
+* S012 // 1-band model, density-density interaction (dynamic)
+* S021 // 2-band model, density-density interaction (static )
+* S022 // 2-band model, density-density interaction (dynamic)
 
-### S011
+## Standard tests: MANJUSHAKA @ iQIST
 
-### S012
-
-### S021
-
-### S022
-
-
-Our impurity solver: MANJUSHAKA @ iQIST
-
-### S111
-
-### S131
-
-### S132
-
-### S151
-
-### S152
-
-### S171
-
-### S172
-
+* S131 // 3-band model, density-density interaction
+* S132 // 3-band model, rotationally invariant interaction, spin-orbit coupling
+* S151 // 5-band model, density-density interaction
+* S152 // 5-band model, rotationally invariant interaction, spin-orbit coupling
+* S171 // 7-band model, density-density interaction
+* S172 // 7-band model, rotationally invariant interaction, spin-orbit coupling
 
 ## Advanced tests
