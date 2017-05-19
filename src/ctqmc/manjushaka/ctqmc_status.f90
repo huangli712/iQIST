@@ -113,13 +113,16 @@
 !!
   subroutine ctqmc_retrieve_status()
      use constants, only : dp, zero, epss, mytmp
-     use mmpi, only : mp_bcast, mp_barrier
+
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
 
      use control, only : iscut
      use control, only : norbs
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
+
      use context, only : ckink, csign, cnegs, n_mtr
      use context, only : rank
 
@@ -145,7 +148,7 @@
      logical  :: exists
 
 ! dummy character variables
-     character(14) :: chr
+     character (len = 9) :: chr
 
 ! determinant ratio for insert operators
      real(dp) :: deter_ratio
