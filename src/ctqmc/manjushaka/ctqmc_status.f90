@@ -136,8 +136,8 @@
      integer  :: j
 
 ! dummy integer variables
-     integer  :: i1
-     integer  :: j1
+     integer  :: m
+     integer  :: n
 
 ! index address for create and destroy operators in flavor part, respectively
      integer  :: fis
@@ -202,16 +202,16 @@
 
 ! read in key data
          FLVR_CYCLE: do i=1,norbs
-             read(mytmp,'(a9,i4)') chr, i1
+             read(mytmp,'(a9,i4)') chr, m
 
              read(mytmp,'(a9,i4)') chr, ckink
              do j=1,ckink
-                 read(mytmp,*) i1, j1, tau_s(j, i)
+                 read(mytmp,*) m, n, tau_s(j, i)
              enddo ! over j={1,ckink} loop
 
              read(mytmp,'(a9,i4)') chr, ckink
              do j=1,ckink
-                 read(mytmp,*) i1, j1, tau_e(j, i)
+                 read(mytmp,*) m, n, tau_e(j, i)
              enddo ! over j={1,ckink} loop
 
              read(mytmp,*) ! skip two lines
