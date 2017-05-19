@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/18/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver().
@@ -198,7 +198,7 @@
              enddo ! over j={1,rank(i)-1} loop
          enddo ! over i={1,norbs} loop
 
-! check segment and anti-segment
+! check time order of operators
          do i=1,norbs
              if ( stts(i) == 1 ) then
                  if ( time_s( index_s(1, i), i ) > time_e( index_e(1, i), i ) ) then
@@ -237,7 +237,8 @@
 !!
 !! @sub ctqmc_insert_kink
 !!
-!! insert new segment or anti-segment in the perturbation expansion series
+!! insert new creation and annihilation operators in the perturbation
+!! expansion series
 !!
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
@@ -255,7 +256,7 @@
      implicit none
 
 ! local variables
-! whether the new segment or anti-segment can be inserted
+! whether the new creation and annihilation operators can be inserted
      logical  :: ladd
 
 ! whether it is an anti-segment
@@ -269,17 +270,17 @@
 ! current flavor channel
      integer  :: flvr
 
-! index address to insert new segment or anti-segment
-! is and ie are for start and end points, respectively
+! index address to insert new creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer  :: is, ie
 
 ! transition probability
      real(dp) :: p
 
-! \tau_s, start point of the new segment
+! \tau_s, imaginary time point of the creation operator
      real(dp) :: tau_start
 
-! \tau_e, end point of the new segment
+! \tau_e, imaginary time point of the annihilation operator
      real(dp) :: tau_end
 
 ! possible maximum length of the new segment
@@ -367,7 +368,8 @@
 !!
 !! @sub ctqmc_remove_kink
 !!
-!! remove old segment or anti-segment in the perturbation expansion series
+!! remove old creation and annihilation operators in the perturbation
+!! expansion series
 !!
   subroutine ctqmc_remove_kink()
      use constants, only : dp, one
@@ -395,17 +397,17 @@
 ! current flavor channel
      integer  :: flvr
 
-! index address to remove old segment or anti-segment
-! is and ie are for start and end points, respectively
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer  :: is, ie
 
 ! transition probability
      real(dp) :: p
 
-! \tau_s, start point of the old segment
+! \tau_s, imaginary time point of the creation operator
      real(dp) :: tau_start
 
-! \tau_e, end point of the old segment
+! \tau_e, imaginary time point of the annihilation operator
      real(dp) :: tau_end
 
 ! possible maximum length of the old segment
@@ -483,7 +485,7 @@
 !!
 !! @sub ctqmc_lshift_kink
 !!
-!! left shift old segment or anti-segment in the perturbation expansion series
+!! shift old creation operator in the perturbation expansion series
 !!
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, one
@@ -508,17 +510,17 @@
 ! current flavor channel
      integer  :: flvr
 
-! index address to left shift old segment or anti-segment
-! iso and isn are for old and new points, respectively
+! index address to shift old creation operator
+! iso and isn are for old and new indices, respectively
      integer  :: iso, isn
 
 ! transition probability
      real(dp) :: p
 
-! \tau_s, start point of the old segment (old point)
+! \tau_s, imaginary time point of the old creation operator
      real(dp) :: tau_start1
 
-! \tau_s, start point of the old segment (new point)
+! \tau_s, imaginary time point of the new creation operator
      real(dp) :: tau_start2
 
 ! ratio between old and new configurations, the local trace part
@@ -545,8 +547,8 @@
 ! try to generate new configuration
 ! (1) at first, we select iso randomly
 ! (2) obtain tau_start1 according to iso
-! (3) based on the existing segments, we determine tau_start2 and related
-!     index isn
+! (3) based on the existing configuration, we determine tau_start2 and
+!     related index isn
 ! (4) finally ring is evaluated
      call try_lshift_colour(flvr, iso, isn, ring, tau_start1, tau_start2)
 
@@ -588,7 +590,7 @@
 !!
 !! @sub ctqmc_rshift_kink
 !!
-!! right shift old segment or anti-segment in the perturbation expansion series
+!! shift old annihilation operator in the perturbation expansion series
 !!
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, one
@@ -613,17 +615,17 @@
 ! current flavor channel
      integer  :: flvr
 
-! index address to right shift old segment or anti-segment
-! ieo and ien are for old and new points, respectively
+! index address to shift old annihilation operator
+! ieo and ien are for old and new indices, respectively
      integer  :: ieo, ien
 
 ! transition probability
      real(dp) :: p
 
-! \tau_e, end point of the old segment (old point)
+! \tau_e, imaginary time point of the old annihilation operator
      real(dp) :: tau_end1
 
-! \tau_e, end point of the old segment (new point)
+! \tau_e, imaginary time point of the new annihilation operator
      real(dp) :: tau_end2
 
 ! ratio between old and new configurations, the local trace part
@@ -650,8 +652,8 @@
 ! try to generate new configuration
 ! (1) at first, we select ieo randomly
 ! (2) obtain tau_end1 according to ieo
-! (3) based on the existing segments, we determine tau_end2 and related
-!     index ien
+! (3) based on the existing configuration, we determine tau_end2 and
+!     related index ien
 ! (4) finally ring is evaluated
      call try_rshift_colour(flvr, ieo, ien, ring, tau_end1, tau_end2)
 
@@ -838,8 +840,8 @@
 !!
 !! @sub ctqmc_reload_kink
 !!
-!! reload all segments or anti-segments in the perturbation expansion
-!! series, then rebuild all related global matrices from scratch
+!! reload all creation and annihilation operators in the perturbation
+!! expansion series, then rebuild all related global matrices from scratch
 !!
   subroutine ctqmc_reload_kink()
      use control, only : norbs
