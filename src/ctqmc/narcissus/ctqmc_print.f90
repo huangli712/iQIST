@@ -250,17 +250,17 @@
 ! write control parameters
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
 
-     write(mystd,'(4X,a,i4,3X,2a)') 'self-consistent scheme  /', isscf, '/ ', scf(isscf)
-     write(mystd,'(4X,a,i4,3X,2a)') 'dynamic interaction     /', isscr, '/ ', scr(isscr)
-     write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (band part)    /', isbnd, '/ ', bnd(isbnd)
-     write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (spin part)    /', isspn, '/ ', spn(isspn)
-     write(mystd,'(4X,a,i4,3X,2a)') 'data binning            /', isbin, '/ ', bin(isbin)
-     write(mystd,'(4X,a,i4,3X,2a)') 'worm algorithm          /', iswor, '/ ', wor(iswor)
-     write(mystd,'(4X,a,i4,3X,2a)') 'advanced basis          /', isort, '/ ', ort(isort)
+     write(mystd,'(4X,2a)') 'self-consistent scheme   / ', scf(isscf)
+     write(mystd,'(4X,2a)') 'dynamic interaction      / ', scr(isscr)
+     write(mystd,'(4X,2a)') 'symmetry (band part)     / ', bnd(isbnd)
+     write(mystd,'(4X,2a)') 'symmetry (spin part)     / ', spn(isspn)
+     write(mystd,'(4X,2a)') 'data binning             / ', bin(isbin)
+     write(mystd,'(4X,2a)') 'worm algorithm           / ', wor(iswor)
+     write(mystd,'(4X,2a)') 'advanced basis           / ', ort(isort)
 
-     write(mystd,'(4X,a,i4,3X,2a)') 'fidelity susceptibility /', isobs, '/ ', trim(str_obs)
-     write(mystd,'(4X,a,i4,3X,2a)') 'sp/ch susceptibility    /', issus, '/ ', trim(str_sus)
-     write(mystd,'(4X,a,i4,3X,2a)') 'two-particle quantities /', isvrt, '/ ', trim(str_vrt)
+     write(mystd,'(4X,2a)') 'fidelity susceptibility  / ', trim(str_obs)
+     write(mystd,'(4X,2a)') 'sp/ch susceptibility     / ', trim(str_sus)
+     write(mystd,'(4X,2a)') 'two-particle quantities  / ', trim(str_vrt)
 
      write(mystd,*)
 
