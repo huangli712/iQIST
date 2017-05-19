@@ -60,7 +60,7 @@
      write(mytmp,'(a)') '>> any problem, please contact me: '//MAIL_VER
 
 ! dump the segments
-     do i=1,norbs
+     FLVR_CYCLE: do i=1,norbs
          write(mytmp,'(a9,i4)') '# flavor:', i
          write(mytmp,'(a9,i4)') '# status:', stts(i)
 
@@ -78,7 +78,7 @@
 
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,norbs} loop
+     enddo FLVR_CYCLE ! over i={1,norbs} loop
 
 ! close the file handler
      close(mytmp)
@@ -121,7 +121,7 @@
      logical  :: exists
 
 ! dummy character variables
-     character (len = 14) :: chr
+     character (len = 9) :: chr
 
 ! determinant ratio for insert segments
      real(dp) :: deter_ratio
@@ -168,16 +168,16 @@
          read(mytmp,*)
 
 ! read in key data
-         do i=1,norbs
-             read(mytmp,'(a14,i4)') chr, m
-             read(mytmp,'(a14,i4)') chr, cstat
+         FLVR_CYCLE: do i=1,norbs
+             read(mytmp,'(a9,i4)') chr, m
+             read(mytmp,'(a9,i4)') chr, cstat
 
-             read(mytmp,'(a14,i4)') chr, ckink
+             read(mytmp,'(a9,i4)') chr, ckink
              do j=1,ckink
                  read(mytmp,*) m, n, tau_s(j, i)
              enddo ! over j={1,ckink} loop
 
-             read(mytmp,'(a14,i4)') chr, ckink
+             read(mytmp,'(a9,i4)') chr, ckink
              do j=1,ckink
                  read(mytmp,*) m, n, tau_e(j, i)
              enddo ! over j={1,ckink} loop
@@ -187,7 +187,7 @@
 
              stts(i) = cstat
              rank(i) = ckink
-         enddo ! over i={1,norbs} loop
+         enddo FLVR_CYCLE ! over i={1,norbs} loop
 
 ! close the status file
          close(mytmp)
