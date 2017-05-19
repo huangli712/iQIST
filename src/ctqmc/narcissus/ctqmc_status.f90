@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
@@ -61,17 +61,17 @@
 
 ! dump the segments
      do i=1,norbs
-         write(mytmp,'(a,i4)') '# flavor     :', i
-         write(mytmp,'(a,i4)') '# status     :', stts(i)
+         write(mytmp,'(a9,i4)') '# flavor:', i
+         write(mytmp,'(a9,i4)') '# status:', stts(i)
 
 ! write out start point values for segments (creation operators)
-         write(mytmp,'(a,i4)') '# time_s data:', rank(i)
+         write(mytmp,'(a9,i4)') '# time_s:', rank(i)
          do j=1,rank(i)
              write(mytmp,'(2i4,f12.6)') i, j, time_s( index_s(j, i), i )
          enddo ! over j={1,rank(i)} loop
 
 ! write out end point values for segments (annihilation operators)
-         write(mytmp,'(a,i4)') '# time_e data:', rank(i)
+         write(mytmp,'(a9,i4)') '# time_e:', rank(i)
          do j=1,rank(i)
              write(mytmp,'(2i4,f12.6)') i, j, time_e( index_e(j, i), i )
          enddo ! over j={1,rank(i)} loop
