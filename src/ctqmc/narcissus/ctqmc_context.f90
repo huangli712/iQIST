@@ -241,14 +241,14 @@
 !!
 !! @var exp_s
 !!
-!! exp(i\omega t), s means creation operators
+!! exp(i\omega \tau_s), s means creation operators
 !!
      complex(dp), public, save, allocatable :: exp_s(:,:,:)
 
 !!
 !! @var exp_e
 !!
-!! exp(i\omega t), e means annihilation operators
+!! exp(i\omega \tau_e), e means annihilation operators
 !!
      complex(dp), public, save, allocatable :: exp_e(:,:,:)
 
