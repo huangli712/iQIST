@@ -25,12 +25,19 @@
 !!
   subroutine ctqmc_save_status()
      use constants, only : mytmp
+
      use stack, only : istack_getrest
 
      use control, only : cname
      use control, only : norbs
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : empty_v, index_v, type_v, flvr_v, time_v
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : empty_v
+     use context, only : index_v
+     use context, only : type_v
+     use context, only : flvr_v
+     use context, only : time_v
      use context, only : rank
 
      implicit none
@@ -98,9 +105,12 @@
      return
   end subroutine ctqmc_save_status
 
-!!>>> ctqmc_retrieve_status: retrieve the perturbation expansion series
-!!>>> information to initialize the continuous time quantum Monte Carlo
-!!>>> quantum impurity solver
+!!
+!! @sub ctqmc_retrieve_status
+!!
+!! retrieve the perturbation expansion series information to initialize
+!! the continuous time quantum Monte Carlo quantum impurity solver
+!!
   subroutine ctqmc_retrieve_status()
      use constants, only : dp, zero, epss, mytmp
      use mmpi, only : mp_bcast, mp_barrier
