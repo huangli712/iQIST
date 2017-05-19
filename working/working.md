@@ -6,6 +6,8 @@
 * S012 // 1-band model, density-density interaction (dynamic)
 * S021 // 2-band model, density-density interaction (static )
 * S022 // 2-band model, density-density interaction (dynamic)
+* S031 // 3-band model, density-density interaction (static )
+* S032 // 3-band model, density-density interaction (dynamic)
 
 ## Standard tests: MANJUSHAKA @ iQIST
 
@@ -16,4 +18,6 @@
 * S171 // 7-band model, density-density interaction
 * S172 // 7-band model, rotationally invariant interaction, spin-orbit coupling
 
-## Advanced tests
+## Advanced tests: NARCISSUS @ iQIST
+
+## Advanced tests: MANJUSHAKA @ iQIST
