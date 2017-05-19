@@ -17,9 +17,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_save_status: save the current perturbation expansion series
-!!>>> information for the continuous time quantum Monte Carlo quantum
-!!>>> impurity solver
+!!
+!! @sub ctqmc_save_status
+!!
+!! save the current perturbation expansion series information for the
+!! continuous time quantum Monte Carlo quantum impurity solver
+!!
   subroutine ctqmc_save_status()
      use constants, only : mytmp
      use stack, only : istack_getrest
