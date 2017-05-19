@@ -199,15 +199,15 @@
          read(mytmp,*)
 
 ! read in key data
-         do i=1,norbs
-             read(mytmp,'(a14,i4)') chr, i1
+         FLVR_CYCLE: do i=1,norbs
+             read(mytmp,'(a9,i4)') chr, i1
 
-             read(mytmp,'(a14,i4)') chr, ckink
+             read(mytmp,'(a9,i4)') chr, ckink
              do j=1,ckink
                  read(mytmp,*) i1, j1, tau_s(j, i)
              enddo ! over j={1,ckink} loop
 
-             read(mytmp,'(a14,i4)') chr, ckink
+             read(mytmp,'(a9,i4)') chr, ckink
              do j=1,ckink
                  read(mytmp,*) i1, j1, tau_e(j, i)
              enddo ! over j={1,ckink} loop
@@ -216,7 +216,7 @@
              read(mytmp,*)
 
              rank(i) = ckink
-         enddo ! over i={1,norbs} loop
+         enddo FLVR_CYCLE ! over i={1,norbs} loop
 
 ! close the status file
          close(mytmp)
