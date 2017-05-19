@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -121,7 +121,7 @@
 !!
 !! if iswor == 2:
 !!     with worm algorithm, slow but more reliable. note that only some
-!!     selected physical observables support this algorithm
+!!     selected physical observables are measured by this algorithm
 !!
      integer, public, save :: iswor  = 1
 
@@ -295,9 +295,9 @@
 !!
 !! @var niter
 !!
-!! number of self-consistent iterations for the continuous time quantum
-!! Monte Carlo quantum impurity solver plus dynamical mean field theory
-!! simulation
+!! number of self-consistent iterations for dynamical mean field theory
+!! simulation combined with continuous time quantum Monte Carlo quantum
+!! impurity solver
 !!
      integer, public, save :: niter  = 20
 
