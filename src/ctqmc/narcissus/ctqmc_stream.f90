@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/17/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -601,9 +601,9 @@
              close(mytmp)
 
          else
-             if ( isscr == 3 ) then
+             if ( isscr == 4 ) then
                  call s_print_error('ctqmc_input_ktau_','solver.ktau.in does not exist')
-             endif ! back if ( isscr == 3 ) block
+             endif ! back if ( isscr == 4 ) block
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
