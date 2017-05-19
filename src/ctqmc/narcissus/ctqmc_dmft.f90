@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : implement a hybridization expansion version continuous time
 !!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
 !!!           dynamical mean field theory (DMFT) self-consistent engine.
@@ -93,8 +93,9 @@
 ! determine effective chemical potential using
 !     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
 ! where N is the number of bands
-     qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
-     qmune = mune - qmune
+     qmune = mune
+     qmune = qmune - ( real(nband) - half ) * Uc
+     qmune = qmune + ( real(nband) - one ) * 2.5_dp * Jz
 
 ! apply dyson equation to get G^{-1}_0
 !     G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
@@ -217,7 +218,7 @@
          write(mystd,'(4X,a,i03.2)') 'current iteration / ', iter
          write(mystd,'(4X,a,e10.3)') 'current epsilon   / ', seps
          write(mystd,'(4X,a,X,a11)') 'selected watchdog / ', 'self-energy'
-         write(mystd,'(4X,a,l2)')    'is it convergence / ', conv
+         write(mystd,'(4X,a,l2)')    'reach convergence / ', conv
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
