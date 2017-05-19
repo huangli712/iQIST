@@ -381,7 +381,7 @@
 !!
 !! @var knop
 !!
-!! number of operators, < k >
+!! number of operators, < k_i >
 !!
      real(dp), public, save, allocatable :: knop(:)
 
@@ -802,7 +802,7 @@
      implicit none
 
 !!========================================================================
-!!>>> declare global variables                                         <<<
+!!>>> declare private variables                                         <<<
 !!========================================================================
 
 ! status flag
