@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/18/2017 by li huang (last modified)
+!!!           05/19/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver().
@@ -515,7 +515,7 @@
 !!
 !! @sub ctqmc_lshift_kink
 !!
-!! shift old creation operators in the perturbation expansion series
+!! shift old creation operator in the perturbation expansion series
 !!
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, zero, one
@@ -540,7 +540,7 @@
 ! current flavor channel
      integer  :: flvr
 
-! index address to shift old creation operators
+! index address to shift old creation operator
 ! iso and isn are for old and new indices, respectively
 ! ciso (cisn) is for the colour part, while fiso (fisn) is for the flavor part
      integer  :: ciso, cisn
@@ -652,7 +652,7 @@
 !!
 !! @sub ctqmc_rshift_kink
 !!
-!! shift old annihilation operators in the perturbation expansion series
+!! shift old annihilation operator in the perturbation expansion series
 !!
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, zero, one
@@ -677,7 +677,7 @@
 ! current flavor channel
      integer  :: flvr
 
-! index address to shift old annihilation operators
+! index address to shift old annihilation operator
 ! ieo and ien are for old and new indices, respectively
 ! cieo (cien) is for the colour part, while fieo (fien) is for the flavor part
      integer  :: cieo, cien
