@@ -914,14 +914,13 @@
 !!
 !! since the narcissus code is based on the segment representation, it
 !! does not support the spin-flip and pair-hopping terms of course. only
-!! Uc and Jz are need, the other Coulomb interaction parameters are used
-!! as backup and reference
+!! the Uc and Jz parameters are need to build the interaction matrix
 !!
 
 !!
 !! @sub ctqmc_make_umat
 !!
-!! to build density-density two-fermions Coulomb interaction matrix: umat
+!! build density-density two-fermions Coulomb interaction matrix: umat
 !!
   subroutine ctqmc_make_umat(umat)
      use constants, only : dp, zero
@@ -979,7 +978,7 @@
 !!
 !! @sub ctqmc_make_lift
 !!
-!! to shift the Coulomb interaction matrix and the chemical potential if
+!! shift the Coulomb interaction matrix and the chemical potential if
 !! retarded interaction is considered
 !!
   subroutine ctqmc_make_lift(umat, ssign)
