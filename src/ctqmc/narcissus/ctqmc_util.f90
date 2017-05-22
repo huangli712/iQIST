@@ -847,6 +847,7 @@
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
