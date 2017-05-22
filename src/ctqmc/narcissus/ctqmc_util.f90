@@ -784,6 +784,8 @@
   subroutine ctqmc_tran_grnf(gaux, grnf)
      use constants, only : dp, zero, one, two, pi, czi, czero
 
+     use control, only : isort
+     use control, only : lemax
      use control, only : mfreq
      use control, only : beta
 
@@ -811,7 +813,11 @@
 ! unitary transformation matrix for legendre orthogonal polynomial
      complex(dp) :: taux(mfreq,lemax)
 
-! 3.1 build spherical Bessel functions: jaux
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
+     LEG_BLOCK: if ( isort == 2 ) then
+! build spherical Bessel functions: jaux
          jaux = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
@@ -841,6 +847,7 @@
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
   end subroutine ctqmc_tran_grnf
@@ -1256,7 +1263,6 @@
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax
      use control, only : mfreq
      use control, only : nfreq
      use control, only : ntime
