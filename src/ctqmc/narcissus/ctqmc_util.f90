@@ -795,7 +795,7 @@
 
 ! external arguments
 ! orthogonal polynomial coefficients for impurity green's function
-     real(dp), intent(in)  :: gaux(ntime,norbs,norbs)
+     real(dp), intent(in) :: gaux(ntime,norbs,norbs)
 
 ! calculated impurity green's function
      complex(dp), intent(out) :: grnf(mfreq,norbs,norbs)
@@ -847,6 +847,14 @@
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
      endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!-------------------------------------------------------------------------
+! using intermediate representation
+!-------------------------------------------------------------------------
+     SVD_BLOCK: if ( isort == 3 ) then
+
+     endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
