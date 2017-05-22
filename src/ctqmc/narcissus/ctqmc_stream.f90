@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/19/2017 by li huang (last modified)
+!!!           05/22/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -305,7 +305,7 @@
      call s_linspace_d(-one, one, legrd, lmesh)
 
 ! build legendre orthogonal polynomial in [-1,1]
-     call s_legendre(lemax, legrd, lmesh, rep_l)
+     call s_leg_basis(lemax, legrd, lmesh, rep_l)
 
      return
   end subroutine ctqmc_input_mesh_
