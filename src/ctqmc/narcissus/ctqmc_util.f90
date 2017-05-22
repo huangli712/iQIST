@@ -782,7 +782,7 @@
 !! build matsubara green's function using different representation
 !!
   subroutine ctqmc_tran_grnf(gaux, grnf)
-     use constants, only : zero
+     use constants, only : dp, zero, one, two, pi, czi, czero
 
      implicit none
 
@@ -1227,7 +1227,7 @@
 !! by using the improved estimator trick
 !!
   subroutine ctqmc_make_hub2()
-     use constants, only : dp, zero, one, two, pi, czi, czero
+     use constants, only : dp
 
      use control, only : isort
      use control, only : norbs
