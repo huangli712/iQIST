@@ -101,7 +101,7 @@
 !!
 !! build the second kind chebyshev polynomial in [-1,1]
 !!
-  subroutine s_chebyshev(chmax, chgrd, cmesh, qqche)
+  subroutine s_chebyshev(chmax, chgrd, cmesh, rep_c)
      use constants, only : dp, one, two
 
      implicit none
@@ -117,7 +117,7 @@
      real(dp), intent(in)  :: cmesh(chgrd)
 
 ! chebyshev polynomial defined on [-1,1]
-     real(dp), intent(out) :: qqche(chgrd, chmax)
+     real(dp), intent(out) :: rep_c(chgrd, chmax)
 
 ! local variables
 ! loop index
@@ -135,10 +135,10 @@
 !     $U_1(x) = 2x$
 !     $U_{n+1}(x) = 2xU_n(x) - U_{n-1}(x)$
      do i=1,chgrd
-         qqche(i,1) = one
-         qqche(i,2) = two * cmesh(i)
+         rep_c(i,1) = one
+         rep_c(i,2) = two * cmesh(i)
          do j=3,chmax
-             qqche(i,j) = two * cmesh(i) * qqche(i,j-1) - qqche(i,j-2)
+             rep_c(i,j) = two * cmesh(i) * rep_c(i,j-1) - rep_c(i,j-2)
          enddo ! over j={3,chmax} loop
      enddo ! over i={1,chgrd} loop
 
