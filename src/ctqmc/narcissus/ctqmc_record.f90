@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/22/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -519,7 +519,7 @@
                          maux = two * maux
                      endif ! back if ( curr == 1 .or. curr == ntime ) block
 
-! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
+! record ftau, we normalize ftau in ctqmc_make_gtau() subroutine
                      ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux
 
                  endif STD_BLOCK ! back if ( isort == 1 ) block
@@ -536,7 +536,7 @@
 ! determine index for legendre polynomial interval
                      curr = nint( daux * step ) + 1
 
-! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
+! record ftau, we normalize ftau in ctqmc_make_gtau() subroutine
                      LEG_CYCLE: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau

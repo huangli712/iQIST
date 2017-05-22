@@ -1226,7 +1226,7 @@
 
          call ctqmc_make_gtau(tmesh, gtau, gaux)
          call ctqmc_four_htau(gaux, grnf)
-         call ctqmc_make_ftau(tmesh, ftau, faux)
+         call ctqmc_make_gtau(tmesh, ftau, faux)
          call ctqmc_four_htau(faux, frnf)
 
      endif STD_BLOCK ! back if ( isort == 1 ) block

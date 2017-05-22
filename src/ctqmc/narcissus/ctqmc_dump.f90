@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/15/2017 by li huang (last modified)
+!!!           05/22/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -384,8 +384,8 @@
      real(dp) :: fbar(ntime,norbs,norbs)
 
 ! evaluate faux and fbar at first
-     call ctqmc_make_ftau(tmesh, ftau, faux)
-     call ctqmc_make_ftau(tmesh, ferr, fbar)
+     call ctqmc_make_gtau(tmesh, ftau, faux)
+     call ctqmc_make_gtau(tmesh, ferr, fbar)
 
 ! open data file: solver.fcorr.dat
      open(mytmp, file='solver.fcorr.dat', form='formatted', status='unknown')
