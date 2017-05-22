@@ -1,7 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_leg_basis
-!!!           s_chebyshev
+!!!           s_che_basis
 !!!           s_sbessel
 !!!           s_bezier
 !!!           s_f_kernel
@@ -27,7 +27,7 @@
 !! ------------------------
 !!
 !! subroutine s_leg_basis(...)
-!! subroutine s_chebyshev(...)
+!! subroutine s_che_basis(...)
 !!
 !! 2. spheric Bessel function
 !! --------------------------
@@ -97,11 +97,11 @@
   end subroutine s_leg_basis
 
 !!
-!! @sub s_chebyshev
+!! @sub s_che_basis
 !!
 !! build the second kind chebyshev polynomial in [-1,1]
 !!
-  subroutine s_chebyshev(chmax, chgrd, cmesh, rep_c)
+  subroutine s_che_basis(chmax, chgrd, cmesh, rep_c)
      use constants, only : dp, one, two
 
      implicit none
@@ -126,7 +126,7 @@
 
 ! check chmax
      if ( chmax <= 2 ) then
-         call s_print_error('s_chebyshev','chmax must be larger than 2')
+         call s_print_error('s_che_basis','chmax must be larger than 2')
      endif ! back if ( chmax <= 2 ) block
 
 ! the chebyshev polynomials of the second kind can be defined by the
@@ -143,7 +143,7 @@
      enddo ! over i={1,chgrd} loop
 
      return
-  end subroutine s_chebyshev
+  end subroutine s_che_basis
 
 !!========================================================================
 !!>>> spherical Bessel functions                                       <<<
