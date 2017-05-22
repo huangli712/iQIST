@@ -322,8 +322,8 @@
      real(dp) :: gbar(ntime,norbs,norbs)
 
 ! evaluate gaux and gbar at first
-     call ctqmc_tran_gtau(tmesh, gtau, gaux)
-     call ctqmc_tran_gtau(tmesh, gerr, gbar)
+     call ctqmc_tran_gtau(gtau, gaux)
+     call ctqmc_tran_gtau(gerr, gbar)
 
 ! determine reset and nbins
      if ( nbins == nsweep / nwrite + 1 ) then
@@ -384,8 +384,8 @@
      real(dp) :: fbar(ntime,norbs,norbs)
 
 ! evaluate faux and fbar at first
-     call ctqmc_tran_gtau(tmesh, ftau, faux)
-     call ctqmc_tran_gtau(tmesh, ferr, fbar)
+     call ctqmc_tran_gtau(ftau, faux)
+     call ctqmc_tran_gtau(ferr, fbar)
 
 ! open data file: solver.fcorr.dat
      open(mytmp, file='solver.fcorr.dat', form='formatted', status='unknown')
