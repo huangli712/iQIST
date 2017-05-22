@@ -359,6 +359,9 @@
 
 
 
+
+
+
   function s_f_kernel(tau, omega, beta) result(val)
      use constants, only : dp, one, two
 
@@ -394,3 +397,37 @@
 
      return
   end function s_f_kernel
+
+  function s_b_kernel(tau, omega, beta) result(val)
+     use constants, only : dp, one, two
+
+! external arguments
+! imaginary time point
+     real(dp), intent(in) :: tau
+
+! frequency point
+     real(dp), intent(in) :: omega
+
+! inverse temperature
+     real(dp), intent(in) :: beta
+
+! local variables
+! return value
+     real(dp) :: val
+
+! dimensionless variables
+     real(dp) :: x, y
+
+     x = beta * omega / two
+     y = two * tau / beta - one
+
+     if ( x > 100.0_dp ) then
+         val = exp( -x * ( y + one ) )
+     else if ( x < -100.0_dp ) then
+         val = exp(  x * ( one - y ) )
+     else
+         val = exp( -x * y ) / ( two * cosh(x) )
+     endif ! back if ( x > 100.0_dp ) block
+
+     return
+  end function s_b_kernel
