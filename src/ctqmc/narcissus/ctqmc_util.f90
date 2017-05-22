@@ -1085,7 +1085,7 @@
 ! init integral I(\tau_end)
      iret = zero
 
-     do flvr=1,norbs
+     FLVR_CYCLE: do flvr=1,norbs
          do it=1,rank(flvr)
 
 ! contribution from creation operators
@@ -1109,7 +1109,7 @@
              endif ! back if ( dtau >= zero ) block
 
          enddo ! over it={1,rank(flvr)} loop
-     enddo ! over flvr={1,norbs} loop
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
 ! add additional term
      call cat_weight_kernel(2, zero, daux)
@@ -1122,7 +1122,8 @@
 !! @sub ctqmc_make_pref
 !!
 !! calculate the prefactor used by the improved estimator for self-energy
-!! function and two-particle green's function
+!! function and two-particle green's function. when retarded interaction
+!! is present, an additional term is supplemented
 !!
   subroutine ctqmc_make_pref()
      use constants, only : dp, zero, half
@@ -1150,7 +1151,7 @@
 ! integral value for I(\tau_end)
      real(dp) :: iret
 
-     do f1=1,norbs
+     FLVR_CYCLE: do f1=1,norbs
          do it=1,rank(f1)
 
 ! reset the prefactor
@@ -1168,7 +1169,7 @@
                  pref(it,f1) = pref(it,f1) + iret
              endif ! back if ( isscr > 1 ) block
          enddo ! over it={1,rank(f1)} loop
-     enddo ! over f1={1,norbs} loop
+     enddo FLVR_CYCLE ! over f1={1,norbs} loop
 
      return
   end subroutine ctqmc_make_pref
