@@ -797,6 +797,11 @@
      complex(dp), intent(out) :: grnf(mfreq,norbs,norbs)
 
 ! local variables
+! dummy real variables
+     real(dp) :: ob
+
+! spherical Bessel functions
+     real(dp) :: jaux(mfreq,lemax)
 
 
 ! 3.1 build spherical Bessel functions: jaux
@@ -1260,12 +1265,6 @@
      integer  :: i
      integer  :: j
      integer  :: k
-
-! dummy real variables
-     real(dp) :: ob
-
-! spherical Bessel functions
-     real(dp) :: jaux(mfreq,lemax)
 
 ! imaginary time green's function
      real(dp) :: gaux(ntime,norbs,norbs)
