@@ -50,7 +50,7 @@
 !!
 !! build legendre polynomial in [-1,1]
 !!
-  subroutine s_legendre(lemax, legrd, lmesh, ppleg)
+  subroutine s_legendre(lemax, legrd, lmesh, rep_l)
      use constants, only : dp, one
 
      implicit none
@@ -66,7 +66,7 @@
      real(dp), intent(in)  :: lmesh(legrd)
 
 ! legendre polynomial defined on [-1,1]
-     real(dp), intent(out) :: ppleg(legrd,lemax)
+     real(dp), intent(out) :: rep_l(legrd,lemax)
 
 ! local variables
 ! loop index
@@ -85,11 +85,11 @@
 !     $P_1(x) = x$
 !     $(n+1) P_{n+1}(x) = (2n+1) P_n(x) - n P_{n-1}(x)$
      do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = lmesh(i)
+         rep_l(i,1) = one
+         rep_l(i,2) = lmesh(i)
          do j=3,lemax
              k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * lmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
+             rep_l(i,j) = ( real(2*k-1) * lmesh(i) * rep_l(i,j-1) - real(k-1) * rep_l(i,j-2) ) / real(k)
          enddo ! over j={3,lemax} loop
      enddo ! over i={1,legrd} loop
 
