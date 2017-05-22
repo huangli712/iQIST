@@ -690,7 +690,7 @@
 !!
 !! build imaginary time green's function using different representation
 !!
-  subroutine ctqmc_tran_gtau(tmesh, gtau, gaux)
+  subroutine ctqmc_tran_gtau(gtau, gaux)
      use constants, only : dp, zero, two
 
      use control, only : isort
@@ -699,14 +699,12 @@
      use control, only : ntime
      use control, only : beta
 
+     use context, only : tmesh
      use context, only : rep_l
 
      implicit none
 
 ! external arguments
-! imaginary time mesh
-     real(dp), intent(in)  :: tmesh(ntime)
-
 ! impurity green's function/orthogonal polynomial coefficients
      real(dp), intent(in)  :: gtau(ntime,norbs,norbs)
 
