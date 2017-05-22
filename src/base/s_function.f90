@@ -422,11 +422,11 @@
      y = two * tau / beta - one
 
      if ( x > 100.0_dp ) then
-         val = exp( -x * ( y + one ) )
+         val = omega * exp( -x * ( y + one ) )
      else if ( x < -100.0_dp ) then
-         val = exp(  x * ( one - y ) )
+         val = -omega * exp(  x * ( one - y ) )
      else
-         val = exp( -x * y ) / ( two * cosh(x) )
+         val = omega * exp( -x * y ) / ( two * sinh(x) )
      endif ! back if ( x > 100.0_dp ) block
 
      return
