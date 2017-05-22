@@ -1,3 +1,5 @@
-beta = 40.0
 isort = 2
+issus = 30
+isvrt = 2
 nsweep = 40000000
+beta = 40.0
