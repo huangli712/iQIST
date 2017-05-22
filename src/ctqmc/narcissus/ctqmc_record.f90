@@ -392,7 +392,7 @@
                          maux = two * maux
                      endif ! back if ( curr == 1 .or. curr == ntime ) block
 
-! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
+! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
                  endif STD_BLOCK ! back if ( isort == 1 ) block
@@ -409,7 +409,7 @@
 ! determine index for legendre polynomial interval
                      curr = nint( daux * step ) + 1
 
-! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
+! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      LEG_CYCLE: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
@@ -519,7 +519,7 @@
                          maux = two * maux
                      endif ! back if ( curr == 1 .or. curr == ntime ) block
 
-! record ftau, we normalize ftau in ctqmc_make_gtau() subroutine
+! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
                      ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux
 
                  endif STD_BLOCK ! back if ( isort == 1 ) block
@@ -536,7 +536,7 @@
 ! determine index for legendre polynomial interval
                      curr = nint( daux * step ) + 1
 
-! record ftau, we normalize ftau in ctqmc_make_gtau() subroutine
+! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
                      LEG_CYCLE: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
