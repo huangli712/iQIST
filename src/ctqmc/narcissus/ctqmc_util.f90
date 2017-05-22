@@ -982,7 +982,7 @@
 !! retarded interaction is considered
 !!
   subroutine ctqmc_make_lift(umat, ssign)
-     use constants, only : dp, two
+     use constants, only : dp, zero, two
 
      use control, only : isscr
      use control, only : norbs
