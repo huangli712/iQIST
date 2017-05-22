@@ -784,6 +784,11 @@
   subroutine ctqmc_tran_grnf(gaux, grnf)
      use constants, only : dp, zero, one, two, pi, czi, czero
 
+     use control, only : mfreq
+     use control, only : beta
+
+     implicit none
+
 ! external arguments
 ! orthogonal polynomial coefficients for impurity green's function
      real(dp), intent(in)  :: gaux(ntime,norbs,norbs)
@@ -793,7 +798,6 @@
 
 ! local variables
 
-     implicit none
 
 ! 3.1 build spherical Bessel functions: jaux
          jaux = zero
