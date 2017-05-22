@@ -781,8 +781,43 @@
 !!
 !! build matsubara green's function using different representation
 !!
-  subroutine ctqmc_tran_grnf()
+  subroutine ctqmc_tran_grnf(gaux, grnf)
+     use constants, only : zero
+
      implicit none
+
+! 3.1 build spherical Bessel functions: jaux
+         jaux = zero
+         do k=1,mfreq
+             ob = (two * k - one) * pi / two
+             call s_sbessel(lemax-1, ob, jaux(k,:))
+         enddo ! over k={1,mfreq} loop
+
+! 3.2 build unitary transformation matrix: taux
+         taux = czero
+         do i=1,lemax
+             do k=1,mfreq
+                 ob = (-one)**(k - 1) * sqrt(two * i - one)
+                 taux(k,i) = jaux(k,i) * ob * ( czi**i )
+             enddo ! over k={1,mfreq} loop
+         enddo ! over i={1,lemax} loop
+         taux = taux / beta
+
+! 3.3 rebuild impurity green's function on matsubara frequency
+!     using orthogonal polynomial representation, G(i\omega)
+!
+! 3.4 rebuild auxiliary correlation function on matsubara frequency
+!     using orthogonal polynomial representation, F(i\omega)
+         grnf = czero
+         frnf = czero
+         do i=1,norbs
+             do j=1,lemax
+                 do k=1,mfreq
+                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i)
+                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i)
+                 enddo ! over k={1,mfreq} loop
+             enddo ! over j={1,lemax} loop
+         enddo ! over i={1,norbs} loop
 
      return
   end subroutine ctqmc_tran_grnf
@@ -1257,38 +1292,6 @@
 ! of performing fourier transformation
      LEG_BLOCK: if ( isort == 2 ) then
 
-! 3.1 build spherical Bessel functions: jaux
-         jaux = zero
-         do k=1,mfreq
-             ob = (two * k - one) * pi / two
-             call s_sbessel(lemax-1, ob, jaux(k,:))
-         enddo ! over k={1,mfreq} loop
-
-! 3.2 build unitary transformation matrix: taux
-         taux = czero
-         do i=1,lemax
-             do k=1,mfreq
-                 ob = (-one)**(k - 1) * sqrt(two * i - one)
-                 taux(k,i) = jaux(k,i) * ob * ( czi**i )
-             enddo ! over k={1,mfreq} loop
-         enddo ! over i={1,lemax} loop
-         taux = taux / beta
-
-! 3.3 rebuild impurity green's function on matsubara frequency
-!     using orthogonal polynomial representation, G(i\omega)
-!
-! 3.4 rebuild auxiliary correlation function on matsubara frequency
-!     using orthogonal polynomial representation, F(i\omega)
-         grnf = czero
-         frnf = czero
-         do i=1,norbs
-             do j=1,lemax
-                 do k=1,mfreq
-                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i)
-                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i)
-                 enddo ! over k={1,mfreq} loop
-             enddo ! over j={1,lemax} loop
-         enddo ! over i={1,norbs} loop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 
