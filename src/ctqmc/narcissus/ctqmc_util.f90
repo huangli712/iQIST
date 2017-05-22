@@ -984,8 +984,12 @@
   subroutine ctqmc_make_lift(umat, ssign)
      use constants, only : dp, two
 
+     use control, only : isscr
      use control, only : norbs
+     use control, only : lc, wc
      use control, only : mune
+
+     use context, only : ptau
 
      implicit none
 
@@ -1047,10 +1051,7 @@
   subroutine ctqmc_eval_lift(shift)
      use constants, only : dp, zero, two
 
-     use control, only : isscr
-     use control, only : lc, wc
 
-     use context, only : ptau
 
      implicit none
 
