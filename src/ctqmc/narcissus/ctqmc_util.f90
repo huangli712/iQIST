@@ -1276,7 +1276,6 @@
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: j
      integer  :: k
 
 ! imaginary time green's function
