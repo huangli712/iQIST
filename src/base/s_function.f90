@@ -4,11 +4,13 @@
 !!!           s_chebyshev
 !!!           s_sbessel
 !!!           s_bezier
+!!!           s_f_kernel
+!!!           s_b_kernel
 !!! source  : s_function.f90
-!!! type    : subroutines
+!!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
+!!!           05/22/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -354,3 +356,41 @@
 
      return
   end subroutine s_bezier
+
+
+
+  function s_f_kernel(tau, omega, beta) result(val)
+     use constants, only : dp, one, two
+
+     implicit none
+
+! external arguments
+! imaginary time point
+     real(dp), intent(in) :: tau
+
+! frequency point
+     real(dp), intent(in) :: omega
+
+! inverse temperature
+     real(dp), intent(in) :: beta
+
+! local variables
+! return value
+     real(dp) :: val
+
+! dimensionless variables
+     real(dp) :: x, y
+
+     x = beta * omega / two
+     y = two * tau / beta - one
+
+     if ( x > 100.0_dp ) then
+         val = exp( -x * ( y + one ) )
+     else if ( x < -100.0_dp ) then
+         val = exp(  x * ( one - y ) )
+     else
+         val = exp( -x * y ) / ( two * cosh(x) )
+     endif ! back if ( x > 100.0_dp ) block
+
+     return
+  end function s_f_kernel
