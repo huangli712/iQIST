@@ -1248,7 +1248,6 @@
      use control, only : mfreq
      use control, only : nfreq
      use control, only : ntime
-     use control, only : beta
 
      use context, only : gtau, ftau
      use context, only : grnf, frnf
