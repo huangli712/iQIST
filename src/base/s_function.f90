@@ -432,10 +432,14 @@
      return
   end function s_b_kernel
 
-  subroutine s_svd_basis()
+  subroutine s_svd_basis(irmax, irgrd)
      use constants, only : dp
 
      implicit none
+
+! external arguments
+     integer, intent(in) :: irmax
+     integer, intent(in) :: irgrd
 
 ! local parameters
      integer, parameter :: wsize = 512
