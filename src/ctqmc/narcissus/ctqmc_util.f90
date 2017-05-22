@@ -9,9 +9,9 @@
 !!!           ctqmc_symm_nimp
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf <<<---
+!!!           ctqmc_tran_twop <<<---
 !!!           ctqmc_tran_gtau
 !!!           ctqmc_tran_grnf 
-!!!           ctqmc_tran_twop <<<---
 !!!           ctqmc_make_fock <<<---
 !!!           ctqmc_make_umat <<<---
 !!!           ctqmc_make_lift <<<---
@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/20/2017 by li huang (last modified)
+!!!           05/22/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
