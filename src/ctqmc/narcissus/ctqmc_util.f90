@@ -1009,7 +1009,7 @@
      real(dp) :: shift
 
 ! evaluate Coulomb interaction shift
-     select case ( isscr )
+     DYNAMIC_MODEL: select case ( isscr )
 
          case (1) ! static interaction
              shift = zero
@@ -1023,7 +1023,7 @@
          case (4) ! dynamic interaction, realistic materials
              shift = two * ptau(1)
 
-     end select
+     end select DYNAMIC_MODEL
 
 ! multiple the shift with sign
      shift = shift * ssign
