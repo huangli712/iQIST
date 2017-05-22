@@ -1004,9 +1004,22 @@
 ! Coulomb interaction shift introduced by dynamic screening effect
      real(dp) :: shift
 
-! evaluate the shift at first
-     shift = 0.0_dp
-     call ctqmc_eval_lift(shift)
+! evaluate Coulomb interaction shift
+     select case ( isscr )
+
+         case (1) ! static interaction
+             shift = zero
+
+         case (2) ! dynamic interaction, plasmon pole model
+             shift = two * lc * lc / wc
+
+         case (3) ! dynamic interaction, ohmic model
+             shift = two * lc * wc
+
+         case (4) ! dynamic interaction, realistic materials
+             shift = two * ptau(1)
+
+     end select
 
 ! multiple the shift with sign
      shift = shift * ssign
@@ -1045,22 +1058,6 @@
 ! the shift value for Uc and mune
      real(dp), intent(out) :: shift
 
-! evaluate Coulomb interaction shift
-     select case ( isscr )
-
-         case (1) ! static interaction
-             shift = zero
-
-         case (2) ! dynamic interaction, plasmon pole model
-             shift = two * lc * lc / wc
-
-         case (3) ! dynamic interaction, ohmic model
-             shift = two * lc * wc
-
-         case (4) ! dynamic interaction, realistic materials
-             shift = two * ptau(1)
-
-     end select
 
      return
   end subroutine ctqmc_eval_lift
