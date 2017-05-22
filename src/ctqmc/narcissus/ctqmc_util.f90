@@ -1248,8 +1248,8 @@
 !!
 !! first of all, build impurity green's function and auxiliary correlation
 !! function via fast fourier transformation (if isort == 1) or analytical
-!! formula (if isort == 2). and then, the self-energy function is obtained
-!! by using the improved estimator trick
+!! formula (if isort == 2 or isort == 3). and then, self-energy function
+!! is obtained by using the improved estimator trick
 !!
   subroutine ctqmc_make_hub2()
      use constants, only : dp
@@ -1277,7 +1277,7 @@
 ! imaginary time auxiliary correlation function
      real(dp) :: faux(ntime,norbs,norbs)
 
-! used to backup the sampled impurity green's function
+! it is used to backup the sampled impurity green's function
      complex(dp) :: gtmp(nfreq,norbs,norbs)
 
 ! task 1: backup the sampled impurity green's function
@@ -1286,7 +1286,7 @@
 
 ! task 2: build impurity green's function and auxiliary correlation function
 !-------------------------------------------------------------------------
-! using fast fourier transformation
+! 2.1 using fast fourier transformation
      STD_BLOCK: if ( isort == 1 ) then
 
          call ctqmc_tran_gtau(gtau, gaux)
@@ -1296,17 +1296,17 @@
 
      endif STD_BLOCK ! back if ( isort == 1 ) block
 
-! task 3: build impurity green's function and auxiliary correlation function
-!-------------------------------------------------------------------------
-! special consideration must be taken for legendre representation, we can
-! calculate grnf and frnf directly by using legendre coefficients, instead
-! of performing fourier transformation
+! 2.2 special consideration must be taken for legendre representation, we
+!     can calculate grnf and frnf directly by using legendre coefficients,
+!     instead of performing fourier transformation
      LEG_BLOCK: if ( isort == 2 ) then
 
+         call ctqmc_tran_grnf(gtau, grnf)
+         call ctqmc_tran_grnf(ftau, frnf)
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 
-! task 4: build final self-energy function by using improved estimator
+! task 3: build final self-energy function by using improved estimator
 !-------------------------------------------------------------------------
      do i=1,norbs
          do k=1,mfreq
@@ -1314,7 +1314,7 @@
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
 
-! task 5: restore the sampled impurity green's function
+! task 4: restore the sampled impurity green's function
 !-------------------------------------------------------------------------
      grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
 
