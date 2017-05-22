@@ -810,31 +810,31 @@
      real(dp) :: ob
 
 ! spherical Bessel functions
-     real(dp) :: jaux(mfreq,lemax)
+     real(dp) :: bfun(mfreq,lemax)
 
 ! unitary transformation matrix for legendre orthogonal polynomial
-     complex(dp) :: taux(mfreq,lemax)
+     complex(dp) :: tleg(mfreq,lemax)
 
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
-! build spherical Bessel functions: jaux
-         jaux = zero
+! build spherical Bessel functions: bfun
+         bfun = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
-             call s_sbessel(lemax-1, ob, jaux(k,:))
+             call s_sbessel(lemax-1, ob, bfun(k,:))
          enddo ! over k={1,mfreq} loop
 
-! build unitary transformation matrix: taux
-         taux = czero
+! build unitary transformation matrix: tleg
+         tleg = czero
          do i=1,lemax
              do k=1,mfreq
                  ob = (-one)**(k - 1) * sqrt(two * i - one)
-                 taux(k,i) = jaux(k,i) * ob * ( czi**i )
+                 tleg(k,i) = bfun(k,i) * ob * ( czi**i )
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,lemax} loop
-         taux = taux / beta
+         tleg = taux / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
@@ -842,7 +842,7 @@
          do i=1,norbs
              do j=1,lemax
                  do k=1,mfreq
-                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gaux(j,i,i)
+                     grnf(k,i,i) = grnf(k,i,i) + tleg(k,j) * gaux(j,i,i)
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
