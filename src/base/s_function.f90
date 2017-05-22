@@ -432,4 +432,5 @@
      return
   end function s_b_kernel
 
-  subroutine s_svd_basis
+  subroutine s_svd_basis()
+  end subroutine s_svd_basis
