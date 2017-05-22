@@ -686,11 +686,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_make_gtau
+!! @sub ctqmc_tran_gtau
 !!
 !! build imaginary time green's function using different representation
 !!
-  subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
+  subroutine ctqmc_tran_gtau(tmesh, gtau, gaux)
      use constants, only : dp, zero, two
 
      use control, only : isort
@@ -765,7 +765,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
-  end subroutine ctqmc_make_gtau
+  end subroutine ctqmc_tran_gtau
 
 !!========================================================================
 !!>>> atomic eigenstates                                               <<<
@@ -1224,9 +1224,9 @@
 ! using fast fourier transformation
      STD_BLOCK: if ( isort == 1 ) then
 
-         call ctqmc_make_gtau(tmesh, gtau, gaux)
+         call ctqmc_tran_gtau(tmesh, gtau, gaux)
          call ctqmc_four_htau(gaux, grnf)
-         call ctqmc_make_gtau(tmesh, ftau, faux)
+         call ctqmc_tran_gtau(tmesh, ftau, faux)
          call ctqmc_four_htau(faux, frnf)
 
      endif STD_BLOCK ! back if ( isort == 1 ) block
