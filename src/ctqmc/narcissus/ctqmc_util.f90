@@ -787,6 +787,7 @@
      use control, only : isort
      use control, only : lemax
      use control, only : mfreq
+     use control, only : ntime
      use control, only : beta
 
      implicit none
