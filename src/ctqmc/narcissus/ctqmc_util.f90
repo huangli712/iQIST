@@ -1182,7 +1182,6 @@
      use control, only : ntime
      use control, only : beta
 
-     use context, only : tmesh
      use context, only : gtau, ftau
      use context, only : grnf, frnf
      use context, only : sig2
