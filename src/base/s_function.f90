@@ -433,4 +433,31 @@
   end function s_b_kernel
 
   subroutine s_svd_basis()
+     use constants, only : dp
+
+     implicit none
+
+! local parameters
+     integer, parameter :: wsize = 512
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+     real(dp) :: tvec(irgrd)
+     real(dp) :: fvec(wsize)
+     real(dp) :: fker(wsize,irgrd)
+
+! build time mesh
+
+! build real frequency mesh
+
+! build the fermionic kernel
+     do i=1,irgrd
+         do j=1,wsize
+         enddo ! over j={1,wsize} loop
+     enddo ! over i={1,irgrd} loop
+
+     return
   end subroutine s_svd_basis
