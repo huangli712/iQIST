@@ -834,7 +834,7 @@
                  tleg(k,i) = bfun(k,i) * ob * ( czi**i )
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,lemax} loop
-         tleg = taux / beta
+         tleg = tleg / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
