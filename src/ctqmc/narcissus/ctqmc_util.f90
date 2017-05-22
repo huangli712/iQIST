@@ -1042,27 +1042,6 @@
      return
   end subroutine ctqmc_make_lift
 
-!!
-!! @sub ctqmc_eval_lift
-!!
-!! evaluate the shift for the Coulomb interaction and the chemical
-!! potential. in fact, shift = 2 K'(\tau = 0)
-!!
-  subroutine ctqmc_eval_lift(shift)
-     use constants, only : dp, zero, two
-
-
-
-     implicit none
-
-! external arguments
-! the shift value for Uc and mune
-     real(dp), intent(out) :: shift
-
-
-     return
-  end subroutine ctqmc_eval_lift
-
 !!========================================================================
 !!>>> improved estimator                                               <<<
 !!========================================================================
