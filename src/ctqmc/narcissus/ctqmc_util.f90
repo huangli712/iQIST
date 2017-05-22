@@ -808,6 +808,8 @@
 ! spherical Bessel functions
      real(dp) :: jaux(mfreq,lemax)
 
+! unitary transformation matrix for legendre orthogonal polynomial
+     complex(dp) :: taux(mfreq,lemax)
 
 ! 3.1 build spherical Bessel functions: jaux
          jaux = zero
@@ -1276,9 +1278,6 @@
 
 ! imaginary time auxiliary correlation function
      real(dp) :: faux(ntime,norbs,norbs)
-
-! unitary transformation matrix for legendre orthogonal polynomial
-     complex(dp) :: taux(mfreq,lemax)
 
 ! used to backup the sampled impurity green's function
      complex(dp) :: gtmp(nfreq,norbs,norbs)
