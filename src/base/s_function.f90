@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
-!!! program : s_legendre
+!!! program : s_leg_basis
 !!!           s_chebyshev
 !!!           s_sbessel
 !!!           s_bezier
@@ -26,7 +26,7 @@
 !! 1. orthogonal polynomial
 !! ------------------------
 !!
-!! subroutine s_legendre(...)
+!! subroutine s_leg_basis(...)
 !! subroutine s_chebyshev(...)
 !!
 !! 2. spheric Bessel function
@@ -46,11 +46,11 @@
 !!========================================================================
 
 !!
-!! @sub s_legendre
+!! @sub s_leg_basis
 !!
 !! build legendre polynomial in [-1,1]
 !!
-  subroutine s_legendre(lemax, legrd, lmesh, rep_l)
+  subroutine s_leg_basis(lemax, legrd, lmesh, rep_l)
      use constants, only : dp, one
 
      implicit none
@@ -76,7 +76,7 @@
 
 ! check lemax
      if ( lemax <= 2 ) then
-         call s_print_error('s_legendre','lemax must be larger than 2')
+         call s_print_error('s_leg_basis','lemax must be larger than 2')
      endif ! back if ( lemax <= 2 ) block
 
 ! the legendre polynomials obey the three term recurrence relation known
@@ -94,7 +94,7 @@
      enddo ! over i={1,legrd} loop
 
      return
-  end subroutine s_legendre
+  end subroutine s_leg_basis
 
 !!
 !! @sub s_chebyshev
@@ -431,3 +431,5 @@
 
      return
   end function s_b_kernel
+
+  subroutine s_svd_basis
