@@ -797,6 +797,11 @@
      complex(dp), intent(out) :: grnf(mfreq,norbs,norbs)
 
 ! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+
 ! dummy real variables
      real(dp) :: ob
 
