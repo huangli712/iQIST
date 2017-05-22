@@ -785,6 +785,7 @@
      use constants, only : dp, zero, one, two, pi, czi, czero
 
      use control, only : isort
+     use control, only : norbs
      use control, only : lemax
      use control, only : mfreq
      use control, only : ntime
