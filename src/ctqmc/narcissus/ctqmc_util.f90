@@ -809,12 +809,10 @@
 ! 3.4 rebuild auxiliary correlation function on matsubara frequency
 !     using orthogonal polynomial representation, F(i\omega)
          grnf = czero
-         frnf = czero
          do i=1,norbs
              do j=1,lemax
                  do k=1,mfreq
                      grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i)
-                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i)
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
