@@ -1222,9 +1222,9 @@
 ! using fast fourier transformation
      STD_BLOCK: if ( isort == 1 ) then
 
-         call ctqmc_tran_gtau(tmesh, gtau, gaux)
+         call ctqmc_tran_gtau(gtau, gaux)
          call ctqmc_four_htau(gaux, grnf)
-         call ctqmc_tran_gtau(tmesh, ftau, faux)
+         call ctqmc_tran_gtau(ftau, faux)
          call ctqmc_four_htau(faux, frnf)
 
      endif STD_BLOCK ! back if ( isort == 1 ) block
