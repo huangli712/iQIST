@@ -824,7 +824,7 @@
              call s_sbessel(lemax-1, ob, jaux(k,:))
          enddo ! over k={1,mfreq} loop
 
-! 3.2 build unitary transformation matrix: taux
+! build unitary transformation matrix: taux
          taux = czero
          do i=1,lemax
              do k=1,mfreq
@@ -834,16 +834,13 @@
          enddo ! over i={1,lemax} loop
          taux = taux / beta
 
-! 3.3 rebuild impurity green's function on matsubara frequency
-!     using orthogonal polynomial representation, G(i\omega)
-!
-! 3.4 rebuild auxiliary correlation function on matsubara frequency
-!     using orthogonal polynomial representation, F(i\omega)
+! build impurity green's function on matsubara frequency using orthogonal
+! polynomial representation: grnf
          grnf = czero
          do i=1,norbs
              do j=1,lemax
                  do k=1,mfreq
-                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i)
+                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gaux(j,i,i)
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
