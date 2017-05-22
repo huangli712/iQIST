@@ -701,7 +701,7 @@
 !!
 !! build imaginary time green's function using different representation
 !!
-  subroutine ctqmc_tran_gtau(gtau, gaux)
+  subroutine ctqmc_tran_gtau(gaux, gtau)
      use constants, only : dp, zero, two
 
      use control, only : isort
@@ -717,10 +717,10 @@
 
 ! external arguments
 ! impurity green's function/orthogonal polynomial coefficients
-     real(dp), intent(in)  :: gtau(ntime,norbs,norbs)
+     real(dp), intent(in)  :: gaux(ntime,norbs,norbs)
 
 ! calculated impurity green's function
-     real(dp), intent(out) :: gaux(ntime,norbs,norbs)
+     real(dp), intent(out) :: gtau(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -739,8 +739,8 @@
 ! dummy variables
      real(dp) :: raux
 
-! initialize gaux
-     gaux = zero
+! initialize gtau
+     gtau = zero
 
 !-------------------------------------------------------------------------
 ! using normal representation
@@ -749,7 +749,7 @@
          raux = real(ntime) / (beta * beta)
          do i=1,norbs
              do j=1,ntime
-                 gaux(j,i,i) = gtau(j,i,i) * raux
+                 gtau(j,i,i) = gaux(j,i,i) * raux
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
      endif STD_BLOCK ! back if ( isort == 1 ) block
@@ -766,7 +766,7 @@
                  curr = nint(raux * step) + 1
                  do fleg=1,lemax
                      raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
-                     gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i)
+                     gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fleg,i,i)
                  enddo ! over fleg={1,lemax} loop
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
@@ -775,6 +775,17 @@
 
      return
   end subroutine ctqmc_tran_gtau
+
+!!
+!! @sub ctqmc_tran_grnf
+!!
+!! build matsubara green's function using different representation
+!!
+  subroutine ctqmc_tran_grnf()
+     implicit none
+
+     return
+  end subroutine ctqmc_tran_grnf
 
 !!========================================================================
 !!>>> atomic eigenstates                                               <<<
