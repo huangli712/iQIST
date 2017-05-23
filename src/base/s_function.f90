@@ -378,6 +378,8 @@
 ! inverse temperature
      real(dp), intent(in) :: beta
 
+     procedure( real(dp) ) :: s_safe_exp
+
 ! local variables
 ! return value
      real(dp) :: val
@@ -389,11 +391,11 @@
      y = two * tau / beta - one
 
      if ( x > 100.0_dp ) then
-         val = exp( -x * ( y + one ) )
+         val = s_safe_exp( -x * ( y + one ) )
      else if ( x < -100.0_dp ) then
-         val = exp(  x * ( one - y ) )
+         val = s_safe_exp(  x * ( one - y ) )
      else
-         val = exp( -x * y ) / ( two * cosh(x) )
+         val = s_safe_exp( -x * y ) / ( two * cosh(x) )
      endif ! back if ( x > 100.0_dp ) block
 
      return
@@ -412,6 +414,8 @@
 ! inverse temperature
      real(dp), intent(in) :: beta
 
+     procedure( real(dp) ) :: s_safe_exp
+
 ! local variables
 ! return value
      real(dp) :: val
@@ -423,15 +427,32 @@
      y = two * tau / beta - one
 
      if ( x > 100.0_dp ) then
-         val = omega * exp( -x * ( y + one ) )
+         val = omega * s_safe_exp( -x * ( y + one ) )
      else if ( x < -100.0_dp ) then
-         val = -omega * exp(  x * ( one - y ) )
+         val = -omega * s_safe_exp(  x * ( one - y ) )
      else
-         val = omega * exp( -x * y ) / ( two * sinh(x) )
+         val = omega * s_safe_exp( -x * y ) / ( two * sinh(x) )
      endif ! back if ( x > 100.0_dp ) block
 
      return
   end function s_b_kernel
+
+  function s_safe_exp(x) result(val)
+     use constants, only : dp, zero
+
+     implicit none
+
+     real(dp), intent(in) :: x
+     real(dp) :: val
+
+     if ( x < -60.0_dp ) then
+         val = zero
+     else
+         val = exp(x)
+     endif
+
+     return
+  end function s_safe_exp
 
   subroutine s_svd_basis()
      use constants, only : dp, zero
@@ -441,8 +462,8 @@
 ! local parameters
      integer, parameter :: irmax = 40
      integer, parameter :: wsize = 513
-     integer, parameter :: irgrd = 1001
-     real(dp), parameter :: beta = 40.0_dp
+     integer, parameter :: irgrd = 20001
+     real(dp), parameter :: beta = 10.0_dp
      real(dp), parameter :: rmax = 10.0_dp
      real(dp), parameter :: rmin = -10.0_dp
 
@@ -459,6 +480,7 @@
      real(dp) :: vmat(wsize,wsize) 
      
      procedure ( real(dp) ) :: s_f_kernel
+     procedure ( real(dp) ) :: s_b_kernel
 
 ! build time mesh
      call s_linspace_d(zero, beta, irgrd, tvec)
@@ -469,11 +491,16 @@
 ! build the fermionic kernel
      do i=1,wsize
          do j=1,irgrd
-             fker(j,i) = s_f_kernel(tvec(j), fvec(i), beta)
+             fker(j,i) = s_b_kernel(tvec(j), fvec(i), beta)
          enddo ! over j={1,irgrd} loop
      enddo ! over i={1,wsize} loop
+     print *, fker
 
      call s_svd_dg(irgrd, wsize, wsize, fker, umat, svec, vmat)
+
+     do i=1,wsize
+         print *, i, svec(i)
+     enddo
 
      return
   end subroutine s_svd_basis
