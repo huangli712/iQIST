@@ -473,6 +473,8 @@
          enddo ! over j={1,irgrd} loop
      enddo ! over i={1,wsize} loop
 
+     call s_svd_dg(irgrd, wsize, wsize, fker, umat, svec, vmat)
+
      return
   end subroutine s_svd_basis
 
