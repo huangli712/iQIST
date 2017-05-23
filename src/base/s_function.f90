@@ -2,6 +2,7 @@
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_leg_basis
 !!!           s_che_basis
+!!!           s_svd_basis
 !!!           s_sbessel
 !!!           s_bezier
 !!!           s_f_kernel
@@ -10,7 +11,7 @@
 !!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/22/2017 by li huang (last modified)
+!!!           05/23/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -432,17 +433,18 @@
      return
   end function s_b_kernel
 
-  subroutine s_svd_basis(irmax, irgrd)
-     use constants, only : dp
+  subroutine s_svd_basis()
+     use constants, only : dp, zero
 
      implicit none
 
-! external arguments
-     integer, intent(in) :: irmax
-     integer, intent(in) :: irgrd
-
 ! local parameters
-     integer, parameter :: wsize = 512
+     integer, parameter :: irmax = 40
+     integer, parameter :: wsize = 513
+     integer, parameter :: irgrd = 1001
+     real(dp), parameter :: beta = 40.0_dp
+     real(dp), parameter :: rmax = 10.0_dp
+     real(dp), parameter :: rmin = -10.0_dp
 
 ! local variables
 ! loop index
@@ -451,17 +453,30 @@
 
      real(dp) :: tvec(irgrd)
      real(dp) :: fvec(wsize)
-     real(dp) :: fker(wsize,irgrd)
+     real(dp) :: fker(irgrd,wsize)
+     real(dp) :: umat(irgrd,wsize)
+     real(dp) :: svec(wsize)
+     real(dp) :: vmat(wsize,wsize) 
+     
+     procedure ( real(dp) ) :: s_f_kernel
 
 ! build time mesh
+     call s_linspace_d(zero, beta, irgrd, tvec)
 
 ! build real frequency mesh
+     call s_linspace_d(rmin, rmax, wsize, fvec)
 
 ! build the fermionic kernel
-     do i=1,irgrd
-         do j=1,wsize
-         enddo ! over j={1,wsize} loop
-     enddo ! over i={1,irgrd} loop
+     do i=1,wsize
+         do j=1,irgrd
+             fker(j,i) = s_f_kernel(tvec(j), fvec(i), beta)
+         enddo ! over j={1,irgrd} loop
+     enddo ! over i={1,wsize} loop
 
      return
   end subroutine s_svd_basis
+
+  program test
+     print *, 'hehe'
+     call s_svd_basis()
+  end program test
