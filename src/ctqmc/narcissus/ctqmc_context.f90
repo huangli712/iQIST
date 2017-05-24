@@ -913,7 +913,9 @@
      allocate(rmesh(mfreq),       stat=istat)
 
      allocate(lmesh(legrd),       stat=istat)
+     allocate(smesh(svgrd),       stat=istat)
      allocate(rep_l(legrd,lemax), stat=istat)
+     allocate(rep_s(svgrd,svmax), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -925,7 +927,9 @@
      rmesh = zero
 
      lmesh = zero
+     smesh = zero
      rep_l = zero
+     rep_s = zero
 
      return
   end subroutine cat_alloc_mesh
@@ -1214,7 +1218,9 @@
      if ( allocated(rmesh) )   deallocate(rmesh)
 
      if ( allocated(lmesh) )   deallocate(lmesh)
+     if ( allocated(smesh) )   deallocate(smesh)
      if ( allocated(rep_l) )   deallocate(rep_l)
+     if ( allocated(rep_s) )   deallocate(rep_s)
 
      return
   end subroutine cat_free_mesh
