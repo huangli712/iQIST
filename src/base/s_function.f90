@@ -5,6 +5,7 @@
 !!!           s_svd_basis
 !!!           s_sbessel
 !!!           s_bezier
+!!!           s_safe_exp
 !!!           s_f_kernel
 !!!           s_b_kernel
 !!! source  : s_function.f90
@@ -41,8 +42,12 @@
 !!
 !! subroutine s_bezier(...)
 !!
+!! 4. some helper functions for s_svd_basis
+!! ----------------------------------------
 !!
-!!
+!! function s_safe_exp(...)
+!! function s_f_kernel(...)
+!! function s_b_kernel(...)
 !!
 
 !!========================================================================
