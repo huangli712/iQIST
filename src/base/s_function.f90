@@ -160,7 +160,7 @@
 !! build the svd orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_svd_basis(svmax, svgrd, smesh, rep_s, bose, beta)
-     use constants, only : dp, zero, one
+     use constants, only : dp, zero, one, epss
 
      implicit none
 
@@ -222,6 +222,9 @@
 ! make sure wsize is less than svgrd
      call s_assert( svgrd > wsize )
 
+! make sure wsize is larger than svmax
+     call s_assert( svmax < wsize )
+
 ! allocate memory
      allocate(fmesh(wsize),      stat=istat)
      allocate(fker(svgrd,wsize), stat=istat)
@@ -250,6 +253,9 @@
 ! make singular values decomposition
      call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
+! check svec
+     call s_assert2( svec(svmax) < epss, 'please increase svmax' )
+
 ! copy umat to rep_s
      do i=1,svmax
          if ( umat(svgrd,i) < zero ) then
@@ -262,6 +268,7 @@
      do i=1,wsize
          print *, i, dot_product(rep_s(:,i), rep_s(:,i))
      enddo
+     STOP
 
      return
   end subroutine s_svd_basis
@@ -590,5 +597,5 @@
 ! build time mesh
      call s_linspace_d(zero, beta, svgrd, smesh)
      print *, smesh
-     call s_svd_basis(svmax, svgrd, beta, smesh, rep_s)
+     call s_svd_basis(svmax, svgrd, smesh, rep_s, 'true', beta)
   end program test
