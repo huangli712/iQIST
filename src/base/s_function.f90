@@ -154,6 +154,11 @@
      return
   end subroutine s_che_basis
 
+!!
+!! @sub s_che_basis
+!!
+!! build the svd orthogonal polynomial in [-1,1] interval
+!!
   subroutine s_svd_basis()
      use constants, only : dp, zero, one
 
