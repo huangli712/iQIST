@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/22/2017 by li huang (last modified)
+!!!           05/24/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -707,11 +707,12 @@
      use control, only : isort
      use control, only : norbs
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : ntime
      use control, only : beta
 
      use context, only : tmesh
-     use context, only : rep_l
+     use context, only : rep_l, rep_s
 
      implicit none
 
@@ -727,8 +728,9 @@
      integer  :: i
      integer  :: j
 
-! loop index for legendre polynomial
+! loop index for orthogonal polynomial
      integer  :: fleg
+     integer  :: fsvd
 
 ! index for imaginary time \tau
      integer  :: curr
@@ -777,7 +779,17 @@
 ! using intermediate representation
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
-
+         step = real(svgrd - 1) / two
+         do i=1,norbs
+             do j=1,ntime
+                 raux = two * tmesh(j) / beta
+                 curr = nint(raux * step) + 1
+                 do fsvd=1,svmax
+                     raux = 1.0_dp / (beta * beta) * rep_s(curr,fsvd)
+                     gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fsvd,i,i)
+                 enddo ! over fsvd={1,svmax} loop
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
