@@ -306,13 +306,14 @@
 ! build mesh for legendre orthogonal polynomial in [-1,1]
      call s_linspace_d(-one, one, legrd, lmesh)
 
-! build mesh for svd orthogonal polynomial in [0,beta]
-     call s_linspace_d(zero, beta, svgrd, smesh)
+! build mesh for svd orthogonal polynomial in [-1,1]
+     call s_linspace_d(-one, one, svgrd, smesh)
 
 ! build legendre orthogonal polynomial in [-1,1]
      call s_leg_basis(lemax, legrd, lmesh, rep_l)
 
-! build svd orthogonal polynomial in [0,beta]
+! build svd orthogonal polynomial in [-1,1]
+! .false. means fermionic kernel, and .true. means bosonic kernel
      call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
 
      return
