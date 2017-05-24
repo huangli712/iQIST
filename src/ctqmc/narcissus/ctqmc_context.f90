@@ -798,6 +798,7 @@
 
      use control, only : nband, norbs, ncfgs
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq
      use control, only : nfreq
