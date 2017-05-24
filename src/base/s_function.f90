@@ -11,7 +11,7 @@
 !!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/23/2017 by li huang (last modified)
+!!!           05/24/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -362,7 +362,9 @@
 
 
 
-
+!!
+!! @fun s_f_kernel
+!!
   function s_f_kernel(tau, omega, beta) result(val)
      use constants, only : dp, one, two
 
@@ -387,15 +389,15 @@
 ! dimensionless variables
      real(dp) :: x, y
 
-     x = beta * omega / two
-     y = two * tau / beta - one
+     x = two * tau / beta - one
+     y = beta * omega / two
 
-     if ( x > 100.0_dp ) then
-         val = s_safe_exp( -x * ( y + one ) )
-     else if ( x < -100.0_dp ) then
-         val = s_safe_exp(  x * ( one - y ) )
+     if ( y > 200.0_dp ) then
+         val = s_safe_exp( -y * ( x + one ) )
+     else if ( y < -200.0_dp ) then
+         val = s_safe_exp(  y * ( one - x ) )
      else
-         val = s_safe_exp( -x * y ) / ( two * cosh(x) )
+         val = s_safe_exp( -x * y ) / ( two * cosh(y) )
      endif ! back if ( x > 100.0_dp ) block
 
      return
