@@ -303,6 +303,8 @@
 
      implicit none
 
+     integer :: i
+
 ! build imaginary time mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
@@ -322,6 +324,14 @@
 ! .false. means fermionic kernel, and .true. means bosonic kernel
      call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
 
+     do i=1,legrd
+         write(99,'(4e16.8)') lmesh(i), rep_l(i,1), rep_l(i,2), rep_l(i,3)
+     enddo
+     do i=1,svgrd
+         write(99,'(4e16.8)') smesh(i), rep_s(i,1), rep_s(i,2), rep_s(i,3)
+     enddo
+
+     STOP
      return
   end subroutine ctqmc_input_mesh_
 

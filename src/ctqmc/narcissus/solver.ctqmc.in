@@ -1,2 +1,3 @@
 isort = 3
 svmax = 40
+beta = 10.0
