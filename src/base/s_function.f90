@@ -265,11 +265,6 @@
          endif ! back if ( umat(svgrd,i) < zero ) block
      enddo ! over i={1,svmax} loop
 
-     do i=1,wsize
-         print *, i, dot_product(rep_s(:,i), rep_s(:,i))
-     enddo
-     STOP
-
      return
   end subroutine s_svd_basis
 
@@ -596,6 +591,5 @@
 
 ! build time mesh
      call s_linspace_d(zero, beta, svgrd, smesh)
-     print *, smesh
      call s_svd_basis(svmax, svgrd, smesh, rep_s, 'true', beta)
   end program test
