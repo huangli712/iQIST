@@ -159,20 +159,20 @@
 !!
 !! build the svd orthogonal polynomial in [-1,1] interval
 !!
-  subroutine s_svd_basis(svmax, svgrd, smesh, rep_s, beta, stat)
+  subroutine s_svd_basis(svmax, svgrd, smesh, rep_s, bose, beta)
      use constants, only : dp, zero, one
 
      implicit none
 
 ! external arguments
-! using fermionic or bosonic kernel function
-     character (len=1), intent(in) :: stat
-
 ! maximum order for svd orthogonal polynomial
      integer, intent(in)   :: svmax
 
 ! number of mesh points for svd orthogonal polynomial
      integer, intent(in)   :: svgrd
+
+! using fermionic or bosonic kernel function
+     logical, intent(in)   :: bose
 
 ! inversion of temperature
      real(dp), intent(in)  :: beta
@@ -239,15 +239,13 @@
 ! build the fermionic or bosonic kernel function
      do i=1,wsize
          do j=1,svgrd
-             if ( stat == 'f' ) then
-                 fker(j,i) = s_f_kernel(smesh(j), fmesh(i), beta)
-             else
+             if ( bose .eqv. .true. ) then
                  fker(j,i) = s_b_kernel(smesh(j), fmesh(i), beta)
-             endif
+             else
+                 fker(j,i) = s_f_kernel(smesh(j), fmesh(i), beta)
+             endif ! back if ( bose .eqv. .true. ) block
          enddo ! over j={1,svgrd} loop
      enddo ! over i={1,wsize} loop
-
-     print *, 'hh'
 
      call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
