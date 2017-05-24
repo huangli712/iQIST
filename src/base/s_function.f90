@@ -494,7 +494,7 @@
 !!
 !! @fun s_safe_exp
 !!
-!! a safe exp call to avoid data overflow 
+!! a safe exp call to avoid data overflow
 !!
   function s_safe_exp(x) result(val)
      use constants, only : dp, zero
