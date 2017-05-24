@@ -265,6 +265,13 @@
          endif ! back if ( umat(svgrd,i) < zero ) block
      enddo ! over i={1,svmax} loop
 
+! deallocate memory
+     deallocate(fmesh)
+     deallocate(fker )
+     deallocate(umat )
+     deallocate(svec )
+     deallocate(vmat )
+
      return
   end subroutine s_svd_basis
 
@@ -583,7 +590,7 @@
   program test
      use constants, only : dp, zero
 
-     integer, parameter :: svmax = 40
+     integer, parameter :: svmax = 10
      integer, parameter :: svgrd = 10001
      real(dp), parameter :: beta = 10.0_dp
      real(dp) :: smesh(svgrd)
