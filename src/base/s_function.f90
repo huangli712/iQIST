@@ -283,7 +283,7 @@
 !! @sub s_sbessel
 !!
 !! computes the spherical Bessel functions of the first kind, j_l(x), for
-!! argument x and l=0,1,\ldots,l_{max}.
+!! argument x and l=0, 1, \ldots, l_{max}
 !!
   subroutine s_sbessel(lmax, x, jl)
      use constants, only : dp, zero, one, two, eps8
@@ -423,7 +423,7 @@
 ! external arguments
 ! the degree of the bernstein polynomials to be used. for any N, there
 ! is a set of N+1 bernstein polynomials, each of degree N, which form a
-! basis for polynomials on [0,1].
+! basis for polynomials on [0,1]
      integer, intent(in)  :: n
 
 ! the evaluation point.
@@ -487,12 +487,41 @@
      return
   end subroutine s_bezier
 
+!!========================================================================
+!!>>> helper functions for s_svd_basis                                 <<<
+!!========================================================================
 
+!!
+!! @fun s_safe_exp
+!!
+!! a safe exp call to avoid data overflow 
+!!
+  function s_safe_exp(x) result(val)
+     use constants, only : dp, zero
 
+     implicit none
 
+! external arguments
+! input
+     real(dp), intent(in) :: x
+
+! local variables
+! return value
+     real(dp) :: val
+
+     if ( x < -60.0_dp ) then
+         val = zero
+     else
+         val = exp(x)
+     endif ! back if ( x < -60.0_dp ) block
+
+     return
+  end function s_safe_exp
 
 !!
 !! @fun s_f_kernel
+!!
+!! used to calculate fermionic kernel function
 !!
   function s_f_kernel(tau, omega, beta) result(val)
      use constants, only : dp, one, two
@@ -503,12 +532,14 @@
 ! imaginary time point
      real(dp), intent(in) :: tau
 
-! frequency point
+! real frequency point
      real(dp), intent(in) :: omega
 
-! inverse temperature
+! inversion of temperature
      real(dp), intent(in) :: beta
 
+! external arguments
+! a safe exp call
      procedure( real(dp) ) :: s_safe_exp
 
 ! local variables
@@ -532,6 +563,11 @@
      return
   end function s_f_kernel
 
+!!
+!! @fun s_b_kernel
+!!
+!! used to calculate bosonic kernel function
+!!
   function s_b_kernel(tau, omega, beta) result(val)
      use constants, only : dp, one, two
 
@@ -539,12 +575,14 @@
 ! imaginary time point
      real(dp), intent(in) :: tau
 
-! frequency point
+! real frequency point
      real(dp), intent(in) :: omega
 
-! inverse temperature
+! inversion of temperature
      real(dp), intent(in) :: beta
 
+! external arguments
+! a safe exp call
      procedure( real(dp) ) :: s_safe_exp
 
 ! local variables
@@ -569,34 +607,3 @@
 
      return
   end function s_b_kernel
-
-  function s_safe_exp(x) result(val)
-     use constants, only : dp, zero
-
-     implicit none
-
-     real(dp), intent(in) :: x
-     real(dp) :: val
-
-     if ( x < -60.0_dp ) then
-         val = zero
-     else
-         val = exp(x)
-     endif
-
-     return
-  end function s_safe_exp
-
-  program test
-     use constants, only : dp, zero
-
-     integer, parameter :: svmax = 10
-     integer, parameter :: svgrd = 10001
-     real(dp), parameter :: beta = 10.0_dp
-     real(dp) :: smesh(svgrd)
-     real(dp) :: rep_s(svgrd, svmax)
-
-! build time mesh
-     call s_linspace_d(zero, beta, svgrd, smesh)
-     call s_svd_basis(svmax, svgrd, smesh, rep_s, 'true', beta)
-  end program test
