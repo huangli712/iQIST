@@ -183,6 +183,13 @@
 ! svd orthogonal polynomial defined on [-1,1]
      real(dp), intent(out) :: rep_s(svgrd, svmax)
 
+! external arguments
+! used to calculate the fermionic kernel function
+     procedure ( real(dp) ) :: s_f_kernel
+
+! used to calculate the bosonic kernel function
+     procedure ( real(dp) ) :: s_b_kernel
+
 ! local parameters
 ! number of mesh points for real axis
      integer, parameter  :: wsize = 513
@@ -203,9 +210,6 @@
      real(dp), allocatable :: umat(:,:)
      real(dp), allocatable :: svec(:)
      real(dp), allocatable :: vmat(:,:)
-     
-     procedure ( real(dp) ) :: s_f_kernel
-     procedure ( real(dp) ) :: s_b_kernel
 
      allocate(fmesh(wsize))
      allocate(fker(svgrd,wsize))
