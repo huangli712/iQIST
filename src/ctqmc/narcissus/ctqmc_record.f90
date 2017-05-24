@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/22/2017 by li huang (last modified)
+!!!           05/24/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -315,12 +315,13 @@
      use control, only : isort
      use control, only : norbs
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : ntime
      use control, only : beta
 
      use context, only : index_s, index_e
      use context, only : time_s, time_e
-     use context, only : rep_l
+     use context, only : rep_l, rep_s
      use context, only : rank
      use context, only : mmat
      use context, only : gtau
@@ -335,8 +336,9 @@
 ! loop index for flavor channel
      integer  :: flvr
 
-! loop index for legendre polynomial
+! loop index for orthogonal polynomial
      integer  :: fleg
+     integer  :: fsvd
 
 ! index for imaginary time \tau
      integer  :: curr
@@ -356,8 +358,18 @@
      real(dp) :: step
 
 ! evaluate step at first
-     if ( isort == 1 ) step = real(ntime - 1) / beta
-     if ( isort == 2 ) step = real(legrd - 1) / two
+     select case ( isort )
+
+         case (1)
+             step = real(ntime - 1) / beta
+
+         case (2)
+             step = real(legrd - 1) / two
+
+         case (3)
+             step = real(svgrd - 1) / two
+
+     end select
 
      FLVR_CYCLE: do flvr=1,norbs
 
@@ -416,6 +428,26 @@
                      enddo LEG_CYCLE ! over fleg={1,lemax} loop
 
                  endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!-------------------------------------------------------------------------
+! using svd polynomial representation
+!-------------------------------------------------------------------------
+                 SVD_BLOCK: if ( isort == 3 ) then
+
+! convert dtau in [0,\beta] to daux in [0,2]
+                     daux = two * dtau / beta
+
+! determine index for legendre polynomial interval
+                     curr = nint( daux * step ) + 1
+
+! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
+                     SVD_CYCLE: do fsvd=1,svmax
+                         dtau = rep_s(curr,fsvd)
+                         gtau(fsvd, flvr, flvr) = gtau(fsvd, flvr, flvr) - maux * dtau
+                     enddo SVD_CYCLE ! over fsvd={1,svmax} loop
+
+                 endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
              enddo ! over ie={1,rank(flvr)} loop
