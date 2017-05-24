@@ -159,12 +159,13 @@
 !!
 !! build the svd orthogonal polynomial in [-1,1] interval
 !!
-  subroutine s_svd_basis(svmax, svgrd, beta, smesh, rep_s)
+  subroutine s_svd_basis(svmax, svgrd, smesh, rep_s, beta, stat)
      use constants, only : dp, zero, one
 
      implicit none
 
 ! external arguments
+     character (len=1), intent(in) :: stat
      integer, intent(in)   :: svmax
      integer, intent(in)   :: svgrd
      real(dp), intent(in)  :: beta
@@ -181,17 +182,24 @@
      integer :: i
      integer :: j
 
-     real(dp) :: fmesh(wsize)
-     real(dp) :: fker(svgrd,wsize)
-     real(dp) :: umat(svgrd,wsize)
-     real(dp) :: svec(wsize)
-     real(dp) :: vmat(wsize,wsize)
+     real(dp), allocatable :: fmesh(:)
+     real(dp), allocatable :: fker(:,:)
+     real(dp), allocatable :: umat(:,:)
+     real(dp), allocatable :: svec(:)
+     real(dp), allocatable :: vmat(:,:)
      
      procedure ( real(dp) ) :: s_f_kernel
      procedure ( real(dp) ) :: s_b_kernel
 
+     allocate(fmesh(wsize))
+     allocate(fker(svgrd,wsize))
+     allocate(umat(svgrd,wsize))
+     allocate(svec(wsize))
+     allocate(vmat(wsize,wsize))
+
 ! build real frequency mesh
      call s_linspace_d(rmin, rmax, wsize, fmesh)
+     print *, 'hh'
 
 ! build the fermionic kernel
      do i=1,wsize
@@ -199,6 +207,8 @@
              fker(j,i) = s_b_kernel(smesh(j), fmesh(i), beta)
          enddo ! over j={1,svgrd} loop
      enddo ! over i={1,wsize} loop
+
+     print *, 'hh'
 
      call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
@@ -214,6 +224,7 @@
          print *, i, dot_product(umat(:,i), umat(:,i))
      enddo
 
+     rep_s = umat(:,1:svmax)
      return
   end subroutine s_svd_basis
 
@@ -540,6 +551,6 @@
 
 ! build time mesh
      call s_linspace_d(zero, beta, svgrd, smesh)
-
+     print *, smesh
      call s_svd_basis(svmax, svgrd, beta, smesh, rep_s)
   end program test
