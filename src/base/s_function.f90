@@ -155,20 +155,24 @@
   end subroutine s_che_basis
 
 !!
-!! @sub s_che_basis
+!! @sub s_svd_basis
 !!
 !! build the svd orthogonal polynomial in [-1,1] interval
 !!
-  subroutine s_svd_basis()
+  subroutine s_svd_basis(svmax, svgrd, beta, smesh, rep_s)
      use constants, only : dp, zero, one
 
      implicit none
 
+! external arguments
+     integer, intent(in)   :: svmax
+     integer, intent(in)   :: svgrd
+     real(dp), intent(in)  :: beta
+     real(dp), intent(in)  :: smesh(svgrd)
+     real(dp), intent(out) :: rep_s(svgrd, svmax)
+
 ! local parameters
-     integer, parameter :: irmax = 40
      integer, parameter :: wsize = 513
-     integer, parameter :: irgrd = 10001
-     real(dp), parameter :: beta = 10.0_dp
      real(dp), parameter :: rmax = 10.0_dp
      real(dp), parameter :: rmin = -10.0_dp
 
@@ -177,10 +181,10 @@
      integer :: i
      integer :: j
 
-     real(dp) :: tvec(irgrd)
+     real(dp) :: tvec(svgrd)
      real(dp) :: fvec(wsize)
-     real(dp) :: fker(irgrd,wsize)
-     real(dp) :: umat(irgrd,wsize)
+     real(dp) :: fker(svgrd,wsize)
+     real(dp) :: umat(svgrd,wsize)
      real(dp) :: svec(wsize)
      real(dp) :: vmat(wsize,wsize)
      
@@ -188,25 +192,25 @@
      procedure ( real(dp) ) :: s_b_kernel
 
 ! build time mesh
-     call s_linspace_d(zero, beta, irgrd, tvec)
+     call s_linspace_d(zero, beta, svgrd, tvec)
 
 ! build real frequency mesh
      call s_linspace_d(rmin, rmax, wsize, fvec)
 
 ! build the fermionic kernel
      do i=1,wsize
-         do j=1,irgrd
+         do j=1,svgrd
              fker(j,i) = s_b_kernel(tvec(j), fvec(i), beta)
-         enddo ! over j={1,irgrd} loop
+         enddo ! over j={1,svgrd} loop
      enddo ! over i={1,wsize} loop
 
-     call s_svd_dg(irgrd, wsize, wsize, fker, umat, svec, vmat)
+     call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
      do i=1,wsize
-         if ( umat(irgrd,i) < zero ) umat(:,i) = -one * umat(:,i)
+         if ( umat(svgrd,i) < zero ) umat(:,i) = -one * umat(:,i)
      enddo
 
-     !do i=1,irgrd
+     !do i=1,svgrd
      !    write(*,'(i,3e16.8)') i, umat(i,1), umat(i,2), umat(i,3)
      !enddo
 
@@ -530,5 +534,9 @@
   end function s_safe_exp
 
   program test
+     integer, parameter :: svmax = 40
+     integer, parameter :: svgrd = 10001
+     real(dp), parameter :: beta = 10.0_dp
+
      call s_svd_basis()
   end program test
