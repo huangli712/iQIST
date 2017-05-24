@@ -464,7 +464,7 @@
 ! local parameters
      integer, parameter :: irmax = 40
      integer, parameter :: wsize = 513
-     integer, parameter :: irgrd = 20001
+     integer, parameter :: irgrd = 10001
      real(dp), parameter :: beta = 10.0_dp
      real(dp), parameter :: rmax = 10.0_dp
      real(dp), parameter :: rmin = -10.0_dp
@@ -493,10 +493,9 @@
 ! build the fermionic kernel
      do i=1,wsize
          do j=1,irgrd
-             fker(j,i) = s_b_kernel(tvec(j), fvec(i), beta)
+             fker(j,i) = s_f_kernel(tvec(j), fvec(i), beta)
          enddo ! over j={1,irgrd} loop
      enddo ! over i={1,wsize} loop
-     print *, fker
 
      call s_svd_dg(irgrd, wsize, wsize, fker, umat, svec, vmat)
 
@@ -508,6 +507,5 @@
   end subroutine s_svd_basis
 
   program test
-     print *, 'hehe'
      call s_svd_basis()
   end program test
