@@ -65,16 +65,16 @@
      implicit none
 
 ! external arguments
-! maximum order for legendre polynomial
+! maximum order for legendre orthogonal polynomial
      integer, intent(in)   :: lemax
 
-! number of mesh points for legendre polynomial
+! number of mesh points for legendre orthogonal polynomial
      integer, intent(in)   :: legrd
 
-! mesh for legendre polynomial in [-1,1]
+! mesh for legendre orthogonal polynomial in [-1,1]
      real(dp), intent(in)  :: lmesh(legrd)
 
-! legendre polynomial defined on [-1,1]
+! legendre orthogonal polynomial defined on [-1,1]
      real(dp), intent(out) :: rep_l(legrd,lemax)
 
 ! local variables
@@ -88,8 +88,8 @@
          call s_print_error('s_leg_basis','lemax must be larger than 2')
      endif ! back if ( lemax <= 2 ) block
 
-! the legendre polynomials obey the three term recurrence relation known
-! as Bonnet’s recursion formula:
+! the legendre orthogonal polynomials obey the three term recurrence
+! relation known as Bonnet’s recursion formula:
 !     $P_0(x) = 1$
 !     $P_1(x) = x$
 !     $(n+1) P_{n+1}(x) = (2n+1) P_n(x) - n P_{n-1}(x)$
@@ -116,16 +116,16 @@
      implicit none
 
 ! external arguments
-! maximum order for chebyshev polynomial
+! maximum order for chebyshev orthogonal polynomial
      integer, intent(in)   :: chmax
 
-! number of mesh points for chebyshev polynomial
+! number of mesh points for chebyshev orthogonal polynomial
      integer, intent(in)   :: chgrd
 
-! mesh for chebyshev polynomial in [-1,1]
+! mesh for chebyshev orthogonal polynomial in [-1,1]
      real(dp), intent(in)  :: cmesh(chgrd)
 
-! chebyshev polynomial defined on [-1,1]
+! chebyshev orthogonal polynomial defined on [-1,1]
      real(dp), intent(out) :: rep_c(chgrd, chmax)
 
 ! local variables
@@ -138,8 +138,8 @@
          call s_print_error('s_che_basis','chmax must be larger than 2')
      endif ! back if ( chmax <= 2 ) block
 
-! the chebyshev polynomials of the second kind can be defined by the
-! following recurrence relation
+! the chebyshev orthogonal polynomials of the second kind can be defined
+! by the following recurrence relation
 !     $U_0(x) = 1$
 !     $U_1(x) = 2x$
 !     $U_{n+1}(x) = 2xU_n(x) - U_{n-1}(x)$
@@ -165,11 +165,22 @@
      implicit none
 
 ! external arguments
+! using fermionic or bosonic kernel function
      character (len=1), intent(in) :: stat
+
+! maximum order for svd orthogonal polynomial
      integer, intent(in)   :: svmax
+
+! number of mesh points for svd orthogonal polynomial
      integer, intent(in)   :: svgrd
+
+! inversion of temperature
      real(dp), intent(in)  :: beta
+
+! mesh for svd orthogonal polynomial in [-1,1]
      real(dp), intent(in)  :: smesh(svgrd)
+
+! svd orthogonal polynomial defined on [-1,1]
      real(dp), intent(out) :: rep_s(svgrd, svmax)
 
 ! local parameters
