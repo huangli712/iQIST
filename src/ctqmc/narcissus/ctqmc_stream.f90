@@ -320,18 +320,27 @@
 ! build legendre orthogonal polynomial in [-1,1]
      call s_leg_basis(lemax, legrd, lmesh, rep_l)
 
+     print *, dot_product(rep_l(:,1), rep_l(:,1))
+     print *, dot_product(rep_l(:,2), rep_l(:,2))
+     print *, dot_product(rep_l(:,3), rep_l(:,3))
+     print *, dot_product(rep_l(:,4), rep_l(:,4))
+
 ! build svd orthogonal polynomial in [-1,1]
 ! .false. means fermionic kernel, and .true. means bosonic kernel
      call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
 
-     do i=1,legrd
-         write(99,'(4e16.8)') lmesh(i), rep_l(i,1), rep_l(i,2), rep_l(i,3)
-     enddo
-     do i=1,svgrd
-         write(99,'(4e16.8)') smesh(i), rep_s(i,1), rep_s(i,2), rep_s(i,3)
-     enddo
+     !do i=1,legrd
+     !    write(99,'(4e16.8)') lmesh(i), rep_l(i,1), rep_l(i,2), rep_l(i,3)
+     !enddo
+     !do i=1,svgrd
+     !    write(100,'(4e16.8)') smesh(i), rep_s(i,1), rep_s(i,2), rep_s(i,3)
+     !enddo
+     print *, dot_product(rep_s(:,1), rep_s(:,1))
+     print *, dot_product(rep_s(:,2), rep_s(:,2))
+     print *, dot_product(rep_s(:,3), rep_s(:,3))
+     print *, dot_product(rep_s(:,4), rep_s(:,4))
 
-     STOP
+     rep_s = rep_s * real(svgrd)
      return
   end subroutine ctqmc_input_mesh_
 

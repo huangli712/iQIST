@@ -790,6 +790,7 @@
                  enddo ! over fsvd={1,svmax} loop
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
+         gtau = gtau / real(svgrd)
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
