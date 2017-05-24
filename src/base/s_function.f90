@@ -184,9 +184,14 @@
      real(dp), intent(out) :: rep_s(svgrd, svmax)
 
 ! local parameters
+! number of mesh points for real axis
      integer, parameter  :: wsize = 513
-     real(dp), parameter :: rmax = 10.0_dp
-     real(dp), parameter :: rmin = -10.0_dp
+
+! left boundary for real axis mesh, \omega_{min}
+     real(dp), parameter :: w_min = -10.0_dp
+
+! right boundary for real axis mesh, \omega_{max}
+     real(dp), parameter :: w_max = +10.0_dp
 
 ! local variables
 ! loop index
