@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/19/2017 by li huang (last modified)
+!!!           05/24/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -305,11 +305,25 @@
      real(dp), public, save, allocatable :: lmesh(:)
 
 !!
+!! @var smesh
+!!
+!! uniform mesh on interval [0,beta] for svd orthogonal polynomial
+!!
+     real(dp), public, save, allocatable :: smesh(:)
+
+!!
 !! @var rep_l
 !!
 !! legendre orthogonal polynomial defined on [-1,1]
 !!
      real(dp), public, save, allocatable :: rep_l(:,:)
+
+!!
+!! @var rep_s
+!!
+!! svd orthogonal polynomial defined on [0,beta]
+!!
+     real(dp), public, save, allocatable :: rep_s(:,:)
 
   end module ctqmc_mesh
 
