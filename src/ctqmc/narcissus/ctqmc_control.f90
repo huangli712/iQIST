@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/19/2017 by li huang (last modified)
+!!!           05/24/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -316,6 +316,20 @@
 !! number of mesh points for legendre orthogonal polynomial in [-1,1] range
 !!
      integer, public, save :: legrd  = 20001
+
+!!
+!! @var svmax
+!!
+!! maximum expansion order for svd orthogonal polynomial
+!!
+     integer, public, save :: svmax  = 32
+
+!!
+!! @var svgrd
+!!
+!! number of mesh points for svd orthogonal polynomial in [-1,1] range
+!!
+     integer, public, save :: svgrd  = 20001
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
