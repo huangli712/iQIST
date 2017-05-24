@@ -250,13 +250,14 @@
 ! make singular values decomposition
      call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
+! copy umat to rep_s
      do i=1,svmax
          if ( umat(svgrd,i) < zero ) then
              rep_s(:,i) = -one * umat(:,i)
          else
              rep_s(:,i) = +one * umat(:,i)
-         endif
-     enddo
+         endif ! back if ( umat(svgrd,i) < zero ) block
+     enddo ! over i={1,svmax} loop
 
      do i=1,wsize
          print *, i, dot_product(rep_s(:,i), rep_s(:,i))
