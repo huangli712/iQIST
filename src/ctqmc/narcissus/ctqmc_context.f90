@@ -307,7 +307,7 @@
 !!
 !! @var smesh
 !!
-!! uniform mesh on interval [0,beta] for svd orthogonal polynomial
+!! uniform mesh on interval [-1,1] for svd orthogonal polynomial
 !!
      real(dp), public, save, allocatable :: smesh(:)
 
@@ -321,7 +321,7 @@
 !!
 !! @var rep_s
 !!
-!! svd orthogonal polynomial defined on [0,beta]
+!! svd orthogonal polynomial defined on [-1,1]
 !!
      real(dp), public, save, allocatable :: rep_s(:,:)
 
