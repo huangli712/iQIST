@@ -247,21 +247,21 @@
          enddo ! over j={1,svgrd} loop
      enddo ! over i={1,wsize} loop
 
+! make singular values decomposition
      call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
-     do i=1,wsize
-         if ( umat(svgrd,i) < zero ) umat(:,i) = -one * umat(:,i)
+     do i=1,svmax
+         if ( umat(svgrd,i) < zero ) then
+             rep_s(:,i) = -one * umat(:,i)
+         else
+             rep_s(:,i) = +one * umat(:,i)
+         endif
      enddo
 
-     !do i=1,svgrd
-     !    write(*,'(i,3e16.8)') i, umat(i,1), umat(i,2), umat(i,3)
-     !enddo
-
      do i=1,wsize
-         print *, i, dot_product(umat(:,i), umat(:,i))
+         print *, i, dot_product(rep_s(:,i), rep_s(:,i))
      enddo
 
-     rep_s = umat(:,1:svmax)
      return
   end subroutine s_svd_basis
 
