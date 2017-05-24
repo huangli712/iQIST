@@ -172,7 +172,7 @@
      real(dp), intent(out) :: rep_s(svgrd, svmax)
 
 ! local parameters
-     integer, parameter :: wsize = 513
+     integer, parameter  :: wsize = 513
      real(dp), parameter :: rmax = 10.0_dp
      real(dp), parameter :: rmin = -10.0_dp
 
@@ -181,8 +181,7 @@
      integer :: i
      integer :: j
 
-     real(dp) :: tvec(svgrd)
-     real(dp) :: fvec(wsize)
+     real(dp) :: fmesh(wsize)
      real(dp) :: fker(svgrd,wsize)
      real(dp) :: umat(svgrd,wsize)
      real(dp) :: svec(wsize)
@@ -191,16 +190,13 @@
      procedure ( real(dp) ) :: s_f_kernel
      procedure ( real(dp) ) :: s_b_kernel
 
-! build time mesh
-     call s_linspace_d(zero, beta, svgrd, tvec)
-
 ! build real frequency mesh
-     call s_linspace_d(rmin, rmax, wsize, fvec)
+     call s_linspace_d(rmin, rmax, wsize, fmesh)
 
 ! build the fermionic kernel
      do i=1,wsize
          do j=1,svgrd
-             fker(j,i) = s_b_kernel(tvec(j), fvec(i), beta)
+             fker(j,i) = s_b_kernel(smesh(j), fmesh(i), beta)
          enddo ! over j={1,svgrd} loop
      enddo ! over i={1,wsize} loop
 
@@ -534,9 +530,16 @@
   end function s_safe_exp
 
   program test
+     use constants, only : dp, zero
+
      integer, parameter :: svmax = 40
      integer, parameter :: svgrd = 10001
      real(dp), parameter :: beta = 10.0_dp
+     real(dp) :: smesh(svgrd)
+     real(dp) :: rep_s(svgrd, svmax)
 
-     call s_svd_basis()
+! build time mesh
+     call s_linspace_d(zero, beta, svgrd, smesh)
+
+     call s_svd_basis(svmax, svgrd, beta, smesh, rep_s)
   end program test
