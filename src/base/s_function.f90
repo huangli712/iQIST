@@ -126,7 +126,7 @@
      real(dp), intent(in)  :: cmesh(chgrd)
 
 ! chebyshev orthogonal polynomial defined on [-1,1]
-     real(dp), intent(out) :: rep_c(chgrd, chmax)
+     real(dp), intent(out) :: rep_c(chgrd,chmax)
 
 ! local variables
 ! loop index
@@ -181,7 +181,7 @@
      real(dp), intent(in)  :: smesh(svgrd)
 
 ! svd orthogonal polynomial defined on [-1,1]
-     real(dp), intent(out) :: rep_s(svgrd, svmax)
+     real(dp), intent(out) :: rep_s(svgrd,svmax)
 
 ! external arguments
 ! used to calculate the fermionic kernel function
@@ -220,10 +220,10 @@
      real(dp), allocatable :: vmat(:,:)
 
 ! make sure wsize is less than svgrd
-     call s_assert( svgrd > wsize )
+     call s_assert2( svgrd > wsize, 'please make sure svgrd > wsize' )
 
 ! make sure wsize is larger than svmax
-     call s_assert( svmax < wsize )
+     call s_assert2( svmax < wsize, 'please make sure svmax < wsize' )
 
 ! allocate memory
      allocate(fmesh(wsize),      stat=istat)
@@ -254,7 +254,7 @@
      call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
 ! check svec
-     call s_assert2( svec(svmax) < epss, 'please increase svmax' )
+     call s_assert2( abs(svec(svmax) / svec(1)) < epss, 'please increase svmax' )
 
 ! copy umat to rep_s
      do i=1,svmax
@@ -264,6 +264,8 @@
              rep_s(:,i) = +one * umat(:,i)
          endif ! back if ( umat(svgrd,i) < zero ) block
      enddo ! over i={1,svmax} loop
+
+     STOP
 
 ! deallocate memory
      deallocate(fmesh)
