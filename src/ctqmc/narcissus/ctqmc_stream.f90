@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/22/2017 by li huang (last modified)
+!!!           05/24/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -255,7 +255,7 @@
   subroutine ctqmc_setup_model()
      implicit none
 
-! build various meshes (tmesh, rmesh, lmesh, and rep_l)
+! build various meshes (tmesh, rmesh, lmesh, and rep_l, etc)
      call ctqmc_input_mesh_()
 
 ! build initial hybridization function (hybf)
@@ -286,12 +286,14 @@
      use constants, only : zero, one, two, pi
 
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
 
      use context, only : tmesh, rmesh
      use context, only : lmesh, rep_l
+     use context, only : smesh, rep_s
 
      implicit none
 
@@ -304,8 +306,14 @@
 ! build mesh for legendre orthogonal polynomial in [-1,1]
      call s_linspace_d(-one, one, legrd, lmesh)
 
+! build mesh for svd orthogonal polynomial in [0,beta]
+     call s_linspace_d(zero, beta, svgrd, smesh)
+
 ! build legendre orthogonal polynomial in [-1,1]
      call s_leg_basis(lemax, legrd, lmesh, rep_l)
+
+! build svd orthogonal polynomial in [0,beta]
+     call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
 
      return
   end subroutine ctqmc_input_mesh_
