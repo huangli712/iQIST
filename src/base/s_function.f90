@@ -51,13 +51,13 @@
 !!
 
 !!========================================================================
-!!>>> Legendre and Chebyshev polynomials                               <<<
+!!>>> orthogonal polynomial basis                                      <<<
 !!========================================================================
 
 !!
 !! @sub s_leg_basis
 !!
-!! build legendre polynomial in [-1,1]
+!! build legendre orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_leg_basis(lemax, legrd, lmesh, rep_l)
      use constants, only : dp, one
@@ -108,7 +108,7 @@
 !!
 !! @sub s_che_basis
 !!
-!! build the second kind chebyshev polynomial in [-1,1]
+!! build the second kind chebyshev orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_che_basis(chmax, chgrd, cmesh, rep_c)
      use constants, only : dp, one, two
@@ -153,6 +153,64 @@
 
      return
   end subroutine s_che_basis
+
+  subroutine s_svd_basis()
+     use constants, only : dp, zero, one
+
+     implicit none
+
+! local parameters
+     integer, parameter :: irmax = 40
+     integer, parameter :: wsize = 513
+     integer, parameter :: irgrd = 10001
+     real(dp), parameter :: beta = 10.0_dp
+     real(dp), parameter :: rmax = 10.0_dp
+     real(dp), parameter :: rmin = -10.0_dp
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+     real(dp) :: tvec(irgrd)
+     real(dp) :: fvec(wsize)
+     real(dp) :: fker(irgrd,wsize)
+     real(dp) :: umat(irgrd,wsize)
+     real(dp) :: svec(wsize)
+     real(dp) :: vmat(wsize,wsize)
+     
+     procedure ( real(dp) ) :: s_f_kernel
+     procedure ( real(dp) ) :: s_b_kernel
+
+! build time mesh
+     call s_linspace_d(zero, beta, irgrd, tvec)
+
+! build real frequency mesh
+     call s_linspace_d(rmin, rmax, wsize, fvec)
+
+! build the fermionic kernel
+     do i=1,wsize
+         do j=1,irgrd
+             fker(j,i) = s_b_kernel(tvec(j), fvec(i), beta)
+         enddo ! over j={1,irgrd} loop
+     enddo ! over i={1,wsize} loop
+
+     call s_svd_dg(irgrd, wsize, wsize, fker, umat, svec, vmat)
+
+     do i=1,wsize
+         if ( umat(irgrd,i) < zero ) umat(:,i) = -one * umat(:,i)
+     enddo
+
+     !do i=1,irgrd
+     !    write(*,'(i,3e16.8)') i, umat(i,1), umat(i,2), umat(i,3)
+     !enddo
+
+     do i=1,wsize
+         print *, i, dot_product(umat(:,i), umat(:,i))
+     enddo
+
+     return
+  end subroutine s_svd_basis
 
 !!========================================================================
 !!>>> spherical Bessel functions                                       <<<
@@ -465,64 +523,6 @@
 
      return
   end function s_safe_exp
-
-  subroutine s_svd_basis()
-     use constants, only : dp, zero, one
-
-     implicit none
-
-! local parameters
-     integer, parameter :: irmax = 40
-     integer, parameter :: wsize = 513
-     integer, parameter :: irgrd = 10001
-     real(dp), parameter :: beta = 10.0_dp
-     real(dp), parameter :: rmax = 10.0_dp
-     real(dp), parameter :: rmin = -10.0_dp
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-     real(dp) :: tvec(irgrd)
-     real(dp) :: fvec(wsize)
-     real(dp) :: fker(irgrd,wsize)
-     real(dp) :: umat(irgrd,wsize)
-     real(dp) :: svec(wsize)
-     real(dp) :: vmat(wsize,wsize)
-     
-     procedure ( real(dp) ) :: s_f_kernel
-     procedure ( real(dp) ) :: s_b_kernel
-
-! build time mesh
-     call s_linspace_d(zero, beta, irgrd, tvec)
-
-! build real frequency mesh
-     call s_linspace_d(rmin, rmax, wsize, fvec)
-
-! build the fermionic kernel
-     do i=1,wsize
-         do j=1,irgrd
-             fker(j,i) = s_b_kernel(tvec(j), fvec(i), beta)
-         enddo ! over j={1,irgrd} loop
-     enddo ! over i={1,wsize} loop
-
-     call s_svd_dg(irgrd, wsize, wsize, fker, umat, svec, vmat)
-
-     do i=1,wsize
-         if ( umat(irgrd,i) < zero ) umat(:,i) = -one * umat(:,i)
-     enddo
-
-     !do i=1,irgrd
-     !    write(*,'(i,3e16.8)') i, umat(i,1), umat(i,2), umat(i,3)
-     !enddo
-
-     do i=1,wsize
-         print *, i, dot_product(umat(:,i), umat(:,i))
-     enddo
-
-     return
-  end subroutine s_svd_basis
 
   program test
      call s_svd_basis()
