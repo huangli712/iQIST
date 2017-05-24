@@ -24,11 +24,12 @@
 !! Introduction
 !! ============
 !!
-!! 1. orthogonal polynomial
-!! ------------------------
+!! 1. orthogonal polynomial basis
+!! ------------------------------
 !!
 !! subroutine s_leg_basis(...)
 !! subroutine s_che_basis(...)
+!! subroutine s_svd_basis(...)
 !!
 !! 2. spheric Bessel function
 !! --------------------------
@@ -39,6 +40,8 @@
 !! -----------------------
 !!
 !! subroutine s_bezier(...)
+!!
+!!
 !!
 !!
 
@@ -398,7 +401,7 @@
          val = s_safe_exp(  y * ( one - x ) )
      else
          val = s_safe_exp( -x * y ) / ( two * cosh(y) )
-     endif ! back if ( x > 100.0_dp ) block
+     endif ! back if ( y > 200.0_dp ) block
 
      return
   end function s_f_kernel
@@ -425,16 +428,18 @@
 ! dimensionless variables
      real(dp) :: x, y
 
-     x = beta * omega / two
-     y = two * tau / beta - one
+     x = two * tau / beta - one
+     y = beta * omega / two
 
-     if ( x > 100.0_dp ) then
-         val = omega * s_safe_exp( -x * ( y + one ) )
-     else if ( x < -100.0_dp ) then
-         val = -omega * s_safe_exp(  x * ( one - y ) )
+     if ( abs(y) < 1E-10 ) then
+         val = s_safe_exp( -x * y )
+     else if ( y > 200.0_dp ) then
+         val = two * y * s_safe_exp( -y * ( x + one ) )
+     else if ( y < -200.0_dp ) then
+         val = -two * y * s_safe_exp( y * ( one - x ) )
      else
-         val = omega * s_safe_exp( -x * y ) / ( two * sinh(x) )
-     endif ! back if ( x > 100.0_dp ) block
+         val = y * s_safe_exp( -x * y ) / sinh(y)
+     endif ! back if ( abs(y) < 1E-10 ) block
 
      return
   end function s_b_kernel
@@ -457,7 +462,7 @@
   end function s_safe_exp
 
   subroutine s_svd_basis()
-     use constants, only : dp, zero
+     use constants, only : dp, zero, one
 
      implicit none
 
@@ -479,7 +484,7 @@
      real(dp) :: fker(irgrd,wsize)
      real(dp) :: umat(irgrd,wsize)
      real(dp) :: svec(wsize)
-     real(dp) :: vmat(wsize,wsize) 
+     real(dp) :: vmat(wsize,wsize)
      
      procedure ( real(dp) ) :: s_f_kernel
      procedure ( real(dp) ) :: s_b_kernel
@@ -493,14 +498,22 @@
 ! build the fermionic kernel
      do i=1,wsize
          do j=1,irgrd
-             fker(j,i) = s_f_kernel(tvec(j), fvec(i), beta)
+             fker(j,i) = s_b_kernel(tvec(j), fvec(i), beta)
          enddo ! over j={1,irgrd} loop
      enddo ! over i={1,wsize} loop
 
      call s_svd_dg(irgrd, wsize, wsize, fker, umat, svec, vmat)
 
      do i=1,wsize
-         print *, i, svec(i)
+         if ( umat(irgrd,i) < zero ) umat(:,i) = -one * umat(:,i)
+     enddo
+
+     !do i=1,irgrd
+     !    write(*,'(i,3e16.8)') i, umat(i,1), umat(i,2), umat(i,3)
+     !enddo
+
+     do i=1,wsize
+         print *, i, dot_product(umat(:,i), umat(:,i))
      enddo
 
      return
