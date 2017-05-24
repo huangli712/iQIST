@@ -205,8 +205,16 @@
      integer :: i
      integer :: j
 
+! status flag
+     integer :: istat
+
+! real axis mesh
      real(dp), allocatable :: fmesh(:)
+
+! fermionic or bosonic kernel function
      real(dp), allocatable :: fker(:,:)
+
+! U, \Sigma, and V matrices for singular values decomposition
      real(dp), allocatable :: umat(:,:)
      real(dp), allocatable :: svec(:)
      real(dp), allocatable :: vmat(:,:)
