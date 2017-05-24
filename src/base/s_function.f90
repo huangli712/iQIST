@@ -265,8 +265,6 @@
          endif ! back if ( umat(svgrd,i) < zero ) block
      enddo ! over i={1,svmax} loop
 
-     STOP
-
 ! deallocate memory
      deallocate(fmesh)
      deallocate(fker )
