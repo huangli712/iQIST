@@ -191,13 +191,13 @@
      procedure ( real(dp) ) :: s_b_kernel
 
 ! local parameters
-! number of mesh points for real axis
+! number of mesh points for real frequency
      integer, parameter  :: wsize = 513
 
-! left boundary for real axis mesh, \omega_{min}
+! left boundary for real frequency mesh, \omega_{min}
      real(dp), parameter :: w_min = -10.0_dp
 
-! right boundary for real axis mesh, \omega_{max}
+! right boundary for real frequency mesh, \omega_{max}
      real(dp), parameter :: w_max = +10.0_dp
 
 ! local variables
@@ -219,20 +219,31 @@
      real(dp), allocatable :: svec(:)
      real(dp), allocatable :: vmat(:,:)
 
-     allocate(fmesh(wsize))
-     allocate(fker(svgrd,wsize))
-     allocate(umat(svgrd,wsize))
-     allocate(svec(wsize))
-     allocate(vmat(wsize,wsize))
+! make sure wsize is less than svgrd
+     call s_assert( svgrd > wsize )
+
+! allocate memory
+     allocate(fmesh(wsize),      stat=istat)
+     allocate(fker(svgrd,wsize), stat=istat)
+     allocate(umat(svgrd,wsize), stat=istat)
+     allocate(svec(wsize),       stat=istat)
+     allocate(vmat(wsize,wsize), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('s_svd_basis','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! build real frequency mesh
-     call s_linspace_d(rmin, rmax, wsize, fmesh)
-     print *, 'hh'
+     call s_linspace_d(w_min, w_max, wsize, fmesh)
 
-! build the fermionic kernel
+! build the fermionic or bosonic kernel function
      do i=1,wsize
          do j=1,svgrd
-             fker(j,i) = s_b_kernel(smesh(j), fmesh(i), beta)
+             if ( stat == 'f' ) then
+                 fker(j,i) = s_f_kernel(smesh(j), fmesh(i), beta)
+             else
+                 fker(j,i) = s_b_kernel(smesh(j), fmesh(i), beta)
+             endif
          enddo ! over j={1,svgrd} loop
      enddo ! over i={1,wsize} loop
 
