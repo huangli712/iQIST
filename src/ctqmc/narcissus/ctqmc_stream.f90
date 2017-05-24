@@ -92,6 +92,8 @@
 !-------------------------------------------------------------------------
      lemax  = 32        ! maximum expansion order for legendre polynomial
      legrd  = 20001     ! number of mesh points for legendre polynomial
+     svmax  = 32        ! maximum expansion order for svd polynomial
+     svgrd  = 20001     ! number of mesh points for svd polynomial
 !-------------------------------------------------------------------------
      mkink  = 1024      ! maximum perturbation expansion order
      mfreq  = 8193      ! maximum number of matsubara frequency points
@@ -157,6 +159,8 @@
 
              call p_get('lemax' , lemax )
              call p_get('legrd' , legrd )
+             call p_get('svmax' , svmax )
+             call p_get('svgrd' , svgrd )
 
              call p_get('mkink' , mkink )
              call p_get('mfreq' , mfreq )
@@ -220,6 +224,8 @@
 
      call mp_bcast( lemax , master )
      call mp_bcast( legrd , master )
+     call mp_bcast( svmax , master )
+     call mp_bcast( svgrd , master )
      call mp_barrier()
 
      call mp_bcast( mkink , master )
