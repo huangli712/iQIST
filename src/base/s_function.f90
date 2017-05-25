@@ -160,7 +160,7 @@
 !! build the svd orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_svd_basis(svmax, svgrd, smesh, rep_s, bose, beta)
-     use constants, only : dp, zero, one, epss
+     use constants, only : dp, zero, one, two, epss
 
      implicit none
 
@@ -265,9 +265,9 @@
 ! copy umat to rep_s
      do i=1,svmax
          if ( umat(svgrd,i) < zero ) then
-             rep_s(:,i) = -one * umat(:,i)
+             rep_s(:,i) = -one * umat(:,i) * sqrt( svgrd / two )
          else
-             rep_s(:,i) = +one * umat(:,i)
+             rep_s(:,i) = +one * umat(:,i) * sqrt( svgrd / two )
          endif ! back if ( umat(svgrd,i) < zero ) block
      enddo ! over i={1,svmax} loop
 
