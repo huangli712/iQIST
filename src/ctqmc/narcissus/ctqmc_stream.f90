@@ -289,7 +289,7 @@
 !! try to create various meshes, including time mesh, frequency mesh etc
 !!
   subroutine ctqmc_input_mesh_()
-     use constants, only : zero, one, two, pi
+     use constants, only : dp, zero, one, two, pi
 
      use control, only : lemax, legrd
      use control, only : svmax, svgrd
@@ -304,6 +304,8 @@
      implicit none
 
      integer :: i
+     real(dp) :: step
+     real(dp) :: raux
 
 ! build imaginary time mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
@@ -325,6 +327,14 @@
      print *, dot_product(rep_l(:,3), rep_l(:,3))
      print *, dot_product(rep_l(:,4), rep_l(:,4))
 
+     raux = zero
+     step = two / real(legrd - 1) 
+     do i=1,legrd-1
+         raux = raux + ( rep_l(i,1) + rep_l(i+1,1) ) * step / two
+     enddo
+     print *, raux
+     STOP
+
 ! build svd orthogonal polynomial in [-1,1]
 ! .false. means fermionic kernel, and .true. means bosonic kernel
      call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
@@ -341,6 +351,7 @@
      print *, dot_product(rep_s(:,4), rep_s(:,4))
 
      rep_s = rep_s * real(svgrd)
+
      return
   end subroutine ctqmc_input_mesh_
 
