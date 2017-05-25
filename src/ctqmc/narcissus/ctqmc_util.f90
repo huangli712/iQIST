@@ -785,12 +785,11 @@
                  raux = two * tmesh(j) / beta
                  curr = nint(raux * step) + 1
                  do fsvd=1,svmax
-                     raux = 1.0_dp / (beta * beta) * rep_s(curr,fsvd)
+                     raux = two / (beta * beta) * rep_s(curr,fsvd)
                      gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fsvd,i,i)
                  enddo ! over fsvd={1,svmax} loop
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
-         gtau = gtau / real(svgrd)
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
