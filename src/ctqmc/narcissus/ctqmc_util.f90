@@ -903,6 +903,7 @@
                  tsvd(k,i) = tsvd(k,i) * ( smesh(2) - smesh(1) )
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,svmax} loop
+         tsvd = tsvd / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
