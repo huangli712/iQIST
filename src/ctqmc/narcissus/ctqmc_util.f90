@@ -758,7 +758,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
-! using legendre polynomial representation
+! using legendre orthogonal polynomial representation
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
          step = real(legrd - 1) / two
@@ -776,7 +776,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
-! using intermediate representation
+! using svd orthogonal polynomial representation
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
          step = real(svgrd - 1) / two
@@ -847,11 +847,11 @@
      allocate(tsvd(mfreq,lemax), stat=istat)
 
      if ( istat /= 0 ) then
-         call s_print_error('cat_reflip_detrat','can not allocate enough memory')
+         call s_print_error('ctqmc_tran_grnf','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 !-------------------------------------------------------------------------
-! using legendre polynomial representation
+! using legendre orthogonal polynomial representation
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
 ! build spherical Bessel functions: lfun
@@ -885,12 +885,44 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
-! using intermediate representation
+! using svd orthogonal polynomial representation
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
+! build spherical Bessel functions: sfun
+         sfun = zero
+         do k=1,mfreq
+             ob = (two * k - one) * pi / two
+             call s_sbessel(svmax-1, ob, sfun(k,:))
+         enddo ! over k={1,mfreq} loop
 
+! build unitary transformation matrix: tsvd
+         tsvd = czero
+         do i=1,svmax
+             do k=1,mfreq
+                 ob = (-one)**(k - 1) * two
+                 tsvd(k,i) = sfun(k,i) * ob * ( czi**i )
+             enddo ! over k={1,mfreq} loop
+         enddo ! over i={1,svmax} loop
+         tsvd = tsvd / beta
+
+! build impurity green's function on matsubara frequency using orthogonal
+! polynomial representation: grnf
+         grnf = czero
+         do i=1,norbs
+             do j=1,svmax
+                 do k=1,mfreq
+                     grnf(k,i,i) = grnf(k,i,i) + tsvd(k,j) * gaux(j,i,i)
+                 enddo ! over k={1,mfreq} loop
+             enddo ! over j={1,svmax} loop
+         enddo ! over i={1,norbs} loop
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! deallocate memory
+     deallocate(lfun)
+     deallocate(sfun)
+     deallocate(tleg)
+     deallocate(tsvd)
 
      return
   end subroutine ctqmc_tran_grnf
