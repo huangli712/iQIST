@@ -605,6 +605,9 @@
 ! setup initial ptau
      ptau = zero
 
+! check isscr, if the interaction is static, return directly
+     if ( isscr == 1 ) RETURN
+
 ! read in initial screening function and its derivates if available
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
