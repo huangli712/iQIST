@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/24/2017 by li huang (last modified)
+!!!           05/25/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -411,14 +411,14 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
-! using legendre polynomial representation
+! using legendre orthogonal polynomial representation
 !-------------------------------------------------------------------------
                  LEG_BLOCK: if ( isort == 2 ) then
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                      daux = two * dtau / beta
 
-! determine index for legendre polynomial interval
+! determine index for legendre orthogonal polynomial interval
                      curr = nint( daux * step ) + 1
 
 ! special tricks for the first point and the last point
@@ -436,14 +436,14 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
-! using svd polynomial representation
+! using svd orthogonal polynomial representation
 !-------------------------------------------------------------------------
                  SVD_BLOCK: if ( isort == 3 ) then
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                      daux = two * dtau / beta
 
-! determine index for legendre polynomial interval
+! determine index for svd orthogonal polynomial interval
                      curr = nint( daux * step ) + 1
 
 ! special tricks for the first point and the last point
