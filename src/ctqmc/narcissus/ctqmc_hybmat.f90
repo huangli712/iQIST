@@ -1214,6 +1214,7 @@
 ! allocate memory
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('cat_reflip_detrat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
