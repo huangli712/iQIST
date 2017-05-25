@@ -289,7 +289,7 @@
 !! try to create various meshes, including time mesh, frequency mesh etc
 !!
   subroutine ctqmc_input_mesh_()
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : zero, one, two, pi
 
      use control, only : isort
      use control, only : lemax, legrd
