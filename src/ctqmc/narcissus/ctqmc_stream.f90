@@ -291,6 +291,7 @@
   subroutine ctqmc_input_mesh_()
      use constants, only : dp, zero, one, two, pi
 
+     use control, only : isort
      use control, only : lemax, legrd
      use control, only : svmax, svgrd
      use control, only : mfreq
@@ -303,10 +304,6 @@
 
      implicit none
 
-     integer :: i
-     real(dp) :: step
-     real(dp) :: raux1, raux2, raux3, raux4
-
 ! build imaginary time mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
@@ -314,39 +311,25 @@
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build mesh for legendre orthogonal polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, lmesh)
+     if ( isort == 2 ) then
+         call s_linspace_d(-one, one, legrd, lmesh)
+     endif ! back if ( isort == 2 ) block
 
 ! build mesh for svd orthogonal polynomial in [-1,1]
-     call s_linspace_d(-one, one, svgrd, smesh)
+     if ( isort == 3 ) then
+         call s_linspace_d(-one, one, svgrd, smesh)
+     endif ! back if ( isort == 3 ) block
 
 ! build legendre orthogonal polynomial in [-1,1]
-     call s_leg_basis(lemax, legrd, lmesh, rep_l)
-
-     do i=1,legrd
-         write(99,'(5e16.8)') lmesh(i), rep_l(i,1), rep_l(i,2), rep_l(i,3), rep_l(i,4)
-     enddo
+     if ( isort == 2 ) then
+         call s_leg_basis(lemax, legrd, lmesh, rep_l)
+     endif ! back if ( isort == 2 ) block
 
 ! build svd orthogonal polynomial in [-1,1]
 ! .false. means fermionic kernel, and .true. means bosonic kernel
-     call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
-
-     do i=1,svgrd
-         write(100,'(5e16.8)') smesh(i), rep_s(i,1), rep_s(i,2), rep_s(i,3), rep_s(i,4)
-     enddo
-
-     raux1 = zero
-     raux2 = zero
-     raux3 = zero
-     raux4 = zero
-     step = two / real(legrd - 1) 
-     do i=1,svgrd-1
-         raux1 = raux1 + ( rep_s(i,1) * rep_s(i,1) + rep_s(i+1,1) * rep_s(i+1,1) ) * step / two
-         raux2 = raux2 + ( rep_s(i,2) * rep_s(i,2) + rep_s(i+1,2) * rep_s(i+1,2) ) * step / two
-         raux3 = raux3 + ( rep_s(i,3) * rep_s(i,3) + rep_s(i+1,3) * rep_s(i+1,3) ) * step / two
-         raux4 = raux4 + ( rep_s(i,4) * rep_s(i,4) + rep_s(i+1,4) * rep_s(i+1,4) ) * step / two
-     enddo
-     print *, raux1, raux2, raux3, raux4
-     print *, sum(rep_s(:,1) * rep_s(:,1))
+     if ( isort == 3 ) then
+         call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
+     endif ! back if ( isort == 3 ) block
 
      return
   end subroutine ctqmc_input_mesh_
