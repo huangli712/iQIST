@@ -806,10 +806,14 @@
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax, svmax
+     use control, only : lemax
+     use control, only : svmax, svgrd
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
+
+     use context, only : rmesh, smesh
+     use context, only : rep_s
 
      implicit none
 
@@ -888,22 +892,17 @@
 ! using svd orthogonal polynomial representation
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
-! build spherical Bessel functions: sfun
-         sfun = zero
-         do k=1,mfreq
-             ob = (two * k - one) * pi / two
-             call s_sbessel(svmax-1, ob, sfun(k,:))
-         enddo ! over k={1,mfreq} loop
-
 ! build unitary transformation matrix: tsvd
          tsvd = czero
          do i=1,svmax
              do k=1,mfreq
-                 ob = (-one)**(k - 1) * two
-                 tsvd(k,i) = sfun(k,i) * ob * ( czi**i )
+                 do j=1,svgrd
+                     ob = rmesh(k) * ( smesh(j) + one ) * beta / two
+                     tsvd(k,i) = tsvd(k,i) + exp( czi * ob ) * rep_s(j,i)
+                 enddo ! over j={1,svgrd} loop
+                 tsvd(k,i) = tsvd(k,i) * ( smesh(2) - smesh(1) )
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,svmax} loop
-         tsvd = tsvd / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf

@@ -1,4 +1,4 @@
-isort = 3
+isort = 2
 svmax = 36
 beta = 10.0
 nsweep = 40000000
