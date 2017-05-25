@@ -305,7 +305,7 @@
 
      integer :: i
      real(dp) :: step
-     real(dp) :: raux
+     real(dp) :: raux1, raux2, raux3, raux4
 
 ! build imaginary time mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
@@ -327,12 +327,18 @@
      print *, dot_product(rep_l(:,3), rep_l(:,3))
      print *, dot_product(rep_l(:,4), rep_l(:,4))
 
-     raux = zero
+     raux1 = zero
+     raux2 = zero
+     raux3 = zero
+     raux4 = zero
      step = two / real(legrd - 1) 
      do i=1,legrd-1
-         raux = raux + ( rep_l(i,1) + rep_l(i+1,1) ) * step / two
+         raux1 = raux1 + ( rep_l(i,1) + rep_l(i+1,1) ) * step / two
+         raux2 = raux2 + ( rep_l(i,2) + rep_l(i+1,2) ) * step / two
+         raux3 = raux3 + ( rep_l(i,3) + rep_l(i+1,3) ) * step / two
+         raux4 = raux4 + ( rep_l(i,4) + rep_l(i+1,4) ) * step / two
      enddo
-     print *, raux
+     print *, raux1, raux2, raux3, raux4
      STOP
 
 ! build svd orthogonal polynomial in [-1,1]
