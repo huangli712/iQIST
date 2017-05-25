@@ -842,9 +842,9 @@
 
 ! allocate memory
      allocate(lfun(mfreq,lemax), stat=istat)
-     allocate(sfun(mfreq,lemax), stat=istat)
+     allocate(sfun(mfreq,svmax), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
-     allocate(tsvd(mfreq,lemax), stat=istat)
+     allocate(tsvd(mfreq,svmax), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_tran_grnf','can not allocate enough memory')
