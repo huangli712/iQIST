@@ -12,7 +12,7 @@
 !!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/24/2017 by li huang (last modified)
+!!!           05/25/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -220,10 +220,14 @@
      real(dp), allocatable :: vmat(:,:)
 
 ! make sure wsize is less than svgrd
-     call s_assert2( svgrd > wsize, 'please make sure svgrd > wsize' )
+     if ( svgrd <= wsize ) then
+         call s_print_error('s_svd_basis','please make sure svgrd > wsize')
+     endif ! back if ( svgrd < wsize ) block
 
 ! make sure wsize is larger than svmax
-     call s_assert2( svmax < wsize, 'please make sure svmax < wsize' )
+     if ( svmax >= wsize ) then
+         call s_print_error('s_svd_basis','please make sure svmax < wsize')
+     endif ! back if ( svmax >= wsize ) block
 
 ! allocate memory
      allocate(fmesh(wsize),      stat=istat)
@@ -254,7 +258,9 @@
      call s_svd_dg(svgrd, wsize, wsize, fker, umat, svec, vmat)
 
 ! check svec
-     call s_assert2( abs(svec(svmax) / svec(1)) < epss, 'please increase svmax' )
+     if ( abs( svec(svmax) / svec(1) ) > epss ) then
+         call s_print_error('s_svd_basis','please increase svmax')
+     endif ! back if ( abs( svec(svmax) / svec(1) ) > epss ) block
 
 ! copy umat to rep_s
      do i=1,svmax
@@ -502,7 +508,7 @@
      implicit none
 
 ! external arguments
-! input
+! input variable
      real(dp), intent(in) :: x
 
 ! local variables
