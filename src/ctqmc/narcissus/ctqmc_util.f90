@@ -1365,6 +1365,16 @@
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 
+! 2.3 special consideration must be taken for svd representation, we
+!     can calculate grnf and frnf directly by using svd coefficients,
+!     instead of performing fourier transformation
+     SVD_BLOCK: if ( isort == 3 ) then
+
+         call ctqmc_tran_grnf(gtau, grnf)
+         call ctqmc_tran_grnf(ftau, frnf)
+
+     endif SVD_BLOCK ! back if ( isort == 3 ) block
+
 ! task 3: build final self-energy function by using improved estimator
 !-------------------------------------------------------------------------
      do i=1,norbs
