@@ -224,6 +224,17 @@
      allocate(nmat_mpi(norbs,norbs),       stat=istat)
      allocate(nmat_err(norbs,norbs),       stat=istat)
 
+     allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
+     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
+     allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
+     allocate(ftau_err(ntime,norbs,norbs), stat=istat)
+     allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+     allocate(frnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(frnf_err(mfreq,norbs,norbs), stat=istat)
+     allocate(sig2_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(sig2_err(mfreq,norbs,norbs), stat=istat)
+
      allocate(knop_mpi(norbs),             stat=istat)
      allocate(knop_err(norbs),             stat=istat)
      allocate(kmat_mpi(norbs,norbs),       stat=istat)
@@ -256,17 +267,6 @@
      allocate(h2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(p2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(p2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-
-     allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
-     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
-     allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
-     allocate(ftau_err(ntime,norbs,norbs), stat=istat)
-     allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
-     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
-     allocate(frnf_mpi(mfreq,norbs,norbs), stat=istat)
-     allocate(frnf_err(mfreq,norbs,norbs), stat=istat)
-     allocate(sig2_mpi(mfreq,norbs,norbs), stat=istat)
-     allocate(sig2_err(mfreq,norbs,norbs), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
