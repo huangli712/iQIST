@@ -782,14 +782,8 @@
          step = real(svgrd - 1) / two
          do i=1,norbs
              do j=1,ntime
-                 if ( j == 1 ) then
-                     curr = 1
-                 else if ( j == ntime ) then
-                     curr = svgrd
-                 else
-                     raux = two * tmesh(j) / beta - one
-                     call s_svd_point(raux, step, curr)
-                 endif
+                 raux = two * tmesh(j) / beta - one
+                 call s_svd_point(raux, step, curr)
                  do fsvd=1,svmax
                      raux = two / (beta * beta) * rep_s(curr,fsvd)
                      gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fsvd,i,i)
