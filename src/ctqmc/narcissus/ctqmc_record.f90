@@ -6,7 +6,9 @@
 !!!           ctqmc_record_nmat <<<---
 !!!           ctqmc_record_gtau
 !!!           ctqmc_record_ftau
-!!!           ctqmc_record_grnf <<<---
+!!!           ctqmc_record_grnf
+!!!           ctqmc_record_frnf
+!!!           ctqmc_record_sig2 <<<---
 !!!           ctqmc_record_kmat
 !!!           ctqmc_record_lrmm
 !!!           ctqmc_record_szpw <<<---
@@ -22,7 +24,9 @@
 !!!           ctqmc_reduce_nmat <<<---
 !!!           ctqmc_reduce_gtau
 !!!           ctqmc_reduce_ftau
-!!!           ctqmc_reduce_grnf <<<---
+!!!           ctqmc_reduce_grnf
+!!!           ctqmc_reduce_frnf
+!!!           ctqmc_reduce_sig2 <<<---
 !!!           ctqmc_reduce_kmat
 !!!           ctqmc_reduce_lrmm
 !!!           ctqmc_reduce_szpw <<<---
@@ -668,6 +672,12 @@
 
      return
   end subroutine ctqmc_record_grnf
+
+  subroutine ctqmc_record_frnf()
+  end subroutine ctqmc_record_frnf
+
+  subroutine ctqmc_record_sig2()
+  end subroutine ctqmc_record_sig2
 
 !!========================================================================
 !!>>> measure physical observables 3                                   <<<
@@ -2036,6 +2046,92 @@
      return
   end subroutine ctqmc_reduce_grnf
 
+!!
+!! @sub ctqmc_reduce_grnf
+!!
+!! reduce the grnf from all children processes
+!!
+  subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+     use constants, only : dp, zero, czero, czi
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+
+     use context, only : grnf
+
+     implicit none
+
+! external arguments
+! impurity green's function
+     complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
+     complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
+
+! local variables
+! used to store the real and imaginary parts of impurity green's function
+     real(dp), allocatable :: g_re_err(:,:,:)
+     real(dp), allocatable :: g_im_err(:,:,:)
+
+! allocate memory
+     allocate(g_re_err(mfreq,norbs,norbs))
+     allocate(g_im_err(mfreq,norbs,norbs))
+
+! initialize g_re_err and g_im_err
+     g_re_err = zero
+     g_im_err = zero
+
+! initialize grnf_mpi and grnf_err
+     grnf_mpi = czero
+     grnf_err = czero
+
+! build grnf_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(grnf, grnf_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     grnf_mpi = grnf
+
+# endif /* MPI */
+
+! calculate the average
+     grnf_mpi = grnf_mpi / real(nprocs)
+
+! build grnf_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, g_re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, g_im_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+! construct the final grnf_err
+     grnf_err = g_re_err + g_im_err * czi
+
+! deallocate memory
+     deallocate( g_re_err )
+     deallocate( g_im_err )
+
+     return
+  end subroutine ctqmc_reduce_grnf
 !!========================================================================
 !!>>> reduce physical observables 3                                    <<<
 !!========================================================================
