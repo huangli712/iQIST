@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/22/2017 by li huang (last modified)
+!!!           05/26/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -317,14 +317,6 @@
 ! counter for data bins
      integer, save :: nbins = 0
 
-! scaled impurity green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-     real(dp) :: gbar(ntime,norbs,norbs)
-
-! evaluate gaux and gbar at first
-     call ctqmc_tran_gtau(gtau, gaux)
-     call ctqmc_tran_gtau(gerr, gbar)
-
 ! determine reset and nbins
      if ( nbins == nsweep / nwrite + 1 ) then
          nbins = 1 ! reset the counter to 1
@@ -342,7 +334,7 @@
 ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gbar(j,i,i)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gtau(j,i,i), gerr(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
