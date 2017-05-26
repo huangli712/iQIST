@@ -796,8 +796,8 @@
          call ctqmc_dump_gtau(gtau, gtau_err)
          call ctqmc_dump_grnf(grnf, grnf_err)
          call ctqmc_dump_ftau(ftau, ftau_err)
-         call ctqmc_dump_frnf(frnf)
-         call ctqmc_dump_sigf(sig2)
+         call ctqmc_dump_frnf(frnf, frnf_err)
+         call ctqmc_dump_sigf(sig2, sig2_err)
 
          call ctqmc_dump_kmat(knop, kmat, knop_err, kmat_err)
          call ctqmc_dump_lrmm(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
