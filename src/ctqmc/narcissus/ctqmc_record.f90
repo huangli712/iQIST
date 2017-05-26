@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/25/2017 by li huang (last modified)
+!!!           05/26/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -1803,6 +1803,23 @@
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
+! local variables
+! status flag
+     integer :: istat
+
+! calculated impurity green's function
+     real(dp), allocatable :: gaux(:,:,:)
+
+! allocate memory
+     allocate(gaux(ntime,norbs,norbs), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_reduce_gtau','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! calculate final impurity green's function
+     call ctqmc_tran_gtau(gtau, gaux)
+
 ! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
      gtau_err = zero
@@ -1811,14 +1828,14 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(gtau, gtau_mpi)
+     call mp_allreduce(gaux, gtau_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     gtau_mpi = gtau
+     gtau_mpi = gaux
 
 # endif /* MPI */
 
@@ -1829,7 +1846,7 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
+     call mp_allreduce((gaux - gtau_mpi)**2, gtau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1840,6 +1857,9 @@
      if ( nprocs > 1 ) then
          gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+! deallocate memory
+     deallocate(gaux)
 
      return
   end subroutine ctqmc_reduce_gtau
