@@ -13,7 +13,7 @@
 !!!           ctqmc_dump_frnf
 !!!           ctqmc_dump_hybf
 !!!           ctqmc_dump_wssf
-!!!           ctqmc_dump_sigf <<<---
+!!!           ctqmc_dump_sig2 <<<---
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lrmm
 !!!           ctqmc_dump_szpw <<<---
@@ -694,11 +694,11 @@
   end subroutine ctqmc_dump_wssf
 
 !!
-!! @sub ctqmc_dump_sigf
+!! @sub ctqmc_dump_sig2
 !!
 !! write out self-energy function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_sigf(sigf, serr)
+  subroutine ctqmc_dump_sig2(sig2, serr)
      use constants, only : dp, mytmp
 
      use control, only : norbs
@@ -710,7 +710,7 @@
 
 ! external arguments
 ! self-energy function
-     complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: sig2(mfreq,norbs,norbs)
      complex(dp), intent(in) :: serr(mfreq,norbs,norbs)
 
 ! local variables
@@ -724,7 +724,7 @@
 ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), sigf(j,i,i), serr(j,i,i)
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), sig2(j,i,i), serr(j,i,i)
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -734,7 +734,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_sigf
+  end subroutine ctqmc_dump_sig2
 
 !!========================================================================
 !!>>> dump data of physical observables 3                              <<<
