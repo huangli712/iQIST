@@ -2206,8 +2206,8 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
-         f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final sig2_err
