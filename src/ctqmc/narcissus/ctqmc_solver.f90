@@ -196,6 +196,10 @@
      complex(dp), allocatable :: frnf_mpi(:,:,:)
      complex(dp), allocatable :: frnf_err(:,:,:)
 
+! self-energy function in matsubara frequency axis
+     complex(dp), allocatable :: sig2_mpi(:,:,:)
+     complex(dp), allocatable :: sig2_err(:,:,:)
+
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      allocate(hist_err(mkink),             stat=istat)
@@ -247,6 +251,10 @@
      allocate(ftau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+     allocate(frnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(frnf_err(mfreq,norbs,norbs), stat=istat)
+     allocate(sig2_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(sig2_err(mfreq,norbs,norbs), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
