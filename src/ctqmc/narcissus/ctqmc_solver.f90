@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           05/26/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -191,6 +191,10 @@
 ! impurity green's function in matsubara frequency axis
      complex(dp), allocatable :: grnf_mpi(:,:,:)
      complex(dp), allocatable :: grnf_err(:,:,:)
+
+! auxiliary correlation function in matsubara frequency axis
+     complex(dp), allocatable :: frnf_mpi(:,:,:)
+     complex(dp), allocatable :: frnf_err(:,:,:)
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
