@@ -4,7 +4,6 @@
 !!!           s_che_basis
 !!!           s_svd_basis
 !!!           s_svd_point
-!!!           s_svd_value
 !!!           s_sbessel
 !!!           s_bezier
 !!!           s_safe_exp
@@ -34,7 +33,6 @@
 !! subroutine s_che_basis(...)
 !! subroutine s_svd_basis(...)
 !! subroutine s_svd_point(...)
-!! subroutine s_svd_value(...)
 !!
 !! 2. spheric Bessel function
 !! --------------------------
@@ -317,7 +315,7 @@
   end subroutine s_svd_basis
 
   subroutine s_svd_point(val, stp, pnt)
-     use constants, only : dp, two, pi
+     use constants, only : dp, zero, one, two, pi
 
      implicit none
 
@@ -331,7 +329,13 @@
 ! local variables
      real(dp) :: dt
 
-     dt = asinh( two / pi * atanh(val) )
+     if ( -one < val .and. val < one ) then
+         dt = asinh( two / pi * atanh(val) )
+     else if ( val == one ) then
+         dt = asinh( two / pi * atanh(val - 0.0001_dp) )
+     else
+         dt = asinh( two / pi * atanh(val + 0.0001_dp) )
+     endif
      dt = dt + limit
 
      pnt = nint( dt * stp / limit ) + 1
