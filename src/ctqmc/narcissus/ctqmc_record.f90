@@ -449,7 +449,6 @@
                      daux = two * dtau / beta - one
 
 ! determine index for svd orthogonal polynomial interval
-                     !! curr = nint( daux * step ) + 1
                      call s_svd_point(daux, step, curr)
 
 ! special tricks for the first point and the last point
