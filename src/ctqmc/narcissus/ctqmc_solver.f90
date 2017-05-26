@@ -409,7 +409,7 @@
 
 ! record the impurity (double) occupation number (matrix)
              if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_nmat()
+                 call ctqmc_record_nmat() ! EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 !!========================================================================
@@ -434,7 +434,12 @@
 
 ! record the auxiliary correlation function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_frnf()
+                 call ctqmc_record_frnf() ! EMPTY CALL
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+! record the self-energy function in matsubara frequency space
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_sig2() ! EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 !!========================================================================
@@ -631,6 +636,8 @@
          gtau = gtau * real(nmonte) / real(nsweep)
          ftau = ftau * real(nmonte) / real(nsweep)
          grnf = grnf * real(nmonte) / real(nsweep)
+         frnf = frnf * real(nmonte) / real(nsweep)
+         sig2 = sig2 * real(nmonte) / real(nsweep)
 
          knop = knop * real(nmonte) / real(nsweep)
          kmat = kmat * real(nmonte) / real(nsweep)
@@ -651,6 +658,12 @@
          p2pw = p2pw * real(nmonte) / real(nsweep)
 
      END BLOCK AVERAGE_DATA
+
+! try to evaluate the impurity green's function and self-energy function
+! grnf, frnf, and sig2 would be updated there
+     UPDATE1_DATA: BLOCK
+         call ctqmc_make_hub2()
+     END BLOCK UPDATE1_DATA
 
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
@@ -679,7 +692,7 @@
      END BLOCK COLLECT_DATA
 
 ! update original data
-     UPDATE_DATA: BLOCK
+     UPDATE2_DATA: BLOCK
 
          hist = hist_mpi
          prob = prob_mpi
@@ -709,11 +722,7 @@
          h2pw = h2pw_mpi
          p2pw = p2pw_mpi
 
-     END BLOCK UPDATE_DATA
-
-! try to evaluate the impurity green's function and self-energy function
-! grnf, frnf, and sig2 would be updated there
-     call ctqmc_make_hub2()
+     END BLOCK UPDATE2_DATA
 
      call cpu_time(time_end) ! record ending time
 
