@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/26/2017 by li huang (last modified)
+!!!           05/27/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -764,7 +764,7 @@
          step = real(legrd - 1) / two
          do i=1,norbs
              do j=1,ntime
-                 raux = two * tmesh(j) / beta
+                 raux = two * tmesh(j) / beta ! map tmesh to [0,2]
                  curr = nint(raux * step) + 1
                  do fleg=1,lemax
                      raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
@@ -782,7 +782,7 @@
          step = real(svgrd - 1) / two
          do i=1,norbs
              do j=1,ntime
-                 raux = two * tmesh(j) / beta - one
+                 raux = two * tmesh(j) / beta - one ! map tmesh to [-1,1]
                  call s_svd_point(raux, step, curr)
                  do fsvd=1,svmax
                      raux = two / (beta * beta) * rep_s(curr,fsvd)
