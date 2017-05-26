@@ -839,12 +839,16 @@
 ! spherical Bessel functions
      real(dp), allocatable :: bfun(:,:)
 
+! exponential functions: e^{i\omega\tau}
+     complex(dp), allocatable :: sfun(:,:)
+
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
      allocate(bfun(mfreq,lemax), stat=istat)
+     allocate(sfun(mfreq,svgrd), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
 
@@ -890,17 +894,16 @@
 ! using svd orthogonal polynomial representation
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
+! build exponential functions: sfun
+         do k=1,mfreq
+             do j=1,svgrd
+                 ob = rmesh(k) * ( smesh(j) + one ) * beta / two
+                 sfun(k,j) = exp( czi * ob )
+             enddo ! over j={1,svgrd} loop
+         enddo ! over k={1,mfreq} loop
+
 ! build unitary transformation matrix: tsvd
-         tsvd = czero
-         do i=1,svmax
-             do k=1,mfreq
-                 do j=1,svgrd
-                     ob = rmesh(k) * ( smesh(j) + one ) * beta / two
-                     tsvd(k,i) = tsvd(k,i) + exp( czi * ob ) * rep_s(j,i)
-                 enddo ! over j={1,svgrd} loop
-             enddo ! over k={1,mfreq} loop
-         enddo ! over i={1,svmax} loop
-         tsvd = tsvd * ( smesh(2) - smesh(1) ) / beta
+         tsvd = matmul(sfun, rep_s) * ( smesh(2) - smesh(1) ) / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
@@ -917,6 +920,7 @@
 
 ! deallocate memory
      deallocate(bfun)
+     deallocate(sfun)
      deallocate(tleg)
      deallocate(tsvd)
 
