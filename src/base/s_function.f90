@@ -3,6 +3,8 @@
 !!! program : s_leg_basis
 !!!           s_che_basis
 !!!           s_svd_basis
+!!!           s_svd_point
+!!!           s_svd_value
 !!!           s_sbessel
 !!!           s_bezier
 !!!           s_safe_exp
@@ -31,6 +33,8 @@
 !! subroutine s_leg_basis(...)
 !! subroutine s_che_basis(...)
 !! subroutine s_svd_basis(...)
+!! subroutine s_svd_point(...)
+!! subroutine s_svd_value(...)
 !!
 !! 2. spheric Bessel function
 !! --------------------------
@@ -287,7 +291,7 @@
      enddo ! over i={1,svgrd} loop
 
      do i=1,svmax
-         t = two * limit / float(svgrd) * sum( ( umat(:,i) * wmesh(:) )**2 )
+         t = ( two * limit / float(svgrd) ) * sum( ( umat(:,i) * wmesh(:) )**2 )
          umat(:,i) = umat(:,i) / sqrt(t)
      enddo ! over i={1,svmax} loop
 
