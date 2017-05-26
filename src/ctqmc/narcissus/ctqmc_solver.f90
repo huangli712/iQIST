@@ -100,6 +100,8 @@
 ! time consuming by total iteration
      real(dp) :: time_sum
 
+! the following observables are always measured: real(dp)
+!-------------------------------------------------------------------------
 ! histogram for perturbation expansion series
      real(dp), allocatable :: hist_mpi(:)
      real(dp), allocatable :: hist_err(:)
@@ -120,6 +122,32 @@
      real(dp), allocatable :: nmat_mpi(:,:)
      real(dp), allocatable :: nmat_err(:,:)
 
+! impurity green's function in imaginary time axis
+     real(dp), allocatable :: gtau_mpi(:,:,:)
+     real(dp), allocatable :: gtau_err(:,:,:)
+
+! auxiliary correlation function in imaginary time axis
+     real(dp), allocatable :: ftau_mpi(:,:,:)
+     real(dp), allocatable :: ftau_err(:,:,:)
+!-------------------------------------------------------------------------
+
+! the following observables are always measured: complex(dp)
+!-------------------------------------------------------------------------
+! impurity green's function in matsubara frequency axis
+     complex(dp), allocatable :: grnf_mpi(:,:,:)
+     complex(dp), allocatable :: grnf_err(:,:,:)
+
+! auxiliary correlation function in matsubara frequency axis
+     complex(dp), allocatable :: frnf_mpi(:,:,:)
+     complex(dp), allocatable :: frnf_err(:,:,:)
+
+! self-energy function in matsubara frequency axis
+     complex(dp), allocatable :: sig2_mpi(:,:,:)
+     complex(dp), allocatable :: sig2_err(:,:,:)
+!-------------------------------------------------------------------------
+
+! the following observables are measured optionally: real(dp)
+!-------------------------------------------------------------------------
 ! number of operators, < k >
      real(dp), allocatable :: knop_mpi(:)
      real(dp), allocatable :: knop_err(:)
@@ -167,7 +195,10 @@
 ! orbital-resolved charge-charge correlation function
      real(dp), allocatable :: ch_w_mpi(:,:,:)
      real(dp), allocatable :: ch_w_err(:,:,:)
+!-------------------------------------------------------------------------
 
+! the following observables are measured optionally: complex(dp)
+!-------------------------------------------------------------------------
 ! two-particle green's function
      complex(dp), allocatable :: g2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: g2pw_err(:,:,:,:,:)
@@ -179,26 +210,7 @@
 ! particle-particle pairing susceptibility
      complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
-
-! impurity green's function in imaginary time axis
-     real(dp), allocatable    :: gtau_mpi(:,:,:)
-     real(dp), allocatable    :: gtau_err(:,:,:)
-
-! auxiliary correlation function in imaginary time axis
-     real(dp), allocatable    :: ftau_mpi(:,:,:)
-     real(dp), allocatable    :: ftau_err(:,:,:)
-
-! impurity green's function in matsubara frequency axis
-     complex(dp), allocatable :: grnf_mpi(:,:,:)
-     complex(dp), allocatable :: grnf_err(:,:,:)
-
-! auxiliary correlation function in matsubara frequency axis
-     complex(dp), allocatable :: frnf_mpi(:,:,:)
-     complex(dp), allocatable :: frnf_err(:,:,:)
-
-! self-energy function in matsubara frequency axis
-     complex(dp), allocatable :: sig2_mpi(:,:,:)
-     complex(dp), allocatable :: sig2_err(:,:,:)
+!-------------------------------------------------------------------------
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
