@@ -677,7 +677,7 @@
          call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
          call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
          call ctqmc_reduce_frnf(frnf_mpi, frnf_err)
-         call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+         call ctqmc_reduce_sig2(sig2_mpi, sig2_err)
 
          call ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
          call ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
