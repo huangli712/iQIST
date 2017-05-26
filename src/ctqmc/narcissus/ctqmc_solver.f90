@@ -873,6 +873,10 @@
      deallocate(ftau_err)
      deallocate(grnf_mpi)
      deallocate(grnf_err)
+     deallocate(frnf_mpi)
+     deallocate(frnf_err)
+     deallocate(sig2_mpi)
+     deallocate(sig2_err)
 
      deallocate(knop_mpi)
      deallocate(knop_err)
