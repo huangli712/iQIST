@@ -371,21 +371,13 @@
      integer  :: i
      integer  :: j
 
-! scaled auxiliary correlation function
-     real(dp) :: faux(ntime,norbs,norbs)
-     real(dp) :: fbar(ntime,norbs,norbs)
-
-! evaluate faux and fbar at first
-     call ctqmc_tran_gtau(ftau, faux)
-     call ctqmc_tran_gtau(ferr, fbar)
-
 ! open data file: solver.fcorr.dat
      open(mytmp, file='solver.fcorr.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), faux(j,i,i), fbar(j,i,i)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), ftau(j,i,i), ferr(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
