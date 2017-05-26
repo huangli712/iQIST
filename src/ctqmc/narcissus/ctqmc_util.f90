@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/25/2017 by li huang (last modified)
+!!!           05/26/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -838,7 +838,6 @@
 
 ! spherical Bessel functions
      real(dp), allocatable :: lfun(:,:)
-     real(dp), allocatable :: sfun(:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
@@ -846,7 +845,6 @@
 
 ! allocate memory
      allocate(lfun(mfreq,lemax), stat=istat)
-     allocate(sfun(mfreq,svmax), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
 
@@ -920,7 +918,6 @@
 
 ! deallocate memory
      deallocate(lfun)
-     deallocate(sfun)
      deallocate(tleg)
      deallocate(tsvd)
 
