@@ -761,9 +761,11 @@
      call ctqmc_symm_gtau(symm, ftau)
      call ctqmc_symm_gtau(symm, ftau_err)
      call ctqmc_symm_grnf(symm, frnf)
+     call ctqmc_symm_grnf(symm, frnf_err)
 
 ! symmetrize the self-energy function over spin or over bands
      call ctqmc_symm_grnf(symm, sig2)
+     call ctqmc_symm_grnf(symm, sig2_err)
 
      call cpu_time(time_end) ! record ending time
 
