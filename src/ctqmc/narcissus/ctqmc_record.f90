@@ -1888,6 +1888,23 @@
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ftau_err(ntime,norbs,norbs)
 
+! local variables
+! status flag
+     integer :: istat
+
+! calculated auxiliary correlation function
+     real(dp), allocatable :: faux(:,:,:)
+
+! allocate memory
+     allocate(faux(ntime,norbs,norbs), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_reduce_ftau','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! calculate final auxiliary correlation function
+     call ctqmc_tran_gtau(ftau, faux)
+
 ! initialize ftau_mpi and ftau_err
      ftau_mpi = zero
      ftau_err = zero
@@ -1896,14 +1913,14 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(ftau, ftau_mpi)
+     call mp_allreduce(faux, ftau_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     ftau_mpi = ftau
+     ftau_mpi = faux
 
 # endif /* MPI */
 
@@ -1914,7 +1931,7 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((ftau - ftau_mpi)**2, ftau_err)
+     call mp_allreduce((faux - ftau_mpi)**2, ftau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1925,6 +1942,9 @@
      if ( nprocs > 1 ) then
          ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+! deallocate memory
+     deallocate(faux)
 
      return
   end subroutine ctqmc_reduce_ftau
