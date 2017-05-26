@@ -702,7 +702,7 @@
 !! build imaginary time green's function using different representation
 !!
   subroutine ctqmc_tran_gtau(gaux, gtau)
-     use constants, only : dp, zero, two
+     use constants, only : dp, zero, one, two, pi
 
      use control, only : isort
      use control, only : norbs
@@ -779,11 +779,18 @@
 ! using svd orthogonal polynomial representation
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
-         step = real(svgrd - 1) / two
+         step = real(svgrd - 1) / (two * 3.0_dp)
          do i=1,norbs
              do j=1,ntime
-                 raux = two * tmesh(j) / beta
-                 curr = nint(raux * step) + 1
+                 if ( j == 1 ) then
+                     curr = 1
+                 else if ( j == ntime ) then
+                     curr = svgrd
+                 else
+                     raux = two * tmesh(j) / beta - one
+                     raux = asinh( two / pi * atanh(raux) ) + 3.0_dp
+                     curr = nint(raux * step) + 1
+                 endif
                  do fsvd=1,svmax
                      raux = two / (beta * beta) * rep_s(curr,fsvd)
                      gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fsvd,i,i)

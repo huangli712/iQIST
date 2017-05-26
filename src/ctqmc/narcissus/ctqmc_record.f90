@@ -314,7 +314,7 @@
 !! record the impurity green's function in imaginary time axis
 !!
   subroutine ctqmc_record_gtau()
-     use constants, only : dp, zero, one, two
+     use constants, only : dp, zero, one, two, pi
 
      use control, only : isort
      use control, only : norbs
@@ -445,11 +445,12 @@
 !-------------------------------------------------------------------------
                  SVD_BLOCK: if ( isort == 3 ) then
 
-! convert dtau in [0,\beta] to daux in [0,2]
-                     daux = two * dtau / beta
+! convert dtau in [0,\beta] to daux in [-1,1]
+                     daux = two * dtau / beta - one
 
 ! determine index for svd orthogonal polynomial interval
-                     curr = nint( daux * step ) + 1
+                     !! curr = nint( daux * step ) + 1
+                     call s_svd_point(daux, step, curr)
 
 ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == svgrd ) then
