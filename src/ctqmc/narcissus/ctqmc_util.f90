@@ -833,7 +833,7 @@
 ! status flag
      integer  :: istat
 
-! dummy real variables
+! dummy real(dp) variables
      real(dp) :: ob
 
 ! spherical Bessel functions
@@ -898,10 +898,9 @@
                      ob = rmesh(k) * ( smesh(j) + one ) * beta / two
                      tsvd(k,i) = tsvd(k,i) + exp( czi * ob ) * rep_s(j,i)
                  enddo ! over j={1,svgrd} loop
-                 tsvd(k,i) = tsvd(k,i) * ( smesh(2) - smesh(1) )
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,svmax} loop
-         tsvd = tsvd / beta
+         tsvd = tsvd * ( smesh(2) - smesh(1) ) / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
