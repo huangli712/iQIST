@@ -705,6 +705,8 @@
          gtau = gtau_mpi
          ftau = ftau_mpi
          grnf = grnf_mpi
+         frnf = frnf_mpi
+         sig2 = sig2_mpi
 
          knop = knop_mpi
          kmat = kmat_mpi
