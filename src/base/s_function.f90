@@ -160,7 +160,7 @@
 !! build the svd orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_svd_basis(svmax, svgrd, smesh, rep_s, bose, beta)
-     use constants, only : dp, zero, one, two, epss
+     use constants, only : dp, zero, one, two, pi, epss
 
      implicit none
 
@@ -200,13 +200,23 @@
 ! right boundary for real frequency mesh, \omega_{max}
      real(dp), parameter :: w_max = +10.0_dp
 
+! boundary for linear imaginary time mesh
+     real(dp), parameter :: limit = +3.00_dp
+
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
 
 ! status flag
-     integer :: istat
+     integer  :: istat
+
+! dummy real(dp) variable
+     real(dp) :: t
+
+! non-uniform imaginary time mesh
+     real(dp), allocatable :: tmesh(:)
+     real(dp), allocatable :: wmesh(:) ! integration weight
 
 ! real axis mesh
      real(dp), allocatable :: fmesh(:)
@@ -230,6 +240,8 @@
      endif ! back if ( svmax >= wsize ) block
 
 ! allocate memory
+     allocate(tmesh(svgrd),      stat=istat)
+     allocate(wmesh(svgrd),      stat=istat)
      allocate(fmesh(wsize),      stat=istat)
      allocate(fker(svgrd,wsize), stat=istat)
      allocate(umat(svgrd,wsize), stat=istat)
@@ -240,6 +252,13 @@
          call s_print_error('s_svd_basis','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+! build non-uniform imaginary time mesh
+     do i=1,svgrd
+         t = limit * smesh(i) ! map the original mesh from [-1,1] to [-3,3]
+         tmesh(i) = tanh( pi / two * sinh (t) )
+         wmesh(i) = sqrt( pi / two * cosh (t) ) / cosh( pi / two * sinh(t) )
+     enddo ! over i={1,svgrd} loop
+
 ! build real frequency mesh
      call s_linspace_d(w_min, w_max, wsize, fmesh)
 
@@ -247,9 +266,9 @@
      do i=1,wsize
          do j=1,svgrd
              if ( bose .eqv. .true. ) then
-                 fker(j,i) = s_b_kernel(smesh(j), fmesh(i), beta)
+                 fker(j,i) = wmesh(j) * s_b_kernel(tmesh(j), fmesh(i), beta)
              else
-                 fker(j,i) = s_f_kernel(smesh(j), fmesh(i), beta)
+                 fker(j,i) = wmesh(j) * s_f_kernel(tmesh(j), fmesh(i), beta)
              endif ! back if ( bose .eqv. .true. ) block
          enddo ! over j={1,svgrd} loop
      enddo ! over i={1,wsize} loop
@@ -262,16 +281,28 @@
          call s_print_error('s_svd_basis','please increase svmax')
      endif ! back if ( abs( svec(svmax) / svec(1) ) > epss ) block
 
+! normalize umat to make sure the orthogonality
+     do i=1,svgrd
+         umat(i,:) = umat(i,:) / wmesh(i)
+     enddo ! over i={1,svgrd} loop
+
+     do i=1,svmax
+         t = two * limit / float(svgrd) * sum( ( umat(:,i) * wmesh(:) )**2 )
+         umat(:,i) = umat(:,i) / sqrt(t)
+     enddo ! over i={1,svmax} loop
+
 ! copy umat to rep_s
      do i=1,svmax
          if ( umat(svgrd,i) < zero ) then
-             rep_s(:,i) = -one * umat(:,i) * sqrt( svgrd / two )
+             rep_s(:,i) = -one * umat(:,i)
          else
-             rep_s(:,i) = +one * umat(:,i) * sqrt( svgrd / two )
+             rep_s(:,i) = +one * umat(:,i)
          endif ! back if ( umat(svgrd,i) < zero ) block
      enddo ! over i={1,svmax} loop
 
 ! deallocate memory
+     deallocate(tmesh)
+     deallocate(wmesh)
      deallocate(fmesh)
      deallocate(fker )
      deallocate(umat )
