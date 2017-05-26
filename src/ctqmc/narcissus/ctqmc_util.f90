@@ -837,14 +837,14 @@
      real(dp) :: ob
 
 ! spherical Bessel functions
-     real(dp), allocatable :: lfun(:,:)
+     real(dp), allocatable :: bfun(:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
-     allocate(lfun(mfreq,lemax), stat=istat)
+     allocate(bfun(mfreq,lemax), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
 
@@ -856,11 +856,11 @@
 ! using legendre orthogonal polynomial representation
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
-! build spherical Bessel functions: lfun
-         lfun = zero
+! build spherical Bessel functions: bfun
+         bfun = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
-             call s_sbessel(lemax-1, ob, lfun(k,:))
+             call s_sbessel(lemax-1, ob, bfun(k,:))
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: tleg
@@ -868,7 +868,7 @@
          do i=1,lemax
              do k=1,mfreq
                  ob = (-one)**(k - 1) * sqrt(two * i - one)
-                 tleg(k,i) = lfun(k,i) * ob * ( czi**i )
+                 tleg(k,i) = bfun(k,i) * ob * ( czi**i )
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,lemax} loop
          tleg = tleg / beta
@@ -917,7 +917,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! deallocate memory
-     deallocate(lfun)
+     deallocate(bfun)
      deallocate(tleg)
      deallocate(tsvd)
 
