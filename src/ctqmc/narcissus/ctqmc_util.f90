@@ -834,7 +834,10 @@
      integer  :: istat
 
 ! dummy real(dp) variables
-     real(dp) :: ob
+     real(dp) :: t, ob
+
+     real(dp) :: dmesh(svgrd)
+     real(dp) :: wmesh(svgrd)
 
 ! spherical Bessel functions
      real(dp), allocatable :: bfun(:,:)
@@ -901,16 +904,24 @@
 ! using svd orthogonal polynomial representation
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
+
+! build non-uniform imaginary time mesh
+         do i=1,svgrd
+             t = 3.0_dp * smesh(i) ! map the original mesh from [-1,1] to [-3,3]
+             dmesh(i) = tanh( pi / two * sinh (t) )
+             wmesh(i) = sqrt( pi / two * cosh (t) ) / cosh( pi / two * sinh(t) )
+         enddo ! over i={1,svgrd} loop
+
 ! build exponential functions: sfun
          do k=1,mfreq
              do j=1,svgrd
-                 ob = rmesh(k) * ( smesh(j) + one ) * beta / two
-                 sfun(k,j) = exp( czi * ob )
+                 ob = rmesh(k) * ( dmesh(j) + one ) * beta / two
+                 sfun(k,j) = exp( czi * ob ) * wmesh(j) * wmesh(j)
              enddo ! over j={1,svgrd} loop
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: tsvd
-         tsvd = matmul(sfun, rep_s) * ( smesh(2) - smesh(1) ) / beta
+         tsvd = matmul(sfun, rep_s)
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
