@@ -13,7 +13,7 @@
 !!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/25/2017 by li huang (last modified)
+!!!           05/26/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -203,6 +203,7 @@
      real(dp), parameter :: w_max = +10.0_dp
 
 ! boundary for linear imaginary time mesh
+! it must be the same with the one defined in the s_svd_point
      real(dp), parameter :: limit = +3.00_dp
 
 ! local variables
@@ -314,21 +315,45 @@
      return
   end subroutine s_svd_basis
 
+!!
+!! @sub s_svd_point
+!!
+!! for a given point val, return its index in the non-uniform mesh
+!!
   subroutine s_svd_point(val, stp, pnt)
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp, one, two, pi
 
      implicit none
 
 ! external arguments
+! point's value, it lies in a non-uniform mesh [-1,1]
      real(dp), intent(in) :: val
+
+! step for an uniform mesh [-1,1]
      real(dp), intent(in) :: stp
+
+! index in the non-uniform mesh [-1,1]
      integer, intent(out) :: pnt
 
+! local parameters
+! boundary for linear imaginary time mesh
+! it must be the same with the one defined in the s_svd_basis
      real(dp), parameter :: limit = 3.0_dp
 
 ! local variables
+! dummy real(dp) variable
      real(dp) :: dt
 
+! note:
+!
+! 1. we have tau in [0,\beta]. the mesh is uniform (size is ntime)
+! 2. then tau is mapped into val in [-1,1]. the mesh is non-uniform (size is svgrd)
+! 3. then val is mapped into dt in [0,6]. here the mesh is uniform (size is svgrd)
+! 4. we calculate the index for dt in the uniform mesh [0,6] (size is svgrd)
+! 5. clearly, the obtained index is the same with the index in the non-uniform mesh
+!
+
+! val \in [-1,1], convert it to dt \in [-3,3]
      if ( -one < val .and. val < one ) then
          dt = asinh( two / pi * atanh(val) )
      else if ( val == one ) then
@@ -336,8 +361,11 @@
      else
          dt = asinh( two / pi * atanh(val + 0.0001_dp) )
      endif
+
+! shift dt from [-3,3] to [0,6]
      dt = dt + limit
 
+! get the index for dt in linear mesh [0,6]
      pnt = nint( dt * stp / limit ) + 1
 
      return
