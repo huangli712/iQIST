@@ -316,6 +316,29 @@
      return
   end subroutine s_svd_basis
 
+  subroutine s_svd_point(val, stp, pnt)
+     use constants, only : dp, two, pi
+
+     implicit none
+
+! external arguments
+     real(dp), intent(in) :: val
+     real(dp), intent(in) :: stp
+     integer, intent(out) :: pnt
+
+     real(dp), parameter :: limit = 3.0_dp
+
+! local variables
+     real(dp) :: dt
+
+     dt = asinh( two / pi * atanh(val) )
+     dt = dt + limit
+
+     pnt = nint( dt * stp / limit ) + 1
+
+     return
+  end subroutine s_svd_point
+
 !!========================================================================
 !!>>> spherical Bessel functions                                       <<<
 !!========================================================================
