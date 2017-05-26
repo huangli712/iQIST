@@ -614,11 +614,11 @@
 !-------------------------------------------------------------------------
                  SVD_BLOCK: if ( isort == 3 ) then
 
-! convert dtau in [0,\beta] to daux in [0,2]
-                     daux = two * dtau / beta
+! convert dtau in [0,\beta] to daux in [-1,1]
+                     daux = two * dtau / beta - one
 
 ! determine index for svd orthogonal polynomial interval
-                     curr = nint( daux * step ) + 1
+                     call s_svd_point(daux, step, curr)
 
 ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == svgrd ) then
@@ -673,10 +673,28 @@
      return
   end subroutine ctqmc_record_grnf
 
+!!
+!! @sub ctqmc_record_frnf
+!!
+!! record the auxiliary correlation function in matsubara frequency space.
+!! the required feature is implemented in the ctqmc_make_hub2() subroutine
+!!
   subroutine ctqmc_record_frnf()
+     implicit none
+
+     return
   end subroutine ctqmc_record_frnf
 
+!!
+!! @sub ctqmc_record_sig2
+!!
+!! record the self-energy function in matsubara frequency space.
+!! the required feature is implemented in the ctqmc_make_hub2() subroutine
+!!
   subroutine ctqmc_record_sig2()
+     implicit none
+
+     return
   end subroutine ctqmc_record_sig2
 
 !!========================================================================
