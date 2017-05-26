@@ -2047,11 +2047,11 @@
   end subroutine ctqmc_reduce_grnf
 
 !!
-!! @sub ctqmc_reduce_grnf
+!! @sub ctqmc_reduce_frnf
 !!
-!! reduce the grnf from all children processes
+!! reduce the frnf from all children processes
 !!
-  subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+  subroutine ctqmc_reduce_frnf(frnf_mpi, frnf_err)
      use constants, only : dp, zero, czero, czi
 
      use mmpi, only : mp_allreduce
@@ -2061,56 +2061,56 @@
      use control, only : mfreq
      use control, only : nprocs
 
-     use context, only : grnf
+     use context, only : frnf
 
      implicit none
 
 ! external arguments
-! impurity green's function
-     complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
-     complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
+! auxiliary correlation function
+     complex(dp), intent(out) :: frnf_mpi(mfreq,norbs,norbs)
+     complex(dp), intent(out) :: frnf_err(mfreq,norbs,norbs)
 
 ! local variables
-! used to store the real and imaginary parts of impurity green's function
-     real(dp), allocatable :: g_re_err(:,:,:)
-     real(dp), allocatable :: g_im_err(:,:,:)
+! used to store the real and imaginary parts of auxiliary correlation function
+     real(dp), allocatable :: f_re_err(:,:,:)
+     real(dp), allocatable :: f_im_err(:,:,:)
 
 ! allocate memory
-     allocate(g_re_err(mfreq,norbs,norbs))
-     allocate(g_im_err(mfreq,norbs,norbs))
+     allocate(f_re_err(mfreq,norbs,norbs))
+     allocate(f_im_err(mfreq,norbs,norbs))
 
-! initialize g_re_err and g_im_err
-     g_re_err = zero
-     g_im_err = zero
+! initialize f_re_err and f_im_err
+     f_re_err = zero
+     f_im_err = zero
 
-! initialize grnf_mpi and grnf_err
-     grnf_mpi = czero
-     grnf_err = czero
+! initialize frnf_mpi and frnf_err
+     frnf_mpi = czero
+     frnf_err = czero
 
-! build grnf_mpi, collect data from all children processes
+! build frnf_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(grnf, grnf_mpi)
+     call mp_allreduce(frnf, frnf_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     grnf_mpi = grnf
+     frnf_mpi = frnf
 
 # endif /* MPI */
 
 ! calculate the average
-     grnf_mpi = grnf_mpi / real(nprocs)
+     frnf_mpi = frnf_mpi / real(nprocs)
 
-! build grnf_err, collect data from all children processes
+! build frnf_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(( real(grnf - grnf_mpi))**2, g_re_err)
-     call mp_allreduce((aimag(grnf - grnf_mpi))**2, g_im_err)
+     call mp_allreduce(( real(frnf - frnf_mpi))**2, f_re_err)
+     call mp_allreduce((aimag(frnf - frnf_mpi))**2, f_im_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2119,19 +2119,20 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
-         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final grnf_err
-     grnf_err = g_re_err + g_im_err * czi
+! construct the final frnf_err
+     frnf_err = f_re_err + f_im_err * czi
 
 ! deallocate memory
-     deallocate( g_re_err )
-     deallocate( g_im_err )
+     deallocate( f_re_err )
+     deallocate( f_im_err )
 
      return
-  end subroutine ctqmc_reduce_grnf
+  end subroutine ctqmc_reduce_frnf
+
 !!========================================================================
 !!>>> reduce physical observables 3                                    <<<
 !!========================================================================
