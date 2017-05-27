@@ -15,6 +15,7 @@
 * Clean tutorial files.
 * Update the building system.
 * Improve the code style and comments.
+* Add svd orthogonal polynomial representation.
 
 ## v0.6.7 @ c14fdc4 // Jan 13, 2017
 
