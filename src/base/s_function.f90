@@ -359,9 +359,9 @@
          dt = asinh( two / pi * atanh(val) )
      else
          if ( val > zero ) then ! val == +one
-             dt = asinh( two / pi * atanh(val - 0.0001_dp) )
+             dt = asinh( two / pi * atanh(val - 0.00001_dp) )
          else                   ! val == -one
-             dt = asinh( two / pi * atanh(val + 0.0001_dp) )
+             dt = asinh( two / pi * atanh(val + 0.00001_dp) )
          endif ! back if ( val > zero ) block
      endif ! back if ( -one < val .and. val < one ) block
 
