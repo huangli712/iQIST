@@ -13,7 +13,7 @@
 !!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/26/2017 by li huang (last modified)
+!!!           05/27/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -235,7 +235,7 @@
 ! make sure wsize is less than svgrd
      if ( svgrd <= wsize ) then
          call s_print_error('s_svd_basis','please make sure svgrd > wsize')
-     endif ! back if ( svgrd < wsize ) block
+     endif ! back if ( svgrd <= wsize ) block
 
 ! make sure wsize is larger than svmax
      if ( svmax >= wsize ) then
@@ -321,7 +321,7 @@
 !! for a given point val, return its index in the non-uniform mesh
 !!
   subroutine s_svd_point(val, stp, pnt)
-     use constants, only : dp, one, two, pi
+     use constants, only : dp, zero, one, two, pi
 
      implicit none
 
@@ -344,6 +344,7 @@
 ! dummy real(dp) variable
      real(dp) :: dt
 
+!
 ! note:
 !
 ! 1. we have tau in [0,\beta]. the mesh is uniform (size is ntime)
@@ -356,11 +357,13 @@
 ! val \in [-1,1], convert it to dt \in [-3,3]
      if ( -one < val .and. val < one ) then
          dt = asinh( two / pi * atanh(val) )
-     else if ( val == one ) then
-         dt = asinh( two / pi * atanh(val - 0.0001_dp) )
      else
-         dt = asinh( two / pi * atanh(val + 0.0001_dp) )
-     endif
+         if ( val > zero ) then ! val == +one
+             dt = asinh( two / pi * atanh(val - 0.0001_dp) )
+         else                   ! val == -one
+             dt = asinh( two / pi * atanh(val + 0.0001_dp) )
+         endif ! back if ( val > zero ) block
+     endif ! back if ( -one < val .and. val < one ) block
 
 ! shift dt from [-3,3] to [0,6]
      dt = dt + limit
