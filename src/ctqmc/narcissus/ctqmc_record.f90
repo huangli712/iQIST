@@ -314,7 +314,7 @@
 !! record the impurity green's function in imaginary time axis
 !!
   subroutine ctqmc_record_gtau()
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp, zero, one, two
 
      use control, only : isort
      use control, only : norbs
@@ -452,9 +452,11 @@
                      call s_svd_point(daux, step, curr)
 
 ! special tricks for the first point and the last point
-                     if ( curr == 1 .or. curr == svgrd ) then
-                         maux = two * maux
-                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
+! we are using a non-uniform mesh, the mesh points are very dense near
+! the left and right boundaries \pm 1, so we do not need the trick
+!<                     if ( curr == 1 .or. curr == svgrd ) then
+!<                         maux = two * maux
+!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      SVD_CYCLE: do fsvd=1,svmax
@@ -621,9 +623,11 @@
                      call s_svd_point(daux, step, curr)
 
 ! special tricks for the first point and the last point
-                     if ( curr == 1 .or. curr == svgrd ) then
-                         maux = two * maux
-                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
+! we are using a non-uniform mesh, the mesh points are very dense near
+! the left and right boundaries \pm 1, so we do not need the trick
+!<                     if ( curr == 1 .or. curr == svgrd ) then
+!<                         maux = two * maux
+!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
                      SVD_CYCLE: do fsvd=1,svmax
