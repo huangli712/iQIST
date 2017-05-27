@@ -812,7 +812,7 @@
      use control, only : ntime
      use control, only : beta
 
-     use context, only : rmesh, smesh
+     use context, only : rmesh, smesh, tmesh
      use context, only : rep_s
 
      implicit none
@@ -836,6 +836,11 @@
 ! dummy real(dp) variable
      real(dp) :: ob
 
+     real(dp) :: raux, step
+     integer  :: curr
+     integer, allocatable  :: imesh(:)
+     real(dp), allocatable :: umesh(:)
+
 ! non-uniform mesh and its integration weight
      real(dp), allocatable :: dmesh(:)
      real(dp), allocatable :: wmesh(:)
@@ -851,6 +856,7 @@
      complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
+     allocate(imesh(ntime), umesh(ntime))
      allocate(dmesh(svgrd),      stat=istat)
      allocate(wmesh(svgrd),      stat=istat)
      allocate(bfun(mfreq,lemax), stat=istat)
@@ -908,29 +914,21 @@
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
 
-! build non-uniform imaginary time mesh and its integration weight
-! here the magic number 3.0 is the boundary of the original uniform mesh
-         do i=1,svgrd
-             ob = 3.0_dp * smesh(i) ! map the original mesh from [-1,1] to [-3,3]
-             dmesh(i) = tanh( pi / two * sinh (ob) )
-             wmesh(i) = sqrt( pi / two * cosh (ob) ) / cosh( pi / two * sinh(ob) )
-             wmesh(i) = wmesh(i)**2
-         enddo ! over i={1,svgrd} loop
+         tsvd = czero
+         step = real(svgrd - 1) / two
 
-! renormalize wmesh
-         wmesh = two * wmesh / sum(wmesh)
+         do i=1,ntime
+             raux = two * tmesh(i) / beta - one
+             call s_svd_point(raux, step, curr)
+             imesh(i) = curr
+         enddo
 
-! build exponential functions: sfun
-! here we multiply it with the integration weight
-         do k=1,mfreq
-             do j=1,svgrd
-                 ob = rmesh(k) * ( dmesh(j) + one ) * beta / two
-                 sfun(k,j) = exp( czi * ob ) * wmesh(j)
-             enddo ! over j={1,svgrd} loop
-         enddo ! over k={1,mfreq} loop
-
-! build unitary transformation matrix: tsvd
-         tsvd = matmul(sfun, rep_s) / beta
+         do i=1,svmax
+             do j=1,ntime
+                 umesh(j) = rep_s( imesh(j), i )
+             enddo
+             call s_fft_forward(ntime, tmesh, umesh, mfreq, rmesh, tsvd(:,i))
+         enddo
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
