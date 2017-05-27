@@ -836,20 +836,20 @@
 ! dummy real(dp) variable
      real(dp) :: ob
 
-     real(dp) :: raux, step
-     integer, allocatable  :: imesh(:)
-     real(dp), allocatable :: umesh(:)
+! step for the linear mesh
+     real(dp) :: step
 
 ! spherical Bessel functions
      real(dp), allocatable :: bfun(:,:)
+     real(dp), allocatable :: ufun(:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
-     allocate(imesh(ntime), umesh(ntime))
      allocate(bfun(mfreq,lemax), stat=istat)
+     allocate(ufun(ntime,svmax), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
 
@@ -903,20 +903,18 @@
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
 
-         tsvd = czero
          step = real(svgrd - 1) / two
-
          do i=1,ntime
-             raux = two * tmesh(i) / beta - one
-             call s_svd_point(raux, step, imesh(i))
-         enddo
+             ob = two * tmesh(i) / beta - one
+             call s_svd_point(ob, step, istat)
+             ufun(i,:) = rep_s(istat,:)
+         enddo ! over i={1,ntime} loop
 
+! build unitary transformation matrix: tsvd
+         tsvd = czero
          do i=1,svmax
-             do j=1,ntime
-                 umesh(j) = rep_s( imesh(j), i )
-             enddo
-             call s_fft_forward(ntime, tmesh, umesh, mfreq, rmesh, tsvd(:,i))
-         enddo
+             call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tsvd(:,i))
+         enddo ! over i={1,svmax} loop
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
@@ -932,6 +930,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! deallocate memory
+     deallocate(ufun)
      deallocate(bfun)
      deallocate(tleg)
      deallocate(tsvd)
