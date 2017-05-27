@@ -1,5 +1,5 @@
 isort = 3
-svmax = 42
+svmax = 36
 beta = 10.0
 svgrd = 1001
-nsweep = 4000000
+nsweep = 40000000
