@@ -11,7 +11,7 @@
 !!!           ctqmc_symm_grnf <<<---
 !!!           ctqmc_tran_twop <<<---
 !!!           ctqmc_tran_gtau
-!!!           ctqmc_tran_grnf 
+!!!           ctqmc_tran_grnf
 !!!           ctqmc_make_fock <<<---
 !!!           ctqmc_make_umat <<<---
 !!!           ctqmc_make_lift <<<---
@@ -833,11 +833,12 @@
 ! status flag
      integer  :: istat
 
-! dummy real(dp) variables
-     real(dp) :: t, ob
+! dummy real(dp) variable
+     real(dp) :: ob
 
-     real(dp) :: dmesh(svgrd)
-     real(dp) :: wmesh(svgrd)
+! non-uniform mesh and its integration weight
+     real(dp), allocatable :: dmesh(:)
+     real(dp), allocatable :: wmesh(:)
 
 ! spherical Bessel functions
      real(dp), allocatable :: bfun(:,:)
@@ -850,6 +851,8 @@
      complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
+     allocate(dmesh(svgrd),      stat=istat)
+     allocate(wmesh(svgrd),      stat=istat)
      allocate(bfun(mfreq,lemax), stat=istat)
      allocate(sfun(mfreq,svgrd), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
@@ -905,23 +908,29 @@
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
 
-! build non-uniform imaginary time mesh
+! build non-uniform imaginary time mesh and its integration weight
+! here the magic number 3.0 is the boundary of the original uniform mesh
          do i=1,svgrd
-             t = 3.0_dp * smesh(i) ! map the original mesh from [-1,1] to [-3,3]
-             dmesh(i) = tanh( pi / two * sinh (t) )
-             wmesh(i) = sqrt( pi / two * cosh (t) ) / cosh( pi / two * sinh(t) )
+             ob = 3.0_dp * smesh(i) ! map the original mesh from [-1,1] to [-3,3]
+             dmesh(i) = tanh( pi / two * sinh (ob) )
+             wmesh(i) = sqrt( pi / two * cosh (ob) ) / cosh( pi / two * sinh(ob) )
+             wmesh(i) = wmesh(i)**2
          enddo ! over i={1,svgrd} loop
 
+! renormalize wmesh
+         wmesh = two * wmesh / sum(wmesh)
+
 ! build exponential functions: sfun
+! here we multiply it with the integration weight
          do k=1,mfreq
              do j=1,svgrd
                  ob = rmesh(k) * ( dmesh(j) + one ) * beta / two
-                 sfun(k,j) = exp( czi * ob ) * wmesh(j) * wmesh(j)
+                 sfun(k,j) = exp( czi * ob ) * wmesh(j)
              enddo ! over j={1,svgrd} loop
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: tsvd
-         tsvd = matmul(sfun, rep_s)
+         tsvd = matmul(sfun, rep_s) / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
@@ -937,6 +946,8 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! deallocate memory
+     deallocate(dmesh)
+     deallocate(wmesh)
      deallocate(bfun)
      deallocate(sfun)
      deallocate(tleg)
