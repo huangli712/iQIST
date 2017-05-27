@@ -812,7 +812,7 @@
      use control, only : ntime
      use control, only : beta
 
-     use context, only : rmesh, smesh, tmesh
+     use context, only : tmesh, rmesh
      use context, only : rep_s
 
      implicit none
@@ -837,19 +837,11 @@
      real(dp) :: ob
 
      real(dp) :: raux, step
-     integer  :: curr
      integer, allocatable  :: imesh(:)
      real(dp), allocatable :: umesh(:)
 
-! non-uniform mesh and its integration weight
-     real(dp), allocatable :: dmesh(:)
-     real(dp), allocatable :: wmesh(:)
-
 ! spherical Bessel functions
      real(dp), allocatable :: bfun(:,:)
-
-! exponential functions: e^{i\omega\tau}
-     complex(dp), allocatable :: sfun(:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
@@ -857,10 +849,7 @@
 
 ! allocate memory
      allocate(imesh(ntime), umesh(ntime))
-     allocate(dmesh(svgrd),      stat=istat)
-     allocate(wmesh(svgrd),      stat=istat)
      allocate(bfun(mfreq,lemax), stat=istat)
-     allocate(sfun(mfreq,svgrd), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
 
@@ -919,8 +908,7 @@
 
          do i=1,ntime
              raux = two * tmesh(i) / beta - one
-             call s_svd_point(raux, step, curr)
-             imesh(i) = curr
+             call s_svd_point(raux, step, imesh(i))
          enddo
 
          do i=1,svmax
@@ -944,10 +932,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! deallocate memory
-     deallocate(dmesh)
-     deallocate(wmesh)
      deallocate(bfun)
-     deallocate(sfun)
      deallocate(tleg)
      deallocate(tsvd)
 
