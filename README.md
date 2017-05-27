@@ -42,7 +42,8 @@ GNU General Public License Version 3
     * Kinetic energy fluctuation
 
 * The following measurement tricks are supported
-    * Orthogonal polynomial representation
+    * Legendre orthogonal polynomial representation
+    * Singular value decomposition representation
     * Improved estimator for self-energy function
 
 * The following optimized algorithms are adopted
