@@ -13,7 +13,7 @@
 !!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/27/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -62,7 +62,8 @@
 !! build legendre orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_leg_basis(lemax, legrd, lmesh, rep_l)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      implicit none
 
@@ -113,7 +114,8 @@
 !! build the second kind chebyshev orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_che_basis(chmax, chgrd, cmesh, rep_c)
-     use constants, only : dp, one, two
+     use constants, only : dp
+     use constants, only : one, two
 
      implicit none
 
@@ -162,7 +164,9 @@
 !! build the svd orthogonal polynomial in [-1,1] interval
 !!
   subroutine s_svd_basis(svmax, svgrd, smesh, rep_s, bose, beta)
-     use constants, only : dp, zero, one, two, pi, epss
+     use constants, only : dp
+     use constants, only : pi, zero, one, two
+     use constants, only : epss
 
      implicit none
 
@@ -321,7 +325,8 @@
 !! for a given point val, return its index in the non-uniform mesh
 !!
   subroutine s_svd_point(val, stp, pnt)
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp
+     use constants, only : pi, zero, one, two
 
      implicit none
 
@@ -385,7 +390,9 @@
 !! argument x and l=0, 1, \ldots, l_{max}
 !!
   subroutine s_sbessel(lmax, x, jl)
-     use constants, only : dp, zero, one, two, eps8
+     use constants, only : dp
+     use constants, only : zero, one, two
+     use constants, only : eps8
 
      implicit none
 
@@ -515,7 +522,8 @@
 !! to evaluates the bernstein polynomials at a point x
 !!
   subroutine s_bezier(n, x, bern)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      implicit none
 
@@ -596,7 +604,8 @@
 !! a safe exp call to avoid data overflow
 !!
   function s_safe_exp(x) result(val)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -623,7 +632,8 @@
 !! used to calculate fermionic kernel function
 !!
   function s_f_kernel(tau, omega, beta) result(val)
-     use constants, only : dp, one, two
+     use constants, only : dp
+     use constants, only : one, two
 
      implicit none
 
@@ -668,7 +678,8 @@
 !! used to calculate bosonic kernel function
 !!
   function s_b_kernel(tau, omega, beta) result(val)
-     use constants, only : dp, one, two
+     use constants, only : dp
+     use constants, only : one, two
 
 ! external arguments
 ! imaginary time point, it is alreay scaled to [-1,1]

@@ -6,7 +6,7 @@
 !!! type    : functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/20/2014 by li huang (created)
-!!!           05/12/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : these functions are used to do numerical integration with
 !!!           composite trapezoid or composite simpson algorithms.
 !!! status  : unstable
@@ -62,7 +62,8 @@
 !! numerical integration with trapezoid algorithm
 !!
   function s_int_trapezoid(f, a, b, n) result(val)
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      implicit none
 
@@ -111,7 +112,8 @@
 !! numerical integration with simpson algorithm
 !!
   function s_int_simpson(f, a, b, n) result(val)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
