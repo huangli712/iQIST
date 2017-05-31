@@ -19,7 +19,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : these subroutines are designed for vectors or arrays. they
 !!!           can be used to manipulate grid and mesh.
 !!! status  : unstable
@@ -475,7 +475,8 @@
 !! linear mixing for two integer vectors
 !!
   subroutine s_mix_i(n, ix, iy, alpha)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      implicit none
 
@@ -503,7 +504,8 @@
 !! linear mixing for two real(dp) vectors
 !!
   subroutine s_mix_d(n, dx, dy, alpha)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      implicit none
 
@@ -531,7 +533,8 @@
 !! linear mixing for two complex(dp) vectors
 !!
   subroutine s_mix_z(n, zx, zy, alpha)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      implicit none
 
