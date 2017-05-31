@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/24/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -34,7 +34,8 @@
 !! Monte Carlo quantum impurity solver
 !!
   module ctqmc_core
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -794,7 +795,8 @@
 !! global variables and arrays
 !!
   module context
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : nband, norbs, ncfgs
      use control, only : lemax, legrd
