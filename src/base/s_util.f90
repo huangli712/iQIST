@@ -17,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -334,7 +334,8 @@
 !! calculate combination algebra
 !!
   subroutine s_combination(ntiny, nlarg, value)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      implicit none
 
@@ -605,7 +606,8 @@
 !! quantum Monte Carlo quantum impurity solver
 !!
   subroutine s_time_analyzer(time_iter, time_niter)
-     use constants, only : dp, mystd
+     use constants, only : dp
+     use constants, only : mystd
 
      implicit none
 
