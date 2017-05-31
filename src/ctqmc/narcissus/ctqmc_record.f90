@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/26/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -281,6 +281,8 @@
 
 ! evaluate total energy: etot
      paux(1) = paux(2) + paux(3)
+
+!-------------------------------------------------------------------------
 
 ! evaluate occupation matrix: < n_i >
      nimp = nimp + sgmt / beta
