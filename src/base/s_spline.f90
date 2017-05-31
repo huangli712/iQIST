@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to do cubic spline interpolation.
 !!! status  : unstable
 !!! comment :
@@ -84,7 +84,8 @@
 !! evaluate the 2-order derivates of yval
 !!
   subroutine s_spl_deriv2(ydim, xval, yval, startu, startd, d2y)
-     use constants, only : dp, zero, one, two, half
+     use constants, only : dp
+     use constants, only : zero, one, two, half
 
      implicit none
 

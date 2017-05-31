@@ -42,7 +42,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to encapsulate some important and
 !!!           frequently used linear algebra operations.
 !!! status  : unstable
@@ -180,7 +180,8 @@
 !! build a real(dp) matrix with all elements are zero
 !!
   subroutine s_zeros_d(n, A)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -202,7 +203,8 @@
 !! build a complex(dp) matrix with all elements are zero
 !!
   subroutine s_zeros_z(n, A)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
@@ -244,7 +246,8 @@
 !! build a real(dp) matrix with all elements are one
 !!
   subroutine s_ones_d(n, A)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      implicit none
 
@@ -266,7 +269,8 @@
 !! build a complex(dp) matrix with all elements are one
 !!
   subroutine s_ones_z(n, A)
-     use constants, only : dp, cone
+     use constants, only : dp
+     use constants, only : cone
 
      implicit none
 
@@ -397,7 +401,8 @@
 !! build real(dp) matrix with ones on the diagonal and zeros elsewhere
 !!
   subroutine s_eye_d(n, k, A)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      implicit none
 
@@ -431,7 +436,8 @@
 !! build complex(dp) matrix with ones on the diagonal and zeros elsewhere
 !!
   subroutine s_eye_z(n, k, A)
-     use constants, only : dp, czero, cone
+     use constants, only : dp
+     use constants, only : czero, cone
 
      implicit none
 
@@ -492,7 +498,8 @@
 !! build real(dp) identity matrix
 !!
   subroutine s_identity_d(n, A)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      implicit none
 
@@ -521,7 +528,8 @@
 !! build complex(dp) identity matrix
 !!
   subroutine s_identity_z(n, A)
-     use constants, only : dp, czero, cone
+     use constants, only : dp
+     use constants, only : czero, cone
 
      implicit none
 
@@ -580,7 +588,8 @@
 !! build real(dp) diagonal matrix from a vector
 !!
   subroutine s_diag_d(n, v, A)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -612,7 +621,8 @@
 !! build complex(dp) diagonal matrix from a vector
 !!
   subroutine s_diag_z(n, v, A)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
@@ -648,7 +658,8 @@
 !! return trace for a real(dp) array
 !!
   subroutine s_trace_d(n, A, tr)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -680,7 +691,8 @@
 !! return trace for a complex(dp) array
 !!
   subroutine s_trace_z(n, A, tr)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
@@ -712,7 +724,8 @@
 !! calculate the determinant of a real(dp) matrix
 !!
   subroutine s_det_d(ndim, dmat, ddet)
-     use constants, only : dp, one, cone
+     use constants, only : dp
+     use constants, only : one, cone
 
      implicit none
 
@@ -832,7 +845,8 @@
 !! calculate the determinant of a complex(dp) matrix
 !!
   subroutine s_det_z(ndim, zmat, zdet)
-     use constants, only : dp, cone
+     use constants, only : dp
+     use constants, only : cone
 
      implicit none
 
@@ -1009,7 +1023,8 @@
 !! eigenvectors
 !!
   subroutine s_eig_dg(ldim, ndim, amat, eval, evec)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -1096,7 +1111,8 @@
 !! and eigenvectors
 !!
   subroutine s_eig_zg(ldim, ndim, zmat, zeig, zvec)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
@@ -1178,7 +1194,8 @@
 !! diagonalize a general real(dp) matrix and return its eigenvalues only
 !!
   subroutine s_eigvals_dg(ldim, ndim, amat, eval)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -1265,7 +1282,8 @@
 !! diagonalize a general complex(dp) matrix and return its eigenvalues only
 !!
   subroutine s_eigvals_zg(ldim, ndim, zmat, zeig)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
@@ -1346,7 +1364,8 @@
 !! computes all eigenvalues and eigenvectors of real symmetric matrix
 !!
   subroutine s_eig_sy(ldim, ndim, amat, eval, evec)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -1412,7 +1431,8 @@
 !! computes all eigenvalues and eigenvectors of complex Hermitian matrix
 !!
   subroutine s_eig_he(ldim, ndim, amat, eval, evec)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -1484,7 +1504,8 @@
 !! computes all eigenvalues of real symmetric matrix
 !!
   subroutine s_eigvals_sy(ldim, ndim, amat, eval)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -1552,7 +1573,8 @@
 !! computes all eigenvalues of complex Hermitian matrix
 !!
   subroutine s_eigvals_he(ldim, ndim, amat, eval)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
