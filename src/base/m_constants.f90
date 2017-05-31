@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/24/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : this module is to provide the definition of some (selected)
 !!!           numerical and physical constants.
 !!! status  : stable
@@ -35,7 +35,8 @@
 !! 2. import partially
 !! -------------------
 !!
-!! use constants, only : dp, one
+!! use constants, only : dp
+!! use constants, only : one
 !! implicit none
 !!
 !! real(dp) :: A
