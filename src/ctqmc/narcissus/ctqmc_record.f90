@@ -303,6 +303,8 @@
   subroutine ctqmc_record_nmat()
      implicit none
 
+     CONTINUE
+
      return
   end subroutine ctqmc_record_nmat
 
@@ -688,6 +690,8 @@
   subroutine ctqmc_record_frnf()
      implicit none
 
+     CONTINUE
+
      return
   end subroutine ctqmc_record_frnf
 
@@ -699,6 +703,8 @@
 !!
   subroutine ctqmc_record_sig2()
      implicit none
+
+     CONTINUE
 
      return
   end subroutine ctqmc_record_sig2
@@ -752,7 +758,8 @@
 !! record the fidelity susceptibility
 !!
   subroutine ctqmc_record_lrmm()
-     use constants, only : dp, zero, one, two
+     use constants, only : dp
+     use constants, only : zero, one, two
 
      use control, only : isobs
      use control, only : norbs
