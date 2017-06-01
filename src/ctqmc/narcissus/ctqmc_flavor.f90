@@ -2223,24 +2223,26 @@
      real(dp) :: ts
      real(dp) :: te
 
-! dummy variables
+! dummy real(dp) variable
      real(dp) :: raux
 
 ! initialize ovlp
      ovlp = zero
 
 ! loop over flavors
-     do i=1,norbs
+     FLVR_CYCLE: do i=1,norbs
 
 ! do not calculate overlap for himself
          if ( flvr == i ) CYCLE
 
+         STATUS_BLOCK: select case ( stts(i) )
+
 ! case 1: null occupation
-         if      ( stts(i) == 0 ) then
+             if      ( stts(i) == 0 ) then
              ovlp(i) = zero
 
 ! case 2: partial occupation, segment scheme
-         else if ( stts(i) == 1 ) then
+             else if ( stts(i) == 1 ) then
 ! loop through all the segments
              do j=1,rank(i)
                  ts = time_s(index_s(j, i), i)
@@ -2251,7 +2253,7 @@
              enddo ! over j={1,rank(i)} loop
 
 ! case 3: partial occupation, anti-segment scheme
-         else if ( stts(i) == 2 ) then
+             else if ( stts(i) == 2 ) then
 ! deal with the first segment (header)
              ts = zero
              te = time_e(index_e(1, i), i)
@@ -2274,12 +2276,12 @@
              enddo ! over j={1,rank(i)-1} loop
 
 ! case 4: full occupation
-         else if ( stts(i) == 3 ) then
+             else if ( stts(i) == 3 ) then
              ovlp(i) = tau_end - tau_start
 
-         endif ! back if ( stts(i) == 0 ) block
+         end select STATUS_BLOCK
 
-     enddo ! over i={1,norbs} loop
+     enddo FLVR_CYCLE ! over i={1,norbs} loop
 
      return
   end subroutine cat_ovlp_segments
