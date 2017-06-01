@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/19/2017 by li huang (last modified)
+!!!           06/01/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver().
@@ -241,7 +241,8 @@
 !! expansion series
 !!
   subroutine ctqmc_insert_kink()
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use spring, only : spring_sfmt_stream
 
@@ -372,7 +373,8 @@
 !! expansion series
 !!
   subroutine ctqmc_remove_kink()
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use spring, only : spring_sfmt_stream
 
@@ -488,7 +490,8 @@
 !! shift old creation operator in the perturbation expansion series
 !!
   subroutine ctqmc_lshift_kink()
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use spring, only : spring_sfmt_stream
 
@@ -593,7 +596,8 @@
 !! shift old annihilation operator in the perturbation expansion series
 !!
   subroutine ctqmc_rshift_kink()
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use spring, only : spring_sfmt_stream
 
@@ -699,7 +703,8 @@
 !! down, it maybe useful for magnetic systems
 !!
   subroutine ctqmc_reflip_kink(cflip)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use spring, only : spring_sfmt_stream
 
