@@ -1229,7 +1229,7 @@
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : ch_w
-     use context, only : rank
+     use context, only : rank, stts
 
      implicit none
 
@@ -1242,8 +1242,8 @@
      integer  :: it
 
 ! imaginary time for start and end points
-     real(dp) :: taus
-     real(dp) :: taue
+     real(dp) :: ts
+     real(dp) :: te
 
 ! the first bosonic frequency
      complex(dp) :: dw
@@ -1251,14 +1251,17 @@
 ! used to record occupations for current flavor channel at \tau = 0
      real(dp) :: oaux(norbs)
 
+! total length of segments
+     real(dp) :: sgmt(norbs)
+
 ! bosonic frequency mesh
-     complex(dp) :: mesh(nbfrq)
+     complex(dp) :: mesh(2:nbfrq)
 
 ! matsubara frequency exponents for creation operators
-     complex(dp) :: exps(nbfrq)
+     complex(dp) :: exps(2:nbfrq)
 
 ! matsubara frequency exponents for annihilation operators
-     complex(dp) :: expe(nbfrq)
+     complex(dp) :: expe(2:nbfrq)
 
 ! check whether there is conflict
      call s_assert( btest(issus, 4) )
@@ -1266,25 +1269,61 @@
 ! build bosonic frequency mesh
      dw = czi * two * pi / beta
      mesh = dw
-     call s_cumsum_z(nbfrq, mesh, mesh)
+     call s_cumsum_z(nbfrq - 1, mesh, mesh)
 
 ! calculate oaux, obtain occupation status
      do f1=1,norbs
          call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
 
+! calculate sgmt, obtain total length of segments
+     do f1=1,norbs
+
+! case 1: null occupation
+         if ( stts(f1) == 0 ) then
+             sgmt(f1) = zero
+         endif ! back if ( stts(f1) == 0 ) block
+
+! case 2: partial occupation, segment scheme
+         if ( stts(f1) == 1 ) then
+             sgmt(f1) = zero
+             do it=1,rank(f1)
+                 ts = time_s(index_s(it, f1), f1)
+                 te = time_e(index_e(it, f1), f1)
+                 sgmt(f1) = sgmt(f1) + abs( te - ts )
+             enddo ! over it={1,rank(f1)} loop
+         endif ! back if ( stts(f1) == 1 ) block
+
+! case 3: partial occupation, anti-segment scheme
+         if ( stts(f1) == 2 ) then
+             sgmt(f1) = beta
+             do it=1,rank(f1)
+                 ts = time_s(index_s(it, f1), f1)
+                 te = time_e(index_e(it, f1), f1)
+                 sgmt(f1) = sgmt(f1) - abs( ts - te )
+             enddo ! over it={1,rank(f1)} loop
+         endif ! back if ( stts(f1) == 2 ) block
+
+! case 4: full occupation
+         if ( stts(f1) == 3 ) then
+             sgmt(f1) = beta
+         endif ! back if ( stts(f1) == 3 ) block
+
+     enddo ! over f1={1,norbs} loop
+
 ! calculate ch_w, it must be real
      FLVR_CYCLE: do f1=1,norbs
          do f2=1,f1
              if ( oaux(f2) > zero ) then
+                 ch_w(1,f2,f1) = ch_w(1,f2,f1) + sgmt(f1)
                  do it=1,rank(f1)
-                     taus = time_s( index_s(it, f1), f1 )
-                     taue = time_e( index_e(it, f1), f1 )
-                     exps = exp( dw * taus )
-                     expe = exp( dw * taue )
+                     ts = time_s( index_s(it, f1), f1 )
+                     te = time_e( index_e(it, f1), f1 )
+                     exps = exp( dw * ts )
+                     expe = exp( dw * te )
                      call s_cumprod_z(nbfrq, exps, exps)
                      call s_cumprod_z(nbfrq, expe, expe)
-                     ch_w(:,f2,f1) = ch_w(:,f2,f1) + real( ( expe - exps ) / mesh )
+                     ch_w(2:,f2,f1) = ch_w(2:,f2,f1) + real( ( expe - exps ) / mesh )
                  enddo ! over do it={1,rank(f1)} loop
              endif ! back if ( oaux(f2) > zero ) block
              if ( f1 /= f2 ) then ! consider the symmetry
