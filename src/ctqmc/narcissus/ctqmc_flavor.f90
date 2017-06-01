@@ -2298,6 +2298,10 @@
 
      use control, only : norbs
 
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rank, stts
+
      implicit none
 
 ! external arguments
@@ -2305,8 +2309,17 @@
      real(dp), intent(out) :: ovlp(norbs,norbs)
 
 ! local variables
+! loop index over segments
+     integer  :: i
 
-     OVLP_CYCLE: do flvr=1,norbs
+! loop index for flavor channel
+     integer  :: flvr
+
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
+
+     FLVR_CYCLE: do flvr=1,norbs
 
 ! case 1: null occupation
          if      ( stts(flvr) == 0 ) then
@@ -2348,7 +2361,8 @@
 
          endif ! back if ( stts(flvr) == 0 ) block
 
-     enddo OVLP_CYCLE ! over flvr={1,norbs} loop
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+
      return
   end subroutine cat_ovlp_2flavors
  
