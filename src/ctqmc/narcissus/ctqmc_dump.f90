@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/26/2017 by li huang (last modified)
+!!!           05/31/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -47,7 +47,8 @@
 !! write out the histogram for perturbation expansion series
 !!
   subroutine ctqmc_dump_hist(hist, herr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : mkink
 
@@ -97,7 +98,9 @@
 !! write out the probability of atomic eigenstates of local hamiltonian
 !!
   subroutine ctqmc_dump_prob(prob, perr)
-     use constants, only : dp, zero, one, half, mytmp
+     use constants, only : dp
+     use constants, only : zero, one, half
+     use constants, only : mytmp
 
      use control, only : nband, norbs, ncfgs
 
@@ -203,7 +206,8 @@
 !! write out the auxiliary physical observables
 !!
   subroutine ctqmc_dump_paux(paux, perr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      implicit none
 
@@ -238,7 +242,8 @@
 !! write out the occupation number and double occupation matrix
 !!
   subroutine ctqmc_dump_nmat(nimp, nmat, nerr, nbar)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : nband, norbs
 
@@ -293,7 +298,8 @@
 !! write out impurity green's function in imaginary time space
 !!
   subroutine ctqmc_dump_gtau(gtau, gerr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : isbin
      use control, only : norbs
