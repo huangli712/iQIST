@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/31/2017 by li huang (last modified)
+!!!           06/01/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -132,7 +132,8 @@
 !! to save the computational time
 !!
   subroutine ctqmc_record_paux()
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : nband, norbs
      use control, only : beta
@@ -318,7 +319,8 @@
 !! record the impurity green's function in imaginary time axis
 !!
   subroutine ctqmc_record_gtau()
-     use constants, only : dp, zero, one, two
+     use constants, only : dp
+     use constants, only : zero, one, two
 
      use control, only : isort
      use control, only : norbs
@@ -486,7 +488,8 @@
 !! latter, we will use it to compute the self-energy function
 !!
   subroutine ctqmc_record_ftau()
-     use constants, only : dp, zero, one, two
+     use constants, only : dp
+     use constants, only : zero, one, two
 
      use control, only : isort
      use control, only : norbs
@@ -836,7 +839,8 @@
 !! the binder cumulant
 !!
   subroutine ctqmc_record_szpw()
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : isobs
      use control, only : nband, norbs
@@ -929,7 +933,8 @@
 !! record the spin-spin correlation function in imaginary time axis
 !!
   subroutine ctqmc_record_sp_t()
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use spring, only : spring_sfmt_stream
 
@@ -1020,7 +1025,8 @@
 !! record the spin-spin correlation function in matsubara frequency axis
 !!
   subroutine ctqmc_record_sp_w()
-     use constants, only : dp, zero, one, two, pi, czi
+     use constants, only : dp
+     use constants, only : pi, zero, one, two, czi
 
      use control, only : issus
      use control, only : nband, norbs
@@ -1138,7 +1144,8 @@
 !! record the charge-charge correlation function in imaginary time axis
 !!
   subroutine ctqmc_record_ch_t()
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use spring, only : spring_sfmt_stream
 
@@ -1211,7 +1218,8 @@
 !! record the charge-charge correlation function in matsubara frequency axis
 !!
   subroutine ctqmc_record_ch_w()
-     use constants, only : dp, zero, two, pi, czi
+     use constants, only : dp
+     use constants, only : pi, zero, two, czi
 
      use control, only : issus
      use control, only : norbs
@@ -1299,7 +1307,8 @@
 !! used to improve the accuracy
 !!
   subroutine ctqmc_record_twop()
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : isvrt
      use control, only : norbs
@@ -1434,7 +1443,8 @@
 !! record the particle-particle pairing susceptibility
 !!
   subroutine ctqmc_record_pair()
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : isvrt
      use control, only : norbs
@@ -1555,7 +1565,8 @@
 !! reduce the hist from all children processes
 !!
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1619,7 +1630,8 @@
 !! reduce the prob from all children processes
 !!
   subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1683,7 +1695,8 @@
 !! reduce the paux from all children processes
 !!
   subroutine ctqmc_reduce_paux(paux_mpi, paux_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1746,7 +1759,8 @@
 !! reduce the nimp and nmat from all children processes
 !!
   subroutine ctqmc_reduce_nmat(nimp_mpi, nmat_mpi, nimp_err, nmat_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1826,7 +1840,8 @@
 !! reduce the gtau from all children processes
 !!
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1911,7 +1926,8 @@
 !! reduce the ftau from all children processes
 !!
   subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1996,7 +2012,8 @@
 !! reduce the grnf from all children processes
 !!
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
-     use constants, only : dp, zero, czero, czi
+     use constants, only : dp
+     use constants, only : zero, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2083,7 +2100,8 @@
 !! reduce the frnf from all children processes
 !!
   subroutine ctqmc_reduce_frnf(frnf_mpi, frnf_err)
-     use constants, only : dp, zero, czero, czi
+     use constants, only : dp
+     use constants, only : zero, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2170,7 +2188,8 @@
 !! reduce the sig2 from all children processes
 !!
   subroutine ctqmc_reduce_sig2(sig2_mpi, sig2_err)
-     use constants, only : dp, zero, czero, czi
+     use constants, only : dp
+     use constants, only : zero, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2261,7 +2280,8 @@
 !! reduce the knop and kmat from all children processes
 !!
   subroutine ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2341,7 +2361,8 @@
 !! reduce the lnop, rnop, and lrmm from all children processes
 !!
   subroutine ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2433,7 +2454,8 @@
 !! reduce the szpw from all children processes
 !!
   subroutine ctqmc_reduce_szpw(szpw_mpi, szpw_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2505,7 +2527,8 @@
 !! reduce the schi and sp_t from all children processes
 !!
   subroutine ctqmc_reduce_sp_t(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2586,7 +2609,8 @@
 !! reduce the sp_w from all children processes
 !!
   subroutine ctqmc_reduce_sp_w(sp_w_mpi, sp_w_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2655,7 +2679,8 @@
 !! reduce the cchi and ch_t from all children processes
 !!
   subroutine ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2736,7 +2761,8 @@
 !! reduce the ch_w from all children processes
 !!
   subroutine ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2809,7 +2835,8 @@
 !! reduce the g2pw and h2pw from all children processes
 !!
   subroutine ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
-     use constants, only : dp, zero, czero, czi
+     use constants, only : dp
+     use constants, only : zero, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2929,7 +2956,8 @@
 !! reduce the p2pw from all children processes
 !!
   subroutine ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
-     use constants, only : dp, zero, czero, czi
+     use constants, only : dp
+     use constants, only : zero, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
