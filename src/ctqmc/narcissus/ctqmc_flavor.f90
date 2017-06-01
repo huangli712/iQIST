@@ -2293,7 +2293,16 @@
 !! be used to evaluate the double occupation number matrix
 !!
   subroutine cat_ovlp_2flavors(ovlp)
+     use constants, only : dp
+     use constants, only : zero
+
+     use control, only : norbs
+
      implicit none
+
+! external arguments
+! overlap of segments for two different flavors
+     real(dp), intent(out) :: ovlp(norbs,norbs)
 
      return
   end subroutine cat_ovlp_2flavors
