@@ -2238,46 +2238,46 @@
          STATUS_BLOCK: select case ( stts(i) )
 
 ! case 1: null occupation
-             if      ( stts(i) == 0 ) then
-             ovlp(i) = zero
+             case (0)
+                 ovlp(i) = zero
 
 ! case 2: partial occupation, segment scheme
-             else if ( stts(i) == 1 ) then
+             case (1)
 ! loop through all the segments
-             do j=1,rank(i)
-                 ts = time_s(index_s(j, i), i)
-                 te = time_e(index_e(j, i), i)
-                 if ( ts > tau_end ) EXIT
-                 call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
-                 ovlp(i) = ovlp(i) + raux
-             enddo ! over j={1,rank(i)} loop
+                 do j=1,rank(i)
+                     ts = time_s(index_s(j, i), i)
+                     te = time_e(index_e(j, i), i)
+                     if ( ts > tau_end ) EXIT
+                     call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
+                     ovlp(i) = ovlp(i) + raux
+                 enddo ! over j={1,rank(i)} loop
 
 ! case 3: partial occupation, anti-segment scheme
-             else if ( stts(i) == 2 ) then
+             case (2)
 ! deal with the first segment (header)
-             ts = zero
-             te = time_e(index_e(1, i), i)
-             call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
-             ovlp(i) = ovlp(i) + raux
-
-! deal with the last segment (tailer)
-             ts = time_s(index_s(rank(i), i), i)
-             te = beta
-             call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
-             ovlp(i) = ovlp(i) + raux
-
-! loop through all the other segments
-             do j=1,rank(i)-1
-                 ts = time_s(index_s(j  , i), i)
-                 te = time_e(index_e(j+1, i), i)
-                 if ( ts > tau_end ) EXIT
+                 ts = zero
+                 te = time_e(index_e(1, i), i)
                  call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
                  ovlp(i) = ovlp(i) + raux
-             enddo ! over j={1,rank(i)-1} loop
+
+! deal with the last segment (tailer)
+                 ts = time_s(index_s(rank(i), i), i)
+                 te = beta
+                 call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
+                 ovlp(i) = ovlp(i) + raux
+
+! loop through all the other segments
+                 do j=1,rank(i)-1
+                     ts = time_s(index_s(j  , i), i)
+                     te = time_e(index_e(j+1, i), i)
+                     if ( ts > tau_end ) EXIT
+                     call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
+                     ovlp(i) = ovlp(i) + raux
+                 enddo ! over j={1,rank(i)-1} loop
 
 ! case 4: full occupation
-             else if ( stts(i) == 3 ) then
-             ovlp(i) = tau_end - tau_start
+             case (3)
+                 ovlp(i) = tau_end - tau_start
 
          end select STATUS_BLOCK
 
