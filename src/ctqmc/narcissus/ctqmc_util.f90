@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/31/2017 by li huang (last modified)
+!!!           06/01/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -50,7 +50,8 @@
 !! fourier htau to hybf, from imaginary time to matsubara frequency
 !!
   subroutine ctqmc_four_htau(htau, hybf)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : norbs
      use control, only : mfreq
@@ -104,7 +105,9 @@
 !! fourier hybf to htau, from matsubara frequency to imaginary time
 !!
   subroutine ctqmc_four_hybf(hybf, htau)
-     use constants, only : dp, zero, czero, eps6
+     use constants, only : dp
+     use constants, only : zero, czero
+     use constants, only : eps6
 
      use control, only : norbs
      use control, only : mfreq
@@ -248,7 +251,8 @@
 !! imaginary time space
 !!
   subroutine ctqmc_eval_hsed(htau, hsed)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : norbs
      use control, only : ntime
@@ -387,7 +391,8 @@
 !! is to transfer ptau and psed to this subroutine
 !!
   subroutine ctqmc_eval_ksed(ktau, ksed)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : ntime
      use control, only : beta
@@ -450,7 +455,8 @@
 !! symmetrize the occupation number array, nimp, according to symm vector
 !!
   subroutine ctqmc_symm_nimp(symm, nimp)
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : isbnd, isspn
      use control, only : nband, norbs
@@ -524,7 +530,8 @@
 !! elements are taken into considerations
 !!
   subroutine ctqmc_symm_gtau(symm, gtau)
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : isbnd, isspn
      use control, only : nband, norbs
@@ -606,7 +613,8 @@
 !! elements are taken into considerations
 !!
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants, only : dp, two, czero
+     use constants, only : dp
+     use constants, only : two, czero
 
      use control, only : isbnd, isspn
      use control, only : nband, norbs
@@ -702,7 +710,8 @@
 !! build imaginary time green's function using different representation
 !!
   subroutine ctqmc_tran_gtau(gaux, gtau)
-     use constants, only : dp, zero, one, two
+     use constants, only : dp
+     use constants, only : zero, one, two
 
      use control, only : isort
      use control, only : norbs
@@ -802,7 +811,8 @@
 !! build matsubara green's function using different representation
 !!
   subroutine ctqmc_tran_grnf(gaux, grnf)
-     use constants, only : dp, zero, one, two, pi, czi, czero
+     use constants, only : dp
+     use constants, only : pi, zero, one, two, czi, czero
 
      use control, only : isort
      use control, only : norbs
@@ -999,7 +1009,8 @@
 !! build density-density two-fermions Coulomb interaction matrix: umat
 !!
   subroutine ctqmc_make_umat(umat)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : nband, norbs
      use control, only : Uc, Jz
@@ -1058,7 +1069,8 @@
 !! retarded interaction is considered
 !!
   subroutine ctqmc_make_lift(umat, ssign)
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : isscr
      use control, only : norbs
@@ -1130,7 +1142,8 @@
 !! in Phys. Rev. B 89, 235128 (2014)
 !!
   subroutine ctqmc_make_iret(time, iret)
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : norbs
 
@@ -1202,7 +1215,8 @@
 !! is present, an additional term is supplemented
 !!
   subroutine ctqmc_make_pref()
-     use constants, only : dp, zero, half
+     use constants, only : dp
+     use constants, only : zero, half
 
      use control, only : isscr
      use control, only : norbs
@@ -1260,7 +1274,8 @@
 !! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
 !!
   subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
-     use constants, only : dp, two, pi, czi
+     use constants, only : dp
+     use constants, only : pi, two, czi
 
      use control, only : nffrq
      use control, only : beta
