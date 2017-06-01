@@ -1906,6 +1906,41 @@
 
 
   subroutine cat_occupy_length()
+     implicit none
+
+     SGMT_CYCLE: do flvr=1,norbs
+
+! case 1: null occupation
+         if      ( stts(flvr) == 0 ) then
+             sgmt(flvr) = zero
+
+! case 2: partial occupation, segment scheme
+         else if ( stts(flvr) == 1 ) then
+             sgmt(flvr) = zero
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 3: partial occupation, anti-segment scheme
+         else if ( stts(flvr) == 2 ) then
+             sgmt(flvr) = beta
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 4: full occupation
+         else if ( stts(flvr) == 3 ) then
+             sgmt(flvr) = beta
+
+         endif ! back if ( stts(flvr) == 0 ) block
+
+     enddo SGMT_CYCLE ! over flvr={1,norbs} loop
+
+     return
   end subroutine cat_occupy_length
 
 
