@@ -893,7 +893,7 @@
 ! accumulate szpw(1:4,1:nband)
 ! calculate \delta \tau
      step = ( tmesh(2) - tmesh(1) ) / 2.0
-     BAND_CYCLE: do f2=1,nband
+     FLVR_CYCLE: do f2=1,nband
 ! calculate sint using trapezoid algorithm
          sint = zero
          do i=1,ntime-1
@@ -905,7 +905,7 @@
          szpw(2,f2) = szpw(2,f2) + sint**2.0
          szpw(3,f2) = szpw(3,f2) + sint**3.0
          szpw(4,f2) = szpw(4,f2) + sint**4.0
-     enddo BAND_CYCLE ! over f2={1,nband} loop
+     enddo FLVR_CYCLE ! over f2={1,nband} loop
 
 ! accumulate szpw(1:4,nband+1)
 ! here we consider the contribution from all flavors
