@@ -754,7 +754,7 @@
 !!
   subroutine ctqmc_record_szpw()
      use constants, only : dp
-     use constants, only : zero
+     use constants, only : zero, two
 
      use control, only : isobs
      use control, only : nband, norbs
@@ -806,7 +806,7 @@
 
 ! accumulate szpw(1:4,1:nband)
 ! calculate \delta \tau
-     step = ( tmesh(2) - tmesh(1) ) / 2.0
+     step = ( tmesh(2) - tmesh(1) ) / two
      FLVR_CYCLE: do f2=1,nband
 ! calculate sint using trapezoid algorithm
          sint = zero
@@ -1143,7 +1143,7 @@
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : ch_w
-     use context, only : rank, stts
+     use context, only : rank
 
      implicit none
 
@@ -1191,39 +1191,7 @@
      enddo ! over i={1,norbs} loop
 
 ! calculate sgmt, obtain total length of segments
-     do f1=1,norbs
-
-! case 1: null occupation
-         if ( stts(f1) == 0 ) then
-             sgmt(f1) = zero
-         endif ! back if ( stts(f1) == 0 ) block
-
-! case 2: partial occupation, segment scheme
-         if ( stts(f1) == 1 ) then
-             sgmt(f1) = zero
-             do it=1,rank(f1)
-                 ts = time_s(index_s(it, f1), f1)
-                 te = time_e(index_e(it, f1), f1)
-                 sgmt(f1) = sgmt(f1) + abs( te - ts )
-             enddo ! over it={1,rank(f1)} loop
-         endif ! back if ( stts(f1) == 1 ) block
-
-! case 3: partial occupation, anti-segment scheme
-         if ( stts(f1) == 2 ) then
-             sgmt(f1) = beta
-             do it=1,rank(f1)
-                 ts = time_s(index_s(it, f1), f1)
-                 te = time_e(index_e(it, f1), f1)
-                 sgmt(f1) = sgmt(f1) - abs( ts - te )
-             enddo ! over it={1,rank(f1)} loop
-         endif ! back if ( stts(f1) == 2 ) block
-
-! case 4: full occupation
-         if ( stts(f1) == 3 ) then
-             sgmt(f1) = beta
-         endif ! back if ( stts(f1) == 3 ) block
-
-     enddo ! over f1={1,norbs} loop
+     call cat_occupy_length(sgmt)
 
 ! calculate ch_w, it must be real
      FLVR_CYCLE: do f1=1,norbs
@@ -1235,8 +1203,8 @@
                      te = time_e( index_e(it, f1), f1 )
                      exps = exp( dw * ts )
                      expe = exp( dw * te )
-                     call s_cumprod_z(nbfrq, exps, exps)
-                     call s_cumprod_z(nbfrq, expe, expe)
+                     call s_cumprod_z(nbfrq - 1, exps, exps)
+                     call s_cumprod_z(nbfrq - 1, expe, expe)
                      ch_w(2:,f2,f1) = ch_w(2:,f2,f1) + real( ( expe - exps ) / mesh )
                  enddo ! over do it={1,rank(f1)} loop
              endif ! back if ( oaux(f2) > zero ) block
