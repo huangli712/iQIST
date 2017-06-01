@@ -2320,6 +2320,9 @@
      real(dp) :: ts
      real(dp) :: te
 
+! overlap between a given segment and segments in a flavor channel
+     real(dp) :: oaux(norbs)
+
      FLVR_CYCLE: do flvr=1,norbs
 
 ! case 1: null occupation
