@@ -1141,7 +1141,7 @@
      use control, only : beta
 
      use context, only : index_s, index_e
-     use context, only : time_s, time_e
+     use context, only : exp_s, exp_e
      use context, only : ch_w
      use context, only : rank
 
@@ -1154,10 +1154,6 @@
 
 ! loop index for operators
      integer  :: it
-
-! imaginary time for start and end points
-     real(dp) :: ts
-     real(dp) :: te
 
 ! the first bosonic frequency
      complex(dp) :: dw
@@ -1199,12 +1195,10 @@
              if ( oaux(f2) > zero ) then
                  ch_w(1,f2,f1) = ch_w(1,f2,f1) + sgmt(f1)
                  do it=1,rank(f1)
-                     ts = time_s( index_s(it, f1), f1 )
-                     te = time_e( index_e(it, f1), f1 )
-                     exps = exp( dw * ts )
-                     expe = exp( dw * te )
-                     call s_cumprod_z(nbfrq - 1, exps, exps)
-                     call s_cumprod_z(nbfrq - 1, expe, expe)
+                     dw = exp_s(1,index_s(it, f1), f1)
+                     exps = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
+                     dw = exp_e(1,index_e(it, f1), f1)
+                     expe = dw * exp_e(1:nbfrq-1,index_e(it, f1), f1)
                      ch_w(2:,f2,f1) = ch_w(2:,f2,f1) + real( ( expe - exps ) / mesh )
                  enddo ! over do it={1,rank(f1)} loop
              endif ! back if ( oaux(f2) > zero ) block
