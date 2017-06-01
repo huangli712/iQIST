@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/31/2017 by li huang (last modified)
+!!!           06/01/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -358,7 +358,8 @@
 !! write out auxiliary correlation function in imaginary time space
 !!
   subroutine ctqmc_dump_ftau(ftau, ferr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : ntime
@@ -401,7 +402,9 @@
 !! write out hybridization function in imaginary time space
 !!
   subroutine ctqmc_dump_htau(htau)
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : ntime
@@ -443,7 +446,9 @@
 !! write out bath weiss's function in imaginary time space
 !!
   subroutine ctqmc_dump_wtau(wtau)
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : ntime
@@ -486,7 +491,8 @@
 !! time space
 !!
   subroutine ctqmc_dump_ktau(ktau, ptau, ksed, psed)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : ntime
 
@@ -535,7 +541,8 @@
 !! write out impurity green's function in matsubara frequency space
 !!
   subroutine ctqmc_dump_grnf(grnf, gerr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -578,7 +585,8 @@
 !! write out auxiliary correlation function in matsubara frequency space
 !!
   subroutine ctqmc_dump_frnf(frnf, ferr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -621,7 +629,9 @@
 !! write out hybridization function in matsubara frequency space
 !!
   subroutine ctqmc_dump_hybf(hybf)
-     use constants, only : dp, czero, mytmp
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -663,7 +673,9 @@
 !! write out bath weiss's function in matsubara frequency space
 !!
   subroutine ctqmc_dump_wssf(wssf)
-     use constants, only : dp, czero, mytmp
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -705,7 +717,8 @@
 !! write out self-energy function in matsubara frequency space
 !!
   subroutine ctqmc_dump_sig2(sig2, serr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -752,7 +765,9 @@
 !! write out the kinetic energy fluctuation
 !!
   subroutine ctqmc_dump_kmat(knop, kmat, kerr, kbar)
-     use constants, only : dp, one, two, mytmp
+     use constants, only : dp
+     use constants, only : one, two
+     use constants, only : mytmp
 
      use control, only : isobs
      use control, only : norbs
@@ -816,7 +831,8 @@
 !! write out the fidelity susceptibility
 !!
   subroutine ctqmc_dump_lrmm(lnop, rnop, lrmm, lerr, rerr, lree)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : isobs
      use control, only : norbs
@@ -886,7 +902,8 @@
 !! calculate the binder cumulant
 !!
   subroutine ctqmc_dump_szpw(szpw, serr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : isobs
      use control, only : nband, norbs
@@ -943,7 +960,8 @@
 !! in imaginary time space
 !!
   subroutine ctqmc_dump_sp_t(schi, sp_t, serr, sbar)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : issus
      use control, only : nband
@@ -1011,7 +1029,9 @@
 !! in matsubara frequency space
 !!
   subroutine ctqmc_dump_sp_w(sp_w, serr)
-     use constants, only : dp, two, pi, mytmp
+     use constants, only : dp
+     use constants, only : pi, two
+     use constants, only : mytmp
 
      use control, only : issus
      use control, only : nband
@@ -1068,7 +1088,8 @@
 !! in imaginary time space
 !!
   subroutine ctqmc_dump_ch_t(cchi, ch_t, cerr, cbar)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : issus
      use control, only : norbs
@@ -1139,7 +1160,9 @@
 !! in matsubara frequency space
 !!
   subroutine ctqmc_dump_ch_w(ch_w, cerr)
-     use constants, only : dp, two, pi, mytmp
+     use constants, only : dp
+     use constants, only : pi, two
+     use constants, only : mytmp
 
      use control, only : issus
      use control, only : norbs
@@ -1203,7 +1226,9 @@
 !! function, the improved estimator was used to improve the accuracy
 !!
   subroutine ctqmc_dump_twop(g2pw, h2pw, gerr, herr)
-     use constants, only : dp, czero, mytmp
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
 
      use control, only : isvrt
      use control, only : norbs
@@ -1391,7 +1416,8 @@
 !! write out the particle-particle pairing susceptibility
 !!
   subroutine ctqmc_dump_pair(p2pw, perr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : isvrt
      use control, only : norbs

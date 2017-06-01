@@ -23,7 +23,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/22/2017 by li huang (last modified)
+!!!           06/01/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -43,7 +43,8 @@
 !! or anti-segment
 !!
   subroutine try_insert_colour(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
-     use constants, only : dp, zero, half
+     use constants, only : dp
+     use constants, only : zero, half
 
      use spring, only : spring_sfmt_stream
 
@@ -420,7 +421,8 @@
 !! or anti-segment
 !!
   subroutine try_remove_colour(flvr, is, ie, anti, tau_start, tau_end, tau_max)
-     use constants, only : dp, zero, half
+     use constants, only : dp
+     use constants, only : zero, half
 
      use spring, only : spring_sfmt_stream
 
@@ -635,7 +637,8 @@
 !! determine \tau_s1 and \tau_s2 for lshifting old segment or anti-segment
 !!
   subroutine try_lshift_colour(flvr, iso, isn, ring, tau_start1, tau_start2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use spring, only : spring_sfmt_stream
 
@@ -815,7 +818,8 @@
 !! determine \tau_e1 and \tau_e2 for rshifting old segment or anti-segment
 !!
   subroutine try_rshift_colour(flvr, ieo, ien, ring, tau_end1, tau_end2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use spring, only : spring_sfmt_stream
 
@@ -1270,7 +1274,8 @@
 !! on perturbation expansion series
 !!
   subroutine cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : isscr
      use control, only : norbs
@@ -1402,7 +1407,8 @@
 !! on perturbation expansion series
 !!
   subroutine cat_remove_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : isscr
      use control, only : norbs
@@ -1534,7 +1540,8 @@
 !! on perturbation expansion series
 !!
   subroutine cat_lshift_ztrace(flvr, ring, tau_start1, tau_start2, trace_ratio)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : isscr
      use control, only : norbs
@@ -1676,7 +1683,8 @@
 !! on perturbation expansion series
 !!
   subroutine cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : isscr
      use control, only : norbs
@@ -1822,7 +1830,8 @@
 !! which can be used to calculate the spin-spin correlation function
 !!
   subroutine cat_occupy_status(flvr, curr, occu)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -1904,7 +1913,8 @@
 !! correlators of noninteracting boson operators
 !!
   subroutine cat_weight_factor(tau, scr)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : norbs
 
@@ -1979,7 +1989,8 @@
 !! as well. you should use the 'typ' parameter to control it
 !!
   subroutine cat_weight_kernel(typ, tau, cur)
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp
+     use constants, only : pi, zero, one, two
 
      use control, only : isscr
      use control, only : lc, wc
@@ -2047,7 +2058,8 @@
 !! compare two given segments, and calculate their overlap
 !!
   subroutine cat_ovlp_segment_(ts0, te0, ts1, te1, cover)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -2102,7 +2114,8 @@
 !! and other flavor channels
 !!
   subroutine cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : norbs
      use control, only : beta
