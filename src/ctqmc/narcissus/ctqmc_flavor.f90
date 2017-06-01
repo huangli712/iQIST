@@ -1905,8 +1905,20 @@
   end subroutine cat_occupy_status
 
 
-  subroutine cat_occupy_length()
+  subroutine cat_occupy_length(sgmt)
+     use constants, only : dp
+     use constants, only : zero
+
+     use control, only : norbs
+
      implicit none
+
+! external arguments
+     real(dp), intent(out) :: sgmt(norbs)
+
+! local variables
+! loop index for flavor channel
+     integer  :: flvr
 
      SGMT_CYCLE: do flvr=1,norbs
 
