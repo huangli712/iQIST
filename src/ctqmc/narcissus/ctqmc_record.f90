@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/01/2017 by li huang (last modified)
+!!!           06/02/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -166,89 +166,11 @@
      real(dp) :: oaux(norbs)
      real(dp) :: ovlp(norbs,norbs)
 
-!-------------------------------------------------------------------------
 ! prepare sgmt array
-!-------------------------------------------------------------------------
-     SGMT_CYCLE: do flvr=1,norbs
+     call cat_occupy_length(sgmt)
 
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             sgmt(flvr) = zero
-
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             sgmt(flvr) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 3: partial occupation, anti-segment scheme
-         else if ( stts(flvr) == 2 ) then
-             sgmt(flvr) = beta
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             sgmt(flvr) = beta
-
-         endif ! back if ( stts(flvr) == 0 ) block
-
-     enddo SGMT_CYCLE ! over flvr={1,norbs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
 ! prepare ovlp matrix
-!-------------------------------------------------------------------------
-     OVLP_CYCLE: do flvr=1,norbs
-
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             ovlp(flvr,:) = zero
-
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             ovlp(flvr,:) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 call cat_ovlp_segments(flvr, ts, te, oaux)
-                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 3: partial occupation, anti-segment scheme
-! pay special attention to the head and tail parts
-         else if ( stts(flvr) == 2 ) then
-             ovlp(flvr,:) = zero
-             do i=1,rank(flvr)-1
-                 ts = time_s(index_s(i,   flvr), flvr)
-                 te = time_e(index_e(i+1, flvr), flvr)
-                 call cat_ovlp_segments(flvr, ts, te, oaux)
-                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
-             enddo ! over i={1,rank(flvr)-1} loop
-
-             te = time_e(index_e(1, flvr), flvr)
-             call cat_ovlp_segments(flvr, zero, te, oaux)
-             ovlp(flvr,:) = ovlp(flvr,:) + oaux
-
-             ts = time_s(index_s(rank(flvr), flvr), flvr)
-             call cat_ovlp_segments(flvr, ts, beta, oaux)
-             ovlp(flvr,:) = ovlp(flvr,:) + oaux
-
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             call cat_ovlp_segments(flvr, zero, beta, oaux)
-             ovlp(flvr,:) = oaux
-
-         endif ! back if ( stts(flvr) == 0 ) block
-
-     enddo OVLP_CYCLE ! over flvr={1,norbs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     call cat_ovlp_2flavors(ovlp)
 
 ! evaluate < K^4 >
      paux(9) = paux(9) + ( ckink * two )**4

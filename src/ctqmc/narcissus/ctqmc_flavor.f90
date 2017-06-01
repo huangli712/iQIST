@@ -1938,6 +1938,7 @@
      real(dp) :: ts
      real(dp) :: te
 
+! loop over flavors
      FLVR_CYCLE: do flvr=1,norbs
 
          STATUS_BLOCK: select case ( stts(flvr) )
@@ -2323,6 +2324,7 @@
 ! overlap between a given segment and segments in a flavor channel
      real(dp) :: oaux(norbs)
 
+! loop over flavors
      FLVR_CYCLE: do flvr=1,norbs
 
          STATUS_BLOCK: select case ( stts(flvr) )
