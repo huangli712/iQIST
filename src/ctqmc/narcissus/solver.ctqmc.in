@@ -3,5 +3,5 @@
 isscr  = 4
 isort  = 2
 issus  = 2
-nsweep = 40000000
+nsweep = 10000000
 beta   = 40.0
