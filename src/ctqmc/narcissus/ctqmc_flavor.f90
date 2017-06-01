@@ -1904,7 +1904,12 @@
      return
   end subroutine cat_occupy_status
 
-
+!!
+!! @sub cat_occupy_length
+!!
+!! evaluate the total length of segments for each flavor channel, which
+!! can be used to calculate the orbital occupation
+!!
   subroutine cat_occupy_length(sgmt)
      use constants, only : dp
      use constants, only : zero
@@ -1937,9 +1942,11 @@
 
          STATUS_BLOCK: select case ( stts(flvr) )
 
+! case 1: there is no segments, null configuration
              case (0)
                  sgmt(flvr) = zero
 
+! case 2: there are segments, segment configuration
              case (1)
                  sgmt(flvr) = zero
                  do i=1,rank(flvr)
@@ -1948,6 +1955,7 @@
                      sgmt(flvr) = sgmt(flvr) + abs( te - ts )
                  enddo ! over i={1,rank(flvr)} loop
 
+! case 3: there are segments, anti-segment configuration
              case (2)
                  sgmt(flvr) = beta
                  do i=1,rank(flvr)
@@ -1956,6 +1964,7 @@
                      sgmt(flvr) = sgmt(flvr) - abs( ts - te )
                  enddo ! over i={1,rank(flvr)} loop
 
+! case 4: there is no segments, full configuration
              case (3)
                  sgmt(flvr) = beta
 
@@ -1965,7 +1974,6 @@
 
      return
   end subroutine cat_occupy_length
-
 
 !!========================================================================
 !!>>> service layer: calculate weight factor for dynamic interaction   <<<
