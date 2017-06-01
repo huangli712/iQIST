@@ -1910,47 +1910,58 @@
      use constants, only : zero
 
      use control, only : norbs
+     use control, only : beta
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
 ! external arguments
+! total length of segments in every flavor
      real(dp), intent(out) :: sgmt(norbs)
 
 ! local variables
+! loop index over segments
+     integer  :: i
+
 ! loop index for flavor channel
      integer  :: flvr
 
-     SGMT_CYCLE: do flvr=1,norbs
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
 
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             sgmt(flvr) = zero
+     FLVR_CYCLE: do flvr=1,norbs
 
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             sgmt(flvr) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
-             enddo ! over i={1,rank(flvr)} loop
+         STATUS_BLOCK: select case ( stts(flvr) )
 
-! case 3: partial occupation, anti-segment scheme
-         else if ( stts(flvr) == 2 ) then
-             sgmt(flvr) = beta
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
-             enddo ! over i={1,rank(flvr)} loop
+             case (0)
+                 sgmt(flvr) = zero
 
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             sgmt(flvr) = beta
+             case (1)
+                 sgmt(flvr) = zero
+                 do i=1,rank(flvr)
+                     ts = time_s(index_s(i, flvr), flvr)
+                     te = time_e(index_e(i, flvr), flvr)
+                     sgmt(flvr) = sgmt(flvr) + abs( te - ts )
+                 enddo ! over i={1,rank(flvr)} loop
 
-         endif ! back if ( stts(flvr) == 0 ) block
+             case (2)
+                 sgmt(flvr) = beta
+                 do i=1,rank(flvr)
+                     ts = time_s(index_s(i, flvr), flvr)
+                     te = time_e(index_e(i, flvr), flvr)
+                     sgmt(flvr) = sgmt(flvr) - abs( ts - te )
+                 enddo ! over i={1,rank(flvr)} loop
 
-     enddo SGMT_CYCLE ! over flvr={1,norbs} loop
+             case (3)
+                 sgmt(flvr) = beta
+
+         end select STATUS_BLOCK
+
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
      return
   end subroutine cat_occupy_length
