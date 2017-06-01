@@ -2286,6 +2286,18 @@
      return
   end subroutine cat_ovlp_segments
 
+!!
+!! @sub cat_ovlp_2flavors
+!!
+!! calculate the overlap of segments for two different flavors, which can
+!! be used to evaluate the double occupation number matrix
+!!
+  subroutine cat_ovlp_2flavors(ovlp)
+     implicit none
+
+     return
+  end subroutine cat_ovlp_2flavors
+ 
 !!========================================================================
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
 !!========================================================================
