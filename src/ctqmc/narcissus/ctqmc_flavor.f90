@@ -2325,45 +2325,47 @@
 
      FLVR_CYCLE: do flvr=1,norbs
 
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             ovlp(flvr,:) = zero
+         STATUS_BLOCK: select case ( stts(flvr) )
 
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             ovlp(flvr,:) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 call cat_ovlp_segments(flvr, ts, te, oaux)
-                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
-             enddo ! over i={1,rank(flvr)} loop
+! case 1: there is no segments, null configuration
+             case (0)
+                 ovlp(flvr,:) = zero
 
-! case 3: partial occupation, anti-segment scheme
+! case 2: there are segments, segment configuration
+             case (1)
+                 ovlp(flvr,:) = zero
+                 do i=1,rank(flvr)
+                     ts = time_s(index_s(i, flvr), flvr)
+                     te = time_e(index_e(i, flvr), flvr)
+                     call cat_ovlp_segments(flvr, ts, te, oaux)
+                     ovlp(flvr,:) = ovlp(flvr,:) + oaux
+                 enddo ! over i={1,rank(flvr)} loop
+
+! case 3: there are segments, anti-segment configuration
 ! pay special attention to the head and tail parts
-         else if ( stts(flvr) == 2 ) then
-             ovlp(flvr,:) = zero
-             do i=1,rank(flvr)-1
-                 ts = time_s(index_s(i,   flvr), flvr)
-                 te = time_e(index_e(i+1, flvr), flvr)
-                 call cat_ovlp_segments(flvr, ts, te, oaux)
+             case (2)
+                 ovlp(flvr,:) = zero
+                 do i=1,rank(flvr)-1
+                     ts = time_s(index_s(i,   flvr), flvr)
+                     te = time_e(index_e(i+1, flvr), flvr)
+                     call cat_ovlp_segments(flvr, ts, te, oaux)
+                     ovlp(flvr,:) = ovlp(flvr,:) + oaux
+                 enddo ! over i={1,rank(flvr)-1} loop
+
+                 te = time_e(index_e(1, flvr), flvr)
+                 call cat_ovlp_segments(flvr, zero, te, oaux)
                  ovlp(flvr,:) = ovlp(flvr,:) + oaux
-             enddo ! over i={1,rank(flvr)-1} loop
 
-             te = time_e(index_e(1, flvr), flvr)
-             call cat_ovlp_segments(flvr, zero, te, oaux)
-             ovlp(flvr,:) = ovlp(flvr,:) + oaux
+                 ts = time_s(index_s(rank(flvr), flvr), flvr)
+                 call cat_ovlp_segments(flvr, ts, beta, oaux)
+                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
 
-             ts = time_s(index_s(rank(flvr), flvr), flvr)
-             call cat_ovlp_segments(flvr, ts, beta, oaux)
-             ovlp(flvr,:) = ovlp(flvr,:) + oaux
+! case 4: there is no segments, full configuration
+             case (3)
+                 call cat_ovlp_segments(flvr, zero, beta, oaux)
+                 ovlp(flvr,:) = oaux
 
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             call cat_ovlp_segments(flvr, zero, beta, oaux)
-             ovlp(flvr,:) = oaux
-
-         endif ! back if ( stts(flvr) == 0 ) block
+         end select STATUS_BLOCK
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
