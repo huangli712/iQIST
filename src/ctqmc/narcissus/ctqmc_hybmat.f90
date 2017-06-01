@@ -16,7 +16,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/18/2017 by li huang (last modified)
+!!!           06/01/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -37,7 +37,8 @@
 !! annihilation operators
 !!
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
-     use constants, only : dp, zero, one, czero
+     use constants, only : dp
+     use constants, only : zero, one, czero
 
      use control, only : nfreq
      use control, only : beta
@@ -174,7 +175,8 @@
 !! annihilation operators
 !!
   subroutine cat_remove_matrix(flvr, is, ie)
-     use constants, only : dp, one, czero
+     use constants, only : dp
+     use constants, only : one, czero
 
      use control, only : nfreq
      use control, only : beta
@@ -274,7 +276,8 @@
 !! update the mmat matrix and gmat matrix for shifting creation operator
 !!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : mkink
      use control, only : nfreq
@@ -475,7 +478,8 @@
 !! update the mmat matrix and gmat matrix for shifting annihilation operator
 !!
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : mkink
      use control, only : nfreq
@@ -780,7 +784,8 @@
 !! global update the mmat matrix and gmat matrix from scratch
 !!
   subroutine cat_reload_matrix(flvr)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : nfreq
      use control, only : beta
@@ -874,7 +879,8 @@
 !! annihilation operators
 !!
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : mkink
      use control, only : beta
@@ -1000,7 +1006,8 @@
 !! calculate the determinant ratio for shifting creation operator
 !!
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use control, only : mkink
      use control, only : beta
@@ -1079,7 +1086,8 @@
 !! calculate the determinant ratio for shifting annihilation operator
 !!
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use control, only : mkink
      use control, only : beta
@@ -1158,7 +1166,8 @@
 !! calculate the determinant ratio for global spin flip
 !!
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use control, only : beta
 
