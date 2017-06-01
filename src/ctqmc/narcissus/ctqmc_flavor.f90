@@ -1904,6 +1904,11 @@
      return
   end subroutine cat_occupy_status
 
+
+  subroutine cat_occupy_length()
+  end subroutine cat_occupy_length
+
+
 !!========================================================================
 !!>>> service layer: calculate weight factor for dynamic interaction   <<<
 !!========================================================================
