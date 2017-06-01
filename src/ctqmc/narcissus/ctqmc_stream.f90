@@ -289,7 +289,7 @@
 !! try to create various meshes, including time mesh, frequency mesh etc
 !!
   subroutine ctqmc_input_mesh_()
-     use constants, only : zero, one, two, pi
+     use constants, only : pi, zero, one, two
 
      use control, only : isort
      use control, only : lemax, legrd
@@ -340,7 +340,9 @@
 !! try to build initial hybridization function from solver.hyb.in
 !!
   subroutine ctqmc_input_hybf_()
-     use constants, only : dp, one, two, czi, czero, mytmp
+     use constants, only : dp
+     use constants, only : one, two, czi, czero
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
@@ -431,7 +433,8 @@
 !! try to build orbital symmetry and impurity level from solver.eimp.in
 !!
   subroutine ctqmc_input_eimp_()
-     use constants, only : zero, mytmp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
@@ -502,7 +505,8 @@
 !! try to build the Coulomb interaction matrix from solver.umat.in
 !!
   subroutine ctqmc_input_umat_()
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
@@ -575,7 +579,9 @@
 !! try to build the dynamic interaction model from solver.ktau.in
 !!
   subroutine ctqmc_input_ktau_()
-     use constants, only : dp, zero, one, mytmp
+     use constants, only : dp
+     use constants, only : zero, one
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
@@ -693,7 +699,8 @@
 !! impurity solver
 !!
   subroutine ctqmc_reset_array()
-     use constants, only : zero, czero, mystd
+     use constants, only : zero, czero
+     use constants, only : mystd
 
      use spring, only : spring_sfmt_init
      use stack, only : istack_clean
