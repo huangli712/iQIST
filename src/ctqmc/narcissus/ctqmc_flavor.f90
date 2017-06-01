@@ -2237,11 +2237,11 @@
 
          STATUS_BLOCK: select case ( stts(i) )
 
-! case 1: null occupation
+! case 1: there is no segments, null configuration
              case (0)
                  ovlp(i) = zero
 
-! case 2: partial occupation, segment scheme
+! case 2: there are segments, segment configuration
              case (1)
 ! loop through all the segments
                  do j=1,rank(i)
@@ -2252,7 +2252,7 @@
                      ovlp(i) = ovlp(i) + raux
                  enddo ! over j={1,rank(i)} loop
 
-! case 3: partial occupation, anti-segment scheme
+! case 3: there are segments, anti-segment configuration
              case (2)
 ! deal with the first segment (header)
                  ts = zero
@@ -2275,7 +2275,7 @@
                      ovlp(i) = ovlp(i) + raux
                  enddo ! over j={1,rank(i)-1} loop
 
-! case 4: full occupation
+! case 4: there is no segments, full configuration
              case (3)
                  ovlp(i) = tau_end - tau_start
 
