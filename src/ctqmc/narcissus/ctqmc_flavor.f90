@@ -12,11 +12,13 @@
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
 !!!           cat_rshift_ztrace <<<---
-!!!           cat_occupy_status <<<---
+!!!           cat_occupy_status
+!!!           cat_occupy_length <<<---
 !!!           cat_weight_factor
 !!!           cat_weight_kernel <<<---
 !!!           cat_ovlp_segment_
-!!!           cat_ovlp_segments <<<---
+!!!           cat_ovlp_segments
+!!!           cat_ovlp_2flavors <<<---
 !!!           cat_make_segments
 !!!           cat_disp_segments <<<---
 !!! source  : ctqmc_flavor.f90
