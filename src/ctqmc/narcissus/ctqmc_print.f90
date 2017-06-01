@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/24/2017 by li huang (last modified)
+!!!           06/01/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -86,7 +86,8 @@
 !! quantum impurity solver plus dynamical mean field theory engine
 !!
   subroutine ctqmc_print_footer()
-     use constants, only : dp, mystd
+     use constants, only : dp
+     use constants, only : mystd
 
      use control, only : cname
 
@@ -276,7 +277,8 @@
 !! statistic data, only for reference
 !!
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants, only : one, half, mystd
+     use constants, only : one, half
+     use constants, only : mystd
 
      use control, only : nsweep
      use control, only : nmonte
