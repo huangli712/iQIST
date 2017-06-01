@@ -139,31 +139,21 @@
      use control, only : beta
 
      use context, only : ckink
-     use context, only : index_s, index_e
-     use context, only : time_s, time_e
      use context, only : paux
      use context, only : nimp, nmat
-     use context, only : rank, stts
      use context, only : umat
 
      implicit none
 
 ! local variables
-! loop index over segments
-     integer  :: i
-
 ! loop index for flavor channel
      integer  :: flvr
-
-! imaginary time for start and end points
-     real(dp) :: ts
-     real(dp) :: te
+     integer  :: i
 
 ! total length of segments
      real(dp) :: sgmt(norbs)
 
-! used to record overlaps between two segments
-     real(dp) :: oaux(norbs)
+! overlap of segments for different flavors
      real(dp) :: ovlp(norbs,norbs)
 
 ! prepare sgmt array
@@ -171,6 +161,8 @@
 
 ! prepare ovlp matrix
      call cat_ovlp_2flavors(ovlp)
+
+!-------------------------------------------------------------------------
 
 ! evaluate < K^4 >
      paux(9) = paux(9) + ( ckink * two )**4
