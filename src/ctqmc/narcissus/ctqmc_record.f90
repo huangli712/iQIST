@@ -977,30 +977,36 @@
 ! the first bosonic frequency
      complex(dp) :: dw
 
-! used to record occupations for current flavor channel at \tau = 0
+! occupation status for current flavor channel at \tau = 0
      real(dp) :: oaux(norbs)
 
+! total length of segments
+     real(dp) :: sgmt(norbs)
+
 ! bosonic frequency mesh
-     complex(dp) :: mesh(nbfrq)
+     complex(dp) :: mesh(2:nbfrq)
 
 ! matsubara frequency exponents for creation operators
-     complex(dp) :: exps(nbfrq)
+     complex(dp) :: bexp_s(2:nbfrq)
 
 ! matsubara frequency exponents for annihilation operators
-     complex(dp) :: expe(nbfrq)
+     complex(dp) :: bexp_e(2:nbfrq)
 
 ! check whether there is conflict
      call s_assert( btest(issus, 3) )
 
-! build bosonic frequency mesh
+! build bosonic frequency mesh, zero frequency is not included
      dw = czi * two * pi / beta
      mesh = dw
-     call s_cumsum_z(nbfrq, mesh, mesh)
+     call s_cumsum_z(nbfrq - 1, mesh, mesh)
 
 ! calculate oaux, obtain occupation status
      do f1=1,norbs
          call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
+
+! calculate sgmt, obtain total length of segments
+     call cat_occupy_single(sgmt)
 
 ! calculate sp_w, it must be real
 ! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
@@ -1011,48 +1017,52 @@
 ! here oaux(f1) = one; oaux(f2) = zero
          if ( oaux(f1) > zero .and. oaux(f2) < one ) then
 ! + nu(t)nu(0) term
+             sp_w(1,f1) = sp_w(1,f1) + sgmt(f1)
              do it=1,rank(f1)
                  taus = time_s( index_s(it, f1), f1 )
                  taue = time_e( index_e(it, f1), f1 )
-                 exps = exp( dw * taus )
-                 expe = exp( dw * taue )
-                 call s_cumprod_z(nbfrq, exps, exps)
-                 call s_cumprod_z(nbfrq, expe, expe)
-                 sp_w(:,f1) = sp_w(:,f1) + real( ( expe - exps ) / mesh )
+                 bexp_s = exp( dw * taus )
+                 bexp_e = exp( dw * taue )
+                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
+                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 sp_w(2:,f1) = sp_w(2:,f1) + real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
 ! - nd(t)nu(0) term
+             sp_w(1,f1) = sp_w(1,f1) - sgmt(f2)
              do it=1,rank(f2)
                  taus = time_s( index_s(it, f2), f2 )
                  taue = time_e( index_e(it, f2), f2 )
-                 exps = exp( dw * taus )
-                 expe = exp( dw * taue )
-                 call s_cumprod_z(nbfrq, exps, exps)
-                 call s_cumprod_z(nbfrq, expe, expe)
-                 sp_w(:,f1) = sp_w(:,f1) - real( ( expe - exps ) / mesh )
+                 bexp_s = exp( dw * taus )
+                 bexp_e = exp( dw * taue )
+                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
+                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 sp_w(2:,f1) = sp_w(2:,f1) - real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f1) > zero .and. oaux(f2) < one ) block
 
 ! here oaux(f2) = one; oaux(f1) = zero
          if ( oaux(f2) > zero .and. oaux(f1) < one ) then
 ! - nu(t)nd(0) term
+             sp_w(1,f1) = sp_w(1,f1) - sgmt(f1)
              do it=1,rank(f1)
                  taus = time_s( index_s(it, f1), f1 )
                  taue = time_e( index_e(it, f1), f1 )
-                 exps = exp( dw * taus )
-                 expe = exp( dw * taue )
-                 call s_cumprod_z(nbfrq, exps, exps)
-                 call s_cumprod_z(nbfrq, expe, expe)
-                 sp_w(:,f1) = sp_w(:,f1) - real( ( expe - exps ) / mesh )
+                 bexp_s = exp( dw * taus )
+                 bexp_e = exp( dw * taue )
+                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
+                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 sp_w(2:,f1) = sp_w(2:,f1) - real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
 ! + nd(t)nd(0) term
+             sp_w(1,f1) = sp_w(1,f1) + sgmt(f2)
              do it=1,rank(f2)
                  taus = time_s( index_s(it, f2), f2 )
                  taue = time_e( index_e(it, f2), f2 )
-                 exps = exp( dw * taus )
-                 expe = exp( dw * taue )
-                 call s_cumprod_z(nbfrq, exps, exps)
-                 call s_cumprod_z(nbfrq, expe, expe)
-                 sp_w(:,f1) = sp_w(:,f1) + real( ( expe - exps ) / mesh )
+                 bexp_s = exp( dw * taus )
+                 bexp_e = exp( dw * taue )
+                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
+                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 sp_w(2:,f1) = sp_w(2:,f1) + real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f2) > zero .and. oaux(f1) < one ) block
      enddo FLVR_CYCLE ! over f1={1,nband} loop
