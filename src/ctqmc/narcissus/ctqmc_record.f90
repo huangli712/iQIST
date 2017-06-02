@@ -956,7 +956,7 @@
      use control, only : beta
 
      use context, only : index_s, index_e
-     use context, only : time_s, time_e
+     use context, only : exp_s, exp_e
      use context, only : sp_w
      use context, only : rank
 
@@ -969,10 +969,6 @@
 
 ! loop index for operators
      integer  :: it
-
-! imaginary time for start and end points
-     real(dp) :: taus
-     real(dp) :: taue
 
 ! the first bosonic frequency
      complex(dp) :: dw
@@ -1012,30 +1008,42 @@
 ! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
      FLVR_CYCLE: do f1=1,nband
          f2 = f1 + nband
-! the contribution from oaux(f1) = one and oaux(f2) = one is zero
+
+!
+! note:
+!
+! the contribution from oaux(f1) = one and oaux(f2) = one is zero, and
 ! the contribution from oaux(f1) = zero and oaux(f2) = zero is also zero
+!
 ! here oaux(f1) = one; oaux(f2) = zero
          if ( oaux(f1) > zero .and. oaux(f2) < one ) then
 ! + nu(t)nu(0) term
+!-------------------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) + sgmt(f1)
+! loop over the segments
+! here we do not calculate bexp_s and bexp_e directly. we just utilize
+! the available data in exp_s and exp_e. so that the required exponent
+! functions are obtained via only a few complex number multiplications
              do it=1,rank(f1)
-                 taus = time_s( index_s(it, f1), f1 )
-                 taue = time_e( index_e(it, f1), f1 )
-                 bexp_s = exp( dw * taus )
-                 bexp_e = exp( dw * taue )
-                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
-                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 dw = exp_s(1,index_s(it, f1), f1)
+                 bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
+                 dw = exp_e(1,index_e(it, f1), f1)
+                 bexp_e = dw * exp_e(1:nbfrq-1,index_e(it, f1), f1)
                  sp_w(2:,f1) = sp_w(2:,f1) + real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
+
 ! - nd(t)nu(0) term
+!-------------------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) - sgmt(f2)
+! loop over the segments
+! here we do not calculate bexp_s and bexp_e directly. we just utilize
+! the available data in exp_s and exp_e. so that the required exponent
+! functions are obtained via only a few complex number multiplications
              do it=1,rank(f2)
-                 taus = time_s( index_s(it, f2), f2 )
-                 taue = time_e( index_e(it, f2), f2 )
-                 bexp_s = exp( dw * taus )
-                 bexp_e = exp( dw * taue )
-                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
-                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 dw = exp_s(1,index_s(it, f2), f2)
+                 bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f2), f2)
+                 dw = exp_e(1,index_e(it, f2), f2)
+                 bexp_e = dw * exp_e(1:nbfrq-1,index_e(it, f2), f2)
                  sp_w(2:,f1) = sp_w(2:,f1) - real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f1) > zero .and. oaux(f2) < one ) block
@@ -1043,28 +1051,36 @@
 ! here oaux(f2) = one; oaux(f1) = zero
          if ( oaux(f2) > zero .and. oaux(f1) < one ) then
 ! - nu(t)nd(0) term
+!-------------------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) - sgmt(f1)
+! loop over the segments
+! here we do not calculate bexp_s and bexp_e directly. we just utilize
+! the available data in exp_s and exp_e. so that the required exponent
+! functions are obtained via only a few complex number multiplications
              do it=1,rank(f1)
-                 taus = time_s( index_s(it, f1), f1 )
-                 taue = time_e( index_e(it, f1), f1 )
-                 bexp_s = exp( dw * taus )
-                 bexp_e = exp( dw * taue )
-                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
-                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 dw = exp_s(1,index_s(it, f1), f1)
+                 bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
+                 dw = exp_e(1,index_e(it, f1), f1)
+                 bexp_e = dw * exp_e(1:nbfrq-1,index_e(it, f1), f1)
                  sp_w(2:,f1) = sp_w(2:,f1) - real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
+
 ! + nd(t)nd(0) term
+!-------------------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) + sgmt(f2)
+! loop over the segments
+! here we do not calculate bexp_s and bexp_e directly. we just utilize
+! the available data in exp_s and exp_e. so that the required exponent
+! functions are obtained via only a few complex number multiplications
              do it=1,rank(f2)
-                 taus = time_s( index_s(it, f2), f2 )
-                 taue = time_e( index_e(it, f2), f2 )
-                 bexp_s = exp( dw * taus )
-                 bexp_e = exp( dw * taue )
-                 call s_cumprod_z(nbfrq - 1, bexp_s, bexp_s)
-                 call s_cumprod_z(nbfrq - 1, bexp_e, bexp_e)
+                 dw = exp_s(1,index_s(it, f2), f2)
+                 bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f2), f2)
+                 dw = exp_e(1,index_e(it, f2), f2)
+                 bexp_e = dw * exp_e(1:nbfrq-1,index_e(it, f2), f2)
                  sp_w(2:,f1) = sp_w(2:,f1) + real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f2) > zero .and. oaux(f1) < one ) block
+
      enddo FLVR_CYCLE ! over f1={1,nband} loop
 
      return
