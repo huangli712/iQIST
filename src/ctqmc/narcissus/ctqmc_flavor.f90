@@ -1976,6 +1976,85 @@
      return
   end subroutine cat_occupy_single
 
+!!
+!! @sub cat_occupy_double
+!!
+!! calculate the overlap length of segments between different flavors,
+!! which can be used to evaluate the double occupation number matrix
+!!
+  subroutine cat_occupy_double(ovlp)
+     use constants, only : dp
+     use constants, only : zero
+
+     use control, only : norbs
+     use control, only : beta
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rank, stts
+
+     implicit none
+
+! external arguments
+! overlap of segments for two different flavors
+     real(dp), intent(out) :: ovlp(norbs,norbs)
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
+
+! overlap between a given segment and segments in a flavor channel
+     real(dp) :: oaux(norbs)
+
+! loop over flavors
+     FLVR_CYCLE: do flvr=1,norbs
+
+         STATUS_BLOCK: select case ( stts(flvr) )
+
+! case 1: there is no segments, null configuration
+             case (0)
+                 ovlp(flvr,:) = zero
+
+! case 2: there are segments, segment configuration
+             case (1)
+                 ovlp(flvr,:) = zero
+                 do i=1,rank(flvr)
+                     ts = time_s(index_s(i, flvr), flvr)
+                     te = time_e(index_e(i, flvr), flvr)
+                     call cat_ovlp_segment_(flvr, ts, te, oaux)
+                     ovlp(flvr,:) = ovlp(flvr,:) + oaux
+                 enddo ! over i={1,rank(flvr)} loop
+
+! case 3: there are segments, anti-segment configuration
+             case (2)
+                 call cat_ovlp_segment_(flvr, zero, beta, oaux)
+                 ovlp(flvr,:) = oaux
+                 do i=1,rank(flvr)
+                     ts = time_s(index_s(i, flvr), flvr)
+                     te = time_e(index_e(i, flvr), flvr)
+                     call cat_ovlp_segment_(flvr, te, ts, oaux)
+                     ovlp(flvr,:) = ovlp(flvr,:) - oaux
+                 enddo ! over i={1,rank(flvr)} loop
+
+! case 4: there is no segments, full configuration
+             case (3)
+                 call cat_ovlp_segment_(flvr, zero, beta, oaux)
+                 ovlp(flvr,:) = oaux
+
+         end select STATUS_BLOCK
+
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+
+     return
+  end subroutine cat_occupy_double
+
 !!========================================================================
 !!>>> service layer: calculate weight factor for dynamic interaction   <<<
 !!========================================================================
@@ -2192,7 +2271,6 @@
      use constants, only : zero
 
      use control, only : norbs
-     use control, only : beta
 
      use context, only : index_s, index_e
      use context, only : time_s, time_e
@@ -2276,93 +2354,6 @@
 
      return
   end subroutine cat_ovlp_segment_
-
-!!
-!! @sub cat_occupy_double
-!!
-!! calculate the overlap of segments for two different flavors, which can
-!! be used to evaluate the double occupation number matrix
-!!
-  subroutine cat_occupy_double(ovlp)
-     use constants, only : dp
-     use constants, only : zero
-
-     use control, only : norbs
-     use control, only : beta
-
-     use context, only : index_s, index_e
-     use context, only : time_s, time_e
-     use context, only : rank, stts
-
-     implicit none
-
-! external arguments
-! overlap of segments for two different flavors
-     real(dp), intent(out) :: ovlp(norbs,norbs)
-
-! local variables
-! loop index over segments
-     integer  :: i
-
-! loop index for flavor channel
-     integer  :: flvr
-
-! imaginary time for start and end points
-     real(dp) :: ts
-     real(dp) :: te
-
-! overlap between a given segment and segments in a flavor channel
-     real(dp) :: oaux(norbs)
-
-! loop over flavors
-     FLVR_CYCLE: do flvr=1,norbs
-
-         STATUS_BLOCK: select case ( stts(flvr) )
-
-! case 1: there is no segments, null configuration
-             case (0)
-                 ovlp(flvr,:) = zero
-
-! case 2: there are segments, segment configuration
-             case (1)
-                 ovlp(flvr,:) = zero
-                 do i=1,rank(flvr)
-                     ts = time_s(index_s(i, flvr), flvr)
-                     te = time_e(index_e(i, flvr), flvr)
-                     call cat_ovlp_segment_(flvr, ts, te, oaux)
-                     ovlp(flvr,:) = ovlp(flvr,:) + oaux
-                 enddo ! over i={1,rank(flvr)} loop
-
-! case 3: there are segments, anti-segment configuration
-! pay special attention to the head and tail parts
-             case (2)
-                 ovlp(flvr,:) = zero
-                 do i=1,rank(flvr)-1
-                     ts = time_s(index_s(i,   flvr), flvr)
-                     te = time_e(index_e(i+1, flvr), flvr)
-                     call cat_ovlp_segment_(flvr, ts, te, oaux)
-                     ovlp(flvr,:) = ovlp(flvr,:) + oaux
-                 enddo ! over i={1,rank(flvr)-1} loop
-
-                 te = time_e(index_e(1, flvr), flvr)
-                 call cat_ovlp_segment_(flvr, zero, te, oaux)
-                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
-
-                 ts = time_s(index_s(rank(flvr), flvr), flvr)
-                 call cat_ovlp_segment_(flvr, ts, beta, oaux)
-                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
-
-! case 4: there is no segments, full configuration
-             case (3)
-                 call cat_ovlp_segment_(flvr, zero, beta, oaux)
-                 ovlp(flvr,:) = oaux
-
-         end select STATUS_BLOCK
-
-     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
-
-     return
-  end subroutine cat_occupy_double
 
 !!========================================================================
 !!>>> service layer: utility subroutines to test segment algorithm     <<<

@@ -157,10 +157,10 @@
      real(dp) :: ovlp(norbs,norbs)
 
 ! prepare sgmt array
-     call cat_occupy_length(sgmt)
+     call cat_occupy_single(sgmt)
 
 ! prepare ovlp matrix
-     call cat_full_overlap_(ovlp)
+     call cat_occupy_double(ovlp)
 
 !-------------------------------------------------------------------------
 
@@ -1187,7 +1187,7 @@
      enddo ! over i={1,norbs} loop
 
 ! calculate sgmt, obtain total length of segments
-     call cat_occupy_length(sgmt)
+     call cat_occupy_single(sgmt)
 
 ! calculate ch_w, it must be real
      FLVR_CYCLE: do f1=1,norbs
