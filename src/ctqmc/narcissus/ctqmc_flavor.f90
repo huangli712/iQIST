@@ -18,7 +18,7 @@
 !!!           cat_weight_kernel <<<---
 !!!           cat_ovlp_service_
 !!!           cat_ovlp_segment_
-!!!           cat_ovlp_2flavors <<<---
+!!!           cat_full_overlap_ <<<---
 !!!           cat_make_segments
 !!!           cat_disp_segments <<<---
 !!! source  : ctqmc_flavor.f90
@@ -2288,12 +2288,12 @@
   end subroutine cat_ovlp_segment_
 
 !!
-!! @sub cat_ovlp_2flavors
+!! @sub cat_full_overlap_
 !!
 !! calculate the overlap of segments for two different flavors, which can
 !! be used to evaluate the double occupation number matrix
 !!
-  subroutine cat_ovlp_2flavors(ovlp)
+  subroutine cat_full_overlap_(ovlp)
      use constants, only : dp
      use constants, only : zero
 
@@ -2372,7 +2372,7 @@
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
      return
-  end subroutine cat_ovlp_2flavors
+  end subroutine cat_full_overlap_
  
 !!========================================================================
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
