@@ -13,12 +13,12 @@
 !!!           cat_lshift_ztrace
 !!!           cat_rshift_ztrace <<<---
 !!!           cat_occupy_status
-!!!           cat_occupy_length <<<---
+!!!           cat_occupy_single
+!!!           cat_occupy_double <<<---
 !!!           cat_weight_factor
 !!!           cat_weight_kernel <<<---
 !!!           cat_ovlp_service_
-!!!           cat_ovlp_segment_
-!!!           cat_full_overlap_ <<<---
+!!!           cat_ovlp_segment_ <<<---
 !!!           cat_make_segments
 !!!           cat_disp_segments <<<---
 !!! source  : ctqmc_flavor.f90
@@ -1905,12 +1905,12 @@
   end subroutine cat_occupy_status
 
 !!
-!! @sub cat_occupy_length
+!! @sub cat_occupy_single
 !!
 !! evaluate the total length of segments for all flavor channels, which
 !! can be used to calculate the orbital occupation
 !!
-  subroutine cat_occupy_length(sgmt)
+  subroutine cat_occupy_single(sgmt)
      use constants, only : dp
      use constants, only : zero
 
@@ -1974,7 +1974,7 @@
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
      return
-  end subroutine cat_occupy_length
+  end subroutine cat_occupy_single
 
 !!========================================================================
 !!>>> service layer: calculate weight factor for dynamic interaction   <<<
@@ -2185,7 +2185,7 @@
 !! @sub cat_ovlp_segment_
 !!
 !! for a given segment in the current flavor channel, calculate its
-!! overlap with the segments in the other flavor channels 
+!! overlap with the segments in the other flavor channels
 !!
   subroutine cat_ovlp_segment_(flvr, tau_start, tau_end, ovlp)
      use constants, only : dp
@@ -2278,12 +2278,12 @@
   end subroutine cat_ovlp_segment_
 
 !!
-!! @sub cat_full_overlap_
+!! @sub cat_occupy_double
 !!
 !! calculate the overlap of segments for two different flavors, which can
 !! be used to evaluate the double occupation number matrix
 !!
-  subroutine cat_full_overlap_(ovlp)
+  subroutine cat_occupy_double(ovlp)
      use constants, only : dp
      use constants, only : zero
 
@@ -2362,8 +2362,8 @@
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
      return
-  end subroutine cat_full_overlap_
- 
+  end subroutine cat_occupy_double
+
 !!========================================================================
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
 !!========================================================================
