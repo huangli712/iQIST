@@ -164,46 +164,54 @@
 
 !-------------------------------------------------------------------------
 
+     CALC_PAUX: BLOCK
+
 ! evaluate < K^4 >
-     paux(9) = paux(9) + ( ckink * two )**4
+         paux(9) = paux(9) + ( ckink * two )**4
 
 ! evaluate < K^3 >
-     paux(8) = paux(8) + ( ckink * two )**3
+         paux(8) = paux(8) + ( ckink * two )**3
 
 ! evaluate < K^2 >
-     paux(7) = paux(7) + ( ckink * two )**2
+         paux(7) = paux(7) + ( ckink * two )**2
 
 ! evaluate < N^2 >
-     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
+         paux(6) = paux(6) + ( sum(sgmt) / beta )**2
 
 ! evaluate < N^1 >
-     paux(5) = paux(5) + sum(sgmt) / beta
+         paux(5) = paux(5) + sum(sgmt) / beta
 
 ! evaluate spin magnetization: < Sz >
-     do flvr=1,nband
-         paux(4) = paux(4) + ( sgmt(flvr) - sgmt(flvr+nband) ) / beta
-     enddo ! over flvr={1,nband} loop
+         do flvr=1,nband
+             paux(4) = paux(4) + ( sgmt(flvr) - sgmt(flvr+nband) ) / beta
+         enddo ! over flvr={1,nband} loop
 
 ! evaluate kinetic energy: ekin
-     paux(3) = paux(3) - real(ckink * norbs) / beta
+         paux(3) = paux(3) - real(ckink * norbs) / beta
 
 ! evaluate potential energy: epot
-     do flvr=1,norbs
-         do i=1,flvr
-             paux(2) = paux(2) + umat(flvr,i) * ovlp(flvr,i) / beta
-         enddo ! over i={1,flvr} loop
-     enddo ! over flvr={1,norbs} loop
+         do flvr=1,norbs
+             do i=1,flvr
+                 paux(2) = paux(2) + umat(flvr,i) * ovlp(flvr,i) / beta
+             enddo ! over i={1,flvr} loop
+         enddo ! over flvr={1,norbs} loop
 
 ! evaluate total energy: etot
-     paux(1) = paux(2) + paux(3)
+         paux(1) = paux(2) + paux(3)
+
+     END BLOCK CALC_PAUX
 
 !-------------------------------------------------------------------------
 
+     CALC_NMAT: BLOCK
+
 ! evaluate occupation matrix: < n_i >
-     nimp = nimp + sgmt / beta
+         nimp = nimp + sgmt / beta
 
 ! evaluate double occupation matrix: < n_i n_j >
-     nmat = nmat + ovlp / beta
+         nmat = nmat + ovlp / beta
+
+     END BLOCK CALC_NMAT
 
      return
   end subroutine ctqmc_record_paux
