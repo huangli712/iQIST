@@ -1178,7 +1178,7 @@
 ! the first bosonic frequency
      complex(dp) :: dw
 
-! used to record occupations for current flavor channel at \tau = 0
+! occupation status for current flavor channel at \tau = 0
      real(dp) :: oaux(norbs)
 
 ! total length of segments
@@ -1188,15 +1188,15 @@
      complex(dp) :: mesh(2:nbfrq)
 
 ! matsubara frequency exponents for creation operators
-     complex(dp) :: exps(2:nbfrq)
+     complex(dp) :: bexp_s(2:nbfrq)
 
 ! matsubara frequency exponents for annihilation operators
-     complex(dp) :: expe(2:nbfrq)
+     complex(dp) :: bexp_e(2:nbfrq)
 
 ! check whether there is conflict
      call s_assert( btest(issus, 4) )
 
-! build bosonic frequency mesh
+! build bosonic frequency mesh, zero frequency is not included
      dw = czi * two * pi / beta
      mesh = dw
      call s_cumsum_z(nbfrq - 1, mesh, mesh)
@@ -1213,13 +1213,17 @@
      FLVR_CYCLE: do f1=1,norbs
          do f2=1,f1
              if ( oaux(f2) > zero ) then
+! special treatment for the first frequency
                  ch_w(1,f2,f1) = ch_w(1,f2,f1) + sgmt(f1)
+! loop over the segments
+! note here we do not calculate bexp_s and bexp_e directly. we utilize
+! the data in exp_s and exp_e and avoid complex exponent calculations
                  do it=1,rank(f1)
                      dw = exp_s(1,index_s(it, f1), f1)
-                     exps = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
+                     bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
                      dw = exp_e(1,index_e(it, f1), f1)
-                     expe = dw * exp_e(1:nbfrq-1,index_e(it, f1), f1)
-                     ch_w(2:,f2,f1) = ch_w(2:,f2,f1) + real( ( expe - exps ) / mesh )
+                     bexp_e = dw * exp_e(1:nbfrq-1,index_e(it, f1), f1)
+                     ch_w(2:,f2,f1) = ch_w(2:,f2,f1) + real( ( bexp_e - bexp_s ) / mesh )
                  enddo ! over do it={1,rank(f1)} loop
              endif ! back if ( oaux(f2) > zero ) block
              if ( f1 /= f2 ) then ! consider the symmetry
