@@ -17,7 +17,7 @@
 !!!           cat_weight_factor
 !!!           cat_weight_kernel <<<---
 !!!           cat_ovlp_service_
-!!!           cat_ovlp_segments
+!!!           cat_ovlp_segment_
 !!!           cat_ovlp_2flavors <<<---
 !!!           cat_make_segments
 !!!           cat_disp_segments <<<---
@@ -1344,24 +1344,24 @@
      if ( anti .eqv. .false. ) then
          if ( tau_start < tau_end ) then
              dtau = tau_end - tau_start
-             call cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
+             call cat_ovlp_segment_(flvr, tau_start, tau_end, ovlp)
 ! the new segment winds around the circle
          else
              dtau = beta - tau_start + tau_end - zero
-             call cat_ovlp_segments(flvr, zero, tau_end, ovlp1)
-             call cat_ovlp_segments(flvr, tau_start, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_end, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_start, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start < tau_end ) block
 ! for anti-segment case
      else
          if ( tau_start > tau_end ) then
              dtau = tau_start - tau_end
-             call cat_ovlp_segments(flvr, tau_end, tau_start, ovlp)
+             call cat_ovlp_segment_(flvr, tau_end, tau_start, ovlp)
 ! the new anti-segment winds around the circle
          else
              dtau = tau_start - zero + beta - tau_end
-             call cat_ovlp_segments(flvr, zero, tau_start, ovlp1)
-             call cat_ovlp_segments(flvr, tau_end, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_start, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_end, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start > tau_end ) block
      endif ! back if ( anti .eqv. .false. ) block
@@ -1477,24 +1477,24 @@
 ! for segment case
          if ( tau_start < tau_end ) then
              dtau = tau_end - tau_start
-             call cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
+             call cat_ovlp_segment_(flvr, tau_start, tau_end, ovlp)
 ! the selected segment winds around the circle
          else
              dtau = beta - tau_start + tau_end - zero
-             call cat_ovlp_segments(flvr, zero, tau_end, ovlp1)
-             call cat_ovlp_segments(flvr, tau_start, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_end, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_start, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start < tau_end ) block
 ! for anti-segment case
      else
          if ( tau_start > tau_end ) then
              dtau = tau_start - tau_end
-             call cat_ovlp_segments(flvr, tau_end, tau_start, ovlp)
+             call cat_ovlp_segment_(flvr, tau_end, tau_start, ovlp)
 ! the selected anti-segment winds around the circle
          else
              dtau = tau_start - zero + beta - tau_end
-             call cat_ovlp_segments(flvr, zero, tau_start, ovlp1)
-             call cat_ovlp_segments(flvr, tau_end, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_start, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_end, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start > tau_end ) block
      endif ! back if ( anti .eqv. .false. ) block
@@ -1611,25 +1611,25 @@
 ! stretch the segment
          if ( tau_start1 > tau_start2 ) then
              dtau = tau_start1 - tau_start2
-             call cat_ovlp_segments(flvr, tau_start2, tau_start1, ovlp)
+             call cat_ovlp_segment_(flvr, tau_start2, tau_start1, ovlp)
 ! shrink the segment
          else
              dtau = tau_start2 - tau_start1
-             call cat_ovlp_segments(flvr, tau_start1, tau_start2, ovlp)
+             call cat_ovlp_segment_(flvr, tau_start1, tau_start2, ovlp)
          endif ! back if ( tau_start1 > tau_start2 ) block
 ! it does wind around the circle
      else
 ! shrink the segment
          if ( tau_start1 > tau_start2 ) then
              dtau = beta - tau_start1 + tau_start2 - zero
-             call cat_ovlp_segments(flvr, zero, tau_start2, ovlp1)
-             call cat_ovlp_segments(flvr, tau_start1, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_start2, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_start1, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
 ! stretch the segment
          else
              dtau = tau_start1 - zero + beta - tau_start2
-             call cat_ovlp_segments(flvr, zero, tau_start1, ovlp1)
-             call cat_ovlp_segments(flvr, tau_start2, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_start1, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_start2, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start1 > tau_start2 ) block
      endif ! back if ( ring .eqv. .false. ) block
@@ -1754,25 +1754,25 @@
 ! shrink the segment
          if ( tau_end1 > tau_end2 ) then
              dtau = tau_end1 - tau_end2
-             call cat_ovlp_segments(flvr, tau_end2, tau_end1, ovlp)
+             call cat_ovlp_segment_(flvr, tau_end2, tau_end1, ovlp)
 ! stretch the segment
          else
              dtau = tau_end2 - tau_end1
-             call cat_ovlp_segments(flvr, tau_end1, tau_end2, ovlp)
+             call cat_ovlp_segment_(flvr, tau_end1, tau_end2, ovlp)
          endif ! back if ( tau_end1 > tau_end2 ) block
 ! it does wind around the circle
      else
 ! stretch the segment
          if ( tau_end1 > tau_end2 ) then
              dtau = beta - tau_end1 + tau_end2 - zero
-             call cat_ovlp_segments(flvr, zero, tau_end2, ovlp1)
-             call cat_ovlp_segments(flvr, tau_end1, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_end2, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_end1, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
 ! shrink the segment
          else
              dtau = tau_end1 - zero + beta - tau_end2
-             call cat_ovlp_segments(flvr, zero, tau_end1, ovlp1)
-             call cat_ovlp_segments(flvr, tau_end2, beta, ovlp2)
+             call cat_ovlp_segment_(flvr, zero, tau_end1, ovlp1)
+             call cat_ovlp_segment_(flvr, tau_end2, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_end1 > tau_end2 ) block
      endif ! back if ( ring .eqv. .false. ) block
@@ -2182,12 +2182,12 @@
   end subroutine cat_ovlp_service_
 
 !!
-!! @sub cat_ovlp_segments
+!! @sub cat_ovlp_segment_
 !!
 !! calculate the delta segment overlaps between current flavor channel
 !! and other flavor channels
 !!
-  subroutine cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
+  subroutine cat_ovlp_segment_(flvr, tau_start, tau_end, ovlp)
      use constants, only : dp
      use constants, only : zero
 
@@ -2285,7 +2285,7 @@
      enddo FLVR_CYCLE ! over i={1,norbs} loop
 
      return
-  end subroutine cat_ovlp_segments
+  end subroutine cat_ovlp_segment_
 
 !!
 !! @sub cat_ovlp_2flavors
@@ -2339,7 +2339,7 @@
                  do i=1,rank(flvr)
                      ts = time_s(index_s(i, flvr), flvr)
                      te = time_e(index_e(i, flvr), flvr)
-                     call cat_ovlp_segments(flvr, ts, te, oaux)
+                     call cat_ovlp_segment_(flvr, ts, te, oaux)
                      ovlp(flvr,:) = ovlp(flvr,:) + oaux
                  enddo ! over i={1,rank(flvr)} loop
 
@@ -2350,21 +2350,21 @@
                  do i=1,rank(flvr)-1
                      ts = time_s(index_s(i,   flvr), flvr)
                      te = time_e(index_e(i+1, flvr), flvr)
-                     call cat_ovlp_segments(flvr, ts, te, oaux)
+                     call cat_ovlp_segment_(flvr, ts, te, oaux)
                      ovlp(flvr,:) = ovlp(flvr,:) + oaux
                  enddo ! over i={1,rank(flvr)-1} loop
 
                  te = time_e(index_e(1, flvr), flvr)
-                 call cat_ovlp_segments(flvr, zero, te, oaux)
+                 call cat_ovlp_segment_(flvr, zero, te, oaux)
                  ovlp(flvr,:) = ovlp(flvr,:) + oaux
 
                  ts = time_s(index_s(rank(flvr), flvr), flvr)
-                 call cat_ovlp_segments(flvr, ts, beta, oaux)
+                 call cat_ovlp_segment_(flvr, ts, beta, oaux)
                  ovlp(flvr,:) = ovlp(flvr,:) + oaux
 
 ! case 4: there is no segments, full configuration
              case (3)
-                 call cat_ovlp_segments(flvr, zero, beta, oaux)
+                 call cat_ovlp_segment_(flvr, zero, beta, oaux)
                  ovlp(flvr,:) = oaux
 
          end select STATUS_BLOCK
