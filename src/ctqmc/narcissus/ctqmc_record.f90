@@ -160,7 +160,7 @@
      call cat_occupy_length(sgmt)
 
 ! prepare ovlp matrix
-     call cat_ovlp_2flavors(ovlp)
+     call cat_full_overlap_(ovlp)
 
 !-------------------------------------------------------------------------
 

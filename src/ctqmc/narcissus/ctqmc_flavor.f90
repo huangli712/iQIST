@@ -1907,7 +1907,7 @@
 !!
 !! @sub cat_occupy_length
 !!
-!! evaluate the total length of segments for each flavor channel, which
+!! evaluate the total length of segments for all flavor channels, which
 !! can be used to calculate the orbital occupation
 !!
   subroutine cat_occupy_length(sgmt)
@@ -2184,8 +2184,8 @@
 !!
 !! @sub cat_ovlp_segment_
 !!
-!! calculate the delta segment overlaps between current flavor channel
-!! and other flavor channels
+!! for a given segment in the current flavor channel, calculate its
+!! overlap with the segments in the other flavor channels 
 !!
   subroutine cat_ovlp_segment_(flvr, tau_start, tau_end, ovlp)
      use constants, only : dp
@@ -2233,7 +2233,7 @@
 ! loop over flavors
      FLVR_CYCLE: do i=1,norbs
 
-! do not calculate overlap for himself
+! do not calculate overlap for the current flavor channel
          if ( flvr == i ) CYCLE
 
          STATUS_BLOCK: select case ( stts(i) )
@@ -2244,6 +2244,7 @@
 
 ! case 2: there are segments, segment configuration
              case (1)
+                 ovlp(i) = zero
 ! loop through all the segments
                  do j=1,rank(i)
                      ts = time_s(index_s(j, i), i)
@@ -2255,26 +2256,15 @@
 
 ! case 3: there are segments, anti-segment configuration
              case (2)
-! deal with the first segment (header)
-                 ts = zero
-                 te = time_e(index_e(1, i), i)
-                 call cat_ovlp_service_( tau_start, tau_end, ts, te, raux )
-                 ovlp(i) = ovlp(i) + raux
-
-! deal with the last segment (tailer)
-                 ts = time_s(index_s(rank(i), i), i)
-                 te = beta
-                 call cat_ovlp_service_( tau_start, tau_end, ts, te, raux )
-                 ovlp(i) = ovlp(i) + raux
-
-! loop through all the other segments
-                 do j=1,rank(i)-1
-                     ts = time_s(index_s(j  , i), i)
-                     te = time_e(index_e(j+1, i), i)
-                     if ( ts > tau_end ) EXIT
-                     call cat_ovlp_service_( tau_start, tau_end, ts, te, raux )
-                     ovlp(i) = ovlp(i) + raux
-                 enddo ! over j={1,rank(i)-1} loop
+                 ovlp(i) = tau_end - tau_start
+! loop through all the segments
+                 do j=1,rank(i)
+                     ts = time_s(index_s(j, i), i)
+                     te = time_e(index_e(j, i), i)
+                     if ( te > tau_end ) EXIT
+                     call cat_ovlp_service_( tau_start, tau_end, te, ts, raux )
+                     ovlp(i) = ovlp(i) - raux
+                 enddo ! over j={1,rank(i)} loop
 
 ! case 4: there is no segments, full configuration
              case (3)
