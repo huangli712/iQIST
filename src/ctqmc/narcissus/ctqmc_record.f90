@@ -133,7 +133,7 @@
 !!
   subroutine ctqmc_record_paux()
      use constants, only : dp
-     use constants, only : zero, two
+     use constants, only : two
 
      use control, only : nband, norbs
      use control, only : beta
@@ -150,16 +150,16 @@
      integer  :: flvr
      integer  :: i
 
-! total length of segments
+! total length of segments for all flavor channels
      real(dp) :: sgmt(norbs)
 
-! overlap of segments for different flavors
+! overlap length of segments between different flavors
      real(dp) :: ovlp(norbs,norbs)
 
 ! prepare sgmt array
      call cat_occupy_single(sgmt)
 
-! prepare ovlp matrix
+! prepare ovlp array
      call cat_occupy_double(ovlp)
 
 !-------------------------------------------------------------------------
