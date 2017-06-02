@@ -883,7 +883,7 @@
 ! loop index for flavor channel
      integer  :: f1
 
-! used to record occupations for current flavor channel and time
+! occupation status for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
@@ -1067,7 +1067,7 @@
 !!
   subroutine ctqmc_record_ch_t()
      use constants, only : dp
-     use constants, only : zero
+     use constants, only : zero, one, two
 
      use spring, only : spring_sfmt_stream
 
@@ -1095,7 +1095,10 @@
      integer  :: f1
      integer  :: f2
 
-! used to record occupations for current flavor channel and time
+! factor for orbital symmetry
+     real(dp) :: fa
+
+! occupation status for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
@@ -1112,23 +1115,32 @@
 
 ! calculate cchi and ch_t
      FLVR_CYCLE: do f1=1,norbs
-         do f2=1,norbs
+         do f2=1,f1
+! evaluate the symmetry factor
+             if ( f1 /= f2 ) then
+                 fa = two
+             else
+                 fa = one
+             endif ! back if ( f1 /= f2 ) block
              do i=1,num_try
                  m = ceiling( spring_sfmt_stream() * ntime )
                  if ( oaux(m,f2) > zero ) then
 ! n - m + ntime \in [ntime - m + 1, ntime]
                      do n=1,m
-                         cchi(n-m+ntime) = cchi(n-m+ntime) + oaux(n,f1)
+                         cchi(n-m+ntime) = cchi(n-m+ntime) + fa * oaux(n,f1)
                          ch_t(n-m+ntime,f2,f1) = ch_t(n-m+ntime,f2,f1) + oaux(n,f1)
                      enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                      do n=m+1,ntime
-                         cchi(n-m) = cchi(n-m) + oaux(n,f1)
+                         cchi(n-m) = cchi(n-m) + fa * oaux(n,f1)
                          ch_t(n-m,f2,f1) = ch_t(n-m,f2,f1) + oaux(n,f1)
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
-         enddo ! over f2={1,norbs} loop
+             if ( f1 /= f2 ) then ! consider the symmetry
+                 ch_t(:,f1,f2) = ch_t(:,f2,f1)
+             endif ! back if ( f1 /= f2 ) block
+         enddo ! over f2={1,f1} loop
      enddo FLVR_CYCLE ! over f1={1,norbs} loop
 
      return
