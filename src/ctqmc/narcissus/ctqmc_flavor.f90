@@ -19,8 +19,8 @@
 !!!           cat_weight_kernel <<<---
 !!!           cat_ovlp_service_
 !!!           cat_ovlp_segment_ <<<---
-!!!           cat_make_segments
-!!!           cat_disp_segments <<<---
+!!!           cat_make_diagrams
+!!!           cat_disp_diagrams <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -2360,12 +2360,12 @@
 !!========================================================================
 
 !!
-!! @sub cat_make_segments
+!! @sub cat_make_diagrams
 !!
 !! generate segments or anti-segments for the specified flavor channel
 !! randomly, only used to debug the code
 !!
-  subroutine cat_make_segments(flvr, kink, anti)
+  subroutine cat_make_diagrams(flvr, kink, anti)
      use constants, only : dp
 
      use spring, only : spring_sfmt_stream
@@ -2424,14 +2424,14 @@
      rank(flvr) = ckink
 
      return
-  end subroutine cat_make_segments
+  end subroutine cat_make_diagrams
 
 !!
-!! @sub cat_disp_segments
+!! @sub cat_disp_diagrams
 !!
 !! display segment information on the screen, only used to debug the code
 !!
-  subroutine cat_disp_segments(show_type)
+  subroutine cat_disp_diagrams(show_type)
      use constants, only : mystd
 
      use control, only : norbs
@@ -2507,4 +2507,4 @@
      endif ! back if ( show_type == 1 ) block
 
      return
-  end subroutine cat_disp_segments
+  end subroutine cat_disp_diagrams
