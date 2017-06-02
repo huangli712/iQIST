@@ -1216,8 +1216,9 @@
 ! special treatment for the first frequency
                  ch_w(1,f2,f1) = ch_w(1,f2,f1) + sgmt(f1)
 ! loop over the segments
-! note here we do not calculate bexp_s and bexp_e directly. we utilize
-! the data in exp_s and exp_e and avoid complex exponent calculations
+! here we do not calculate bexp_s and bexp_e directly. we just utilize
+! the available data in exp_s and exp_e. so that the required exponent
+! functions are obtained via only a few complex number multiplications
                  do it=1,rank(f1)
                      dw = exp_s(1,index_s(it, f1), f1)
                      bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
