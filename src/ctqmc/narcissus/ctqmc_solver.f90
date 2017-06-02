@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/01/2017 by li huang (last modified)
+!!!           06/02/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -937,7 +937,7 @@
 ! please insert your debug code here
 !-------------------------------------------------------------------------
 
-     call cat_disp_segments(2)
+     call cat_disp_diagrams(2)
      call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
