@@ -1316,7 +1316,7 @@
          taus = time_s( index_s(is, flvr), flvr )
          caux1(:,is) = exp(-two * czi * pi * taus / beta)
          call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
-         caux1(:,is) = caux1(:,is) * exp(+(nffrq - 1) * czi * pi * taus / beta)
+         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * czi * pi * taus / beta)
      enddo ! over is={1,rank(flvr)} loop
 
 ! for annihilation operators
@@ -1324,7 +1324,7 @@
          taue = time_e( index_e(ie, flvr), flvr )
          caux2(:,ie) = exp(+two * czi * pi * taue / beta)
          call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
-         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq - 1) * czi * pi * taue / beta)
+         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * czi * pi * taue / beta)
      enddo ! over ie={1,rank(flvr)} loop
 
      return
