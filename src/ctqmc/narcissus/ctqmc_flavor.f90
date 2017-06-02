@@ -16,7 +16,7 @@
 !!!           cat_occupy_length <<<---
 !!!           cat_weight_factor
 !!!           cat_weight_kernel <<<---
-!!!           cat_ovlp_segment_
+!!!           cat_ovlp_service_
 !!!           cat_ovlp_segments
 !!!           cat_ovlp_2flavors <<<---
 !!!           cat_make_segments
@@ -25,7 +25,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           06/01/2017 by li huang (last modified)
+!!!           06/02/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -2127,11 +2127,11 @@
 !!========================================================================
 
 !!
-!! @sub cat_ovlp_segment_
+!! @sub cat_ovlp_service_
 !!
 !! compare two given segments, and calculate their overlap
 !!
-  subroutine cat_ovlp_segment_(ts0, te0, ts1, te1, cover)
+  subroutine cat_ovlp_service_(ts0, te0, ts1, te1, cover)
      use constants, only : dp
      use constants, only : zero
 
@@ -2179,7 +2179,7 @@
      endif ! back if ( lb < rb ) block
 
      return
-  end subroutine cat_ovlp_segment_
+  end subroutine cat_ovlp_service_
 
 !!
 !! @sub cat_ovlp_segments
@@ -2249,7 +2249,7 @@
                      ts = time_s(index_s(j, i), i)
                      te = time_e(index_e(j, i), i)
                      if ( ts > tau_end ) EXIT
-                     call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
+                     call cat_ovlp_service_( tau_start, tau_end, ts, te, raux )
                      ovlp(i) = ovlp(i) + raux
                  enddo ! over j={1,rank(i)} loop
 
@@ -2258,13 +2258,13 @@
 ! deal with the first segment (header)
                  ts = zero
                  te = time_e(index_e(1, i), i)
-                 call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
+                 call cat_ovlp_service_( tau_start, tau_end, ts, te, raux )
                  ovlp(i) = ovlp(i) + raux
 
 ! deal with the last segment (tailer)
                  ts = time_s(index_s(rank(i), i), i)
                  te = beta
-                 call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
+                 call cat_ovlp_service_( tau_start, tau_end, ts, te, raux )
                  ovlp(i) = ovlp(i) + raux
 
 ! loop through all the other segments
@@ -2272,7 +2272,7 @@
                      ts = time_s(index_s(j  , i), i)
                      te = time_e(index_e(j+1, i), i)
                      if ( ts > tau_end ) EXIT
-                     call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
+                     call cat_ovlp_service_( tau_start, tau_end, ts, te, raux )
                      ovlp(i) = ovlp(i) + raux
                  enddo ! over j={1,rank(i)-1} loop
 
