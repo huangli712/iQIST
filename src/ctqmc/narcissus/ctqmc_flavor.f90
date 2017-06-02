@@ -1829,7 +1829,7 @@
 !! @sub cat_occupy_status
 !!
 !! evaluate the occupation status for current flavor channel and time,
-!! which can be used to calculate the spin-spin correlation function
+!! which can be used to calculate the charge or spin susceptibility
 !!
   subroutine cat_occupy_status(flvr, curr, occu)
      use constants, only : dp
