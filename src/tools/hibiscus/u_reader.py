@@ -448,37 +448,37 @@ class iqistReader(object):
         return (bmesh, sp_w)
 
     @staticmethod
-    def get_ochi(norbs, ntime, fileName = None):
-        """ try to read the solver.ochi.dat file to return the orbital-
+    def get_ch_t(norbs, ntime, fileName = None):
+        """ try to read the solver.ch_t.dat file to return the orbital-
             orbital correlation function < N_i(0) N_j(\tau) > data
         """
         if fileName is None:
-            f = open("solver.ochi.dat","r")
+            f = open("solver.ch_t.dat","r")
         else:
             f = open(fileName,"r")
 
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
-        ochi = numpy.zeros((ntime), dtype = numpy.float)
-        oochi = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        # read oochi
+        cchi = numpy.zeros((ntime), dtype = numpy.float)
+        ch_t = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        # read ch_t
         for i in range(norbs):
             for j in range(norbs):
                 f.readline() # skip one comment line
                 for k in range(ntime):
                     spl = f.readline().split()
-                    oochi[k,j,i] = float( spl[1] )
+                    ch_t[k,j,i] = float( spl[1] )
                 f.readline() # skip two blank lines
                 f.readline()
         f.readline() # skip one comment line
-        # read ochi
+        # read cchi
         for i in range(ntime):
             spl = f.readline().split()
             tmesh[i] = float( spl[0] )
-            ochi[i] = float( spl[1] )
+            cchi[i] = float( spl[1] )
 
         f.close()
 
-        return (tmesh, ochi, oochi)
+        return (tmesh, cchi, ch_t)
 
     @staticmethod
     def get_ofom(norbs, nbfrq, fileName = None):
