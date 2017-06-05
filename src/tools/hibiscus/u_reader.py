@@ -423,7 +423,7 @@ class iqistReader(object):
 
     @staticmethod
     def get_lrmm(norbs, fileName = None):
-        """ try to read the solver.lmat.dat file to return the fidelity
+        """ try to read the solver.lrmm.dat file to return the fidelity
             susceptibility data: < k_l >, < k_r >, and < k_l k_r >
         """
         if fileName is None:
@@ -452,6 +452,18 @@ class iqistReader(object):
         f.close()
 
         return (lnop, rnop, lrmm)
+
+    @staticmethod
+    def get_szpw(fileName = None):
+        """ try to read the solver.szpw.dat file to return the powers of
+            local magnetization
+        """
+        if fileName is None:
+            f = open("solver.szpw.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        f.close()
 
     @staticmethod
     def get_sp_t(nband, ntime, fileName = None):
