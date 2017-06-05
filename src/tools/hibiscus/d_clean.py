@@ -6,7 +6,7 @@
 ## ============
 ##
 ## It is a python script. The purpose of this script is to clean the dull
-## .DS_Store files for the Mac OS X filesystem.
+## .DS_Store files in the macOS system.
 ##
 ## This script should be used by the developer only.
 ##
@@ -18,7 +18,7 @@
 ## Author
 ## ======
 ##
-## This python script is designed, created, implemented, and maintained by
+## This python script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -26,7 +26,7 @@
 ## =======
 ##
 ## 12/02/2014 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 
