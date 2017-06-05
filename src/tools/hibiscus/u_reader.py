@@ -297,6 +297,30 @@ class iqistReader(object):
         return (rmesh, grnf)
 
     @staticmethod
+    def get_frnf(norbs, mfreq, fileName = None):
+        """ try to read the solver.frn.dat file to return the matsubara
+            auxiliary correlation function F(i\omega) data
+        """
+        if fileName is None:
+            f = open("solver.frn.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
+        frnf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        for i in range(norbs):
+            for j in range(mfreq):
+                spl = f.readline().split()
+                rmesh[j] = float( spl[1] )
+                frnf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (rmesh, frnf)
+
+    @staticmethod
     def get_hybf(norbs, mfreq, fileName = None):
         """ try to read the solver.hyb.dat file to return the matsubara
             hybridization function \Delta(i\omega) data
