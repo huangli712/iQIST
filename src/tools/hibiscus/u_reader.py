@@ -232,20 +232,8 @@ class iqistReader(object):
 
         return (tmesh, ktau, ptau, ksed, psed)
 
-
-
-
-
-
-
-
-
-
-
-
-
     @staticmethod
-    def get_grn(norbs, mfreq, fileName = None):
+    def get_grnf(norbs, mfreq, fileName = None):
         """ try to read the solver.grn.dat file to return the matsubara
             Green's function G(i\omega) data
         """
