@@ -23,7 +23,7 @@
 ## Author
 ## ======
 ##
-## This shell script is designed, created, implemented, and maintained by
+## This shell script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -31,7 +31,7 @@
 ## =======
 ##
 ## 02/06/2015 by li huang (created)
-## 04/06/2017 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 

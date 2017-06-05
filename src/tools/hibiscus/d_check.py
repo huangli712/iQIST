@@ -18,7 +18,7 @@
 ## Author
 ## ======
 ##
-## This python script is designed, created, implemented, and maintained by
+## This python script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -26,7 +26,7 @@
 ## =======
 ##
 ## 11/13/2014 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 
@@ -42,6 +42,7 @@ while True:
         break
     i = i + 1
     if len(line) != len(line.rstrip()) + 1:
-        print 'check space:', i, line,
+        print 'line number:', i
+        print '--->', line,
 
 f.close()
