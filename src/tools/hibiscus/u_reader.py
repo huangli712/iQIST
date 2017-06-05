@@ -181,6 +181,29 @@ class iqistReader(object):
 
         return (tmesh, htau)
 
+    @staticmethod
+    def get_wtau(norbs, ntime, fileName = None):
+        """ try to read the solver.weiss.dat file to return the imaginary
+            time Weiss's function \mathcal{G}(\tau) data
+        """
+        if fileName is None:
+            f = open("solver.weiss.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        wtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        for i in range(norbs):
+            for j in range(ntime):
+                spl = f.readline().split()
+                tmesh[j] = float( spl[2] )
+                wtau[j,i,i] = float( spl[3] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (tmesh, wtau)
 
 
 
@@ -220,29 +243,6 @@ class iqistReader(object):
 
         return (rmesh, grnf)
 
-    @staticmethod
-    def get_weiss(norbs, ntime, fileName = None):
-        """ try to read the solver.weiss.dat file to return the imaginary
-            time Weiss's function \mathcal{G}(\tau) data
-        """
-        if fileName is None:
-            f = open("solver.weiss.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        tmesh = numpy.zeros((ntime), dtype = numpy.float)
-        wtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(norbs):
-            for j in range(ntime):
-                spl = f.readline().split()
-                tmesh[j] = float( spl[2] )
-                wtau[j,i,i] = float( spl[3] )
-            f.readline() # skip two blank lines
-            f.readline()
-
-        f.close()
-
-        return (tmesh, wtau)
 
     @staticmethod
     def get_wss(norbs, mfreq, fileName = None):
