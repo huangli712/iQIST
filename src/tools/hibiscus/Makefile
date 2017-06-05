@@ -8,12 +8,12 @@
 ## Usage
 ## =====
 ##
-## 'make' or 'make clean'
+## 'make', 'make clean', 'make clean-dat' or 'make clean-all'
 ##
 ## Author
 ## ======
 ##
-## This building system is designed, created, implemented, and maintained by
+## This building system is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 11/03/2014 by li huang (created)
-## 04/06/2017 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 
@@ -30,11 +30,10 @@ default: all
 all:
 
 clean:
-	rm -fr *.pyc
+	rm -f *.pyc
 
 clean-dat:
-	rm -fr *.dat
-	rm -fr *.out
-	rm -fr *.data
+	rm -f *.dat
+	rm -f *.out
 
 clean-all: clean clean-dat
