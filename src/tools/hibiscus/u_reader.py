@@ -540,38 +540,6 @@ class iqistReader(object):
         return (g2, f2)
 
     @staticmethod
-    def get_vrtx(norbs, nffrq, nbfrq, fileName = None):
-        """ try to read the solver.vrtx.dat file to return the two-particle
-            Green's function data
-        """
-        if fileName is None:
-            f = open("solver.vrtx.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
-        f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
-        for m in range(norbs):
-            for n in range(m+1):
-                for k in range(nbfrq):
-                    f.readline() # skip three comment lines
-                    f.readline()
-                    f.readline()
-                    for j in range(nffrq):
-                        for i in range(nffrq):
-                            spl = f.readline().split()
-                            g2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
-                            g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
-                            f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
-                            f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
-                    f.readline() # skip two blank lines
-                    f.readline()
-
-        f.close()
-
-        return (g2, f2)
-
-    @staticmethod
     def get_pair(norbs, nffrq, nbfrq, fileName = None):
         """ try to read the solver.pair.dat file to return the pair
             susceptibility data
