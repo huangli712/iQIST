@@ -103,6 +103,22 @@ class iqistReader(object):
             return prob
 
     @staticmethod
+    def get_paux(fileName = None):
+        """ try to read the solver.paux.dat file to return the auxiliary
+            physical observables
+        """
+        if fileName is None:
+            f = open("solver.paux.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        paux = numpy.zeros((9), dtype = numpy.float)
+        for i in range(9):
+            spl = f.readline().split()
+            paux[i] = float( spl[2] )
+        f.close()
+
+    @staticmethod
     def get_nmat(norbs, fileName = None):
         """ try to read the solver.nmat.dat file to return the occupation
             number < N_i > and double occupation number < N_i N_j > data
