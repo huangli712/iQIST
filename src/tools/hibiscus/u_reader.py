@@ -17,7 +17,7 @@
 ## Author
 ## ======
 ##
-## This python script is designed, created, implemented, and maintained by
+## This python script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 08/15/2015 by li huang (created)
-## 04/06/2017 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 
@@ -218,33 +218,6 @@ class iqistReader(object):
         f.close()
 
         return (rmesh, sig2)
-
-    @staticmethod
-    def get_hub(norbs, mfreq, fileName = None):
-        """ try to read the solver.hub.dat file to return the matsubara
-            Hubbard-I self-energy function \Sigma_{hub}(i\omega) data and
-            Green's function data
-        """
-        if fileName is None:
-            f = open("solver.hub.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
-        ghub = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        shub = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(norbs):
-            for j in range(mfreq):
-                spl = f.readline().split()
-                rmesh[j] = float( spl[1] )
-                ghub[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                shub[j,i,i] = float( spl[4] ) + 1j * float( spl[5] )
-            f.readline() # skip two blank lines
-            f.readline()
-
-        f.close()
-
-        return (rmesh, ghub, shub)
 
     @staticmethod
     def get_hist(mkink, fileName = None):
