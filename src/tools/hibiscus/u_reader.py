@@ -391,7 +391,7 @@ class iqistReader(object):
 
     @staticmethod
     def get_sp_t(nband, ntime, fileName = None):
-        """ try to read the solver.schi.dat file to return the spin-spin
+        """ try to read the solver.sp_t.dat file to return the spin-spin
             correlation function < S_z(0) S_z(\tau) > data
         """
         if fileName is None:
@@ -422,30 +422,30 @@ class iqistReader(object):
         return (tmesh, schi, sp_t)
 
     @staticmethod
-    def get_sfom(nband, nbfrq, fileName = None):
-        """ try to read the solver.sfom.dat file to return the spin-spin
+    def get_sp_w(nband, nbfrq, fileName = None):
+        """ try to read the solver.sp_w.dat file to return the spin-spin
             correlation function data
         """
         if fileName is None:
-            f = open("solver.sfom.dat","r")
+            f = open("solver.sp_w.dat","r")
         else:
             f = open(fileName,"r")
 
         bmesh = numpy.zeros((nbfrq), dtype = numpy.float)
-        ssfom = numpy.zeros((nbfrq,nband), dtype = numpy.float)
-        # read ssfom
+        sp_w = numpy.zeros((nbfrq,nband), dtype = numpy.float)
+        # read sp_w
         for i in range(nband):
             f.readline() # skip one comment line
             for j in range(nbfrq):
                 spl = f.readline().split()
                 bmesh[j] = float( spl[0] )
-                ssfom[j,i] = float( spl[1] )
+                sp_w[j,i] = float( spl[1] )
             f.readline() # skip two blank lines
             f.readline()
 
         f.close()
 
-        return (bmesh, ssfom)
+        return (bmesh, sp_w)
 
     @staticmethod
     def get_ochi(norbs, ntime, fileName = None):
