@@ -338,24 +338,24 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        kmat = numpy.zeros((norbs), dtype = numpy.float)
-        kkmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
+        knop = numpy.zeros((norbs), dtype = numpy.float)
+        kmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
         f.readline() # skip one comment line
-        # read kmat
+        # read knop
         for i in range(norbs):
             spl = f.readline().split()
-            kmat[i] = float( spl[1] )
+            knop[i] = float( spl[1] )
         f.readline() # skip two lines
         f.readline()
-        # read kkmat
+        # read kmat
         for i in range(norbs):
             for j in range(norbs):
                 spl = f.readline().split()
-                kkmat[i,j] = float( spl[2] )
+                kmat[i,j] = float( spl[2] )
 
         f.close()
 
-        return (kmat, kkmat)
+        return (knop, kmat)
 
     @staticmethod
     def get_lrmm(norbs, fileName = None):
