@@ -158,6 +158,45 @@ class iqistReader(object):
         return (tmesh, gtau)
 
     @staticmethod
+    def get_htau(norbs, ntime, fileName = None):
+        """ try to read the solver.hybri.dat file to return the imaginary
+            time hybridization function \Delta(\tau) data
+        """
+        if fileName is None:
+            f = open("solver.hybri.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        htau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        for i in range(norbs):
+            for j in range(ntime):
+                spl = f.readline().split()
+                tmesh[j] = float( spl[2] )
+                htau[j,i,i] = float( spl[3] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (tmesh, htau)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @staticmethod
     def get_grn(norbs, mfreq, fileName = None):
         """ try to read the solver.grn.dat file to return the matsubara
             Green's function G(i\omega) data
@@ -229,29 +268,6 @@ class iqistReader(object):
 
         return (rmesh, wssf)
 
-    @staticmethod
-    def get_hybri(norbs, ntime, fileName = None):
-        """ try to read the solver.hybri.dat file to return the imaginary
-            time hybridization function \Delta(\tau) data
-        """
-        if fileName is None:
-            f = open("solver.hybri.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        tmesh = numpy.zeros((ntime), dtype = numpy.float)
-        htau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(norbs):
-            for j in range(ntime):
-                spl = f.readline().split()
-                tmesh[j] = float( spl[2] )
-                htau[j,i,i] = float( spl[3] )
-            f.readline() # skip two blank lines
-            f.readline()
-
-        f.close()
-
-        return (tmesh, htau)
 
     @staticmethod
     def get_hyb(norbs, mfreq, fileName = None):
