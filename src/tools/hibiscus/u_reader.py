@@ -174,6 +174,30 @@ class iqistReader(object):
         return (tmesh, gtau)
 
     @staticmethod
+    def get_ftau(norbs, ntime, fileName = None):
+        """ try to read the solver.fcorr.dat file to return the imaginary
+            time auxiliary correlation function F(\tau) data
+        """
+        if fileName is None:
+            f = open("solver.fcorr.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        ftau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        for i in range(norbs):
+            for j in range(ntime):
+                spl = f.readline().split()
+                tmesh[j] = float( spl[2] )
+                ftau[j,i,i] = float( spl[3] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (tmesh, ftau)
+
+    @staticmethod
     def get_htau(norbs, ntime, fileName = None):
         """ try to read the solver.hybri.dat file to return the imaginary
             time hybridization function \Delta(\tau) data
