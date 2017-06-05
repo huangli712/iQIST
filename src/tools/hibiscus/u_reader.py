@@ -52,6 +52,102 @@ class iqistReader(object):
     """
 
     @staticmethod
+    def get_hist(mkink, fileName = None):
+        """ try to read the solver.hist.dat file to return the histogram
+            data for diagrammatic perturbation expansion
+        """
+        if fileName is None:
+            f = open("solver.hist.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        hist = numpy.zeros((mkink), dtype = numpy.float)
+        f.readline() # skip one comment line
+        for i in range(mkink):
+            spl = f.readline().split()
+            hist[i] = float( spl[2] )
+
+        f.close()
+
+        return hist
+
+    @staticmethod
+    def get_prob(ncfgs, nsect = 0, fileName = None):
+        """ try to read the solver.prob.dat file to return the atomic
+            state probability P_{\Gamma} data
+        """
+        if fileName is None:
+            f = open("solver.prob.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        prob = numpy.zeros((ncfgs), dtype = numpy.float)
+        f.readline() # skip one comment line
+        # read atomic state probability (prob)
+        for i in range(ncfgs):
+            spl = f.readline().split()
+            prob[i] = float( spl[1] )
+        if nsect > 0:
+            sprob = numpy.zeros((nsect), dtype = numpy.float)
+            f.readline() # skip one comment line
+            # read sector probability (sprob)
+            for j in range(nsect):
+                spl = f.readline().split()
+                sprob[j] = float( spl[2] )
+
+        f.close()
+
+        if nsect > 0:
+            return (prob, sprob)
+        else:
+            return prob
+
+    @staticmethod
+    def get_nmat(norbs, fileName = None):
+        """ try to read the solver.nmat.dat file to return the occupation
+            number < N_i > and double occupation number < N_i N_j > data
+        """
+        if fileName is None:
+            f = open("solver.nmat.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        nimp = numpy.zeros((norbs), dtype = numpy.float)
+        nmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
+        f.readline() # skip one comment line
+        # read nmat
+        for i in range(norbs):
+            spl = f.readline().split()
+            nimp[i] = float( spl[1] )
+        f.readline() # skip four lines
+        f.readline()
+        f.readline()
+        f.readline()
+        # read nnmat
+        for i in range(norbs):
+            for j in range(norbs):
+                spl = f.readline().split()
+                nmat[i,j] = float( spl[2] )
+
+        f.close()
+
+        return (nimp, nmat)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @staticmethod
     def get_green(norbs, ntime, fileName = None):
         """ try to read the solver.green.dat file to return the imaginary
             time Green's function G(\tau) data
@@ -218,88 +314,6 @@ class iqistReader(object):
         f.close()
 
         return (rmesh, sig2)
-
-    @staticmethod
-    def get_hist(mkink, fileName = None):
-        """ try to read the solver.hist.dat file to return the histogram
-            data for diagrammatic perturbation expansion
-        """
-        if fileName is None:
-            f = open("solver.hist.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        hist = numpy.zeros((mkink), dtype = numpy.float)
-        f.readline() # skip one comment line
-        for i in range(mkink):
-            spl = f.readline().split()
-            hist[i] = float( spl[2] )
-
-        f.close()
-
-        return hist
-
-    @staticmethod
-    def get_prob(ncfgs, nsect = 0, fileName = None):
-        """ try to read the solver.prob.dat file to return the atomic
-            state probability P_{\Gamma} data
-        """
-        if fileName is None:
-            f = open("solver.prob.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        prob = numpy.zeros((ncfgs), dtype = numpy.float)
-        f.readline() # skip one comment line
-        # read atomic state probability (prob)
-        for i in range(ncfgs):
-            spl = f.readline().split()
-            prob[i] = float( spl[1] )
-        if nsect > 0:
-            sprob = numpy.zeros((nsect), dtype = numpy.float)
-            f.readline() # skip one comment line
-            # read sector probability (sprob)
-            for j in range(nsect):
-                spl = f.readline().split()
-                sprob[j] = float( spl[2] )
-
-        f.close()
-
-        if nsect > 0:
-            return (prob, sprob)
-        else:
-            return prob
-
-    @staticmethod
-    def get_nmat(norbs, fileName = None):
-        """ try to read the solver.nmat.dat file to return the occupation
-            number < N_i > and double occupation number < N_i N_j > data
-        """
-        if fileName is None:
-            f = open("solver.nmat.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        nmat = numpy.zeros((norbs), dtype = numpy.float)
-        nnmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
-        f.readline() # skip one comment line
-        # read nmat
-        for i in range(norbs):
-            spl = f.readline().split()
-            nmat[i] = float( spl[1] )
-        f.readline() # skip four lines
-        f.readline()
-        f.readline()
-        f.readline()
-        # read nnmat
-        for i in range(norbs):
-            for j in range(norbs):
-                spl = f.readline().split()
-                nnmat[i,j] = float( spl[2] )
-
-        f.close()
-
-        return (nmat, nnmat)
 
     @staticmethod
     def get_kmat(norbs, fileName = None):
