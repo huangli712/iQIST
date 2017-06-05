@@ -15,7 +15,7 @@
 ##
 ## ./d_trim.sh file_name
 ##
-## For Mac OS X system, the grammar for sed is (we don't generate backup)
+## For macOS system, the grammar for sed is (we don't generate backup)
 ##     sed -i '' ...
 ##
 ## However, for Linux-based system, the grammar for sed is
@@ -24,7 +24,7 @@
 ## Author
 ## ======
 ##
-## This shell script is designed, created, implemented, and maintained by
+## This shell script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -32,7 +32,7 @@
 ## =======
 ##
 ## 11/13/2014 by li huang (created)
-## 04/06/2017 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 
