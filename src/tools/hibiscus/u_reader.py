@@ -256,6 +256,35 @@ class iqistReader(object):
 
         return (rmesh, grnf)
 
+    @staticmethod
+    def get_hybf(norbs, mfreq, fileName = None):
+        """ try to read the solver.hyb.dat file to return the matsubara
+            hybridization function \Delta(i\omega) data
+        """
+        if fileName is None:
+            f = open("solver.hyb.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
+        hybf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        for i in range(norbs):
+            for j in range(mfreq):
+                spl = f.readline().split()
+                rmesh[j] = float( spl[1] )
+                hybf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (rmesh, hybf)
+
+
+
+
+
+
 
     @staticmethod
     def get_wss(norbs, mfreq, fileName = None):
@@ -282,29 +311,6 @@ class iqistReader(object):
         return (rmesh, wssf)
 
 
-    @staticmethod
-    def get_hyb(norbs, mfreq, fileName = None):
-        """ try to read the solver.hyb.dat file to return the matsubara
-            hybridization function \Delta(i\omega) data
-        """
-        if fileName is None:
-            f = open("solver.hyb.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
-        hybf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(norbs):
-            for j in range(mfreq):
-                spl = f.readline().split()
-                rmesh[j] = float( spl[1] )
-                hybf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-            f.readline() # skip two blank lines
-            f.readline()
-
-        f.close()
-
-        return (rmesh, hybf)
 
     @staticmethod
     def get_sgm(norbs, mfreq, fileName = None):
