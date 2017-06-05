@@ -47,8 +47,8 @@ class iqistReader(object):
         mfreq = 8193
 
         # read the data
-        (tmesh, gtau) = iqistReader.get_green(norbs, ntime)
-        (rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
+        (tmesh, gtau) = iqistReader.get_gtau(norbs, ntime)
+        (rmesh, grnf) = iqistReader.get_grnf(norbs, mfreq)
     """
 
     @staticmethod
@@ -133,22 +133,8 @@ class iqistReader(object):
 
         return (nimp, nmat)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @staticmethod
-    def get_green(norbs, ntime, fileName = None):
+    def get_gtau(norbs, ntime, fileName = None):
         """ try to read the solver.green.dat file to return the imaginary
             time Green's function G(\tau) data
         """
