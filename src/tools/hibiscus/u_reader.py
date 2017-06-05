@@ -205,7 +205,32 @@ class iqistReader(object):
 
         return (tmesh, wtau)
 
+    @staticmethod
+    def get_ktau(ntime, fileName = None):
+        """ try to read the solver.kernel.dat file to return the screening
+            function K(\tau) and its first derivates
+        """
+        if fileName is None:
+            f = open("solver.kernel.dat","r")
+        else:
+            f = open(fileName,"r")
 
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        ktau = numpy.zeros((ntime), dtype = numpy.float)
+        ptau = numpy.zeros((ntime), dtype = numpy.float)
+        ksed = numpy.zeros((ntime), dtype = numpy.float)
+        psed = numpy.zeros((ntime), dtype = numpy.float)
+        for i in range(ntime):
+            spl = f.readline().split()
+            tmesh[i] = float( spl[1] )
+            ktau[i] = float( spl[2] )
+            ptau[i] = float( spl[3] )
+            ksed[i] = float( spl[4] )
+            psed[i] = float( spl[5] )
+
+        f.close()
+
+        return (tmesh, ktau, ptau, ksed, psed)
 
 
 
@@ -588,30 +613,3 @@ class iqistReader(object):
         f.close()
 
         return p2
-
-    @staticmethod
-    def get_kernel(ntime, fileName = None):
-        """ try to read the solver.kernel.dat file to return the screening
-            function K(\tau) and its first derivates
-        """
-        if fileName is None:
-            f = open("solver.kernel.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        tmesh = numpy.zeros((ntime), dtype = numpy.float)
-        ktau = numpy.zeros((ntime), dtype = numpy.float)
-        ptau = numpy.zeros((ntime), dtype = numpy.float)
-        ksed = numpy.zeros((ntime), dtype = numpy.float)
-        psed = numpy.zeros((ntime), dtype = numpy.float)
-        for i in range(ntime):
-            spl = f.readline().split()
-            tmesh[i] = float( spl[1] )
-            ktau[i] = float( spl[2] )
-            ptau[i] = float( spl[3] )
-            ksed[i] = float( spl[4] )
-            psed[i] = float( spl[5] )
-
-        f.close()
-
-        return (tmesh, ktau, ptau, ksed, psed)
