@@ -304,10 +304,8 @@ class iqistReader(object):
 
         return (rmesh, wssf)
 
-
-
     @staticmethod
-    def get_sgm(norbs, mfreq, fileName = None):
+    def get_sig2(norbs, mfreq, fileName = None):
         """ try to read the solver.sgm.dat file to return the matsubara
             self-energy function \Sigma(i\omega) data
         """
