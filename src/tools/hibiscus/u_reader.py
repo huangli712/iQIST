@@ -358,36 +358,36 @@ class iqistReader(object):
         return (kmat, kkmat)
 
     @staticmethod
-    def get_lmat(norbs, fileName = None):
+    def get_lrmm(norbs, fileName = None):
         """ try to read the solver.lmat.dat file to return the fidelity
             susceptibility data: < k_l >, < k_r >, and < k_l k_r >
         """
         if fileName is None:
-            f = open("solver.lmat.dat","r")
+            f = open("solver.lrmm.dat","r")
         else:
             f = open(fileName,"r")
 
-        lmat = numpy.zeros((norbs), dtype = numpy.float)
-        rmat = numpy.zeros((norbs), dtype = numpy.float)
-        lrmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
+        lnop = numpy.zeros((norbs), dtype = numpy.float)
+        rnop = numpy.zeros((norbs), dtype = numpy.float)
+        lrmm = numpy.zeros((norbs,norbs), dtype = numpy.float)
         f.readline() # skip one comment line
-        # read lmat and rmat
+        # read lnop and rnop
         for i in range(norbs):
             spl = f.readline().split()
-            lmat[i] = float( spl[1] )
-            rmat[i] = float( spl[2] )
+            lnop[i] = float( spl[1] )
+            rnop[i] = float( spl[2] )
         f.readline() # skip three lines
         f.readline()
         f.readline()
-        # read lrmat
+        # read lrmm
         for i in range(norbs):
             for j in range(norbs):
                 spl = f.readline().split()
-                lrmat[i,j] = float( spl[2] )
+                lrmm[i,j] = float( spl[2] )
 
         f.close()
 
-        return (lmat, rmat, lrmat)
+        return (lnop, rnop, lrmm)
 
     @staticmethod
     def get_schi(nband, ntime, fileName = None):
