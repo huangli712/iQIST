@@ -280,14 +280,8 @@ class iqistReader(object):
 
         return (rmesh, hybf)
 
-
-
-
-
-
-
     @staticmethod
-    def get_wss(norbs, mfreq, fileName = None):
+    def get_wssf(norbs, mfreq, fileName = None):
         """ try to read the solver.wss.dat file to return the matsubara
             Weiss's function \mathcal{G}(i\omega) data
         """
