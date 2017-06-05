@@ -17,7 +17,7 @@
 ## Author
 ## ======
 ##
-## This python script is designed, created, implemented, and maintained by
+## This python script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 04/06/2017 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 
@@ -63,17 +63,28 @@ class p_ctqmc_solver(object):
         """
         # __p_cmp_solver: the official parameter dict for generic solver
         self.__p_cmp_solver = {
-            'isscf'  : 2       ,
-            'issun'  : 2       ,
+            'isscf'  : 1       ,
+            'isbnd'  : 1       ,
             'isspn'  : 1       ,
-            'isbin'  : 2       ,
+            'isbin'  : 1       ,
+            'iswor'  : 1       ,
+            'isort'  : 1       ,
+            'isobs'  : 1       ,
+            'issus'  : 1       ,
+            'isvrt'  : 1       ,
             'nband'  : 1       ,
             'nspin'  : 2       ,
             'norbs'  : 2       ,
             'ncfgs'  : 4       ,
             'niter'  : 20      ,
+            'lemax'  : 32      ,
+            'legrd'  : 20001   ,
+            'svmax'  : 32      ,
+            'svgrd'  : 20001   ,
             'mkink'  : 1024    ,
             'mfreq'  : 8193    ,
+            'nffrq'  : 32      ,
+            'nbfrq'  : 8       ,
             'nfreq'  : 128     ,
             'ntime'  : 1024    ,
             'nflip'  : 20000   ,
@@ -83,12 +94,8 @@ class p_ctqmc_solver(object):
             'nclean' : 100000  ,
             'nmonte' : 10      ,
             'ncarlo' : 10      ,
-            'U'      : 4.00    ,
             'Uc'     : 4.00    ,
-            'Uv'     : 4.00    ,
             'Jz'     : 0.00    ,
-            'Js'     : 0.00    ,
-            'Jp'     : 0.00    ,
             'mune'   : 2.00    ,
             'beta'   : 8.00    ,
             'part'   : 0.50    ,
@@ -97,30 +104,14 @@ class p_ctqmc_solver(object):
 
         # __p_cmp_narcissus: the official parameter dict for narcissus
         self.__p_cmp_narcissus = self.__p_cmp_solver.copy()
-        self.__p_cmp_narcissus['isort'] = 1
-        self.__p_cmp_narcissus['issus'] = 1
-        self.__p_cmp_narcissus['isvrt'] = 1
         self.__p_cmp_narcissus['isscr'] = 1
-        self.__p_cmp_narcissus['lemax'] = 32
-        self.__p_cmp_narcissus['legrd'] = 20001
-        self.__p_cmp_narcissus['chmax'] = 32
-        self.__p_cmp_narcissus['chgrd'] = 20001
-        self.__p_cmp_narcissus['nffrq'] = 32
-        self.__p_cmp_narcissus['nbfrq'] = 8
+        self.__p_cmp_narcissus['lc']    = 1.0
+        self.__p_cmp_narcissus['wc']    = 1.0
 
         # __p_cmp_manjushaka: the official parameter dict for manjushaka
         self.__p_cmp_manjushaka = self.__p_cmp_solver.copy()
-        self.__p_cmp_manjushaka['isort'] = 1
-        self.__p_cmp_manjushaka['issus'] = 1
-        self.__p_cmp_manjushaka['isvrt'] = 1
-        self.__p_cmp_manjushaka['ifast'] = 1
-        self.__p_cmp_manjushaka['itrun'] = 1
-        self.__p_cmp_manjushaka['lemax'] = 32
-        self.__p_cmp_manjushaka['legrd'] = 20001
-        self.__p_cmp_manjushaka['chmax'] = 32
-        self.__p_cmp_manjushaka['chgrd'] = 20001
-        self.__p_cmp_manjushaka['nffrq'] = 32
-        self.__p_cmp_manjushaka['nbfrq'] = 8
+        self.__p_cmp_manjushaka['isopt'] = 1
+        self.__p_cmp_manjushaka['iscut'] = 1
         self.__p_cmp_manjushaka['npart'] = 4
 
         # __p_cmp: the official parameter dict
