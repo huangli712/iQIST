@@ -390,24 +390,24 @@ class iqistReader(object):
         return (lnop, rnop, lrmm)
 
     @staticmethod
-    def get_schi(nband, ntime, fileName = None):
+    def get_sp_t(nband, ntime, fileName = None):
         """ try to read the solver.schi.dat file to return the spin-spin
             correlation function < S_z(0) S_z(\tau) > data
         """
         if fileName is None:
-            f = open("solver.schi.dat","r")
+            f = open("solver.sp_t.dat","r")
         else:
             f = open(fileName,"r")
 
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
         schi = numpy.zeros((ntime), dtype = numpy.float)
-        sschi = numpy.zeros((ntime,nband), dtype = numpy.float)
-        # read sschi
+        sp_t = numpy.zeros((ntime,nband), dtype = numpy.float)
+        # read sp_t
         for i in range(nband):
             f.readline() # skip one comment line
             for j in range(ntime):
                 spl = f.readline().split()
-                sschi[j,i] = float( spl[1] )
+                sp_t[j,i] = float( spl[1] )
             f.readline() # skip two blank lines
             f.readline()
         f.readline() # skip one comment line
@@ -419,7 +419,7 @@ class iqistReader(object):
 
         f.close()
 
-        return (tmesh, schi, sschi)
+        return (tmesh, schi, sp_t)
 
     @staticmethod
     def get_sfom(nband, nbfrq, fileName = None):
