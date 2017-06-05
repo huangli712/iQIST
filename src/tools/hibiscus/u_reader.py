@@ -508,8 +508,8 @@ class iqistReader(object):
         return (bmesh, ch_w)
 
     @staticmethod
-    def get_twop(norbs, nffrq, nbfrq, fileName = None):
-        """ try to read the solver.twop.dat file to return the two-particle
+    def get_g2pw(norbs, nffrq, nbfrq, fileName = None):
+        """ try to read the solver.g2pw.dat file to return the two-particle
             Green's function data
         """
         if fileName is None:
