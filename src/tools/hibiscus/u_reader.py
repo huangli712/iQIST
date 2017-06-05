@@ -115,7 +115,7 @@ class iqistReader(object):
         nimp = numpy.zeros((norbs), dtype = numpy.float)
         nmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
         f.readline() # skip one comment line
-        # read nmat
+        # read nimp
         for i in range(norbs):
             spl = f.readline().split()
             nimp[i] = float( spl[1] )
@@ -123,7 +123,7 @@ class iqistReader(object):
         f.readline()
         f.readline()
         f.readline()
-        # read nnmat
+        # read nmat
         for i in range(norbs):
             for j in range(norbs):
                 spl = f.readline().split()
