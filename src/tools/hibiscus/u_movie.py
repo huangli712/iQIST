@@ -11,7 +11,7 @@
 ## Usage
 ## =====
 ##
-## edit the configuration parameter carefully, and then
+## edit the configuration parameter carefully, and then execute
 ##
 ## ./u_movie.py movie.mp4
 ##
@@ -21,7 +21,7 @@
 ## Author
 ## ======
 ##
-## This python script is designed, created, implemented, and maintained by
+## This python script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -29,7 +29,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 04/06/2017 by li huang (last modified)
+## 06/05/2017 by li huang (last modified)
 ##
 ##
 
@@ -53,8 +53,20 @@ max_pair = 128  # maximum number of operator pairs per orbital
 
 # setup colormap
 # we use colors to distinguish the operators of various orbitals
-#cmap = ['red','green','blue','purple','magenta','cyan','yellow','tan','darkkhaki','maroon','teal','plum','violet','crimson']
-cmap = ['red','sienna','tan','orange','darkkhaki','greenyellow','green','teal','skyblue','slategrey','blue','purple','magenta','hotpink']
+cmap = ['red',         # 01
+        'sienna',      # 02
+        'tan',         # 03
+        'orange',      # 04
+        'darkkhaki',   # 05
+        'greenyellow', # 06
+        'green',       # 07
+        'teal',        # 08
+        'skyblue',     # 09
+        'slategrey',   # 10
+        'blue',        # 11
+        'purple',      # 12
+        'magenta',     # 13
+        'hotpink']     # 14
 
 # creator operators (x points)
 time_s = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
