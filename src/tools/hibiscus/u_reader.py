@@ -456,7 +456,7 @@ class iqistReader(object):
         return (lnop, rnop, lrmm)
 
     @staticmethod
-    def get_szpw(fileName = None):
+    def get_szpw(nband, norbs, fileName = None):
         """ try to read the solver.szpw.dat file to return the powers of
             local magnetization
         """
@@ -465,7 +465,18 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
+        szpw = numpy.zeros((4,norbs), dtype = numpy.float)
+        for i in range(nband+1):
+            f.readline() # skip one comment line
+            for j in range(4):
+                spl = f.readline().split()
+                szpw[j,i] = float( spl[1] )
+            f.readline() # skip two lines
+            f.readline()
+
         f.close()
+
+        return szpw
 
     @staticmethod
     def get_sp_t(nband, ntime, fileName = None):
@@ -645,3 +656,6 @@ class iqistReader(object):
 
 paux = iqistReader.get_paux()
 print paux
+norbs = 2
+nimp, nmat = iqistReader.get_nmat(norbs)
+print nimp,nmat
