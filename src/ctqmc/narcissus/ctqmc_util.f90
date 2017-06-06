@@ -1308,23 +1308,24 @@
      integer  :: ie
 
 ! imaginary time for start and end points
-     real(dp) :: taus
-     real(dp) :: taue
+! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
+     complex(dp) :: zs
+     complex(dp) :: ze
 
 ! for creation operators
      do is=1,rank(flvr)
-         taus = time_s( index_s(is, flvr), flvr )
-         caux1(:,is) = exp(-two * czi * pi * taus / beta)
+         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
+         caux1(:,is) = exp(-two * zs)
          call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
-         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * czi * pi * taus / beta)
+         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * zs)
      enddo ! over is={1,rank(flvr)} loop
 
 ! for annihilation operators
      do ie=1,rank(flvr)
-         taue = time_e( index_e(ie, flvr), flvr )
-         caux2(:,ie) = exp(+two * czi * pi * taue / beta)
+         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
+         caux2(:,ie) = exp(+two * ze)
          call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
-         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * czi * pi * taue / beta)
+         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * ze)
      enddo ! over ie={1,rank(flvr)} loop
 
      return
