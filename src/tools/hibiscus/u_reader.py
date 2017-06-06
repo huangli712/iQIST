@@ -118,6 +118,8 @@ class iqistReader(object):
             paux[i] = float( spl[2] )
         f.close()
 
+        return paux
+
     @staticmethod
     def get_nmat(norbs, fileName = None):
         """ try to read the solver.nmat.dat file to return the occupation
@@ -640,3 +642,6 @@ class iqistReader(object):
         f.close()
 
         return p2
+
+paux = iqistReader.get_paux()
+print paux
