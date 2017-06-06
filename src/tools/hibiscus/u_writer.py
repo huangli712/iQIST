@@ -17,7 +17,7 @@
 ## Author
 ## ======
 ##
-## This python script is designed, created, implemented, and maintained by
+## This python script is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 02/05/2015 by li huang (created)
-## 03/24/2017 by li huang (last modified)
+## 06/06/2017 by li huang (last modified)
 ##
 ##
 
@@ -39,9 +39,7 @@ class iqistWriter(object):
 
         Why do we need this class? 
 
-        Because sometimes it is not convenient to call the Python API for
-        iQIST directly. Using this class, we can ensure that the input
-        file format is correct.
+        With this class, we can ensure the input file format is correct.
 
         typical usage:
         # import this module
@@ -128,5 +126,3 @@ class iqistWriter(object):
             print >> f, '%16.8f %16.8f %16.8f' % ( tmesh[i], ktau[i], ptau[i] )
 
         f.close()
-
-        return (tmesh, ktau, ptau)
