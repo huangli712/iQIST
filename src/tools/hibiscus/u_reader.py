@@ -714,9 +714,3 @@ class iqistReader(object):
         f.close()
 
         return p2pw
-
-paux = iqistReader.get_paux()
-print paux
-norbs = 2
-nimp, nmat = iqistReader.get_nmat(norbs)
-print nimp,nmat
