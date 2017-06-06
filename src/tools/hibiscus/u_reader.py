@@ -471,7 +471,7 @@ class iqistReader(object):
             for j in range(4):
                 spl = f.readline().split()
                 szpw[j,i] = float( spl[1] )
-            f.readline() # skip two lines
+            f.readline() # skip two blank lines
             f.readline()
 
         f.close()
@@ -606,7 +606,7 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        g2pw = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
             for n in range(m+1):
                 for k in range(nbfrq):
@@ -616,14 +616,14 @@ class iqistReader(object):
                     for j in range(nffrq):
                         for i in range(nffrq):
                             spl = f.readline().split()
-                            g2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
-                            g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2pw[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2pw[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
                     f.readline() # skip two blank lines
                     f.readline()
 
         f.close()
 
-        return g2
+        return g2pw
 
     @staticmethod
     def get_pair(norbs, nffrq, nbfrq, fileName = None):
