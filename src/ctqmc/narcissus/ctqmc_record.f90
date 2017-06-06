@@ -1311,7 +1311,8 @@
      real(dp) :: naux
 
 ! dummy complex(dp) variables, used to calculate the g2pw and h2pw
-     complex(dp) :: cmeas
+     complex(dp) :: zg
+     complex(dp) :: zh
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
@@ -1371,19 +1372,19 @@
 
                  WF1_CYCLE: do w2n=1,nffrq
                      WF2_CYCLE: do w3n=1,nffrq
-                         w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+                         w1n = w2n + wbn - 1
+                         w4n = w3n + wbn - 1
 
-                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                         if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                         endif ! back if ( f1 == f2 ) block
-                         g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) + cmeas / beta
+                         zg = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                         zh = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
 
-                         cmeas = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         h2pw(w3n,w2n,wbn,f2,f1) = h2pw(w3n,w2n,wbn,f2,f1) + cmeas / beta
+
+                         g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) + zg / beta
+                         h2pw(w3n,w2n,wbn,f2,f1) = h2pw(w3n,w2n,wbn,f2,f1) + zh / beta
                      enddo WF2_CYCLE ! over w3n={1,nffrq} loop
                  enddo WF1_CYCLE ! over w2n={1,nffrq} loop
 
