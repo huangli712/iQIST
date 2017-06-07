@@ -1320,6 +1320,9 @@
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
 
+     real(dp) :: t1, t2
+     real(dp), save :: ta = 0.0_dp, tb = 0.0_dp
+
 ! check whether there is conflict
      call s_assert( btest(isvrt, 1) )
 
@@ -1335,6 +1338,8 @@
 ! allocate memory for caux1 and caux2, and then initialize them
      allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
      allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
+
+     call cpu_time(t1)
 
 ! calculate prefactor: pref
      call ctqmc_make_pref()
@@ -1363,6 +1368,11 @@
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 !$OMP END DO
 
+     call cpu_time(t2)
+     ta = ta + t2 - t1
+
+     call cpu_time(t1)
+
 ! calculate g2pw and h2pw
 !$OMP DO PRIVATE (f1, f2, zg, zh, wbn, w4n, w3n, w2n, w1n)
      ORB1_CYCLE: do f1=1,norbs
@@ -1375,12 +1385,23 @@
                          w1n = w2n + wbn - 1
                          w4n = w3n + wbn - 1
 
-                         zg = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                         zh = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                         zg = czero
+                         zh = czero
+
+                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
 
                          if ( f1 == f2 ) then
                              zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                              zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                         endif ! back if ( f1 == f2 ) block
+
+                         zg = zg - g2aux(w3n,w2n,f2) * g2aux(w1n,w4n,f1)
+                         zh = zh - h2aux(w3n,w2n,f2) * g2aux(w1n,w4n,f1)
+
+                         if ( f1 == f2 ) then
+                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
                          endif ! back if ( f1 == f2 ) block
 
                          g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) + zg / beta
@@ -1394,6 +1415,10 @@
      enddo ORB1_CYCLE ! over f1={1,norbs} loop
 !$OMP END DO
 !$OMP END PARALLEL
+
+     call cpu_time(t2)
+     tb = tb + t2 - t1
+     !print *, ta, tb, tb/ta
 
 ! deallocate memory
      deallocate( g2aux )
