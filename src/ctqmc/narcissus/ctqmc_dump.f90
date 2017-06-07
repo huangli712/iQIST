@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/01/2017 by li huang (last modified)
+!!!           06/07/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -220,15 +220,15 @@
      open(mytmp, file='solver.paux.dat', form='formatted', status='unknown')
 
 ! write it
-     write(mytmp,'(a,2f12.6)') 'etot :', paux(1), perr(1)
-     write(mytmp,'(a,2f12.6)') 'epot :', paux(2), perr(2)
-     write(mytmp,'(a,2f12.6)') 'ekin :', paux(3), perr(3)
-     write(mytmp,'(a,2f12.6)') '<Sz> :', paux(4), perr(4)
-     write(mytmp,'(a,2f12.6)') '<N1> :', paux(5), perr(5)
-     write(mytmp,'(a,2f12.6)') '<N2> :', paux(6), perr(6)
-     write(mytmp,'(a,2e12.4)') '<K2> :', paux(7), perr(7)
-     write(mytmp,'(a,2e12.4)') '<K3> :', paux(8), perr(8)
-     write(mytmp,'(a,2e12.4)') '<K4> :', paux(9), perr(9)
+     write(mytmp,'(a,2f12.6)') 'etot:', paux(1), perr(1)
+     write(mytmp,'(a,2f12.6)') 'epot:', paux(2), perr(2)
+     write(mytmp,'(a,2f12.6)') 'ekin:', paux(3), perr(3)
+     write(mytmp,'(a,2f12.6)') '<Sz>:', paux(4), perr(4)
+     write(mytmp,'(a,2f12.6)') '<N1>:', paux(5), perr(5)
+     write(mytmp,'(a,2f12.6)') '<N2>:', paux(6), perr(6)
+     write(mytmp,'(a,2e12.4)') '<K2>:', paux(7), perr(7)
+     write(mytmp,'(a,2e12.4)') '<K3>:', paux(8), perr(8)
+     write(mytmp,'(a,2e12.4)') '<K4>:', paux(9), perr(9)
 
 ! close data file
      close(mytmp)
