@@ -1364,7 +1364,7 @@
 !$OMP END DO
 
 ! calculate g2pw and h2pw
-!$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
+!$OMP DO PRIVATE (f1, f2, zg, zh, wbn, w4n, w3n, w2n, w1n)
      ORB1_CYCLE: do f1=1,norbs
          ORB2_CYCLE: do f2=1,f1
 
