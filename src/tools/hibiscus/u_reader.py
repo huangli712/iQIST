@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 08/15/2015 by li huang (created)
-## 06/05/2017 by li huang (last modified)
+## 06/07/2017 by li huang (last modified)
 ##
 ##
 
@@ -115,7 +115,7 @@ class iqistReader(object):
         paux = numpy.zeros((9), dtype = numpy.float)
         for i in range(9):
             spl = f.readline().split()
-            paux[i] = float( spl[2] )
+            paux[i] = float( spl[1] )
         f.close()
 
         return paux
