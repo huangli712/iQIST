@@ -1396,13 +1396,13 @@
                              zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
 
-                         zg = zg - g2aux(w3n,w2n,f2) * g2aux(w1n,w4n,f1)
-                         zh = zh - h2aux(w3n,w2n,f2) * g2aux(w1n,w4n,f1)
+                         !zg = zg - g2aux(w3n,w2n,f2) * g2aux(w1n,w4n,f1)
+                         !zh = zh - h2aux(w3n,w2n,f2) * g2aux(w1n,w4n,f1)
 
-                         if ( f1 == f2 ) then
-                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-                         endif ! back if ( f1 == f2 ) block
+                         !if ( f1 == f2 ) then
+                         !    zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                         !    zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                         !endif ! back if ( f1 == f2 ) block
 
                          g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) + zg / beta
                          h2pw(w3n,w2n,wbn,f2,f1) = h2pw(w3n,w2n,wbn,f2,f1) + zh / beta
