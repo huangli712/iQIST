@@ -1,7 +1,0 @@
-# s011/solver.ctqmc.in
-
-isscr  = 4
-isort  = 2
-isvrt  = 2
-nsweep = 2000000
-beta   = 40.0
