@@ -1388,20 +1388,32 @@
                          zg = czero
                          zh = czero
 
-                         !zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                         !zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+!!!!!! AABB ph part
+!<                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+!<                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+!<
+!<                         if ( f1 == f2 ) then
+!<                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+!<                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+!<                         endif ! back if ( f1 == f2 ) block
 
-                         !if ( f1 == f2 ) then
-                         !    zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                         !    zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                         !endif ! back if ( f1 == f2 ) block
+!!!!!! ABBA ph part
+!<                         zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+!<                         zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+!<
+!<                         if ( f1 == f2 ) then
+!<                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+!<                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+!<                         endif ! back if ( f1 == f2 ) block
 
-                         zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-                         zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                         w1n = wbn - w3n + nffrq
+                         w4n = wbn - w2n + nffrq
+                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
 
                          if ( f1 == f2 ) then
-                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                             zg = zg + g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
 
                          g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) + zg / beta
