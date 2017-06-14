@@ -1412,7 +1412,7 @@
                          zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
 
                          if ( f1 == f2 ) then
-                             zg = zg + g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                              zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
 
