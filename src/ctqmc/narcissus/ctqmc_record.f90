@@ -34,8 +34,8 @@
 !!!           ctqmc_reduce_sp_w
 !!!           ctqmc_reduce_ch_t
 !!!           ctqmc_reduce_ch_w <<<---
-!!!           ctqmc_reduce_twop
-!!!           ctqmc_reduce_pair <<<---
+!!!           ctqmc_reduce_g2ph
+!!!           ctqmc_reduce_g2pp <<<---
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
