@@ -50,7 +50,7 @@
 
 # endif  /* MPI */
 
-     CTQMC_WAKEUP: BLOCK
+     CTQMC_START: BLOCK
 
 ! print the welcome messages
          if ( myid == master ) then ! only master node can do it
@@ -71,7 +71,7 @@
              call ctqmc_print_summary()
          endif ! back if ( myid == master ) block
 
-     END BLOCK CTQMC_WAKEUP
+     END BLOCK CTQMC_START
 
 !!========================================================================
 !!>>> DMFT ITERATION BEGIN                                             <<<
