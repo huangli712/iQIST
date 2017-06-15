@@ -501,10 +501,25 @@
 !!========================================================================
 
 ! the following physical observables are measured optionally (by isvrt)
-! record the two-particle green's function
+! record the two-particle green's function, particle-hole channel, AABB
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
+
+! record the two-particle green's function, particle-hole channel, ABBA
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
+                 call ctqmc_record_g2ph()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
+
+! record the two-particle green's function, particle-particle channel, AABB
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+                 call ctqmc_record_g2pp()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+
+! record the two-particle green's function, particle-particle channel, ABBA
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
+                 call ctqmc_record_g2pp()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
 
          enddo MC_WRITE ! over j={1,nwrite} loop
 
