@@ -202,17 +202,21 @@
 
 ! the following observables are measured optionally: complex(dp)
 !-------------------------------------------------------------------------
-! two-particle green's function
-     complex(dp), allocatable :: g2pw_mpi(:,:,:,:,:)
-     complex(dp), allocatable :: g2pw_err(:,:,:,:,:)
+! two-particle green's function (ph channel)
+     complex(dp), allocatable :: g2ph_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: g2ph_err(:,:,:,:,:)
 
-! irreducible vertex function
-     complex(dp), allocatable :: h2pw_mpi(:,:,:,:,:)
-     complex(dp), allocatable :: h2pw_err(:,:,:,:,:)
+! two-particle vertex function (ph channel)
+     complex(dp), allocatable :: h2ph_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: h2ph_err(:,:,:,:,:)
 
-! particle-particle pairing susceptibility
-     complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
-     complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
+! two-particle green's function (pp channel)
+     complex(dp), allocatable :: g2pp_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: g2pp_err(:,:,:,:,:)
+
+! two-particle vertex function (pp channel)
+     complex(dp), allocatable :: h2pp_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: h2pp_err(:,:,:,:,:)
 !-------------------------------------------------------------------------
 
 ! allocate memory
