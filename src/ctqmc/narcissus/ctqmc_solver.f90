@@ -268,12 +268,14 @@
      allocate(ch_w_mpi(nbfrq,norbs,norbs), stat=istat)
      allocate(ch_w_err(nbfrq,norbs,norbs), stat=istat)
 
-     allocate(g2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(g2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(h2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(h2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(p2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(p2pw_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2ph_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2ph_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2pp_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2pp_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2pp_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2pp_err(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
