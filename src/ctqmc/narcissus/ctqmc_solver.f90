@@ -829,8 +829,8 @@
          call ctqmc_dump_ch_t(cchi, ch_t, cchi_err, ch_t_err)
          call ctqmc_dump_ch_w(ch_w, ch_w_err)
 
-         call ctqmc_dump_twop(g2pw, h2pw, g2pw_err, h2pw_err)
-         call ctqmc_dump_pair(p2pw, p2pw_err)
+         call ctqmc_dump_g2ph(g2ph, h2ph, g2ph_err, h2ph_err)
+         call ctqmc_dump_g2pp(g2pp, h2pp, g2pp_err, h2pp_err)
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_end) ! record ending time
