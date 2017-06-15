@@ -973,9 +973,8 @@
      allocate(ch_t(ntime,norbs,norbs), stat=istat)
      allocate(ch_w(nbfrq,norbs,norbs), stat=istat)
 
-     allocate(g2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(h2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(p2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1003,9 +1002,8 @@
      ch_t = zero
      ch_w = zero
 
-     g2pw = czero
-     h2pw = czero
-     p2pw = czero
+     g2ph = czero
+     h2ph = czero
 
      return
   end subroutine cat_alloc_meat
