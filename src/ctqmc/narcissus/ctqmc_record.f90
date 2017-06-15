@@ -1267,12 +1267,12 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_record_twop
+!! @sub ctqmc_record_g2ph
 !!
 !! record the two-particle green's function. here improved estimator is
 !! used to improve the accuracy
 !!
-  subroutine ctqmc_record_twop()
+  subroutine ctqmc_record_g2ph()
      use constants, only : dp
      use constants, only : czero
 
@@ -1439,7 +1439,7 @@
      deallocate( caux2 )
 
      return
-  end subroutine ctqmc_record_twop
+  end subroutine ctqmc_record_g2ph
 
 !!
 !! @sub ctqmc_record_pair
