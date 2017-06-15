@@ -1442,6 +1442,9 @@
      return
   end subroutine ctqmc_record_g2ph
 
+  subroutine ctqmc_record_g2pp()
+  end subroutine ctqmc_record_g2pp
+
 !!========================================================================
 !!>>> reduce physical observables 1                                    <<<
 !!========================================================================
@@ -2836,3 +2839,6 @@
 
      return
   end subroutine ctqmc_reduce_g2ph
+
+  subroutine ctqmc_reduce_g2pp()
+  end subroutine ctqmc_reduce_g2pp
