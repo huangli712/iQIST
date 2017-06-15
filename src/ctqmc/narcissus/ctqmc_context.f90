@@ -452,7 +452,7 @@
 !!
 !! @var sp_w
 !!
-!! spin-spin correlation function, \chi_{sp} (i\omega), orbital-resolved
+!! spin-spin correlation function, \chi_{sp}(i\omega), orbital-resolved
 !!
      real(dp), public, save, allocatable :: sp_w(:,:)
 
@@ -473,7 +473,7 @@
 !!
 !! @var ch_w
 !!
-!! charge-charge correlation function, \chi_{ch} (i\omega), orbital-resolved
+!! charge-charge correlation function, \chi_{ch}(i\omega), orbital-resolved
 !!
      real(dp), public, save, allocatable :: ch_w(:,:,:)
 
