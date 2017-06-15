@@ -1265,9 +1265,8 @@
      if ( allocated(ch_t) )    deallocate(ch_t)
      if ( allocated(ch_w) )    deallocate(ch_w)
 
-     if ( allocated(g2pw) )    deallocate(g2pw)
-     if ( allocated(h2pw) )    deallocate(h2pw)
-     if ( allocated(p2pw) )    deallocate(p2pw)
+     if ( allocated(g2ph) )    deallocate(g2ph)
+     if ( allocated(h2ph) )    deallocate(h2ph)
 
      return
   end subroutine cat_free_meat
