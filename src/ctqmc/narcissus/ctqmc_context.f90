@@ -975,6 +975,8 @@
 
      allocate(g2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1004,6 +1006,8 @@
 
      g2ph = czero
      h2ph = czero
+     g2pp = czero
+     h2pp = czero
 
      return
   end subroutine cat_alloc_meat
