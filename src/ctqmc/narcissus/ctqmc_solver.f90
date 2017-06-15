@@ -708,8 +708,8 @@
          call ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
          call ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
 
-         call ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
-         call ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
+         call ctqmc_reduce_g2ph(g2ph_mpi, h2ph_mpi, g2ph_err, h2ph_err)
+         call ctqmc_reduce_g2pp(g2pp_mpi, h2pp_mpi, g2pp_err, h2pp_err)
 
      END BLOCK COLLECT_DATA
 
