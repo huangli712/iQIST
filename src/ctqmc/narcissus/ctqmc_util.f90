@@ -694,17 +694,6 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_tran_twop
-!!
-!! build two-particle green's function using different representation
-!!
-  subroutine ctqmc_tran_twop()
-     implicit none
-
-     return
-  end subroutine ctqmc_tran_twop
-
-!!
 !! @sub ctqmc_tran_gtau
 !!
 !! build imaginary time green's function using different representation
@@ -953,6 +942,17 @@
 
      return
   end subroutine ctqmc_tran_grnf
+
+!!
+!! @sub ctqmc_tran_twop
+!!
+!! build two-particle green's function using different representation
+!!
+  subroutine ctqmc_tran_twop()
+     implicit none
+
+     return
+  end subroutine ctqmc_tran_twop
 
 !!========================================================================
 !!>>> atomic eigenstates                                               <<<
