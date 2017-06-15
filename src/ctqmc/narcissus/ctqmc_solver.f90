@@ -503,7 +503,7 @@
 ! the following physical observables are measured optionally (by isvrt)
 ! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
-                 call ctqmc_record_twop()
+                 call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
          enddo MC_WRITE ! over j={1,nwrite} loop
