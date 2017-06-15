@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/07/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -1225,7 +1225,7 @@
 !! write out the two-particle green's function and full (reducible) vertex
 !! function, the improved estimator was used to improve the accuracy
 !!
-  subroutine ctqmc_dump_twop(g2pw, h2pw, gerr, herr)
+  subroutine ctqmc_dump_g2ph(g2pw, h2pw, gerr, herr)
      use constants, only : dp
      use constants, only : czero
      use constants, only : mytmp
@@ -1408,7 +1408,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_twop
+  end subroutine ctqmc_dump_g2ph
 
 !!
 !! @sub ctqmc_dump_pair
