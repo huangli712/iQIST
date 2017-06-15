@@ -1410,6 +1410,9 @@
      return
   end subroutine ctqmc_dump_g2ph
 
+  subroutine ctqmc_dump_g2pp()
+  end subroutine ctqmc_dump_g2pp
+
 !!
 !! @sub ctqmc_dump_pair
 !!
