@@ -9,9 +9,9 @@
 !!!           ctqmc_symm_nimp
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf <<<---
-!!!           ctqmc_tran_twop <<<---
 !!!           ctqmc_tran_gtau
 !!!           ctqmc_tran_grnf
+!!!           ctqmc_tran_twop <<<---
 !!!           ctqmc_make_fock <<<---
 !!!           ctqmc_make_umat <<<---
 !!!           ctqmc_make_lift <<<---
@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           06/01/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -297,17 +297,17 @@
          do i=1,norbs
 
 ! calculate first-order derivate of \Delta(0): startu
-             startu = (-25.0_dp*htau(1,       i, j) +                    &
-                        48.0_dp*htau(2,       i, j) -                    &
-                        36.0_dp*htau(3,       i, j) +                    &
-                        16.0_dp*htau(4,       i, j) -                    &
+             startu = (-25.0_dp*htau(1,       i, j) + &
+                        48.0_dp*htau(2,       i, j) - &
+                        36.0_dp*htau(3,       i, j) + &
+                        16.0_dp*htau(4,       i, j) - &
                          3.0_dp*htau(5,       i, j)) / 12.0_dp / deltau
 
 ! calculate first-order derivate of \Delta(\beta): startd
-             startd = ( 25.0_dp*htau(ntime-0, i, j) -                    &
-                        48.0_dp*htau(ntime-1, i, j) +                    &
-                        36.0_dp*htau(ntime-2, i, j) -                    &
-                        16.0_dp*htau(ntime-3, i, j) +                    &
+             startd = ( 25.0_dp*htau(ntime-0, i, j) - &
+                        48.0_dp*htau(ntime-1, i, j) + &
+                        36.0_dp*htau(ntime-2, i, j) - &
+                        16.0_dp*htau(ntime-3, i, j) + &
                          3.0_dp*htau(ntime-4, i, j)) / 12.0_dp / deltau
 
 ! reinitialize d2y to zero
