@@ -1267,6 +1267,8 @@
 
      if ( allocated(g2ph) )    deallocate(g2ph)
      if ( allocated(h2ph) )    deallocate(h2ph)
+     if ( allocated(g2pp) )    deallocate(g2pp)
+     if ( allocated(h2pp) )    deallocate(h2pp)
 
      return
   end subroutine cat_free_meat
