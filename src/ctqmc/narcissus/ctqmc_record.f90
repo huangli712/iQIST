@@ -2717,11 +2717,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_reduce_twop
+!! @sub ctqmc_reduce_g2ph
 !!
 !! reduce the g2ph and h2ph from all children processes
 !!
-  subroutine ctqmc_reduce_twop(g2ph_mpi, h2ph_mpi, g2ph_err, h2ph_err)
+  subroutine ctqmc_reduce_g2ph(g2ph_mpi, h2ph_mpi, g2ph_err, h2ph_err)
      use constants, only : dp
      use constants, only : zero, czero, czi
 
@@ -2835,4 +2835,4 @@
      deallocate(h_im_err)
 
      return
-  end subroutine ctqmc_reduce_twop
+  end subroutine ctqmc_reduce_g2ph
