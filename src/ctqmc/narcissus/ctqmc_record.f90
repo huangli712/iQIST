@@ -1281,8 +1281,8 @@
      use control, only : nffrq, nbfrq
      use control, only : beta
 
-     use context, only : g2pw
-     use context, only : h2pw
+     use context, only : g2ph
+     use context, only : h2ph
      use context, only : rank, pref
      use context, only : mmat
 
