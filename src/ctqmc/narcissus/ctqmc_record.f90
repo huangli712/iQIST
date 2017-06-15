@@ -1310,7 +1310,7 @@
      real(dp) :: maux
      real(dp) :: naux
 
-! dummy complex(dp) variables, used to calculate the g2pw and h2pw
+! dummy complex(dp) variables, used to calculate the g2ph and h2ph
      complex(dp) :: zg
      complex(dp) :: zh
 
@@ -1373,7 +1373,7 @@
 
      call cpu_time(t1)
 
-! calculate g2pw and h2pw
+! calculate g2ph and h2ph
 !$OMP DO PRIVATE (f1, f2, zg, zh, wbn, w4n, w3n, w2n, w1n)
      ORB1_CYCLE: do f1=1,norbs
          ORB2_CYCLE: do f2=1,f1
@@ -2719,9 +2719,9 @@
 !!
 !! @sub ctqmc_reduce_twop
 !!
-!! reduce the g2pw and h2pw from all children processes
+!! reduce the g2ph and h2ph from all children processes
 !!
-  subroutine ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
+  subroutine ctqmc_reduce_twop(g2ph_mpi, h2ph_mpi, g2ph_err, h2ph_err)
      use constants, only : dp
      use constants, only : zero, czero, czi
 
@@ -2733,19 +2733,19 @@
      use control, only : nffrq, nbfrq
      use control, only : nprocs
 
-     use context, only : g2pw
-     use context, only : h2pw
+     use context, only : g2ph
+     use context, only : h2ph
 
      implicit none
 
 ! external arguments
 ! two-particle green's function
-     complex(dp), intent(out) :: g2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
-     complex(dp), intent(out) :: g2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: g2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: g2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! irreducible vertex function
-     complex(dp), intent(out) :: h2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
-     complex(dp), intent(out) :: h2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: h2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: h2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! used to store the real and imaginary parts of green's function
@@ -2773,43 +2773,43 @@
      h_re_err = zero
      h_im_err = zero
 
-! initialize g2pw_mpi and g2pw_err
-     g2pw_mpi = czero
-     g2pw_err = czero
+! initialize g2ph_mpi and g2ph_err
+     g2ph_mpi = czero
+     g2ph_err = czero
 
-! initialize h2pw_mpi and h2pw_err
-     h2pw_mpi = czero
-     h2pw_err = czero
+! initialize h2ph_mpi and h2ph_err
+     h2ph_mpi = czero
+     h2ph_err = czero
 
-! build g2pw_mpi and h2pw_mpi, collect data from all children processes
+! build g2ph_mpi and h2ph_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(g2pw, g2pw_mpi)
-     call mp_allreduce(h2pw, h2pw_mpi)
+     call mp_allreduce(g2ph, g2ph_mpi)
+     call mp_allreduce(h2ph, h2ph_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     g2pw_mpi = g2pw
-     h2pw_mpi = h2pw
+     g2ph_mpi = g2ph
+     h2ph_mpi = h2ph
 
 # endif /* MPI */
 
 ! calculate the average
-     g2pw_mpi = g2pw_mpi / real(nprocs)
-     h2pw_mpi = h2pw_mpi / real(nprocs)
+     g2ph_mpi = g2ph_mpi / real(nprocs)
+     h2ph_mpi = h2ph_mpi / real(nprocs)
 
-! build g2pw_err and h2pw_err, collect data from all children processes
+! build g2ph_err and h2ph_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(( real(g2pw - g2pw_mpi))**2, g_re_err)
-     call mp_allreduce((aimag(g2pw - g2pw_mpi))**2, g_im_err)
-     call mp_allreduce(( real(h2pw - h2pw_mpi))**2, h_re_err)
-     call mp_allreduce((aimag(h2pw - h2pw_mpi))**2, h_im_err)
+     call mp_allreduce(( real(g2ph - g2ph_mpi))**2, g_re_err)
+     call mp_allreduce((aimag(g2ph - g2ph_mpi))**2, g_im_err)
+     call mp_allreduce(( real(h2ph - h2ph_mpi))**2, h_re_err)
+     call mp_allreduce((aimag(h2ph - h2ph_mpi))**2, h_im_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2824,9 +2824,9 @@
          h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final g2pw_err and h2pw_err
-     g2pw_err = g_re_err + g_im_err * czi
-     h2pw_err = h_re_err + h_im_err * czi
+! construct the final g2ph_err and h2ph_err
+     g2ph_err = g_re_err + g_im_err * czi
+     h2ph_err = h_re_err + h_im_err * czi
 
 ! deallocate memory
      deallocate(g_re_err)
