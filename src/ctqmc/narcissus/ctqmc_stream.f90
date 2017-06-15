@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/24/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -810,11 +810,12 @@
      ch_w = zero
 
 ! init two-particle green's function
-     g2pw = czero
-     h2pw = czero
+     g2ph = czero
+     g2pp = czero
 
-! init particle-particle pairing susceptibility
-     p2pw = czero
+! init two-particle vertex function
+     h2ph = czero
+     h2pp = czero
 
 !>>> ctqmc_umat module
 !-------------------------------------------------------------------------

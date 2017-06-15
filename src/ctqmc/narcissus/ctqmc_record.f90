@@ -2743,7 +2743,7 @@
      complex(dp), intent(out) :: g2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: g2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! irreducible vertex function
+! two-particle vertex function
      complex(dp), intent(out) :: h2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: h2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
