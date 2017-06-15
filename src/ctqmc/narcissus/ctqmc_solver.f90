@@ -672,9 +672,10 @@
          ch_t = ch_t * real(nmonte) / real(nsweep)
          ch_w = ch_w * real(nmonte) / real(nsweep)
 
-         g2pw = g2pw * real(nmonte) / real(nsweep)
-         h2pw = h2pw * real(nmonte) / real(nsweep)
-         p2pw = p2pw * real(nmonte) / real(nsweep)
+         g2ph = g2ph * real(nmonte) / real(nsweep)
+         h2ph = h2ph * real(nmonte) / real(nsweep)
+         g2pp = g2pp * real(nmonte) / real(nsweep)
+         h2pp = h2pp * real(nmonte) / real(nsweep)
 
      END BLOCK AVERAGE_DATA
 
