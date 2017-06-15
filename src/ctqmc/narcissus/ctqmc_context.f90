@@ -973,9 +973,10 @@
      allocate(ch_t(ntime,norbs,norbs), stat=istat)
      allocate(ch_w(nbfrq,norbs,norbs), stat=istat)
 
-     allocate(g2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(h2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(p2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1003,9 +1004,10 @@
      ch_t = zero
      ch_w = zero
 
-     g2pw = czero
-     h2pw = czero
-     p2pw = czero
+     g2ph = czero
+     h2ph = czero
+     g2pp = czero
+     h2pp = czero
 
      return
   end subroutine cat_alloc_meat
@@ -1263,9 +1265,10 @@
      if ( allocated(ch_t) )    deallocate(ch_t)
      if ( allocated(ch_w) )    deallocate(ch_w)
 
-     if ( allocated(g2pw) )    deallocate(g2pw)
-     if ( allocated(h2pw) )    deallocate(h2pw)
-     if ( allocated(p2pw) )    deallocate(p2pw)
+     if ( allocated(g2ph) )    deallocate(g2ph)
+     if ( allocated(h2ph) )    deallocate(h2ph)
+     if ( allocated(g2pp) )    deallocate(g2pp)
+     if ( allocated(h2pp) )    deallocate(h2pp)
 
      return
   end subroutine cat_free_meat
