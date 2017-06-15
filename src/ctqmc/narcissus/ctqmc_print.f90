@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           06/01/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -216,7 +216,7 @@
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
      character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
      character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
-     character (len = 4) :: vrt(3) = ['none', 'twop', 'pair']
+     character (len =10) :: vrt(5) = ['none', 'g2_ph_aabb', 'g2_ph_abba', 'g2_pp_aabb', 'g2_pp_abba']
 
 ! predefined strings for control parameters
      character (len = 99) :: str_obs
@@ -266,6 +266,7 @@
      write(mystd,'(4X,2a)') 'two-particle quantities  / ', trim(str_vrt)
 
      write(mystd,*)
+     STOP
 
      return
   end subroutine ctqmc_print_control

@@ -269,6 +269,14 @@
 !!     block: ABBA
 !!     channel: particle-particle
 !!
+!! note 1:
+!!
+!!     p = 2 and p = 3 could not be enabled at the same time
+!!
+!! note 2:
+!!
+!!     p = 4 and p = 5 could not be enabled at the same time
+!!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
 !! p = 9 8 7 6 5 4 3 2 1
