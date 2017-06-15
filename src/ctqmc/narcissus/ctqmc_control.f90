@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/24/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -238,8 +238,9 @@
 !!     then we examine the bits one by one. if it is 1, then we try to do
 !!     the calculation. if it is 0, then we ignore the calculation. for
 !!     example, we just use the second bit (from right side to left side)
-!!     to represent the calculation of two-particle green's function. so,
-!!     if isvrt is 10_10 (1010_2), we will try to compute the two-particle
+!!     to represent the calculation of two-particle green's function for
+!!     the particle-hole channel and AABB block structure. so, if isvrt is
+!!     10_10 (1010_2), we will try to compute the specified two-particle
 !!     green's function. if isvrt is 13_10 (1101_2), we will not calculate
 !!     it since the second bit is 0
 !!
@@ -250,9 +251,23 @@
 !!
 !! if p == 2:
 !!     calculate two-particle green's function
+!!     block: AABB
+!!     channel: particle-hole
 !!
 !! if p == 3:
-!!     calculate particle-particle pairing susceptibility
+!!     calculate two-particle green's function
+!!     block: ABBA
+!!     channel: particle-hole
+!!
+!! if p == 4:
+!!     calculate two-particle green's function
+!!     block: AABB
+!!     channel: particle-particle
+!!
+!! if p == 5:
+!!     calculate two-particle green's function
+!!     block: ABBA
+!!     channel: particle-particle
 !!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
