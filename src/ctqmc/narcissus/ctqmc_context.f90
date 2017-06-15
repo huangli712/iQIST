@@ -491,6 +491,20 @@
 !!
      complex(dp), public, save, allocatable :: h2ph(:,:,:,:,:)
 
+!!
+!! @var g2pp
+!!
+!! two-particle green's function, particle-particle channel
+!!
+     complex(dp), public, save, allocatable :: g2pp(:,:,:,:,:)
+
+!!
+!! @var h2pp
+!!
+!! used to calculate two-particle vertex function, particle-particle channel
+!!
+     complex(dp), public, save, allocatable :: h2pp(:,:,:,:,:)
+
   end module ctqmc_meat
 
 !!========================================================================
