@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/02/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -58,9 +58,10 @@
      use context, only : schi, sp_t, sp_w    ! spin susceptibility
      use context, only : cchi, ch_t, ch_w    ! charge susceptibility
                                              !
-     use context, only : g2pw                ! two-particle green's function
-     use context, only : h2pw                ! irreducible vertex function
-     use context, only : p2pw                ! pairing susceptibility
+     use context, only : g2ph                ! two-particle green's function (ph)
+     use context, only : h2ph                ! two-particle vertex function (ph)
+     use context, only : g2pp                ! two-particle green's function (pp)
+     use context, only : h2pp                ! two-particle vertex function (pp)
                                              !
      use context, only : symm                ! symmetry vector
      use context, only : gtau, ftau          ! imaginary time green's function
