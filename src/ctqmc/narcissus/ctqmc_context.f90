@@ -491,13 +491,6 @@
 !!
      complex(dp), public, save, allocatable :: h2ph(:,:,:,:,:)
 
-!!
-!! @var p2pw
-!!
-!! particle-particle pairing susceptibility
-!!
-     complex(dp), public, save, allocatable :: p2pw(:,:,:,:,:)
-
   end module ctqmc_meat
 
 !!========================================================================
