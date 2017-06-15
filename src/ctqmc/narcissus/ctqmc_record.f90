@@ -16,8 +16,8 @@
 !!!           ctqmc_record_sp_w
 !!!           ctqmc_record_ch_t
 !!!           ctqmc_record_ch_w <<<---
-!!!           ctqmc_record_twop
-!!!           ctqmc_record_pair <<<---
+!!!           ctqmc_record_g2ph
+!!!           ctqmc_record_g2pp <<<---
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_paux
@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/02/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
