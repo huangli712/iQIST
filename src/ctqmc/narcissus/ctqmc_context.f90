@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/31/2017 by li huang (last modified)
+!!!           06/15/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -438,14 +438,14 @@
 !!
 !! @var schi
 !!
-!! spin-spin correlation function, < Sz(0) Sz(\tau) >, totally-averaged
+!! spin-spin correlation function, \chi_{sp}(\tau), totally-averaged
 !!
      real(dp), public, save, allocatable :: schi(:)
 
 !!
 !! @var sp_t
 !!
-!! spin-spin correlation function, < Sz(0) Sz(\tau) >, orbital-resolved
+!! spin-spin correlation function, \chi_{sp}(\tau), orbital-resolved
 !!
      real(dp), public, save, allocatable :: sp_t(:,:)
 
@@ -459,14 +459,14 @@
 !!
 !! @var cchi
 !!
-!! charge-charge correlation function, < N(0) N(\tau) >, totally-averaged
+!! charge-charge correlation function, \chi_{ch}(\tau), totally-averaged
 !!
      real(dp), public, save, allocatable :: cchi(:)
 
 !!
 !! @var ch_t
 !!
-!! charge-charge correlation function, < N(0) N(\tau) >, orbital-resolved
+!! charge-charge correlation function, \chi_{ch}(\tau), orbital-resolved
 !!
      real(dp), public, save, allocatable :: ch_t(:,:,:)
 
@@ -478,18 +478,18 @@
      real(dp), public, save, allocatable :: ch_w(:,:,:)
 
 !!
-!! @var g2pw
+!! @var g2ph
 !!
-!! two-particle green's function
+!! two-particle green's function, particle-hole channel
 !!
-     complex(dp), public, save, allocatable :: g2pw(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: g2ph(:,:,:,:,:)
 
 !!
-!! @var h2pw
+!! @var h2ph
 !!
-!! used to calculate irreducible vertex function
+!! used to calculate two-particle vertex function, particle-hole channel
 !!
-     complex(dp), public, save, allocatable :: h2pw(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: h2ph(:,:,:,:,:)
 
 !!
 !! @var p2pw
