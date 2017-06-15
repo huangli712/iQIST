@@ -506,11 +506,6 @@
                  call ctqmc_record_twop()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
-! record the particle-particle pairing susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
-                 call ctqmc_record_pair()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
-
          enddo MC_WRITE ! over j={1,nwrite} loop
 
 !!========================================================================
