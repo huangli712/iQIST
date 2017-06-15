@@ -1269,8 +1269,25 @@
 !!
 !! @sub ctqmc_record_g2ph
 !!
-!! record the two-particle green's function. here improved estimator is
-!! used to improve the accuracy
+!! record the two-particle green's and vertex functions in the ph channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     \              /
+!!      \            /
+!!       \          /
+!!      i \--------/ l
+!!        |        |
+!!        |        |
+!!        |        |
+!!      j /--------\ k
+!!       /          \
+!!      /            \
+!!     /              \
+!!
+!!
+!!
 !!
   subroutine ctqmc_record_g2ph()
      use constants, only : dp
