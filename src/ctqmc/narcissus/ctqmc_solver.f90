@@ -742,9 +742,10 @@
          ch_t = ch_t_mpi
          ch_w = ch_w_mpi
 
-         g2pw = g2pw_mpi
-         h2pw = h2pw_mpi
-         p2pw = p2pw_mpi
+         g2ph = g2ph_mpi
+         h2ph = h2ph_mpi
+         g2pp = g2pp_mpi
+         h2pp = h2pp_mpi
 
      END BLOCK UPDATE2_DATA
 
