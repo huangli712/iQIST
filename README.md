@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package contains several state-of-the-art quantum impurity solvers which implement the strong coupling (or hybridization expansion) continuous-time quantum Monte Carlo algorithm, auxiliary tools, libraries and some applications.
+The iQIST software package contains several state-of-the-art quantum impurity solvers which implement the strong coupling (or hybridization expansion) continuous-time quantum Monte Carlo algorithm, auxiliary tools, numerical libraries and some applications.
 
 ## Version
 
@@ -13,9 +13,8 @@ GNU General Public License Version 3
 ## Features
 
 * The quantum impurity models could have the following terms
-    * Density-density interaction
+    * Dynamic or static density-density interaction
     * General interaction (Slater or Kanamori scheme)
-    * Frequency-dependent Coulomb interaction
     * Spin-orbital coupling
     * Crystal field splitting
 
