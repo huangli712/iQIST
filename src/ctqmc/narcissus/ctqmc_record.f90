@@ -1408,7 +1408,7 @@
 ! calculate g2aux and h2aux
 ! see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
 !$OMP PARALLEL DEFAULT(SHARED)
-!$OMP DO PRIVATE (flvr, is, ie, maux, naux, w2n, w1n, caux1, caux2)
+!$OMP DO PRIVATE (flvr, is, ie, w2n, w1n, maux, naux, caux1, caux2)
      FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
@@ -1654,7 +1654,7 @@
 ! calculate g2aux and h2aux
 ! see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
 !$OMP PARALLEL DEFAULT(SHARED)
-!$OMP DO PRIVATE (flvr, is, ie, maux, naux, w2n, w1n, caux1, caux2)
+!$OMP DO PRIVATE (flvr, is, ie, w2n, w1n, maux, naux, caux1, caux2)
      FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
@@ -1676,18 +1676,18 @@
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 !$OMP END DO
 
-! calculate g2ph and h2ph
+! calculate g2pp and h2pp
 !
 ! note:
 !
 !     g2aux(w1n,w2n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i \nu \tau_j ]
 !
 !     g2aux(w3n,w4n,f2) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+!         exp [ i \nu' \tau'_k ] exp [ -i (\omega - \nu) \tau_l ]
 !
 !     g2aux(w1n,w4n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i (\omega - nu) \tau_l ]
 !
 !     g2aux(w3n,w2n,f1) ->
 !         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
