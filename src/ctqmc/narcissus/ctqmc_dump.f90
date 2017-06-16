@@ -1223,9 +1223,9 @@
 !! @sub ctqmc_dump_g2ph
 !!
 !! write out the two-particle green's function and full (reducible) vertex
-!! function, the improved estimator was used to improve the accuracy
+!! function in the particle-hole channel
 !!
-  subroutine ctqmc_dump_g2ph(g2pw, h2pw, gerr, herr)
+  subroutine ctqmc_dump_g2ph(g2ph, h2ph, gerr, herr)
      use constants, only : dp
      use constants, only : czero
      use constants, only : mytmp
@@ -1240,11 +1240,11 @@
 
 ! external arguments
 ! two-particle green's functions
-     complex(dp), intent(in) :: g2pw(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: g2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! irreducible vertex functions
-     complex(dp), intent(in) :: h2pw(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: h2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
@@ -1280,14 +1280,14 @@
      complex(dp) :: chig
 
 ! check whether we need to dump the two-particle green's function and
-! irreducible vertex function data to solver.g2pw.dat and solver.h2pw.dat
+! irreducible vertex function data to solver.g2ph.dat and solver.h2ph.dat
      if ( .not. btest(isvrt, 1) ) RETURN
 
 ! task 1: dump two-particle green's function
 !-------------------------------------------------------------------------
 
-! open data file: solver.g2pw.dat
-     open(mytmp, file='solver.g2pw.dat', form='formatted', status='unknown')
+! open data file: solver.g2ph.dat
+     open(mytmp, file='solver.g2ph.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
@@ -1299,7 +1299,7 @@
                  do j=1,nffrq
                      do i=1,nffrq
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, g2pw(i,j,k,n,m), gerr(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') jt, it, g2ph(i,j,k,n,m), gerr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1314,8 +1314,8 @@
 ! task 2: dump irreducible vertex function
 !-------------------------------------------------------------------------
 
-! open data file: solver.h2pw.dat
-     open(mytmp, file='solver.h2pw.dat', form='formatted', status='unknown')
+! open data file: solver.h2ph.dat
+     open(mytmp, file='solver.h2ph.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
@@ -1327,7 +1327,7 @@
                  do j=1,nffrq
                      do i=1,nffrq
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, h2pw(i,j,k,n,m), herr(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') jt, it, h2ph(i,j,k,n,m), herr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1389,7 +1389,7 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chic
-                         chic = g1 * h2pw(i,j,k,n,m) - fw * g2pw(i,j,k,n,m)
+                         chic = g1 * h2ph(i,j,k,n,m) - fw * g2ph(i,j,k,n,m)
 
 ! evaluate chig
                          chig = chic / (g1 * g2 * g3 * g4)
