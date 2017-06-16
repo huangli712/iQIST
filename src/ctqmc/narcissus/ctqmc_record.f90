@@ -1700,14 +1700,22 @@
                                                !
                  WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
                      WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
-                         w1n = w2n + wbn - 1
-                         w4n = w3n + wbn - 1
+                         w1n = wbn - w3n + nffrq
+                         w4n = wbn - w2n + nffrq
 
                          zg = czero; zh = czero
 
-! AABB_PH component
+!<                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+!<                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+!<
+!<                         if ( f1 == f2 ) then
+!<                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+!<                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+!<                         endif ! back if ( f1 == f2 ) block
+
+! AABB_PP component
 !-------------------------------------------------------------------------
-                     CALC_AABB_PH: BLOCK
+                     CALC_AABB_PP: BLOCK
 
                          if ( btest(isvrt,1) ) then
                              zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
@@ -1719,11 +1727,11 @@
                              endif ! back if ( f1 == f2 ) block
                          endif ! back if ( btest(isvrt,1) ) block
 
-                     END BLOCK CALC_AABB_PH
+                     END BLOCK CALC_AABB_PP
 
-! ABBA_PH component
+! ABBA_PP component
 !-------------------------------------------------------------------------
-                     CALC_ABBA_PH: BLOCK
+                     CALC_ABBA_PP: BLOCK
 
                          if ( btest(isvrt,2) ) then
                              zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
@@ -1735,7 +1743,7 @@
                              endif ! back if ( f1 == f2 ) block
                          endif ! back if ( btest(isvrt,2) ) block
 
-                     END BLOCK CALC_ABBA_PH
+                     END BLOCK CALC_ABBA_PP
 
                          g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
                          h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
@@ -1757,19 +1765,6 @@
 
      return
   end subroutine ctqmc_record_g2pp
-
-!  subroutine ctqmc_record_g2pp()
-!!!!!! AABB pp part
-!<                         w1n = wbn - w3n + nffrq
-!<                         w4n = wbn - w2n + nffrq
-!<                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-!<                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-!<
-!<                         if ( f1 == f2 ) then
-!<                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-!<                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-!<                         endif ! back if ( f1 == f2 ) block
-!  end subroutine ctqmc_record_g2pp
 
 !!========================================================================
 !!>>> reduce physical observables 1                                    <<<
