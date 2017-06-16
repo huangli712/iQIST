@@ -1431,6 +1431,21 @@
 !$OMP END DO
 
 ! calculate g2ph and h2ph
+!
+! note:
+!
+!     g2aux(w1n,w2n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+!
+!     g2aux(w3n,w4n,f2) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w1n,w4n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w3n,w2n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!
 !$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
          ORB2_CYCLE: do f2=1,f1                ! block index: B
@@ -1445,10 +1460,7 @@
                          zg = czero; zh = czero
 
 ! AABB_PH component
-! g2aux(w1n,w2n,f1) -> exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
-! g2aux(w3n,w4n,f2) -> exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
-! g2aux(w1n,w4n,f1) -> exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
-! g2aux(w3n,w2n,f1) -> exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!-------------------------------------------------------------------------
                      CALC_AABB_PH: BLOCK
 
                          if ( btest(isvrt,1) ) then
@@ -1463,16 +1475,21 @@
 
                      END BLOCK CALC_AABB_PH
 
-!!!!!! ABBA ph part
-!<                         zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-!<                         zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-!<
-!<                         if ( f1 == f2 ) then
-!<                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-!<                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-!<                         endif ! back if ( f1 == f2 ) block
+! ABBA_PH component
+!-------------------------------------------------------------------------
+                     CALC_ABBA_PH: BLOCK
 
+                         if ( btest(isvrt,2) ) then
+                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
 
+                             if ( f1 == f2 ) then
+                                 zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                                 zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                             endif ! back if ( f1 == f2 ) block
+                         endif ! back if ( btest(isvrt,2) ) block
+
+                     END BLOCK CALC_ABBA_PH
 
                          g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
                          h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
