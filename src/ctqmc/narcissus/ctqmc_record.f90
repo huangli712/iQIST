@@ -3073,7 +3073,7 @@
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
 
 ! check whether this observable has been measured
-     if ( .not. btest(isvrt, 1) ) RETURN
+     if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
 
 ! allocate memory
      allocate(g_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
@@ -3152,6 +3152,3 @@
 
      return
   end subroutine ctqmc_reduce_g2ph
-
-  subroutine ctqmc_reduce_g2pp()
-  end subroutine ctqmc_reduce_g2pp
