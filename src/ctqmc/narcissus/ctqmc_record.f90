@@ -1379,13 +1379,10 @@
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
 
-! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ -i \omega_n \tau_j ]
+! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ i \omega_n \tau_j ]
 ! where m and n are the first two frequency indices for g2aux and h2aux
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
-
-     real(dp) :: t1, t2
-     real(dp), save :: ta = 0.0_dp, tb = 0.0_dp
 
 ! check whether there is conflict
 ! this subroutine is only designed for the particle-hole channel
@@ -1394,22 +1391,16 @@
 ! you can not calculate the AABB and ABBA components at the same time
      call s_assert( .not. ( btest(isvrt, 1) .and. btest(isvrt, 2) ) )
 
-     STOP
-
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
-
-! allocate memory for g2aux and then initialize it
-     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
-
-! allocate memory for h2aux and then initialize it
-     allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
 
 ! allocate memory for caux1 and caux2, and then initialize them
      allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
      allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
 
-     call cpu_time(t1)
+! allocate memory for g2aux and h2aux, and then initialize them
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+     allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
 
 ! calculate prefactor: pref
      call ctqmc_make_pref()
@@ -1437,11 +1428,6 @@
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 !$OMP END DO
-
-     call cpu_time(t2)
-     ta = ta + t2 - t1
-
-     call cpu_time(t1)
 
 ! calculate g2ph and h2ph
 !$OMP DO PRIVATE (f1, f2, zg, zh, wbn, w4n, w3n, w2n, w1n)
@@ -1499,15 +1485,11 @@
 !$OMP END DO
 !$OMP END PARALLEL
 
-     call cpu_time(t2)
-     tb = tb + t2 - t1
-     !print *, ta, tb, tb/ta
-
 ! deallocate memory
-     deallocate( g2aux )
-     deallocate( h2aux )
      deallocate( caux1 )
      deallocate( caux2 )
+     deallocate( g2aux )
+     deallocate( h2aux )
 
      return
   end subroutine ctqmc_record_g2ph
