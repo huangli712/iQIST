@@ -3152,3 +3152,124 @@
 
      return
   end subroutine ctqmc_reduce_g2ph
+
+!!
+!! @sub ctqmc_reduce_g2pp
+!!
+!! reduce the g2pp and h2pp from all children processes
+!!
+  subroutine ctqmc_reduce_g2pp(g2pp_mpi, h2pp_mpi, g2pp_err, h2pp_err)
+     use constants, only : dp
+     use constants, only : zero, czero, czi
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+
+     use context, only : g2ph
+     use context, only : h2ph
+
+     implicit none
+
+! external arguments
+! two-particle green's function
+     complex(dp), intent(out) :: g2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: g2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! two-particle vertex function
+     complex(dp), intent(out) :: h2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: h2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! used to store the real and imaginary parts of green's function
+     real(dp), allocatable :: g_re_err(:,:,:,:,:)
+     real(dp), allocatable :: g_im_err(:,:,:,:,:)
+
+! used to store the real and imaginary parts of vertex function
+     real(dp), allocatable :: h_re_err(:,:,:,:,:)
+     real(dp), allocatable :: h_im_err(:,:,:,:,:)
+
+! check whether this observable has been measured
+     if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
+
+! allocate memory
+     allocate(g_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
+     allocate(g_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
+     allocate(h_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
+     allocate(h_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
+
+! initialize g_re_err and g_im_err
+     g_re_err = zero
+     g_im_err = zero
+
+! initialize h_re_err and h_im_err
+     h_re_err = zero
+     h_im_err = zero
+
+! initialize g2ph_mpi and g2ph_err
+     g2ph_mpi = czero
+     g2ph_err = czero
+
+! initialize h2ph_mpi and h2ph_err
+     h2ph_mpi = czero
+     h2ph_err = czero
+
+! build g2ph_mpi and h2ph_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(g2ph, g2ph_mpi)
+     call mp_allreduce(h2ph, h2ph_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     g2ph_mpi = g2ph
+     h2ph_mpi = h2ph
+
+# endif /* MPI */
+
+! calculate the average
+     g2ph_mpi = g2ph_mpi / real(nprocs)
+     h2ph_mpi = h2ph_mpi / real(nprocs)
+
+! build g2ph_err and h2ph_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(( real(g2ph - g2ph_mpi))**2, g_re_err)
+     call mp_allreduce((aimag(g2ph - g2ph_mpi))**2, g_im_err)
+     call mp_allreduce(( real(h2ph - h2ph_mpi))**2, h_re_err)
+     call mp_allreduce((aimag(h2ph - h2ph_mpi))**2, h_im_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+! construct the final g2ph_err and h2ph_err
+     g2ph_err = g_re_err + g_im_err * czi
+     h2ph_err = h_re_err + h_im_err * czi
+
+! deallocate memory
+     deallocate(g_re_err)
+     deallocate(g_im_err)
+     deallocate(h_re_err)
+     deallocate(h_im_err)
+
+     return
+  end subroutine ctqmc_reduce_g2ph
