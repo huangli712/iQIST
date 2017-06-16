@@ -1220,7 +1220,7 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_dump_twop
+!! @sub ctqmc_dump_g2ph
 !!
 !! write out the two-particle green's function and full (reducible) vertex
 !! function, the improved estimator was used to improve the accuracy
@@ -1412,74 +1412,6 @@
 
   subroutine ctqmc_dump_g2pp()
   end subroutine ctqmc_dump_g2pp
-
-!!
-!! @sub ctqmc_dump_pair
-!!
-!! write out the particle-particle pairing susceptibility
-!!
-  subroutine ctqmc_dump_pair(p2pw, perr)
-     use constants, only : dp
-     use constants, only : mytmp
-
-     use control, only : isvrt
-     use control, only : norbs
-     use control, only : nffrq, nbfrq
-
-     implicit none
-
-! external arguments
-! particle-particle pairing susceptibility
-     complex(dp), intent(in) :: p2pw(nffrq,nffrq,nbfrq,norbs,norbs)
-     complex(dp), intent(in) :: perr(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! local variables
-! loop index for frequencies
-     integer :: i
-     integer :: j
-     integer :: k
-
-! loop index for orbitals
-     integer :: m
-     integer :: n
-
-! dummy integer variables
-! jt: \omega, unit is \pi/\beta
-! it: \omega', unit is \pi/\beta
-     integer :: it
-     integer :: jt
-
-! check if we need to dump the particle-particle pairing susceptibility
-! to solver.pair.dat
-     if ( .not. btest(isvrt, 2) ) RETURN
-
-! open data file: solver.pair.dat
-     open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
-
-! write it
-     do m=1,norbs
-         do n=1,m
-             do k=1,nbfrq
-                 write(mytmp,'(a,i6)') '# flvr1:', m
-                 write(mytmp,'(a,i6)') '# flvr2:', n
-                 write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
-                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, p2pw(i,j,k,n,m), perr(i,j,k,n,m)
-                     enddo ! over i={1,nffrq} loop
-                 enddo ! over j={1,nffrq} loop
-                 write(mytmp,*) ! write empty lines
-                 write(mytmp,*)
-             enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,m} loop
-     enddo ! over m={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_pair
 
 !!========================================================================
 !!>>> dump data of diagrammatic configuration                          <<<
