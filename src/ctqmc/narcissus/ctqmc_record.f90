@@ -1308,7 +1308,7 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
-!!     G^{(2)}_{abcd,AABB} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     G^{(2)}_{abcd,AABB,ph} (\nu, \nu', \omega) = \frac{1}{\beta}
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
@@ -1319,7 +1319,7 @@
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     G^{(2)}_{abcd,ABBA,ph} (\nu, \nu', \omega) = \frac{1}{\beta}
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
@@ -1550,11 +1550,11 @@
 !!    out             in
 !!
 !!     we try to measure the two-particle green's and vertex functions in
-!!     the particle-hole channel and Matsubara frequency representation
+!!     the particle-particle channel and Matsubara frequency representation
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
-!!     G^{(2)}_{abcd,AABB} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     G^{(2)}_{abcd,AABB,pp} (\nu, \nu', \omega) = \frac{1}{\beta}
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
@@ -1565,7 +1565,7 @@
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     G^{(2)}_{abcd,ABBA,pp} (\nu, \nu', \omega) = \frac{1}{\beta}
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
@@ -1579,7 +1579,7 @@
 !!    \tau'_i and \tau'_k: imaginary time for annihilation operator
 !!    \tau_j and \tau_l: imaginary time for creation operator
 !!
-  subroutine ctqmc_record_g2ph()
+  subroutine ctqmc_record_g2pp()
      use constants, only : dp
      use constants, only : czero
 
@@ -1756,13 +1756,9 @@
      deallocate( h2aux )
 
      return
-  end subroutine ctqmc_record_g2ph
+  end subroutine ctqmc_record_g2pp
 
-
-
-
-
-  subroutine ctqmc_record_g2pp()
+!  subroutine ctqmc_record_g2pp()
 !!!!!! AABB pp part
 !<                         w1n = wbn - w3n + nffrq
 !<                         w4n = wbn - w2n + nffrq
@@ -1773,7 +1769,7 @@
 !<                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
 !<                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
 !<                         endif ! back if ( f1 == f2 ) block
-  end subroutine ctqmc_record_g2pp
+!  end subroutine ctqmc_record_g2pp
 
 !!========================================================================
 !!>>> reduce physical observables 1                                    <<<
