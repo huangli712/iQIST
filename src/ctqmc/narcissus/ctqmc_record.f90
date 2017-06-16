@@ -1380,6 +1380,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ -i \omega_n \tau_j ]
+! where m and n are the first two frequency indices for g2aux and h2aux
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
 
