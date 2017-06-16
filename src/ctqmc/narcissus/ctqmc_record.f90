@@ -1308,6 +1308,30 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
+!!     G^{(2)}_{abcd,AABB} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!         \langle
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ -i \nu \tau_j ]
+!!             exp [ i \nu' \tau'_k ]
+!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!         \langle
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ -i \nu \tau_j ]
+!!             exp [ i \nu' \tau'_k ]
+!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!    \tau'_i and \tau'_k: imaginary time for annihilation operator
+!!    \tau_j and \tau_l: imaginary time for creation operator
 !!
   subroutine ctqmc_record_g2ph()
      use constants, only : dp
@@ -1351,11 +1375,13 @@
      complex(dp) :: zg
      complex(dp) :: zh
 
-! dummy complex(dp) arrays, used to store the intermediate results
-     complex(dp), allocatable :: g2aux(:,:,:)
-     complex(dp), allocatable :: h2aux(:,:,:)
+! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
+
+! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ -i \omega_n \tau_j ]
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: h2aux(:,:,:)
 
      real(dp) :: t1, t2
      real(dp), save :: ta = 0.0_dp, tb = 0.0_dp
