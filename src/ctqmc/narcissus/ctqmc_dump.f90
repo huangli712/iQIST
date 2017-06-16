@@ -1243,7 +1243,7 @@
      complex(dp), intent(in) :: g2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! irreducible vertex functions
+! two-particle vertex functions
      complex(dp), intent(in) :: h2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
 
@@ -1260,8 +1260,8 @@
      integer :: n
 
 ! dummy integer variables
-! jt: \omega, unit is \pi/\beta
-! it: \omega', unit is \pi/\beta
+! jt: \nu, unit is \pi/\beta
+! it: \nu', unit is \pi/\beta
      integer :: it
      integer :: jt
 
@@ -1276,12 +1276,12 @@
 ! two-particle green's function, connected part, \chi_{irr}
      complex(dp) :: chic
 
-! full vertex function, \gamma
+! true two-particle vertex function, \gamma^{(4)}
      complex(dp) :: chig
 
 ! check whether we need to dump the two-particle green's function and
-! irreducible vertex function data to solver.g2ph.dat and solver.h2ph.dat
-     if ( .not. btest(isvrt, 1) ) RETURN
+! vertex function data to solver.g2ph.dat and solver.h2ph.dat
+     if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
 
 ! task 1: dump two-particle green's function
 !-------------------------------------------------------------------------
@@ -1311,7 +1311,7 @@
 ! close data file
      close(mytmp)
 
-! task 2: dump irreducible vertex function
+! task 2: dump two-particle vertex function (auxiliary)
 !-------------------------------------------------------------------------
 
 ! open data file: solver.h2ph.dat
@@ -1339,7 +1339,7 @@
 ! close data file
      close(mytmp)
 
-! task 3: dump irreducible vertex function
+! task 3: dump two-particle vertex function (true)
 !-------------------------------------------------------------------------
 
 ! open data file: solver.twop.dat
@@ -1354,14 +1354,15 @@
                  write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
-! evaluate g2
+! evaluate g2: G(-v)
                      if ( j <= nffrq/2 ) then
                          g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
                      else
                          g2 = grnf(j-nffrq/2,m,m)
                      endif ! back if ( j <= nffrq/2 ) block
 
-! evaluate g1 and fw
+! evaluate g1: G(v+w)
+! evaluate fw: F(v+w)
                      p = j + k - 1
                      if ( p <= nffrq/2 ) then
                          g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
@@ -1373,14 +1374,14 @@
 
                      do i=1,nffrq
 
-! evaluate g3
+! evaluate g3: G(v')
                          if ( i <= nffrq/2 ) then
                              g3 = dconjg( grnf(nffrq/2-i+1,n,n) )
                          else
                              g3 = grnf(i-nffrq/2,n,n)
                          endif ! back if ( i <= nffrq/2 ) block
 
-! evaluate g4
+! evaluate g4: G(-(v'+w))
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
                              g4 = dconjg( grnf(nffrq/2-q+1,n,n))
