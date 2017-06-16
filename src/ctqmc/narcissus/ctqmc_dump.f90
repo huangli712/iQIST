@@ -1342,8 +1342,8 @@
 ! task 3: dump two-particle vertex function (true)
 !-------------------------------------------------------------------------
 
-! open data file: solver.twop.dat
-     open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
+! open data file: solver.v4ph.dat
+     open(mytmp, file='solver.v4ph.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
@@ -1534,8 +1534,8 @@
 ! task 3: dump two-particle vertex function (true)
 !-------------------------------------------------------------------------
 
-! open data file: solver.twop.dat
-     open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
+! open data file: solver.v4pp.dat
+     open(mytmp, file='solver.v4pp.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
