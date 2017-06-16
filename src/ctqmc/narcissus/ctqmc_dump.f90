@@ -1412,12 +1412,12 @@
   end subroutine ctqmc_dump_g2ph
 
 !!
-!! @sub ctqmc_dump_g2ph
+!! @sub ctqmc_dump_g2pp
 !!
 !! write out the two-particle green's function and full (reducible) vertex
-!! function in the particle-hole channel
+!! function in the particle-particle channel
 !!
-  subroutine ctqmc_dump_g2ph(g2ph, h2ph, gerr, herr)
+  subroutine ctqmc_dump_g2pp(g2pp, h2pp, gerr, herr)
      use constants, only : dp
      use constants, only : czero
      use constants, only : mytmp
@@ -1432,11 +1432,11 @@
 
 ! external arguments
 ! two-particle green's functions
-     complex(dp), intent(in) :: g2ph(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: g2pp(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! two-particle vertex functions
-     complex(dp), intent(in) :: h2ph(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: h2pp(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
@@ -1472,7 +1472,7 @@
      complex(dp) :: chig
 
 ! check whether we need to dump the two-particle green's function and
-! vertex function data to solver.g2ph.dat and solver.h2ph.dat
+! vertex function data to solver.g2pp.dat and solver.h2pp.dat
      if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
 
 ! task 1: dump two-particle green's function
