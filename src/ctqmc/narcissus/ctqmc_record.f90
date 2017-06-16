@@ -1745,8 +1745,8 @@
 
                      END BLOCK CALC_ABBA_PP
 
-                         g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
-                         h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
+                         g2pp(w3n,w2n,wbn,f2,f1) = g2pp(w3n,w2n,wbn,f2,f1) + zg / beta
+                         h2pp(w3n,w2n,wbn,f2,f1) = h2pp(w3n,w2n,wbn,f2,f1) + zh / beta
                      enddo WF2_CYCLE ! over w3n={1,nffrq} loop
                  enddo WF1_CYCLE ! over w2n={1,nffrq} loop
 
