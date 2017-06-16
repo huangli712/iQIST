@@ -1554,7 +1554,7 @@
                      endif ! back if ( j <= nffrq/2 ) block
 
 ! evaluate g4: G(w-v)
-                     q = j + k - 1
+                     q = k - j + nffrq
                      if ( q <= nffrq/2 ) then
                          g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                      else
@@ -1565,7 +1565,7 @@
 
 ! evaluate g1: G(w-v')
 ! evaluate fw: F(w-v')
-                         p = i + k - 1
+                         p = k - i + nffrq
                          if ( p <= nffrq/2 ) then
                              g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
                              fw = dconjg( frnf(nffrq/2-p+1,m,m) )
