@@ -1459,9 +1459,9 @@
 
                          zg = czero; zh = czero
 
-! G2_AABB_PH component
+! G2_PH_AABB component
 !-------------------------------------------------------------------------
-                     CALC_AABB_PH: BLOCK
+                     CALC_G2_PH_AABB: BLOCK
 
                          if ( btest(isvrt,1) ) then
                              zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
@@ -1473,11 +1473,11 @@
                              endif ! back if ( f1 == f2 ) block
                          endif ! back if ( btest(isvrt,1) ) block
 
-                     END BLOCK CALC_AABB_PH
+                     END BLOCK CALC_G2_PH_AABB
 
-! G2_ABBA_PH component
+! G2_PH_ABBA component
 !-------------------------------------------------------------------------
-                     CALC_ABBA_PH: BLOCK
+                     CALC_G2_PH_ABBA: BLOCK
 
                          if ( btest(isvrt,2) ) then
                              zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
@@ -1489,7 +1489,7 @@
                              endif ! back if ( f1 == f2 ) block
                          endif ! back if ( btest(isvrt,2) ) block
 
-                     END BLOCK CALC_ABBA_PH
+                     END BLOCK CALC_G2_PH_ABBA
 
                          g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
                          h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
@@ -1705,9 +1705,9 @@
 
                          zg = czero; zh = czero
 
-! G2_AABB_PP component
+! G2_PP_AABB component
 !-------------------------------------------------------------------------
-                     CALC_AABB_PP: BLOCK
+                     CALC_G2_PP_AABB: BLOCK
 
                          if ( btest(isvrt,3) ) then
                              zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
@@ -1719,11 +1719,11 @@
                              endif ! back if ( f1 == f2 ) block
                          endif ! back if ( btest(isvrt,3) ) block
 
-                     END BLOCK CALC_AABB_PP
+                     END BLOCK CALC_G2_PP_AABB
 
-! G2_ABBA_PP component
+! G2_PP_ABBA component
 !-------------------------------------------------------------------------
-                     CALC_ABBA_PP: BLOCK
+                     CALC_G2_PP_ABBA: BLOCK
 
                          if ( btest(isvrt,4) ) then
                              zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
@@ -1735,7 +1735,7 @@
                              endif ! back if ( f1 == f2 ) block
                          endif ! back if ( btest(isvrt,4) ) block
 
-                     END BLOCK CALC_ABBA_PP
+                     END BLOCK CALC_G2_PP_ABBA
 
                          g2pp(w3n,w2n,wbn,f2,f1) = g2pp(w3n,w2n,wbn,f2,f1) + zg / beta
                          h2pp(w3n,w2n,wbn,f2,f1) = h2pp(w3n,w2n,wbn,f2,f1) + zh / beta

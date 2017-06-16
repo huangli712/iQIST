@@ -1,6 +1,6 @@
 Uc = 2.0
 mune = 1.0
 beta = 10.0
-isvrt = 6
-nbfrq = 3
-nffrq = 10
+isvrt = 2
+nbfrq = 2
+nffrq = 64
