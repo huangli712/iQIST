@@ -1454,12 +1454,12 @@
                                                !
                  WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
                      WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
-                         w1n = w2n + wbn - 1
+                         w1n = w2n + wbn - 1 ! think it carefully
                          w4n = w3n + wbn - 1
 
                          zg = czero; zh = czero
 
-! AABB_PH component
+! G2_AABB_PH component
 !-------------------------------------------------------------------------
                      CALC_AABB_PH: BLOCK
 
@@ -1475,7 +1475,7 @@
 
                      END BLOCK CALC_AABB_PH
 
-! ABBA_PH component
+! G2_ABBA_PH component
 !-------------------------------------------------------------------------
                      CALC_ABBA_PH: BLOCK
 
@@ -1700,16 +1700,16 @@
                                                !
                  WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
                      WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
-                         w1n = wbn - w3n + nffrq
+                         w1n = wbn - w3n + nffrq ! think it carefully
                          w4n = wbn - w2n + nffrq
 
                          zg = czero; zh = czero
 
-! AABB_PP component
+! G2_AABB_PP component
 !-------------------------------------------------------------------------
                      CALC_AABB_PP: BLOCK
 
-                         if ( btest(isvrt,1) ) then
+                         if ( btest(isvrt,3) ) then
                              zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                              zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
 
@@ -1717,15 +1717,15 @@
                                  zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                                  zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                              endif ! back if ( f1 == f2 ) block
-                         endif ! back if ( btest(isvrt,1) ) block
+                         endif ! back if ( btest(isvrt,3) ) block
 
                      END BLOCK CALC_AABB_PP
 
-! ABBA_PP component
+! G2_ABBA_PP component
 !-------------------------------------------------------------------------
                      CALC_ABBA_PP: BLOCK
 
-                         if ( btest(isvrt,2) ) then
+                         if ( btest(isvrt,4) ) then
                              zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
                              zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
 
@@ -1733,7 +1733,7 @@
                                  zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
                                  zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
                              endif ! back if ( f1 == f2 ) block
-                         endif ! back if ( btest(isvrt,2) ) block
+                         endif ! back if ( btest(isvrt,4) ) block
 
                      END BLOCK CALC_ABBA_PP
 
