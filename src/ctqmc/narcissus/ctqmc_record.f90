@@ -1274,6 +1274,21 @@
 !!
 !! note:
 !!
+!!     G^{(2)}_{\alpha\beta\gamma\delta} (\tau_1, \tau_2, \tau_3, \tau_4)
+!!         = \langle T_\tau
+!!               c_{\alpha} (\tau_1) c^{\dagger}_{\beta} (\tau_2)
+!!               c_{\gamma} (\tau_3) c^{\dagger}_{\delta} (\tau_4)
+!!           \rangle
+!!
+!!     G^{(2)}_{\alpha\beta\gamma\delta} (\nu, \nu', \omega)
+!!         = \langle
+!!               c_{\alpha} (\nu + \omega) c^{*}_{\beta} (\nu)
+!!               c_{\gamma} (\nu') c^{*}_{\delta} (\nu' + \omega)
+!!           \rangle
+!!
+!!     \nu and \nu': fermionic Matsubara frequency
+!!     \omega: bosonic Matsubara frequency
+!!
 !!    in             out
 !!     \              /
 !!  v+w \            / v'+w
@@ -1287,6 +1302,11 @@
 !!    v /            \ v'
 !!     /              \
 !!    out             in
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-hole channel and Matsubara frequency representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
 !!
 !!
   subroutine ctqmc_record_g2ph()
