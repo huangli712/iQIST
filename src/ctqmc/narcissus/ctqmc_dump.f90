@@ -1354,13 +1354,6 @@
                  write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
-! evaluate g2: G(-v)
-                     if ( j <= nffrq/2 ) then
-                         g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
-                     else
-                         g2 = grnf(j-nffrq/2,m,m)
-                     endif ! back if ( j <= nffrq/2 ) block
-
 ! evaluate g1: G(v+w)
 ! evaluate fw: F(v+w)
                      p = j + k - 1
@@ -1372,6 +1365,13 @@
                          fw = frnf(p-nffrq/2,m,m)
                      endif ! back if ( p <= nffrq/2 ) block
 
+! evaluate g2: G(v)
+                     if ( j <= nffrq/2 ) then
+                         g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
+                     else
+                         g2 = grnf(j-nffrq/2,m,m)
+                     endif ! back if ( j <= nffrq/2 ) block
+
                      do i=1,nffrq
 
 ! evaluate g3: G(v')
@@ -1381,7 +1381,7 @@
                              g3 = grnf(i-nffrq/2,n,n)
                          endif ! back if ( i <= nffrq/2 ) block
 
-! evaluate g4: G(-(v'+w))
+! evaluate g4: G(v'+w)
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
                              g4 = dconjg( grnf(nffrq/2-q+1,n,n))
@@ -1410,9 +1410,6 @@
 
      return
   end subroutine ctqmc_dump_g2ph
-
-  subroutine ctqmc_dump_g2pp()
-  end subroutine ctqmc_dump_g2pp
 
 !!========================================================================
 !!>>> dump data of diagrammatic configuration                          <<<
