@@ -1405,7 +1405,8 @@
 ! calculate prefactor: pref
      call ctqmc_make_pref()
 
-! calculate g2aux and h2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
+! calculate g2aux and h2aux
+! see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP DO PRIVATE (flvr, is, ie, maux, naux, w2n, w1n, caux1, caux2)
      FLVR_CYCLE: do flvr=1,norbs
@@ -1430,28 +1431,37 @@
 !$OMP END DO
 
 ! calculate g2ph and h2ph
-!$OMP DO PRIVATE (f1, f2, zg, zh, wbn, w4n, w3n, w2n, w1n)
-     ORB1_CYCLE: do f1=1,norbs
-         ORB2_CYCLE: do f2=1,f1
-
-             WB_CYCLE: do wbn=1,nbfrq
-
-                 WF1_CYCLE: do w2n=1,nffrq
-                     WF2_CYCLE: do w3n=1,nffrq
+!$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
+     ORB1_CYCLE: do f1=1,norbs                 ! block index: A
+         ORB2_CYCLE: do f2=1,f1                ! block index: B
+                                               !
+             WB_CYCLE: do wbn=1,nbfrq          ! bosonic Matsubara frequency: w
+                                               !
+                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
+                     WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
                          w1n = w2n + wbn - 1
                          w4n = w3n + wbn - 1
 
-                         zg = czero
-                         zh = czero
+                         zg = czero; zh = czero
 
-!!!!!! AABB ph part
-!<                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-!<                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-!<
-!<                         if ( f1 == f2 ) then
-!<                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-!<                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-!<                         endif ! back if ( f1 == f2 ) block
+! AABB_PH component
+! g2aux(w1n,w2n,f1) -> exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+! g2aux(w3n,w4n,f2) -> exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+! g2aux(w1n,w4n,f1) -> exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+! g2aux(w3n,w2n,f1) -> exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+                     CALC_AABB_PH: BLOCK
+
+                         if ( btest(isvrt,1) ) then
+                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+
+                             if ( f1 == f2 ) then
+                                 zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                                 zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                             endif ! back if ( f1 == f2 ) block
+                         endif ! back if ( btest(isvrt,1) ) block
+
+                     END BLOCK CALC_AABB_PH
 
 !!!!!! ABBA ph part
 !<                         zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
@@ -1462,16 +1472,7 @@
 !<                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
 !<                         endif ! back if ( f1 == f2 ) block
 
-!!!!!! AABB pp part
-                         w1n = wbn - w3n + nffrq
-                         w4n = wbn - w2n + nffrq
-                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
 
-                         if ( f1 == f2 ) then
-                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                         endif ! back if ( f1 == f2 ) block
 
                          g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
                          h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
@@ -1495,6 +1496,16 @@
   end subroutine ctqmc_record_g2ph
 
   subroutine ctqmc_record_g2pp()
+!!!!!! AABB pp part
+!<                         w1n = wbn - w3n + nffrq
+!<                         w4n = wbn - w2n + nffrq
+!<                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+!<                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+!<
+!<                         if ( f1 == f2 ) then
+!<                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+!<                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+!<                         endif ! back if ( f1 == f2 ) block
   end subroutine ctqmc_record_g2pp
 
 !!========================================================================
