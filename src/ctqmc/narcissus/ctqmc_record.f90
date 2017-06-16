@@ -1280,7 +1280,7 @@
 !!               c_{\gamma} (\tau_3) c^{\dagger}_{\delta} (\tau_4)
 !!           \rangle
 !!
-!!     G^{(2)}_{\alpha\beta\gamma\delta} (\nu, \nu', \omega)
+!!     G^{(2)}_{\alpha\beta\gamma\delta,ph} (\nu, \nu', \omega)
 !!         = \langle
 !!               c_{\alpha} (\nu + \omega) c^{*}_{\beta} (\nu)
 !!               c_{\gamma} (\nu') c^{*}_{\delta} (\nu' + \omega)
@@ -1515,7 +1515,7 @@
 !!
 !! @sub ctqmc_record_g2pp
 !!
-!! record the two-particle green's and vertex functions in the ph channel.
+!! record the two-particle green's and vertex functions in the pp channel.
 !! here improved estimator is used to improve the accuracy
 !!
 !! note:
@@ -1526,10 +1526,10 @@
 !!               c_{\gamma} (\tau_3) c^{\dagger}_{\delta} (\tau_4)
 !!           \rangle
 !!
-!!     G^{(2)}_{\alpha\beta\gamma\delta} (\nu, \nu', \omega)
+!!     G^{(2)}_{\alpha\beta\gamma\delta,pp} (\nu, \nu', \omega)
 !!         = \langle
-!!               c_{\alpha} (\nu + \omega) c^{*}_{\beta} (\nu)
-!!               c_{\gamma} (\nu') c^{*}_{\delta} (\nu' + \omega)
+!!               c_{\alpha} (\omega - \nu') c^{*}_{\beta} (\nu)
+!!               c_{\gamma} (\nu') c^{*}_{\delta} (\omega - nu)
 !!           \rangle
 !!
 !!     \nu and \nu': fermionic Matsubara frequency
@@ -1537,7 +1537,7 @@
 !!
 !!    in             out
 !!     \              /
-!!  v+w \            / v'+w
+!! w-v' \            / w-v
 !!       \          /
 !!      i \--------/ l
 !!        |        |
