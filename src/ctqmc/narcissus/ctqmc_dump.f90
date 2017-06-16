@@ -1546,17 +1546,6 @@
                  write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
-! evaluate g1: G(v+w)
-! evaluate fw: F(v+w)
-                     p = j + k - 1
-                     if ( p <= nffrq/2 ) then
-                         g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
-                         fw = dconjg( frnf(nffrq/2-p+1,m,m) )
-                     else
-                         g1 = grnf(p-nffrq/2,m,m)
-                         fw = frnf(p-nffrq/2,m,m)
-                     endif ! back if ( p <= nffrq/2 ) block
-
 ! evaluate g2: G(v)
                      if ( j <= nffrq/2 ) then
                          g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
@@ -1564,7 +1553,26 @@
                          g2 = grnf(j-nffrq/2,m,m)
                      endif ! back if ( j <= nffrq/2 ) block
 
+! evaluate g4: G(w-v)
+                     q = j + k - 1
+                     if ( q <= nffrq/2 ) then
+                         g4 = dconjg( grnf(nffrq/2-q+1,n,n))
+                     else
+                         g4 = grnf(q-nffrq/2,n,n)
+                     endif ! back if ( q <= nffrq/2 ) block
+
                      do i=1,nffrq
+
+! evaluate g1: G(w-v')
+! evaluate fw: F(w-v')
+                         p = i + k - 1
+                         if ( p <= nffrq/2 ) then
+                             g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
+                             fw = dconjg( frnf(nffrq/2-p+1,m,m) )
+                         else
+                             g1 = grnf(p-nffrq/2,m,m)
+                             fw = frnf(p-nffrq/2,m,m)
+                         endif ! back if ( p <= nffrq/2 ) block
 
 ! evaluate g3: G(v')
                          if ( i <= nffrq/2 ) then
@@ -1572,14 +1580,6 @@
                          else
                              g3 = grnf(i-nffrq/2,n,n)
                          endif ! back if ( i <= nffrq/2 ) block
-
-! evaluate g4: G(v'+w)
-                         q = i + k - 1
-                         if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
-                         else
-                             g4 = grnf(q-nffrq/2,n,n)
-                         endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chic
                          chic = g1 * h2pp(i,j,k,n,m) - fw * g2pp(i,j,k,n,m)
