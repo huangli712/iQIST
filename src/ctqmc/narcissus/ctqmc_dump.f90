@@ -1411,6 +1411,198 @@
      return
   end subroutine ctqmc_dump_g2ph
 
+!!
+!! @sub ctqmc_dump_g2ph
+!!
+!! write out the two-particle green's function and full (reducible) vertex
+!! function in the particle-hole channel
+!!
+  subroutine ctqmc_dump_g2ph(g2ph, h2ph, gerr, herr)
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+
+     use context, only : grnf, frnf
+
+     implicit none
+
+! external arguments
+! two-particle green's functions
+     complex(dp), intent(in) :: g2ph(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! two-particle vertex functions
+     complex(dp), intent(in) :: h2ph(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! loop index for frequencies
+     integer :: i
+     integer :: j
+     integer :: k
+     integer :: p
+     integer :: q
+
+! loop index for orbitals
+     integer :: m
+     integer :: n
+
+! dummy integer variables
+! jt: \nu, unit is \pi/\beta
+! it: \nu', unit is \pi/\beta
+     integer :: it
+     integer :: jt
+
+! dummy complex(dp) variables
+! they are used to store the impurity green's function
+     complex(dp) :: fw
+     complex(dp) :: g1
+     complex(dp) :: g2
+     complex(dp) :: g3
+     complex(dp) :: g4
+
+! two-particle green's function, connected part, \chi_{irr}
+     complex(dp) :: chic
+
+! true two-particle vertex function, \gamma^{(4)}
+     complex(dp) :: chig
+
+! check whether we need to dump the two-particle green's function and
+! vertex function data to solver.g2ph.dat and solver.h2ph.dat
+     if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
+
+! task 1: dump two-particle green's function
+!-------------------------------------------------------------------------
+
+! open data file: solver.g2ph.dat
+     open(mytmp, file='solver.g2ph.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,4f16.8)') jt, it, g2ph(i,j,k,n,m), gerr(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+! task 2: dump two-particle vertex function (auxiliary)
+!-------------------------------------------------------------------------
+
+! open data file: solver.h2ph.dat
+     open(mytmp, file='solver.h2ph.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,4f16.8)') jt, it, h2ph(i,j,k,n,m), herr(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+! task 3: dump two-particle vertex function (true)
+!-------------------------------------------------------------------------
+
+! open data file: solver.twop.dat
+     open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+
+! evaluate g1: G(v+w)
+! evaluate fw: F(v+w)
+                     p = j + k - 1
+                     if ( p <= nffrq/2 ) then
+                         g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
+                         fw = dconjg( frnf(nffrq/2-p+1,m,m) )
+                     else
+                         g1 = grnf(p-nffrq/2,m,m)
+                         fw = frnf(p-nffrq/2,m,m)
+                     endif ! back if ( p <= nffrq/2 ) block
+
+! evaluate g2: G(v)
+                     if ( j <= nffrq/2 ) then
+                         g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
+                     else
+                         g2 = grnf(j-nffrq/2,m,m)
+                     endif ! back if ( j <= nffrq/2 ) block
+
+                     do i=1,nffrq
+
+! evaluate g3: G(v')
+                         if ( i <= nffrq/2 ) then
+                             g3 = dconjg( grnf(nffrq/2-i+1,n,n) )
+                         else
+                             g3 = grnf(i-nffrq/2,n,n)
+                         endif ! back if ( i <= nffrq/2 ) block
+
+! evaluate g4: G(v'+w)
+                         q = i + k - 1
+                         if ( q <= nffrq/2 ) then
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
+                         else
+                             g4 = grnf(q-nffrq/2,n,n)
+                         endif ! back if ( q <= nffrq/2 ) block
+
+! evaluate chic
+                         chic = g1 * h2ph(i,j,k,n,m) - fw * g2ph(i,j,k,n,m)
+
+! evaluate chig
+                         chig = chic / (g1 * g2 * g3 * g4)
+
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,4f16.8)') jt, it, chic, chig
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_g2ph
+
 !!========================================================================
 !!>>> dump data of diagrammatic configuration                          <<<
 !!========================================================================
