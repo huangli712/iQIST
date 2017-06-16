@@ -1558,10 +1558,10 @@
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ i (\omega - \nu') \tau'_i ]
 !!             exp [ -i \nu \tau_j ]
 !!             exp [ i \nu' \tau'_k ]
-!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             exp [ -i (\omega - \nu) \tau_l ]
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
@@ -1569,10 +1569,10 @@
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ i (\omega - \nu') \tau'_i ]
 !!             exp [ -i \nu \tau_j ]
 !!             exp [ i \nu' \tau'_k ]
-!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             exp [ -i (\omega - \nu) \tau_l ]
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
