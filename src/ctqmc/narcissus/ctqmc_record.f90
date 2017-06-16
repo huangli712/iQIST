@@ -1512,6 +1512,256 @@
      return
   end subroutine ctqmc_record_g2ph
 
+!!
+!! @sub ctqmc_record_g2pp
+!!
+!! record the two-particle green's and vertex functions in the ph channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     G^{(2)}_{\alpha\beta\gamma\delta} (\tau_1, \tau_2, \tau_3, \tau_4)
+!!         = \langle T_\tau
+!!               c_{\alpha} (\tau_1) c^{\dagger}_{\beta} (\tau_2)
+!!               c_{\gamma} (\tau_3) c^{\dagger}_{\delta} (\tau_4)
+!!           \rangle
+!!
+!!     G^{(2)}_{\alpha\beta\gamma\delta} (\nu, \nu', \omega)
+!!         = \langle
+!!               c_{\alpha} (\nu + \omega) c^{*}_{\beta} (\nu)
+!!               c_{\gamma} (\nu') c^{*}_{\delta} (\nu' + \omega)
+!!           \rangle
+!!
+!!     \nu and \nu': fermionic Matsubara frequency
+!!     \omega: bosonic Matsubara frequency
+!!
+!!    in             out
+!!     \              /
+!!  v+w \            / v'+w
+!!       \          /
+!!      i \--------/ l
+!!        |        |
+!!        |        |
+!!        |        |
+!!      j /--------\ k
+!!       /          \
+!!    v /            \ v'
+!!     /              \
+!!    out             in
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-hole channel and Matsubara frequency representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
+!!     G^{(2)}_{abcd,AABB} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!         \langle
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ -i \nu \tau_j ]
+!!             exp [ i \nu' \tau'_k ]
+!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!         \langle
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ -i \nu \tau_j ]
+!!             exp [ i \nu' \tau'_k ]
+!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!    \tau'_i and \tau'_k: imaginary time for annihilation operator
+!!    \tau_j and \tau_l: imaginary time for creation operator
+!!
+  subroutine ctqmc_record_g2ph()
+     use constants, only : dp
+     use constants, only : czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+
+     use context, only : g2ph
+     use context, only : h2ph
+     use context, only : rank, pref
+     use context, only : mmat
+
+     implicit none
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+! used to store the element of mmat matrix
+     real(dp) :: maux
+     real(dp) :: naux
+
+! dummy complex(dp) variables, used to calculate the g2ph and h2ph
+     complex(dp) :: zg
+     complex(dp) :: zh
+
+! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
+
+! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ i \omega_n \tau_j ]
+! where m and n are the first two frequency indices for g2aux and h2aux
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: h2aux(:,:,:)
+
+! check whether there is conflict
+! this subroutine is only designed for the particle-hole channel
+     call s_assert( btest(isvrt, 1) .or. btest(isvrt, 2) )
+
+! you can not calculate the AABB and ABBA components at the same time
+     call s_assert( .not. ( btest(isvrt, 1) .and. btest(isvrt, 2) ) )
+
+! evaluate nfaux, determine the size of g2aux and h2aux
+     nfaux = nffrq + nbfrq - 1
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
+
+! allocate memory for g2aux and h2aux, and then initialize them
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+     allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
+
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
+! calculate g2aux and h2aux
+! see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP DO PRIVATE (flvr, is, ie, maux, naux, w2n, w1n, caux1, caux2)
+     FLVR_CYCLE: do flvr=1,norbs
+         call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
+
+         do is=1,rank(flvr)
+             do ie=1,rank(flvr)
+
+                 maux = mmat(ie, is, flvr)
+                 naux = mmat(ie, is, flvr) * pref(ie,flvr)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
+                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w2n,is) * caux2(w1n,ie)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+!$OMP END DO
+
+! calculate g2ph and h2ph
+!
+! note:
+!
+!     g2aux(w1n,w2n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+!
+!     g2aux(w3n,w4n,f2) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w1n,w4n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w3n,w2n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!
+!$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
+     ORB1_CYCLE: do f1=1,norbs                 ! block index: A
+         ORB2_CYCLE: do f2=1,f1                ! block index: B
+                                               !
+             WB_CYCLE: do wbn=1,nbfrq          ! bosonic Matsubara frequency: w
+                                               !
+                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
+                     WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
+                         w1n = w2n + wbn - 1
+                         w4n = w3n + wbn - 1
+
+                         zg = czero; zh = czero
+
+! AABB_PH component
+!-------------------------------------------------------------------------
+                     CALC_AABB_PH: BLOCK
+
+                         if ( btest(isvrt,1) ) then
+                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+
+                             if ( f1 == f2 ) then
+                                 zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                                 zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                             endif ! back if ( f1 == f2 ) block
+                         endif ! back if ( btest(isvrt,1) ) block
+
+                     END BLOCK CALC_AABB_PH
+
+! ABBA_PH component
+!-------------------------------------------------------------------------
+                     CALC_ABBA_PH: BLOCK
+
+                         if ( btest(isvrt,2) ) then
+                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+
+                             if ( f1 == f2 ) then
+                                 zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                                 zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                             endif ! back if ( f1 == f2 ) block
+                         endif ! back if ( btest(isvrt,2) ) block
+
+                     END BLOCK CALC_ABBA_PH
+
+                         g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
+                         h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
+                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
+                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
+
+             enddo WB_CYCLE ! over wbn={1,nbfrq} loop
+
+         enddo ORB2_CYCLE ! over f2={1,f1} loop
+     enddo ORB1_CYCLE ! over f1={1,norbs} loop
+!$OMP END DO
+!$OMP END PARALLEL
+
+! deallocate memory
+     deallocate( caux1 )
+     deallocate( caux2 )
+     deallocate( g2aux )
+     deallocate( h2aux )
+
+     return
+  end subroutine ctqmc_record_g2ph
+
+
+
+
+
   subroutine ctqmc_record_g2pp()
 !!!!!! AABB pp part
 !<                         w1n = wbn - w3n + nffrq
