@@ -1,9 +1,9 @@
 # s032/solver.ctqmc.in
 
 isscr  = 4
-#isort  = 2
-#issus  = 30
-#isvrt  = 2
+isort  = 2
+issus  = 30
+isvrt  = 2
 nband  = 3
 norbs  = 6
 ncfgs  = 64
