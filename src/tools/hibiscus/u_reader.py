@@ -685,32 +685,3 @@ class iqistReader(object):
         f.close()
 
         return (chic, chig)
-
-    @staticmethod
-    def get_pair(norbs, nffrq, nbfrq, fileName = None):
-        """ try to read the solver.pair.dat file to return the pair
-            susceptibility data
-        """
-        if fileName is None:
-            f = open("solver.pair.dat","r")
-        else:
-            f = open(fileName,"r")
-
-        p2pw = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
-        for m in range(norbs):
-            for n in range(m+1):
-                for k in range(nbfrq):
-                    f.readline() # skip three comment lines
-                    f.readline()
-                    f.readline()
-                    for j in range(nffrq):
-                        for i in range(nffrq):
-                            spl = f.readline().split()
-                            p2pw[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
-                            p2pw[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
-                    f.readline() # skip two blank lines
-                    f.readline()
-
-        f.close()
-
-        return p2pw
