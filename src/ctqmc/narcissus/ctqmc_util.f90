@@ -1284,6 +1284,117 @@
      use context, only : time_s, time_e
      use context, only : rank
 
+     use context, only : exp_s, exp_e
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in) :: flvr
+
+! combination of nffrq and nbfrq
+     integer, intent(in) :: nfaux
+
+! maximum number of operators in different flavor channels
+     integer, intent(in) :: mrank
+
+! matsubara frequency exponents for creation operators
+     complex(dp), intent(out) :: caux1(nfaux,mrank)
+
+! matsubara frequency exponents for annihilation operators
+     complex(dp), intent(out) :: caux2(nfaux,mrank)
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! imaginary time for start and end points
+! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
+     complex(dp) :: zs
+     complex(dp) :: ze
+
+     integer :: ix, ir
+
+! creation operators
+!-------------------------------------------------------------------------
+! for each \tau_s, we try to calculate
+!     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+!     \omega_n = -(v + w), v: -v ---> +v, w: -0 ---> +w
+! so,
+!     \omega_n = +v,   when n = 1
+!     \omega_n = -v-w, when n = nfaux
+!
+!<     do is=1,rank(flvr)
+!<         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
+!<         caux1(:,is) = exp(-two * zs)
+!<         call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
+!<         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * zs)
+!<     enddo ! over is={1,rank(flvr)} loop
+
+     do is=1,rank(flvr)
+!<         do ix=1,nfaux
+!<             ir = nffrq / 2 + 1 - ix
+!<             if ( ir > 0 ) then
+!<                 caux1(ix,is) = exp_s(ir, index_s(is, flvr), flvr)
+!<             else
+!<                 ir = abs(ir) + 1
+!<                 caux1(ix,is) = dconjg( exp_s(ir, index_s(is, flvr), flvr) )
+!<             endif
+!<         enddo
+         do ix=1,nffrq/2
+             ir = nffrq / 2 + 1 - ix
+             caux1(ix,is) = exp_s(ir, index_s(is, flvr), flvr)
+         enddo
+         do ix=nffrq/2+1,nfaux
+             ir = nffrq / 2 + 1 - ix
+             ir = abs(ir) + 1
+             caux1(ix,is) = dconjg( exp_s(ir, index_s(is, flvr), flvr) )
+         enddo
+     enddo ! over is={1,rank(flvr)} loop
+
+! annihilation operators
+!-------------------------------------------------------------------------
+! for each \tau_e, we try to calculate
+!     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+!     \omega_n = +(v + w), v: -v ---> +v, w: -0 ---> +w
+! so,
+!     \omega_n = -v,   when n = 1
+!     \omega_n = +v+w, when n = nfaux
+!
+!<     do ie=1,rank(flvr)
+!<         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
+!<         caux2(:,ie) = exp(+two * ze)
+!<         call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
+!<         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * ze)
+!<     enddo ! over ie={1,rank(flvr)} loop
+
+     do ie=1,rank(flvr)
+         do ix=1,nffrq/2
+             ir = -nffrq/2 + ix
+             ir = abs(ir) + 1
+             caux2(ix,ie) = dconjg( exp_e(ir, index_e(ie, flvr), flvr) )
+         enddo
+         do ix=nffrq/2+1,nfaux
+             ir = -nffrq/2 + ix
+             caux2(ix,ie) = exp_e(ir, index_e(ie, flvr), flvr)
+         enddo
+     enddo ! over ie={1,rank(flvr)} loop
+
+     return
+  end subroutine ctqmc_make_prod
+
+  subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
+     use constants, only : dp
+     use constants, only : pi, two, czi
+
+     use control, only : nffrq
+     use control, only : beta
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rank
+
      implicit none
 
 ! external arguments
