@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 08/15/2015 by li huang (created)
-## 06/07/2017 by li huang (last modified)
+## 06/19/2017 by li huang (last modified)
 ##
 ##
 
@@ -597,16 +597,16 @@ class iqistReader(object):
         return (bmesh, ch_w)
 
     @staticmethod
-    def get_g2pw(norbs, nffrq, nbfrq, fileName = None):
-        """ try to read the solver.g2pw.dat file to return the two-particle
+    def get_g2ph(norbs, nffrq, nbfrq, fileName = None):
+        """ try to read the solver.g2ph.dat file to return the two-particle
             Green's function data
         """
         if fileName is None:
-            f = open("solver.g2pw.dat","r")
+            f = open("solver.g2ph.dat","r")
         else:
             f = open(fileName,"r")
 
-        g2pw = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        g2ph = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
             for n in range(m+1):
                 for k in range(nbfrq):
@@ -616,14 +616,14 @@ class iqistReader(object):
                     for j in range(nffrq):
                         for i in range(nffrq):
                             spl = f.readline().split()
-                            g2pw[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
-                            g2pw[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2ph[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2ph[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
                     f.readline() # skip two blank lines
                     f.readline()
 
         f.close()
 
-        return g2pw
+        return g2ph
 
     @staticmethod
     def get_h2pw(norbs, nffrq, nbfrq, fileName = None):
