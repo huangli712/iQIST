@@ -1273,6 +1273,14 @@
 !!
 !! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
 !!
+!! note:
+!!
+!!     here, we provide two versions of ctqmc_make_prod subroutines. the
+!!     difference lies in how to evaluate exp(i \omega_n \tau). one just
+!!     copies data from exp_s and exp_e, which is fast. but nfreq must be
+!!     larger than nfaux (= nffrq + nbfrq - 1). another one just try to
+!!     calculate the quantity directly, which is a bit slow, but safe.
+!!
   subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp
      use constants, only : pi, two, czi
@@ -1458,6 +1466,7 @@
 !<
 !<     return
 !<  end subroutine ctqmc_make_prod
+!<
 
 !!========================================================================
 !!>>> self-energy function                                             <<<
