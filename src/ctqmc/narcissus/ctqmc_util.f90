@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           06/15/2017 by li huang (last modified)
+!!!           06/19/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -1284,8 +1284,6 @@
      use context, only : time_s, time_e
      use context, only : rank
 
-     use context, only : exp_s, exp_e
-
      implicit none
 
 ! external arguments
@@ -1314,8 +1312,6 @@
      complex(dp) :: zs
      complex(dp) :: ze
 
-     integer :: ix, ir
-
 ! creation operators
 !-------------------------------------------------------------------------
 ! for each \tau_s, we try to calculate
@@ -1325,32 +1321,11 @@
 !     \omega_n = +v,   when n = 1
 !     \omega_n = -v-w, when n = nfaux
 !
-!<     do is=1,rank(flvr)
-!<         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
-!<         caux1(:,is) = exp(-two * zs)
-!<         call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
-!<         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * zs)
-!<     enddo ! over is={1,rank(flvr)} loop
-
      do is=1,rank(flvr)
-!<         do ix=1,nfaux
-!<             ir = nffrq / 2 + 1 - ix
-!<             if ( ir > 0 ) then
-!<                 caux1(ix,is) = exp_s(ir, index_s(is, flvr), flvr)
-!<             else
-!<                 ir = abs(ir) + 1
-!<                 caux1(ix,is) = dconjg( exp_s(ir, index_s(is, flvr), flvr) )
-!<             endif
-!<         enddo
-         do ix=1,nffrq/2
-             ir = nffrq / 2 + 1 - ix
-             caux1(ix,is) = exp_s(ir, index_s(is, flvr), flvr)
-         enddo
-         do ix=nffrq/2+1,nfaux
-             ir = nffrq / 2 + 1 - ix
-             ir = abs(ir) + 1
-             caux1(ix,is) = dconjg( exp_s(ir, index_s(is, flvr), flvr) )
-         enddo
+         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
+         caux1(:,is) = exp(-two * zs)
+         call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
+         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * zs)
      enddo ! over is={1,rank(flvr)} loop
 
 ! annihilation operators
@@ -1362,23 +1337,11 @@
 !     \omega_n = -v,   when n = 1
 !     \omega_n = +v+w, when n = nfaux
 !
-!<     do ie=1,rank(flvr)
-!<         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
-!<         caux2(:,ie) = exp(+two * ze)
-!<         call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
-!<         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * ze)
-!<     enddo ! over ie={1,rank(flvr)} loop
-
      do ie=1,rank(flvr)
-         do ix=1,nffrq/2
-             ir = -nffrq/2 + ix
-             ir = abs(ir) + 1
-             caux2(ix,ie) = dconjg( exp_e(ir, index_e(ie, flvr), flvr) )
-         enddo
-         do ix=nffrq/2+1,nfaux
-             ir = -nffrq/2 + ix
-             caux2(ix,ie) = exp_e(ir, index_e(ie, flvr), flvr)
-         enddo
+         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
+         caux2(:,ie) = exp(+two * ze)
+         call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
+         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * ze)
      enddo ! over ie={1,rank(flvr)} loop
 
      return
