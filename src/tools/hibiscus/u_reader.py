@@ -655,12 +655,12 @@ class iqistReader(object):
         return h2ph
 
     @staticmethod
-    def get_twop(norbs, nffrq, nbfrq, fileName = None):
-        """ try to read the solver.twop.dat file to return the two-particle
+    def get_v4ph(norbs, nffrq, nbfrq, fileName = None):
+        """ try to read the solver.v4ph.dat file to return the two-particle
             vertex function data
         """
         if fileName is None:
-            f = open("solver.twop.dat","r")
+            f = open("solver.v4ph.dat","r")
         else:
             f = open(fileName,"r")
 
