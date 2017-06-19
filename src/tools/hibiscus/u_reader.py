@@ -626,16 +626,16 @@ class iqistReader(object):
         return g2ph
 
     @staticmethod
-    def get_h2pw(norbs, nffrq, nbfrq, fileName = None):
-        """ try to read the solver.h2pw.dat file to return the two-particle
+    def get_h2ph(norbs, nffrq, nbfrq, fileName = None):
+        """ try to read the solver.h2ph.dat file to return the two-particle
             Green's function data
         """
         if fileName is None:
-            f = open("solver.h2pw.dat","r")
+            f = open("solver.h2ph.dat","r")
         else:
             f = open(fileName,"r")
 
-        h2pw = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        h2ph = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
             for n in range(m+1):
                 for k in range(nbfrq):
@@ -645,14 +645,14 @@ class iqistReader(object):
                     for j in range(nffrq):
                         for i in range(nffrq):
                             spl = f.readline().split()
-                            h2pw[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
-                            h2pw[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                            h2ph[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            h2ph[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
                     f.readline() # skip two blank lines
                     f.readline()
 
         f.close()
 
-        return h2pw
+        return h2ph
 
     @staticmethod
     def get_twop(norbs, nffrq, nbfrq, fileName = None):
