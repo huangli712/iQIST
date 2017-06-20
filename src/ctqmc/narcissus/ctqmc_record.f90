@@ -1520,6 +1520,8 @@
      use control, only : lemax
      use control, only : nbfrq
 
+     use context, only : mmat, rank
+
      implicit none
 
 ! local variables
@@ -1544,11 +1546,6 @@
              do ie=1,rank(flvr)
 
                  maux = mmat(ie, is, flvr)
-                 do w2n=1,nfaux
-                     do w1n=1,nfaux
-                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
-                     enddo ! over w1n={1,nfaux} loop
-                 enddo ! over w2n={1,nfaux} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
