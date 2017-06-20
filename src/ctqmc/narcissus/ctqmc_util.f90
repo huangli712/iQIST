@@ -990,6 +990,11 @@
 
 ! allocate memory
      allocate(pfun(ntime,lemax), stat=istat)
+     allocate(tleg(nfreq,lemax), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_tran_twop','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 !-------------------------------------------------------------------------
 ! using normal representation
