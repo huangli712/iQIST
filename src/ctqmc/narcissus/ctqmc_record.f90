@@ -1555,7 +1555,6 @@
      allocate( gaux1(lemax, nbfrq, norbs) ); gaux1 = czero
      allocate( gaux2(lemax, nbfrq, norbs) ); gaux2 = czero
 
-     print *, 'here'
      step = real(legrd - 1) / two
      FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_bexp(flvr, nbfrq, maxval(rank), caux1, caux2)

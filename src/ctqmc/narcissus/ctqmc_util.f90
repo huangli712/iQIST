@@ -869,6 +869,7 @@
      endif STD_BLOCK ! back if ( isort == 1 ) block
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 !-------------------------------------------------------------------------
 ! using legendre orthogonal polynomial representation
 !-------------------------------------------------------------------------
@@ -956,8 +957,16 @@
 !!
 !! build two-particle green's function using different representation
 !!
-  subroutine ctqmc_tran_twop()
+  subroutine ctqmc_tran_twop(twop)
+     use constants, only : dp
+     use constants, only : czero
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+
      implicit none
+
+     complex(dp), intent(out) :: twop(nffrq,nffrq,nbfrq,norbs,norbs)
 
      return
   end subroutine ctqmc_tran_twop
