@@ -1410,7 +1410,7 @@
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP DO PRIVATE (flvr, is, ie, w2n, w1n, maux, naux, caux1, caux2)
      FLVR_CYCLE: do flvr=1,norbs
-         call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
+         call ctqmc_make_fexp(flvr, nfaux, maxval(rank), caux1, caux2)
 
          do is=1,rank(flvr)
              do ie=1,rank(flvr)
@@ -1821,7 +1821,7 @@
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP DO PRIVATE (flvr, is, ie, w2n, w1n, maux, naux, caux1, caux2)
      FLVR_CYCLE: do flvr=1,norbs
-         call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
+         call ctqmc_make_fexp(flvr, nfaux, maxval(rank), caux1, caux2)
 
          do is=1,rank(flvr)
              do ie=1,rank(flvr)
