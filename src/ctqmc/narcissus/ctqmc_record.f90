@@ -1516,6 +1516,10 @@
      use constants, only : dp
      use constants, only : czero
 
+     use control, only : norbs
+     use control, only : lemax
+     use control, only : nbfrq
+
      implicit none
 
 ! local variables
@@ -1533,6 +1537,23 @@
 
      allocate( g2aux_c(lemax, nbfrq, norbs) ); g2aux_c = czero
      allocate( g2aux_d(lemax, nbfrq, norbs) ); g2aux_d = czero
+
+     FLVR_CYCLE: do flvr=1,norbs
+
+         do is=1,rank(flvr)
+             do ie=1,rank(flvr)
+
+                 maux = mmat(ie, is, flvr)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
      deallocate( g2aux_c )
      deallocate( g2aux_d )
