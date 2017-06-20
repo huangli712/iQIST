@@ -1513,6 +1513,31 @@
   end subroutine ctqmc_record_g2ph_std
 
   subroutine ctqmc_record_g2ph()
+     use constants, only : dp
+     use constants, only : czero
+
+     implicit none
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+     complex(dp), allocatable :: g2aux_c(:,:,:)
+     complex(dp), allocatable :: g2aux_d(:,:,:)
+
+     allocate( g2aux_c(lemax, nbfrq, norbs) ); g2aux_c = czero
+     allocate( g2aux_d(lemax, nbfrq, norbs) ); g2aux_d = czero
+
+     deallocate( g2aux_c )
+     deallocate( g2aux_d )
+
+     return
   end subroutine ctqmc_record_g2ph
 
 !!
