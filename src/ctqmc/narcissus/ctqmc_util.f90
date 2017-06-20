@@ -959,7 +959,7 @@
 !!
   subroutine ctqmc_tran_twop(twop)
      use constants, only : dp
-     use constants, only : two, czero
+     use constants, only : one, two, czero
 
      use control, only : isort
      use control, only : norbs
@@ -969,6 +969,7 @@
      use control, only : beta
 
      use context, only : tmesh
+     use context, only : rep_l
 
      implicit none
 
@@ -978,6 +979,15 @@
      integer :: curr
      real(dp) :: step
      real(dp) :: ob
+
+! p_l(x(\tau)), for legendre orthogonal polynomial representation
+     real(dp), allocatable :: pfun(:,:)
+
+! unitary transformation matrix for orthogonal polynomials
+     complex(dp), allocatable :: tleg(:,:)
+
+! allocate memory
+     allocate(pfun(ntime,lemax), stat=istat)
 
 !-------------------------------------------------------------------------
 ! using normal representation
@@ -1014,17 +1024,21 @@
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
-         grnf = czero
-         do i=1,norbs
-             do j=1,lemax
-                 do k=1,mfreq
-                     grnf(k,i,i) = grnf(k,i,i) + tleg(k,j) * gaux(j,i,i)
-                 enddo ! over k={1,mfreq} loop
-             enddo ! over j={1,lemax} loop
-         enddo ! over i={1,norbs} loop
+!<         grnf = czero
+!<         do i=1,norbs
+!<             do j=1,lemax
+!<                 do k=1,mfreq
+!<                     grnf(k,i,i) = grnf(k,i,i) + tleg(k,j) * gaux(j,i,i)
+!<                 enddo ! over k={1,mfreq} loop
+!<             enddo ! over j={1,lemax} loop
+!<         enddo ! over i={1,norbs} loop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! deallocate memory
+     deallocate(pfun)
+     deallocate(tleg)
 
      return
   end subroutine ctqmc_tran_twop
