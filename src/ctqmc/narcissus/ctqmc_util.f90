@@ -1550,7 +1550,7 @@
 
 ! task 4: restore the sampled impurity green's function
 !-------------------------------------------------------------------------
-     grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
+!<     grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
 
      return
   end subroutine ctqmc_make_hub2
