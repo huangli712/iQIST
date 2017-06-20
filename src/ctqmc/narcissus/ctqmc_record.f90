@@ -1599,6 +1599,9 @@
          enddo ! over is={1,rank(flvr)} loop
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+     print *, gaux1
+     print *, gaux2
+     STOP
 
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
          ORB2_CYCLE: do f2=1,f1                ! block index: B
