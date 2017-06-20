@@ -977,6 +977,8 @@
 
      integer :: i
      integer :: curr
+! status flag
+     integer  :: istat
      real(dp) :: step
      real(dp) :: ob
 
