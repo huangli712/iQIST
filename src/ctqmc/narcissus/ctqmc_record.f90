@@ -1558,10 +1558,10 @@
      step = real(legrd - 1) / two
      FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_bexp(flvr, nbfrq, maxval(rank), caux1, caux2)
-         print *, caux1
-         print *, caux2
-         print *, maxval(rank)
-         STOP
+         !print *, caux1
+         !print *, caux2
+         !print *, maxval(rank)
+         !STOP
 
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
