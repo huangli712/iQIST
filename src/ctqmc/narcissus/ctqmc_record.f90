@@ -1333,7 +1333,7 @@
 !!    \tau'_i and \tau'_k: imaginary time for annihilation operator
 !!    \tau_j and \tau_l: imaginary time for creation operator
 !!
-  subroutine ctqmc_record_g2ph()
+  subroutine ctqmc_record_g2ph_std()
      use constants, only : dp
      use constants, only : czero
 
@@ -1510,7 +1510,7 @@
      deallocate( h2aux )
 
      return
-  end subroutine ctqmc_record_g2ph
+  end subroutine ctqmc_record_g2ph_std
 
 !!
 !! @sub ctqmc_record_g2pp
