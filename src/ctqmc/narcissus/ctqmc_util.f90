@@ -970,12 +970,16 @@
 
      use context, only : tmesh
      use context, only : rep_l
+     use context, only : g2ph
 
      implicit none
 
      complex(dp), intent(out) :: twop(nffrq,nffrq,nbfrq,norbs,norbs)
 
      integer :: i
+     integer :: j
+     integer :: k
+     integer :: l
      integer :: curr
 ! status flag
      integer  :: istat
@@ -1002,7 +1006,6 @@
      do i=1,nffrq
          fmesh(i) = ( two*i - nffrq - 1 ) * pi / beta
      enddo
-     STOP
 
 !-------------------------------------------------------------------------
 ! using normal representation
@@ -1047,6 +1050,17 @@
 !<                 enddo ! over k={1,mfreq} loop
 !<             enddo ! over j={1,lemax} loop
 !<         enddo ! over i={1,norbs} loop
+         twop = czero
+         do i=1,nffrq
+             do j=1,nffrq
+                 do k=1,lemax
+                     do l=1,lemax
+                         twop(i,j,:,:,:) = twop(i,j,:,:,:) + tleg(i,k) * g2ph(k,l,:,:,:) * dconjg( tleg(j,l) )
+                     enddo
+                 enddo
+             enddo
+         enddo
+         g2ph = twop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
