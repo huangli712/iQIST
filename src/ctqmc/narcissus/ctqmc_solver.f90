@@ -683,7 +683,7 @@
 ! grnf, frnf, and sig2 would be updated there
      UPDATE1_DATA: BLOCK
          call ctqmc_make_hub2()
-         !!call ctqmc_tran_twop(g2ph_mpi)
+         call ctqmc_tran_twop(g2ph_mpi)
      END BLOCK UPDATE1_DATA
 
 ! collect data from all children processes
