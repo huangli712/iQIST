@@ -1514,13 +1514,15 @@
 
   subroutine ctqmc_record_g2ph()
      use constants, only : dp
-     use constants, only : czero
+     use constants, only : zero, one, czero
 
      use control, only : norbs
      use control, only : lemax
      use control, only : nbfrq
+     use control, only : beta
 
      use context, only : mmat, rank
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1534,7 +1536,7 @@
      integer  :: f2
      integer  :: flvr
 
-     real(dp) :: maux
+     real(dp) :: dtau, taus, taue, maux
 
      complex(dp), allocatable :: g2aux_c(:,:,:)
      complex(dp), allocatable :: g2aux_d(:,:,:)
