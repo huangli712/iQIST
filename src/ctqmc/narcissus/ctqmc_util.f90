@@ -961,12 +961,18 @@
      use constants, only : dp
      use constants, only : czero
 
+     use control, only : isort
      use control, only : norbs
      use control, only : nffrq, nbfrq
+     use control, only : ntime
 
      implicit none
 
      complex(dp), intent(out) :: twop(nffrq,nffrq,nbfrq,norbs,norbs)
+
+     integer :: i
+
+     real(dp) :: step
 
 !-------------------------------------------------------------------------
 ! using normal representation
