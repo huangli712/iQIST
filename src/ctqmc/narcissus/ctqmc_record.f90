@@ -1545,9 +1545,20 @@
      FLVR_CYCLE: do flvr=1,norbs
 
          do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
              do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
 
-                 maux = mmat(ie, is, flvr)
+! evaluate dtau
+                 dtau = taue - taus
+
+! get matrix element from mmat, pay special attention to the sign of dtau
+                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+
+! adjust dtau, keep it stay in (zero, beta)
+                 if ( dtau < zero ) then
+                     dtau = dtau + beta
+                 endif ! back if ( dtau < zero ) block
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
