@@ -1538,9 +1538,11 @@
      integer  :: f2
      integer  :: flvr, fleg
 
+     integer  :: l1, l2
      integer  :: wbn
      integer  :: curr
      real(dp) :: dtau, daux, taus, taue, maux, step
+     complex(dp) :: zg
 
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
