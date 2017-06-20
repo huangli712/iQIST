@@ -1541,16 +1541,16 @@
      integer  :: curr
      real(dp) :: dtau, daux, taus, taue, maux, step
 
-     complex(dp), allocatable :: caux1(:,:,:)
-     complex(dp), allocatable :: caux2(:,:,:)
-     complex(dp), allocatable :: g2aux_c(:,:,:)
-     complex(dp), allocatable :: g2aux_d(:,:,:)
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
+     complex(dp), allocatable :: gaux1(:,:,:)
+     complex(dp), allocatable :: gaux2(:,:,:)
 
-     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
-     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
+     allocate( caux1(nbfrq, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank)) ); caux2 = czero
 
-     allocate( g2aux_c(lemax, nbfrq, norbs) ); g2aux_c = czero
-     allocate( g2aux_d(lemax, nbfrq, norbs) ); g2aux_d = czero
+     allocate( gaux1(lemax, nbfrq, norbs) ); gaux1 = czero
+     allocate( gaux2(lemax, nbfrq, norbs) ); gaux2 = czero
 
      step = real(legrd - 1) / two
      FLVR_CYCLE: do flvr=1,norbs
@@ -1586,8 +1586,8 @@
                      dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                      daux = daux * ( (-one)**fleg )
                      do wbn=1,nbfrq
-                         g2aux_c(fleg,wbn,flvr) = g2aux_c(fleg,wbn,flvr) + maux * daux * caux1(wbn,is,flvr)
-                         g2aux_d(fleg,wbn,flvr) = g2aux_d(fleg,wbn,flvr) + maux * dtau * caux2(wbn,ie,flvr)
+                         gaux1(fleg,wbn,flvr) = gaux1(fleg,wbn,flvr) + maux * daux * caux1(wbn,is)
+                         gaux2(fleg,wbn,flvr) = gaux2(fleg,wbn,flvr) + maux * dtau * caux2(wbn,ie)
                      enddo
                  enddo LEG_CYCLE ! over fleg={1,lemax} loop
 
