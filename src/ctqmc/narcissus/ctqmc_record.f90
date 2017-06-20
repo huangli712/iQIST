@@ -1558,6 +1558,10 @@
      step = real(legrd - 1) / two
      FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_bexp(flvr, nbfrq, maxval(rank), caux1, caux2)
+         print *, caux1
+         print *, caux2
+         print *, maxval(rank)
+         STOP
 
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
@@ -1634,6 +1638,7 @@
      use constants, only : pi, czi, two
 
      use control, only : beta
+     use context, only : rank
      use context, only : index_s, index_e, time_s, time_e
 
      implicit none
@@ -1664,10 +1669,13 @@
 
      do is=1,rank(flvr)
          zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
+         print *, is, zs
          do iw=1,nfaux
              caux1(iw,is) = exp( -two * float(iw - 1) * zs )
          enddo
      enddo ! over is={1,rank(flvr)} loop
+     print *, caux1
+     print *, rank
 
      do ie=1,rank(flvr)
          ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
@@ -1675,6 +1683,7 @@
              caux2(iw,ie) = exp( +two * float(iw - 1) * ze )
          enddo
      enddo ! over ie={1,rank(flvr)} loop
+     print *, 'here'
 
      return
   end subroutine ctqmc_make_bexp
