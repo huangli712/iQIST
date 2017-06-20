@@ -1523,6 +1523,7 @@
 
      use context, only : mmat, rank
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : rep_l
 
      implicit none
 
@@ -1534,7 +1535,7 @@
 ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
-     integer  :: flvr
+     integer  :: flvr, fleg
 
      integer  :: wbn
      integer  :: curr
