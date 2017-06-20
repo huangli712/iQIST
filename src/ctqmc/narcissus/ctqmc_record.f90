@@ -1534,6 +1534,8 @@
      integer  :: f2
      integer  :: flvr
 
+     real(dp) :: maux
+
      complex(dp), allocatable :: g2aux_c(:,:,:)
      complex(dp), allocatable :: g2aux_d(:,:,:)
 
