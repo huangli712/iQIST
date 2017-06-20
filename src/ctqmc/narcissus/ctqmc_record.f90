@@ -1596,6 +1596,22 @@
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
+     ORB1_CYCLE: do f1=1,norbs                 ! block index: A
+         ORB2_CYCLE: do f2=1,f1                ! block index: B
+                                               !
+             WB_CYCLE: do wbn=1,nbfrq          ! bosonic Matsubara frequency: w
+                                               !
+!                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
+!                     WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
+
+!                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
+!                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
+
+             enddo WB_CYCLE ! over wbn={1,nbfrq} loop
+
+         enddo ORB2_CYCLE ! over f2={1,f1} loop
+     enddo ORB1_CYCLE ! over f1={1,norbs} loop
+
 ! deallocate memory
      deallocate( caux1 )
      deallocate( caux2 )
