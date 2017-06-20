@@ -1514,10 +1514,10 @@
 
   subroutine ctqmc_record_g2ph()
      use constants, only : dp
-     use constants, only : zero, one, czero
+     use constants, only : zero, one, two, czero
 
      use control, only : norbs
-     use control, only : lemax
+     use control, only : legrd, lemax
      use control, only : nbfrq
      use control, only : beta
 
@@ -1536,7 +1536,8 @@
      integer  :: f2
      integer  :: flvr
 
-     real(dp) :: dtau, taus, taue, maux
+     integer  :: curr
+     real(dp) :: dtau, daux, taus, taue, maux, step
 
      complex(dp), allocatable :: g2aux_c(:,:,:)
      complex(dp), allocatable :: g2aux_d(:,:,:)
@@ -1544,6 +1545,7 @@
      allocate( g2aux_c(lemax, nbfrq, norbs) ); g2aux_c = czero
      allocate( g2aux_d(lemax, nbfrq, norbs) ); g2aux_d = czero
 
+     step = real(legrd - 1) / two
      FLVR_CYCLE: do flvr=1,norbs
 
          do is=1,rank(flvr)
