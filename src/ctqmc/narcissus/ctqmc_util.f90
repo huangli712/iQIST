@@ -840,10 +840,10 @@
 ! step for the linear mesh
      real(dp) :: step
 
-! spherical Bessel functions
-     real(dp), allocatable :: bfun(:,:)
+! p_l(x(\tau)), for legendre orthogonal polynomial representation
+     real(dp), allocatable :: pfun(:,:)
 
-! u_l(x(\tau))
+! u_l(x(\tau)), svd orthogonal polynomial representation
      real(dp), allocatable :: ufun(:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
