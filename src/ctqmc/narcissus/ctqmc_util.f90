@@ -801,7 +801,7 @@
 !!
   subroutine ctqmc_tran_grnf(gaux, grnf)
      use constants, only : dp
-     use constants, only : pi, zero, one, two, czi, czero
+     use constants, only : one, two, czero
 
      use control, only : isort
      use control, only : norbs
@@ -829,6 +829,7 @@
      integer  :: j
      integer  :: k
 
+! index for imaginary time \tau
      integer  :: curr
 
 ! status flag
@@ -837,7 +838,7 @@
 ! dummy real(dp) variable
      real(dp) :: ob
 
-! step for the linear mesh
+! step for the linear frequency mesh
      real(dp) :: step
 
 ! p_l(x(\tau)), for legendre orthogonal polynomial representation
@@ -851,7 +852,7 @@
      complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
-     allocate(bfun(ntime,lemax), stat=istat)
+     allocate(pfun(ntime,lemax), stat=istat)
      allocate(ufun(ntime,svmax), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
@@ -872,16 +873,22 @@
 ! using legendre orthogonal polynomial representation
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
+
+! copy rep_l to pfun, prepare p_l(x(\tau))
          step = real(legrd - 1) / two
          do i=1,ntime
              ob = two * tmesh(i) / beta
              curr = nint( ob * step ) + 1
-             bfun(i,:) = rep_l(curr,:)
+             pfun(i,:) = rep_l(curr,:)
          enddo
 
+! build unitary transformation matrix: tleg
+! we do the fourier transformation directly using Eq. (E1) in Phys. Rev.
+! B 84, 075145 (2011). the advantage is that it doesn't depend on the
+! spherical Bessel functions any more
          tleg = czero
          do i=1,lemax
-             call s_fft_forward(ntime, tmesh, bfun(:,i), mfreq, rmesh, tleg(:,i))
+             call s_fft_forward(ntime, tmesh, pfun(:,i), mfreq, rmesh, tleg(:,i))
              tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
          enddo ! over i={1,lemax} loop
          tleg = tleg / (beta * beta)
@@ -896,6 +903,7 @@
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
+
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -930,6 +938,7 @@
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,svmax} loop
          enddo ! over i={1,norbs} loop
+
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
