@@ -943,7 +943,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! deallocate memory
-     deallocate(bfun)
+     deallocate(pfun)
      deallocate(ufun)
      deallocate(tleg)
      deallocate(tsvd)
