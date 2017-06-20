@@ -959,13 +959,14 @@
 !!
   subroutine ctqmc_tran_twop(twop)
      use constants, only : dp
-     use constants, only : czero
+     use constants, only : two, czero
 
      use control, only : isort
      use control, only : norbs
      use control, only : legrd
      use control, only : nffrq, nbfrq
      use control, only : ntime
+     use control, only : beta
 
      use context, only : tmesh
 
@@ -974,8 +975,9 @@
      complex(dp), intent(out) :: twop(nffrq,nffrq,nbfrq,norbs,norbs)
 
      integer :: i
-
+     integer :: curr
      real(dp) :: step
+     real(dp) :: ob
 
 !-------------------------------------------------------------------------
 ! using normal representation
