@@ -959,7 +959,7 @@
 !!
   subroutine ctqmc_tran_twop(twop)
      use constants, only : dp
-     use constants, only : one, two, czero
+     use constants, only : one, two, czero, pi
 
      use control, only : isort
      use control, only : norbs
@@ -998,6 +998,11 @@
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_tran_twop','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+     do i=1,nffrq
+         fmesh(i) = ( two*i - nffrq - 1 ) * pi / beta
+     enddo
+     STOP
 
 !-------------------------------------------------------------------------
 ! using normal representation

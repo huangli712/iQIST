@@ -5,3 +5,4 @@ isvrt = 2
 isort = 2
 nbfrq = 2
 nffrq = 64
+nsweep = 2000000
