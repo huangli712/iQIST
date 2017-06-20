@@ -1562,6 +1562,17 @@
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
 
+! convert dtau in [0,\beta] to daux in [0,2]
+                 daux = two * dtau / beta
+
+! determine index for legendre orthogonal polynomial interval
+                 curr = nint( daux * step ) + 1
+
+! special tricks for the first point and the last point
+                 if ( curr == 1 .or. curr == legrd ) then
+                     maux = two * maux
+                 endif ! back if ( curr == 1 .or. curr == legrd ) block
+
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
