@@ -990,7 +990,7 @@
 
 ! allocate memory
      allocate(pfun(ntime,lemax), stat=istat)
-     allocate(tleg(nfreq,lemax), stat=istat)
+     allocate(tleg(nffrq,lemax), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_tran_twop','can not allocate enough memory')
@@ -1024,7 +1024,7 @@
 ! spherical Bessel functions any more
          tleg = czero
          do i=1,lemax
-             call s_fft_forward(ntime, tmesh, pfun(:,i), mfreq, rmesh, tleg(:,i))
+             call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, rmesh, tleg(:,i))
              tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
          enddo ! over i={1,lemax} loop
          tleg = tleg / (beta * beta)
