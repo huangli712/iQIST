@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/16/2017 by li huang (last modified)
+!!!           06/20/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -660,7 +660,7 @@
      integer :: j
 
 ! check whether there is conflict
-     call s_assert( btest(isobs, 1) )
+     call s_assert2( btest(isobs, 1), 'in ctqmc_record_kmat' )
 
 ! since rank means the number of operator pairs, so we have to multiply
 ! it with two
@@ -715,7 +715,7 @@
      real(dp) :: kr(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(isobs, 2) )
+     call s_assert2( btest(isobs, 2), 'in ctqmc_record_lrmm' )
 
 ! init k_l and k_r
      kl = zero
@@ -796,7 +796,7 @@
      real(dp) :: saux(ntime,nband)
 
 ! check whether there is conflict
-     call s_assert( btest(isobs, 3) )
+     call s_assert2( btest(isobs, 3), 'in ctqmc_record_szpw' )
 
 ! calculate oaux, obtain occupation status
 ! calculate saux, obtain Sz(\tau)
@@ -887,7 +887,7 @@
      real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 1) )
+     call s_assert2( btest(issus, 1), 'in ctqmc_record_sp_t' )
 
 ! calculate oaux, obtain occupation status
      oaux = zero
@@ -989,7 +989,7 @@
      complex(dp) :: bexp_e(2:nbfrq)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 3) )
+     call s_assert2( btest(issus, 3), 'in ctqmc_record_sp_w' )
 
 ! build bosonic frequency mesh, zero frequency is not included
      dw = czi * two * pi / beta
@@ -1128,7 +1128,7 @@
      real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 2) )
+     call s_assert2( btest(issus, 2), 'in ctqmc_record_ch_t' )
 
 ! calculate oaux, obtain occupation status
      oaux = zero
@@ -1220,7 +1220,7 @@
      complex(dp) :: bexp_e(2:nbfrq)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 4) )
+     call s_assert2( btest(issus, 4), 'in ctqmc_record_ch_w' )
 
 ! build bosonic frequency mesh, zero frequency is not included
      dw = czi * two * pi / beta
@@ -1386,10 +1386,10 @@
 
 ! check whether there is conflict
 ! this subroutine is only designed for the particle-hole channel
-     call s_assert( btest(isvrt, 1) .or. btest(isvrt, 2) )
+     call s_assert2( btest(isvrt, 1) .or. btest(isvrt, 2), 'in ctqmc_record_g2ph' )
 
 ! you can not calculate the AABB and ABBA components at the same time
-     call s_assert( .not. ( btest(isvrt, 1) .and. btest(isvrt, 2) ) )
+     call s_assert2( .not. ( btest(isvrt, 1) .and. btest(isvrt, 2) ), 'in ctqmc_record_g2ph' )
 
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
@@ -1632,10 +1632,10 @@
 
 ! check whether there is conflict
 ! this subroutine is only designed for the particle-particle channel
-     call s_assert( btest(isvrt, 3) .or. btest(isvrt, 4) )
+     call s_assert2( btest(isvrt, 3) .or. btest(isvrt, 4), 'in ctqmc_record_g2pp' )
 
 ! you can not calculate the AABB and ABBA components at the same time
-     call s_assert( .not. ( btest(isvrt, 3) .and. btest(isvrt, 4) ) )
+     call s_assert2( .not. ( btest(isvrt, 3) .and. btest(isvrt, 4) ), 'in ctqmc_record_g2pp' )
 
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1

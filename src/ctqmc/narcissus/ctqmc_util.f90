@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           06/19/2017 by li huang (last modified)
+!!!           06/20/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -1325,7 +1325,7 @@
      integer :: ir
 
 ! make sure nfreq is larger than nfaux, or else this subroutine will fail
-     call s_assert2( nfreq > nfaux, 'in ctqmc_make_prod')
+     call s_assert2( nfreq > nfaux, 'in ctqmc_make_prod' )
 
 ! creation operators
 !-------------------------------------------------------------------------
