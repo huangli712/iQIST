@@ -1281,14 +1281,14 @@
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
 !!     calculate the quantity directly, which is a bit slow, but safe. we
 !!     prefer to use the fist one. if you want to use the second one, you
-!!     have to comment out the codes and recompile them.
+!!     have to comment out the codes and recompile them
 !!
 !! version 1
 !!
   subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp
-     use constants, only : pi, two, czi
 
+     use control, only : nfreq
      use control, only : nffrq
 
      use context, only : index_s, index_e
@@ -1318,8 +1318,14 @@
      integer :: is
      integer :: ie
 
+! loop index for frequency
      integer :: ix
+
+! index for frequency
      integer :: ir
+
+! make sure nfreq is larger than nfaux, or else this subroutine will fail
+     call s_assert2( nfreq > nfaux, 'in ctqmc_make_prod')
 
 ! creation operators
 !-------------------------------------------------------------------------
@@ -1334,12 +1340,12 @@
          do ix=1,nffrq/2
              ir = nffrq / 2 + 1 - ix
              caux1(ix,is) = exp_s(ir, index_s(is, flvr), flvr)
-         enddo
+         enddo ! over ix={1,nffrq/2} loop
          do ix=nffrq/2+1,nfaux
              ir = nffrq / 2 + 1 - ix
              ir = abs(ir) + 1
              caux1(ix,is) = dconjg( exp_s(ir, index_s(is, flvr), flvr) )
-         enddo
+         enddo ! over ix={nffrq/2+1,nfaux} loop
      enddo ! over is={1,rank(flvr)} loop
 
 ! annihilation operators
@@ -1356,11 +1362,11 @@
              ir = -nffrq/2 + ix
              ir = abs(ir) + 1
              caux2(ix,ie) = dconjg( exp_e(ir, index_e(ie, flvr), flvr) )
-         enddo
+         enddo ! over ix={1,nffrq/2} loop
          do ix=nffrq/2+1,nfaux
              ir = -nffrq/2 + ix
              caux2(ix,ie) = exp_e(ir, index_e(ie, flvr), flvr)
-         enddo
+         enddo ! over ix={nffrq/2+1,nfaux} loop
      enddo ! over ie={1,rank(flvr)} loop
 
      return
@@ -1379,7 +1385,7 @@
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
 !!     calculate the quantity directly, which is a bit slow, but safe. we
 !!     prefer to use the fist one. if you want to use the second one, you
-!!     have to comment out the codes and recompile them.
+!!     have to comment out the codes and recompile them
 !!
 !! version 2
 !!
@@ -1414,8 +1420,8 @@
 !<
 !<! local variables
 !<! loop indices for start and end points
-!<     integer  :: is
-!<     integer  :: ie
+!<     integer :: is
+!<     integer :: ie
 !<
 !<! imaginary time for start and end points
 !<! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
