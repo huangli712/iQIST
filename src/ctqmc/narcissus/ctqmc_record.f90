@@ -1524,6 +1524,7 @@
      use context, only : mmat, rank
      use context, only : index_s, index_e, time_s, time_e
      use context, only : rep_l
+     use context, only : g2ph
 
      implicit none
 
@@ -1601,11 +1602,12 @@
                                                !
              WB_CYCLE: do wbn=1,nbfrq          ! bosonic Matsubara frequency: w
                                                !
-!                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
-!                     WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
-
-!                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
-!                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
+                 do l1=1,lemax
+                     do l2=1,lemax
+                         zg = gaux2(l1,wbn,f1) * gaux1(l2,wbn,f2)
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + zg / beta
+                     enddo
+                 enddo
 
              enddo WB_CYCLE ! over wbn={1,nbfrq} loop
 
