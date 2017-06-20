@@ -880,7 +880,7 @@
              ob = two * tmesh(i) / beta
              curr = nint( ob * step ) + 1
              pfun(i,:) = rep_l(curr,:)
-         enddo
+         enddo ! over i={1,ntime} loop
 
 ! build unitary transformation matrix: tleg
 ! we do the fourier transformation directly using Eq. (E1) in Phys. Rev.
