@@ -968,6 +968,53 @@
 
      complex(dp), intent(out) :: twop(nffrq,nffrq,nbfrq,norbs,norbs)
 
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
+     STD_BLOCK: if ( isort == 1 ) then
+         CONTINUE
+     endif STD_BLOCK ! back if ( isort == 1 ) block
+
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!-------------------------------------------------------------------------
+! using legendre orthogonal polynomial representation
+!-------------------------------------------------------------------------
+     LEG_BLOCK: if ( isort == 2 ) then
+
+! copy rep_l to pfun, prepare p_l(x(\tau))
+         step = real(legrd - 1) / two
+         do i=1,ntime
+             ob = two * tmesh(i) / beta
+             curr = nint( ob * step ) + 1
+             pfun(i,:) = rep_l(curr,:)
+         enddo ! over i={1,ntime} loop
+
+! build unitary transformation matrix: tleg
+! we do the fourier transformation directly using Eq. (E1) in Phys. Rev.
+! B 84, 075145 (2011). the advantage is that it doesn't depend on the
+! spherical Bessel functions any more
+         tleg = czero
+         do i=1,lemax
+             call s_fft_forward(ntime, tmesh, pfun(:,i), mfreq, rmesh, tleg(:,i))
+             tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
+         enddo ! over i={1,lemax} loop
+         tleg = tleg / (beta * beta)
+
+! build impurity green's function on matsubara frequency using orthogonal
+! polynomial representation: grnf
+         grnf = czero
+         do i=1,norbs
+             do j=1,lemax
+                 do k=1,mfreq
+                     grnf(k,i,i) = grnf(k,i,i) + tleg(k,j) * gaux(j,i,i)
+                 enddo ! over k={1,mfreq} loop
+             enddo ! over j={1,lemax} loop
+         enddo ! over i={1,norbs} loop
+
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
      return
   end subroutine ctqmc_tran_twop
 
