@@ -1603,9 +1603,9 @@
          enddo ! over is={1,rank(flvr)} loop
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
-     print *, gaux1
-     print *, gaux2
-     STOP
+     !print *, gaux1
+     !print *, gaux2
+     !STOP
 
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
          ORB2_CYCLE: do f2=1,f1                ! block index: B
@@ -1669,13 +1669,10 @@
 
      do is=1,rank(flvr)
          zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
-         print *, is, zs
          do iw=1,nfaux
              caux1(iw,is) = exp( -two * float(iw - 1) * zs )
          enddo
      enddo ! over is={1,rank(flvr)} loop
-     print *, caux1
-     print *, rank
 
      do ie=1,rank(flvr)
          ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
@@ -1683,7 +1680,6 @@
              caux2(iw,ie) = exp( +two * float(iw - 1) * ze )
          enddo
      enddo ! over ie={1,rank(flvr)} loop
-     print *, 'here'
 
      return
   end subroutine ctqmc_make_bexp
