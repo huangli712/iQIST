@@ -805,14 +805,14 @@
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax
+     use control, only : lemax, legrd
      use control, only : svmax, svgrd
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
 
      use context, only : tmesh, rmesh
-     use context, only : rep_s
+     use context, only : rep_l, rep_s
 
      implicit none
 
@@ -828,6 +828,8 @@
      integer  :: i
      integer  :: j
      integer  :: k
+
+     integer  :: curr
 
 ! status flag
      integer  :: istat
@@ -849,7 +851,7 @@
      complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
-     allocate(bfun(mfreq,lemax), stat=istat)
+     allocate(bfun(ntime,lemax), stat=istat)
      allocate(ufun(ntime,svmax), stat=istat)
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
@@ -870,22 +872,36 @@
 ! using legendre orthogonal polynomial representation
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
-! build spherical Bessel functions: bfun
-         bfun = zero
-         do k=1,mfreq
-             ob = (two * k - one) * pi / two
-             call s_sbessel(lemax-1, ob, bfun(k,:))
-         enddo ! over k={1,mfreq} loop
+!<! build spherical Bessel functions: bfun
+!<         bfun = zero
+!<         do k=1,mfreq
+!<             ob = (two * k - one) * pi / two
+!<             call s_sbessel(lemax-1, ob, bfun(k,:))
+!<         enddo ! over k={1,mfreq} loop
+!<
+!<! build unitary transformation matrix: tleg
+!<         tleg = czero
+!<         do i=1,lemax
+!<             do k=1,mfreq
+!<                 ob = (-one)**(k - 1) * sqrt(two * i - one)
+!<                 tleg(k,i) = bfun(k,i) * ob * ( czi**i )
+!<             enddo ! over k={1,mfreq} loop
+!<         enddo ! over i={1,lemax} loop
+!<         tleg = tleg / beta
 
-! build unitary transformation matrix: tleg
+         step = real(legrd - 1) / two
+         do i=1,ntime
+             ob = two * tmesh(i) / beta
+             curr = nint( ob * step ) + 1
+             bfun(i,:) = rep_l(curr,:)
+         enddo
+
          tleg = czero
          do i=1,lemax
-             do k=1,mfreq
-                 ob = (-one)**(k - 1) * sqrt(two * i - one)
-                 tleg(k,i) = bfun(k,i) * ob * ( czi**i )
-             enddo ! over k={1,mfreq} loop
+             call s_fft_forward(ntime, tmesh, bfun(:,i), mfreq, rmesh, tleg(:,i))
+             tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
          enddo ! over i={1,lemax} loop
-         tleg = tleg / beta
+         tleg = tleg / (beta * beta)
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
@@ -909,8 +925,8 @@
          step = real(svgrd - 1) / two
          do i=1,ntime
              ob = two * tmesh(i) / beta - one
-             call s_svd_point(ob, step, istat)
-             ufun(i,:) = rep_s(istat,:)
+             call s_svd_point(ob, step, curr)
+             ufun(i,:) = rep_s(curr,:)
          enddo ! over i={1,ntime} loop
 
 ! build unitary transformation matrix: tsvd
