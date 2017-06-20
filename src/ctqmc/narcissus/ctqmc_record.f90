@@ -1512,6 +1512,9 @@
      return
   end subroutine ctqmc_record_g2ph_std
 
+  subroutine ctqmc_record_g2ph()
+  end subroutine ctqmc_record_g2ph
+
 !!
 !! @sub ctqmc_record_g2pp
 !!
