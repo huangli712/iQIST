@@ -982,6 +982,8 @@
      real(dp) :: step
      real(dp) :: ob
 
+     real(dp), allocatable :: fmesh(:)
+
 ! p_l(x(\tau)), for legendre orthogonal polynomial representation
      real(dp), allocatable :: pfun(:,:)
 
@@ -989,6 +991,7 @@
      complex(dp), allocatable :: tleg(:,:)
 
 ! allocate memory
+     allocate(fmesh(nffrq), stat=istat)
      allocate(pfun(ntime,lemax), stat=istat)
      allocate(tleg(nffrq,lemax), stat=istat)
 
@@ -1024,7 +1027,7 @@
 ! spherical Bessel functions any more
          tleg = czero
          do i=1,lemax
-             call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, rmesh, tleg(:,i))
+             call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, fmesh, tleg(:,i))
              tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
          enddo ! over i={1,lemax} loop
          tleg = tleg / (beta * beta)
@@ -1044,6 +1047,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! deallocate memory
+     deallocate(fmesh)
      deallocate(pfun)
      deallocate(tleg)
 
