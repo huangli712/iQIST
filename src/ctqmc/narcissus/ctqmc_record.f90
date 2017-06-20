@@ -1536,11 +1536,17 @@
      integer  :: f2
      integer  :: flvr
 
+     integer  :: wbn
      integer  :: curr
      real(dp) :: dtau, daux, taus, taue, maux, step
 
+     complex(dp), allocatable :: caux1(:,:,:)
+     complex(dp), allocatable :: caux2(:,:,:)
      complex(dp), allocatable :: g2aux_c(:,:,:)
      complex(dp), allocatable :: g2aux_d(:,:,:)
+
+     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
      allocate( g2aux_c(lemax, nbfrq, norbs) ); g2aux_c = czero
      allocate( g2aux_d(lemax, nbfrq, norbs) ); g2aux_d = czero
@@ -1574,6 +1580,15 @@
                  if ( curr == 1 .or. curr == legrd ) then
                      maux = two * maux
                  endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+                 LEG_CYCLE: do fleg=1,lemax
+                     dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
+                     daux = daux * ( (-one)**fleg )
+                     do wbn=1,nbfrq
+                         g2aux_c(fleg,wbn,flvr) = g2aux_c(fleg,wbn,flvr) + maux * daux * caux1(wbn,is,flvr)
+                         g2aux_d(fleg,wbn,flvr) = g2aux_d(fleg,wbn,flvr) + maux * dtau * caux2(wbn,ie,flvr)
+                     enddo
+                 enddo LEG_CYCLE ! over fleg={1,lemax} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
