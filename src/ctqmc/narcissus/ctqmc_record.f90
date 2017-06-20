@@ -1557,6 +1557,7 @@
 
      step = real(legrd - 1) / two
      FLVR_CYCLE: do flvr=1,norbs
+         call ctqmc_make_bexp(flvr, nbfrq, maxval(rank), caux1, caux2)
 
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
@@ -1624,6 +1625,28 @@
 
      return
   end subroutine ctqmc_record_g2ph
+
+  subroutine ctqmc_make_bexp(flvr, nfaux, mrank, caux1, caux2)
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in) :: flvr
+
+! number of frequency points, usually it is equal to nbfrq
+     integer, intent(in) :: nfaux
+
+! maximum number of operators in different flavor channels
+     integer, intent(in) :: mrank
+
+! matsubara frequency exponents for creation operators
+     complex(dp), intent(out) :: caux1(nfaux,mrank)
+
+! matsubara frequency exponents for annihilation operators
+     complex(dp), intent(out) :: caux2(nfaux,mrank)
+
+     return
+  end subroutine ctqmc_make_bexp
 
 !!
 !! @sub ctqmc_record_g2pp
