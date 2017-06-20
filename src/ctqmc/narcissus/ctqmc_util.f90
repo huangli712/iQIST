@@ -963,7 +963,7 @@
 
      use control, only : isort
      use control, only : norbs
-     use control, only : legrd
+     use control, only : lemax, legrd
      use control, only : nffrq, nbfrq
      use control, only : ntime
      use control, only : beta
