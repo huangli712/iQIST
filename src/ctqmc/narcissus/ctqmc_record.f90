@@ -1596,8 +1596,11 @@
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
-     deallocate( g2aux_c )
-     deallocate( g2aux_d )
+! deallocate memory
+     deallocate( caux1 )
+     deallocate( caux2 )
+     deallocate( gaux1 )
+     deallocate( gaux2 )
 
      return
   end subroutine ctqmc_record_g2ph
