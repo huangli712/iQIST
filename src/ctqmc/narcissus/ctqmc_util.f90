@@ -17,7 +17,7 @@
 !!!           ctqmc_make_lift <<<---
 !!!           ctqmc_make_iret
 !!!           ctqmc_make_pref <<<---
-!!!           ctqmc_make_prod <<<---
+!!!           ctqmc_make_fexp <<<---
 !!!           ctqmc_make_hub2 <<<---
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
@@ -1277,13 +1277,13 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_make_prod
+!! @sub ctqmc_make_fexp
 !!
 !! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
 !!
 !! note:
 !!
-!!     here, we provide two versions of ctqmc_make_prod subroutines. the
+!!     here, we provide two versions of ctqmc_make_fexp subroutines. the
 !!     difference lies in how to evaluate exp(i \omega_n \tau). one just
 !!     copies data from exp_s and exp_e, which is fast. but nfreq must be
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
@@ -1293,7 +1293,7 @@
 !!
 !! version 1
 !!
-  subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
+  subroutine ctqmc_make_fexp(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp
 
      use control, only : nfreq
@@ -1333,7 +1333,7 @@
      integer :: ir
 
 ! make sure nfreq is larger than nfaux, or else this subroutine will fail
-     call s_assert2( nfreq > nfaux, 'in ctqmc_make_prod' )
+     call s_assert2( nfreq > nfaux, 'in ctqmc_make_fexp' )
 
 ! creation operators
 !-------------------------------------------------------------------------
@@ -1378,16 +1378,16 @@
      enddo ! over ie={1,rank(flvr)} loop
 
      return
-  end subroutine ctqmc_make_prod
+  end subroutine ctqmc_make_fexp
 
 !!
-!! @sub ctqmc_make_prod
+!! @sub ctqmc_make_fexp
 !!
 !! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
 !!
 !! note:
 !!
-!!     here, we provide two versions of ctqmc_make_prod subroutines. the
+!!     here, we provide two versions of ctqmc_make_fexp subroutines. the
 !!     difference lies in how to evaluate exp(i \omega_n \tau). one just
 !!     copies data from exp_s and exp_e, which is fast. but nfreq must be
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
@@ -1397,7 +1397,7 @@
 !!
 !! version 2
 !!
-!<  subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
+!<  subroutine ctqmc_make_fexp(flvr, nfaux, mrank, caux1, caux2)
 !<     use constants, only : dp
 !<     use constants, only : pi, two, czi
 !<
@@ -1469,7 +1469,7 @@
 !<     enddo ! over ie={1,rank(flvr)} loop
 !<
 !<     return
-!<  end subroutine ctqmc_make_prod
+!<  end subroutine ctqmc_make_fexp
 
 !!========================================================================
 !!>>> self-energy function                                             <<<
