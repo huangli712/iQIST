@@ -1063,13 +1063,14 @@
              do j=1,nffrq
                  do k=1,lemax
                      do l=1,lemax
-                         associate ( val => grnf(i,j,:,:,:), gkl => gaux(k,l,:,:,:) )
+                         associate ( val => grnf(i,j,:,:,:), &
+                                     gkl => gaux(k,l,:,:,:) )
                              val = val + tleg(i,k) * gkl * conjg( tleg(j,l) )
                          end associate
-                     enddo
-                 enddo
-             enddo
-         enddo
+                     enddo ! over l={1,lemax} loop
+                 enddo ! over k={1,lemax} loop
+             enddo ! over j={1,nffrq} loop
+         enddo ! over i={1,nffrq} loop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
