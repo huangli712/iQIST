@@ -980,16 +980,26 @@
 ! calculated impurity green's function
      complex(dp), intent(out) :: grnf(nffrq,nffrq,nbfrq,norbs,norbs)
 
-     integer :: i
-     integer :: j
-     integer :: k
-     integer :: l
-     integer :: curr
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: l
+
+! index for imaginary time \tau
+     integer  :: curr
+
 ! status flag
      integer  :: istat
-     real(dp) :: step
+
+! dummy real(dp) variable
      real(dp) :: ob
 
+! step for the linear frequency mesh
+     real(dp) :: step
+
+! symmetric fermionic matsubara frequency mesh
      real(dp), allocatable :: fmesh(:)
 
 ! p_l(x(\tau)), for legendre orthogonal polynomial representation
@@ -999,7 +1009,7 @@
      complex(dp), allocatable :: tleg(:,:)
 
 ! allocate memory
-     allocate(fmesh(nffrq), stat=istat)
+     allocate(fmesh(nffrq),      stat=istat)
      allocate(pfun(ntime,lemax), stat=istat)
      allocate(tleg(nffrq,lemax), stat=istat)
 
@@ -1007,9 +1017,15 @@
          call s_print_error('ctqmc_tran_twop','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+! build symmetric fermionic matsubara frequency mesh
+     do i=nffrq/2+1,nffrq
+         fmesh(i) = rmesh(i-nffrq/2)
+         fmesh(nffrq-i+1) = -fmesh(i)
+     enddo ! over i={nffrq/2+1,nffrq} loop
      do i=1,nffrq
-         fmesh(i) = ( two*i - nffrq - 1 ) * pi / beta
+         print *, i, fmesh(i)
      enddo
+     STOP
 
 !-------------------------------------------------------------------------
 ! using normal representation
@@ -1046,25 +1062,16 @@
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
-!<         grnf = czero
-!<         do i=1,norbs
-!<             do j=1,lemax
-!<                 do k=1,mfreq
-!<                     grnf(k,i,i) = grnf(k,i,i) + tleg(k,j) * gaux(j,i,i)
-!<                 enddo ! over k={1,mfreq} loop
-!<             enddo ! over j={1,lemax} loop
-!<         enddo ! over i={1,norbs} loop
-         twop = czero
+         grnf = czero
          do i=1,nffrq
              do j=1,nffrq
                  do k=1,lemax
                      do l=1,lemax
-                         twop(i,j,:,:,:) = twop(i,j,:,:,:) + tleg(i,k) * g2ph(k,l,:,:,:) * dconjg( tleg(j,l) )
+                         grnf(i,j,:,:,:) = grnf(i,j,:,:,:) + tleg(i,k) * gaux(k,l,:,:,:) * dconjg( tleg(j,l) )
                      enddo
                  enddo
              enddo
          enddo
-         g2ph = twop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
