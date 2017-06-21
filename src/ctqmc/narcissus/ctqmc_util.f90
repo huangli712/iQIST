@@ -1019,13 +1019,9 @@
 
 ! build symmetric fermionic matsubara frequency mesh
      do i=nffrq/2+1,nffrq
-         fmesh(i) = rmesh(i-nffrq/2)
-         fmesh(nffrq-i+1) = -fmesh(i)
+         fmesh(i) = rmesh(i-nffrq/2)  ! > 0
+         fmesh(nffrq-i+1) = -fmesh(i) ! < 0
      enddo ! over i={nffrq/2+1,nffrq} loop
-     do i=1,nffrq
-         print *, i, fmesh(i)
-     enddo
-     STOP
 
 !-------------------------------------------------------------------------
 ! using normal representation
