@@ -1075,6 +1075,14 @@
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!-------------------------------------------------------------------------
+! using svd orthogonal polynomial representation
+!-------------------------------------------------------------------------
+     SVD_BLOCK: if ( isort == 3 ) then
+
+     endif SVD_BLOCK ! back if ( isort == 3 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! deallocate memory
      deallocate(fmesh)
      deallocate(pfun)
