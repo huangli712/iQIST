@@ -964,12 +964,13 @@
      use control, only : isort
      use control, only : norbs
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : nffrq, nbfrq
      use control, only : ntime
      use control, only : beta
 
      use context, only : tmesh, rmesh
-     use context, only : rep_l
+     use context, only : rep_l, rep_s
 
      implicit none
 
@@ -1005,13 +1006,19 @@
 ! p_l(x(\tau)), for legendre orthogonal polynomial representation
      real(dp), allocatable :: pfun(:,:)
 
+! u_l(x(\tau)), svd orthogonal polynomial representation
+     real(dp), allocatable :: ufun(:,:)
+
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
+     complex(dp), allocatable :: tsvd(:,:)
 
 ! allocate memory
      allocate(fmesh(nffrq),      stat=istat)
      allocate(pfun(ntime,lemax), stat=istat)
+     allocate(ufun(ntime,svmax), stat=istat)
      allocate(tleg(nffrq,lemax), stat=istat)
+     allocate(tsvd(nffrq,svmax), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_tran_twop','can not allocate enough memory')
@@ -1092,9 +1099,9 @@
 ! actually, we do the fourier transformation
          tsvd = czero
          do i=1,svmax
-             call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tsvd(:,i))
+             call s_fft_forward(ntime, tmesh, ufun(:,i), nffrq, fmesh, tsvd(:,i))
          enddo ! over i={1,svmax} loop
-         tsvd = tsvd * (two / beta / beta)
+         tsvd = tsvd * (two / beta)
 
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1102,7 +1109,9 @@
 ! deallocate memory
      deallocate(fmesh)
      deallocate(pfun)
+     deallocate(ufun)
      deallocate(tleg)
+     deallocate(tsvd)
 
      return
   end subroutine ctqmc_tran_twop
