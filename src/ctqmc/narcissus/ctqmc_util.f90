@@ -836,7 +836,7 @@
      integer  :: istat
 
 ! dummy real(dp) variable
-     real(dp) :: ob
+     real(dp) :: raux
 
 ! step for the linear frequency mesh
      real(dp) :: step
@@ -844,7 +844,7 @@
 ! p_l(x(\tau)), for legendre orthogonal polynomial representation
      real(dp), allocatable :: pfun(:,:)
 
-! u_l(x(\tau)), svd orthogonal polynomial representation
+! u_l(x(\tau)), for svd orthogonal polynomial representation
      real(dp), allocatable :: ufun(:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
@@ -878,8 +878,8 @@
 ! copy rep_l to pfun, prepare p_l(x(\tau))
          step = real(legrd - 1) / two
          do i=1,ntime
-             ob = two * tmesh(i) / beta
-             curr = nint( ob * step ) + 1
+             raux = two * tmesh(i) / beta
+             curr = nint( raux * step ) + 1
              pfun(i,:) = rep_l(curr,:)
          enddo ! over i={1,ntime} loop
 
@@ -892,6 +892,8 @@
              call s_fft_forward(ntime, tmesh, pfun(:,i), mfreq, rmesh, tleg(:,i))
              tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
          enddo ! over i={1,lemax} loop
+! note: the first beta is from Eq. (C19), while the second beta is from
+! Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
          tleg = tleg / (beta * beta)
 
 ! build impurity green's function on matsubara frequency using orthogonal
@@ -916,8 +918,8 @@
 ! copy rep_s to ufun, prepare u_l(x(\tau))
          step = real(svgrd - 1) / two
          do i=1,ntime
-             ob = two * tmesh(i) / beta - one
-             call s_svd_point(ob, step, curr)
+             raux = two * tmesh(i) / beta - one
+             call s_svd_point(raux, step, curr)
              ufun(i,:) = rep_s(curr,:)
          enddo ! over i={1,ntime} loop
 
@@ -995,7 +997,7 @@
      integer  :: istat
 
 ! dummy real(dp) variable
-     real(dp) :: ob
+     real(dp) :: raux
 
 ! step for the linear frequency mesh
      real(dp) :: step
@@ -1006,7 +1008,7 @@
 ! p_l(x(\tau)), for legendre orthogonal polynomial representation
      real(dp), allocatable :: pfun(:,:)
 
-! u_l(x(\tau)), svd orthogonal polynomial representation
+! u_l(x(\tau)), for svd orthogonal polynomial representation
      real(dp), allocatable :: ufun(:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
@@ -1047,8 +1049,8 @@
 ! copy rep_l to pfun, prepare p_l(x(\tau))
          step = real(legrd - 1) / two
          do i=1,ntime
-             ob = two * tmesh(i) / beta
-             curr = nint( ob * step ) + 1
+             raux = two * tmesh(i) / beta
+             curr = nint( raux * step ) + 1
              pfun(i,:) = rep_l(curr,:)
          enddo ! over i={1,ntime} loop
 
@@ -1061,6 +1063,7 @@
              call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, fmesh, tleg(:,i))
              tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
          enddo ! over i={1,lemax} loop
+! note: the beta is from Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
          tleg = tleg / beta
 
 ! build two-particle green's function on matsubara frequency using
@@ -1102,6 +1105,22 @@
              call s_fft_forward(ntime, tmesh, ufun(:,i), nffrq, fmesh, tsvd(:,i))
          enddo ! over i={1,svmax} loop
          tsvd = tsvd * (two / beta)
+
+! build two-particle green's function on matsubara frequency using
+! orthogonal polynomial representation: grnf
+         grnf = czero
+         do i=1,nffrq
+             do j=1,nffrq
+                 do k=1,svmax
+                     do l=1,svmax
+                         associate ( val => grnf(i,j,:,:,:), &
+                                     gkl => gaux(k,l,:,:,:) )
+                             val = val + tsvd(i,k) * gkl * conjg( tsvd(j,l) )
+                         end associate
+                     enddo ! over l={1,svmax} loop
+                 enddo ! over k={1,svmax} loop
+             enddo ! over j={1,nffrq} loop
+         enddo ! over i={1,nffrq} loop
 
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
