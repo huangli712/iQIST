@@ -1054,7 +1054,12 @@
              call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, fmesh, tleg(:,i))
              tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
          enddo ! over i={1,lemax} loop
-         tleg = tleg / (beta)
+         tleg = tleg / beta
+
+         do i=1,lemax
+             print *, dot_product(dconjg(tleg(:,i)), tleg(:,i))
+         enddo
+         STOP
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
