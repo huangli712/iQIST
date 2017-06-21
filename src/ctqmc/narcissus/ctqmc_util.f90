@@ -1080,6 +1080,22 @@
 !-------------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
 
+! copy rep_s to ufun, prepare u_l(x(\tau))
+         step = real(svgrd - 1) / two
+         do i=1,ntime
+             ob = two * tmesh(i) / beta - one
+             call s_svd_point(ob, step, curr)
+             ufun(i,:) = rep_s(curr,:)
+         enddo ! over i={1,ntime} loop
+
+! build unitary transformation matrix: tsvd
+! actually, we do the fourier transformation
+         tsvd = czero
+         do i=1,svmax
+             call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tsvd(:,i))
+         enddo ! over i={1,svmax} loop
+         tsvd = tsvd * (two / beta / beta)
+
      endif SVD_BLOCK ! back if ( isort == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
