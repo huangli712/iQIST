@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/15/2017 by li huang (last modified)
+!!!           06/22/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -643,7 +643,7 @@
 
      call cpu_time(time_begin) ! record starting time
 
-! calculate the average values
+! calculate the averaged values
      AVERAGE_DATA: BLOCK
 
          hist = hist * one
@@ -679,11 +679,17 @@
 
      END BLOCK AVERAGE_DATA
 
-! try to evaluate the impurity green's function and self-energy function
-! grnf, frnf, and sig2 would be updated there
+! calculate some essential observables which are not measured directly
      UPDATE1_DATA: BLOCK
+
+! try to evaluate the impurity green's function and self-energy function
+! < grnf, frnf, and sig2 >
          call ctqmc_make_hub2()
-         call ctqmc_tran_twop(g2ph, g2ph_mpi)
+
+! try to evaluate the two-particle green's function (ph channel)
+! < g2ph >
+         call ctqmc_tran_twop(g2ph, g2ph_mpi); g2ph = g2ph_mpi
+
      END BLOCK UPDATE1_DATA
 
 ! collect data from all children processes
