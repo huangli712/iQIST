@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           06/20/2017 by li huang (last modified)
+!!!           06/21/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -959,7 +959,7 @@
 !!
   subroutine ctqmc_tran_twop(twop)
      use constants, only : dp
-     use constants, only : one, two, czero, pi
+     use constants, only : one, two, czero
 
      use control, only : isort
      use control, only : norbs
