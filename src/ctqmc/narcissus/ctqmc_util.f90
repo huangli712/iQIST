@@ -894,11 +894,6 @@
          enddo ! over i={1,lemax} loop
          tleg = tleg / (beta * beta)
 
-         do i=1,lemax
-             print *, dot_product(dconjg(tleg(:,i)), tleg(:,i))
-         enddo
-         STOP
-
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
          grnf = czero
@@ -1000,6 +995,7 @@
 
 ! dummy real(dp) variable
      real(dp) :: ob
+     complex(dp) :: cb
 
 ! step for the linear frequency mesh
      real(dp) :: step
@@ -1062,9 +1058,13 @@
          tleg = tleg / beta
 
          do i=1,lemax
-             print *, dot_product(dconjg(tleg(:,i)), tleg(:,i))
+             cb = 0.0_dp
+             do j=1,mfreq
+                 cb = cb + conjg(tleg(j,i)) * tleg(j,i)
+             enddo
+             print *, i, cb * 2
          enddo
-         !STOP
+         STOP
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf
