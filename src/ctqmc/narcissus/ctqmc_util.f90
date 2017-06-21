@@ -1093,8 +1093,8 @@
 ! copy rep_s to ufun, prepare u_l(x(\tau))
          step = real(svgrd - 1) / two
          do i=1,ntime
-             ob = two * tmesh(i) / beta - one
-             call s_svd_point(ob, step, curr)
+             raux = two * tmesh(i) / beta - one
+             call s_svd_point(raux, step, curr)
              ufun(i,:) = rep_s(curr,:)
          enddo ! over i={1,ntime} loop
 
