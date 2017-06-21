@@ -1059,10 +1059,10 @@
 
          do i=1,lemax
              cb = 0.0_dp
-             do j=1,mfreq
+             do j=1,nfreq
                  cb = cb + conjg(tleg(j,i)) * tleg(j,i)
              enddo
-             print *, i, cb * 2
+             print *, i, cb
          enddo
          STOP
 
