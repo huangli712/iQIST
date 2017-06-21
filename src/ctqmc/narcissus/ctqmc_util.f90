@@ -977,7 +977,7 @@
 ! orthogonal polynomial coefficients for two-particle green's function
      complex(dp), intent(in)  :: gaux(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! calculated impurity green's function
+! calculated two-particle green's function
      complex(dp), intent(out) :: grnf(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
@@ -995,7 +995,6 @@
 
 ! dummy real(dp) variable
      real(dp) :: ob
-     complex(dp) :: cb
 
 ! step for the linear frequency mesh
      real(dp) :: step
@@ -1057,23 +1056,16 @@
          enddo ! over i={1,lemax} loop
          tleg = tleg / beta
 
-         do i=1,lemax
-             cb = 0.0_dp
-             do j=1,nfreq
-                 cb = cb + conjg(tleg(j,i)) * tleg(j,i)
-             enddo
-             print *, i, cb
-         enddo
-         STOP
-
-! build impurity green's function on matsubara frequency using orthogonal
-! polynomial representation: grnf
+! build two-particle green's function on matsubara frequency using
+! orthogonal polynomial representation: grnf
          grnf = czero
          do i=1,nffrq
              do j=1,nffrq
                  do k=1,lemax
                      do l=1,lemax
-                         grnf(i,j,:,:,:) = grnf(i,j,:,:,:) + tleg(i,k) * gaux(k,l,:,:,:) * dconjg( tleg(j,l) )
+                         associate ( val => grnf(i,j,:,:,:), gkl => gaux(k,l,:,:,:) )
+                             val = val + tleg(i,k) * gkl * conjg( tleg(j,l) )
+                         end associate
                      enddo
                  enddo
              enddo
