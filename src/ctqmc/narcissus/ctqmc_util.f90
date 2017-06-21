@@ -957,7 +957,7 @@
 !!
 !! build two-particle green's function using different representation
 !!
-  subroutine ctqmc_tran_twop(twop)
+  subroutine ctqmc_tran_twop(gaux, grnf)
      use constants, only : dp
      use constants, only : one, two, czero
 
@@ -968,13 +968,17 @@
      use control, only : ntime
      use control, only : beta
 
-     use context, only : tmesh
+     use context, only : tmesh, rmesh
      use context, only : rep_l
-     use context, only : g2ph
 
      implicit none
 
-     complex(dp), intent(out) :: twop(nffrq,nffrq,nbfrq,norbs,norbs)
+! external arguments
+! orthogonal polynomial coefficients for two-particle green's function
+     complex(dp), intent(in)  :: gaux(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! calculated impurity green's function
+     complex(dp), intent(out) :: grnf(nffrq,nffrq,nbfrq,norbs,norbs)
 
      integer :: i
      integer :: j
