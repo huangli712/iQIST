@@ -1535,6 +1535,8 @@
      real(dp) :: ts, te
      real(dp) :: dt, dx, mx
 
+     complex(dp) :: zg
+
      real(dp), allocatable :: l1l2(:,:)
      complex(dp), allocatable :: gaux1(:,:,:)
      complex(dp), allocatable :: gaux2(:,:,:)
@@ -1582,12 +1584,13 @@
          enddo
      enddo
 
-     do f1=2,2  ! A
-         do f2=1,1 ! B
-             do wbn=1,1
+     do f1=1,norbs  ! A
+         do f2=1,f1 ! B
+             do wbn=1,nbfrq
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
-     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
+                         zg = l1l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1)
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) +  zg / beta
                      enddo
                  enddo
              enddo
