@@ -1542,13 +1542,22 @@
 
      !complex(dp) :: cmx1, cmx2
 
+     real(dp), allocatable :: l1l2(:,:)
      complex(dp), allocatable :: caux1(:,:,:)
      complex(dp), allocatable :: caux2(:,:,:)
+
+     allocate( l1l2(lemax,lemax) ); l1l2 = zero
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
      
      do f1=1,norbs
          call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
+     enddo
+
+     do l1=1,lemax
+         do l2=1,lemax
+             l1l2(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
+         enddo
      enddo
 
      step = real(legrd - 1) / two
@@ -1574,7 +1583,8 @@
                  mx1 = two * mx1
              endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
 
-             mx1 = mx1 * sqrt(two * l1 - 1) * rep_l(curr1,l1)
+             mx1 = mx1 * rep_l(curr1,l1)
+             !mx1 = mx1 * sqrt(two * l1 - 1) * rep_l(curr1,l1)
              !!cmx1 = mx1 * exp( czi * two * (wbn - 1) * pi / beta * te1 )
 
 
@@ -1594,11 +1604,12 @@
                          mx2 = two * mx2
                      endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
 
-                     mx2 = mx2 * sqrt(two * l2 - 1) * rep_l(curr2,l2) * ( (-one)**l2 )
+                     mx2 = mx2 * rep_l(curr2,l2)
+                     !mx2 = mx2 * sqrt(two * l2 - 1) * rep_l(curr2,l2) * ( (-one)**l2 )
                      !! cmx2 = mx2 * exp( -czi * two * (wbn - 1) * pi / beta * ts2 )
 
                      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + &
-                         mx1 * caux2(wbn,te1,f1) * mx2 * caux1(wbn,ts2,f2) / beta
+                         l1l2(l1,l2) * mx1 * caux2(wbn,te1,f1) * mx2 * caux1(wbn,ts2,f2) / beta
 
                  enddo
              enddo
@@ -1613,6 +1624,7 @@
          enddo
      enddo
 
+     deallocate( l1l2 )
      deallocate( caux1 )
      deallocate( caux2 )
 
