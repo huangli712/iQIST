@@ -1519,7 +1519,7 @@
      use control, only : norbs, nbfrq, lemax, legrd, beta
      use context, only : rank
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : mmat
+     use context, only : mmat, rep_l
 
      implicit none
 
@@ -1567,6 +1567,13 @@
 
              mx1 = mx1 * sqrt(two * l1 - 1) * rep_l(curr1,l1)
              cmx1 = mx1 * exp( czi * two * (wbn - 1) * pi / beta * te1 )
+
+
+             do is2=1,rank(f2)
+                 ts2 = time_s( index_s(is2, f2), f2 )
+                 do ie2=1,rank(f2)
+                     te2 = time_e( index_e(ie2, f2), f2 )
+
          enddo
      enddo
 
