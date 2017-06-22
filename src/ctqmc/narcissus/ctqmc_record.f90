@@ -1542,8 +1542,8 @@
      complex(dp), allocatable :: caux2(:,:)
 
      allocate( l1l2(lemax,lemax) ); l1l2 = zero
-     allocate( gaux1(nbfrq, lemax, norbs) ); gaux1 = czero
-     allocate( gaux2(nbfrq, lemax, norbs) ); gaux2 = czero
+     allocate( gaux1(lemax, nbfrq, norbs) ); gaux1 = czero
+     allocate( gaux2(lemax, nbfrq, norbs) ); gaux2 = czero
      allocate( caux1(nbfrq, maxval(rank)) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank)) ); caux2 = czero
 
@@ -1572,10 +1572,10 @@
                      mx = two * mx
                  endif ! back if ( curr == 1 .or. curr == legrd ) block
 
-                 do l1=1,lemax
-                     do wbn=1,nbfrq
-                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + mx * rep_l(curr,l1) * caux1(wbn,is)
-                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + mx * rep_l(curr,l1) * caux2(wbn,ie)
+                 do wbn=1,nbfrq
+                     do l1=1,lemax
+                         gaux1(l1,wbn,f1) = gaux1(l1,wbn,f1) + mx * rep_l(curr,l1) * caux1(wbn,is)
+                         gaux2(l1,wbn,f1) = gaux2(l1,wbn,f1) + mx * rep_l(curr,l1) * caux2(wbn,ie)
                      enddo
                  enddo
              enddo
@@ -1587,7 +1587,7 @@
              do wbn=1,1
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
-     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * gaux1(wbn,l2,f2) * gaux2(wbn,l1,f1) / beta
+     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
                      enddo
                  enddo
              enddo
