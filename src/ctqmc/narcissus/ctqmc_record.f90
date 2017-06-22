@@ -1575,14 +1575,14 @@
                      te2 = time_e( index_e(ie2, f2), f2 )
 
                      dt2 = te2 - ts2
-                     mx1 = mmat(ie1, is1, f1) * sign(one, dt1)
-                     if ( dt1 < zero ) then
-                         dt1 = dt1 + beta
-                     endif ! back if ( dt1 < zero ) block
-                     dx1 = two * dt1 / beta
-                     curr1 = nint( dx1 * step ) + 1
-                     if ( curr1 == 1 .or. curr1 == legrd ) then
-                         mx1 = two * mx1
+                     mx2 = mmat(ie2, is2, f2) * sign(one, dt2)
+                     if ( dt2 < zero ) then
+                         dt2 = dt2 + beta
+                     endif ! back if ( dt2 < zero ) block
+                     dx2 = two * dt2 / beta
+                     curr2 = nint( dx2 * step ) + 1
+                     if ( curr2 == 1 .or. curr2 == legrd ) then
+                         mx2 = two * mx2
                      endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
 
                      mx1 = mx1 * sqrt(two * l1 - 1) * rep_l(curr1,l1)
