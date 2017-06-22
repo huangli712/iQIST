@@ -1528,7 +1528,7 @@
      integer :: l1, l2
 
      integer :: is1, ie1
-     integer :: is2, ie2
+!     integer :: is2, ie2
 
      integer :: curr
 
@@ -1537,7 +1537,7 @@
      real(dp) :: ts, te
      real(dp) :: dt, dx, mx
 
-     complex(dp) :: cmx1, cmx2
+!     complex(dp) :: cmx1, cmx2
 
      real(dp), allocatable :: l1l2(:,:)
      real(dp), allocatable :: maux(:,:,:,:)
@@ -1583,15 +1583,6 @@
 
                  do l1=1,lemax
                      maux(l1,ie1,is1,f1) = mx * rep_l(curr,l1)
-                 enddo
-             enddo
-         enddo
-     enddo
-
-     do f1=1,norbs
-         do is1=1,rank(f1)
-             do ie1=1,rank(f1)
-                 do l1=1,lemax
                      do wbn=1,nbfrq
                          gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux1(wbn,is1,f1)
                          gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
@@ -1601,33 +1592,25 @@
          enddo
      enddo
 
+!     do f1=1,norbs
+!         do is1=1,rank(f1)
+!             do ie1=1,rank(f1)
+!                 do l1=1,lemax
+!                     do wbn=1,nbfrq
+!                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux1(wbn,is1,f1)
+!                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
+!                     enddo
+!                 enddo
+!             enddo
+!         enddo
+!     enddo
+
      do f1=2,2  ! A
          do f2=1,1 ! B
              do wbn=1,1
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
-
-     !cmx1 = czero
-     !do is1=1,rank(f1)
-     !    do ie1=1,rank(f1)
-     !        cmx1 = cmx1 + maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
-     !    enddo
-     !enddo
-     !print *, gaux2(wbn,l1,f1), cmx1
-     !pause
-
-     !cmx2 = czero
-     !do is2=1,rank(f2)
-     !    do ie2=1,rank(f2)
-     !        cmx2 = cmx2 + maux(l2,ie2,is2,f2) * caux1(wbn,is2,f2)
-     !    enddo
-     !enddo
-     !print *, gaux1(wbn,l2,f2), cmx2
-     !pause
-
-     !g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * cmx1 * cmx2 / beta
      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * gaux1(wbn,l2,f2) * gaux2(wbn,l1,f1) / beta
-
                      enddo
                  enddo
              enddo
