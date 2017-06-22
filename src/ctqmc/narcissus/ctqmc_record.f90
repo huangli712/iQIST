@@ -1594,46 +1594,43 @@
                      do l2=1,lemax ! l'
 
      do is1=1,rank(f1)
+         ts1 = time_s( index_s(is1, f1), f1 )
          do ie1=1,rank(f1)
-             cmx1 = maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
-             do is2=1,rank(f2)
-                 do ie2=1,rank(f2)
-                     cmx2 = maux(l2,ie2,is2,f2) * caux1(wbn,is2,f2)
+             te1 = time_e( index_e(ie1, f1), f1 )
 
-!     do is1=1,rank(f1)
-!         ts1 = time_s( index_s(is1, f1), f1 )
-!         do ie1=1,rank(f1)
-!             te1 = time_e( index_e(ie1, f1), f1 )
-!
-!             dt1 = te1 - ts1
-!             mx1 = mmat(ie1, is1, f1) * sign(one, dt1)
-!             if ( dt1 < zero ) then
-!                 dt1 = dt1 + beta
-!             endif ! back if ( dt1 < zero ) block
-!             dx1 = two * dt1 / beta
-!             curr1 = nint( dx1 * step ) + 1
-!             if ( curr1 == 1 .or. curr1 == legrd ) then
-!                 mx1 = two * mx1
-!             endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
-!             cmx1 = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1,f1)
-!
-!             do is2=1,rank(f2)
-!                 ts2 = time_s( index_s(is2, f2), f2 )
-!                 do ie2=1,rank(f2)
-!                     te2 = time_e( index_e(ie2, f2), f2 )
-!
-!                     dt2 = te2 - ts2
-!                     mx2 = mmat(ie2, is2, f2) * sign(one, dt2)
-!                     if ( dt2 < zero ) then
-!                         dt2 = dt2 + beta
-!                     endif ! back if ( dt2 < zero ) block
-!                     dx2 = two * dt2 / beta
-!                     curr2 = nint( dx2 * step ) + 1
-!                     if ( curr2 == 1 .or. curr2 == legrd ) then
-!                         mx2 = two * mx2
-!                     endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
-!
-!                     cmx2 = mx2 * rep_l(curr2,l2) * caux1(wbn,is2,f2)
+             dt1 = te1 - ts1
+             mx1 = mmat(ie1, is1, f1) * sign(one, dt1)
+             if ( dt1 < zero ) then
+                 dt1 = dt1 + beta
+             endif ! back if ( dt1 < zero ) block
+             dx1 = two * dt1 / beta
+             curr1 = nint( dx1 * step ) + 1
+             if ( curr1 == 1 .or. curr1 == legrd ) then
+                 mx1 = two * mx1
+             endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
+             cmx1 = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1,f1)
+             print *, mx1 * rep_l(curr1,l1), maux(l1,ie1,is1,f1)
+             pause
+
+             do is2=1,rank(f2)
+                 ts2 = time_s( index_s(is2, f2), f2 )
+                 do ie2=1,rank(f2)
+                     te2 = time_e( index_e(ie2, f2), f2 )
+
+                     dt2 = te2 - ts2
+                     mx2 = mmat(ie2, is2, f2) * sign(one, dt2)
+                     if ( dt2 < zero ) then
+                         dt2 = dt2 + beta
+                     endif ! back if ( dt2 < zero ) block
+                     dx2 = two * dt2 / beta
+                     curr2 = nint( dx2 * step ) + 1
+                     if ( curr2 == 1 .or. curr2 == legrd ) then
+                         mx2 = two * mx2
+                     endif ! back if ( curr2 == 1 .or. curr2 == legrd ) block
+
+                     cmx2 = mx2 * rep_l(curr2,l2) * caux1(wbn,is2,f2)
+                     print *, mx2 * rep_l(curr2,l2), maux(l2,ie2,is2,f2)
+                     pause
 
                      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + &
                          l1l2(l1,l2) * cmx1 * cmx2 / beta
