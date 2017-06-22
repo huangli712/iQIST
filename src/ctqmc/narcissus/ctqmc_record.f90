@@ -1574,6 +1574,9 @@
                  do ie2=1,rank(f2)
                      te2 = time_e( index_e(ie2, f2), f2 )
 
+                 enddo
+             enddo
+
          enddo
      enddo
 
