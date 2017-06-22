@@ -1622,6 +1622,8 @@
              cmx2 = cmx2 + maux(l2,ie2,is2,f2) * caux1(wbn,is2,f2)
          enddo
      enddo
+     print *, gaux1(wbn,l2,f2), cmx2
+     pause
 
      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * cmx1 * cmx2 / beta
 
