@@ -1519,7 +1519,7 @@
      use control, only : norbs, nbfrq, lemax, legrd, beta
      use context, only : rank
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : mmat, rep_l
+     use context, only : mmat, rep_l, g2ph
 
      implicit none
 
@@ -1543,9 +1543,9 @@
      complex(dp) :: cmx1, cmx2
 
      step = real(legrd - 1) / two
-     do f1=1,norbs  ! A
-         do f2=1,f1 ! B
-             do wbn=1,nbfrq
+     do f1=2,2  ! A
+         do f2=1,1 ! B
+             do wbn=1,1
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
 
@@ -1585,8 +1585,10 @@
                          mx2 = two * mx2
                      endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
 
-                     mx2 = mx2 * sqrt(two * l2 - 1) * rep_l(curr2,l2)
+                     mx2 = mx2 * sqrt(two * l2 - 1) * rep_l(curr2,l2) * ( (-one)**l2 )
                      cmx2 = mx2 * exp( -czi * two * (wbn - 1) * pi / beta * ts2 )
+
+                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + cmx1 * cmx2 / beta
 
                  enddo
              enddo
