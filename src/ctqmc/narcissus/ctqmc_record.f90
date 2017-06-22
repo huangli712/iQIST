@@ -1558,10 +1558,6 @@
      step = real(legrd - 1) / two
      FLVR_CYCLE: do flvr=1,norbs
          call ctqmc_make_bexp(flvr, nbfrq, maxval(rank), caux1, caux2)
-         !print *, caux1
-         !print *, caux2
-         !print *, maxval(rank)
-         !STOP
 
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
@@ -1603,9 +1599,6 @@
          enddo ! over is={1,rank(flvr)} loop
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
-     !print *, gaux1
-     !print *, gaux2
-     !STOP
 
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
          ORB2_CYCLE: do f2=1,f1                ! block index: B
@@ -1614,7 +1607,7 @@
                                                !
                  do l1=1,lemax
                      do l2=1,lemax
-                         zg = gaux2(l1,wbn,f1) * gaux1(l2,wbn,f2)
+                         zg = gaux2(l2,wbn,f1) * gaux1(l1,wbn,f2)
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + zg / beta
                      enddo
                  enddo
