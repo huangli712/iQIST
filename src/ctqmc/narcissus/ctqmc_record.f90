@@ -1537,13 +1537,13 @@
 
      complex(dp) :: zg
 
-     real(dp), allocatable :: l1l2(:,:)
+     real(dp), allocatable :: l1_l2(:,:)
      complex(dp), allocatable :: gaux1(:,:,:)
      complex(dp), allocatable :: gaux2(:,:,:)
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
 
-     allocate( l1l2(lemax,lemax) ); l1l2 = zero
+     allocate( l1_l2(lemax,lemax) ); l1_l2 = zero
      allocate( gaux1(lemax, nbfrq, norbs) ); gaux1 = czero
      allocate( gaux2(lemax, nbfrq, norbs) ); gaux2 = czero
      allocate( caux1(nbfrq, maxval(rank)) ); caux1 = czero
@@ -1551,7 +1551,7 @@
 
      do l1=1,lemax
          do l2=1,lemax
-             l1l2(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
+             l1_l2(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
          enddo
      enddo
 
@@ -1589,7 +1589,7 @@
              do wbn=1,nbfrq
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
-                         zg = l1l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1)
+                         zg = l1_l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1)
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) +  zg / beta
                      enddo
                  enddo
@@ -1597,7 +1597,7 @@
          enddo
      enddo
 
-     deallocate( l1l2 )
+     deallocate( l1_l2 )
      deallocate( gaux1 )
      deallocate( gaux2 )
      deallocate( caux1 )
