@@ -683,11 +683,9 @@
      UPDATE1_DATA: BLOCK
 
 ! try to evaluate the impurity green's function and self-energy function
-! < grnf, frnf, and sig2 >
          call ctqmc_make_hub2()
 
 ! try to evaluate the two-particle green's function (ph channel)
-! < g2ph >
          call ctqmc_tran_twop(g2ph, g2ph_mpi); g2ph = g2ph_mpi
 
      END BLOCK UPDATE1_DATA
