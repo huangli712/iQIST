@@ -1541,11 +1541,15 @@
 
      real(dp), allocatable :: l1l2(:,:)
      real(dp), allocatable :: maux(:,:,:,:)
+     complex(dp), allocatable :: gaux1(:,:,:)
+     complex(dp), allocatable :: gaux2(:,:,:)
      complex(dp), allocatable :: caux1(:,:,:)
      complex(dp), allocatable :: caux2(:,:,:)
 
      allocate( l1l2(lemax,lemax) ); l1l2 = zero
      allocate( maux(lemax, maxval(rank), maxval(rank), norbs) ); maux = zero
+     allocate( gaux1(nbfrq, lemax, norbs) ); gaux1 = czero
+     allocate( gaux2(nbfrq, lemax, norbs) ); gaux2 = czero
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
      
@@ -1614,6 +1618,8 @@
 
      deallocate( l1l2 )
      deallocate( maux )
+     deallocate( gaux1 )
+     deallocate( gaux2 )
      deallocate( caux1 )
      deallocate( caux2 )
 
