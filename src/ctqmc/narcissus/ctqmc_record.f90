@@ -1514,11 +1514,12 @@
 
   subroutine ctqmc_record_g2ph()
      use constants, only : dp
-     use constants, only : one
+     use constants, only : zero, one, two, czi, pi
 
-     use control, only : norbs, nbfrq, lemax
+     use control, only : norbs, nbfrq, lemax, legrd, beta
      use context, only : rank
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : mmat
 
      implicit none
 
@@ -1529,11 +1530,19 @@
      integer :: is1, ie1
      integer :: is2, ie2
 
+     integer :: curr1, curr2
+
+     real(dp) :: step
+
      real(dp) :: ts1, te1
      real(dp) :: ts2, te2
      real(dp) :: dt1, dt2
      real(dp) :: mx1, mx2
+     real(dp) :: dx1, dx2
 
+     complex(dp) :: cmx1, cmx2
+
+     step = real(legrd - 1) / two
      do f1=1,norbs  ! A
          do f2=1,f1 ! B
              do wbn=1,nbfrq
@@ -1547,7 +1556,17 @@
 
              dt1 = te1 - ts1
              mx1 = mmat(ie1, is1, f1) * sign(one, dt1)
+             if ( dt1 < zero ) then
+                 dt1 = dt1 + beta
+             endif ! back if ( dt1 < zero ) block
+             dx1 = two * dt1 / beta
+             curr1 = nint( dx1 * step ) + 1
+             if ( curr1 == 1 .or. curr1 == legrd ) then
+                 mx1 = two * mx1
+             endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
 
+             mx1 = mx1 * sqrt(two * l1 - 1) * rep_l(curr1,l1)
+             cmx1 = mx1 * exp( czi * two * (wbn - 1) * pi / beta * te1 )
          enddo
      enddo
 
