@@ -1537,7 +1537,7 @@
      real(dp) :: ts1, te1
      real(dp) :: ts2, te2
      real(dp) :: dt1, dt2
-     real(dp) :: mx1, mx2
+     real(dp) :: mx1, mx2, mm
      real(dp) :: dx1, dx2
 
      complex(dp) :: cmx1, cmx2
@@ -1561,7 +1561,7 @@
      enddo
 
      step = real(legrd - 1) / two
-     do f1=2,2  ! A
+     do f1=1,1  ! A
          do f2=1,1 ! B
              do wbn=1,1
                  do l1=1,lemax     ! l
@@ -1573,7 +1573,7 @@
              te1 = time_e( index_e(ie1, f1), f1 )
 
              dt1 = te1 - ts1
-             mx1 = mmat(ie1, is1, f1) * sign(one, dt1)
+             mx1 = sign(one, dt1)
              if ( dt1 < zero ) then
                  dt1 = dt1 + beta
              endif ! back if ( dt1 < zero ) block
@@ -1590,7 +1590,7 @@
                      te2 = time_e( index_e(ie2, f2), f2 )
 
                      dt2 = te2 - ts2
-                     mx2 = mmat(ie2, is2, f2) * sign(one, dt2)
+                     mx2 = sign(one, dt2)
                      if ( dt2 < zero ) then
                          dt2 = dt2 + beta
                      endif ! back if ( dt2 < zero ) block
@@ -1602,8 +1602,13 @@
 
                      cmx2 = mx2 * rep_l(curr2,l2) * caux1(wbn,is2,f2)
 
+                     mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                     if ( f1 == f2 ) then
+                         mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                     endif
+
                      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + &
-                         l1l2(l1,l2) * cmx1 * cmx2 / beta
+                         l1l2(l1,l2) * mm * cmx1 * cmx2 / beta
 
                  enddo
              enddo
