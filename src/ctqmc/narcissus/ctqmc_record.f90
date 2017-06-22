@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/20/2017 by li huang (last modified)
+!!!           06/22/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -1588,6 +1588,19 @@
          enddo
      enddo
 
+     do f1=1,norbs
+         do is1=1,rank(f1)
+             do ie1=1,rank(f1)
+                 do l1=1,lemax
+                     do wbn=1,nbfrq
+                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux1(wbn,is1,f1)
+                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
+                     enddo
+                 enddo
+             enddo
+         enddo
+     enddo
+
      do f1=2,2  ! A
          do f2=1,1 ! B
              do wbn=1,1
@@ -1600,6 +1613,8 @@
              cmx1 = cmx1 + maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
          enddo
      enddo
+     print *, gaux2(wbn,l1,f1), cmx1
+     pause
 
      cmx2 = czero
      do is2=1,rank(f2)
