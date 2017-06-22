@@ -1586,6 +1586,8 @@
              mx1 = mx1 * rep_l(curr1,l1)
              !mx1 = mx1 * sqrt(two * l1 - 1) * rep_l(curr1,l1)
              !!cmx1 = mx1 * exp( czi * two * (wbn - 1) * pi / beta * te1 )
+             print *, caux2(wbn,ie1,f1), exp( czi * two * (wbn - 1) * pi / beta * te1 )
+             pause
 
 
              do is2=1,rank(f2)
@@ -1609,7 +1611,7 @@
                      !! cmx2 = mx2 * exp( -czi * two * (wbn - 1) * pi / beta * ts2 )
 
                      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + &
-                         l1l2(l1,l2) * mx1 * caux2(wbn,te1,f1) * mx2 * caux1(wbn,ts2,f2) / beta
+                         l1l2(l1,l2) * mx1 * caux2(wbn,ie1,f1) * mx2 * caux1(wbn,is2,f2) / beta
 
                  enddo
              enddo
