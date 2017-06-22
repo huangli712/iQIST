@@ -1594,13 +1594,6 @@
          do ie1=1,rank(f1)
              cmx1 = maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
 
-             !do is2=1,rank(f2)
-             !    do ie2=1,rank(f2)
-             !        cmx2 = maux(l2,ie2,is2,f2) * caux1(wbn,is2,f2)
-             !
-             !        g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * cmx1 * cmx2 / beta
-             !    enddo
-             !enddo
              cmx2 = czero
              do is2=1,rank(f2)
                  do ie2=1,rank(f2)
