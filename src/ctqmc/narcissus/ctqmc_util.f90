@@ -1075,7 +1075,12 @@
                      do l=1,lemax
                          associate ( val => grnf(i,j,:,:,:), &
                                      gkl => gaux(k,l,:,:,:) )
-                             val = val + tleg(i,k) * gkl * conjg( tleg(j,l) )
+                             !val = val + tleg(i,k) * gkl * conjg( tleg(j,l) )
+! i : v' n'
+! j : v  n
+! k : l'
+! l : l
+                             val = val + tleg(j,l) * gkl * conjg( tleg(i,k) )
                          end associate
                      enddo ! over l={1,lemax} loop
                  enddo ! over k={1,lemax} loop

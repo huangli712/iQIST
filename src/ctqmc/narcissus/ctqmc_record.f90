@@ -1605,9 +1605,9 @@
                                                !
              WB_CYCLE: do wbn=1,nbfrq          ! bosonic Matsubara frequency: w
                                                !
-                 do l1=1,lemax
-                     do l2=1,lemax
-                         zg = gaux2(l2,wbn,f1) * gaux1(l1,wbn,f2)
+                 do l1=1,lemax                 ! l
+                     do l2=1,lemax             ! l'
+                         zg = gaux2(l1,wbn,f1) * gaux1(l2,wbn,f2)
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + zg / beta
                      enddo
                  enddo
