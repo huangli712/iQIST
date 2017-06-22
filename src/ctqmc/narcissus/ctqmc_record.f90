@@ -1514,6 +1514,55 @@
 
   subroutine ctqmc_record_g2ph()
      use constants, only : dp
+     use constants, only : one
+
+     use control, only : norbs, nbfrq, lemax
+     use context, only : rank
+     use context, only : index_s, index_e, time_s, time_e
+
+     implicit none
+
+     integer :: f1, f2
+     integer :: wbn
+     integer :: l1, l2
+
+     integer :: is1, ie1
+     integer :: is2, ie2
+
+     real(dp) :: ts1, te1
+     real(dp) :: ts2, te2
+     real(dp) :: dt1, dt2
+     real(dp) :: mx1, mx2
+
+     do f1=1,norbs  ! A
+         do f2=1,f1 ! B
+             do wbn=1,nbfrq
+                 do l1=1,lemax     ! l
+                     do l2=1,lemax ! l'
+
+     do is1=1,rank(f1)
+         ts1 = time_s( index_s(is1, f1), f1 )
+         do ie1=1,rank(f1)
+             te1 = time_e( index_e(ie1, f1), f1 )
+
+             dt1 = te1 - ts1
+             mx1 = mmat(ie1, is1, f1) * sign(one, dt1)
+
+         enddo
+     enddo
+
+
+                     enddo
+                 enddo
+             enddo
+         enddo
+     enddo
+
+     return
+  end subroutine ctqmc_record_g2ph
+
+  subroutine ctqmc_record_g2ph_test()
+     use constants, only : dp
      use constants, only : zero, one, two, czero
 
      use control, only : norbs
@@ -1624,7 +1673,7 @@
      deallocate( gaux2 )
 
      return
-  end subroutine ctqmc_record_g2ph
+  end subroutine ctqmc_record_g2ph_test
 
   subroutine ctqmc_make_bexp(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp
