@@ -1526,9 +1526,7 @@
      integer :: f1, f2
      integer :: wbn
      integer :: l1, l2
-
      integer :: is1, ie1
-!     integer :: is2, ie2
 
      integer :: curr
 
@@ -1537,17 +1535,15 @@
      real(dp) :: ts, te
      real(dp) :: dt, dx, mx
 
-!     complex(dp) :: cmx1, cmx2
-
      real(dp), allocatable :: l1l2(:,:)
-     real(dp), allocatable :: maux(:,:,:,:)
+     !real(dp), allocatable :: maux(:,:,:,:)
      complex(dp), allocatable :: gaux1(:,:,:)
      complex(dp), allocatable :: gaux2(:,:,:)
      complex(dp), allocatable :: caux1(:,:,:)
      complex(dp), allocatable :: caux2(:,:,:)
 
      allocate( l1l2(lemax,lemax) ); l1l2 = zero
-     allocate( maux(lemax, maxval(rank), maxval(rank), norbs) ); maux = zero
+     !allocate( maux(lemax, maxval(rank), maxval(rank), norbs) ); maux = zero
      allocate( gaux1(nbfrq, lemax, norbs) ); gaux1 = czero
      allocate( gaux2(nbfrq, lemax, norbs) ); gaux2 = czero
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
@@ -1582,28 +1578,14 @@
                  endif ! back if ( curr == 1 .or. curr == legrd ) block
 
                  do l1=1,lemax
-                     maux(l1,ie1,is1,f1) = mx * rep_l(curr,l1)
                      do wbn=1,nbfrq
-                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux1(wbn,is1,f1)
-                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
+                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + mx * rep_l(curr,l1) * caux1(wbn,is1,f1)
+                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + mx * rep_l(curr,l1) * caux2(wbn,ie1,f1)
                      enddo
                  enddo
              enddo
          enddo
      enddo
-
-!     do f1=1,norbs
-!         do is1=1,rank(f1)
-!             do ie1=1,rank(f1)
-!                 do l1=1,lemax
-!                     do wbn=1,nbfrq
-!                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux1(wbn,is1,f1)
-!                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
-!                     enddo
-!                 enddo
-!             enddo
-!         enddo
-!     enddo
 
      do f1=2,2  ! A
          do f2=1,1 ! B
@@ -1618,7 +1600,7 @@
      enddo
 
      deallocate( l1l2 )
-     deallocate( maux )
+     !deallocate( maux )
      deallocate( gaux1 )
      deallocate( gaux2 )
      deallocate( caux1 )
