@@ -1526,7 +1526,7 @@
      integer :: f1, f2
      integer :: wbn
      integer :: l1, l2
-     integer :: is1, ie1
+     integer :: is, ie
 
      integer :: curr
 
@@ -1536,22 +1536,16 @@
      real(dp) :: dt, dx, mx
 
      real(dp), allocatable :: l1l2(:,:)
-     !real(dp), allocatable :: maux(:,:,:,:)
      complex(dp), allocatable :: gaux1(:,:,:)
      complex(dp), allocatable :: gaux2(:,:,:)
-     complex(dp), allocatable :: caux1(:,:,:)
-     complex(dp), allocatable :: caux2(:,:,:)
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
 
      allocate( l1l2(lemax,lemax) ); l1l2 = zero
-     !allocate( maux(lemax, maxval(rank), maxval(rank), norbs) ); maux = zero
      allocate( gaux1(nbfrq, lemax, norbs) ); gaux1 = czero
      allocate( gaux2(nbfrq, lemax, norbs) ); gaux2 = czero
-     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
-     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
-     
-     do f1=1,norbs
-         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
-     enddo
+     allocate( caux1(nbfrq, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank)) ); caux2 = czero
 
      do l1=1,lemax
          do l2=1,lemax
@@ -1561,13 +1555,14 @@
 
      step = real(legrd - 1) / two
      do f1=1,norbs
-         do is1=1,rank(f1)
-             ts = time_s( index_s(is1, f1), f1 )
-             do ie1=1,rank(f1)
-                 te = time_e( index_e(ie1, f1), f1 )
+         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1, caux2)
+         do is=1,rank(f1)
+             ts = time_s( index_s(is, f1), f1 )
+             do ie=1,rank(f1)
+                 te = time_e( index_e(ie, f1), f1 )
 
                  dt = te - ts
-                 mx = mmat(ie1, is1, f1) * sign(one, dt)
+                 mx = mmat(ie, is, f1) * sign(one, dt)
                  if ( dt < zero ) then
                      dt = dt + beta
                  endif ! back if ( dt < zero ) block
@@ -1579,8 +1574,8 @@
 
                  do l1=1,lemax
                      do wbn=1,nbfrq
-                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + mx * rep_l(curr,l1) * caux1(wbn,is1,f1)
-                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + mx * rep_l(curr,l1) * caux2(wbn,ie1,f1)
+                         gaux1(wbn,l1,f1) = gaux1(wbn,l1,f1) + mx * rep_l(curr,l1) * caux1(wbn,is)
+                         gaux2(wbn,l1,f1) = gaux2(wbn,l1,f1) + mx * rep_l(curr,l1) * caux2(wbn,ie)
                      enddo
                  enddo
              enddo
@@ -1600,7 +1595,6 @@
      enddo
 
      deallocate( l1l2 )
-     !deallocate( maux )
      deallocate( gaux1 )
      deallocate( gaux2 )
      deallocate( caux1 )
