@@ -1530,15 +1530,12 @@
      integer :: is1, ie1
      integer :: is2, ie2
 
-     integer :: curr1, curr2
+     integer :: curr
 
      real(dp) :: step
 
-     real(dp) :: ts1, te1
-     real(dp) :: ts2, te2
-     real(dp) :: dt1, dt2
-     real(dp) :: mx1, mx2
-     real(dp) :: dx1, dx2
+     real(dp) :: ts, te
+     real(dp) :: dt, dx, mx
 
      complex(dp) :: cmx1, cmx2
 
@@ -1565,23 +1562,23 @@
      step = real(legrd - 1) / two
      do f1=1,norbs
          do is1=1,rank(f1)
-             ts1 = time_s( index_s(is1, f1), f1 )
+             ts = time_s( index_s(is1, f1), f1 )
              do ie1=1,rank(f1)
-                 te1 = time_e( index_e(ie1, f1), f1 )
+                 te = time_e( index_e(ie1, f1), f1 )
 
-                 dt1 = te1 - ts1
-                 mx1 = mmat(ie1, is1, f1) * sign(one, dt1)
-                 if ( dt1 < zero ) then
-                     dt1 = dt1 + beta
-                 endif ! back if ( dt1 < zero ) block
-                 dx1 = two * dt1 / beta
-                 curr1 = nint( dx1 * step ) + 1
-                 if ( curr1 == 1 .or. curr1 == legrd ) then
-                     mx1 = two * mx1
-                 endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
+                 dt = te - ts
+                 mx = mmat(ie1, is1, f1) * sign(one, dt)
+                 if ( dt < zero ) then
+                     dt = dt + beta
+                 endif ! back if ( dt < zero ) block
+                 dx = two * dt / beta
+                 curr = nint( dx * step ) + 1
+                 if ( curr == 1 .or. curr == legrd ) then
+                     mx = two * mx
+                 endif ! back if ( curr == 1 .or. curr == legrd ) block
 
                  do l1=1,lemax
-                     maux(l1,ie1,is1,f1) = mx1 * rep_l(curr1,l1)
+                     maux(l1,ie1,is1,f1) = mx * rep_l(curr,l1)
                  enddo
              enddo
          enddo
@@ -1594,25 +1591,19 @@
                      do l2=1,lemax ! l'
 
      do is1=1,rank(f1)
-         !ts1 = time_s( index_s(is1, f1), f1 )
          do ie1=1,rank(f1)
-             !te1 = time_e( index_e(ie1, f1), f1 )
              cmx1 = maux(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
 
              do is2=1,rank(f2)
-                 !ts2 = time_s( index_s(is2, f2), f2 )
                  do ie2=1,rank(f2)
-                     !te2 = time_e( index_e(ie2, f2), f2 )
                      cmx2 = maux(l2,ie2,is2,f2) * caux1(wbn,is2,f2)
 
                      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * cmx1 * cmx2 / beta
-
                  enddo
              enddo
 
          enddo
      enddo
-
 
                      enddo
                  enddo
