@@ -1542,29 +1542,32 @@
 
      complex(dp) :: cmx1, cmx2
 
-     real(dp), allocatable :: l1l2(:,:)
-     real(dp), allocatable :: pl(:,:,:,:)
-     complex(dp), allocatable :: caux1(:,:,:)
-     complex(dp), allocatable :: caux2(:,:,:)
+     real(dp), allocatable :: l1_l2(:,:)
+     complex(dp), allocatable :: pl1(:,:,:,:,:)
+     complex(dp), allocatable :: pl2(:,:,:,:,:)
+     complex(dp), allocatable :: gaux1(:,:,:)
+     complex(dp), allocatable :: gaux2(:,:,:)
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
 
-     allocate( l1l2(lemax,lemax) ); l1l2 = zero
-     allocate( pl(lemax, maxval(rank), maxval(rank), norbs)); pl = zero
-     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
-     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
+     allocate( l1_l2(lemax,lemax) ); l1_l2 = zero
+     allocate( pl1(lemax, nbfrq, maxval(rank), maxval(rank), norbs)); pl1 = czero
+     allocate( pl2(lemax, nbfrq, maxval(rank), maxval(rank), norbs)); pl2 = czero
+     allocate( gaux1(lemax, nbfrq, norbs) ); gaux1 = czero
+     allocate( gaux2(lemax, nbfrq, norbs) ); gaux2 = czero
+     allocate( caux1(nbfrq, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank)) ); caux2 = czero
      
-     do f1=1,norbs
-         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
-     enddo
+     step = real(legrd - 1) / two
 
      do l1=1,lemax
          do l2=1,lemax
-             l1l2(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
+             l1_l2(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
          enddo
      enddo
 
-     step = real(legrd - 1) / two
-
      do f1=1,norbs
+         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1, caux2)
          do is1=1,rank(f1)
              ts1 = time_s( index_s(is1, f1), f1 )
              do ie1=1,rank(f1)
@@ -1581,8 +1584,13 @@
                      mx1 = two * mx1
                  endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
 
+                 do wbn=1,nbfrq
                  do l1=1,lemax
-                     pl(l1,ie1,is1,f1) = mx1 * rep_l(curr1,l1)
+                     pl1(l1,wbn,ie1,is1,f1) = mx1 * rep_l(curr1,l1) * caux1(wbn,is1)
+                     pl2(l1,wbn,ie1,is1,f1) = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1)
+                     gaux1(l1,wbn,f1) = gaux1(l1,wbn,f1) + mx1 * rep_l(curr1,l1) * caux1(wbn,is1) * mmat(ie1, is1, f1)
+                     gaux2(l1,wbn,f1) = gaux2(l1,wbn,f1) + mx1 * rep_l(curr1,l1) * caux2(wbn,ie1) * mmat(ie1, is1, f1)
+                 enddo
                  enddo
              enddo
          enddo
@@ -1594,49 +1602,51 @@
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
 
-     do is1=1,rank(f1)
-         !ts1 = time_s( index_s(is1, f1), f1 )
-         do ie1=1,rank(f1)
-             !te1 = time_e( index_e(ie1, f1), f1 )
+     !do is1=1,rank(f1)
+     !    do ie1=1,rank(f1)
+     !        cmx1 = pl2(l1,wbn,ie1,is1,f1)
+     !
+     !        do is2=1,rank(f2)
+     !            do ie2=1,rank(f2)
+     !                cmx2 = pl1(l2,wbn,ie2,is2,f2)
+     !
+     !                mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+     !                g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * mm * cmx1 * cmx2 / beta
+     !            enddo
+     !        enddo
+     !
+     !    enddo
+     !enddo
+                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
 
-             !dt1 = te1 - ts1
-             !mx1 = sign(one, dt1)
-             !if ( dt1 < zero ) then
-             !    dt1 = dt1 + beta
-             !endif ! back if ( dt1 < zero ) block
-             !dx1 = two * dt1 / beta
-             !curr1 = nint( dx1 * step ) + 1
-             !if ( curr1 == 1 .or. curr1 == legrd ) then
-             !    mx1 = two * mx1
-             !endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
-             !cmx1 = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1,f1)
-             cmx1 = pl(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
+                     enddo
+                 enddo
+             enddo
+         enddo
+     enddo
+
+!---------------------
+
+     do f1=1,1  ! A
+         do f2=1,1 ! B
+             do wbn=1,1
+                 do l1=1,lemax     ! l
+                     do l2=1,lemax ! l'
+
+     do is1=1,rank(f1)
+         do ie1=1,rank(f1)
+             cmx1 = pl2(l1,wbn,ie1,is1,f1)
 
              do is2=1,rank(f2)
-                 !ts2 = time_s( index_s(is2, f2), f2 )
                  do ie2=1,rank(f2)
-                     !te2 = time_e( index_e(ie2, f2), f2 )
+                     cmx2 = pl1(l2,wbn,ie2,is2,f2)
 
-                     !dt2 = te2 - ts2
-                     !mx2 = sign(one, dt2)
-                     !if ( dt2 < zero ) then
-                     !    dt2 = dt2 + beta
-                     !endif ! back if ( dt2 < zero ) block
-                     !dx2 = two * dt2 / beta
-                     !curr2 = nint( dx2 * step ) + 1
-                     !if ( curr2 == 1 .or. curr2 == legrd ) then
-                     !    mx2 = two * mx2
-                     !endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
-                     !cmx2 = mx2 * rep_l(curr2,l2) * caux1(wbn,is2,f2)
-                     cmx2 = pl(l2,ie2,is2,f2) * caux1(wbn,is2,f2)
-
-                     mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                     mm = zero
                      if ( f1 == f2 ) then
                          mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                      endif
 
-                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * mm * cmx1 * cmx2 / beta
-
+                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * mm * cmx1 * cmx2 / beta
                  enddo
              enddo
 
@@ -1649,8 +1659,11 @@
          enddo
      enddo
 
-     deallocate( l1l2 )
-     deallocate( pl )
+     deallocate( l1_l2 )
+     deallocate( pl1 )
+     deallocate( pl2 )
+     deallocate( gaux1 )
+     deallocate( gaux2 )
      deallocate( caux1 )
      deallocate( caux2 )
 
