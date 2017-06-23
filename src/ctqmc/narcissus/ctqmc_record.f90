@@ -1530,15 +1530,14 @@
      integer :: is1, ie1
      integer :: is2, ie2
 
-     integer :: curr1, curr2
+     integer :: curr1
 
      real(dp) :: step
 
      real(dp) :: ts1, te1
-     real(dp) :: ts2, te2
-     real(dp) :: dt1, dt2
-     real(dp) :: mx1, mx2, mm
-     real(dp) :: dx1, dx2
+     real(dp) :: dt1
+     real(dp) :: mx1, mm
+     real(dp) :: dx1
 
      complex(dp) :: cmx1, cmx2
 
@@ -1596,27 +1595,14 @@
          enddo
      enddo
 
+!---------------------
+
      do f1=1,1  ! A
          do f2=1,1 ! B
              do wbn=1,1
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
 
-     !do is1=1,rank(f1)
-     !    do ie1=1,rank(f1)
-     !        cmx1 = pl2(l1,wbn,ie1,is1,f1)
-     !
-     !        do is2=1,rank(f2)
-     !            do ie2=1,rank(f2)
-     !                cmx2 = pl1(l2,wbn,ie2,is2,f2)
-     !
-     !                mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
-     !                g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * mm * cmx1 * cmx2 / beta
-     !            enddo
-     !        enddo
-     !
-     !    enddo
-     !enddo
                      g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
 
                      enddo
@@ -1628,32 +1614,27 @@
 !---------------------
 
      do f1=1,1  ! A
-         do f2=1,1 ! B
-             do wbn=1,1
-                 do l1=1,lemax     ! l
-                     do l2=1,lemax ! l'
+         do wbn=1,1
+             do l1=1,lemax     ! l
+                 do l2=1,lemax ! l'
 
      do is1=1,rank(f1)
          do ie1=1,rank(f1)
              cmx1 = pl2(l1,wbn,ie1,is1,f1)
 
-             do is2=1,rank(f2)
-                 do ie2=1,rank(f2)
-                     cmx2 = pl1(l2,wbn,ie2,is2,f2)
+             do is2=1,rank(f1)
+                 do ie2=1,rank(f1)
+                     cmx2 = pl1(l2,wbn,ie2,is2,f1)
 
-                     mm = zero
-                     if ( f1 == f2 ) then
-                         mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
-                     endif
+                     mm = - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
 
-                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * mm * cmx1 * cmx2 / beta
+                     g2ph(l2,l1,wbn,f1,f1) = g2ph(l2,l1,wbn,f1,f1) + l1_l2(l1,l2) * mm * cmx1 * cmx2 / beta
                  enddo
              enddo
 
          enddo
      enddo
 
-                     enddo
                  enddo
              enddo
          enddo
