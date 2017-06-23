@@ -1539,7 +1539,7 @@
      real(dp) :: mx1, mm
      real(dp) :: dx1
 
-     complex(dp) :: cmx1, cmx2
+     complex(dp) :: cmx
 
      real(dp), allocatable :: l1_l2(:,:)
      complex(dp), allocatable :: pl1(:,:,:,:,:)
@@ -1597,19 +1597,19 @@
 
 !---------------------
 
-     do f1=1,1  ! A
-         do f2=1,1 ! B
-             do wbn=1,1
-                 do l1=1,lemax     ! l
-                     do l2=1,lemax ! l'
-
-                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
-
-                     enddo
-                 enddo
-             enddo
-         enddo
-     enddo
+!     do f1=1,1  ! A
+!         do f2=1,1 ! B
+!             do wbn=1,1
+!                 do l1=1,lemax     ! l
+!                     do l2=1,lemax ! l'
+!
+!                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
+!
+!                     enddo
+!                 enddo
+!             enddo
+!         enddo
+!     enddo
 
 !---------------------
 
@@ -1620,15 +1620,14 @@
 
      do is1=1,rank(f1)
          do ie1=1,rank(f1)
-             cmx1 = pl2(l1,wbn,ie1,is1,f1)
 
              do is2=1,rank(f1)
                  do ie2=1,rank(f1)
-                     cmx2 = pl1(l2,wbn,ie2,is2,f1)
+                     cmx = pl1(l2,wbn,ie2,is2,f1) * pl2(l1,wbn,ie1,is1,f1)
 
                      mm = - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
 
-                     g2ph(l2,l1,wbn,f1,f1) = g2ph(l2,l1,wbn,f1,f1) + l1_l2(l1,l2) * mm * cmx1 * cmx2 / beta
+                     g2ph(l2,l1,wbn,f1,f1) = g2ph(l2,l1,wbn,f1,f1) + l1_l2(l1,l2) * mm * cmx / beta
                  enddo
              enddo
 
