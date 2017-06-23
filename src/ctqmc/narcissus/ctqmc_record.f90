@@ -1543,10 +1543,12 @@
      complex(dp) :: cmx1, cmx2
 
      real(dp), allocatable :: l1l2(:,:)
+     real(dp), allocatable :: pl(:,:,:,:)
      complex(dp), allocatable :: caux1(:,:,:)
      complex(dp), allocatable :: caux2(:,:,:)
 
      allocate( l1l2(lemax,lemax) ); l1l2 = zero
+     allocate( pl(lemax, maxval(rank), maxval(rank), norbs)); pl = zero
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
      
@@ -1561,6 +1563,31 @@
      enddo
 
      step = real(legrd - 1) / two
+
+     do f1=1,norbs
+         do is1=1,rank(f1)
+             ts1 = time_s( index_s(is1, f1), f1 )
+             do ie1=1,rank(f1)
+                 te1 = time_e( index_e(ie1, f1), f1 )
+
+                 dt1 = te1 - ts1
+                 mx1 = sign(one, dt1)
+                 if ( dt1 < zero ) then
+                     dt1 = dt1 + beta
+                 endif ! back if ( dt1 < zero ) block
+                 dx1 = two * dt1 / beta
+                 curr1 = nint( dx1 * step ) + 1
+                 if ( curr1 == 1 .or. curr1 == legrd ) then
+                     mx1 = two * mx1
+                 endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
+
+                 do l1=1,lemax
+                     pl(l1,ie1,is1,f1) = mx1 * rep_l(curr1,l1)
+                 enddo
+             enddo
+         enddo
+     enddo
+
      do f1=1,1  ! A
          do f2=1,1 ! B
              do wbn=1,1
@@ -1568,54 +1595,53 @@
                      do l2=1,lemax ! l'
 
      do is1=1,rank(f1)
-         ts1 = time_s( index_s(is1, f1), f1 )
+         !ts1 = time_s( index_s(is1, f1), f1 )
          do ie1=1,rank(f1)
-             te1 = time_e( index_e(ie1, f1), f1 )
+             !te1 = time_e( index_e(ie1, f1), f1 )
 
-             dt1 = te1 - ts1
-             mx1 = sign(one, dt1)
-             if ( dt1 < zero ) then
-                 dt1 = dt1 + beta
-             endif ! back if ( dt1 < zero ) block
-             dx1 = two * dt1 / beta
-             curr1 = nint( dx1 * step ) + 1
-             if ( curr1 == 1 .or. curr1 == legrd ) then
-                 mx1 = two * mx1
-             endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
-             cmx1 = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1,f1)
+             !dt1 = te1 - ts1
+             !mx1 = sign(one, dt1)
+             !if ( dt1 < zero ) then
+             !    dt1 = dt1 + beta
+             !endif ! back if ( dt1 < zero ) block
+             !dx1 = two * dt1 / beta
+             !curr1 = nint( dx1 * step ) + 1
+             !if ( curr1 == 1 .or. curr1 == legrd ) then
+             !    mx1 = two * mx1
+             !endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
+             !cmx1 = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1,f1)
+             cmx1 = pl(l1,ie1,is1,f1) * caux2(wbn,ie1,f1)
 
              do is2=1,rank(f2)
-                 ts2 = time_s( index_s(is2, f2), f2 )
+                 !ts2 = time_s( index_s(is2, f2), f2 )
                  do ie2=1,rank(f2)
-                     te2 = time_e( index_e(ie2, f2), f2 )
+                     !te2 = time_e( index_e(ie2, f2), f2 )
 
-                     dt2 = te2 - ts2
-                     mx2 = sign(one, dt2)
-                     if ( dt2 < zero ) then
-                         dt2 = dt2 + beta
-                     endif ! back if ( dt2 < zero ) block
-                     dx2 = two * dt2 / beta
-                     curr2 = nint( dx2 * step ) + 1
-                     if ( curr2 == 1 .or. curr2 == legrd ) then
-                         mx2 = two * mx2
-                     endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
-
-                     cmx2 = mx2 * rep_l(curr2,l2) * caux1(wbn,is2,f2)
+                     !dt2 = te2 - ts2
+                     !mx2 = sign(one, dt2)
+                     !if ( dt2 < zero ) then
+                     !    dt2 = dt2 + beta
+                     !endif ! back if ( dt2 < zero ) block
+                     !dx2 = two * dt2 / beta
+                     !curr2 = nint( dx2 * step ) + 1
+                     !if ( curr2 == 1 .or. curr2 == legrd ) then
+                     !    mx2 = two * mx2
+                     !endif ! back if ( curr1 == 1 .or. curr1 == legrd ) block
+                     !cmx2 = mx2 * rep_l(curr2,l2) * caux1(wbn,is2,f2)
+                     cmx2 = pl(l2,ie2,is2,f2) * caux1(wbn,is2,f2)
 
                      mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                      if ( f1 == f2 ) then
                          mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                      endif
 
-                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + &
-                         l1l2(l1,l2) * mm * cmx1 * cmx2 / beta
+                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1l2(l1,l2) * mm * cmx1 * cmx2 / beta
 
                  enddo
              enddo
 
          enddo
      enddo
-
 
                      enddo
                  enddo
@@ -1624,6 +1650,7 @@
      enddo
 
      deallocate( l1l2 )
+     deallocate( pl )
      deallocate( caux1 )
      deallocate( caux2 )
 
