@@ -1593,12 +1593,6 @@
                      pl2(l1,wbn,ie1,is1,f1) = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1)
                      gaux1(l1,wbn,f1) = gaux1(l1,wbn,f1) + pl1(l1,wbn,ie1,is1,f1) * mmat(ie1, is1, f1)
                      gaux2(l1,wbn,f1) = gaux2(l1,wbn,f1) + pl2(l1,wbn,ie1,is1,f1) * mmat(ie1, is1, f1)
-
-                     !do is2=1,rank(f1)
-                     !    gaux3(l1,wbn,f1) = gaux3(l1,wbn,f1) + pl1(l1,wbn,ie1,is1,f1) * mmat(ie1,is2,f1) 
-                     !    gaux4(l1,wbn,f1) = gaux4(l1,wbn,f1) + pl2(l1,wbn,ie1,is1,f1) * mmat(ie1,is2,f1) 
-                     !enddo
-
                  enddo
                  enddo
 
