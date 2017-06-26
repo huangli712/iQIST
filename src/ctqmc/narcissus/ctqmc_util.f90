@@ -1037,7 +1037,7 @@
 ! using normal representation
 !-------------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
-         CONTINUE
+         grnf = gaux
      endif STD_BLOCK ! back if ( isort == 1 ) block
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
