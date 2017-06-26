@@ -1645,13 +1645,27 @@
 !<     return
 !<  end subroutine ctqmc_make_fexp
 
+!!
+!! @sub ctqmc_make_bexp
+!!
+!! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
+!!
+!! note:
+!!
+!!     unlike the above ctqmc_make_fexp(), here the matsubara frequency
+!!     mesh is bosonic. since the number of bosonic frequency points is
+!!     usually very small (that is nbfrq << nffrq), so the calculation is
+!!     very efficient
+!!
   subroutine ctqmc_make_bexp(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp
-     use constants, only : pi, czi, two
+     use constants, only : pi, two, czi
 
      use control, only : beta
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank
-     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1676,8 +1690,13 @@
      integer :: is
      integer :: ie
 
+! loop index for matsubara frequency
      integer :: iw
-     complex(dp) :: zs, ze
+
+! imaginary time for start and end points
+! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
+     complex(dp) :: zs
+     complex(dp) :: ze
 
      do is=1,rank(flvr)
          zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
