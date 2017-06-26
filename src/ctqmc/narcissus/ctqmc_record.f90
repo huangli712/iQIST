@@ -1304,6 +1304,7 @@
 !!    out             in
 !!
   subroutine ctqmc_record_g2ph()
+     use control, only : isort
      use control, only : isvrt
 
      implicit none
@@ -1331,11 +1332,14 @@
      return
   end subroutine ctqmc_record_g2ph
 
-
-
-
-
-
+!!
+!! @sub cat_record_g2ph_std
+!!
+!! record the two-particle green's and vertex functions in the ph channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
 !!     we try to measure the two-particle green's and vertex functions in
 !!     the particle-hole channel and Matsubara frequency representation
 !!     in this subroutine. in order to simplify the calculations, we just
@@ -1363,10 +1367,10 @@
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
-!!    \tau'_i and \tau'_k: imaginary time for annihilation operator
-!!    \tau_j and \tau_l: imaginary time for creation operator
+!!    \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!    \tau_j and \tau_l: imaginary time for creation operators
 !!
-  subroutine ctqmc_record_g2ph_std()
+  subroutine cat_record_g2ph_std()
      use constants, only : dp
      use constants, only : czero
 
@@ -1536,7 +1540,7 @@
      deallocate( h2aux )
 
      return
-  end subroutine ctqmc_record_g2ph_std
+  end subroutine cat_record_g2ph_std
 
   subroutine ctqmc_record_g2ph_leg()
      use constants, only : dp
