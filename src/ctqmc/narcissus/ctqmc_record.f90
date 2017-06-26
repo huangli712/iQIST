@@ -1640,57 +1640,6 @@
      return
   end subroutine ctqmc_record_g2ph
 
-  subroutine ctqmc_make_bexp(flvr, nfaux, mrank, caux1, caux2)
-     use constants, only : dp
-     use constants, only : pi, czi, two
-
-     use control, only : beta
-     use context, only : rank
-     use context, only : index_s, index_e, time_s, time_e
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in) :: flvr
-
-! number of frequency points, usually it is equal to nbfrq
-     integer, intent(in) :: nfaux
-
-! maximum number of operators in different flavor channels
-     integer, intent(in) :: mrank
-
-! matsubara frequency exponents for creation operators
-     complex(dp), intent(out) :: caux1(nfaux,mrank)
-
-! matsubara frequency exponents for annihilation operators
-     complex(dp), intent(out) :: caux2(nfaux,mrank)
-
-! local variables
-! loop indices for start and end points
-     integer :: is
-     integer :: ie
-
-     integer :: iw
-     complex(dp) :: zs, ze
-
-     do is=1,rank(flvr)
-         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
-         do iw=1,nfaux
-             caux1(iw,is) = exp( -two * float(iw - 1) * zs )
-         enddo
-     enddo ! over is={1,rank(flvr)} loop
-
-     do ie=1,rank(flvr)
-         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
-         do iw=1,nfaux
-             caux2(iw,ie) = exp( +two * float(iw - 1) * ze )
-         enddo
-     enddo ! over ie={1,rank(flvr)} loop
-
-     return
-  end subroutine ctqmc_make_bexp
-
 !!
 !! @sub ctqmc_record_g2pp
 !!
