@@ -451,84 +451,10 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_symm_nimp
-!!
-!! symmetrize the occupation number array, nimp, according to symm vector
-!!
-  subroutine ctqmc_symm_nimp(symm, nimp)
-     use constants, only : dp
-     use constants, only : zero, two
-
-     use control, only : isbnd, isspn
-     use control, only : nband, norbs
-
-     implicit none
-
-! external arguments
-! symmetry vector
-     integer, intent(in) :: symm(norbs)
-
-! occupation number
-     real(dp), intent(inout) :: nimp(norbs)
-
-! local variables
-! loop index over bands
-     integer  :: ibnd
-     integer  :: jbnd
-
-! dummy variables
-     real(dp) :: raux
-
-! histogram vector
-! note: it is NOT the global one
-     integer  :: hist(norbs)
-
-! build histogram
-     hist = 0
-     do ibnd=1,norbs
-         hist(symm(ibnd)) = hist(symm(ibnd)) + 1
-     enddo ! over ibnd={1,norbs} loop
-
-! perform symmetrization for those orbitals with the same symmetry
-     if ( isbnd == 2 ) then
-         do ibnd=1,norbs
-             if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
-                 raux = zero
-
-                 do jbnd=1,norbs                ! gather the data
-                     if ( symm(jbnd) == ibnd ) then
-                         raux = raux + nimp(jbnd)
-                     endif ! back if ( symm(jbnd) == ibnd ) block
-                 enddo ! over jbnd={1,norbs} loop
-
-                 raux = raux / real(hist(ibnd)) ! calculate average value
-
-                 do jbnd=1,norbs                ! setup it
-                     if ( symm(jbnd) == ibnd ) then
-                         nimp(jbnd) = raux
-                     endif ! back if ( symm(jbnd) == ibnd ) block
-                 enddo ! over jbnd={1,norbs} loop
-             endif ! back if ( hist(ibnd) > 0 ) block
-         enddo ! over ibnd={1,norbs} loop
-     endif ! back if ( isbnd == 2 ) block
-
-! symmetrize nimp over spin
-     if ( isspn == 2 ) then
-         do jbnd=1,nband
-             raux = ( nimp(jbnd) + nimp(jbnd+nband) ) / two
-             nimp(jbnd) = raux
-             nimp(jbnd+nband) = raux
-         enddo ! over jbnd={1,nband} loop
-     endif ! back if ( isspn == 2 ) block
-
-     return
-  end subroutine ctqmc_symm_nimp
-
-!!
 !! @sub ctqmc_symm_gtau
 !!
-!! symmetrize the gtau according to symm vector. only the diagonal
-!! elements are taken into considerations
+!! symmetrize the gtau according to symm vector. only the diagonal terms
+!! are taken into considerations
 !!
   subroutine ctqmc_symm_gtau(symm, gtau)
      use constants, only : dp
@@ -610,8 +536,8 @@
 !!
 !! @sub ctqmc_symm_grnf
 !!
-!! symmetrize the grnf according to symm vector. only the diagonal
-!! elements are taken into considerations
+!! symmetrize the grnf according to symm vector. only the diagonal terms
+!! are taken into considerations
 !!
   subroutine ctqmc_symm_grnf(symm, grnf)
      use constants, only : dp
@@ -689,6 +615,80 @@
 
      return
   end subroutine ctqmc_symm_grnf
+
+!!
+!! @sub ctqmc_symm_nimp
+!!
+!! symmetrize the occupation number array, nimp, according to symm vector
+!!
+  subroutine ctqmc_symm_nimp(symm, nimp)
+     use constants, only : dp
+     use constants, only : zero, two
+
+     use control, only : isbnd, isspn
+     use control, only : nband, norbs
+
+     implicit none
+
+! external arguments
+! symmetry vector
+     integer, intent(in) :: symm(norbs)
+
+! occupation number
+     real(dp), intent(inout) :: nimp(norbs)
+
+! local variables
+! loop index over bands
+     integer  :: ibnd
+     integer  :: jbnd
+
+! dummy variables
+     real(dp) :: raux
+
+! histogram vector
+! note: it is NOT the global one
+     integer  :: hist(norbs)
+
+! build histogram
+     hist = 0
+     do ibnd=1,norbs
+         hist(symm(ibnd)) = hist(symm(ibnd)) + 1
+     enddo ! over ibnd={1,norbs} loop
+
+! perform symmetrization for those orbitals with the same symmetry
+     if ( isbnd == 2 ) then
+         do ibnd=1,norbs
+             if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
+                 raux = zero
+
+                 do jbnd=1,norbs                ! gather the data
+                     if ( symm(jbnd) == ibnd ) then
+                         raux = raux + nimp(jbnd)
+                     endif ! back if ( symm(jbnd) == ibnd ) block
+                 enddo ! over jbnd={1,norbs} loop
+
+                 raux = raux / real(hist(ibnd)) ! calculate average value
+
+                 do jbnd=1,norbs                ! setup it
+                     if ( symm(jbnd) == ibnd ) then
+                         nimp(jbnd) = raux
+                     endif ! back if ( symm(jbnd) == ibnd ) block
+                 enddo ! over jbnd={1,norbs} loop
+             endif ! back if ( hist(ibnd) > 0 ) block
+         enddo ! over ibnd={1,norbs} loop
+     endif ! back if ( isbnd == 2 ) block
+
+! symmetrize nimp over spin
+     if ( isspn == 2 ) then
+         do jbnd=1,nband
+             raux = ( nimp(jbnd) + nimp(jbnd+nband) ) / two
+             nimp(jbnd) = raux
+             nimp(jbnd+nband) = raux
+         enddo ! over jbnd={1,nband} loop
+     endif ! back if ( isspn == 2 ) block
+
+     return
+  end subroutine ctqmc_symm_nimp
 
 !!========================================================================
 !!>>> advanced representation                                          <<<
