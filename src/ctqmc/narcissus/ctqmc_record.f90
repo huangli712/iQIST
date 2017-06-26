@@ -1542,7 +1542,7 @@
      return
   end subroutine cat_record_g2ph_std
 
-  subroutine ctqmc_record_g2ph_leg()
+  subroutine cat_record_g2ph_leg()
      use constants, only : dp
      use constants, only : zero, one, two, czi, pi, czero
 
@@ -1682,7 +1682,10 @@
      deallocate( caux2 )
 
      return
-  end subroutine ctqmc_record_g2ph_leg
+  end subroutine cat_record_g2ph_leg
+
+  subroutine cat_record_g2ph_svd()
+  end subroutine cat_record_g2ph_svd
 
 !!
 !! @sub ctqmc_record_g2pp
