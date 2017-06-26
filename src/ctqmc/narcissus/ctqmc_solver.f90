@@ -369,7 +369,7 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
          write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING BEGINS'
-         select case (iswor)
+         select case ( iswor )
 
              case (1)
                  write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z)'
@@ -620,7 +620,7 @@
 ! end simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING STOPS'
-         select case (iswor)
+         select case ( iswor )
 
              case (1)
                  write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z)'

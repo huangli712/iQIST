@@ -1272,7 +1272,7 @@
 !! record the two-particle green's and vertex functions in the ph channel.
 !! here improved estimator is used to improve the accuracy
 !!
-!! note:
+!! notation:
 !!
 !!     G^{(2)}_{\alpha\beta\gamma\delta} (\tau_1, \tau_2, \tau_3, \tau_4)
 !!         = \langle T_\tau
@@ -1303,6 +1303,39 @@
 !!     /              \
 !!    out             in
 !!
+  subroutine ctqmc_record_g2ph()
+     use control, only : isvrt
+
+     implicit none
+
+! check whether there is conflict
+! this subroutine is only designed for the particle-hole channel
+     call s_assert2( btest(isvrt, 1) .or. btest(isvrt, 2), 'in ctqmc_record_g2ph' )
+
+! you can not calculate the AABB and ABBA components at the same time
+     call s_assert2( .not. ( btest(isvrt, 1) .and. btest(isvrt, 2) ), 'in ctqmc_record_g2ph' )
+
+     select case ( isort )
+
+         case (1)
+             call cat_record_g2ph_std()
+
+         case (2)
+             call cat_record_g2ph_leg()
+
+         case (3)
+             call cat_record_g2ph_svd()
+
+     end select
+
+     return
+  end subroutine ctqmc_record_g2ph
+
+
+
+
+
+
 !!     we try to measure the two-particle green's and vertex functions in
 !!     the particle-hole channel and Matsubara frequency representation
 !!     in this subroutine. in order to simplify the calculations, we just
@@ -1383,13 +1416,6 @@
 ! where m and n are the first two frequency indices for g2aux and h2aux
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
-
-! check whether there is conflict
-! this subroutine is only designed for the particle-hole channel
-     call s_assert2( btest(isvrt, 1) .or. btest(isvrt, 2), 'in ctqmc_record_g2ph' )
-
-! you can not calculate the AABB and ABBA components at the same time
-     call s_assert2( .not. ( btest(isvrt, 1) .and. btest(isvrt, 2) ), 'in ctqmc_record_g2ph' )
 
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
@@ -1512,7 +1538,7 @@
      return
   end subroutine ctqmc_record_g2ph_std
 
-  subroutine ctqmc_record_g2ph()
+  subroutine ctqmc_record_g2ph_leg()
      use constants, only : dp
      use constants, only : zero, one, two, czi, pi, czero
 
@@ -1652,7 +1678,7 @@
      deallocate( caux2 )
 
      return
-  end subroutine ctqmc_record_g2ph
+  end subroutine ctqmc_record_g2ph_leg
 
 !!
 !! @sub ctqmc_record_g2pp
