@@ -1698,18 +1698,30 @@
      complex(dp) :: zs
      complex(dp) :: ze
 
+! creation operators
+!-------------------------------------------------------------------------
+! for each \tau_s, we try to calculate
+!     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+!     \omega_n = - 2 (n - 1) \pi / beta
+!
      do is=1,rank(flvr)
          zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
          do iw=1,nfaux
              caux1(iw,is) = exp( -two * float(iw - 1) * zs )
-         enddo
+         enddo ! over iw={1,nfaux} loop
      enddo ! over is={1,rank(flvr)} loop
 
+! annihilation operators
+!-------------------------------------------------------------------------
+! for each \tau_e, we try to calculate
+!     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+!     \omega_n = + 2 (n - 1) \pi / beta
+!
      do ie=1,rank(flvr)
          ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
          do iw=1,nfaux
              caux2(iw,ie) = exp( +two * float(iw - 1) * ze )
-         enddo
+         enddo ! over iw={1,nfaux} loop
      enddo ! over ie={1,rank(flvr)} loop
 
      return
