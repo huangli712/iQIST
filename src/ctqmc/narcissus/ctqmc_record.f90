@@ -1546,8 +1546,6 @@
      complex(dp), allocatable :: pl2(:,:,:,:,:)
      complex(dp), allocatable :: gaux1(:,:,:)
      complex(dp), allocatable :: gaux2(:,:,:)
-     complex(dp), allocatable :: gaux3(:,:,:)
-     complex(dp), allocatable :: gaux4(:,:,:)
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
 
@@ -1556,8 +1554,6 @@
      allocate( pl2(lemax, nbfrq, maxval(rank), maxval(rank), norbs)); pl2 = czero
      allocate( gaux1(lemax, nbfrq, norbs) ); gaux1 = czero
      allocate( gaux2(lemax, nbfrq, norbs) ); gaux2 = czero
-     allocate( gaux3(lemax, nbfrq, norbs) ); gaux3 = czero
-     allocate( gaux4(lemax, nbfrq, norbs) ); gaux4 = czero
      allocate( caux1(nbfrq, maxval(rank)) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank)) ); caux2 = czero
      
@@ -1591,8 +1587,8 @@
                  do l1=1,lemax
                      pl1(l1,wbn,ie1,is1,f1) = mx1 * rep_l(curr1,l1) * caux1(wbn,is1)
                      pl2(l1,wbn,ie1,is1,f1) = mx1 * rep_l(curr1,l1) * caux2(wbn,ie1)
-                     gaux1(l1,wbn,f1) = gaux1(l1,wbn,f1) + pl1(l1,wbn,ie1,is1,f1) * mmat(ie1, is1, f1)
-                     gaux2(l1,wbn,f1) = gaux2(l1,wbn,f1) + pl2(l1,wbn,ie1,is1,f1) * mmat(ie1, is1, f1)
+                     !gaux1(l1,wbn,f1) = gaux1(l1,wbn,f1) + pl1(l1,wbn,ie1,is1,f1) * mmat(ie1, is1, f1)
+                     !gaux2(l1,wbn,f1) = gaux2(l1,wbn,f1) + pl2(l1,wbn,ie1,is1,f1) * mmat(ie1, is1, f1)
                  enddo
                  enddo
 
@@ -1607,36 +1603,30 @@
                  do l1=1,lemax     ! l
                      do l2=1,lemax ! l'
 
-                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
-
-                     enddo
-                 enddo
-             enddo
-         enddo
-     enddo
-
-     do f1=1,1  ! A
+                     !g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * gaux1(l2,wbn,f2) * gaux2(l1,wbn,f1) / beta
 
      do is1=1,rank(f1)
          do ie1=1,rank(f1)
              do is2=1,rank(f1)
                  do ie2=1,rank(f1)
-                     mm = - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
 
-         do wbn=1,1
-             do l1=1,lemax     ! l
-                 do l2=1,lemax ! l'
-                     cmx = pl1(l2,wbn,ie2,is2,f1) * pl2(l1,wbn,ie1,is1,f1)
+                     cmx = pl1(l2,wbn,ie2,is2,f2) * pl2(l1,wbn,ie1,is1,f1)
+                     mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                     g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + l1_l2(l1,l2) * mm * cmx / beta
+                    
+     if ( f1 == f2 ) then
+                     mm = - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                      g2ph(l2,l1,wbn,f1,f1) = g2ph(l2,l1,wbn,f1,f1) + l1_l2(l1,l2) * mm * cmx / beta
-                 enddo
-             enddo
-         enddo
+     endif
 
                  enddo
              enddo
          enddo
      enddo
-
+                     enddo
+                 enddo
+             enddo
+         enddo
      enddo
 
      deallocate( l1_l2 )
@@ -1644,8 +1634,6 @@
      deallocate( pl2 )
      deallocate( gaux1 )
      deallocate( gaux2 )
-     deallocate( gaux3 )
-     deallocate( gaux4 )
      deallocate( caux1 )
      deallocate( caux2 )
 
