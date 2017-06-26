@@ -1110,13 +1110,13 @@
 ! build two-particle green's function on matsubara frequency using
 ! orthogonal polynomial representation: grnf
          grnf = czero
-         do i=1,nffrq
-             do j=1,nffrq
-                 do k=1,svmax
-                     do l=1,svmax
+         do i=1,nffrq             ! for v' index
+             do j=1,nffrq         ! for v  index
+                 do k=1,svmax     ! for l' index
+                     do l=1,svmax ! for l  index
                          associate ( val => grnf(i,j,:,:,:), &
                                      gkl => gaux(k,l,:,:,:) )
-                             val = val + tsvd(i,k) * gkl * conjg( tsvd(j,l) )
+                             val = val + tsvd(j,l) * gkl * conjg( tsvd(i,k) )
                          end associate
                      enddo ! over l={1,svmax} loop
                  enddo ! over k={1,svmax} loop
