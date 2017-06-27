@@ -1626,34 +1626,36 @@
      enddo ! over l1={1,lemax} loop
 
 ! prepare some important arrays: pfun
-     step = real(legrd - 1) / two
-     do f1=1,norbs
-         do is1=1,rank(f1)
-             do ie1=1,rank(f1)
+     if ( btest(isvrt,1) ) then
+         step = real(legrd - 1) / two
+         do f1=1,norbs
+             do is1=1,rank(f1)
+                 do ie1=1,rank(f1)
 ! determine dt (distance) and ms (sign)
-                 dt = time_e( index_e(ie1, f1), f1 ) - time_s( index_s(is1, f1), f1 )
-                 ms = sign(one, dt)
+                     dt = time_e( index_e(ie1, f1), f1 ) - time_s( index_s(is1, f1), f1 )
+                     ms = sign(one, dt)
 
 ! adjust dt, keep it stay in (zero, beta)
-                 if ( dt < zero ) then
-                     dt = dt + beta
-                 endif ! back if ( dt < zero ) block
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
 
 ! determine index for imaginary time
-                 curr = nint( ( two * dt / beta ) * step ) + 1
+                     curr = nint( ( two * dt / beta ) * step ) + 1
 
 ! special tricks for the first point and the last point
-                 if ( curr == 1 .or. curr == legrd ) then
-                     ms = two * ms
-                 endif ! back if ( curr == 1 .or. curr == legrd ) block
+                     if ( curr == 1 .or. curr == legrd ) then
+                         ms = two * ms
+                     endif ! back if ( curr == 1 .or. curr == legrd ) block
 
 ! fill pfun
-                 do l1=1,lemax
-                     pfun(l1,ie1,is1,f1) = ms * rep_l(curr,l1)
-                 enddo ! over l1={1,lemax} loop
-             enddo ! over ie1={1,rank(f1)} loop
-         enddo ! over is1={1,rank(f1)} loop
-     enddo ! over f1={1,norbs} loop
+                     do l1=1,lemax
+                         pfun(l1,ie1,is1,f1) = ms * rep_l(curr,l1)
+                     enddo ! over l1={1,lemax} loop
+                 enddo ! over ie1={1,rank(f1)} loop
+             enddo ! over is1={1,rank(f1)} loop
+         enddo ! over f1={1,norbs} loop
+     endif ! back if ( btest(isvrt,1) ) block
 
 ! prepare some important arrays: caux1 and caux2
      do f1=1,norbs
@@ -1661,6 +1663,9 @@
      enddo ! over f1={1,norbs} loop
 
 ! calculate g2ph and h2ph
+!
+! G2_PH_AABB component
+!-------------------------------------------------------------------------
 !
 ! note:
 !
@@ -1677,21 +1682,20 @@
 !     mmat(ie1, is2, f1)  -> M_{\alpha\delta}
 !     mmat(ie2, is1, f1)  -> M_{\gamma\beta}
 !
-     do f1=1,norbs                         ! block index: A
-         do f2=1,f1                        ! block index: B
-             do is1=1,rank(f1)             ! \beta : creation operator
-                 do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                     do is2=1,rank(f2)     ! \delta: creation operator
-                         do ie2=1,rank(f2) ! \gamma: annihilation operator
-
-! G2_PH_AABB component
-!-------------------------------------------------------------------------
      CALC_G2_PH_AABB: BLOCK
 
          if ( btest(isvrt,1) ) then
-             do wbn=1,nbfrq                ! bosonic Matsubara frequency: w
-                 do l1=1,lemax             ! legendre polynomial index: l
-                     do l2=1,lemax         ! legendre polynomial index: l'
+
+             do f1=1,1                             ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \beta : creation operator
+                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
+                             do is2=1,rank(f2)     ! \delta: creation operator
+                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+             !-------------------!
+             do wbn=1,nbfrq                        ! bosonic Matsubara frequency: w
+                 do l1=1,lemax                     ! legendre polynomial index: l
+                     do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          pp = pfun(l1,ie1,is1,f1) * pfun(l2,ie2,is2,f2) * lfun(l1,l2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
@@ -1703,20 +1707,21 @@
                      enddo ! over l2={1,lemax} loop
                  enddo ! over l1={1,lemax} loop
              enddo ! over wbn={1,nbfrq} loop
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
          endif ! back if ( btest(isvrt,1) ) block
 
      END BLOCK CALC_G2_PH_AABB
 
-                         enddo
-                     enddo
-                 enddo
-             enddo
-         enddo
-     enddo
-
 ! deallocate memory
-     deallocate( lfun )
-     deallocate( pfun )
+     deallocate( lfun  )
+     deallocate( pfun  )
      deallocate( caux1 )
      deallocate( caux2 )
 
