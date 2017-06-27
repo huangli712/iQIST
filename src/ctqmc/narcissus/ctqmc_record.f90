@@ -1549,6 +1549,7 @@
      use constants, only : dp
      use constants, only : zero, one, two, czero
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : lemax, legrd
      use control, only : nbfrq
@@ -1592,7 +1593,7 @@
 
 ! real(dp) dummy variables
      real(dp) :: mm
-     real(dp) :: pp
+     real(dp) :: pp, qq
 
 ! complex(dp) dummy variables
      complex(dp) :: ee
@@ -1602,6 +1603,7 @@
 
 ! p_l(x(\tau_e - \tau_s))
      real(dp), allocatable :: pfun(:,:,:,:)
+     real(dp), allocatable :: qfun(:,:,:,:,:)
 
 ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
 ! note here \omega_n is bosonic
@@ -1611,6 +1613,7 @@
 ! allocate memory
      allocate( lfun(lemax,lemax) ); lfun = zero
      allocate( pfun(lemax, maxval(rank), maxval(rank), norbs)); pfun = czero
+     allocate( qfun(lemax, maxval(rank), maxval(rank), norbs, norbs)); qfun = czero
 
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
@@ -1656,6 +1659,40 @@
              enddo ! over is1={1,rank(f1)} loop
          enddo ! over f1={1,norbs} loop
      endif ! back if ( btest(isvrt,1) ) block
+
+! prepare some important arrays: qfun
+     if ( btest(isvrt,2) ) then
+         step = real(legrd - 1) / two
+         do f1=1,norbs
+             do is1=1,rank(f1)
+                 do f2=1,norbs
+                     do ie2=1,rank(f2)
+! determine dt (distance) and ms (sign)
+                         dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+                         ms = sign(one, dt)
+
+! adjust dt, keep it stay in (zero, beta)
+                         if ( dt < zero ) then
+                             dt = dt + beta
+                         endif ! back if ( dt < zero ) block
+
+! determine index for imaginary time
+                         curr = nint( ( two * dt / beta ) * step ) + 1
+
+! special tricks for the first point and the last point
+                         if ( curr == 1 .or. curr == legrd ) then
+                             ms = two * ms
+                         endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+! fill pfun
+                         do l1=1,lemax
+                             qfun(l1,ie2,is1,f2,f1) = ms * rep_l(curr,l1)
+                         enddo ! over l1={1,lemax} loop
+                     enddo ! over ie2={1,rank(f2)} loop
+                 enddo ! over f2={1,norbs} loop
+             enddo ! over is1={1,rank(f1)} loop
+         enddo ! over f1={1,norbs} loop
+     endif ! back if ( btest(isvrt,2) ) block
 
 ! prepare some important arrays: caux1 and caux2
      do f1=1,norbs
@@ -1719,9 +1756,47 @@
 
      END BLOCK CALC_G2_PH_AABB
 
+     CALC_G2_PH_ABBA: BLOCK
+
+         if ( btest(isvrt,2) ) then
+
+             do f1=1,1                             ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \delta: creation operator
+                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
+                             do is2=1,rank(f2)     ! \beta : creation operator
+                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+             !-------------------!
+             do wbn=2,2                            ! bosonic Matsubara frequency: w
+                 do l1=1,lemax                     ! legendre polynomial index: l
+                     do l2=1,lemax                 ! legendre polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
+                         qq = qfun(l1,ie1,is2,f1,f2) * qfun(l2,ie2,is1,f2,f1) * lfun(l1,l2)
+                         mm = -mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+
+                         if ( f1 == f2 ) then
+                             mm = mm + mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * qq * ee / beta
+                     enddo ! over l2={1,lemax} loop
+                 enddo ! over l1={1,lemax} loop
+             enddo ! over wbn={1,nbfrq} loop
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
+         endif ! back if ( btest(isvrt,2) ) block
+
+     END BLOCK CALC_G2_PH_ABBA
+
 ! deallocate memory
      deallocate( lfun  )
      deallocate( pfun  )
+     deallocate( qfun  )
      deallocate( caux1 )
      deallocate( caux2 )
 
