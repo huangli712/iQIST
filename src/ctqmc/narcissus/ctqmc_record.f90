@@ -1597,7 +1597,7 @@
 ! complex(dp) dummy variables
      complex(dp) :: ee
 
-! sqrt(2l+1) sqrt(2l'+1) (-1)**(l'+1)
+! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
 ! p_l(x(\tau_e - \tau_s))
@@ -1615,9 +1615,12 @@
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
 ! prepare some important arrays: lfun
-     do l1=1,lemax     ! l
-         do l2=1,lemax ! l'
+     do l1=1,lemax     ! legendre polynomial index: l
+         do l2=1,lemax ! legendre polynomial index: l'
              lfun(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
          enddo ! over l2={1,lemax} loop
      enddo ! over l1={1,lemax} loop
@@ -1627,50 +1630,81 @@
      do f1=1,norbs
          do is1=1,rank(f1)
              do ie1=1,rank(f1)
+! determine dt (distance) and ms (sign)
                  dt = time_e( index_e(ie1, f1), f1 ) - time_s( index_s(is1, f1), f1 )
                  ms = sign(one, dt)
+
+! adjust dt, keep it stay in (zero, beta)
                  if ( dt < zero ) then
                      dt = dt + beta
                  endif ! back if ( dt < zero ) block
+
+! determine index for imaginary time
                  curr = nint( ( two * dt / beta ) * step ) + 1
+
+! special tricks for the first point and the last point
                  if ( curr == 1 .or. curr == legrd ) then
                      ms = two * ms
                  endif ! back if ( curr == 1 .or. curr == legrd ) block
 
+! fill pfun
                  do l1=1,lemax
                      pfun(l1,ie1,is1,f1) = ms * rep_l(curr,l1)
-                 enddo
-             enddo
-         enddo
-     enddo
+                 enddo ! over l1={1,lemax} loop
+             enddo ! over ie1={1,rank(f1)} loop
+         enddo ! over is1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
 
 ! prepare some important arrays: caux1 and caux2
      do f1=1,norbs
          call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
      enddo ! over f1={1,norbs} loop
 
-     do f1=1,norbs                         ! A
-         do f2=1,f1                        ! B
-             do is1=1,rank(f1)             ! beta
-                 do ie1=1,rank(f1)         ! alpha
-                     do is2=1,rank(f2)     ! delta
-                         do ie2=1,rank(f2) ! gamma
+! calculate g2ph and h2ph
+!
+! note:
+!
+!     caux2(wbn,ie1,f1)   -> exp (+i\omega_m \tau'_{\alpha})
+!     caux1(wbn,is2,f2)   -> exp (-i\omega_m \tau_{\delta})
+!
+!     pfun(l1,ie1,is1,f1) -> p_l(\tau'_{\alpha} - \tau_{\beta})
+!     pfun(l2,ie2,is2,f2) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
+!
+!     lfun(l1,l2)         -> \sqrt{2l + 1} \sqrt{2l'+1} (-1)^(l'+1)
+!
+!     mmat(ie1, is1, f1)  -> M_{\alpha\beta}
+!     mmat(ie2, is2, f2)  -> M_{\gamma\delta}
+!     mmat(ie1, is2, f1)  -> M_{\alpha\delta}
+!     mmat(ie2, is1, f1)  -> M_{\gamma\beta}
+!
+     do f1=1,norbs                         ! block index: A
+         do f2=1,f1                        ! block index: B
+             do is1=1,rank(f1)             ! \beta : creation operator
+                 do ie1=1,rank(f1)         ! \alpha: annihilation operator
+                     do is2=1,rank(f2)     ! \delta: creation operator
+                         do ie2=1,rank(f2) ! \gamma: annihilation operator
 
+! G2_PH_AABB component
+!-------------------------------------------------------------------------
      CALC_G2_PH_AABB: BLOCK
-     do wbn=1,nbfrq        ! w
-         do l1=1,lemax     ! l
-             do l2=1,lemax ! l'
-                 ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
-                 pp = pfun(l1,ie1,is1,f1) * pfun(l2,ie2,is2,f2) * lfun(l1,l2)
-                 mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
 
-                 if ( f1 == f2 ) then
-                     mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
-                 endif
-                 g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
-             enddo
-         enddo
-     enddo
+         if ( btest(isvrt,1) ) then
+             do wbn=1,nbfrq                ! bosonic Matsubara frequency: w
+                 do l1=1,lemax             ! legendre polynomial index: l
+                     do l2=1,lemax         ! legendre polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
+                         pp = pfun(l1,ie1,is1,f1) * pfun(l2,ie2,is2,f2) * lfun(l1,l2)
+                         mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+
+                         if ( f1 == f2 ) then
+                             mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
+                     enddo ! over l2={1,lemax} loop
+                 enddo ! over l1={1,lemax} loop
+             enddo ! over wbn={1,nbfrq} loop
+         endif ! back if ( btest(isvrt,1) ) block
+
      END BLOCK CALC_G2_PH_AABB
 
                          enddo
