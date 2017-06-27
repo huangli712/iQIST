@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/26/2017 by li huang (last modified)
+!!!           06/27/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -1693,7 +1693,7 @@
 !! record the two-particle green's and vertex functions in the pp channel.
 !! here improved estimator is used to improve the accuracy
 !!
-!! note:
+!! notation:
 !!
 !!     G^{(2)}_{\alpha\beta\gamma\delta} (\tau_1, \tau_2, \tau_3, \tau_4)
 !!         = \langle T_\tau
@@ -1724,6 +1724,13 @@
 !!     /              \
 !!    out             in
 !!
+  subroutine ctqmc_record_g2pp()
+  end subroutine ctqmc_record_g2pp
+
+
+
+
+
 !!     we try to measure the two-particle green's and vertex functions in
 !!     the particle-particle channel and Matsubara frequency representation
 !!     in this subroutine. in order to simplify the calculations, we just
@@ -1754,7 +1761,7 @@
 !!    \tau'_i and \tau'_k: imaginary time for annihilation operator
 !!    \tau_j and \tau_l: imaginary time for creation operator
 !!
-  subroutine ctqmc_record_g2pp()
+  subroutine cat_record_g2pp_std()
      use constants, only : dp
      use constants, only : czero
 
@@ -1931,7 +1938,7 @@
      deallocate( h2aux )
 
      return
-  end subroutine ctqmc_record_g2pp
+  end subroutine cat_record_g2pp_std
 
 !!========================================================================
 !!>>> reduce physical observables 1                                    <<<
