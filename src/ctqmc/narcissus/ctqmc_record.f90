@@ -1753,10 +1753,14 @@
      return
   end subroutine ctqmc_record_g2pp
 
-
-
-
-
+!!
+!! @sub cat_record_g2pp_std
+!!
+!! record the two-particle green's and vertex functions in the pp channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
 !!     we try to measure the two-particle green's and vertex functions in
 !!     the particle-particle channel and Matsubara frequency representation
 !!     in this subroutine. in order to simplify the calculations, we just
@@ -1958,6 +1962,12 @@
 
      return
   end subroutine cat_record_g2pp_std
+
+  subroutine cat_record_g2pp_leg()
+  end subroutine cat_record_g2pp_leg
+
+  subroutine cat_record_g2pp_svd()
+  end subroutine cat_record_g2pp_svd
 
 !!========================================================================
 !!>>> reduce physical observables 1                                    <<<
