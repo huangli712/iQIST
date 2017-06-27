@@ -1725,6 +1725,13 @@
 !!    out             in
 !!
   subroutine ctqmc_record_g2pp()
+     use control, only : isort
+     use control, only : isvrt
+
+     implicit none
+
+
+     return
   end subroutine ctqmc_record_g2pp
 
 
