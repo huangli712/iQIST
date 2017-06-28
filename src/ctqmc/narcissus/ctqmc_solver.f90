@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/22/2017 by li huang (last modified)
+!!!           06/28/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -687,6 +687,7 @@
 
 ! try to evaluate the two-particle green's function (ph channel)
          call ctqmc_tran_twop(g2ph, g2ph_mpi); g2ph = g2ph_mpi
+         call ctqmc_tran_twop(h2ph, h2ph_mpi); h2ph = h2ph_mpi
 
      END BLOCK UPDATE1_DATA
 
