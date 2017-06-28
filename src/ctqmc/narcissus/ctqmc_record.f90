@@ -1623,7 +1623,7 @@
 
 ! allocate memory
      allocate( lfun(lemax,lemax) ); lfun = zero
-     allocate( pfun(lemax, maxval(rank), maxval(rank), norbs, norbs)); pfun = czero
+     allocate( pfun(lemax, maxval(rank), maxval(rank), norbs, norbs)); pfun = zero
 
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
@@ -2117,6 +2117,8 @@
 
 ! allocate memory
      allocate( lfun(lemax,lemax) ); lfun = zero
+     allocate( pl_s(lemax, maxval(rank), maxval(rank), norbs, norbs)); pl_s = zero
+     allocate( pl_e(lemax, maxval(rank), maxval(rank), norbs, norbs)); pl_e = zero
 
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
