@@ -1699,7 +1699,7 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
@@ -1755,7 +1755,7 @@
 
          if ( btest(isvrt,2) ) then
 
-             do f1=1,norbs                         ! block index: A
+             do f1=1,1                             ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \delta: creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
