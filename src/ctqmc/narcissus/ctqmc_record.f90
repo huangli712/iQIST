@@ -2104,6 +2104,12 @@
 ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
+! p_l(x(\tau_s1 - \tau_s2))
+     real(dp), allocatable :: pl_s(:,:,:,:,:)
+
+! p_l(x(\tau_e1 - \tau_e2))
+     real(dp), allocatable :: pl_e(:,:,:,:,:)
+
 ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
 ! note here \omega_n is bosonic
      complex(dp), allocatable :: caux1(:,:,:)
