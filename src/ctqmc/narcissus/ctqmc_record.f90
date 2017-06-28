@@ -2104,10 +2104,10 @@
 ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
-! p_l(x(\tau_s1 - \tau_s2))
+! p_l(x(\tau_s2 - \tau_s1))
      real(dp), allocatable :: pl_s(:,:,:,:,:)
 
-! p_l(x(\tau_e1 - \tau_e2))
+! p_l(x(\tau_e2 - \tau_e1))
      real(dp), allocatable :: pl_e(:,:,:,:,:)
 
 ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
@@ -2132,6 +2132,38 @@
              lfun(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
          enddo ! over l2={1,lemax} loop
      enddo ! over l1={1,lemax} loop
+
+! prepare some important arrays: pl_s
+     step = real(legrd - 1) / two
+     do f1=1,norbs
+         do is1=1,rank(f1)
+             do f2=1,norbs
+                 do is2=1,rank(f2)
+! determine dt (distance) and ms (sign)
+                     dt = time_s( index_s(is2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+                     ms = sign(one, dt)
+
+! adjust dt, keep it stay in (zero, beta)
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
+
+! determine index for imaginary time
+                     curr = nint( ( two * dt / beta ) * step ) + 1
+
+! special tricks for the first point and the last point
+                     if ( curr == 1 .or. curr == legrd ) then
+                         ms = two * ms
+                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+! fill pl_s
+                     do l1=1,lemax
+                         pl_s(l1,is2,is1,f2,f1) = ms * rep_l(curr,l1)
+                     enddo ! over l1={1,lemax} loop
+                 enddo ! over is2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over is1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
 
 ! prepare some important arrays: caux1 and caux2
      do f1=1,norbs
