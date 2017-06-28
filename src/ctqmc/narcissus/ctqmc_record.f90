@@ -2124,6 +2124,13 @@
 ! sign for p_l(x(\tau))
      real(dp) :: ms
 
+! real(dp) dummy variables
+     real(dp) :: mm
+     real(dp) :: pp
+
+! complex(dp) dummy variables
+     complex(dp) :: ee
+
 ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
