@@ -2079,9 +2079,15 @@
 
   subroutine cat_record_g2pp_leg()
      use constants, only : dp
-     use constants, only : one, two
+     use constants, only : zero, one, two, czero
 
-     use control, only : lemax
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : lemax, legrd
+     use control, only : nbfrq
+     use control, only : beta
+
+     use context, only : rank, pref
 
      implicit none
 
@@ -2098,8 +2104,16 @@
 ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
+! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+! note here \omega_n is bosonic
+     complex(dp), allocatable :: caux1(:,:,:)
+     complex(dp), allocatable :: caux2(:,:,:)
+
 ! allocate memory
      allocate( lfun(lemax,lemax) ); lfun = zero
+
+     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
 ! calculate prefactor: pref
      call ctqmc_make_pref()
@@ -2113,6 +2127,8 @@
 
 ! deallocate memory
      deallocate( lfun  )
+     deallocate( caux1 )
+     deallocate( caux2 )
 
      return
   end subroutine cat_record_g2pp_leg
