@@ -2248,6 +2248,12 @@
                              do is2=1,rank(f2)     ! \delta: creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
+             do wbn=1,nbfrq                        ! bosonic Matsubara frequency: w
+                 do l1=1,lemax                     ! legendre polynomial index: l
+                     do l2=1,lemax                 ! legendre polynomial index: l'
+                     enddo ! over l2={1,lemax} loop
+                 enddo ! over l1={1,lemax} loop
+             enddo ! over wbn={1,nbfrq} loop
              !-------------------!
                                  enddo ! over ie2={1,rank(f2)} loop
                              enddo ! over is2={1,rank(f2)} loop
