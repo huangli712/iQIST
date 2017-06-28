@@ -2106,6 +2106,18 @@
      integer  :: l1
      integer  :: l2
 
+! loop indices for start and end points
+     integer  :: is1
+     integer  :: is2
+     integer  :: ie1
+     integer  :: ie2
+
+! index for imaginary time \tau
+     integer  :: curr
+
+! interval for imaginary time slice
+     real(dp) :: step
+
 ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
