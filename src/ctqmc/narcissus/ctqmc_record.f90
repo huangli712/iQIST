@@ -1545,6 +1545,16 @@
 !!
 !! @sub cat_record_g2ph_leg
 !!
+!! record the two-particle green's and vertex functions in the ph channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-hole channel and legendre/Matsubara representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
   subroutine cat_record_g2ph_leg()
      use constants, only : dp
      use constants, only : zero, one, two, czero
@@ -1688,7 +1698,7 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,norbs                         ! block index: A
+             do f1=1,1                             ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
@@ -1728,17 +1738,17 @@
 ! note:
 !
 !     caux2(wbn,ie1,f1)      -> exp (+i\omega_m \tau'_{\alpha})
-!     caux1(wbn,is2,f2)      -> exp (-i\omega_m \tau_{\delta})
+!     caux1(wbn,is1,f1)      -> exp (-i\omega_m \tau_{\delta})
 !
-!     pfun(l1,ie1,is1,f1,f1) -> p_l(\tau'_{\alpha} - \tau_{\beta})
-!     pfun(l2,ie2,is2,f2,f2) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
+!     pfun(l1,ie1,is2,f1,f2) -> p_l(\tau'_{\alpha} - \tau_{\beta})
+!     pfun(l2,ie2,is1,f2,f1) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
 !
 !     lfun(l1,l2)            -> \sqrt{2l + 1} \sqrt{2l'+1} (-1)^(l'+1)
 !
-!     mmat(ie1, is1, f1)     -> M_{\alpha\beta}
-!     mmat(ie2, is2, f2)     -> M_{\gamma\delta}
-!     mmat(ie1, is2, f1)     -> M_{\alpha\delta}
-!     mmat(ie2, is1, f1)     -> M_{\gamma\beta}
+!     mmat(ie1, is1, f1)     -> M_{\alpha\delta}
+!     mmat(ie2, is2, f2)     -> M_{\gamma\beta}
+!     mmat(ie1, is2, f1)     -> M_{\alpha\beta}
+!     mmat(ie2, is1, f1)     -> M_{\gamma\delta}
 !
      CALC_G2_PH_ABBA: BLOCK
 
