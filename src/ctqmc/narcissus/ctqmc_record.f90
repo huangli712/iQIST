@@ -1629,7 +1629,7 @@
      enddo ! over l1={1,lemax} loop
 
 ! prepare some important arrays: pfun
-     if ( btest(isvrt,1) ) then
+!     if ( btest(isvrt,1) ) then
          step = real(legrd - 1) / two
          do f1=1,norbs
              do is1=1,rank(f1)
@@ -1658,10 +1658,10 @@
                  enddo ! over ie1={1,rank(f1)} loop
              enddo ! over is1={1,rank(f1)} loop
          enddo ! over f1={1,norbs} loop
-     endif ! back if ( btest(isvrt,1) ) block
+!     endif ! back if ( btest(isvrt,1) ) block
 
 ! prepare some important arrays: qfun
-     if ( btest(isvrt,2) ) then
+!     if ( btest(isvrt,2) ) then
          step = real(legrd - 1) / two
          do f1=1,norbs
              do is1=1,rank(f1)
@@ -1692,7 +1692,7 @@
                  enddo ! over f2={1,norbs} loop
              enddo ! over is1={1,rank(f1)} loop
          enddo ! over f1={1,norbs} loop
-     endif ! back if ( btest(isvrt,2) ) block
+!     endif ! back if ( btest(isvrt,2) ) block
 
 ! prepare some important arrays: caux1 and caux2
      do f1=1,norbs
@@ -1723,7 +1723,7 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
@@ -1736,6 +1736,8 @@
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          pp = pfun(l1,ie1,is1,f1) * pfun(l2,ie2,is2,f2) * lfun(l1,l2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                         print *, pfun(l1,ie1,is1,f1) - qfun(l1,ie1,is1,f1,f1)
+                         print *, pfun(l2,ie2,is2,f2) - qfun(l2,ie2,is2,f2,f2)
 
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
@@ -1760,14 +1762,14 @@
 
          if ( btest(isvrt,2) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \delta: creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \beta : creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=2,2                            ! bosonic Matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic Matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
