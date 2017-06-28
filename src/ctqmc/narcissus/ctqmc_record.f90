@@ -2241,6 +2241,21 @@
 
          if ( btest(isvrt,3) ) then
 
+             do f1=1,norbs                         ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \beta : creation operator
+                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
+                             do is2=1,rank(f2)     ! \delta: creation operator
+                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+             !-------------------!
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
          endif ! back if ( btest(isvrt,3) ) block
 
      END BLOCK CALC_G2_PP_AABB
