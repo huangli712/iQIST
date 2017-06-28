@@ -2079,8 +2079,21 @@
 
   subroutine cat_record_g2pp_leg()
      use constants, only : dp
+     use constants, only : one, two
+
+     use control, only : lemax
 
      implicit none
+
+! local variables
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+! loop index for frequency
+     integer  :: wbn
+     integer  :: l1
+     integer  :: l2
 
 ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
