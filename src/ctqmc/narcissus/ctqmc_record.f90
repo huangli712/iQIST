@@ -2118,6 +2118,12 @@
 ! interval for imaginary time slice
      real(dp) :: step
 
+! distance betweem \tau_s and \tau_e
+     real(dp) :: dt
+
+! sign for p_l(x(\tau))
+     real(dp) :: ms
+
 ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
