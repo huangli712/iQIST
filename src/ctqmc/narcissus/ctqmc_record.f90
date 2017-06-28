@@ -2232,6 +2232,19 @@
          call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
      enddo ! over f1={1,norbs} loop
 
+! calculate g2ph and h2ph
+!
+! G2_PH_AABB component
+!-------------------------------------------------------------------------
+
+     CALC_G2_PP_AABB: BLOCK
+
+         if ( btest(isvrt,3) ) then
+
+         endif ! back if ( btest(isvrt,3) ) block
+
+     END BLOCK CALC_G2_PP_AABB
+
 ! deallocate memory
      deallocate( lfun  )
      deallocate( caux1 )
