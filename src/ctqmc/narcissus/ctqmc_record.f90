@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/27/2017 by li huang (last modified)
+!!!           06/28/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -1566,7 +1566,8 @@
 
 ! local variables
 ! loop index for flavor channel
-     integer  :: f1, f2
+     integer  :: f1
+     integer  :: f2
 
 ! loop index for frequency
      integer  :: wbn
@@ -1593,7 +1594,7 @@
 
 ! real(dp) dummy variables
      real(dp) :: mm
-     real(dp) :: pp, qq
+     real(dp) :: pp
 
 ! complex(dp) dummy variables
      complex(dp) :: ee
@@ -1602,8 +1603,7 @@
      real(dp), allocatable :: lfun(:,:)
 
 ! p_l(x(\tau_e - \tau_s))
-     real(dp), allocatable :: pfun(:,:,:,:)
-     real(dp), allocatable :: qfun(:,:,:,:,:)
+     real(dp), allocatable :: pfun(:,:,:,:,:)
 
 ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
 ! note here \omega_n is bosonic
@@ -1612,8 +1612,7 @@
 
 ! allocate memory
      allocate( lfun(lemax,lemax) ); lfun = zero
-     allocate( pfun(lemax, maxval(rank), maxval(rank), norbs)); pfun = czero
-     allocate( qfun(lemax, maxval(rank), maxval(rank), norbs, norbs)); qfun = czero
+     allocate( pfun(lemax, maxval(rank), maxval(rank), norbs, norbs)); pfun = czero
 
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
@@ -1629,13 +1628,13 @@
      enddo ! over l1={1,lemax} loop
 
 ! prepare some important arrays: pfun
-!     if ( btest(isvrt,1) ) then
-         step = real(legrd - 1) / two
-         do f1=1,norbs
-             do is1=1,rank(f1)
-                 do ie1=1,rank(f1)
+     step = real(legrd - 1) / two
+     do f1=1,norbs
+         do is1=1,rank(f1)
+             do f2=1,norbs
+                 do ie2=1,rank(f2)
 ! determine dt (distance) and ms (sign)
-                     dt = time_e( index_e(ie1, f1), f1 ) - time_s( index_s(is1, f1), f1 )
+                     dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
                      ms = sign(one, dt)
 
 ! adjust dt, keep it stay in (zero, beta)
@@ -1653,46 +1652,12 @@
 
 ! fill pfun
                      do l1=1,lemax
-                         pfun(l1,ie1,is1,f1) = ms * rep_l(curr,l1)
+                         pfun(l1,ie2,is1,f2,f1) = ms * rep_l(curr,l1)
                      enddo ! over l1={1,lemax} loop
-                 enddo ! over ie1={1,rank(f1)} loop
-             enddo ! over is1={1,rank(f1)} loop
-         enddo ! over f1={1,norbs} loop
-!     endif ! back if ( btest(isvrt,1) ) block
-
-! prepare some important arrays: qfun
-!     if ( btest(isvrt,2) ) then
-         step = real(legrd - 1) / two
-         do f1=1,norbs
-             do is1=1,rank(f1)
-                 do f2=1,norbs
-                     do ie2=1,rank(f2)
-! determine dt (distance) and ms (sign)
-                         dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
-                         ms = sign(one, dt)
-
-! adjust dt, keep it stay in (zero, beta)
-                         if ( dt < zero ) then
-                             dt = dt + beta
-                         endif ! back if ( dt < zero ) block
-
-! determine index for imaginary time
-                         curr = nint( ( two * dt / beta ) * step ) + 1
-
-! special tricks for the first point and the last point
-                         if ( curr == 1 .or. curr == legrd ) then
-                             ms = two * ms
-                         endif ! back if ( curr == 1 .or. curr == legrd ) block
-
-! fill pfun
-                         do l1=1,lemax
-                             qfun(l1,ie2,is1,f2,f1) = ms * rep_l(curr,l1)
-                         enddo ! over l1={1,lemax} loop
-                     enddo ! over ie2={1,rank(f2)} loop
-                 enddo ! over f2={1,norbs} loop
-             enddo ! over is1={1,rank(f1)} loop
-         enddo ! over f1={1,norbs} loop
-!     endif ! back if ( btest(isvrt,2) ) block
+                 enddo ! over ie2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over is1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
 
 ! prepare some important arrays: caux1 and caux2
      do f1=1,norbs
@@ -1706,18 +1671,18 @@
 !
 ! note:
 !
-!     caux2(wbn,ie1,f1)   -> exp (+i\omega_m \tau'_{\alpha})
-!     caux1(wbn,is2,f2)   -> exp (-i\omega_m \tau_{\delta})
+!     caux2(wbn,ie1,f1)      -> exp (+i\omega_m \tau'_{\alpha})
+!     caux1(wbn,is2,f2)      -> exp (-i\omega_m \tau_{\delta})
 !
-!     pfun(l1,ie1,is1,f1) -> p_l(\tau'_{\alpha} - \tau_{\beta})
-!     pfun(l2,ie2,is2,f2) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
+!     pfun(l1,ie1,is1,f1,f1) -> p_l(\tau'_{\alpha} - \tau_{\beta})
+!     pfun(l2,ie2,is2,f2,f2) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
 !
-!     lfun(l1,l2)         -> \sqrt{2l + 1} \sqrt{2l'+1} (-1)^(l'+1)
+!     lfun(l1,l2)            -> \sqrt{2l + 1} \sqrt{2l'+1} (-1)^(l'+1)
 !
-!     mmat(ie1, is1, f1)  -> M_{\alpha\beta}
-!     mmat(ie2, is2, f2)  -> M_{\gamma\delta}
-!     mmat(ie1, is2, f1)  -> M_{\alpha\delta}
-!     mmat(ie2, is1, f1)  -> M_{\gamma\beta}
+!     mmat(ie1, is1, f1)     -> M_{\alpha\beta}
+!     mmat(ie2, is2, f2)     -> M_{\gamma\delta}
+!     mmat(ie1, is2, f1)     -> M_{\alpha\delta}
+!     mmat(ie2, is1, f1)     -> M_{\gamma\beta}
 !
      CALC_G2_PH_AABB: BLOCK
 
@@ -1734,10 +1699,8 @@
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
-                         pp = pfun(l1,ie1,is1,f1) * pfun(l2,ie2,is2,f2) * lfun(l1,l2)
+                         pp = pfun(l1,ie1,is1,f1,f1) * pfun(l2,ie2,is2,f2,f2) * lfun(l1,l2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
-                         print *, pfun(l1,ie1,is1,f1) - qfun(l1,ie1,is1,f1,f1)
-                         print *, pfun(l2,ie2,is2,f2) - qfun(l2,ie2,is2,f2,f2)
 
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
@@ -1758,6 +1721,24 @@
 
      END BLOCK CALC_G2_PH_AABB
 
+! G2_PH_ABBA component
+!-------------------------------------------------------------------------
+!
+! note:
+!
+!     caux2(wbn,ie1,f1)      -> exp (+i\omega_m \tau'_{\alpha})
+!     caux1(wbn,is2,f2)      -> exp (-i\omega_m \tau_{\delta})
+!
+!     pfun(l1,ie1,is1,f1,f1) -> p_l(\tau'_{\alpha} - \tau_{\beta})
+!     pfun(l2,ie2,is2,f2,f2) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
+!
+!     lfun(l1,l2)            -> \sqrt{2l + 1} \sqrt{2l'+1} (-1)^(l'+1)
+!
+!     mmat(ie1, is1, f1)     -> M_{\alpha\beta}
+!     mmat(ie2, is2, f2)     -> M_{\gamma\delta}
+!     mmat(ie1, is2, f1)     -> M_{\alpha\delta}
+!     mmat(ie2, is1, f1)     -> M_{\gamma\beta}
+!
      CALC_G2_PH_ABBA: BLOCK
 
          if ( btest(isvrt,2) ) then
@@ -1773,13 +1754,13 @@
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
-                         qq = qfun(l1,ie1,is2,f1,f2) * qfun(l2,ie2,is1,f2,f1) * lfun(l1,l2)
+                         pp = pfun(l1,ie1,is2,f1,f2) * pfun(l2,ie2,is1,f2,f1) * lfun(l1,l2)
                          mm = -mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
 
                          if ( f1 == f2 ) then
                              mm = mm + mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * qq * ee / beta
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
                      enddo ! over l2={1,lemax} loop
                  enddo ! over l1={1,lemax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -1798,7 +1779,6 @@
 ! deallocate memory
      deallocate( lfun  )
      deallocate( pfun  )
-     deallocate( qfun  )
      deallocate( caux1 )
      deallocate( caux2 )
 
