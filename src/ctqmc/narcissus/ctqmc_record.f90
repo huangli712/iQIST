@@ -1755,7 +1755,7 @@
 
          if ( btest(isvrt,2) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \delta: creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
@@ -2078,6 +2078,30 @@
   end subroutine cat_record_g2pp_std
 
   subroutine cat_record_g2pp_leg()
+     use constants, only : dp
+
+     implicit none
+
+! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
+     real(dp), allocatable :: lfun(:,:)
+
+! allocate memory
+     allocate( lfun(lemax,lemax) ); lfun = zero
+
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
+! prepare some important arrays: lfun
+     do l1=1,lemax     ! legendre polynomial index: l
+         do l2=1,lemax ! legendre polynomial index: l'
+             lfun(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
+         enddo ! over l2={1,lemax} loop
+     enddo ! over l1={1,lemax} loop
+
+! deallocate memory
+     deallocate( lfun  )
+
+     return
   end subroutine cat_record_g2pp_leg
 
   subroutine cat_record_g2pp_svd()
