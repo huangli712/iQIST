@@ -1555,6 +1555,7 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
+!!
   subroutine cat_record_g2ph_leg()
      use constants, only : dp
      use constants, only : zero, one, two, czero
