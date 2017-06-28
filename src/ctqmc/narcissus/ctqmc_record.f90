@@ -1712,10 +1712,10 @@
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          pp = pfun(l1,ie1,is1,f1,f1) * pfun(l2,ie2,is2,f2,f2) * lfun(l1,l2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
-
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
+
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
                          h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
@@ -1768,10 +1768,10 @@
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
                          pp = pfun(l1,ie1,is2,f1,f2) * pfun(l2,ie2,is1,f2,f1) * lfun(l1,l2)
                          mm = -mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
-
                          if ( f1 == f2 ) then
                              mm = mm + mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
+
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
                          h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
@@ -2251,6 +2251,14 @@
              do wbn=1,nbfrq                        ! bosonic Matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
+                         mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                         if ( f1 == f2 ) then
+                             mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
+                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
                  enddo ! over l1={1,lemax} loop
              enddo ! over wbn={1,nbfrq} loop
