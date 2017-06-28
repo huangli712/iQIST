@@ -2125,6 +2125,11 @@
          enddo ! over l2={1,lemax} loop
      enddo ! over l1={1,lemax} loop
 
+! prepare some important arrays: caux1 and caux2
+     do f1=1,norbs
+         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
+     enddo ! over f1={1,norbs} loop
+
 ! deallocate memory
      deallocate( lfun  )
      deallocate( caux1 )
