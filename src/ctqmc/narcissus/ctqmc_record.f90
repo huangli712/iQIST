@@ -1286,6 +1286,7 @@
 !!               c_{\gamma} (\nu') c^{*}_{\delta} (\nu' + \omega)
 !!           \rangle
 !!
+!!     \alpha, \beta, \gamma, \delta: orbital index
 !!     \nu and \nu': fermionic matsubara frequency
 !!     \omega: bosonic matsubara frequency
 !!
@@ -1367,8 +1368,10 @@
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
-!!    \tau'_i and \tau'_k: imaginary time for annihilation operators
-!!    \tau_j and \tau_l: imaginary time for creation operators
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
+!!     \nu and \nu': fermionic matsubara frequency
+!!     \omega: bosonic matsubara frequency
 !!
   subroutine cat_record_g2ph_std()
      use constants, only : dp
@@ -1467,13 +1470,13 @@
 !     g2aux(w1n,w2n,f1) ->
 !         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
 !
-!     g2aux(w3n,w4n,f2) ->
+!     g2aux(w3n,w4n,f2) or g2aux(w3n,w4n,f1) ->
 !         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
 !
 !     g2aux(w1n,w4n,f1) ->
 !         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
 !
-!     g2aux(w3n,w2n,f1) ->
+!     g2aux(w3n,w2n,f1) or g2aux(w3n,w2n,f2) ->
 !         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
 !
 !$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
