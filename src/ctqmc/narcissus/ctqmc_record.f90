@@ -1286,8 +1286,8 @@
 !!               c_{\gamma} (\nu') c^{*}_{\delta} (\nu' + \omega)
 !!           \rangle
 !!
-!!     \nu and \nu': fermionic Matsubara frequency
-!!     \omega: bosonic Matsubara frequency
+!!     \nu and \nu': fermionic matsubara frequency
+!!     \omega: bosonic matsubara frequency
 !!
 !!    in             out
 !!     \              /
@@ -1341,7 +1341,7 @@
 !! note:
 !!
 !!     we try to measure the two-particle green's and vertex functions in
-!!     the particle-hole channel and Matsubara frequency representation
+!!     the particle-hole channel and matsubara frequency representation
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
@@ -1480,10 +1480,10 @@
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
          ORB2_CYCLE: do f2=1,f1                ! block index: B
                                                !
-             WB_CYCLE: do wbn=1,nbfrq          ! bosonic Matsubara frequency: w
+             WB_CYCLE: do wbn=1,nbfrq          ! bosonic matsubara frequency: w
                                                !
-                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
-                     WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
+                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic matsubara frequency: v
+                     WF2_CYCLE: do w3n=1,nffrq ! fermionic matsubara frequency: v'
                          w1n = w2n + wbn - 1 ! think it carefully
                          w4n = w3n + wbn - 1
 
@@ -1551,7 +1551,7 @@
 !! note:
 !!
 !!     we try to measure the two-particle green's and vertex functions in
-!!     the particle-hole channel and legendre/Matsubara representation
+!!     the particle-hole channel and legendre/matsubara representation
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
@@ -1699,14 +1699,14 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=2,2                             ! block index: A
-                 do f2=1,1                         ! block index: B
+             do f1=1,norbs                         ! block index: A
+                 do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \delta: creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,1                            ! bosonic Matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
@@ -1762,7 +1762,7 @@
                              do is2=1,rank(f2)     ! \beta : creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,nbfrq                        ! bosonic Matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
@@ -1821,8 +1821,8 @@
 !!               c_{\gamma} (\nu') c^{*}_{\delta} (\omega - nu)
 !!           \rangle
 !!
-!!     \nu and \nu': fermionic Matsubara frequency
-!!     \omega: bosonic Matsubara frequency
+!!     \nu and \nu': fermionic matsubara frequency
+!!     \omega: bosonic matsubara frequency
 !!
 !!    in             out
 !!     \              /
@@ -1876,7 +1876,7 @@
 !! note:
 !!
 !!     we try to measure the two-particle green's and vertex functions in
-!!     the particle-particle channel and Matsubara frequency representation
+!!     the particle-particle channel and matsubara frequency representation
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
@@ -2015,10 +2015,10 @@
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
          ORB2_CYCLE: do f2=1,f1                ! block index: B
                                                !
-             WB_CYCLE: do wbn=1,nbfrq          ! bosonic Matsubara frequency: w
+             WB_CYCLE: do wbn=1,nbfrq          ! bosonic matsubara frequency: w
                                                !
-                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic Matsubara frequency: v
-                     WF2_CYCLE: do w3n=1,nffrq ! fermionic Matsubara frequency: v'
+                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic matsubara frequency: v
+                     WF2_CYCLE: do w3n=1,nffrq ! fermionic matsubara frequency: v'
                          w1n = wbn - w3n + nffrq ! think it carefully
                          w4n = wbn - w2n + nffrq
 
@@ -2241,14 +2241,14 @@
 
          if ( btest(isvrt,3) ) then
 
-             do f1=1,norbs                         ! block index: A
+             do f1=1,1                             ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \delta: creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,nbfrq                        ! bosonic Matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
@@ -2282,14 +2282,14 @@
 
          if ( btest(isvrt,4) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \delta: creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \beta : creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,1                            ! bosonic Matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
