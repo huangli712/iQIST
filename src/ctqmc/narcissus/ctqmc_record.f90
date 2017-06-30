@@ -2296,7 +2296,7 @@
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
-                         pp = pl_e(l1,ie1,ie2,f1,f2) * pl_s(l2,is2,is1,f2,f1) * lfun(l1,l2)
+                         pp = pl_s(l1,is1,is2,f1,f2) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
