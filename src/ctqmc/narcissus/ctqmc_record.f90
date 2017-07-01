@@ -2718,6 +2718,47 @@
          endif ! back if ( btest(isvrt,3) ) block
 
      END BLOCK CALC_G2_PP_AABB
+
+! G2_PP_ABBA component
+!-------------------------------------------------------------------------
+
+     CALC_G2_PP_ABBA: BLOCK
+
+         if ( btest(isvrt,4) ) then
+
+             do f1=1,norbs                         ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \delta: creation operator
+                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
+                             do is2=1,rank(f2)     ! \beta : creation operator
+                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+             !-------------------!
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
+                 do l1=1,lemax                     ! legendre polynomial index: l
+                     do l2=1,lemax                 ! legendre polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
+                         pp = pl_s(l1,is1,is2,f1,f2) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
+                         mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                         if ( f1 == f2 ) then
+                             mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+
+                         g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
+                     enddo ! over l2={1,lemax} loop
+                 enddo ! over l1={1,lemax} loop
+             enddo ! over wbn={1,nbfrq} loop
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
+         endif ! back if ( btest(isvrt,4) ) block
+
+     END BLOCK CALC_G2_PP_ABBA
      return
   end subroutine cat_record_g2pp_svd
 
