@@ -2530,12 +2530,17 @@
 
   subroutine cat_record_g2pp_svd()
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero, one, two, czero
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : svmax, svgrd
      use control, only : nbfrq
+     use control, only : beta
 
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rep_s
      use context, only : rank
 
      implicit none
@@ -2656,13 +2661,14 @@
 !<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! fill pl_e
-                     do l1=1,lemax
-                         pl_e(l1,ie2,ie1,f2,f1) = ms * rep_l(curr,l1)
-                     enddo ! over l1={1,lemax} loop
+                     do l1=1,svmax
+                         ul_e(l1,ie2,ie1,f2,f1) = ms * rep_s(curr,l1)
+                     enddo ! over l1={1,svmax} loop
                  enddo ! over ie2={1,rank(f2)} loop
              enddo ! over f2={1,norbs} loop
          enddo ! over ie1={1,rank(f1)} loop
      enddo ! over f1={1,norbs} loop
+
      return
   end subroutine cat_record_g2pp_svd
 
