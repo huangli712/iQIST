@@ -2630,8 +2630,8 @@
          enddo ! over is1={1,rank(f1)} loop
      enddo ! over f1={1,norbs} loop
 
-! prepare some important arrays: pl_e
-     step = real(legrd - 1) / two
+! prepare some important arrays: ul_e
+     step = real(svgrd - 1) / two
      do f1=1,norbs
          do ie1=1,rank(f1)
              do f2=1,norbs
@@ -2646,12 +2646,14 @@
                      endif ! back if ( dt < zero ) block
 
 ! determine index for imaginary time
-                     curr = nint( ( two * dt / beta ) * step ) + 1
+                     call s_svd_point(two * dt / beta - one, step, curr)
 
 ! special tricks for the first point and the last point
-                     if ( curr == 1 .or. curr == legrd ) then
-                         ms = two * ms
-                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+! we are using a non-uniform mesh, the mesh points are very dense near
+! the left and right boundaries \pm 1, so we do not need the trick
+!<                     if ( curr == 1 .or. curr == svgrd ) then
+!<                         ms = two * ms
+!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! fill pl_e
                      do l1=1,lemax
