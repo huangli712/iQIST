@@ -2531,6 +2531,12 @@
   subroutine cat_record_g2pp_svd()
      use constants, only : dp
 
+     use control, only : norbs
+     use control, only : svmax, svgrd
+     use control, only : nbfrq
+
+     use context, only : rank
+
      implicit none
 
 ! local variables
