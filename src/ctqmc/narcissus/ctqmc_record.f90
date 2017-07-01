@@ -1849,6 +1849,12 @@
      complex(dp), allocatable :: caux1(:,:,:)
      complex(dp), allocatable :: caux2(:,:,:)
 
+! allocate memory
+     allocate( ufun(lemax, maxval(rank), maxval(rank), norbs, norbs)); ufun = zero
+
+     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
+
      return
   end subroutine cat_record_g2ph_svd
 
