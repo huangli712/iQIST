@@ -1969,10 +1969,10 @@
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,lemax                     ! legendre polynomial index: l
-                     do l2=1,lemax                 ! legendre polynomial index: l'
+                 do l1=1,svmax                     ! svd polynomial index: l
+                     do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
-                         pp = pfun(l1,ie1,is2,f1,f2) * pfun(l2,ie2,is1,f2,f1) * lfun(l1,l2)
+                         pp = ufun(l1,ie1,is2,f1,f2) * ufun(l2,ie2,is1,f2,f1)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
