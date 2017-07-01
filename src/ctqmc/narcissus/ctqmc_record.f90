@@ -1814,7 +1814,9 @@
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rep_s
-     use context, only : rank
+     use context, only : g2ph, h2ph
+     use context, only : rank, pref
+     use context, only : mmat
 
      implicit none
 
@@ -1929,7 +1931,7 @@
                  do l1=1,svmax                     ! svd polynomial index: l
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
-                         pp = pfun(l1,ie1,is1,f1,f1) * pfun(l2,ie2,is2,f2,f2) * lfun(l1,l2)
+                         pp = ufun(l1,ie1,is1,f1,f1) * ufun(l2,ie2,is2,f2,f2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
