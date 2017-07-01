@@ -1995,6 +1995,11 @@
 
      END BLOCK CALC_G2_PH_ABBA
 
+! deallocate memory
+     deallocate( ufun  )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
      return
   end subroutine cat_record_g2ph_svd
 
