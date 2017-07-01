@@ -1882,7 +1882,7 @@
                      endif ! back if ( dt < zero ) block
 
 ! determine index for imaginary time
-                     curr = nint( ( two * dt / beta ) * step ) + 1
+                     call s_svd_point(two * dt / beta - one, step, curr)
 
 ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == legrd ) then
