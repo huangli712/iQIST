@@ -1885,9 +1885,11 @@
                      call s_svd_point(two * dt / beta - one, step, curr)
 
 ! special tricks for the first point and the last point
-                     if ( curr == 1 .or. curr == legrd ) then
-                         ms = two * ms
-                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+! we are using a non-uniform mesh, the mesh points are very dense near
+! the left and right boundaries \pm 1, so we do not need the trick
+!<                     if ( curr == 1 .or. curr == svgrd ) then
+!<                         ms = two * ms
+!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! fill pfun
                      do l1=1,lemax
