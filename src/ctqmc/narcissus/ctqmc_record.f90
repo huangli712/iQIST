@@ -1802,6 +1802,9 @@
   end subroutine cat_record_g2ph_leg
 
   subroutine cat_record_g2ph_svd()
+     implicit none
+
+     return
   end subroutine cat_record_g2ph_svd
 
 !!
