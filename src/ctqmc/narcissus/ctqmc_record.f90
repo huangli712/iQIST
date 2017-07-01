@@ -1805,6 +1805,7 @@
      use constants, only : dp
      use constants, only : zero, one, two, czero
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : svmax, svgrd
      use control, only : nbfrq
@@ -1925,8 +1926,8 @@
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,lemax                     ! legendre polynomial index: l
-                     do l2=1,lemax                 ! legendre polynomial index: l'
+                 do l1=1,svmax                     ! svd polynomial index: l
+                     do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          pp = pfun(l1,ie1,is1,f1,f1) * pfun(l2,ie2,is2,f2,f2) * lfun(l1,l2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
@@ -1936,8 +1937,8 @@
 
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
                          h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
-                     enddo ! over l2={1,lemax} loop
-                 enddo ! over l1={1,lemax} loop
+                     enddo ! over l2={1,svmax} loop
+                 enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
              !-------------------!
                                  enddo ! over ie2={1,rank(f2)} loop
