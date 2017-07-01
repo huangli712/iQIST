@@ -1804,6 +1804,41 @@
   subroutine cat_record_g2ph_svd()
      implicit none
 
+! local variables
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+! loop index for frequency
+     integer  :: wbn
+     integer  :: l1
+     integer  :: l2
+
+! loop indices for start and end points
+     integer  :: is1
+     integer  :: is2
+     integer  :: ie1
+     integer  :: ie2
+
+! index for imaginary time \tau
+     integer  :: curr
+
+! interval for imaginary time slice
+     real(dp) :: step
+
+! distance betweem \tau_s and \tau_e
+     real(dp) :: dt
+
+! sign for u_l(x(\tau))
+     real(dp) :: ms
+
+! real(dp) dummy variables
+     real(dp) :: mm
+     real(dp) :: pp
+
+! complex(dp) dummy variables
+     complex(dp) :: ee
+
      return
   end subroutine cat_record_g2ph_svd
 
