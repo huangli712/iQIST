@@ -2622,9 +2622,9 @@
 !<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! fill pl_s
-                     do l1=1,lemax
-                         pl_s(l1,is2,is1,f2,f1) = ms * rep_l(curr,l1)
-                     enddo ! over l1={1,lemax} loop
+                     do l1=1,svmax
+                         ul_s(l1,is2,is1,f2,f1) = ms * rep_s(curr,l1)
+                     enddo ! over l1={1,svmax} loop
                  enddo ! over is2={1,rank(f2)} loop
              enddo ! over f2={1,norbs} loop
          enddo ! over is1={1,rank(f1)} loop
