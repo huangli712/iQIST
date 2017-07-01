@@ -1863,6 +1863,9 @@
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
      return
   end subroutine cat_record_g2ph_svd
 
