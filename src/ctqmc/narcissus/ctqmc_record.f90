@@ -1892,13 +1892,14 @@
 !<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! fill pfun
-                     do l1=1,lemax
-                         pfun(l1,ie2,is1,f2,f1) = ms * rep_l(curr,l1)
-                     enddo ! over l1={1,lemax} loop
+                     do l1=1,svmax
+                         ufun(l1,ie2,is1,f2,f1) = ms * rep_s(curr,l1)
+                     enddo ! over l1={1,svmax} loop
                  enddo ! over ie2={1,rank(f2)} loop
              enddo ! over f2={1,norbs} loop
          enddo ! over is1={1,rank(f1)} loop
      enddo ! over f1={1,norbs} loop
+
      return
   end subroutine cat_record_g2ph_svd
 
