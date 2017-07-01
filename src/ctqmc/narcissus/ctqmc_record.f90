@@ -1802,6 +1802,8 @@
   end subroutine cat_record_g2ph_leg
 
   subroutine cat_record_g2ph_svd()
+     use constants, only : dp
+
      implicit none
 
 ! local variables
@@ -1838,6 +1840,14 @@
 
 ! complex(dp) dummy variables
      complex(dp) :: ee
+
+! u_l(x(\tau_e - \tau_s))
+     real(dp), allocatable :: ufun(:,:,:,:,:)
+
+! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+! note here \omega_n is bosonic
+     complex(dp), allocatable :: caux1(:,:,:)
+     complex(dp), allocatable :: caux2(:,:,:)
 
      return
   end subroutine cat_record_g2ph_svd
