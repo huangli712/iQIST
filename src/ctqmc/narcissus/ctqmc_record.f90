@@ -2593,6 +2593,72 @@
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
+! prepare some important arrays: pl_s
+     step = real(legrd - 1) / two
+     do f1=1,norbs
+         do is1=1,rank(f1)
+             do f2=1,norbs
+                 do is2=1,rank(f2)
+! determine dt (distance) and ms (sign)
+                     dt = time_s( index_s(is2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+                     ms = sign(one, dt)
+
+! adjust dt, keep it stay in (zero, beta)
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
+
+! determine index for imaginary time
+                     curr = nint( ( two * dt / beta ) * step ) + 1
+
+! special tricks for the first point and the last point
+                     if ( curr == 1 .or. curr == legrd ) then
+                         ms = two * ms
+                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+! fill pl_s
+                     do l1=1,lemax
+                         pl_s(l1,is2,is1,f2,f1) = ms * rep_l(curr,l1)
+                     enddo ! over l1={1,lemax} loop
+                 enddo ! over is2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over is1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
+
+! prepare some important arrays: pl_e
+     step = real(legrd - 1) / two
+     do f1=1,norbs
+         do ie1=1,rank(f1)
+             do f2=1,norbs
+                 do ie2=1,rank(f2)
+! determine dt (distance) and ms (sign)
+                     dt = time_e( index_e(ie2, f2), f2 ) - time_e( index_e(ie1, f1), f1 )
+                     ms = sign(one, dt)
+
+! adjust dt, keep it stay in (zero, beta)
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
+
+! determine index for imaginary time
+                     curr = nint( ( two * dt / beta ) * step ) + 1
+
+! special tricks for the first point and the last point
+                     if ( curr == 1 .or. curr == legrd ) then
+                         ms = two * ms
+                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+! fill pl_e
+                     do l1=1,lemax
+                         pl_e(l1,ie2,ie1,f2,f1) = ms * rep_l(curr,l1)
+                     enddo ! over l1={1,lemax} loop
+                 enddo ! over ie2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over ie1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
      return
   end subroutine cat_record_g2pp_svd
 
