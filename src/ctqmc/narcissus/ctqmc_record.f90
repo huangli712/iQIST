@@ -2529,6 +2529,64 @@
   end subroutine cat_record_g2pp_leg
 
   subroutine cat_record_g2pp_svd()
+     use constants, only : dp
+
+     implicit none
+
+! local variables
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+! loop index for frequency
+     integer  :: wbn
+     integer  :: l1
+     integer  :: l2
+
+! loop indices for start and end points
+     integer  :: is1
+     integer  :: is2
+     integer  :: ie1
+     integer  :: ie2
+
+! index for imaginary time \tau
+     integer  :: curr
+
+! interval for imaginary time slice
+     real(dp) :: step
+
+! distance betweem \tau_s and \tau_e
+     real(dp) :: dt
+
+! sign for u_l(x(\tau))
+     real(dp) :: ms
+
+! real(dp) dummy variables
+     real(dp) :: mm
+     real(dp) :: pp
+
+! complex(dp) dummy variables
+     complex(dp) :: ee
+
+! u_l(x(\tau_s2 - \tau_s1))
+     real(dp), allocatable :: ul_s(:,:,:,:,:)
+
+! u_l(x(\tau_e2 - \tau_e1))
+     real(dp), allocatable :: ul_e(:,:,:,:,:)
+
+! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+! note here \omega_n is bosonic
+     complex(dp), allocatable :: caux1(:,:,:)
+     complex(dp), allocatable :: caux2(:,:,:)
+
+! allocate memory
+     allocate( ul_s(lemax, maxval(rank), maxval(rank), norbs, norbs)); ul_s = zero
+     allocate( ul_e(lemax, maxval(rank), maxval(rank), norbs, norbs)); ul_e = zero
+
+     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
+
+     return
   end subroutine cat_record_g2pp_svd
 
 !!========================================================================
