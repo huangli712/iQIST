@@ -1803,13 +1803,16 @@
 
   subroutine cat_record_g2ph_svd()
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero, one, two, czero
 
      use control, only : norbs
      use control, only : svmax, svgrd
      use control, only : nbfrq
      use control, only : beta
 
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rep_s
      use context, only : rank
 
      implicit none
