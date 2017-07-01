@@ -2704,8 +2704,8 @@
 
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
                          h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
-                     enddo ! over l2={1,lemax} loop
-                 enddo ! over l1={1,lemax} loop
+                     enddo ! over l2={1,svmax} loop
+                 enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
              !-------------------!
                                  enddo ! over ie2={1,rank(f2)} loop
@@ -2734,10 +2734,10 @@
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,lemax                     ! legendre polynomial index: l
-                     do l2=1,lemax                 ! legendre polynomial index: l'
+                 do l1=1,svmax                     ! svd polynomial index: l
+                     do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
-                         pp = pl_s(l1,is1,is2,f1,f2) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
+                         pp = ul_s(l1,is1,is2,f1,f2) * ul_e(l2,ie2,ie1,f2,f1)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
@@ -2745,8 +2745,8 @@
 
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
                          h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
-                     enddo ! over l2={1,lemax} loop
-                 enddo ! over l1={1,lemax} loop
+                     enddo ! over l2={1,svmax} loop
+                 enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
              !-------------------!
                                  enddo ! over ie2={1,rank(f2)} loop
@@ -2759,6 +2759,13 @@
          endif ! back if ( btest(isvrt,4) ) block
 
      END BLOCK CALC_G2_PP_ABBA
+
+! deallocate memory
+     deallocate( ul_s  )
+     deallocate( ul_e  )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
      return
   end subroutine cat_record_g2pp_svd
 
