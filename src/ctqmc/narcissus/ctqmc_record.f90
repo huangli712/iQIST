@@ -1903,6 +1903,11 @@
          enddo ! over is1={1,rank(f1)} loop
      enddo ! over f1={1,norbs} loop
 
+! prepare some important arrays: caux1 and caux2
+     do f1=1,norbs
+         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
+     enddo ! over f1={1,norbs} loop
+
      return
   end subroutine cat_record_g2ph_svd
 
