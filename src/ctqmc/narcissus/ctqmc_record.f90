@@ -1803,6 +1803,14 @@
 
   subroutine cat_record_g2ph_svd()
      use constants, only : dp
+     use constants, only : zero, czero
+
+     use control, only : norbs
+     use control, only : svmax, svgrd
+     use control, only : nbfrq
+     use control, only : beta
+
+     use context, only : rank
 
      implicit none
 
@@ -1850,7 +1858,7 @@
      complex(dp), allocatable :: caux2(:,:,:)
 
 ! allocate memory
-     allocate( ufun(lemax, maxval(rank), maxval(rank), norbs, norbs)); ufun = zero
+     allocate( ufun(svmax, maxval(rank), maxval(rank), norbs, norbs)); ufun = zero
 
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
