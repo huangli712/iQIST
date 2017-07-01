@@ -2520,6 +2520,8 @@
 
 ! deallocate memory
      deallocate( lfun  )
+     deallocate( pl_s  )
+     deallocate( pl_e  )
      deallocate( caux1 )
      deallocate( caux2 )
 
