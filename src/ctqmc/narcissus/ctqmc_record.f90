@@ -2530,6 +2530,7 @@
 
   subroutine cat_record_g2pp_svd()
      use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : norbs
      use control, only : svmax, svgrd
@@ -2586,8 +2587,8 @@
      complex(dp), allocatable :: caux2(:,:,:)
 
 ! allocate memory
-     allocate( ul_s(lemax, maxval(rank), maxval(rank), norbs, norbs)); ul_s = zero
-     allocate( ul_e(lemax, maxval(rank), maxval(rank), norbs, norbs)); ul_e = zero
+     allocate( ul_s(svmax, maxval(rank), maxval(rank), norbs, norbs)); ul_s = zero
+     allocate( ul_e(svmax, maxval(rank), maxval(rank), norbs, norbs)); ul_e = zero
 
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
