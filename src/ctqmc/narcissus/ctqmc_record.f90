@@ -2541,7 +2541,9 @@
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rep_s
-     use context, only : rank
+     use context, only : g2pp, h2pp
+     use context, only : rank, pref
+     use context, only : mmat
 
      implicit none
 
