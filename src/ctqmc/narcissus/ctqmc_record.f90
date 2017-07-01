@@ -1867,7 +1867,7 @@
      call ctqmc_make_pref()
 
 ! prepare some important arrays: pfun
-     step = real(legrd - 1) / two
+     step = real(svgrd - 1) / two
      do f1=1,norbs
          do is1=1,rank(f1)
              do f2=1,norbs
