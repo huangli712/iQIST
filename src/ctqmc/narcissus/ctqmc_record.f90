@@ -2153,8 +2153,10 @@
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
-!!    \tau'_i and \tau'_k: imaginary time for annihilation operator
-!!    \tau_j and \tau_l: imaginary time for creation operator
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operator
+!!     \tau_j and \tau_l: imaginary time for creation operator
+!!     \nu and \nu': fermionic matsubara frequency
+!!     \omega: bosonic matsubara frequency
 !!
   subroutine cat_record_g2pp_std()
      use constants, only : dp
