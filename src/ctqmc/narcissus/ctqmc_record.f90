@@ -1699,34 +1699,18 @@
 !
 ! G2_PH_AABB component
 !-------------------------------------------------------------------------
-!
-! note:
-!
-!     caux2(wbn,ie1,f1)      -> exp (+i\omega_m \tau'_{\alpha})
-!     caux1(wbn,is2,f2)      -> exp (-i\omega_m \tau_{\delta})
-!
-!     pfun(l1,ie1,is1,f1,f1) -> p_l(\tau'_{\alpha} - \tau_{\beta})
-!     pfun(l2,ie2,is2,f2,f2) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
-!
-!     lfun(l1,l2)            -> \sqrt{2l + 1} \sqrt{2l'+1} (-1)^(l'+1)
-!
-!     mmat(ie1, is1, f1)     -> M_{\alpha\beta}
-!     mmat(ie2, is2, f2)     -> M_{\gamma\delta}
-!     mmat(ie1, is2, f1)     -> M_{\alpha\delta}
-!     mmat(ie2, is1, f1)     -> M_{\gamma\beta}
-!
      CALC_G2_PH_AABB: BLOCK
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,norbs                         ! block index: A
+             do f1=1,1                             ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \delta: creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
+             do wbn=1,1                            ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
@@ -1755,22 +1739,6 @@
 
 ! G2_PH_ABBA component
 !-------------------------------------------------------------------------
-!
-! note:
-!
-!     caux2(wbn,ie1,f1)      -> exp (+i\omega_m \tau'_{\alpha})
-!     caux1(wbn,is1,f1)      -> exp (-i\omega_m \tau_{\delta})
-!
-!     pfun(l1,ie1,is2,f1,f2) -> p_l(\tau'_{\alpha} - \tau_{\beta})
-!     pfun(l2,ie2,is1,f2,f1) -> p_l'(\tau'_{\gamma} - \tau_{\delta})
-!
-!     lfun(l1,l2)            -> \sqrt{2l + 1} \sqrt{2l'+1} (-1)^(l'+1)
-!
-!     mmat(ie1, is1, f1)     -> M_{\alpha\delta}
-!     mmat(ie2, is2, f2)     -> M_{\gamma\beta}
-!     mmat(ie1, is2, f1)     -> M_{\alpha\beta}
-!     mmat(ie2, is1, f1)     -> M_{\gamma\delta}
-!
      CALC_G2_PH_ABBA: BLOCK
 
          if ( btest(isvrt,2) ) then
