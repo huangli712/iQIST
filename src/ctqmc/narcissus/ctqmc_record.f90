@@ -1703,14 +1703,14 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \delta: creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,1                            ! bosonic matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
@@ -1786,6 +1786,20 @@
      return
   end subroutine cat_record_g2ph_leg
 
+!!
+!! @sub cat_record_g2ph_svd
+!!
+!! record the two-particle green's and vertex functions in the ph channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-hole channel and intermediate/matsubara representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
+!!
   subroutine cat_record_g2ph_svd()
      use constants, only : dp
      use constants, only : zero, one, two, czero
