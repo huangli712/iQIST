@@ -2541,17 +2541,16 @@
 !
 ! G2_PP_AABB component
 !-------------------------------------------------------------------------
-
      CALC_G2_PP_AABB: BLOCK
 
          if ( btest(isvrt,3) ) then
 
              do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \beta : creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \delta: creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \delta -> l: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
@@ -2582,17 +2581,16 @@
 
 ! G2_PP_ABBA component
 !-------------------------------------------------------------------------
-
      CALC_G2_PP_ABBA: BLOCK
 
          if ( btest(isvrt,4) ) then
 
              do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \delta: creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \beta : creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \delta -> l: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
