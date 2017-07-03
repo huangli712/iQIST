@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/02/2017 by li huang (last modified)
+!!!           07/03/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -1467,6 +1467,35 @@
 !$OMP END DO
 
 ! calculate g2ph and h2ph
+!
+! note (for G2_PH_AABB component):
+!
+!     g2aux(w1n,w2n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+!
+!     g2aux(w3n,w4n,f2) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w1n,w4n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w3n,w2n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!
+! note (for G2_PH_ABBA component):
+!
+!     g2aux(w1n,w2n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+!
+!     g2aux(w3n,w4n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w1n,w4n,f1) ->
+!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+!
+!     g2aux(w3n,w2n,f2) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!
 !$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
          ORB2_CYCLE: do f2=1,f1                ! block index: B
@@ -1481,22 +1510,6 @@
                          zg = czero; zh = czero
 
 ! G2_PH_AABB component
-!-------------------------------------------------------------------------
-!
-! note:
-!
-!     g2aux(w1n,w2n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
-!
-!     g2aux(w3n,w4n,f2) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
-!
-!     g2aux(w1n,w4n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
-!
-!     g2aux(w3n,w2n,f1) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
-!
 !-------------------------------------------------------------------------
                      CALC_G2_PH_AABB: BLOCK
 
@@ -1513,22 +1526,6 @@
                      END BLOCK CALC_G2_PH_AABB
 
 ! G2_PH_ABBA component
-!-------------------------------------------------------------------------
-!
-! note:
-!
-!     g2aux(w1n,w2n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
-!
-!     g2aux(w3n,w4n,f1) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
-!
-!     g2aux(w1n,w4n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
-!
-!     g2aux(w3n,w2n,f2) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
-!
 !-------------------------------------------------------------------------
                      CALC_G2_PH_ABBA: BLOCK
 
