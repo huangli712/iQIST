@@ -1114,7 +1114,7 @@
              do j=1,nffrq         ! for v  index
                  do k=1,svmax     ! for l' index
                      do l=1,svmax ! for l  index
-                         associate ( val => grnf(i,j,:,:,:), &
+                         associate ( val => grnf(nffrq-i+1,j,:,:,:), &
                                      gkl => gaux(k,l,:,:,:) )
                              val = val + tsvd(j,l) * gkl * conjg( tsvd(i,k) )
                          end associate
