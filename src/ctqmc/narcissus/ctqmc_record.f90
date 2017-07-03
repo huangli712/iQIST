@@ -1575,6 +1575,30 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
+!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             p_l( x(\tau'_i - \tau_j) ) p_l'( x(\tau'_k - \tau_l) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             p_l( x(\tau'_i - \tau_j) ) p_l'( x(\tau'_k - \tau_l) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
+!!     p_l and p_l': legendre polynomial
+!!     \omega: bosonic matsubara frequency
 !!
   subroutine cat_record_g2ph_leg()
      use constants, only : dp
@@ -1705,10 +1729,10 @@
 
              do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \beta : creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \delta: creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \delta -> l: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
@@ -1745,10 +1769,10 @@
 
              do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \delta: creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \beta : creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \delta -> l: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
@@ -1799,6 +1823,30 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
+!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) =  (-1)^l'
+!!         \frac{ 1 }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             u_l( x(\tau'_i - \tau_j) ) u_l'( x(\tau'_k - \tau_l) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             u_l( x(\tau'_i - \tau_j) ) u_l'( x(\tau'_k - \tau_l) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
+!!     u_l and u_l': svd polynomial
+!!     \omega: bosonic matsubara frequency
 !!
   subroutine cat_record_g2ph_svd()
      use constants, only : dp
@@ -1920,10 +1968,10 @@
 
              do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \beta : creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \delta: creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \delta -> l: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,svmax                     ! svd polynomial index: l
@@ -1961,10 +2009,10 @@
 
              do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \delta: creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \beta : creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \delta -> l: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,svmax                     ! svd polynomial index: l
