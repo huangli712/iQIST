@@ -1849,7 +1849,7 @@
 
 ! real(dp) dummy variables
      real(dp) :: mm
-     real(dp) :: pp
+     real(dp) :: uu
 
 ! complex(dp) dummy variables
      complex(dp) :: ee
@@ -1871,7 +1871,7 @@
 ! calculate prefactor: pref
      call ctqmc_make_pref()
 
-! prepare some important arrays: pfun
+! prepare some important arrays: ufun
      step = real(svgrd - 1) / two
      do f1=1,norbs
          do is1=1,rank(f1)
