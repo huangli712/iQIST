@@ -1703,14 +1703,14 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \delta: creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,1                            ! bosonic matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
@@ -1878,7 +1878,7 @@
              do f2=1,norbs
                  do ie2=1,rank(f2)
 ! determine dt (distance) and ms (sign)
-                     dt = time_s( index_s(is1, f1), f1 ) - time_e( index_e(ie2, f2), f2 )
+                     dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
                      ms = sign(one, dt)
 
 ! adjust dt, keep it stay in (zero, beta)
