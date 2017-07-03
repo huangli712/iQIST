@@ -1703,14 +1703,14 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,norbs                         ! block index: A
+             do f1=1,1                             ! block index: A
                  do f2=1,f1                        ! block index: B
                      do is1=1,rank(f1)             ! \beta : creation operator
                          do ie1=1,rank(f1)         ! \alpha: annihilation operator
                              do is2=1,rank(f2)     ! \delta: creation operator
                                  do ie2=1,rank(f2) ! \gamma: annihilation operator
              !-------------------!
-             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
+             do wbn=1,1                            ! bosonic matsubara frequency: w
                  do l1=1,lemax                     ! legendre polynomial index: l
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
@@ -1878,7 +1878,7 @@
              do f2=1,norbs
                  do ie2=1,rank(f2)
 ! determine dt (distance) and ms (sign)
-                     dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+                     dt = time_s( index_s(is1, f1), f1 ) - time_e( index_e(ie2, f2), f2 )
                      ms = sign(one, dt)
 
 ! adjust dt, keep it stay in (zero, beta)
@@ -1896,7 +1896,7 @@
 !<                         ms = two * ms
 !<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
-! fill pfun
+! fill ufun
                      do l1=1,svmax
                          ufun(l1,ie2,is1,f2,f1) = ms * rep_s(curr,l1)
                      enddo ! over l1={1,svmax} loop
@@ -1914,7 +1914,6 @@
 !
 ! G2_PH_AABB component
 !-------------------------------------------------------------------------
-
      CALC_G2_PH_AABB: BLOCK
 
          if ( btest(isvrt,1) ) then
@@ -1930,14 +1929,14 @@
                  do l1=1,svmax                     ! svd polynomial index: l
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
-                         pp = ufun(l1,ie1,is1,f1,f1) * ufun(l2,ie2,is2,f2,f2)
+                         uu = ufun(l1,ie1,is1,f1,f1) * ufun(l2,ie2,is2,f2,f2)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
 
-                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta
+                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
                  enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -1971,14 +1970,14 @@
                  do l1=1,svmax                     ! svd polynomial index: l
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
-                         pp = ufun(l1,ie1,is2,f1,f2) * ufun(l2,ie2,is1,f2,f1)
+                         uu = ufun(l1,ie1,is2,f1,f2) * ufun(l2,ie2,is1,f2,f1)
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
 
-                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
+                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta
+                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
                  enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
