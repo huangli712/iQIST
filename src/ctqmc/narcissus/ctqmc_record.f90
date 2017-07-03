@@ -2072,19 +2072,19 @@
 !!     \nu and \nu': fermionic matsubara frequency
 !!     \omega: bosonic matsubara frequency
 !!
-!!    in             out
-!!     \              /
-!! w-v' \            / w-v
-!!       \          /
-!!      i \--------/ l
-!!        |        |
-!!        |        |
-!!        |        |
-!!      j /--------\ k
-!!       /          \
-!!    v /            \ v'
-!!     /              \
-!!    out             in
+!!        in             out
+!!         \              /
+!!     w-v' \            / w-v
+!!           \          /
+!!          i \--------/ l
+!!            |        |
+!!            |        |
+!!            |        |
+!!          j /--------\ k
+!!           /          \
+!!        v /            \ v'
+!!         /              \
+!!        out             in
 !!
   subroutine ctqmc_record_g2pp()
      use control, only : isort
@@ -2109,6 +2109,9 @@
 
          case (3)
              call cat_record_g2pp_svd()
+
+         case default
+             call s_print_error('ctqmc_record_g2pp','this feature is not implemented')
 
      end select
 
