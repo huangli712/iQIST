@@ -2250,7 +2250,7 @@
 
 ! calculate g2pp and h2pp
 !
-! note:
+! note (for G2_PP_AABB component):
 !
 !     g2aux(w1n,w2n,f1) ->
 !         exp [ i (\omega - \nu') \tau'_i ] exp [ -i \nu \tau_j ]
@@ -2262,6 +2262,20 @@
 !         exp [ i (\omega - \nu') \tau'_i ] exp [ -i (\omega - nu) \tau_l ]
 !
 !     g2aux(w3n,w2n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!
+! note (for G2_PP_ABBA component):
+!
+!     g2aux(w1n,w2n,f1) ->
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i \nu \tau_j ]
+!
+!     g2aux(w3n,w4n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i (\omega - \nu) \tau_l ]
+!
+!     g2aux(w1n,w4n,f1) ->
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i (\omega - nu) \tau_l ]
+!
+!     g2aux(w3n,w2n,f2) ->
 !         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
 !
 !$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
@@ -2330,6 +2344,44 @@
      return
   end subroutine cat_record_g2pp_std
 
+!!
+!! @sub cat_record_g2ph_leg
+!!
+!! record the two-particle green's and vertex functions in the ph channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-hole channel and legendre/matsubara representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
+!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             p_l( x(\tau'_i - \tau_j) ) p_l'( x(\tau'_k - \tau_l) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             p_l( x(\tau'_i - \tau_j) ) p_l'( x(\tau'_k - \tau_l) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
+!!     p_l and p_l': legendre polynomial
+!!     \omega: bosonic matsubara frequency
+!!
   subroutine cat_record_g2pp_leg()
      use constants, only : dp
      use constants, only : zero, one, two, czero
