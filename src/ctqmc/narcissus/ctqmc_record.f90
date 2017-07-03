@@ -2629,6 +2629,44 @@
      return
   end subroutine cat_record_g2pp_leg
 
+!!
+!! @sub cat_record_g2pp_svd
+!!
+!! record the two-particle green's and vertex functions in the pp channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-particle channel and intermediate/matsubara representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
+!!     G^{(2)}_{abcd,AABB,pp} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             u_l( x(\tau_l - \tau_j) ) u_l'( x(\tau'_k - \tau'_i) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA,pp} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             u_l( x(\tau_l - \tau_j) ) u_l'( x(\tau'_k - \tau'_i) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
+!!     u_l and u_l': svd polynomial
+!!     \omega: bosonic matsubara frequency
+!!
   subroutine cat_record_g2pp_svd()
      use constants, only : dp
      use constants, only : zero, one, two, czero
@@ -2678,7 +2716,7 @@
 
 ! real(dp) dummy variables
      real(dp) :: mm
-     real(dp) :: pp
+     real(dp) :: uu
 
 ! complex(dp) dummy variables
      complex(dp) :: ee
@@ -2729,7 +2767,7 @@
 !<                         ms = two * ms
 !<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
-! fill pl_s
+! fill ul_s
                      do l1=1,svmax
                          ul_s(l1,is2,is1,f2,f1) = ms * rep_s(curr,l1)
                      enddo ! over l1={1,svmax} loop
@@ -2763,7 +2801,7 @@
 !<                         ms = two * ms
 !<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
-! fill pl_e
+! fill ul_e
                      do l1=1,svmax
                          ul_e(l1,ie2,ie1,f2,f1) = ms * rep_s(curr,l1)
                      enddo ! over l1={1,svmax} loop
@@ -2781,19 +2819,18 @@
 !
 ! G2_PP_AABB component
 !-------------------------------------------------------------------------
-
      CALC_G2_PP_AABB: BLOCK
 
          if ( btest(isvrt,3) ) then
 
-             do f1=1,1                             ! block index: A
+             do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \beta : creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \delta: creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \delta -> l: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
-             do wbn=1,1                            ! bosonic matsubara frequency: w
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,svmax                     ! svd polynomial index: l
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
@@ -2822,17 +2859,16 @@
 
 ! G2_PP_ABBA component
 !-------------------------------------------------------------------------
-
      CALC_G2_PP_ABBA: BLOCK
 
          if ( btest(isvrt,4) ) then
 
              do f1=1,norbs                         ! block index: A
                  do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \delta: creation operator
-                         do ie1=1,rank(f1)         ! \alpha: annihilation operator
-                             do is2=1,rank(f2)     ! \beta : creation operator
-                                 do ie2=1,rank(f2) ! \gamma: annihilation operator
+                     do is1=1,rank(f1)             ! \delta -> l: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
              !-------------------!
              do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
                  do l1=1,svmax                     ! svd polynomial index: l
