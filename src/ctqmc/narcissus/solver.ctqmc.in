@@ -1,10 +1,10 @@
 Uc = 2.0
 mune = 1.0
 beta = 10.0
-isvrt = 8
+isvrt = 4
 isort = 3
 nbfrq = 2
 nffrq = 64
-nsweep = 200000
+nsweep = 400000
 nwrite = 200000
 svmax = 40
