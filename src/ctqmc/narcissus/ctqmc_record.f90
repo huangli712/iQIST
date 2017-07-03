@@ -2345,19 +2345,19 @@
   end subroutine cat_record_g2pp_std
 
 !!
-!! @sub cat_record_g2ph_leg
+!! @sub cat_record_g2pp_leg
 !!
-!! record the two-particle green's and vertex functions in the ph channel.
+!! record the two-particle green's and vertex functions in the pp channel.
 !! here improved estimator is used to improve the accuracy
 !!
 !! note:
 !!
 !!     we try to measure the two-particle green's and vertex functions in
-!!     the particle-hole channel and legendre/matsubara representation
+!!     the particle-particle channel and legendre/matsubara representation
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
-!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) =  (-1)^l'
+!!     G^{(2)}_{abcd,AABB,pp} (l, l', \omega) =  (-1)^l'
 !!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
 !!         \langle
 !!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
@@ -2367,7 +2367,7 @@
 !!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) =  (-1)^l'
+!!     G^{(2)}_{abcd,ABBA,pp} (l, l', \omega) =  (-1)^l'
 !!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
 !!         \langle
 !!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
