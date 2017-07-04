@@ -44,6 +44,7 @@ GNU General Public License Version 3
     * Legendre orthogonal polynomial representation
     * Singular value decomposition representation
     * Improved estimator for self-energy function
+    * Improved estimator for two-particle vertex function
 
 * The following optimized algorithms are adopted
     * Segment algorithm for density-density interaction
