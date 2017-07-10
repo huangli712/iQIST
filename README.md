@@ -32,11 +32,11 @@ GNU General Public License Version 3
     * Skewness of perturbation expansion order
     * Kinetic energy
     * Potential energy
-    * Orbital occupation numbers
-    * Double occupation numbers
+    * Orbital occupation number
+    * Double occupation matrix
     * Local magnetic moment
     * Binder cumulant
-    * Atomic state probability
+    * Atomic eigenstate probability
     * Fidelity susceptibility
     * Kinetic energy fluctuation
 
