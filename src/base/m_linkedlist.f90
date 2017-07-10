@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/24/2017 by li huang (last modified)
+!!!           07/10/2017 by li huang (last modified)
 !!! purpose : this purpose of this module is to implement a typical and
 !!!           useful data structure --- linked list. it is a generic
 !!!           linked list, capable of storing arbitrary data.
@@ -291,7 +291,11 @@
      return
   end function list_get
 
-!!>>> list_next: return the next node after node [self]
+!!
+!! @fun list_next
+!!
+!! return the next node after node [self]
+!!
   function list_next(self) result(next)
      implicit none
 
