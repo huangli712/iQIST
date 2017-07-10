@@ -9,11 +9,6 @@
 
 ## Standard tests: MANJUSHAKA @ iQIST
 
-* S131 // 3-band model, density-density interaction
-* S132 // 3-band model, rotationally invariant interaction, spin-orbit coupling
-* S151 // 5-band model, density-density interaction
-* S152 // 5-band model, rotationally invariant interaction, spin-orbit coupling
-
 ## Advanced tests: NARCISSUS @ iQIST
 
 ## Advanced tests: MANJUSHAKA @ iQIST
