@@ -69,7 +69,7 @@ Possible options:
 
 ### OMP
 
-Specify whether OpenMP is enable. If you want to disable it, please comment it out. In default it is disabled. So far the OpenMP was used by some ctqmc components to speedup the measurements of some selected two-particle quantities.
+Specify whether OpenMP is enable. If you want to disable it, please comment it out. In default it is disabled. So far the OpenMP was used to speedup the measurements of some selected two-particle quantities.
 
 Possible options:
 
@@ -109,7 +109,7 @@ Possible options:
 * -traceback
 * -g
 
-The '-nogen-interfaces' option ask the compiler to do not generate an interface block for each routine defined in the source file. The '-warn all' option means the check is done in compiling. The '-check all' option means the check will be done in running. The '-traceback' option enables us to track the exact position (line number and file name) where the error occurs. The '-g' option enables the compiler to generate debug information and embed them into the final program. **Note that all of the '-check all', '-traceback', and '-g' options will decrease the efficiency greatly**.
+The '-nogen-interfaces' option ask the compiler to do not generate an interface block for each routine defined in the source file. The '-warn all' option means the check is done in compiling. The '-check all' option means the check will be done in running. The '-traceback' option enables us to track the exact position (line number and file name) where an error occurs. The '-g' option enables the compiler to generate debug information and embed them into the final program. **Note that all of the '-check all', '-traceback', and '-g' options will decrease the efficiency greatly**.
 
 ### MTUNE
 
