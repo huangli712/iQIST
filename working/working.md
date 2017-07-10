@@ -4,8 +4,6 @@
 
 * S011 // 1-band model, density-density interaction (static )
 * S012 // 1-band model, density-density interaction (dynamic)
-* S021 // 2-band model, density-density interaction (static )
-* S022 // 2-band model, density-density interaction (dynamic)
 * S031 // 3-band model, density-density interaction (static )
 * S032 // 3-band model, density-density interaction (dynamic)
 
@@ -15,8 +13,6 @@
 * S132 // 3-band model, rotationally invariant interaction, spin-orbit coupling
 * S151 // 5-band model, density-density interaction
 * S152 // 5-band model, rotationally invariant interaction, spin-orbit coupling
-* S171 // 7-band model, density-density interaction
-* S172 // 7-band model, rotationally invariant interaction, spin-orbit coupling
 
 ## Advanced tests: NARCISSUS @ iQIST
 
