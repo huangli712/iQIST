@@ -356,7 +356,7 @@
 ! 2. then tau is mapped into val in [-1,1]. the mesh is non-uniform (size is svgrd)
 ! 3. then val is mapped into dt in [0,6]. here the mesh is uniform (size is svgrd)
 ! 4. we calculate the index for dt in the uniform mesh [0,6] (size is svgrd)
-! 5. clearly, the obtained index is the same with the index in the non-uniform mesh
+! 5. clearly, the obtained index is the same with the one in the non-uniform mesh
 !
 
 ! val \in [-1,1], convert it to dt \in [-3,3]
@@ -707,7 +707,7 @@
 
      if ( abs(y) < 1E-10 ) then
          val = s_safe_exp( -x * y )
-     else if ( y > 200.0_dp ) then
+     else if ( y > +200.0_dp ) then
          val = two * y * s_safe_exp( -y * ( x + one ) )
      else if ( y < -200.0_dp ) then
          val = -two * y * s_safe_exp( y * ( one - x ) )

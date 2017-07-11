@@ -144,7 +144,7 @@
 !! subroutine s_svd_dg(...)
 !! subroutine s_svd_zg(...)
 !!
-!! Note: _i means integer version, _d real(dp) version, and _z complex(dp)
+!! note: _i means integer version, _d real(dp) version, and _z complex(dp)
 !! version. _dg means real(dp) general version, _zg complex(dp) general
 !! version, _sy real(dp) symmetric version, _he complex(dp) Hermitian version.
 !!

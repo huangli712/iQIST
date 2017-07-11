@@ -57,7 +57,7 @@
 !! call gstack_create(gs, 1.0_dp, 1024) ! create stack to support real(dp)
 !! call gstack_create(gs, (1.0_dp, 1.0_dp), 1024) ! create stack to support complex(dp)
 !!
-!! Note: In istack_create(), the second parameter is the capacity of the
+!! note: In istack_create(), the second parameter is the capacity of the
 !! stack. However, in gstack_create(), the second parameter means the data
 !! type that gstack will manipulate, and the third parameter will be used
 !! to determine the capacity. It is an optional parameter.
@@ -99,7 +99,7 @@
 !! call istack_clean(is)
 !! call gstack_clean(gs)
 !!
-!! Note: This operation will reset the top position of the stack, instead
+!! note: This operation will reset the top position of the stack, instead
 !! of releasing the memory of it. So you can still use the stack after that.
 !!
 !! 8. destroy the stack
@@ -108,7 +108,7 @@
 !! call istack_destroy(is)
 !! call gstack_destroy(gs)
 !!
-!! Note: When the stack was destroyed, you can not use it any more.
+!! note: When the stack was destroyed, you can not use it any more.
 !!
 !!
 
