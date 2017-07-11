@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           06/15/2017 by li huang (last modified)
+!!!           07/11/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -28,10 +28,10 @@
   subroutine ctqmc_print_header()
      use constants, only : mystd
 
-     use version, only : FULL_VER
-     use version, only : AUTH_VER
-     use version, only : MAIL_VER
-     use version, only : GPL3_VER
+     use version, only : V_FULL
+     use version, only : V_AUTH
+     use version, only : V_MAIL
+     use version, only : V_GPL3
 
      use control, only : cname
      use control, only : nprocs
@@ -58,10 +58,10 @@
      write(mystd,'(2X,a)') 'A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: '//AUTH_VER
-     write(mystd,'(2X,a)') 'Support: '//MAIL_VER
-     write(mystd,'(2X,a)') 'License: '//GPL3_VER
+     write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: '//V_AUTH
+     write(mystd,'(2X,a)') 'Support: '//V_MAIL
+     write(mystd,'(2X,a)') 'License: '//V_GPL3
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'start running at '//date_time_string
