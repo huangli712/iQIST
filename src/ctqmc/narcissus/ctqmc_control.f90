@@ -42,7 +42,7 @@
 !! if isscf == 1:
 !!     one-shot non-self-consistent scheme, usually used in the density
 !!     functional theory plus dynamical mean field theory case or used
-!!     to solve the quantum impurity model once
+!!     to solve the quantum impurity model separately
 !!
 !! if isscf == 2:
 !!     self-consistent scheme, used in the dynamical mean field theory
@@ -239,7 +239,7 @@
 !!     the calculation. if it is 0, then we ignore the calculation. for
 !!     example, we just use the second bit (from right side to left side)
 !!     to represent the calculation of two-particle green's function for
-!!     the particle-hole channel and AABB block structure. so, if isvrt is
+!!     the particle-hole channel in AABB block structure. so, if isvrt is
 !!     10_10 (1010_2), we will try to compute the specified two-particle
 !!     green's function. if isvrt is 13_10 (1101_2), we will not calculate
 !!     it since the second bit is 0
