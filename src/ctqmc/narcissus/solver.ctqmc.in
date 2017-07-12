@@ -1,2 +1,3 @@
 isort = 3
+svmax = 36
 svgrd = 1001
