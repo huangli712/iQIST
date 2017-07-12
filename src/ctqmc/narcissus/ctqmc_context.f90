@@ -360,7 +360,7 @@
 !!
 !! @var paux
 !!
-!! auxiliary physical observables, it is a vector with size = 9
+!! auxiliary physical observables, it is a vector with fixed size = 9
 !!
 !! paux(01) : total energy, Etot
 !! paux(02) : potential engrgy, Epot

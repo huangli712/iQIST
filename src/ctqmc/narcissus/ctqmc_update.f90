@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/01/2017 by li huang (last modified)
+!!!           07/12/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver().
@@ -788,10 +788,11 @@
              endif ! back if ( pass .eqv. .true. ) block
 
          enddo ! over flvr={1,nband} loop
+     endif ! back if ( cflip == 1 ) block
 
 ! case 2: cflip = 2, global flip
 !-------------------------------------------------------------------------
-     else
+     if ( cflip == 2 ) then
          do flvr=1,nband
 
 ! get fup and fdn
@@ -836,8 +837,7 @@
          else
              rfl_r = rfl_r + one
          endif ! back if ( pass .eqv. .true. ) block
-
-     endif ! back if ( cflip == 1 ) block
+     endif ! back if ( cflip == 2 ) block
 
      return
   end subroutine ctqmc_reflip_kink
