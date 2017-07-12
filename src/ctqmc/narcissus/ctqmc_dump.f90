@@ -335,8 +335,12 @@
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
      else
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
-         write(mytmp,'(a,i4)') '# bin:', nbins
      endif ! back if ( isbin == 1 .or. nbins == 1 ) block
+
+! write the comment line
+     if ( isbin == 2 ) then
+         write(mytmp,'(a,i4)') '# bin:', nbins
+     endif ! back if ( isbin == 2 ) block
 
 ! write it
      do i=1,norbs
