@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           06/15/2017 by li huang (last modified)
+!!!           07/12/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -352,7 +352,7 @@
 !!
 !! number of mesh points for svd orthogonal polynomial in [-1,1] range
 !!
-     integer, public, save :: svgrd  = 20001
+     integer, public, save :: svgrd  = 2001
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

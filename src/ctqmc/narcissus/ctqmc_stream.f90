@@ -93,7 +93,7 @@
      lemax  = 32        ! maximum expansion order for legendre polynomial
      legrd  = 20001     ! number of mesh points for legendre polynomial
      svmax  = 32        ! maximum expansion order for svd polynomial
-     svgrd  = 20001     ! number of mesh points for svd polynomial
+     svgrd  = 2001      ! number of mesh points for svd polynomial
 !-------------------------------------------------------------------------
      mkink  = 1024      ! maximum perturbation expansion order
      mfreq  = 8193      ! maximum number of matsubara frequency points
