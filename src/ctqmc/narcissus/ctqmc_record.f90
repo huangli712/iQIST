@@ -2622,7 +2622,7 @@
 !!     consider the block structure of G^{(2)}
 !!
 !!     G^{(2)}_{abcd,AABB,pp} (l, l', \omega) =  (-1)^l'
-!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \frac{ 1 }{ \beta }
 !!         \langle
 !!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
@@ -2632,7 +2632,7 @@
 !!         \rangle
 !!
 !!     G^{(2)}_{abcd,ABBA,pp} (l, l', \omega) =  (-1)^l'
-!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \frac{ 1 }{ \beta }
 !!         \langle
 !!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
