@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/03/2017 by li huang (last modified)
+!!!           07/12/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -379,13 +379,6 @@
 ! determine index for svd orthogonal polynomial interval
                      call s_svd_point(daux, step, curr)
 
-! special tricks for the first point and the last point
-! we are using a non-uniform mesh, the mesh points are very dense near
-! the left and right boundaries \pm 1, so we do not need the trick
-!<                     if ( curr == 1 .or. curr == svgrd ) then
-!<                         maux = two * maux
-!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
-
 ! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      SVD_CYCLE: do fsvd=1,svmax
                          dtau = rep_s(curr,fsvd)
@@ -550,13 +543,6 @@
 
 ! determine index for svd orthogonal polynomial interval
                      call s_svd_point(daux, step, curr)
-
-! special tricks for the first point and the last point
-! we are using a non-uniform mesh, the mesh points are very dense near
-! the left and right boundaries \pm 1, so we do not need the trick
-!<                     if ( curr == 1 .or. curr == svgrd ) then
-!<                         maux = two * maux
-!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
                      SVD_CYCLE: do fsvd=1,svmax
@@ -1937,13 +1923,6 @@
 ! determine index for imaginary time
                      call s_svd_point(two * dt / beta - one, step, curr)
 
-! special tricks for the first point and the last point
-! we are using a non-uniform mesh, the mesh points are very dense near
-! the left and right boundaries \pm 1, so we do not need the trick
-!<                     if ( curr == 1 .or. curr == svgrd ) then
-!<                         ms = two * ms
-!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
-
 ! fill ufun
                      do l1=1,svmax
                          ufun(l1,ie2,is1,f2,f1) = ms * rep_s(curr,l1)
@@ -2760,13 +2739,6 @@
 ! determine index for imaginary time
                      call s_svd_point(two * dt / beta - one, step, curr)
 
-! special tricks for the first point and the last point
-! we are using a non-uniform mesh, the mesh points are very dense near
-! the left and right boundaries \pm 1, so we do not need the trick
-!<                     if ( curr == 1 .or. curr == svgrd ) then
-!<                         ms = two * ms
-!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
-
 ! fill ul_s
                      do l1=1,svmax
                          ul_s(l1,is2,is1,f2,f1) = ms * rep_s(curr,l1)
@@ -2793,13 +2765,6 @@
 
 ! determine index for imaginary time
                      call s_svd_point(two * dt / beta - one, step, curr)
-
-! special tricks for the first point and the last point
-! we are using a non-uniform mesh, the mesh points are very dense near
-! the left and right boundaries \pm 1, so we do not need the trick
-!<                     if ( curr == 1 .or. curr == svgrd ) then
-!<                         ms = two * ms
-!<                     endif ! back if ( curr == 1 .or. curr == svgrd ) block
 
 ! fill ul_e
                      do l1=1,svmax
