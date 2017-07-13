@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           07/12/2017 by li huang (last modified)
+!!!           07/13/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -1741,7 +1741,6 @@
   subroutine ctqmc_make_hub2()
      use constants, only : dp
 
-     use control, only : isort
      use control, only : norbs
      use control, only : mfreq
      use control, only : nfreq
@@ -1758,12 +1757,6 @@
      integer  :: i
      integer  :: k
 
-! imaginary time green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-
-! imaginary time auxiliary correlation function
-     real(dp) :: faux(ntime,norbs,norbs)
-
 ! it is used to backup the sampled impurity green's function
      complex(dp) :: gtmp(nfreq,norbs,norbs)
 
@@ -1773,35 +1766,8 @@
 
 ! task 2: build impurity green's function and auxiliary correlation function
 !-------------------------------------------------------------------------
-! 2.1 using fast fourier transformation
-     STD_BLOCK: if ( isort == 1 ) then
-
-         call ctqmc_tran_gtau(gtau, gaux)
-         call ctqmc_four_htau(gaux, grnf)
-         call ctqmc_tran_gtau(ftau, faux)
-         call ctqmc_four_htau(faux, frnf)
-
-     endif STD_BLOCK ! back if ( isort == 1 ) block
-
-! 2.2 special consideration must be taken for legendre representation, we
-!     can calculate grnf and frnf directly by using legendre coefficients,
-!     instead of performing fourier transformation
-     LEG_BLOCK: if ( isort == 2 ) then
-
-         call ctqmc_tran_grnf(gtau, grnf)
-         call ctqmc_tran_grnf(ftau, frnf)
-
-     endif LEG_BLOCK ! back if ( isort == 2 ) block
-
-! 2.3 special consideration must be taken for svd representation, we
-!     can calculate grnf and frnf directly by using svd coefficients,
-!     instead of performing fourier transformation
-     SVD_BLOCK: if ( isort == 3 ) then
-
-         call ctqmc_tran_grnf(gtau, grnf)
-         call ctqmc_tran_grnf(ftau, frnf)
-
-     endif SVD_BLOCK ! back if ( isort == 3 ) block
+     call ctqmc_tran_grnf(gtau, grnf)
+     call ctqmc_tran_grnf(ftau, frnf)
 
 ! task 3: build final self-energy function by using improved estimator
 !-------------------------------------------------------------------------
