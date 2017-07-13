@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/15/2017 by li huang (last modified)
+!!!           07/13/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -56,12 +56,11 @@
      isscr  = 1         ! dynamic interaction
      isbnd  = 1         ! symmetry (band part)
      isspn  = 1         ! symmetry (spin part)
-     isbin  = 1         ! data binning
      iswor  = 1         ! worm algorithm
      isort  = 1         ! advanced basis
      isobs  = 1         ! various physical observables
      issus  = 1         ! charge/spin susceptibility
-     isvrt  = 1         ! two-particle green's function
+     isvrt  = 1         ! two-particle green's functions
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! setup common variables for dynamical mean field theory
@@ -132,7 +131,6 @@
              call p_get('isscr' , isscr )
              call p_get('isbnd' , isbnd )
              call p_get('isspn' , isspn )
-             call p_get('isbin' , isbin )
              call p_get('iswor' , iswor )
              call p_get('isort' , isort )
              call p_get('isobs' , isobs )
@@ -191,7 +189,6 @@
      call mp_bcast( isscr , master )
      call mp_bcast( isbnd , master )
      call mp_bcast( isspn , master )
-     call mp_bcast( isbin , master )
      call mp_bcast( iswor , master )
      call mp_bcast( isort , master )
      call mp_bcast( isobs , master )

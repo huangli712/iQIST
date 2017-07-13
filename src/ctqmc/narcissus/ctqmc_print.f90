@@ -133,7 +133,6 @@
      write(mystd,'(4X,a8,i10,  2X,a8)') 'isscr  /', isscr , 'type / i'
      write(mystd,'(4X,a8,i10,  2X,a8)') 'isbnd  /', isbnd , 'type / i'
      write(mystd,'(4X,a8,i10,  2X,a8)') 'isspn  /', isspn , 'type / i'
-     write(mystd,'(4X,a8,i10,  2X,a8)') 'isbin  /', isbin , 'type / i'
      write(mystd,'(4X,a8,i10,  2X,a8)') 'iswor  /', iswor , 'type / i'
      write(mystd,'(4X,a8,i10,  2X,a8)') 'isort  /', isort , 'type / i'
      write(mystd,'(4X,a8,i10,  2X,a8)') 'isobs  /', isobs , 'type / i'
@@ -197,7 +196,7 @@
      use control, only : isscf               ! control running scheme
      use control, only : isscr               ! control dynamic interaction
      use control, only : isbnd, isspn        ! control symmetry
-     use control, only : isbin, iswor, isort ! control measurement tricks
+     use control, only : iswor, isort        ! control measurement tricks
      use control, only : isobs, issus, isvrt ! control physical observables
 
      implicit none
@@ -211,7 +210,6 @@
      character (len = 7) :: scr(4) = ['static', 'dyn_ppm', 'dyn_om', 'dyn_rm']
      character (len = 3) :: bnd(2) = ['no', 'yes']
      character (len = 3) :: spn(2) = ['no', 'yes']
-     character (len = 3) :: bin(2) = ['no', 'yes']
      character (len = 3) :: wor(2) = ['no', 'yes']
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
      character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
@@ -257,7 +255,6 @@
      write(mystd,'(4X,2a)') 'dynamic interaction      / ', scr(isscr)
      write(mystd,'(4X,2a)') 'symmetry (band part)     / ', bnd(isbnd)
      write(mystd,'(4X,2a)') 'symmetry (spin part)     / ', spn(isspn)
-     write(mystd,'(4X,2a)') 'data binning             / ', bin(isbin)
      write(mystd,'(4X,2a)') 'worm algorithm           / ', wor(iswor)
      write(mystd,'(4X,2a)') 'advanced basis           / ', ort(isort)
 

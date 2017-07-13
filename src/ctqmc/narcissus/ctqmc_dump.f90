@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/12/2017 by li huang (last modified)
+!!!           07/13/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -301,7 +301,6 @@
      use constants, only : dp
      use constants, only : mytmp
 
-     use control, only : isbin
      use control, only : norbs
      use control, only : ntime
      use control, only : nsweep, nwrite
@@ -320,27 +319,8 @@
      integer  :: i
      integer  :: j
 
-! counter for data bins
-     integer, save :: nbins = 0
-
-! determine reset and nbins
-     if ( nbins == nsweep / nwrite + 1 ) then
-         nbins = 1 ! reset the counter to 1
-     else
-         nbins = nbins + 1
-     endif ! back if ( nbins == nsweep / nwrite + 1 ) block
-
 ! open data file: solver.green.dat
-     if ( isbin == 1 .or. nbins == 1 ) then
-         open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
-     else
-         open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
-     endif ! back if ( isbin == 1 .or. nbins == 1 ) block
-
-! write the comment line
-     if ( isbin == 2 ) then
-         write(mytmp,'(a,i4)') '# bin:', nbins
-     endif ! back if ( isbin == 2 ) block
+     open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,norbs

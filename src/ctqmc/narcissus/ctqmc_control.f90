@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           07/12/2017 by li huang (last modified)
+!!!           07/13/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -96,20 +96,6 @@
 !!     enforce spin up = spin down
 !!
      integer, public, save :: isspn  = 1
-
-!!
-!! @var isbin
-!!
-!! control flag, define how to accumulate data for imaginary time
-!! impurity green's function G(\tau)
-!!
-!! if isbin == 1:
-!!     without data binning mode
-!!
-!! if isbin == 2:
-!!     with data binning mode
-!!
-     integer, public, save :: isbin  = 1
 
 !!
 !! @var iswor
