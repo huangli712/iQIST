@@ -1752,7 +1752,6 @@
      use control, only : norbs
      use control, only : mfreq
      use control, only : nfreq
-     use control, only : ntime
 
      use context, only : gtau, ftau
      use context, only : grnf, frnf
