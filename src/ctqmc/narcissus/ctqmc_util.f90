@@ -848,6 +848,9 @@
 ! u_l(x(\tau)), for svd orthogonal polynomial representation
      real(dp), allocatable :: ufun(:,:)
 
+! calculated impurity green's function, imaginary-time axis
+     real(dp), allocatable :: gtau(:,:,:)
+
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
@@ -855,6 +858,9 @@
 ! allocate memory
      allocate(pfun(ntime,lemax), stat=istat)
      allocate(ufun(ntime,svmax), stat=istat)
+
+     allocate(gtau(ntime,norbs,norbs), stat=istat)
+
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
 
@@ -866,7 +872,8 @@
 ! using normal representation
 !-------------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
-         CONTINUE
+         call ctqmc_tran_gtau(gaux, gtau)
+         call ctqmc_four_htau(gtau, grnf)
      endif STD_BLOCK ! back if ( isort == 1 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -948,6 +955,7 @@
 ! deallocate memory
      deallocate(pfun)
      deallocate(ufun)
+     deallocate(gtau)
      deallocate(tleg)
      deallocate(tsvd)
 
@@ -1760,25 +1768,21 @@
 ! it is used to backup the sampled impurity green's function
      complex(dp) :: gtmp(nfreq,norbs,norbs)
 
-! task 1: backup the sampled impurity green's function
-!-------------------------------------------------------------------------
+! backup the sampled impurity green's function
      gtmp = grnf(1:nfreq,:,:)
 
-! task 2: build impurity green's function and auxiliary correlation function
-!-------------------------------------------------------------------------
+! build impurity green's function and auxiliary correlation function
      call ctqmc_tran_grnf(gtau, grnf)
      call ctqmc_tran_grnf(ftau, frnf)
 
-! task 3: build final self-energy function by using improved estimator
-!-------------------------------------------------------------------------
+! build final self-energy function by using improved estimator
      do i=1,norbs
          do k=1,mfreq
              sig2(k,i,i) = frnf(k,i,i) / grnf(k,i,i)
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
 
-! task 4: restore the sampled impurity green's function
-!-------------------------------------------------------------------------
+! restore the sampled impurity green's function
      grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
 
      return
