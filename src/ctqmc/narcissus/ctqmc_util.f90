@@ -1765,8 +1765,14 @@
      integer  :: i
      integer  :: k
 
+! status flag
+     integer  :: istat
+
 ! it is used to backup the sampled impurity green's function
-     complex(dp) :: gtmp(nfreq,norbs,norbs)
+     complex(dp), allocatable :: gtmp(:,:,:)
+
+! allocate memory
+     allocate(gtmp(nfreq,norbs,norbs), stat=istat)
 
 ! backup the sampled impurity green's function
      gtmp = grnf(1:nfreq,:,:)
@@ -1784,6 +1790,9 @@
 
 ! restore the sampled impurity green's function
      grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
+
+! deallocate memory
+     deallocate(gtmp)
 
      return
   end subroutine ctqmc_make_hub2
