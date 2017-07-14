@@ -3645,10 +3645,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
-         kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     knop_err = sqrt( knop_err / real( nprocs ) )
+     kmat_err = sqrt( kmat_err / real( nprocs ) )
 
      return
   end subroutine ctqmc_reduce_kmat
