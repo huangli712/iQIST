@@ -64,6 +64,7 @@
      use context, only : h2pp                ! two-particle vertex function (pp)
                                              !
      use context, only : symm                ! symmetry vector
+                                             !
      use context, only : gtau, ftau          ! imaginary time green's function
      use context, only : grnf, frnf          ! matsubara green's function
      use context, only : sig2                ! matsubara self-energy function
@@ -544,23 +545,6 @@
 ! collect the histogram data from hist to hist_mpi
          call ctqmc_reduce_hist(hist_mpi, hist_err)
 
-! collect the impurity green's function data from gtau to gtau_mpi
-         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
-
-! the data need to be scaled properly before written
-         hist_mpi = hist_mpi * one
-         hist_err = hist_err * one
-         gtau_mpi = gtau_mpi * real(nmonte) / real(cstep)
-         gtau_err = gtau_err * real(nmonte) / real(cstep)
-
-!!========================================================================
-!!>>> symmetrizing immediate results                                   <<<
-!!========================================================================
-
-! symmetrize the impurity green's function over spin or over bands
-         call ctqmc_symm_gtau(symm, gtau_mpi)
-         call ctqmc_symm_gtau(symm, gtau_err)
-
 !!========================================================================
 !!>>> writing immediate results                                        <<<
 !!========================================================================
@@ -568,11 +552,6 @@
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_hist(hist_mpi, hist_err)
-         endif ! back if ( myid == master ) block
-
-! write out the impurity green's function, gtau_mpi
-         if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_gtau(gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
