@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/13/2017 by li huang (last modified)
+!!!           07/14/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -303,7 +303,6 @@
 
      use control, only : norbs
      use control, only : ntime
-     use control, only : nsweep, nwrite
 
      use context, only : tmesh
 
