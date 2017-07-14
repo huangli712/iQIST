@@ -3132,10 +3132,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         nimp_err = sqrt( nimp_err / real( nprocs * ( nprocs - 1 ) ) )
-         nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     nimp_err = sqrt( nimp_err / real( nprocs ) )
+     nmat_err = sqrt( nmat_err / real( nprocs ) )
 
      return
   end subroutine ctqmc_reduce_nmat
