@@ -3695,9 +3695,9 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
-     rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
-     lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
+     lnop_err = sqrt( lnop_err / real( nprocs ) )
+     rnop_err = sqrt( rnop_err / real( nprocs ) )
+     lrmm_err = sqrt( lrmm_err / real( nprocs ) )
 
      return
   end subroutine ctqmc_reduce_lrmm
