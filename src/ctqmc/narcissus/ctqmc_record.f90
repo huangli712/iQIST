@@ -4104,9 +4104,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     ch_w_err = sqrt( ch_w_err / real( nprocs ) )
 
      return
   end subroutine ctqmc_reduce_ch_w
