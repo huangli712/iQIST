@@ -3555,10 +3555,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
-         s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     s_re_err = sqrt( s_re_err / real( nprocs ) )
+     s_im_err = sqrt( s_im_err / real( nprocs ) )
 
 ! construct the final sig2_err
      sig2_err = s_re_err + s_im_err * czi
