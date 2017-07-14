@@ -3804,9 +3804,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     szpw_err = sqrt( szpw_err / real( nprocs ) )
 
      return
   end subroutine ctqmc_reduce_szpw
