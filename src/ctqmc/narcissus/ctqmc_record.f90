@@ -3167,23 +3167,6 @@
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
-! local variables
-! status flag
-     integer :: istat
-
-! calculated impurity green's function
-     real(dp), allocatable :: gaux(:,:,:)
-
-! allocate memory
-     allocate(gaux(ntime,norbs,norbs), stat=istat)
-
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_reduce_gtau','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-! calculate final impurity green's function
-     call ctqmc_tran_gtau(gtau, gaux)
-
 ! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
      gtau_err = zero
@@ -3192,14 +3175,14 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(gaux, gtau_mpi)
+     call mp_allreduce(gtau, gtau_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     gtau_mpi = gaux
+     gtau_mpi = gtau
 
 # endif /* MPI */
 
@@ -3210,7 +3193,7 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((gaux - gtau_mpi)**2, gtau_err)
+     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -3219,9 +3202,6 @@
 
 ! calculate standard deviation
      gtau_err = sqrt( gtau_err / real( nprocs ) )
-
-! deallocate memory
-     deallocate(gaux)
 
      return
   end subroutine ctqmc_reduce_gtau
