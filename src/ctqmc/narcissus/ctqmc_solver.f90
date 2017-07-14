@@ -661,8 +661,12 @@
 ! calculate some essential observables which are not measured directly
      UPDATE1_DATA: BLOCK
 
-! try to evaluate the impurity green's function and self-energy function
+! try to evaluate the self-energy function
          call ctqmc_make_hub2()
+
+! try to evaluate the imaginary-time green's function
+         call ctqmc_tran_gtau(gtau, gtau_mpi); gtau = gtau_mpi
+         call ctqmc_tran_gtau(ftau, ftau_mpi); ftau = ftau_mpi
 
 ! try to evaluate the two-particle green's function (ph channel)
          if ( btest(isvrt, 1) .or. btest(isvrt, 2) ) then
