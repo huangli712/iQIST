@@ -4333,12 +4333,10 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
-         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
-         h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
-         h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     g_re_err = sqrt( g_re_err / real( nprocs ) )
+     g_im_err = sqrt( g_im_err / real( nprocs ) )
+     h_re_err = sqrt( h_re_err / real( nprocs ) )
+     h_im_err = sqrt( h_im_err / real( nprocs ) )
 
 ! construct the final g2pp_err and h2pp_err
      g2pp_err = g_re_err + g_im_err * czi
