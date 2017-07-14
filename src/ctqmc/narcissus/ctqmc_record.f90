@@ -3058,9 +3058,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         paux_err = sqrt( paux_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     paux_err = sqrt( paux_err / real( nprocs ) )
 
      return
   end subroutine ctqmc_reduce_paux
