@@ -3302,9 +3302,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     if ( nprocs > 1 ) then
-         ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
-     endif ! back if ( nprocs > 1 ) block
+     ftau_err = sqrt( ftau_err / real( nprocs ) )
 
 ! deallocate memory
      deallocate(faux)
