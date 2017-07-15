@@ -4195,6 +4195,7 @@
      g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
      h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
      h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final g2ph_err and h2ph_err
      g2ph_err = g_re_err + g_im_err * czi
@@ -4315,6 +4316,7 @@
      g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
      h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
      h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final g2pp_err and h2pp_err
      g2pp_err = g_re_err + g_im_err * czi
