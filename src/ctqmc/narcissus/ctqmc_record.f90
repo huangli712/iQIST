@@ -3859,6 +3859,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
      sp_t_err = sqrt( sp_t_err / real( nprocs * ( nprocs - 1 ) ) )
 
@@ -3928,6 +3929,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
@@ -4007,6 +4009,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
      ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
 
@@ -4076,6 +4079,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
