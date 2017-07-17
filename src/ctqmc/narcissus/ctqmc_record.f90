@@ -3614,6 +3614,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
      kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
 
@@ -3704,6 +3705,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
      rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
      lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
@@ -3773,6 +3775,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
