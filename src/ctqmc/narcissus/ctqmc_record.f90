@@ -2933,7 +2933,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
+     if ( nprocs > 1 ) then
+         hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_hist
@@ -2996,6 +2997,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
@@ -3058,6 +3060,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      paux_err = sqrt( paux_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
