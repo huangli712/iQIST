@@ -3135,6 +3135,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      nimp_err = sqrt( nimp_err / real( nprocs * ( nprocs - 1 ) ) )
      nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
 
@@ -3204,6 +3205,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
@@ -3268,6 +3270,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
@@ -3346,6 +3349,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
      g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
@@ -3432,6 +3436,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
      f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
@@ -3518,6 +3523,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
+     if ( nprocs > 1 ) then
      s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
      s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
