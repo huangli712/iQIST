@@ -2976,6 +2976,17 @@
 !!========================================================================
 
   subroutine ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err)
+     use constants, only : dp
+     use constants, only : zero
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : ntime
+     use control, only : nprocs
+
+     use context, only : ac_t
+
      implicit none
 
      return
