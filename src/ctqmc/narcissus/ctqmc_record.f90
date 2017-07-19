@@ -2935,6 +2935,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
          hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_hist
@@ -2999,6 +3000,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
      prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_prob
@@ -3062,6 +3064,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
      paux_err = sqrt( paux_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_paux
@@ -3138,6 +3141,7 @@
      if ( nprocs > 1 ) then
      nimp_err = sqrt( nimp_err / real( nprocs * ( nprocs - 1 ) ) )
      nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_nmat
@@ -3207,6 +3211,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
      gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_gtau
@@ -3272,6 +3277,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
      ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ftau
@@ -3352,6 +3358,7 @@
      if ( nprocs > 1 ) then
      g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
      g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final grnf_err
      grnf_err = g_re_err + g_im_err * czi
@@ -3439,6 +3446,7 @@
      if ( nprocs > 1 ) then
      f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
      f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final frnf_err
      frnf_err = f_re_err + f_im_err * czi
@@ -3526,6 +3534,7 @@
      if ( nprocs > 1 ) then
      s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
      s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final sig2_err
      sig2_err = s_re_err + s_im_err * czi
@@ -3617,6 +3626,7 @@
      if ( nprocs > 1 ) then
      knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
      kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_kmat
@@ -3709,6 +3719,7 @@
      lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
      rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
      lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_lrmm
@@ -3777,6 +3788,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
      szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_szpw
@@ -3862,6 +3874,7 @@
      if ( nprocs > 1 ) then
      schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
      sp_t_err = sqrt( sp_t_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_sp_t
@@ -3931,6 +3944,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
      sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_sp_w
@@ -4012,6 +4026,7 @@
      if ( nprocs > 1 ) then
      cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
      ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ch_t
@@ -4081,6 +4096,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
      ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ch_w
