@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/15/2017 by li huang (last modified)
+!!!           07/19/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -342,6 +342,21 @@
      use constants, only : dp
 
      implicit none
+
+!!
+!! @var ac_v
+!!
+!! a sequence of specified observable which will be used to measure the
+!! autocorrelation time function
+!!
+     real(dp), public, save, allocatable :: ac_v(:)
+
+!!
+!! @var ac_t
+!!
+!! autocorrelation time function
+!!
+     real(dp), public, save, allocatable :: ac_t(:)
 
 !!
 !! @var hist
