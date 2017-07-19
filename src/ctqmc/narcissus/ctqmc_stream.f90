@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/13/2017 by li huang (last modified)
+!!!           07/19/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -771,6 +771,11 @@
 
 !>>> ctqmc_meat module
 !-------------------------------------------------------------------------
+
+! init autocorrelation time function
+     ac_v = zero
+     ac_t = zero
+
 ! init histogram
      hist = zero
 
