@@ -1,4 +1,5 @@
 isort = 2
 isbin = 2
+isspn = 2
 svmax = 36
 svgrd = 1001
