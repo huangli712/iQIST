@@ -72,18 +72,23 @@
      real(dp) :: knop(norbs)
      real(dp) :: kmat(norbs,norbs)
 
-     do i=1,norbs
-         knop(i) = rank(i) * 2.0_dp
-     enddo ! over i={1,norbs} loop
+     CALC_KMAT: BLOCK
 
-     do j=1,norbs
          do i=1,norbs
-             kmat(i,j) = rank(i) * rank(j) * 4.0_dp
+             knop(i) = rank(i) * 2.0_dp
          enddo ! over i={1,norbs} loop
-     enddo ! over j={1,norbs} loop
+
+         do j=1,norbs
+             do i=1,norbs
+                 kmat(i,j) = rank(i) * rank(j) * 4.0_dp
+             enddo ! over i={1,norbs} loop
+         enddo ! over j={1,norbs} loop
+
+     END BLOCK CALC_KMAT
 
 ! record autocorrelation time function: <A_{n} A_{n+k}>
-!-------------------------------------------------------------------------
+     CALC_AC_T: BLOCK
+
 ! increase the counter
      starter = starter + 1
 
@@ -106,7 +111,8 @@
 
 ! store the observable (the total occupation number) in op_v
      ac_v(p) = sum(sgmt) / beta
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     END BLOCK CALC_AC_T
 
      return
   end subroutine ctqmc_record_ac_t
