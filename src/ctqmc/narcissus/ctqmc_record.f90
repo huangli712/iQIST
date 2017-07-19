@@ -2990,6 +2990,7 @@
      implicit none
 
 ! external arguments
+! autocorrelation function
      real(dp), intent(out) :: ac_t_mpi(ntime+1)
      real(dp), intent(out) :: ac_t_err(ntime+1)
 
@@ -2997,29 +2998,29 @@
      ac_t_mpi = zero
      ac_t_err = zero
 
-! build hist_mpi, collect data from all children processes
+! build ac_t_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(hist, hist_mpi)
+     call mp_allreduce(ac_t, ac_t_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     hist_mpi = hist
+     ac_t_mpi = ac_t
 
 # endif /* MPI */
 
 ! calculate the average
-     hist_mpi = hist_mpi / real(nprocs)
+     ac_t_mpi = ac_t_mpi / real(nprocs)
 
-! build hist_err, collect data from all children processes
+! build ac_t_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((hist - hist_mpi)**2, hist_err)
+     call mp_allreduce((ac_t - ac_t_mpi)**2, ac_t_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -3028,7 +3029,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
+         ac_t_err = sqrt( ac_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
