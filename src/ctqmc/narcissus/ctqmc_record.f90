@@ -133,14 +133,15 @@
                  i = i + 1
                  ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
              enddo ! over j={1,p-1} loop
+             call s_assert( i == ntime )
          endif ! back if ( starter > ntime ) block
 
 ! store the specified observable (the kinetic energy fluctuation) in ac_v
          ac_v(p) = kaux
 
-! note: ac_v(ntime + 1) is used to store the mean value for the kinetic
+! note: ac_t(ntime + 1) is used to store the mean value for the kinetic
 ! energy fluctuation
-         ac_v(ntime + 1) = ac_v(ntime + 1) + kaux
+         ac_t(ntime + 1) = ac_t(ntime + 1) + kaux
 
      END BLOCK CALC_AC_T
 
@@ -2974,7 +2975,7 @@
 !!>>> reduce autocorrelation function                                  <<<
 !!========================================================================
 
-  subroutine ctqmc_reduce_ac_t()
+  subroutine ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err)
      implicit none
 
      return
