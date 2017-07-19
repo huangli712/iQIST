@@ -348,7 +348,7 @@
 !!
 !! a sequence of specified observable which will be used to measure the
 !! autocorrelation function. here the kinetic energy fluctuation is the
-!! selected observable
+!! chosen observable
 !!
      real(dp), public, save, allocatable :: ac_v(:)
 
@@ -969,8 +969,8 @@
      implicit none
 
 ! allocate memory
-     allocate(ac_v(ntime),       stat=istat)
-     allocate(ac_t(ntime),       stat=istat)
+     allocate(ac_v(ntime+1),     stat=istat)
+     allocate(ac_t(ntime+1),     stat=istat)
 
      allocate(hist(mkink),       stat=istat)
      allocate(prob(ncfgs),       stat=istat)
