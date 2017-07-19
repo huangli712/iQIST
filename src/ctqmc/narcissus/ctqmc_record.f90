@@ -83,7 +83,12 @@
 ! autocorrelation function
      integer  :: p
 
+! used to record < k_i >, k_i is the number of operators for the given
+! flavor channel i
      real(dp) :: knop(norbs)
+
+! used to record < k_i k_j >, k_i and k_j are the numbers of operators
+! for the given flavor channels i and j
      real(dp) :: kmat(norbs,norbs)
 
      CALC_KMAT: BLOCK
