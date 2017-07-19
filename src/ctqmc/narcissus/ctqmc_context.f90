@@ -1002,6 +1002,9 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
+     ac_v = zero
+     ac_t = zero
+
      hist = zero
      prob = zero
      paux = zero
