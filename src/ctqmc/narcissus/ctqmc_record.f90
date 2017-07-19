@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/14/2017 by li huang (last modified)
+!!!           07/19/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -2933,7 +2933,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     hist_err = sqrt( hist_err / real( nprocs ) )
+     hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_hist
@@ -2996,7 +2996,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     prob_err = sqrt( prob_err / real( nprocs ) )
+     prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_prob
@@ -3058,7 +3058,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     paux_err = sqrt( paux_err / real( nprocs ) )
+     paux_err = sqrt( paux_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_paux
@@ -3132,8 +3132,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     nimp_err = sqrt( nimp_err / real( nprocs ) )
-     nmat_err = sqrt( nmat_err / real( nprocs ) )
+     nimp_err = sqrt( nimp_err / real( nprocs * ( nprocs - 1 ) ) )
+     nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_nmat
@@ -3201,7 +3201,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     gtau_err = sqrt( gtau_err / real( nprocs ) )
+     gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_gtau
@@ -3265,7 +3265,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     ftau_err = sqrt( ftau_err / real( nprocs ) )
+     ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_ftau
@@ -3343,8 +3343,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     g_re_err = sqrt( g_re_err / real( nprocs ) )
-     g_im_err = sqrt( g_im_err / real( nprocs ) )
+     g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+     g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
 ! construct the final grnf_err
      grnf_err = g_re_err + g_im_err * czi
@@ -3429,8 +3429,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     f_re_err = sqrt( f_re_err / real( nprocs ) )
-     f_im_err = sqrt( f_im_err / real( nprocs ) )
+     f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
+     f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
 ! construct the final frnf_err
      frnf_err = f_re_err + f_im_err * czi
@@ -3515,8 +3515,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     s_re_err = sqrt( s_re_err / real( nprocs ) )
-     s_im_err = sqrt( s_im_err / real( nprocs ) )
+     s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
+     s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
 ! construct the final sig2_err
      sig2_err = s_re_err + s_im_err * czi
@@ -3605,8 +3605,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     knop_err = sqrt( knop_err / real( nprocs ) )
-     kmat_err = sqrt( kmat_err / real( nprocs ) )
+     knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
+     kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_kmat
@@ -3695,9 +3695,9 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     lnop_err = sqrt( lnop_err / real( nprocs ) )
-     rnop_err = sqrt( rnop_err / real( nprocs ) )
-     lrmm_err = sqrt( lrmm_err / real( nprocs ) )
+     lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
+     rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
+     lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_lrmm
@@ -3764,7 +3764,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     szpw_err = sqrt( szpw_err / real( nprocs ) )
+     szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_szpw
@@ -3847,8 +3847,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     schi_err = sqrt( schi_err / real( nprocs ) )
-     sp_t_err = sqrt( sp_t_err / real( nprocs ) )
+     schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
+     sp_t_err = sqrt( sp_t_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_sp_t
@@ -3916,7 +3916,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     sp_w_err = sqrt( sp_w_err / real( nprocs ) )
+     sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_sp_w
@@ -3995,8 +3995,8 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     cchi_err = sqrt( cchi_err / real( nprocs ) )
-     ch_t_err = sqrt( ch_t_err / real( nprocs ) )
+     cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
+     ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_ch_t
@@ -4064,7 +4064,7 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     ch_w_err = sqrt( ch_w_err / real( nprocs ) )
+     ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
 
      return
   end subroutine ctqmc_reduce_ch_w
@@ -4174,10 +4174,10 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     g_re_err = sqrt( g_re_err / real( nprocs ) )
-     g_im_err = sqrt( g_im_err / real( nprocs ) )
-     h_re_err = sqrt( h_re_err / real( nprocs ) )
-     h_im_err = sqrt( h_im_err / real( nprocs ) )
+     g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+     g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
+     h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
 ! construct the final g2ph_err and h2ph_err
      g2ph_err = g_re_err + g_im_err * czi
@@ -4293,10 +4293,10 @@
 # endif /* MPI */
 
 ! calculate standard deviation
-     g_re_err = sqrt( g_re_err / real( nprocs ) )
-     g_im_err = sqrt( g_im_err / real( nprocs ) )
-     h_re_err = sqrt( h_re_err / real( nprocs ) )
-     h_im_err = sqrt( h_im_err / real( nprocs ) )
+     g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+     g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
+     h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
 
 ! construct the final g2pp_err and h2pp_err
      g2pp_err = g_re_err + g_im_err * czi
