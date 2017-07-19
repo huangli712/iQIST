@@ -57,7 +57,7 @@
 !!
 !! @sub ctqmc_record_ac_t
 !!
-!!
+!! record autocorrelation function for the kinetic energy fluctuation
 !!
   subroutine ctqmc_record_ac_t()
      use constants, only : dp
