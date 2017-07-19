@@ -2993,9 +2993,9 @@
      real(dp), intent(out) :: ac_t_mpi(ntime+1)
      real(dp), intent(out) :: ac_t_err(ntime+1)
 
-! initialize hist_mpi and hist_err
-     hist_mpi = zero
-     hist_err = zero
+! initialize ac_t_mpi and ac_t_err
+     ac_t_mpi = zero
+     ac_t_err = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
