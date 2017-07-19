@@ -58,6 +58,8 @@
          call ctqmc_record_ac_t()
      enddo ! over i={1,ntherm} loop
 
+     STOP
+
 ! reset statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
      rmv_t = zero; rmv_a = zero; rmv_r = zero
