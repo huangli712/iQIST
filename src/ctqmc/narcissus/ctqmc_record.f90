@@ -57,10 +57,12 @@
 !!
   subroutine ctqmc_record_ac_t()
      use constants, only : dp
+     use constants, only : one
 
      use control, only : norbs
      use control, only : ntime
 
+     use context, only : ac_v, ac_t
      use context, only : rank
 
      implicit none
