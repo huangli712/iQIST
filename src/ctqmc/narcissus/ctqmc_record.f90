@@ -98,24 +98,24 @@
      CALC_AC_T: BLOCK
 
 ! increase the counter
-     starter = starter + 1
+         starter = starter + 1
 
 ! determine memory location used to store the observable
-     p = mod(starter, ntime)
-     if ( p == 0 ) p = ntime
+         p = mod(starter, ntime)
+         if ( p == 0 ) p = ntime
 
-! measure the ac_t: autocorrelation time function
-     if ( starter > ntime ) then
-         i = 0
-         do j=p,ntime
-             i = i + 1
-             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
-         enddo ! over j={p,ntime} loop
-         do j=1,p-1
-             i = i + 1
-             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
-         enddo ! over j={1,p-1} loop
-     endif ! back if ( starter > ntime ) block
+! measure the ac_t: autocorrelation function
+         if ( starter > ntime ) then
+             i = 0
+             do j=p,ntime
+                 i = i + 1
+                 ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
+             enddo ! over j={p,ntime} loop
+             do j=1,p-1
+                 i = i + 1
+                 ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
+             enddo ! over j={1,p-1} loop
+         endif ! back if ( starter > ntime ) block
 
 ! store the observable (the total occupation number) in op_v
      ac_v(p) = sum(sgmt) / beta
