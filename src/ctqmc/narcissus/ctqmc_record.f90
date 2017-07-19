@@ -2989,6 +2989,48 @@
 
      implicit none
 
+! external arguments
+     real(dp), intent(out) :: ac_t_mpi(ntime+1)
+     real(dp), intent(out) :: ac_t_err(ntime+1)
+
+! initialize hist_mpi and hist_err
+     hist_mpi = zero
+     hist_err = zero
+
+! build hist_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(hist, hist_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     hist_mpi = hist
+
+# endif /* MPI */
+
+! calculate the average
+     hist_mpi = hist_mpi / real(nprocs)
+
+! build hist_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((hist - hist_mpi)**2, hist_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_ac_t
 
