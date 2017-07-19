@@ -2975,6 +2975,11 @@
 !!>>> reduce autocorrelation function                                  <<<
 !!========================================================================
 
+!!
+!! @sub ctqmc_reduce_ac_t
+!!
+!! reduce the ac_t from all children processes
+!!
   subroutine ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err)
      use constants, only : dp
      use constants, only : zero
