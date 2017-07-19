@@ -1,6 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_record_hist
+!!! program : ctqmc_record_ac_t <<<---
+!!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_paux
 !!!           ctqmc_record_nmat <<<---
