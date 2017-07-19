@@ -347,15 +347,15 @@
 !! @var ac_v
 !!
 !! a sequence of specified observable which will be used to measure the
-!! autocorrelation time function. here the kinetic energy fluctuation is
-!! the selected observable
+!! autocorrelation function. here the kinetic energy fluctuation is the
+!! selected observable
 !!
      real(dp), public, save, allocatable :: ac_v(:)
 
 !!
 !! @var ac_t
 !!
-!! autocorrelation time function
+!! autocorrelation function
 !!
      real(dp), public, save, allocatable :: ac_t(:)
 

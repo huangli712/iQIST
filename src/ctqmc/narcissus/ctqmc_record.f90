@@ -67,6 +67,8 @@
      integer  :: i
      integer  :: j
 
+     integer  :: p
+
      real(dp) :: knop(norbs)
      real(dp) :: kmat(norbs,norbs)
 
@@ -89,21 +91,21 @@
      p = mod(starter, ntime)
      if ( p == 0 ) p = ntime
 
-! measure the op_t: autocorrelation time function
+! measure the ac_t: autocorrelation time function
      if ( starter > ntime ) then
          i = 0
          do j=p,ntime
              i = i + 1
-             op_t(i) = op_t(i) + op_v(p) * op_v(j)
+             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
          enddo ! over j={p,ntime} loop
          do j=1,p-1
              i = i + 1
-             op_t(i) = op_t(i) + op_v(p) * op_v(j)
+             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
          enddo ! over j={1,p-1} loop
      endif ! back if ( starter > ntime ) block
 
 ! store the observable (the total occupation number) in op_v
-     op_v(p) = sum(sgmt) / beta
+     ac_v(p) = sum(sgmt) / beta
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
