@@ -19,6 +19,7 @@
 !!!           ctqmc_record_ch_w <<<---
 !!!           ctqmc_record_g2ph
 !!!           ctqmc_record_g2pp <<<---
+!!!           ctqmc_reduce_ac_t <<<---
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_paux
