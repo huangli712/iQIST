@@ -3210,7 +3210,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -3276,7 +3276,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
+         ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -3356,8 +3356,8 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
-     g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final grnf_err
@@ -3444,8 +3444,8 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
-     f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final frnf_err
@@ -3532,8 +3532,8 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
-     s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final sig2_err
@@ -3624,8 +3624,8 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
-     kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
+         kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -3716,9 +3716,9 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
-     rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
-     lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
+         lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
+         rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
+         lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -3787,7 +3787,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
+         szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -3872,8 +3872,8 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
-     sp_t_err = sqrt( sp_t_err / real( nprocs * ( nprocs - 1 ) ) )
+         schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
+         sp_t_err = sqrt( sp_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -3943,7 +3943,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
+         sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -4024,8 +4024,8 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
-     ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
+         cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
+         ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -4095,7 +4095,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
+         ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
@@ -4207,10 +4207,10 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
-     g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
-     h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
-     h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final g2ph_err and h2ph_err
@@ -4328,10 +4328,10 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-     g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
-     g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
-     h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
-     h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final g2pp_err and h2pp_err
