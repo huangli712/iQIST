@@ -968,6 +968,9 @@
      implicit none
 
 ! allocate memory
+     allocate(ac_v(ntime),       stat=istat)
+     allocate(ac_t(ntime),       stat=istat)
+
      allocate(hist(mkink),       stat=istat)
      allocate(prob(ncfgs),       stat=istat)
      allocate(paux(  9  ),       stat=istat)
