@@ -1266,6 +1266,9 @@
   subroutine cat_free_meat()
      implicit none
 
+     if ( allocated(ac_v) )    deallocate(ac_v)
+     if ( allocated(ac_t) )    deallocate(ac_t)
+
      if ( allocated(hist) )    deallocate(hist)
      if ( allocated(prob) )    deallocate(prob)
      if ( allocated(paux) )    deallocate(paux)
