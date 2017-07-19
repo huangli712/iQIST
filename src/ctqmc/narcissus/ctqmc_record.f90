@@ -83,6 +83,9 @@
 ! autocorrelation function
      integer  :: p
 
+! real(dp) dummy variable
+     real(dp) :: kaux
+
 ! used to record < k_i >, k_i is the number of operators for the given
 ! flavor channel i
      real(dp) :: knop(norbs)
@@ -91,6 +94,7 @@
 ! for the given flavor channels i and j
      real(dp) :: kmat(norbs,norbs)
 
+! calculate < k_i > and < k_i k_j >
      CALC_KMAT: BLOCK
 
          do i=1,norbs
@@ -102,6 +106,9 @@
                  kmat(i,j) = rank(i) * rank(j) * 4.0_dp
              enddo ! over i={1,norbs} loop
          enddo ! over j={1,norbs} loop
+
+! kinetic energy fluctuation = < k^2 > - < k >^2 - < k >
+         kaux = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
 
      END BLOCK CALC_KMAT
 
@@ -129,7 +136,11 @@
          endif ! back if ( starter > ntime ) block
 
 ! store the specified observable (the kinetic energy fluctuation) in ac_v
-         ac_v(p) = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
+         ac_v(p) = kaux
+
+! note: ac_v(ntime + 1) is used to store the mean value for the kinetic
+! energy fluctuation
+         ac_v(ntime + 1) = ac_v(ntime + 1) + kaux
 
      END BLOCK CALC_AC_T
 
