@@ -117,8 +117,8 @@
              enddo ! over j={1,p-1} loop
          endif ! back if ( starter > ntime ) block
 
-! store the observable (the total occupation number) in op_v
-     ac_v(p) = sum(sgmt) / beta
+! store the specified observable (the kinetic energy fluctuation) in ac_v
+         ac_v(p) = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
 
      END BLOCK CALC_AC_T
 
