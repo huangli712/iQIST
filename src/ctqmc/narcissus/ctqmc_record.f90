@@ -50,6 +50,11 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! @sub ctqmc_record_ac_t
+!!
+!!
+!!
   subroutine ctqmc_record_ac_t()
      use constants, only : dp
 
@@ -64,9 +69,12 @@
 ! used to record how many times this subroutine were called
      integer, save :: starter = 0
 
+! loop index for flavor channel
      integer  :: i
      integer  :: j
 
+! memory position for current observable, which is used to measure the
+! autocorrelation function
      integer  :: p
 
      real(dp) :: knop(norbs)
