@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/12/2017 by li huang (last modified)
+!!!           07/19/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver().
@@ -51,6 +51,11 @@
 ! warm up the diagram series
      do i=1,ntherm
          call ctqmc_try_walking(i)
+     enddo ! over i={1,ntherm} loop
+
+     do i=1,ntherm
+         call ctqmc_try_walking(i)
+         call ctqmc_record_ac_t()
      enddo ! over i={1,ntherm} loop
 
 ! reset statistics variables
