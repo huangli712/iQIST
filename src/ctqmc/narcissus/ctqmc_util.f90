@@ -954,10 +954,27 @@
 
 ! build unitary transformation matrix: tsvd
 ! actually, we do the fourier transformation
-         tsvd = czero
-         do i=1,svmax
-             call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tsvd(:,i))
-         enddo ! over i={1,svmax} loop
+         allocate(tmpi(mfreq,svmax), stat=istat); tmpi = czero
+         do i=1+myid,svmax,nprocs
+             call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tmpi(:,i))
+         enddo ! over i={1+myid,svmax} loop
+
+! build tsvd, collect data from children processes
+# if defined (MPI)
+
+! collect data
+         call mp_allreduce(tmpi, tsvd)
+
+! block until all processes have reached here
+         call mp_barrier()
+
+# else  /* MPI */
+
+         tsvd = tmpi
+
+# endif /* MPI */
+
+! normalize tsvd
          tsvd = tsvd * (two / beta / beta)
 
 ! build impurity green's function on matsubara frequency using orthogonal
