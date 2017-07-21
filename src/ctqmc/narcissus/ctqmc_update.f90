@@ -87,7 +87,7 @@
 
 ! update nmonte parameter to reduce autocorrelation
      do while ( nmonte < ac_time )
-         nmonte = nmonte * 2
+         nmonte = nmonte * 10
      enddo ! over do while loop
      print *, ac_time, nmonte
      STOP
