@@ -42,7 +42,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/20/2017 by li huang (last modified)
+!!!           07/21/2017 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -57,17 +57,16 @@
 !!
 !! @sub ctqmc_record_ac_t
 !!
-!! record autocorrelation function for the kinetic energy fluctuation
+!! record autocorrelation function for the total occupation number
 !!
   subroutine ctqmc_record_ac_t()
      use constants, only : dp
-     use constants, only : one
 
-     use control, only : norbs, beta
+     use control, only : norbs
      use control, only : ntime
+     use control, only : beta
 
      use context, only : ac_v, ac_t
-     use context, only : rank
 
      implicit none
 
@@ -75,7 +74,7 @@
 ! used to record how many times this subroutine were called
      integer, save :: starter = 0
 
-! loop index for flavor channel
+! loop index
      integer  :: i
      integer  :: j
 
@@ -83,69 +82,41 @@
 ! autocorrelation function
      integer  :: p
 
-! real(dp) dummy variable
-     real(dp) :: kaux
-
-! used to record < k_i >, k_i is the number of operators for the given
-! flavor channel i
-     real(dp) :: knop(norbs)
+! total length of segments for all flavor channels
      real(dp) :: sgmt(norbs)
 
-! used to record < k_i k_j >, k_i and k_j are the numbers of operators
-! for the given flavor channels i and j
-     real(dp) :: kmat(norbs,norbs)
-
-! calculate < k_i > and < k_i k_j >
-     CALC_KMAT: BLOCK
-
-         do i=1,norbs
-             knop(i) = rank(i) !* 2.0_dp
-         enddo ! over i={1,norbs} loop
-
-         do j=1,norbs
-             do i=1,norbs
-                 kmat(i,j) = rank(i) * rank(j) !* 4.0_dp
-             enddo ! over i={1,norbs} loop
-         enddo ! over j={1,norbs} loop
-
-! kinetic energy fluctuation = < k^2 > - < k >^2 - < k >
-         kaux = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
+! calculate occupation status
      call cat_occupy_single(sgmt)
 
-     END BLOCK CALC_KMAT
-
 ! record autocorrelation function: <A_{n} A_{n+k}>
-     CALC_AC_T: BLOCK
+! s1: increase the counter
+     starter = starter + 1
 
-! increase the counter
-         starter = starter + 1
+! s2: determine memory location used to store the observable
+     p = mod(starter, ntime)
+     if ( p == 0 ) p = ntime
 
-! determine memory location used to store the observable
-         p = mod(starter, ntime)
-         if ( p == 0 ) p = ntime
+! s3: measure the autocorrelation function, starter is used to ensure that
+! the vector ac_v is filled completely
+     if ( starter > ntime ) then
+         i = 0
+         do j=p,ntime
+             i = i + 1
+             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
+         enddo ! over j={p,ntime} loop
+         do j=1,p-1
+             i = i + 1
+             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
+         enddo ! over j={1,p-1} loop
+         call s_assert( i == ntime )
+     endif ! back if ( starter > ntime ) block
 
-! measure the ac_t: autocorrelation function
-         if ( starter > ntime ) then
-             i = 0
-             do j=p,ntime
-                 i = i + 1
-                 ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
-             enddo ! over j={p,ntime} loop
-             do j=1,p-1
-                 i = i + 1
-                 ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
-             enddo ! over j={1,p-1} loop
-             call s_assert( i == ntime )
-         endif ! back if ( starter > ntime ) block
+! s4: save the specified observable (the total occupation number) in ac_v
+     ac_v(p) = sum(sgmt) / beta
 
-! store the specified observable (the kinetic energy fluctuation) in ac_v
-         ac_v(p) = sum(sgmt) / beta
-
-! here, ac_t(ntime + 1) is used to store the mean value for the kinetic
-! energy fluctuation
-         ac_t(ntime + 1) = ac_t(ntime + 1) + sum(sgmt) / beta
-
-     END BLOCK CALC_AC_T
+! s5: here, ac_t(ntime + 1) is used to store the mean value for the total
+! occupation number, it is very important
+     ac_t(ntime + 1) = ac_t(ntime + 1) + sum(sgmt) / beta
 
      return
   end subroutine ctqmc_record_ac_t
