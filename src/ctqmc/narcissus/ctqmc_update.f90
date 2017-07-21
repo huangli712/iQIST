@@ -32,8 +32,10 @@
 !! to achieve thermodynamics stable equilibrium state
 !!
   subroutine ctqmc_try_warming()
+     use constants, only : dp
      use constants, only : zero
 
+     use control, only : ntime
      use control, only : ntherm
 
      use context, only : ins_t, ins_a, ins_r
@@ -46,7 +48,10 @@
 
 ! local variables
 ! loop index
-     integer :: i
+     integer  :: i
+
+     real(dp) :: ac_t_mpi(ntime + 1)
+     real(dp) :: ac_t_err(ntime + 1)
 
 ! warm up the diagram series at first
      do i=1,ntherm
@@ -58,6 +63,15 @@
          call ctqmc_try_walking(i)
          call ctqmc_record_ac_t()
      enddo ! over i={1,ntherm} loop
+
+! reduce the autocorrelation function
+     call ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err)
+
+! renormalize the autocorrelation function
+     ac_t_mpi(1:ntime) = ac_t_mpi(1:ntime) / float( ntherm - ntime )
+     ac_t_err(1:ntime) = ac_t_err(1:ntime) / float( ntherm - ntime )
+     ac_t_mpi(ntime + 1) = ac_t_mpi(ntime + 1) / float( ntherm )
+     ac_t_err(ntime + 1) = ac_t_err(ntime + 1) / float( ntherm )
 
      STOP
 
