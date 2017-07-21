@@ -42,6 +42,11 @@
 !!>>> dump data of autocorrelation time                                <<<
 !!========================================================================
 
+!!
+!! @sub ctqmc_dump_ac_t
+!!
+!! write out the autocorrelation function for the total occupation number
+!!
   subroutine ctqmc_dump_ac_t(ac_t)
      use constants, only : dp
      use constants, only : mytmp
