@@ -37,12 +37,14 @@
 
      use control, only : ntime
      use control, only : ntherm
+     use control, only : nmonte
 
      use context, only : ins_t, ins_a, ins_r
      use context, only : rmv_t, rmv_a, rmv_r
      use context, only : lsh_t, lsh_a, lsh_r
      use context, only : rsh_t, rsh_a, rsh_r
      use context, only : rfl_t, rfl_a, rfl_r
+     use context, only : ac_t
 
      implicit none
 
@@ -50,6 +52,7 @@
 ! loop index
      integer  :: i
 
+     real(dp) :: ac_time
      real(dp) :: ac_t_mpi(ntime + 1)
      real(dp) :: ac_t_err(ntime + 1)
 
@@ -70,13 +73,23 @@
 ! normalize the autocorrelation function 1
      ac_t(1:ntime) = ac_t(1:ntime) / float( ntherm - ntime )
      ac_t(ntime + 1) = ac_t(ntime + 1) / float( ntherm )
+     print *, ac_t(ntime + 1)
 
 ! calculate the autocorrelation function (numerator part)
      ac_t = ac_t - ac_t(ntime + 1)
 
 ! normalize the autocorrelation function 2
-     ac_t = ac_t / ac_t(1)
+     ac_t = abs( ac_t / ac_t(1) )
+     print *, ac_t
 
+! evaluate the integrated autocorrelation time
+     ac_time = 0.5_dp + sum( ac_t(2:) )
+
+! update nmonte parameter to reduce autocorrelation
+     do while ( nmonte < ac_time )
+         nmonte = nmonte * 2
+     enddo ! over do while loop
+     print *, ac_time, nmonte
      STOP
 
 ! reset statistics variables

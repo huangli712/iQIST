@@ -63,7 +63,7 @@
      use constants, only : dp
      use constants, only : one
 
-     use control, only : norbs
+     use control, only : norbs, beta
      use control, only : ntime
 
      use context, only : ac_v, ac_t
@@ -89,6 +89,7 @@
 ! used to record < k_i >, k_i is the number of operators for the given
 ! flavor channel i
      real(dp) :: knop(norbs)
+     real(dp) :: sgmt(norbs)
 
 ! used to record < k_i k_j >, k_i and k_j are the numbers of operators
 ! for the given flavor channels i and j
@@ -98,17 +99,18 @@
      CALC_KMAT: BLOCK
 
          do i=1,norbs
-             knop(i) = rank(i) * 2.0_dp
+             knop(i) = rank(i) !* 2.0_dp
          enddo ! over i={1,norbs} loop
 
          do j=1,norbs
              do i=1,norbs
-                 kmat(i,j) = rank(i) * rank(j) * 4.0_dp
+                 kmat(i,j) = rank(i) * rank(j) !* 4.0_dp
              enddo ! over i={1,norbs} loop
          enddo ! over j={1,norbs} loop
 
 ! kinetic energy fluctuation = < k^2 > - < k >^2 - < k >
          kaux = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
+     call cat_occupy_single(sgmt)
 
      END BLOCK CALC_KMAT
 
@@ -137,11 +139,11 @@
          endif ! back if ( starter > ntime ) block
 
 ! store the specified observable (the kinetic energy fluctuation) in ac_v
-         ac_v(p) = kaux
+         ac_v(p) = sum(sgmt) / beta
 
 ! here, ac_t(ntime + 1) is used to store the mean value for the kinetic
 ! energy fluctuation
-         ac_t(ntime + 1) = ac_t(ntime + 1) + kaux
+         ac_t(ntime + 1) = ac_t(ntime + 1) + sum(sgmt) / beta
 
      END BLOCK CALC_AC_T
 
