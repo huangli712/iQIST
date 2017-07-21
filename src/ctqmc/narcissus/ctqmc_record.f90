@@ -112,7 +112,7 @@
 
      END BLOCK CALC_KMAT
 
-! record autocorrelation time function: <A_{n} A_{n+k}>
+! record autocorrelation function: <A_{n} A_{n+k}>
      CALC_AC_T: BLOCK
 
 ! increase the counter
@@ -139,7 +139,7 @@
 ! store the specified observable (the kinetic energy fluctuation) in ac_v
          ac_v(p) = kaux
 
-! note: ac_t(ntime + 1) is used to store the mean value for the kinetic
+! here, ac_t(ntime + 1) is used to store the mean value for the kinetic
 ! energy fluctuation
          ac_t(ntime + 1) = ac_t(ntime + 1) + kaux
 
