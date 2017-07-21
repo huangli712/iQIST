@@ -46,7 +46,7 @@
      use context, only : lsh_t, lsh_a, lsh_r
      use context, only : rsh_t, rsh_a, rsh_r
      use context, only : rfl_t, rfl_a, rfl_r
-     use context, only : ac_t
+     use context, only : ac_f
 
      implicit none
 
@@ -58,8 +58,8 @@
      real(dp) :: actime
 
 ! autocorrelation function
-     real(dp) :: ac_t_mpi(ntime + 1)
-     real(dp) :: ac_t_err(ntime + 1)
+     real(dp) :: ac_f_mpi(ntime + 1)
+     real(dp) :: ac_f_err(ntime + 1)
 
 ! warm up the diagram series at first
      do i=1,ntherm
@@ -69,24 +69,24 @@
 ! measure the autocorrelation function
      do i=1,ntherm
          call ctqmc_try_walking(i)
-         call ctqmc_record_ac_t()
+         call ctqmc_record_ac_f()
      enddo ! over i={1,ntherm} loop
 
-! reduce the autocorrelation function, ac_t -> ac_t_mpi
-     call ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err); ac_t = ac_t_mpi
+! reduce the autocorrelation function, ac_f -> ac_f_mpi
+     call ctqmc_reduce_ac_f(ac_f_mpi, ac_f_err); ac_f = ac_f_mpi
 
 ! normalize the autocorrelation function
-     ac_t(1:ntime) = ac_t(1:ntime) / float( ntherm - ntime )
-     ac_t(ntime + 1) = ac_t(ntime + 1) / float( ntherm )
+     ac_f(1:ntime) = ac_f(1:ntime) / float( ntherm - ntime )
+     ac_f(ntime + 1) = ac_f(ntime + 1) / float( ntherm )
 
 ! calculate the autocorrelation function (numerator part)
-     ac_t = ac_t - ac_t(ntime + 1)
+     ac_f = ac_f - ac_f(ntime + 1)
 
 ! normalize the autocorrelation function again
-     ac_t = ac_t / ac_t(1)
+     ac_f = ac_f / ac_f(1)
 
 ! evaluate the integrated autocorrelation time
-     actime = 0.5_dp + sum( ac_t(2:) )
+     actime = 0.5_dp + sum( ac_f(2:) )
 
 ! update nmonte parameter to reduce autocorrelation
      do while ( nmonte < actime )
@@ -97,7 +97,7 @@
 
 ! write the autocorrelation function, only master node can do it
      if ( myid == master ) then
-         call ctqmc_dump_ac_t(ac_t)
+         call ctqmc_dump_ac_f(ac_f)
      endif ! back if ( myid == master ) block
 
 ! reset statistics variables
