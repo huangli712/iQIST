@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           07/13/2017 by li huang (last modified)
+!!!           07/21/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -446,7 +446,9 @@
 !!
 !! @var nmonte
 !!
-!! how often to sample the physical observables
+!! how often to sample the physical observables. it would be adjusted in
+!! the ctqmc_try_warming() subroutine automatically via rough estimation
+!! of the integrated autocorrelation time for the total occupation number
 !!
      integer, public, save :: nmonte = 10
 
