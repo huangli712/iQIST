@@ -117,6 +117,7 @@
 ! s5: here, ac_f(ntime + 1) is used to store the mean value for the total
 ! occupation number, it is very important
      ac_f(ntime + 1) = ac_f(ntime + 1) + sum(sgmt) / beta
+     ac_f(ntime + 2) = ac_f(ntime + 2) + ( sum(sgmt) / beta )**2
 
      return
   end subroutine ctqmc_record_ac_f
@@ -2969,8 +2970,8 @@
 
 ! external arguments
 ! autocorrelation function
-     real(dp), intent(out) :: ac_f_mpi(ntime+1)
-     real(dp), intent(out) :: ac_f_err(ntime+1)
+     real(dp), intent(out) :: ac_f_mpi(ntime + 2)
+     real(dp), intent(out) :: ac_f_err(ntime + 2)
 
 ! initialize ac_f_mpi and ac_f_err
      ac_f_mpi = zero

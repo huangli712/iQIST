@@ -969,8 +969,8 @@
      implicit none
 
 ! allocate memory
-     allocate(ac_v(ntime + 1),   stat=istat)
-     allocate(ac_f(ntime + 1),   stat=istat)
+     allocate(ac_v(ntime + 2),   stat=istat)
+     allocate(ac_f(ntime + 2),   stat=istat)
 
      allocate(hist(mkink),       stat=istat)
      allocate(prob(ncfgs),       stat=istat)

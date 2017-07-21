@@ -55,11 +55,11 @@
      integer  :: i
 
 ! estimated autocorrelation time
-     real(dp) :: actime
+     real(dp) :: ac_t
 
 ! autocorrelation function
-     real(dp) :: ac_f_mpi(ntime + 1)
-     real(dp) :: ac_f_err(ntime + 1)
+     real(dp) :: ac_f_mpi(ntime + 2)
+     real(dp) :: ac_f_err(ntime + 2)
 
 ! warm up the diagram series at first
      do i=1,ntherm
@@ -78,25 +78,26 @@
 ! normalize the autocorrelation function
      ac_f(1:ntime) = ac_f(1:ntime) / float( ntherm - ntime )
      ac_f(ntime + 1) = ac_f(ntime + 1) / float( ntherm )
+     ac_f(ntime + 2) = ac_f(ntime + 2) / float( ntherm )
 
 ! calculate the autocorrelation function (numerator part)
-     ac_f = ac_f - ac_f(ntime + 1)
+     ac_f(1:ntime) = ac_f(1:ntime) - ac_f(ntime + 1)**2
 
 ! normalize the autocorrelation function again
-     ac_f = ac_f / ac_f(1)
+     ac_f(1:ntime) = ac_f(1:ntime) / ( ac_f(ntime + 2) - ac_f(ntime + 1)**2 )
 
 ! evaluate the integrated autocorrelation time
-     actime = 0.5_dp + sum( ac_f(2:) )
+     ac_t = 0.5_dp + sum( ac_f(2:) )
 
 ! update nmonte parameter to reduce autocorrelation
-     do while ( nmonte < actime )
+     do while ( nmonte < ac_t )
          nmonte = nmonte * 10
      enddo ! over do while loop
-     write(mystd,'(4X,a,f12.6)') 'estimated autocorrelation time / ', actime
-     write(mystd,'(4X,a,i6)') 'nmonte / ', nmonte
 
 ! write the autocorrelation function, only master node can do it
      if ( myid == master ) then
+         write(mystd,'(4X,a,f11.4)',advance='no') 'ac_t:', ac_t
+         write(mystd,'(1X,a,i4,a)') '(nmonte ->', nmonte, ')'
          call ctqmc_dump_ac_f(ac_f)
      endif ! back if ( myid == master ) block
 
