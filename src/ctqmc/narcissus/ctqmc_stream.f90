@@ -774,7 +774,7 @@
 
 ! init autocorrelation function
      ac_v = zero
-     ac_t = zero
+     ac_f = zero
 
 ! init histogram
      hist = zero
