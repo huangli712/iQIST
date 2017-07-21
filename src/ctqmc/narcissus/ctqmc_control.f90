@@ -107,7 +107,7 @@
 !!
 !! if iswor == 2:
 !!     with worm algorithm, slow but more reliable. note that only some
-!!     selected physical observables are measured by this algorithm
+!!     selected physical observables can be measured by this algorithm
 !!
      integer, public, save :: iswor  = 1
 
