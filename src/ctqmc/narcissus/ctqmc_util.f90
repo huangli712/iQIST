@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           07/13/2017 by li huang (last modified)
+!!!           07/21/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -804,6 +804,9 @@
      use constants, only : dp
      use constants, only : one, two, czero
 
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
      use control, only : isort
      use control, only : norbs
      use control, only : lemax, legrd
@@ -811,6 +814,7 @@
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
+     use control, only : myid, nprocs
 
      use context, only : tmesh, rmesh
      use context, only : rep_l, rep_s
@@ -854,6 +858,7 @@
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
+     complex(dp), allocatable :: tmpi(:,:)
 
 ! allocate memory
      allocate(pfun(ntime,lemax), stat=istat)
@@ -894,11 +899,28 @@
 ! we do the fourier transformation directly using Eq. (E1) in Phys. Rev.
 ! B 84, 075145 (2011). the advantage is that it doesn't depend on the
 ! spherical Bessel functions any more
-         tleg = czero
-         do i=1,lemax
-             call s_fft_forward(ntime, tmesh, pfun(:,i), mfreq, rmesh, tleg(:,i))
-             tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
-         enddo ! over i={1,lemax} loop
+         allocate(tmpi(mfreq,lemax), stat=istat); tmpi = czero
+         do i=1+myid,lemax,nprocs
+             call s_fft_forward(ntime, tmesh, pfun(:,i), mfreq, rmesh, tmpi(:,i))
+             tmpi(:,i) = tmpi(:,i) * sqrt(two * i - one)
+         enddo ! over i={1+myid,lemax} loop
+
+! build tleg, collect data from children processes
+# if defined (MPI)
+
+! collect data
+         call mp_allreduce(tmpi, tleg)
+
+! block until all processes have reached here
+         call mp_barrier()
+
+# else  /* MPI */
+
+         tleg = tmpi
+
+# endif /* MPI */
+
+! normalize tleg
 ! note: the first beta is from Eq. (C19), while the second beta is from
 ! Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
          tleg = tleg / (beta * beta)
@@ -958,6 +980,7 @@
      deallocate(gtau)
      deallocate(tleg)
      deallocate(tsvd)
+     deallocate(tmpi)
 
      return
   end subroutine ctqmc_tran_grnf
