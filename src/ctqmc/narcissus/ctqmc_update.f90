@@ -65,13 +65,17 @@
      enddo ! over i={1,ntherm} loop
 
 ! reduce the autocorrelation function
-     call ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err)
+     call ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err); ac_t = ac_t_mpi
 
-! renormalize the autocorrelation function
-     ac_t_mpi(1:ntime) = ac_t_mpi(1:ntime) / float( ntherm - ntime )
-     ac_t_err(1:ntime) = ac_t_err(1:ntime) / float( ntherm - ntime )
-     ac_t_mpi(ntime + 1) = ac_t_mpi(ntime + 1) / float( ntherm )
-     ac_t_err(ntime + 1) = ac_t_err(ntime + 1) / float( ntherm )
+! normalize the autocorrelation function 1
+     ac_t(1:ntime) = ac_t(1:ntime) / float( ntherm - ntime )
+     ac_t(ntime + 1) = ac_t(ntime + 1) / float( ntherm )
+
+! calculate the autocorrelation function (numerator part)
+     ac_t = ac_t - ac_t(ntime + 1)
+
+! normalize the autocorrelation function 2
+     ac_t = ac_t / ac_t(1)
 
      STOP
 
