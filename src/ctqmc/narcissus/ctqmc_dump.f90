@@ -42,7 +42,15 @@
 !!>>> dump data of autocorrelation time                                <<<
 !!========================================================================
 
-  subroutine ctqmc_dump_ac_t()
+  subroutine ctqmc_dump_ac_t(ac_t)
+     use constants, only : dp
+     use constants, only : mytmp
+
+     use control, only : ntime
+
+     implicit none
+
+     return
   end subroutine ctqmc_dump_ac_t
 
 !!========================================================================
