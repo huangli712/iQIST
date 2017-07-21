@@ -39,6 +39,7 @@ GNU General Public License Version 3
     * Atomic eigenstate probability
     * Fidelity susceptibility
     * Kinetic energy fluctuation
+    * Autocorrelation function (for total occupation number)
 
 * The following measurement tricks are supported
     * Legendre orthogonal polynomial representation

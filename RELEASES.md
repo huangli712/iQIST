@@ -18,6 +18,7 @@
 * Add singular value decomposition representation.
 * Improve the measurement for two-particle Green's functions.
 * Remove the support for particle-particle pairing susceptibility.
+* Add measurement for autocorrelation function (for total occupation number)
 
 ## v0.6.7 @ c14fdc4 // Jan 13, 2017
 
