@@ -34,10 +34,12 @@
   subroutine ctqmc_try_warming()
      use constants, only : dp
      use constants, only : zero
+     use constants, only : mystd
 
      use control, only : ntime
      use control, only : ntherm
      use control, only : nmonte
+     use control, only : myid, master
 
      use context, only : ins_t, ins_a, ins_r
      use context, only : rmv_t, rmv_a, rmv_r
@@ -52,7 +54,10 @@
 ! loop index
      integer  :: i
 
-     real(dp) :: ac_time
+! estimated autocorrelation time
+     real(dp) :: actime
+
+! autocorrelation function
      real(dp) :: ac_t_mpi(ntime + 1)
      real(dp) :: ac_t_err(ntime + 1)
 
@@ -67,30 +72,33 @@
          call ctqmc_record_ac_t()
      enddo ! over i={1,ntherm} loop
 
-! reduce the autocorrelation function
+! reduce the autocorrelation function, ac_t -> ac_t_mpi
      call ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err); ac_t = ac_t_mpi
 
-! normalize the autocorrelation function 1
+! normalize the autocorrelation function
      ac_t(1:ntime) = ac_t(1:ntime) / float( ntherm - ntime )
      ac_t(ntime + 1) = ac_t(ntime + 1) / float( ntherm )
-     print *, ac_t(ntime + 1)
 
 ! calculate the autocorrelation function (numerator part)
      ac_t = ac_t - ac_t(ntime + 1)
 
-! normalize the autocorrelation function 2
-     ac_t = abs( ac_t / ac_t(1) )
-     print *, ac_t
+! normalize the autocorrelation function again
+     ac_t = ac_t / ac_t(1)
 
 ! evaluate the integrated autocorrelation time
-     ac_time = 0.5_dp + sum( ac_t(2:) )
+     actime = 0.5_dp + sum( ac_t(2:) )
 
 ! update nmonte parameter to reduce autocorrelation
-     do while ( nmonte < ac_time )
+     do while ( nmonte < actime )
          nmonte = nmonte * 10
      enddo ! over do while loop
-     print *, ac_time, nmonte
-     STOP
+     write(mystd,'(4X,a,f12.6)') 'estimated autocorrelation time / ', actime
+     write(mystd,'(4X,a,i6)') 'nmonte / ', nmonte
+
+! write the autocorrelation function, only master node can do it
+     if ( myid == master ) then
+         call ctqmc_dump_ac_t(ac_t)
+     endif ! back if ( myid == master ) block
 
 ! reset statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero

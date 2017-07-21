@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_record_ac_t <<<---
+!!! program : ctqmc_record_ac_f <<<---
 !!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_paux
@@ -19,7 +19,7 @@
 !!!           ctqmc_record_ch_w <<<---
 !!!           ctqmc_record_g2ph
 !!!           ctqmc_record_g2pp <<<---
-!!!           ctqmc_reduce_ac_t <<<---
+!!!           ctqmc_reduce_ac_f <<<---
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_paux
@@ -55,18 +55,18 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_record_ac_t
+!! @sub ctqmc_record_ac_f
 !!
 !! record autocorrelation function for the total occupation number
 !!
-  subroutine ctqmc_record_ac_t()
+  subroutine ctqmc_record_ac_f()
      use constants, only : dp
 
      use control, only : norbs
      use control, only : ntime
      use control, only : beta
 
-     use context, only : ac_v, ac_t
+     use context, only : ac_v, ac_f
 
      implicit none
 
@@ -102,11 +102,11 @@
          i = 0
          do j=p,ntime
              i = i + 1
-             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
+             ac_f(i) = ac_f(i) + ac_v(p) * ac_v(j)
          enddo ! over j={p,ntime} loop
          do j=1,p-1
              i = i + 1
-             ac_t(i) = ac_t(i) + ac_v(p) * ac_v(j)
+             ac_f(i) = ac_f(i) + ac_v(p) * ac_v(j)
          enddo ! over j={1,p-1} loop
          call s_assert( i == ntime )
      endif ! back if ( starter > ntime ) block
@@ -114,12 +114,12 @@
 ! s4: save the specified observable (the total occupation number) in ac_v
      ac_v(p) = sum(sgmt) / beta
 
-! s5: here, ac_t(ntime + 1) is used to store the mean value for the total
+! s5: here, ac_f(ntime + 1) is used to store the mean value for the total
 ! occupation number, it is very important
-     ac_t(ntime + 1) = ac_t(ntime + 1) + sum(sgmt) / beta
+     ac_f(ntime + 1) = ac_f(ntime + 1) + sum(sgmt) / beta
 
      return
-  end subroutine ctqmc_record_ac_t
+  end subroutine ctqmc_record_ac_f
 
 !!========================================================================
 !!>>> measure physical observables 1                                   <<<
@@ -2949,11 +2949,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_reduce_ac_t
+!! @sub ctqmc_reduce_ac_f
 !!
-!! reduce the ac_t from all children processes
+!! reduce the ac_f from all children processes
 !!
-  subroutine ctqmc_reduce_ac_t(ac_t_mpi, ac_t_err)
+  subroutine ctqmc_reduce_ac_f(ac_f_mpi, ac_f_err)
      use constants, only : dp
      use constants, only : zero
 
@@ -2963,42 +2963,42 @@
      use control, only : ntime
      use control, only : nprocs
 
-     use context, only : ac_t
+     use context, only : ac_f
 
      implicit none
 
 ! external arguments
 ! autocorrelation function
-     real(dp), intent(out) :: ac_t_mpi(ntime+1)
-     real(dp), intent(out) :: ac_t_err(ntime+1)
+     real(dp), intent(out) :: ac_f_mpi(ntime+1)
+     real(dp), intent(out) :: ac_f_err(ntime+1)
 
-! initialize ac_t_mpi and ac_t_err
-     ac_t_mpi = zero
-     ac_t_err = zero
+! initialize ac_f_mpi and ac_f_err
+     ac_f_mpi = zero
+     ac_f_err = zero
 
-! build ac_t_mpi, collect data from all children processes
+! build ac_f_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(ac_t, ac_t_mpi)
+     call mp_allreduce(ac_f, ac_f_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     ac_t_mpi = ac_t
+     ac_f_mpi = ac_f
 
 # endif /* MPI */
 
 ! calculate the average
-     ac_t_mpi = ac_t_mpi / real(nprocs)
+     ac_f_mpi = ac_f_mpi / real(nprocs)
 
-! build ac_t_err, collect data from all children processes
+! build ac_f_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((ac_t - ac_t_mpi)**2, ac_t_err)
+     call mp_allreduce((ac_f - ac_f_mpi)**2, ac_f_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -3007,11 +3007,11 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         ac_t_err = sqrt( ac_t_err / real( nprocs * ( nprocs - 1 ) ) )
+         ac_f_err = sqrt( ac_f_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_ac_t
+  end subroutine ctqmc_reduce_ac_f
 
 !!========================================================================
 !!>>> reduce physical observables 1                                    <<<
