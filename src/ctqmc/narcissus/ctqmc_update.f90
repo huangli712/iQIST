@@ -87,12 +87,20 @@
      ac_f(1:ntime) = ac_f(1:ntime) / ( ac_f(ntime + 2) - ac_f(ntime + 1)**2 )
 
 ! evaluate the integrated autocorrelation time
-     ac_t = 0.5_dp + sum( ac_f(2:) )
+     ac_t = 0.5_dp
+     do i=2,ntime
+         if ( ac_f(i) > zero ) then
+             ac_t = ac_t + ac_f(i)
+         else
+             EXIT
+         endif ! back if ( ac_f(i) > zero ) block
+     enddo ! over i={2,ntime} loop
 
 ! update nmonte parameter to reduce autocorrelation
      do while ( nmonte < ac_t )
          nmonte = nmonte * 10
      enddo ! over do while loop
+     if ( nmonte > ac_t * 5 ) nmonte = nmonte / 5 ! adjust nmonte further
 
 ! write the autocorrelation function, only master node can do it
      if ( myid == master ) then
