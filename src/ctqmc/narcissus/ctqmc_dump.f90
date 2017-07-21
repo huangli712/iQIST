@@ -1,6 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_dump_hist
+!!! program : ctqmc_dump_ac_t <<<---
+!!!           ctqmc_dump_hist
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_paux
 !!!           ctqmc_dump_nmat <<<---
@@ -28,7 +29,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/14/2017 by li huang (last modified)
+!!!           07/21/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -36,6 +37,13 @@
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!========================================================================
+!!>>> dump data of autocorrelation time                                <<<
+!!========================================================================
+
+  subroutine ctqmc_dump_ac_t()
+  end subroutine ctqmc_dump_ac_t
 
 !!========================================================================
 !!>>> dump data of physical observables 1                              <<<
