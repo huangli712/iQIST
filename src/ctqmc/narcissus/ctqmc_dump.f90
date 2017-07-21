@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_dump_ac_t <<<---
+!!! program : ctqmc_dump_ac_f <<<---
 !!!           ctqmc_dump_hist
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_paux
@@ -43,11 +43,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_dump_ac_t
+!! @sub ctqmc_dump_ac_f
 !!
 !! write out the autocorrelation function for the total occupation number
 !!
-  subroutine ctqmc_dump_ac_t(ac_t)
+  subroutine ctqmc_dump_ac_f(ac_f)
      use constants, only : dp
      use constants, only : mytmp
 
@@ -57,25 +57,25 @@
 
 ! external arguments
 ! autocorrelation function
-     real(dp), intent(in) :: ac_t(ntime)
+     real(dp), intent(in) :: ac_f(ntime)
 
 ! local variables
 ! loop index
      integer :: i
 
-! open data file: solver.ac_t.dat
-     open(mytmp, file='solver.ac_t.dat', form='formatted', status='unknown')
+! open data file: solver.ac_f.dat
+     open(mytmp, file='solver.ac_f.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,ntime
-         write(mytmp,'(i6,f12.6)') i, ac_t(i)
+         write(mytmp,'(i6,f12.6)') i, ac_f(i)
      enddo ! over i={1,ntime} loop
 
 ! close data file
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_ac_t
+  end subroutine ctqmc_dump_ac_f
 
 !!========================================================================
 !!>>> dump data of physical observables 1                              <<<
