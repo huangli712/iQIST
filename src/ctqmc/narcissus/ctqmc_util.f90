@@ -1011,6 +1011,9 @@
      use constants, only : dp
      use constants, only : one, two, czero
 
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
      use control, only : isort
      use control, only : norbs
      use control, only : lemax, legrd
@@ -1018,6 +1021,7 @@
      use control, only : nffrq, nbfrq
      use control, only : ntime
      use control, only : beta
+     use control, only : myid, nprocs
 
      use context, only : tmesh, rmesh
      use context, only : rep_l, rep_s
@@ -1062,6 +1066,7 @@
 ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
+     complex(dp), allocatable :: tmpi(:,:)
 
 ! allocate memory
      allocate(fmesh(nffrq),      stat=istat)
@@ -1106,11 +1111,28 @@
 ! we do the fourier transformation directly using Eq. (E1) in Phys. Rev.
 ! B 84, 075145 (2011). the advantage is that it doesn't depend on the
 ! spherical Bessel functions any more
-         tleg = czero
-         do i=1,lemax
-             call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, fmesh, tleg(:,i))
-             tleg(:,i) = tleg(:,i) * sqrt(two * i - one)
-         enddo ! over i={1,lemax} loop
+         allocate(tmpi(nffrq,lemax), stat=istat); tmpi = czero
+         do i=1+myid,lemax,nprocs
+             call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, fmesh, tmpi(:,i))
+             tmpi(:,i) = tmpi(:,i) * sqrt(two * i - one)
+         enddo ! over i={1+myid,lemax} loop
+
+! build tleg, collect data from children processes
+# if defined (MPI)
+
+! collect data
+         call mp_allreduce(tmpi, tleg)
+
+! block until all processes have reached here
+         call mp_barrier()
+
+# else  /* MPI */
+
+         tleg = tmpi
+
+# endif /* MPI */
+
+! normalize tleg
 ! note: the beta is from Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
          tleg = tleg / beta
 
@@ -1148,10 +1170,27 @@
 
 ! build unitary transformation matrix: tsvd
 ! actually, we do the fourier transformation
-         tsvd = czero
-         do i=1,svmax
-             call s_fft_forward(ntime, tmesh, ufun(:,i), nffrq, fmesh, tsvd(:,i))
-         enddo ! over i={1,svmax} loop
+         allocate(tmpi(nffrq,svmax), stat=istat); tmpi = czero
+         do i=1+myid,svmax,nprocs
+             call s_fft_forward(ntime, tmesh, ufun(:,i), nffrq, fmesh, tmpi(:,i))
+         enddo ! over i={1+myid,svmax} loop
+
+! build tsvd, collect data from children processes
+# if defined (MPI)
+
+! collect data
+         call mp_allreduce(tmpi, tsvd)
+
+! block until all processes have reached here
+         call mp_barrier()
+
+# else  /* MPI */
+
+         tsvd = tmpi
+
+# endif /* MPI */
+
+! normalize tsvd
          tsvd = tsvd * (two / beta)
 
 ! build two-particle green's function on matsubara frequency using
@@ -1179,6 +1218,7 @@
      deallocate(ufun)
      deallocate(tleg)
      deallocate(tsvd)
+     deallocate(tmpi)
 
      return
   end subroutine ctqmc_tran_twop

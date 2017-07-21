@@ -1,6 +1,6 @@
-isort = 2
+isort = 3
 isbin = 2
 isspn = 2
 svmax = 36
-svgrd = 1001
+svgrd = 20001
 isobs = 2
