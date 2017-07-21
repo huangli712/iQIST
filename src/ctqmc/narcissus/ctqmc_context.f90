@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/19/2017 by li huang (last modified)
+!!!           07/21/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -353,11 +353,11 @@
      real(dp), public, save, allocatable :: ac_v(:)
 
 !!
-!! @var ac_t
+!! @var ac_f
 !!
 !! autocorrelation function
 !!
-     real(dp), public, save, allocatable :: ac_t(:)
+     real(dp), public, save, allocatable :: ac_f(:)
 
 !!
 !! @var hist
@@ -970,7 +970,7 @@
 
 ! allocate memory
      allocate(ac_v(ntime + 1),   stat=istat)
-     allocate(ac_t(ntime + 1),   stat=istat)
+     allocate(ac_f(ntime + 1),   stat=istat)
 
      allocate(hist(mkink),       stat=istat)
      allocate(prob(ncfgs),       stat=istat)
@@ -1004,7 +1004,7 @@
 
 ! initialize them
      ac_v = zero
-     ac_t = zero
+     ac_f = zero
 
      hist = zero
      prob = zero
@@ -1268,7 +1268,7 @@
      implicit none
 
      if ( allocated(ac_v) )    deallocate(ac_v)
-     if ( allocated(ac_t) )    deallocate(ac_t)
+     if ( allocated(ac_f) )    deallocate(ac_f)
 
      if ( allocated(hist) )    deallocate(hist)
      if ( allocated(prob) )    deallocate(prob)
