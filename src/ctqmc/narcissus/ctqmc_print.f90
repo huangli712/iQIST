@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           07/11/2017 by li huang (last modified)
+!!!           07/22/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -298,19 +298,19 @@
 
 ! local variables
 ! integer dummy variables
-     integer :: istat
+     integer :: iaux
 
 ! about iteration number
      write(mystd,'(4X,a,i3,2(a,i10))') '>>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
-     istat = cstep / nmonte
+     iaux = cstep / nmonte
      write(mystd,'(4X,a)')        'auxiliary system observables:'
-     write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / istat, 'epot :', paux(2) / istat
-     write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / istat, '<Sz> :', paux(4) / istat
-     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / istat, '<N2> :', paux(6) / istat
-     write(mystd,'(2(4X,a,e10.3))') '<K2> :', paux(7) / istat, '<K3> :', paux(8) / istat
-     write(mystd,'(1(4X,a,e10.3))') '<K4> :', paux(9) / istat
+     write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / iaux, 'epot :', paux(2) / iaux
+     write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / iaux, '<Sz> :', paux(4) / iaux
+     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / iaux, '<N2> :', paux(6) / iaux
+     write(mystd,'(2(4X,a,e10.3))') '<K2> :', paux(7) / iaux, '<K3> :', paux(8) / iaux
+     write(mystd,'(1(4X,a,e10.3))') '<K4> :', paux(9) / iaux
 
 ! about insert action
      if ( ins_t <= half ) ins_t = -one ! if insert is disable
