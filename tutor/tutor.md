@@ -1,3 +1,4 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-We will supplement the tutorial files later. We are sorry for this inconvenience.
+Phys. Rev. Lett. 97, 076405 (2006)
+Phys. Rev. B 74, 155107 (2006)
