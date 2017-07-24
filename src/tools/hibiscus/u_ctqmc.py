@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 06/05/2017 by li huang (last modified)
+## 07/25/2017 by li huang (last modified)
 ##
 ##
 
@@ -66,7 +66,6 @@ class p_ctqmc_solver(object):
             'isscf'  : 1       ,
             'isbnd'  : 1       ,
             'isspn'  : 1       ,
-            'isbin'  : 1       ,
             'iswor'  : 1       ,
             'isort'  : 1       ,
             'isobs'  : 1       ,
@@ -80,7 +79,7 @@ class p_ctqmc_solver(object):
             'lemax'  : 32      ,
             'legrd'  : 20001   ,
             'svmax'  : 32      ,
-            'svgrd'  : 20001   ,
+            'svgrd'  : 2001    ,
             'mkink'  : 1024    ,
             'mfreq'  : 8193    ,
             'nffrq'  : 32      ,
