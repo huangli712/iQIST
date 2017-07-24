@@ -1,7 +1,18 @@
 #!/usr/bin/env python
 
 
-from optparse import OptionParser
+import argparse
 import sys
 
-print "hehe"
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('-b', dest = 'nblock', type = int, help = 'number of blocks')
+parser.add_argument('-l', dest = 'nline', type = int, help = 'number of lines for each data block')
+parser.add_argument('filename', help='the file name')
+args = parser.parse_args()
+
+nblock =  args.nblock
+nline = args.nline
+filename = str(args.filename)
+
+f = open(filename, 'r')
+f.close()
