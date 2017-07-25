@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import argparse
 import sys
 
@@ -14,5 +13,19 @@ nblock =  args.nblock
 nline = args.nline
 filename = str(args.filename)
 
+print nblock, nline, filename
+
 f = open(filename, 'r')
+
+for ib in range(nblock):
+    fb = open(filename + '.' + str(ib + 1), 'w')
+
+    for il in range(nline):
+        read_data = f.readline()
+        print >> fb, read_data
+
+    fb.close()
+    f.readline()
+    f.readline()
+
 f.close()
