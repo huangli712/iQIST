@@ -71,5 +71,5 @@ with open(fn, 'r') as f:
         with open(fn + '.' + str(ib + 1), 'w') as fb:
             for il in range(nline):
                 print >> fb, f.readline().rstrip()
-        f.readline() # there should be two empty lines after each block 
+        f.readline() # there should be two empty lines after each block
         f.readline()

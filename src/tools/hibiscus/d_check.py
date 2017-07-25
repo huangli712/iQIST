@@ -26,23 +26,22 @@
 ## =======
 ##
 ## 11/13/2014 by li huang (created)
-## 06/05/2017 by li huang (last modified)
+## 07/26/2017 by li huang (last modified)
 ##
 ##
 
 import sys
 
+# access the command-line argument
 argu = sys.argv[1:]
-f = file(argu[0])
 
-i = 0 # line counter
-while True:
-    line = f.readline()
-    if len(line) == 0:
-        break
-    i = i + 1
-    if len(line) != len(line.rstrip()) + 1:
-        print 'line number:', i
-        print '--->', line,
-
-f.close()
+with open(argu[0], 'r') as f:
+    i = 0 # line counter
+    while True:
+        line = f.readline()
+        if len(line) == 0:
+            break
+        i = i + 1
+        if len(line) != len(line.rstrip()) + 1:
+            print 'line number:', i
+            print '--->', line.rstrip()
