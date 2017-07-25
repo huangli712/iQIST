@@ -12,7 +12,7 @@
 ## Usage
 ## =====
 ##
-## see the document string
+## See the document string
 ##
 ## Author
 ## ======
