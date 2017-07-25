@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 08/15/2015 by li huang (created)
-## 06/19/2017 by li huang (last modified)
+## 07/25/2017 by li huang (last modified)
 ##
 ##
 
@@ -50,6 +50,26 @@ class iqistReader(object):
         (tmesh, gtau) = iqistReader.get_gtau(norbs, ntime)
         (rmesh, grnf) = iqistReader.get_grnf(norbs, mfreq)
     """
+
+    @staticmethod
+    def get_ac_f(ntime, fileName = None):
+        """ try to read the solver.ac_f.dat file to return the auto-
+            correlation function data which can be used to estimate
+            reasonable nmonte parameter
+        """
+        if fileName is None:
+            f = open("solver.ac_f.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        ac_f = numpy.zeros((ntime), dtype = numpy.float)
+        for i in range(ntime):
+            spl = f.readline().split()
+            ac_f[i] = float( spl[1] )
+
+        f.close()
+
+        return ac_f
 
     @staticmethod
     def get_hist(mkink, fileName = None):
