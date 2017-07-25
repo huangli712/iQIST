@@ -5,18 +5,34 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is to generate the
-## animation movie using the data contained in the solver.diag.dat.
+## It is a python script. The purpose of this script is to split the data
+## file into several pieces. We usually use it to deal with the following
+## files:
+##     solver.green.dat
+##     solver.sgm.dat
+##     solver.sp_w.dat
+##     solver.sp_t.dat
+##     solver.ch_w.dat
+##     solver.ch_t.dat
+## so that they can be postprocessed by the other analytical continuation
+## codes, such as SpM or OmegaMaxEnt.
 ##
 ## Usage
 ## =====
 ##
-## edit the configuration parameter carefully, and then execute
+## ./u_cut.py [-h] [-b NBLOCK] [-l NLINE] fn
 ##
-## ./u_movie.py movie.mp4
+## Here fn is the original data file. NBLOCK means number of blocks, and
+## NLINE means number of lines for each block. The output files should be
+## fn.*, * means the index of data block. In other words, each data block
+## in the original data file should be converted into a single file. The
+## following shows a few concrete examples:
 ##
-## Here movie.mp4 is the output file. We can use the VLC to play it. If you
-## don't supply any filename, the default output should be diag.mp4.
+## Solit the imaginary-time green's function
+##     ./u_cut -b 2 -l 1024 solver.green.dat
+##
+## Split the matsubara self-energy function
+##     ./u_cut -b 2 -l 8193 solver.sgm.dat
 ##
 ## Author
 ## ======
@@ -29,7 +45,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 06/05/2017 by li huang (last modified)
+## 07/25/2017 by li huang (last modified)
 ##
 ##
 

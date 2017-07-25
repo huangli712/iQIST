@@ -11,7 +11,7 @@
 ## Usage
 ## =====
 ##
-## edit the configuration parameter carefully, and then execute
+## Edit the configuration parameter carefully, and then execute
 ##
 ## ./u_movie.py movie.mp4
 ##
