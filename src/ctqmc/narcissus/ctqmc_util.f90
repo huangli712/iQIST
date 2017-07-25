@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           07/21/2017 by li huang (last modified)
+!!!           07/25/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -877,6 +877,7 @@
 ! using normal representation
 !-------------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
+         allocate(tmpi(  1  ,  1  ), stat=istat); tmpi = czero
          call ctqmc_tran_gtau(gaux, gtau)
          call ctqmc_four_htau(gtau, grnf)
      endif STD_BLOCK ! back if ( isort == 1 ) block
