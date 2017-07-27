@@ -4,7 +4,7 @@ The iQIST software package contains several hybridization expansion continuous-t
 
 ## Version
 
-v0.7.0 @ 2017.01.31D (devel)
+v0.7.0 (devel)
 
 ## License
 
