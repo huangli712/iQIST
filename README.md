@@ -50,7 +50,7 @@ GNU General Public License Version 3
 * The following optimized algorithms are adopted
     * Segment algorithm for density-density interaction
     * Divide-and-conquer algorithm
-    * Good quantum numbers ($$N$$, $$S_z$$, $$J_z$$, PS)
+    * Good quantum numbers (N, Sz, Jz, PS)
     * Lazy trace evaluation
     * Dynamical truncation approximation
 
