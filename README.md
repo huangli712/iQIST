@@ -87,7 +87,7 @@ Here **iqist** is the directory where the iQIST software package is uncompressed
 
 ## Documentation
 
-We provide a comprehensive online [reference manual](https://www.gitbook.com/book/huangli712/iqist/) for the iQIST software package via the Gitbook.
+We provide a comprehensive online [reference manual](https://www.gitbook.com/book/huangli712/iqist/) for the iQIST software package via the Gitbook service.
 
 ## Development
 
@@ -111,12 +111,4 @@ Computer Physics Communications 195, 140 (2015) or arXiv:1409.7573 (2014)
 Li Huang
 Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou, PRC
 email: lihuang.dmft at gmail.com
-```
-
-or
-
-```sh
-Yilin Wang
-Institute of Physics, Chinese Academy of Sciences, Beijing, PRC
-email: qhwyl2006 at 126.com
 ```
