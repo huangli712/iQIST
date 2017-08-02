@@ -122,17 +122,17 @@ clean-narcissus:
 
 # targets for ctqmc codes: general version (manjushaka)
 manjushaka:
-	cd ../src/ctqmc/manjushaka/; pwd; make
+#	cd ../src/ctqmc/manjushaka/; pwd; make
 
 clean-manjushaka:
-	cd ../src/ctqmc/manjushaka/; pwd; make clean
+#	cd ../src/ctqmc/manjushaka/; pwd; make clean
 
 # targets for atomic codes: jasmine
 jasmine:
-	cd ../src/tools/jasmine/; pwd; make
+#	cd ../src/tools/jasmine/; pwd; make
 
 clean-jasmine:
-	cd ../src/tools/jasmine/; pwd; make clean
+#	cd ../src/tools/jasmine/; pwd; make clean
 
 # targets for toolkit codes: hibiscus
 hibiscus:
