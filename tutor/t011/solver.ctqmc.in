@@ -1,0 +1,10 @@
+# File: t011/solver.ctqmc.in
+# Code: narcissus
+# Ref.: Fig.~3 in Phys. Rev. Lett. 97, 076405 (2006)
+# Note: Please change Uc (mune = Uc/2.0) and do the calculation again
+
+isscf = 2
+part  = 1.00
+Uc    = 5.00
+mune  = 2.50
+beta  = 100.
