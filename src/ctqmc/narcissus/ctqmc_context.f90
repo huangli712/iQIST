@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/21/2017 by li huang (last modified)
+!!!           08/06/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -51,16 +51,16 @@
 !!
 !! status indicator for the current flavor, used to sync with stts vector
 !!
-!! if cstat = 0:
+!! if cstat == 0:
 !!     it means null occupation case
 !!
-!! if cstat = 1:
+!! if cstat == 1:
 !!     it means partial occupation case (segment scheme)
 !!
-!! if cstat = 2:
+!! if cstat == 2:
 !!     it means partial occupation case (anti-segment scheme)
 !!
-!! if cstat = 3:
+!! if cstat == 3:
 !!     it means full occupation case
 !!
      integer, public, save  :: cstat = 0
