@@ -5,41 +5,28 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is to split the data
-## file into several pieces. We usually use it to deal with the following
-## files:
-##     solver.green.dat
-##     solver.sgm.dat
-##     solver.sp_w.dat
-##     solver.sp_t.dat
-##     solver.ch_w.dat
-##     solver.ch_t.dat
-## so that they can be postprocessed by the other analytical continuation
-## codes, such as SpM or OmegaMaxEnt.
+## It is a python script. The purpose of this script is to generate valid
+## hybridization function by using the following formula:
+##
+##     \Delta(i\omega_n) = \sum_{\alpha} \frac{V^2}{i\omega_n - \epsilon_{\alpha}}
+##
+## Here V is the hybridization strength, \epsilon_{\alpha} is the energy
+## level of bath, \omega_n is the matsubara frequency.
+##
 ##
 ## Usage
 ## =====
 ##
-## ./u_cut.py [-h] [-b NBLOCK] [-l NLINE] fn
+## u_hyb.py [-h] [-e EPSILON] [-v V] [-b BETA] [-m MFREQ] [-n NORBS] fn
 ##
-## Here fn is the original data file. NBLOCK means number of blocks, and
-## NLINE means number of lines for each block. The output files should be
-## fn.*, * means the index of data block. In other words, each data block
-## in the original data file should be converted into a single file. The
+## Here fn is the data filename, NORBS the number of orbitals, MFREQ the
+## number of matsubara frequency points, BETA the inverse temperature, V
+## the hybridization strength, EPSILON the energy level of bath. Note that
+## there are no default values for these arguments. And the form of the
+## EPSILON argument looks like the list structure in Python language. The
 ## following shows a few concrete examples:
 ##
-## Solit the imaginary-time green's function
-##     ./u_cut -b 2 -l 1024 solver.green.dat
-##
-## Split the matsubara self-energy function
-##     ./u_cut -b 2 -l 8193 solver.sgm.dat
-##
-#fn = 'solver.hyb.in'
-#epsilon = [-1.0, 0.0, 1.0]
-#V = 0.5
-#beta = 10.0
-#mfreq = 8193
-#norbs = 2
+## ./u_hyb.py -e [-1.0,0.0,1.0] -v 1.0 -b 100.0 -m 8193 -n 2 solver.hyb.in
 ##
 ## Author
 ## ======
