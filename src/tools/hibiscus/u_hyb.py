@@ -72,7 +72,8 @@ args = parser.parse_args()
 
 # extract command-line arguments
 fn = str(args.fn)
-epsilon = [float(item) for item in args.epsilon.split(',')]
+epsilon = args.epsilon.rstrip(']').lstrip('[')
+epsilon = [float(item) for item in epsilon.split(',')]
 V = args.V
 beta = args.beta
 mfreq = args.mfreq
@@ -86,7 +87,7 @@ hybf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
 for i in range(mfreq):
     rmesh[i] = (2*i + 1) * numpy.pi / beta
 
-# build hybridization function
+# build hybridization function (only diagonal part)
 for i in range(mfreq):
     for e in epsilon:
         for b in range(norbs):
