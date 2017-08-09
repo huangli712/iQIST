@@ -26,7 +26,8 @@
 ## EPSILON argument looks like the list structure in Python language. The
 ## following shows a few concrete examples:
 ##
-## ./u_hyb.py -e [-1.0,0.0,1.0] -v 1.0 -b 100.0 -m 8193 -n 2 solver.hyb.in
+## ./u_hyb.py -e [-1.0,1.0] -v 1.0 -b 100.0 -m 8193 -n 2 solver.hyb.in
+## ./u_hyb.py -e [-1.0,1.0] -v 0.5 -b 40.0 -m 8193 -n 4 solver.hyb.in
 ##
 ## Author
 ## ======
@@ -39,7 +40,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 07/25/2017 by li huang (last modified)
+## 08/09/2017 by li huang (last modified)
 ##
 ##
 
