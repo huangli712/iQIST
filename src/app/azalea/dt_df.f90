@@ -53,7 +53,7 @@
      complex(dp), allocatable :: dual_g_new(:,:,:)
      complex(dp), allocatable :: full_v(:,:,:)
      complex(dp), allocatable :: bubble(:,:,:)
-     complex(dp), allocatable :: bubbleM(:,:)
+     complex(dp), allocatable :: bM(:,:)
      complex(dp), allocatable :: vertexM(:,:)
      complex(dp), allocatable :: vertexD(:,:)
      complex(dp), allocatable :: gammaM(:,:)
@@ -63,7 +63,7 @@
      allocate(gshift(nffrq,norbs,nkpts))
      allocate(full_v(nffrq,norbs,nkpts))
      allocate(bubble(nffrq,norbs,nkpts))
-     allocate(bubbleM(nffrq,nffrq))
+     allocate(bM(nffrq,nffrq))
      allocate(vertexM(nffrq,nffrq))
      allocate(vertexD(nffrq,nffrq))
      allocate(gammaM(nffrq,nffrq))
@@ -89,15 +89,15 @@
 
                  K_LOOP: do k=1,nkpts
 
-                     call s_diag_z(nffrq, bubble(:,o,k), bubbleM)
+                     call s_diag_z(nffrq, bubble(:,o,k), bM)
 
-                     call cat_bse_solver(bubbleM, vertexM, gammaM)
-                     call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
+                     call cat_bse_solver(bM, vertexM, gammaM)
+                     call cat_bse_iterator(1, one, bM, vertexM, gammaM2)
                      gammaM = half * 3.0 * (gammaM - half * gammaM2)
                      call dt_df_ladd(full_v(:,o,k), gammaM)
 
-                     call cat_bse_solver(bubbleM, vertexD, gammaM)
-                     call cat_bse_iterator(1, one, bubbleM, vertexD, gammaM2)
+                     call cat_bse_solver(bM, vertexD, gammaM)
+                     call cat_bse_iterator(1, one, bM, vertexD, gammaM2)
                      gammaM = half * 1.0 * (gammaM - half * gammaM2)
                      call dt_df_ladd(full_v(:,o,k), gammaM)
 
@@ -134,7 +134,7 @@
      deallocate(gshift)
      deallocate(full_v)
      deallocate(bubble)
-     deallocate(bubbleM)
+     deallocate(bM)
      deallocate(vertexM)
      deallocate(vertexD)
      deallocate(gammaM)
