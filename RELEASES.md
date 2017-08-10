@@ -11,15 +11,16 @@
 * Remove daisy component.
 * Remove application programming interfaces.
 * Remove many unused codes in hibiscus component.
-* Clean testing cases.
-* Clean tutorial files.
-* Update the building system.
-* Improve the code style and comments.
-* Add singular value decomposition representation.
-* Improve the measurement for two-particle Green's functions.
 * Remove the support for particle-particle pairing susceptibility.
-* Add measurement for autocorrelation function (for total occupation number).
+* Update testing cases.
+* Update tutorial files.
+* Update the building system.
+* Improve the measurement for two-particle Green's functions.
+* Improve the code style and comments.
 * Add u\_cut.py, which can be used to split the data files.
+* Add u\_hyb.py, wich can be used to generate hybridization functions.
+* Add singular value decomposition representation.
+* Add measurement for autocorrelation function (for total occupation number).
 * Adjust nmonte parameter automatically via autocorrelation time.
 
 ## v0.6.7 @ c14fdc4 // Jan 13, 2017
