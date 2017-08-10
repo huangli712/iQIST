@@ -6,12 +6,13 @@
 ## ============
 ##
 ## It is a python script. The purpose of this script is to generate valid
-## hybridization function by using the following formula:
+## hybridization function via the following formula:
 ##
 ##     \Delta(i\omega_n) = \sum_{\alpha} \frac{V^2}{i\omega_n - \epsilon_{\alpha}}
 ##
 ## Here V is the hybridization strength, \epsilon_{\alpha} is the energy
-## level of bath, \omega_n is the matsubara frequency.
+## level of bath, and \omega_n is the matsubara frequency. We usually use
+## this script to build various hybridization functions for testing.
 ##
 ##
 ## Usage
@@ -21,11 +22,13 @@
 ##
 ## Here fn is the data filename, NORBS the number of orbitals, MFREQ the
 ## number of matsubara frequency points, BETA the inverse temperature, V
-## the hybridization strength, EPSILON the energy level of bath. Note that
-## there are no default values for these arguments. And the form of the
-## EPSILON argument looks like the list structure in Python language. The
-## following shows a few concrete examples:
+## the hybridization strength, EPSILON the energy level of bath.
 ##
+## Note that there are no default values for these arguments. And for the
+## EPSILON argument, it just looks like the list structure in the Python
+## language. In the following a few concrete examples show:
+##
+## ./u_hyb.py -h
 ## ./u_hyb.py -e [-1.0,1.0] -v 1.0 -b 100.0 -m 8193 -n 2 solver.hyb.in
 ## ./u_hyb.py -e [-1.0,1.0] -v 0.5 -b 40.0 -m 8193 -n 4 solver.hyb.in
 ##
@@ -40,13 +43,12 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 08/09/2017 by li huang (last modified)
+## 08/11/2017 by li huang (last modified)
 ##
 ##
 
 import numpy
 import argparse
-import sys
 
 # define command-line arguments
 parser = argparse.ArgumentParser(description='Try to generate a valid hybridization function.')
@@ -60,6 +62,7 @@ args = parser.parse_args()
 
 # extract command-line arguments
 fn = str(args.fn)
+# get rid of the '[' and ']' characters at first
 epsilon = args.epsilon.rstrip(']').lstrip('[')
 epsilon = [float(item) for item in epsilon.split(',')]
 V = args.V
