@@ -13,19 +13,20 @@
 ## Usage
 ## =====
 ##
-## u_hyb.py [-h] [-e EPSILON] [-v V] [-b BETA] [-m MFREQ] [-n NORBS] fn
+## u_ktau.py [-h] [-m MODEL] [-t NTIME] [-b BETA] [-l LC] [-w WC] fn
 ##
-## Here fn is the data filename, NORBS the number of orbitals, MFREQ the
-## number of matsubara frequency points, BETA the inverse temperature, V
-## the hybridization strength, EPSILON the energy level of bath.
+## Here fn is the data filename, MODEL the model for screening function,
+## MTIME number of time slices, BETA inverse temperature. Both LC and WC
+## are experienced parameters for screening function.
 ##
-## Note that there are no default values for these arguments. And for the
-## EPSILON argument, it just looks like the list structure in the Python
-## language. In the following a few concrete examples show:
+## Note that there are no default values for these arguments. If MODEL is
+## 1, which means that the plasmon pole model is chosen. If MODEL is 2,
+## then the ohmic model is used. In the following a few concrete examples
+## are shown:
 ##
-## ./u_hyb.py -h
-## ./u_hyb.py -e [-1.0,1.0] -v 1.0 -b 100.0 -m 8193 -n 2 solver.hyb.in
-## ./u_hyb.py -e [-1.0,1.0] -v 0.5 -b 40.0 -m 8193 -n 4 solver.hyb.in
+## ./u_ktau.py -h
+## ./u_ktau.py -m 1 -t 1024 -b 40.0 -l 1.0 -w 1.0 solver.ktau.in
+## ./u_ktau.py -m 2 -t 1024 -b 40.0 -l 1.0 -w 1.0 solver.ktau.in
 ##
 ## Author
 ## ======

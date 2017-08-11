@@ -26,7 +26,7 @@
 ##
 ## Note that there are no default values for these arguments. And for the
 ## EPSILON argument, it just looks like the list structure in the Python
-## language. In the following a few concrete examples show:
+## language. In the following a few concrete examples are shown:
 ##
 ## ./u_hyb.py -h
 ## ./u_hyb.py -e [-1.0,1.0] -v 1.0 -b 100.0 -m 8193 -n 2 solver.hyb.in
