@@ -19,6 +19,7 @@
 * Improve the code style and comments.
 * Add u\_cut.py, which can be used to split the data files.
 * Add u\_hyb.py, wich can be used to generate hybridization functions.
+* Add u\_ktau.py, which can be used to generate screening function.
 * Add singular value decomposition representation.
 * Add measurement for autocorrelation function (for total occupation number).
 * Adjust nmonte parameter automatically via autocorrelation time.
