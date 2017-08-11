@@ -1,5 +1,6 @@
 # s032/solver.ctqmc.in
 
+isspn  = 2
 isscr  = 4
 isort  = 2
 issus  = 30
