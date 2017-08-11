@@ -6,13 +6,8 @@
 ## ============
 ##
 ## It is a python script. The purpose of this script is to generate valid
-## hybridization function via the following formula:
-##
-##     \Delta(i\omega_n) = \sum_{\alpha} \frac{V^2}{i\omega_n - \epsilon_{\alpha}}
-##
-## Here V is the hybridization strength, \epsilon_{\alpha} is the energy
-## level of bath, and \omega_n is the matsubara frequency. We usually use
-## this script to build various hybridization functions for testing.
+## screening functions via the plasmon pole model or ohmic model. Usually
+## this script is used to build various screening functions for testing.
 ##
 ##
 ## Usage
