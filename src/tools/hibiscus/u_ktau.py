@@ -33,8 +33,8 @@ if model == 1: # plasmon pole model
     for i in range(ntime):
         ktau[i] = (lc / wc)**2 / math.sinh(beta * wc / 2.0)
         ktau[i] = ktau[i] * ( math.cosh(beta * wc / 2.0) - math.cosh(beta * wc / 2.0 - kmesh[i] * wc) )
-        ptau[i] = (lc / wc)**2 / sinh(beta * wc / 2.0)
-        ptau[i] = ptau[i] * sinh(beta * wc / 2.0 - kmsh(i) * wc) * wc
+        ptau[i] = (lc / wc)**2 / math.sinh(beta * wc / 2.0)
+        ptau[i] = ptau[i] * math.sinh(beta * wc / 2.0 - kmsh(i) * wc) * wc
 
 if model == 2: # ohmic model
     #do i=1,ntime
