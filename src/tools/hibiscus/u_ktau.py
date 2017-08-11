@@ -21,4 +21,7 @@ beta = args.beta
 lc = args.lc
 wc = args.wc
 
-print fn, model, ntime, beta, lc, wc
+# allocate memory
+kmesh = numpy.zeros(ntime, dtype = numpy.float)
+ktau = numpy.zeros(ntime, dtype = numpy.float)
+ptau = numpy.zeros(ntime, dtype = numpy.float)
