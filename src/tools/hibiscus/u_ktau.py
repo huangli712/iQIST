@@ -36,8 +36,6 @@ if model == 1: # plasmon pole model
         ptau[i] = (lc / wc)**2 / math.sinh(p) * math.sinh(p - kmesh[i] * wc) * wc
 
 if model == 2: # ohmic model
-    #do i=1,ntime
-    #    ktau(i) = lc * log(one + beta * wc * sin(pi * kmsh(i) / beta) / pi)
-    #    ptau(i) = lc * wc * cos(pi * kmsh(i) / beta) / (one + beta * wc * sin(pi * kmsh(i) / beta) / pi)
-    #enddo ! over i={1,ntime} loop
-    pass
+    for i in range(ntime):
+        ktau[i] = lc * log(one + beta * wc * sin(pi * kmesh[i] / beta) / pi)
+        ptau[i] = lc * wc * cos(pi * kmesh[i] / beta) / (one + beta * wc * sin(pi * kmesh[i] / beta) / pi)
