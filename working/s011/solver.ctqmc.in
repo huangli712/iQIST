@@ -1,5 +1,4 @@
-# File: s011/solver.ctqmc.in
-# Code: narcissus
+# s011/solver.ctqmc.in
 
 isspn  = 2
 isort  = 2
