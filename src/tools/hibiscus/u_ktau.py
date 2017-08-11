@@ -1,5 +1,52 @@
 #!/usr/bin/env python
 
+##
+##
+## Introduction
+## ============
+##
+## It is a python script. The purpose of this script is to generate valid
+## hybridization function via the following formula:
+##
+##     \Delta(i\omega_n) = \sum_{\alpha} \frac{V^2}{i\omega_n - \epsilon_{\alpha}}
+##
+## Here V is the hybridization strength, \epsilon_{\alpha} is the energy
+## level of bath, and \omega_n is the matsubara frequency. We usually use
+## this script to build various hybridization functions for testing.
+##
+##
+## Usage
+## =====
+##
+## u_hyb.py [-h] [-e EPSILON] [-v V] [-b BETA] [-m MFREQ] [-n NORBS] fn
+##
+## Here fn is the data filename, NORBS the number of orbitals, MFREQ the
+## number of matsubara frequency points, BETA the inverse temperature, V
+## the hybridization strength, EPSILON the energy level of bath.
+##
+## Note that there are no default values for these arguments. And for the
+## EPSILON argument, it just looks like the list structure in the Python
+## language. In the following a few concrete examples show:
+##
+## ./u_hyb.py -h
+## ./u_hyb.py -e [-1.0,1.0] -v 1.0 -b 100.0 -m 8193 -n 2 solver.hyb.in
+## ./u_hyb.py -e [-1.0,1.0] -v 0.5 -b 40.0 -m 8193 -n 4 solver.hyb.in
+##
+## Author
+## ======
+##
+## This python script is designed, created, and maintained by
+##
+## Li Huang // email: lihuang.dmft@gmail.com
+##
+## History
+## =======
+##
+## 03/28/2015 by li huang (created)
+## 08/11/2017 by li huang (last modified)
+##
+##
+
 import numpy
 import math
 import argparse
