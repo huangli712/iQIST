@@ -29,6 +29,7 @@ ptau = numpy.zeros(ntime, dtype = numpy.float)
 # build linear imaginary time mesh
 kmesh = numpy.linspace(0.0, beta, ntime)
 
+# try to build screening function
 if model == 1: # plasmon pole model
     p = beta * wc / 2.0
     q = (lc / wc)**2
@@ -36,9 +37,16 @@ if model == 1: # plasmon pole model
         ktau[i] = q / math.sinh(p) * ( math.cosh(p) - math.cosh(p - kmesh[i] * wc) )
         ptau[i] = q / math.sinh(p) * math.sinh(p - kmesh[i] * wc) * wc
 
+# try to build screening function
 if model == 2: # ohmic model
     q = beta * wc / math.pi
     for i in range(ntime):
         p = math.pi * kmesh[i] / beta
         ktau[i] = lc * math.log(1.0 + q * math.sin(p))
         ptau[i] = lc * wc * math.cos(p) / (1.0 + q * math.sin(p))
+
+# write the screening function
+with open(fn, 'w') as f:
+    print >> f, '# u shift: %16.8f mu shift: %16.8f' % ( 2.0*ptau[0], ptau[0] )
+    for i in range(ntime):
+        print >> f, '%16.8f %16.8f %16.8f' % ( kmesh[i], ktau[i], ptau[i] )
