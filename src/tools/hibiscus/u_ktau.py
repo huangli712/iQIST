@@ -9,7 +9,6 @@
 ## screening functions via the plasmon pole model or ohmic model. Usually
 ## this script is used to build various screening functions for testing.
 ##
-##
 ## Usage
 ## =====
 ##
@@ -20,7 +19,7 @@
 ## are experienced parameters for screening function.
 ##
 ## Note that there are no default values for these arguments. If MODEL is
-## 1, which means that the plasmon pole model is chosen. If MODEL is 2,
+## 1, then it means that the plasmon pole model is chosen. If MODEL is 2,
 ## then the ohmic model is used. In the following a few concrete examples
 ## are shown:
 ##
