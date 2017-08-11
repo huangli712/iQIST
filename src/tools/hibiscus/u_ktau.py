@@ -47,6 +47,6 @@ if model == 2: # ohmic model
 
 # write the screening function
 with open(fn, 'w') as f:
-    print >> f, '# u shift: %16.8f mu shift: %16.8f' % ( 2.0*ptau[0], ptau[0] )
+    print >> f, '# u shift: %16.8f mu shift: %16.8f' % ( 2.0 * ptau[0], ptau[0] )
     for i in range(ntime):
         print >> f, '%16.8f %16.8f %16.8f' % ( kmesh[i], ktau[i], ptau[i] )
