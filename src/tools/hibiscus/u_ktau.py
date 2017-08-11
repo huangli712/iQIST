@@ -31,11 +31,14 @@ kmesh = numpy.linspace(0.0, beta, ntime)
 
 if model == 1: # plasmon pole model
     p = beta * wc / 2.0
+    q = (lc / wc)**2
     for i in range(ntime):
-        ktau[i] = (lc / wc)**2 / math.sinh(p) * ( math.cosh(p) - math.cosh(p - kmesh[i] * wc) )
-        ptau[i] = (lc / wc)**2 / math.sinh(p) * math.sinh(p - kmesh[i] * wc) * wc
+        ktau[i] = q / math.sinh(p) * ( math.cosh(p) - math.cosh(p - kmesh[i] * wc) )
+        ptau[i] = q / math.sinh(p) * math.sinh(p - kmesh[i] * wc) * wc
 
 if model == 2: # ohmic model
+    q = beta * wc / math.pi
     for i in range(ntime):
-        ktau[i] = lc * log(one + beta * wc * sin(pi * kmesh[i] / beta) / pi)
-        ptau[i] = lc * wc * cos(pi * kmesh[i] / beta) / (one + beta * wc * sin(pi * kmesh[i] / beta) / pi)
+        p = math.pi * kmesh[i] / beta
+        ktau[i] = lc * math.log(1.0 + q * math.sin(p))
+        ptau[i] = lc * wc * math.cos(p) / (1.0 + q * math.sin(p))
