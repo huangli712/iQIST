@@ -1,7 +1,6 @@
 # s011/solver.ctqmc.in
 
 isspn  = 2
-isort  = 2
 issus  = 30
 isvrt  = 2
 nsweep = 40000000
