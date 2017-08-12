@@ -15,11 +15,14 @@
 !!!           s_mix_i
 !!!           s_mix_d
 !!!           s_mix_z
+!!!           s_vecadd_i
+!!!           s_vecadd_d
+!!!           s_vecadd_z
 !!! source  : s_vector.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/31/2017 by li huang (last modified)
+!!!           01/10/2018 by li huang (last modified)
 !!! purpose : these subroutines are designed for vectors or arrays. they
 !!!           can be used to manipulate grid and mesh.
 !!! status  : unstable
@@ -65,6 +68,13 @@
 !! subroutine s_mix_i(...)
 !! subroutine s_mix_d(...)
 !! subroutine s_mix_z(...)
+!!
+!! 6. convert diagonal elements of matrix to vector
+!! ------------------------------------------------
+!!
+!! subroutine s_vecadd_i(...)
+!! subroutine s_vecadd_d(...)
+!! subroutine s_vecadd_z(...)
 !!
 !!
 
