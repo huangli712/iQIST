@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           08/11/2017 by li huang (last modified)
+!!!           08/14/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -1487,7 +1487,7 @@
 !!
   subroutine ctqmc_make_pref()
      use constants, only : dp
-     use constants, only : zero, one, half
+     use constants, only : zero, half
 
      use control, only : isscr
      use control, only : norbs
@@ -1512,8 +1512,6 @@
 ! integral value for I(\tau_end)
      real(dp) :: iret
 
-     call ctqmc_make_lift(umat, -one)
-
      FLVR_CYCLE: do f1=1,norbs
          do it=1,rank(f1)
 
@@ -1533,8 +1531,6 @@
              endif ! back if ( isscr > 1 ) block
          enddo ! over it={1,rank(f1)} loop
      enddo FLVR_CYCLE ! over f1={1,norbs} loop
-
-     call ctqmc_make_lift(umat, +one)
 
      return
   end subroutine ctqmc_make_pref
