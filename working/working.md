@@ -26,4 +26,4 @@ Ref.: Phys. Rev. B 89, 235128 (2014)
 * s151 // 5-band model, density-density interaction
 * s152 // 5-band model, rotationally invariant interaction
 
-Ref.: TRIQS
+Ref.: ALPSCore/CT-HYB
