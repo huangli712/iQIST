@@ -1,10 +1,11 @@
 # v011/solver.ctqmc.in
 
 isscf  = 1
+isort  = 2
 isspn  = 2
 isvrt  = 4
 nbfrq  = 2
-nsweep = 40000000
+nsweep = 10000000
 Uc     = 2.00
 mune   = 1.00
 beta   = 10.0
