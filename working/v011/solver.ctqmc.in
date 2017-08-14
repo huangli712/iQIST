@@ -8,3 +8,10 @@ nsweep = 40000000
 Uc     = 2.00
 mune   = 1.00
 beta   = 10.0
+
+#
+# using the following command to generate hybridization function
+#
+# u_hyb.py -e [-1.0,0.0,1.0] -v 0.5 -b 10.0 -m 8193 -n 2 solver.hyb.in
+#
+#
