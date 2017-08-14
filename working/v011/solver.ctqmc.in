@@ -1,8 +1,8 @@
 # v011/solver.ctqmc.in
 
 isscf  = 1
-isort  = 2
 isspn  = 2
+isort  = 2
 isvrt  = 4
 nbfrq  = 2
 nsweep = 10000000

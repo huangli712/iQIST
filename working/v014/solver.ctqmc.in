@@ -3,7 +3,6 @@
 isscf  = 2
 isscr  = 2
 isspn  = 2
-issus  = 16
 isvrt  = 2
 nbfrq  = 1
 nsweep = 40000000
