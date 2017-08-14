@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/21/2017 by li huang (last modified)
+!!!           08/14/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver().
@@ -52,6 +52,10 @@
 
      implicit none
 
+! local parameters
+! possible (predefined) values for the nmonte parameter
+     integer, parameter :: P_NMONTE(10) = (/10, 20, 40, 50, 100, 200, 400, 500, 1000, 2000/)
+
 ! local variables
 ! loop index
      integer  :: i
@@ -68,7 +72,7 @@
          call ctqmc_try_walking(i)
      enddo ! over i={1,ntherm} loop
 
-! measure the autocorrelation function
+! and then measure the autocorrelation function
      do i=1,ntherm
          call ctqmc_try_walking(i)
          call ctqmc_record_ac_f()
@@ -98,11 +102,14 @@
          endif ! back if ( ac_f(i) > zero ) block
      enddo ! over i={2,ntime} loop
 
-! update nmonte parameter to reduce autocorrelation
-     do while ( nmonte < ac_t )
-         nmonte = nmonte * 10
-     enddo ! over do while loop
-     if ( nmonte > ac_t * 5 ) nmonte = nmonte / 5 ! adjust nmonte further
+! update nmonte parameter to reduce autocorrelation (old algorithm)
+!<     do while ( nmonte < ac_t )
+!<         nmonte = nmonte * 10
+!<     enddo ! over do while loop
+!<     if ( nmonte > ac_t * 5 ) nmonte = nmonte / 5 ! adjust nmonte further
+
+! update nmonte parameter to reduce autocorrelation (new algorithm)
+     nmonte = P_NMONTE( count ( real(P_NMONTE, dp) < ac_t ) + 1 )
 
 ! write the autocorrelation function, only master node can do it
      if ( myid == master ) then
