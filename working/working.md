@@ -10,6 +10,6 @@
 ## For manjushaka and jasmine codes
 
 * s131 // 3-band model, density-density interaction
-* s132 // 3-band model, rotationally invariant interaction, spin-orbit coupling
+* s132 // 3-band model, rotationally invariant interaction
 * s151 // 5-band model, density-density interaction
-* s152 // 5-band model, rotationally invariant interaction, spin-orbit coupling
+* s152 // 5-band model, rotationally invariant interaction
