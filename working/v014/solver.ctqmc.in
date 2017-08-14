@@ -1,0 +1,15 @@
+# v013/solver.ctqmc.in
+
+isscf  = 2
+isscr  = 2
+isspn  = 2
+issus  = 1 #20
+isvrt  = 1 #2
+nbfrq  = 2
+nsweep = 40000000
+Uc     = 8.00
+lc     = 4.47213595499958 
+wc     = 8.00
+mune   = 4.00
+beta   = 50.0
+part   = 1.00
