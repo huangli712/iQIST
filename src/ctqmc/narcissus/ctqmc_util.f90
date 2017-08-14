@@ -1471,9 +1471,12 @@
          enddo ! over it={1,rank(flvr)} loop
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
-! add additional term
-     call cat_weight_kernel(2, zero, daux)
-     iret = -iret - two * daux
+! add additional term: -2K'(0^+)
+! note: this static contribution should already be accounted for by the
+! renormalization of the static U
+!<     call cat_weight_kernel(2, zero, daux)
+!<     iret = -iret - two * daux
+     iret = -iret
 
      return
   end subroutine ctqmc_make_iret
