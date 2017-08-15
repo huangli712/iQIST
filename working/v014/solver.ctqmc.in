@@ -1,9 +1,24 @@
 # v014/solver.ctqmc.in
 
+#
+# 1. for the first step, please:
+#
+#     1) comment out the last two lines
+#
+#     2) do the self-consistent calculation
+#
+# 2. for the second step, please:
+#
+#     1) copy solver.hyb.dat to solver.hyb.in
+#
+#     2) uncomment the last two lines
+#
+#     3) conduct the calculation again
+#
+
 isscf  = 2
 isscr  = 2
 isspn  = 2
-isort  = 2
 isvrt  = 1
 nffrq  = 64
 nbfrq  = 1
@@ -15,6 +30,5 @@ mune   = 4.00
 beta   = 50.0
 part   = 1.00
 
-isscf  = 1
-isort  = 1
-isvrt  = 2
+#isscf  = 1
+#isvrt  = 2
