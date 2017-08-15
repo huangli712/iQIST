@@ -29,7 +29,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/21/2017 by li huang (last modified)
+!!!           08/15/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -1420,7 +1420,7 @@
                          chig = chic / (g1 * g2 * g3 * g4)
 
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, chic, chig
+                         write(mytmp,'(2i6,2f16.8,2e16.8)') jt, it, chic, chig
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1612,7 +1612,7 @@
                          chig = chic / (g1 * g2 * g3 * g4)
 
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, chic, chig
+                         write(mytmp,'(2i6,2f16.8,2e16.8)') jt, it, chic, chig
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
