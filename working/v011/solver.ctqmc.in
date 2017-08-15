@@ -2,10 +2,9 @@
 
 isscf  = 1
 isspn  = 2
-isort  = 2
-isvrt  = 4
-nffrq  = 64
-nbfrq  = 2
+isvrt  = 2
+nffrq  = 32
+nbfrq  = 1
 nsweep = 10000000
 Uc     = 2.00
 mune   = 1.00
