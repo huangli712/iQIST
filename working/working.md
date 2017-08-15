@@ -27,3 +27,13 @@ Ref.: Phys. Rev. B 89, 235128 (2014)
 * s152 // 5-band model, rotationally invariant interaction
 
 Ref.: ALPSCore/CT-HYB
+
+* v121 // 2-band model, rotationally invariant interaction
+* v122 // 2-band model, rotationally invariant interaction
+
+Ref.: TRIQS
+
+* v123 // 2-band model, rotationally invariant interaction
+* v124 // 2-band model, rotationally invariant interaction
+
+Ref.: Phys. Rev. B 85, 205106 (2012)
