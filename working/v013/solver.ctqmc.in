@@ -3,7 +3,8 @@
 isscf  = 2
 isscr  = 2
 isspn  = 2
-isvrt  = 2
+isort  = 2
+#isvrt  = 2
 nffrq  = 64
 nbfrq  = 1
 nsweep = 40000000
