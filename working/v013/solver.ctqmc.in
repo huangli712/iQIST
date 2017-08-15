@@ -3,7 +3,6 @@
 isscf  = 2
 isscr  = 2
 isspn  = 2
-isort  = 2
 isvrt  = 1
 nffrq  = 64
 nbfrq  = 1
@@ -15,6 +14,15 @@ mune   = 4.00
 beta   = 50.0
 part   = 1.00
 
-isscf  = 1
-isort  = 1
-isvrt  = 2
+#
+# once the self-consistent calculation is finished, please:
+#
+# 1. copy solver.hyb.dat to solver.hyb.in
+#
+# 2. uncomment the last two lines
+#
+# 3. conduct the calculation again
+#
+
+#isscf  = 1
+#isvrt  = 2
