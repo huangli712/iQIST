@@ -4,7 +4,9 @@
 !!!           s_che_basis
 !!!           s_svd_basis
 !!!           s_svd_point
-!!!           s_sbessel
+!!!           s_sph_jn
+!!!           s_sph_jn_core
+!!!           s_sph_jn_order
 !!!           s_bezier
 !!!           s_safe_exp
 !!!           s_f_kernel
@@ -13,7 +15,7 @@
 !!! type    : subroutines & functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           05/31/2017 by li huang (last modified)
+!!!           08/17/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -37,7 +39,7 @@
 !! 2. spheric Bessel function
 !! --------------------------
 !!
-!! subroutine s_sbessel(...)
+!! subroutine s_sph_jn(...)
 !!
 !! 3. bernstein polynomial
 !! -----------------------
