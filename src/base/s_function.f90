@@ -410,12 +410,126 @@
 ! loop index
      integer :: i
 
+!
+! note:
+!
+! 1. we use the Liang-Wu Cai (2011) algorithm to calculate the spherical
+!    Bessel functions. see:
+!        http://dx.doi.org/10.1016/j.cpc.2010.11.019
+!    for more details.
+!
+! 2. this implementation is inspired by the corresponding python code in
+!    the spf package. see:
+!        https://github.com/tpudlik/sbf
+!    for more details.
+!
      do i=0,nmax
          call s_sph_jn_core(i, x, sin(x)/x, sin(x)/x**2 - cos(x)/x, jn(i))
      enddo ! over i={0,nmax} loop
 
      return
   end subroutine s_sph_jn
+
+!!
+!! @sub s_sph_jn_core
+!!
+!! helper subroutine for the calculation of spherical Bessel functions
+!!
+  subroutine s_sph_jn_core(n, z, f0, f1, val)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! order of spherical Bessel function
+     integer, intent(in)   :: n
+
+! real argument
+     real(dp), intent(in)  :: z
+
+! j0 and j1
+     real(dp), intent(in)  :: f0, f1
+
+! returned value
+     real(dp), intent(out) :: val
+
+! local variables
+     integer  :: start_order, idx
+     real(dp) :: jlp1, jl, jlm1, out
+
+! quick return
+     if ( n == 0 ) then
+         val = f0; RETURN
+     endif
+
+     if ( n == 1 ) then
+         val = f1; RETURN
+     endif
+
+     call s_sph_jn_order(n, z, start_order)
+     jlp1 = 0.0_dp
+     jl = 10.0_dp**(-305.0_dp)
+
+     do idx=0,start_order - n - 1
+         jlm1 = (2*(start_order - idx) + 1)*jl/z - jlp1
+         jlp1 = jl
+         jl = jlm1
+     enddo ! over idx={0,start_order - n - 1} loop
+     out = jlm1
+     do idx=0,n-1
+         jlm1 = (2*(n - idx) + 1)*jl/z - jlp1
+         jlp1 = jl
+         jl = jlm1
+     enddo ! over idx={0,n-1} loop
+
+     if ( abs(f1) <= abs(f0) ) then
+         val = out*(f0/jlm1)
+     else
+         val = out*(f1/jlp1)
+     endif ! back if ( abs(f1) <= abs(f0) ) block
+
+     return
+  end subroutine s_sph_jn_core
+
+!!
+!! @sub s_sph_jn_order
+!!
+!! helper subroutine for the calculation of spherical Bessel functions
+!!
+  subroutine s_sph_jn_order(n, z, val)
+    use constants, only : dp
+
+    implicit none
+
+! external arguments
+! order of spherical Bessel function
+    integer, intent(in)  :: n
+
+! real argument
+    real(dp), intent(in) :: z
+
+! returned value
+    integer, intent(out) :: val
+
+! local variables
+    real(dp) :: o_approx
+    real(dp) :: o_min
+    real(dp) :: o_max
+
+    o_approx = floor( 1.83_dp * abs(z)**0.91_dp + 9.0_dp )
+    o_min = n + 1.0
+    o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(z) ) )
+
+    if ( o_approx < o_min ) then
+        val = int(o_min)
+    else if ( o_approx > o_max ) then
+        val = int(o_max)
+    else
+        val = int(o_approx)
+    endif ! back if ( o_approx < o_min ) block
+
+    return
+  end subroutine s_sph_jn_order
 
 !!========================================================================
 !!>>> Bernstein polynomials                                            <<<
