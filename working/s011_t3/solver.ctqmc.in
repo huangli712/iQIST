@@ -1,0 +1,7 @@
+# s011/solver.ctqmc.in
+
+svmax  = 64
+isort  = 3
+isspn  = 2
+nsweep = 40000000
+beta   = 40.0
