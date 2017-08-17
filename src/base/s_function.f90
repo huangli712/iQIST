@@ -39,6 +39,7 @@
 !! --------------------------
 !!
 !! subroutine s_sph_jn(...)
+!! subroutine s_sph_jn_impl(...)
 !!
 !! 3. bernstein polynomial
 !! -----------------------
@@ -423,18 +424,18 @@
 !    for more details.
 !
      do i=0,nmax
-         call s_sph_jn_core(i, x, sin(x)/x, sin(x)/x**2 - cos(x)/x, jn(i))
+         call s_sph_jn_impl(i, x, sin(x)/x, sin(x)/x**2 - cos(x)/x, jn(i))
      enddo ! over i={0,nmax} loop
 
      return
   end subroutine s_sph_jn
 
 !!
-!! @sub s_sph_jn_core
+!! @sub s_sph_jn_impl
 !!
-!! helper subroutine for the calculation of spherical Bessel functions
+!! core subroutine for the calculation of spherical Bessel functions
 !!
-  subroutine s_sph_jn_core(n, z, f0, f1, val)
+  subroutine s_sph_jn_impl(n, z, f0, f1, val)
      use constants, only : dp
 
      implicit none
@@ -455,6 +456,10 @@
 ! local variables
      integer  :: start_order, idx
      real(dp) :: jlp1, jl, jlm1, out
+     real(dp) :: o_approx
+     real(dp) :: o_min
+     real(dp) :: o_max
+
 
 ! quick return
      if ( n == 0 ) then
@@ -465,7 +470,19 @@
          val = f1; RETURN
      endif
 
-     call s_sph_jn_order(n, z, start_order)
+!     call s_sph_jn_order(n, z, start_order)
+    o_approx = floor( 1.83_dp * abs(z)**0.91_dp + 9.0_dp )
+    o_min = n + 1.0
+    o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(z) ) )
+
+    if ( o_approx < o_min ) then
+        val = int(o_min)
+    else if ( o_approx > o_max ) then
+        val = int(o_max)
+    else
+        val = int(o_approx)
+    endif ! back if ( o_approx < o_min ) block
+
      jlp1 = 0.0_dp
      jl = 10.0_dp**(-305.0_dp)
 
@@ -488,47 +505,7 @@
      endif ! back if ( abs(f1) <= abs(f0) ) block
 
      return
-  end subroutine s_sph_jn_core
-
-!!
-!! @sub s_sph_jn_order
-!!
-!! helper subroutine for the calculation of spherical Bessel functions
-!!
-  subroutine s_sph_jn_order(n, z, val)
-    use constants, only : dp
-
-    implicit none
-
-! external arguments
-! order of spherical Bessel function
-    integer, intent(in)  :: n
-
-! real argument
-    real(dp), intent(in) :: z
-
-! returned value
-    integer, intent(out) :: val
-
-! local variables
-    real(dp) :: o_approx
-    real(dp) :: o_min
-    real(dp) :: o_max
-
-    o_approx = floor( 1.83_dp * abs(z)**0.91_dp + 9.0_dp )
-    o_min = n + 1.0
-    o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(z) ) )
-
-    if ( o_approx < o_min ) then
-        val = int(o_min)
-    else if ( o_approx > o_max ) then
-        val = int(o_max)
-    else
-        val = int(o_approx)
-    endif ! back if ( o_approx < o_min ) block
-
-    return
-  end subroutine s_sph_jn_order
+  end subroutine s_sph_jn_impl
 
 !!========================================================================
 !!>>> Bernstein polynomials                                            <<<
