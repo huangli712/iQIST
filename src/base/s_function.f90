@@ -5,8 +5,7 @@
 !!!           s_svd_basis
 !!!           s_svd_point
 !!!           s_sph_jn
-!!!           s_sph_jn_core
-!!!           s_sph_jn_order
+!!!           s_sph_jn_impl
 !!!           s_bezier
 !!!           s_safe_exp
 !!!           s_f_kernel
