@@ -4,7 +4,7 @@
 !!!           s_che_basis
 !!!           s_svd_basis
 !!!           s_svd_point
-!!!           s_sph_jn
+!!!           s_sph_jl
 !!!           s_bezier
 !!!           s_safe_exp
 !!!           s_f_kernel
@@ -37,7 +37,7 @@
 !! 2. spheric Bessel function
 !! --------------------------
 !!
-!! subroutine s_sph_jn(...)
+!! subroutine s_sph_jl(...)
 !!
 !! 3. bernstein polynomial
 !! -----------------------
@@ -384,12 +384,12 @@
 !!========================================================================
 
 !!
-!! @sub s_sbessel
+!! @sub s_sph_jl
 !!
 !! computes the spherical Bessel functions of the first kind, j_l(x), for
 !! argument x and l=0, 1, \ldots, l_{max}
 !!
-  subroutine s_sbessel(lmax, x, jl)
+  subroutine s_sph_jl(lmax, x, jl)
      use constants, only : dp
      use constants, only : zero, one, two
      use constants, only : eps8
@@ -423,6 +423,7 @@
      real(dp) :: j0, j1
      real(dp) :: t1, t2
 
+!
 ! important note: the recursion relation
 !     j_{l+1}(x)=\frac{2l+1}{x}j_l(x)-j_{l-1}(x)
 ! is used either downwards for x < l or upwards for x >= l. for x << 1,
@@ -430,14 +431,15 @@
 !     j_l(x) \approx \frac{x^l}{(2l+1)!!}
 ! this procedure is numerically stable and accurate to near this machine
 ! precision for l <= 50
+!
 
 ! check the range of input variables
      if ( lmax < 0 .or. lmax > 50 ) then
-         call s_print_error('s_sbessel','lmax is out of range')
+         call s_print_error('s_sph_jl','lmax is out of range')
      endif ! back if ( lmax < 0 .or. lmax > 50 ) block
 
      if ( x < zero .or. x > 1.0E5 ) then
-         call s_print_error('s_sbessel','x is out of range')
+         call s_print_error('s_sph_jl','x is out of range')
      endif ! back if ( x < zero .or. x > 1.0E5 ) block
 
 ! treat x << 1
@@ -451,7 +453,6 @@
          enddo ! over l={1,lmax} loop
          RETURN
      endif ! back if ( x < eps8 ) block
-
      xi = one / x
 
 ! for x < lmax recurse down
@@ -510,7 +511,7 @@
      endif ! back if ( x < lmax ) block
 
      return
-  end subroutine s_sbessel
+  end subroutine s_sph_jl
 
 !!========================================================================
 !!>>> Bernstein polynomials                                            <<<
