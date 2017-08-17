@@ -487,9 +487,9 @@
          start_order = int(o_approx)
      endif ! back if ( o_approx < o_min ) block
 
+! determine jlm1 and jlp1
      jlp1 = 0.0_dp
      jl = 10.0_dp**(-305.0_dp)
-
      do idx=0,start_order - n - 1
          jlm1 = (2*(start_order - idx) + 1)*jl/z - jlp1
          jlp1 = jl
@@ -503,9 +503,9 @@
      enddo ! over idx={0,n-1} loop
 
      if ( abs(f1) <= abs(f0) ) then
-         val = jout*(f0/jlm1)
+         val = jout * ( f0 / jlm1 )
      else
-         val = jout*(f1/jlp1)
+         val = jout * ( f1 / jlp1 )
      endif ! back if ( abs(f1) <= abs(f0) ) block
 
      return
