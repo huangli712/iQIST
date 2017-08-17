@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           08/14/2017 by li huang (last modified)
+!!!           08/17/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -846,13 +846,13 @@
 ! step for the linear frequency mesh
      real(dp) :: step
 
-! p_l(x(\tau)), for legendre orthogonal polynomial representation
+! j_n(x), for legendre orthogonal polynomial representation
      real(dp), allocatable :: pfun(:,:)
 
 ! u_l(x(\tau)), for svd orthogonal polynomial representation
      real(dp), allocatable :: ufun(:,:)
 
-! calculated impurity green's function, imaginary-time axis
+! calculated impurity green's function, imaginary time axis
      real(dp), allocatable :: gtau(:,:,:)
 
 ! unitary transformation matrix for orthogonal polynomials
@@ -861,7 +861,7 @@
      complex(dp), allocatable :: tmpi(:,:)
 
 ! allocate memory
-     allocate(pfun(ntime,lemax), stat=istat)
+     allocate(pfun(mfreq,lemax), stat=istat)
      allocate(ufun(ntime,svmax), stat=istat)
 
      allocate(gtau(ntime,norbs,norbs), stat=istat)
@@ -888,43 +888,24 @@
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
 
-! copy rep_l to pfun, prepare p_l(x(\tau))
-         step = real(legrd - 1) / two
-         do i=1,ntime
-             raux = two * tmesh(i) / beta
-             curr = nint( raux * step ) + 1
-             pfun(i,:) = rep_l(curr,:)
-         enddo ! over i={1,ntime} loop
+         pfun = zero
+         do k=1,mfreq
+             call s_sph_jn(lemax-1, rmesh(k) * beta / two, pfun(k,:))
+         enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: tleg
-! we do the fourier transformation directly using Eq. (E1) in Phys. Rev.
-! B 84, 075145 (2011). the advantage is that it doesn't depend on the
+         tleg = czero
+         do i=1,lemax
+             do k=1,mfreq
+                 tleg(k,i) = pfun(k,i) * (-one)**(k - 1) * sqrt(two * i - one) * czi**i
+             enddo ! over k={1,mfreq} loop
+         enddo ! over i={1,lemax} loop
+
+! the advantage is that it doesn't depend on the
 ! spherical Bessel functions any more
-         allocate(tmpi(mfreq,lemax), stat=istat); tmpi = czero
-         do i=1+myid,lemax,nprocs
-             call s_fft_forward(ntime, tmesh, pfun(:,i), mfreq, rmesh, tmpi(:,i))
-             tmpi(:,i) = tmpi(:,i) * sqrt(two * i - one)
-         enddo ! over i={1+myid,lemax} loop
-
-! build tleg, collect data from children processes
-# if defined (MPI)
-
-! collect data
-         call mp_allreduce(tmpi, tleg)
-
-! block until all processes have reached here
-         call mp_barrier()
-
-# else  /* MPI */
-
-         tleg = tmpi
-
-# endif /* MPI */
 
 ! normalize tleg
-! note: the first beta is from Eq. (C19), while the second beta is from
-! Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
-         tleg = tleg / (beta * beta)
+         tleg = tleg / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
 ! polynomial representation: grnf

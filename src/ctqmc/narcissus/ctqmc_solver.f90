@@ -664,7 +664,7 @@
 ! try to evaluate the self-energy function
          call ctqmc_make_hub2()
 
-! try to evaluate the imaginary-time green's function
+! try to evaluate the imaginary time green's function
          call ctqmc_tran_gtau(gtau, gtau_mpi); gtau = gtau_mpi
          call ctqmc_tran_gtau(ftau, ftau_mpi); ftau = ftau_mpi
 
