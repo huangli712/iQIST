@@ -439,7 +439,7 @@
 ! real argument
      real(dp), intent(in)  :: z
 
-! j0 and j1
+! j_0(x) and j_1(x)
      real(dp), intent(in)  :: f0, f1
 
 ! returned value
@@ -447,7 +447,7 @@
 
 ! local variables
      integer  :: start_order, idx
-     real(dp) :: jlp1, jl, jlm1, out
+     real(dp) :: jout, jlp1, jlm1, jl
      real(dp) :: o_approx
      real(dp) :: o_min
      real(dp) :: o_max
@@ -469,14 +469,15 @@
 ! quick return
      if ( n == 0 ) then
          val = f0; RETURN
-     endif
+     endif ! back if ( n == 0 ) block
 
      if ( n == 1 ) then
          val = f1; RETURN
-     endif
+     endif ! back if ( n == 1 ) block
 
+! determine start_order
      o_approx = floor( 1.83_dp * abs(z)**0.91_dp + 9.0_dp )
-     o_min = n + 1.0
+     o_min = n + 1.0_dp
      o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(z) ) )
      if ( o_approx < o_min ) then
          start_order = int(o_min)
@@ -494,7 +495,7 @@
          jlp1 = jl
          jl = jlm1
      enddo ! over idx={0,start_order - n - 1} loop
-     out = jlm1
+     jout = jlm1
      do idx=0,n-1
          jlm1 = (2*(n - idx) + 1)*jl/z - jlp1
          jlp1 = jl
@@ -502,9 +503,9 @@
      enddo ! over idx={0,n-1} loop
 
      if ( abs(f1) <= abs(f0) ) then
-         val = out*(f0/jlm1)
+         val = jout*(f0/jlm1)
      else
-         val = out*(f1/jlp1)
+         val = jout*(f1/jlp1)
      endif ! back if ( abs(f1) <= abs(f0) ) block
 
      return
