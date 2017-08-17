@@ -410,19 +410,6 @@
 ! loop index
      integer :: i
 
-!
-! note:
-!
-! 1. we use the Liang-Wu Cai (2011) algorithm to calculate the spherical
-!    Bessel functions. see:
-!        http://dx.doi.org/10.1016/j.cpc.2010.11.019
-!    for more details.
-!
-! 2. this implementation is inspired by the corresponding python code in
-!    the spf package. see:
-!        https://github.com/tpudlik/sbf
-!    for more details.
-!
      do i=0,nmax
          call s_sph_jn_impl(i, x, sin(x)/x, sin(x)/x**2 - cos(x)/x, jn(i))
      enddo ! over i={0,nmax} loop
@@ -460,6 +447,19 @@
      real(dp) :: o_min
      real(dp) :: o_max
 
+!
+! note:
+!
+! 1. we use the Liang-Wu Cai (2011) algorithm to calculate the spherical
+!    Bessel functions. see:
+!        http://dx.doi.org/10.1016/j.cpc.2010.11.019
+!    for more details.
+!
+! 2. this implementation is inspired by the corresponding python code in
+!    the spf package. see:
+!        https://github.com/tpudlik/sbf
+!    for more details.
+!
 
 ! quick return
      if ( n == 0 ) then
