@@ -512,6 +512,129 @@
      return
   end subroutine s_sph_jn_impl
 
+!!>>> s_sbessel: computes the spherical Bessel functions of the first
+!!>>> kind, j_l(x), for argument x and l=0,1,\ldots,l_{max}.
+  subroutine s_sbessel(lmax, x, jl)
+     use constants, only : dp, zero, one, two, eps8
+
+     implicit none
+
+! external arguments
+! maximum order of spherical Bessel function
+     integer, intent(in)   :: lmax
+
+! real argument
+     real(dp), intent(in)  :: x
+
+! array of returned values
+     real(dp), intent(out) :: jl(0:lmax)
+
+! local parameters
+! staring value for l above lmax (suitable for lmax < 50)
+     integer, parameter  :: lst  = 25
+
+! rescale limit
+     real(dp), parameter :: rsc  = 1.0D100
+     real(dp), parameter :: rsci = one / rsc
+
+! local variables
+! loop index
+     integer  :: l
+
+! real(dp) dummy variables
+     real(dp) :: xi, jt
+     real(dp) :: j0, j1
+     real(dp) :: t1, t2
+
+! important note: the recursion relation
+!     j_{l+1}(x)=\frac{2l+1}{x}j_l(x)-j_{l-1}(x)
+! is used either downwards for x < l or upwards for x >= l. for x << 1,
+! the asymtotic form is used:
+!     j_l(x) \approx \frac{x^l}{(2l+1)!!}
+! this procedure is numerically stable and accurate to near this machine
+! precision for l <= 50
+
+! check the range of input variables
+     if ( lmax < 0 .or. lmax > 50 ) then
+         call s_print_error('s_sbessel','lmax is out of range')
+     endif ! back if ( lmax < 0 .or. lmax > 50 ) block
+
+     if ( x < zero .or. x > 1.0E5 ) then
+         call s_print_error('s_sbessel','x is out of range')
+     endif ! back if ( x < zero .or. x > 1.0E5 ) block
+
+! treat x << 1
+     if ( x < eps8 ) then
+         jl(0) = one
+         t1 = one; t2 = one
+         do l=1,lmax
+             t1 = t1 / (two * l + one)
+             t2 = t2 * x
+             jl(l) = t2 * t1
+         enddo ! over l={1,lmax} loop
+         RETURN
+     endif ! back if ( x < eps8 ) block
+
+     xi = one / x
+
+! for x < lmax recurse down
+     if ( x < lmax ) then
+         if ( lmax == 0 ) then
+             jl(0) = sin(x) / x; RETURN
+         endif ! back if ( lmax == 0 ) block
+
+! start from truly random numbers
+         j0 = 0.6370354636449841609d0 * rsci
+         j1 = 0.3532702964695481204d0 * rsci
+         do l=lmax+lst,lmax+1,-1
+             jt = j0 * (two * l + one) * xi - j1
+             j1 = j0
+             j0 = jt
+! check for overflow
+             if ( abs(j0) > rsc ) then
+! rescale
+                 jt = jt * rsci
+                 j1 = j1 * rsci
+                 j0 = j0 * rsci
+             endif ! back if ( abs(j0) > rsc ) block
+         enddo ! over l={lmax+lst,lmax+1} loop
+
+         do l=lmax,0,-1
+             jt = j0 * (two * l + one) * xi - j1
+             j1 = j0
+             j0 = jt
+! check for overflow
+             if ( abs(j0) > rsc ) then
+! rescale
+                 jt = jt * rsci
+                 j1 = j1 * rsci
+                 j0 = j0 * rsci
+                 jl(l+1:lmax) = jl(l+1:lmax) * rsci
+             endif ! back if ( abs(j0) > rsc ) block
+             jl(l) = j1
+         enddo ! over l={lmax,0} loop
+! rescaling constant
+         t1 = one / ( ( jl(0) - x * jl(1) ) * cos(x) + x * jl(0) * sin(x) )
+         jl = t1 * jl
+     else
+! for large x recurse up
+         jl(0) = sin(x) * xi
+         if ( lmax == 0 ) RETURN
+         jl(1) = ( jl(0) - cos(x) ) * xi
+         if ( lmax == 1 ) RETURN
+         j0 = jl(0)
+         j1 = jl(1)
+         do l=2,lmax
+             jt = (two * l - one ) * j1 * xi - j0
+             j0 = j1
+             j1 = jt
+             jl(l) = j1
+         enddo ! over l={2,lmax} loop
+     endif ! back if ( x < lmax ) block
+
+     return
+  end subroutine s_sbessel
+
 !!========================================================================
 !!>>> Bernstein polynomials                                            <<<
 !!========================================================================
