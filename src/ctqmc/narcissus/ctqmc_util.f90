@@ -877,7 +877,6 @@
 ! using normal representation
 !-------------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
-         allocate(tmpi(  1  ,  1  ), stat=istat); tmpi = czero
          call ctqmc_tran_gtau(gaux, gtau)
          call ctqmc_four_htau(gtau, grnf)
      endif STD_BLOCK ! back if ( isort == 1 ) block
@@ -888,6 +887,7 @@
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
 
+! calculate spherical Bessel functions at first
          pfun = zero
          do k=1,mfreq
              call s_sph_jn(lemax-1, rmesh(k) * beta / two, pfun(k,:))
@@ -896,13 +896,11 @@
 ! build unitary transformation matrix: tleg
          tleg = czero
          do i=1,lemax
+             raux = sqrt(two * i - one)
              do k=1,mfreq
-                 tleg(k,i) = pfun(k,i) * (-one)**(k - 1) * sqrt(two * i - one) * czi**i
+                 tleg(k,i) = pfun(k,i) * (-one)**(k - 1) * raux * czi**i
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,lemax} loop
-
-! the advantage is that it doesn't depend on the
-! spherical Bessel functions any more
 
 ! normalize tleg
          tleg = tleg / beta
@@ -979,7 +977,6 @@
      deallocate(gtau)
      deallocate(tleg)
      deallocate(tsvd)
-     deallocate(tmpi)
 
      return
   end subroutine ctqmc_tran_grnf
