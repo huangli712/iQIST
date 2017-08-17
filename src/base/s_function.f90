@@ -410,6 +410,11 @@
 ! loop index
      integer :: i
 
+! generate j_n(x). note that
+!     j_0(x) = sin(x) / 2
+! and
+!     j_1(x) = sin(x) / x**2 - cos(x) / x
+! see wiki about bessel functions
      do i=0,nmax
          call s_sph_jn_impl(i, x, sin(x)/x, sin(x)/x**2 - cos(x)/x, jn(i))
      enddo ! over i={0,nmax} loop
