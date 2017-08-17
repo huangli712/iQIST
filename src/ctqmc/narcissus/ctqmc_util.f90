@@ -868,6 +868,7 @@
 
      allocate(tleg(mfreq,lemax), stat=istat)
      allocate(tsvd(mfreq,svmax), stat=istat)
+     allocate(tmpi(mfreq,svmax), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_tran_grnf','can not allocate enough memory')
@@ -934,7 +935,7 @@
 
 ! build unitary transformation matrix: tsvd
 ! actually, we do the fourier transformation
-         allocate(tmpi(mfreq,svmax), stat=istat); tmpi = czero
+         tmpi = czero
          do i=1+myid,svmax,nprocs
              call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tmpi(:,i))
          enddo ! over i={1+myid,svmax} loop
@@ -977,6 +978,7 @@
      deallocate(gtau)
      deallocate(tleg)
      deallocate(tsvd)
+     deallocate(tmpi)
 
      return
   end subroutine ctqmc_tran_grnf
