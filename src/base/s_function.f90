@@ -470,18 +470,16 @@
          val = f1; RETURN
      endif
 
-!     call s_sph_jn_order(n, z, start_order)
-    o_approx = floor( 1.83_dp * abs(z)**0.91_dp + 9.0_dp )
-    o_min = n + 1.0
-    o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(z) ) )
-
-    if ( o_approx < o_min ) then
-        val = int(o_min)
-    else if ( o_approx > o_max ) then
-        val = int(o_max)
-    else
-        val = int(o_approx)
-    endif ! back if ( o_approx < o_min ) block
+     o_approx = floor( 1.83_dp * abs(z)**0.91_dp + 9.0_dp )
+     o_min = n + 1.0
+     o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(z) ) )
+     if ( o_approx < o_min ) then
+         start_order = int(o_min)
+     else if ( o_approx > o_max ) then
+         start_order = int(o_max)
+     else
+         start_order = int(o_approx)
+     endif ! back if ( o_approx < o_min ) block
 
      jlp1 = 0.0_dp
      jl = 10.0_dp**(-305.0_dp)
