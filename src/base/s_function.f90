@@ -427,7 +427,7 @@
 !!
 !! core subroutine for the calculation of spherical Bessel functions
 !!
-  subroutine s_sph_jn_impl(n, z, f0, f1, val)
+  subroutine s_sph_jn_impl(n, x, f0, f1, val)
      use constants, only : dp
 
      implicit none
@@ -437,7 +437,7 @@
      integer, intent(in)   :: n
 
 ! real argument
-     real(dp), intent(in)  :: z
+     real(dp), intent(in)  :: x
 
 ! j_0(x) and j_1(x)
      real(dp), intent(in)  :: f0, f1
@@ -476,9 +476,9 @@
      endif ! back if ( n == 1 ) block
 
 ! determine start_order
-     o_approx = floor( 1.83_dp * abs(z)**0.91_dp + 9.0_dp )
+     o_approx = floor( 1.83_dp * abs(x)**0.91_dp + 9.0_dp )
      o_min = n + 1.0_dp
-     o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(z) ) )
+     o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(x) ) )
      if ( o_approx < o_min ) then
          start_order = int(o_min)
      else if ( o_approx > o_max ) then
@@ -491,13 +491,13 @@
      jlp1 = 0.0_dp
      jl = 10.0_dp**(-305.0_dp)
      do idx=0,start_order - n - 1
-         jlm1 = ( 2 * ( start_order - idx ) + 1 ) * jl / z - jlp1
+         jlm1 = ( 2 * ( start_order - idx ) + 1 ) * jl / x - jlp1
          jlp1 = jl
          jl = jlm1
      enddo ! over idx={0,start_order - n - 1} loop
      jout = jlm1
      do idx=0,n-1
-         jlm1 = ( 2 * ( n - idx ) + 1 ) * jl / z - jlp1
+         jlm1 = ( 2 * ( n - idx ) + 1 ) * jl / x - jlp1
          jlp1 = jl
          jl = jlm1
      enddo ! over idx={0,n-1} loop
