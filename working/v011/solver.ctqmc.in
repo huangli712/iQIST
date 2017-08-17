@@ -2,8 +2,8 @@
 
 isscf  = 1
 isspn  = 2
-isvrt  = 2
-nffrq  = 32
+isvrt  = 8
+nffrq  = 64
 nbfrq  = 1
 nsweep = 10000000
 Uc     = 2.00
