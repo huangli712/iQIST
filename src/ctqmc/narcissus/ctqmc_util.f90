@@ -904,6 +904,7 @@
          enddo ! over i={1,lemax} loop
 
 ! normalize tleg
+! note: the beta is from Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
          tleg = tleg / beta
 
 ! build impurity green's function on matsubara frequency using orthogonal
@@ -956,6 +957,8 @@
 # endif /* MPI */
 
 ! normalize tsvd
+! note: the first beta is from Eq. (C19), while the second beta is from
+! Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
          tsvd = tsvd * (two / beta / beta)
 
 ! build impurity green's function on matsubara frequency using orthogonal
