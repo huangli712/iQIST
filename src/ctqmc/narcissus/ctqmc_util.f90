@@ -802,14 +802,14 @@
 !!
   subroutine ctqmc_tran_grnf(gaux, grnf)
      use constants, only : dp
-     use constants, only : one, two, czero
+     use constants, only : zero, one, two, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax, legrd
+     use control, only : lemax
      use control, only : svmax, svgrd
      use control, only : mfreq
      use control, only : ntime
@@ -817,7 +817,7 @@
      use control, only : myid, nprocs
 
      use context, only : tmesh, rmesh
-     use context, only : rep_l, rep_s
+     use context, only : rep_s
 
      implicit none
 
