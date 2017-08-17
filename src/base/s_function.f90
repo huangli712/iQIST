@@ -491,17 +491,18 @@
      jlp1 = 0.0_dp
      jl = 10.0_dp**(-305.0_dp)
      do idx=0,start_order - n - 1
-         jlm1 = (2*(start_order - idx) + 1)*jl/z - jlp1
+         jlm1 = ( 2 * ( start_order - idx ) + 1 ) * jl / z - jlp1
          jlp1 = jl
          jl = jlm1
      enddo ! over idx={0,start_order - n - 1} loop
      jout = jlm1
      do idx=0,n-1
-         jlm1 = (2*(n - idx) + 1)*jl/z - jlp1
+         jlm1 = ( 2 * ( n - idx ) + 1 ) * jl / z - jlp1
          jlp1 = jl
          jl = jlm1
      enddo ! over idx={0,n-1} loop
 
+! evaluate returned value
      if ( abs(f1) <= abs(f0) ) then
          val = jout * ( f0 / jlm1 )
      else
