@@ -891,7 +891,7 @@
 ! calculate spherical Bessel functions at first
          pfun = zero
          do k=1,mfreq
-             call s_sph_jn(lemax-1, rmesh(k) * beta / two, pfun(k,:))
+             call s_sph_jl(lemax-1, rmesh(k) * beta / two, pfun(k,:))
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: tleg
