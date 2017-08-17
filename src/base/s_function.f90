@@ -5,7 +5,6 @@
 !!!           s_svd_basis
 !!!           s_svd_point
 !!!           s_sph_jn
-!!!           s_sph_jn_impl
 !!!           s_bezier
 !!!           s_safe_exp
 !!!           s_f_kernel
@@ -39,7 +38,6 @@
 !! --------------------------
 !!
 !! subroutine s_sph_jn(...)
-!! subroutine s_sph_jn_impl(...)
 !!
 !! 3. bernstein polynomial
 !! -----------------------
@@ -386,136 +384,15 @@
 !!========================================================================
 
 !!
-!! @sub s_sph_jn
+!! @sub s_sbessel
 !!
-!! computes the spherical Bessel functions of the first kind, j_n(x), for
-!! argument x and n=0, 1, \ldots, n_{max}
+!! computes the spherical Bessel functions of the first kind, j_l(x), for
+!! argument x and l=0, 1, \ldots, l_{max}
 !!
-  subroutine s_sph_jn(nmax, x, jn)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! maximum order of spherical Bessel function
-     integer, intent(in)   :: nmax
-
-! real argument
-     real(dp), intent(in)  :: x
-
-! array of returned values
-     real(dp), intent(out) :: jn(0:nmax)
-
-! local variables
-! loop index
-     integer :: i
-
-! generate j_n(x). note that
-!     j_0(x) = sin(x) / 2
-! and
-!     j_1(x) = sin(x) / x**2 - cos(x) / x
-! see wiki about bessel functions
-     do i=0,nmax
-         call s_sph_jn_impl(i, x, sin(x)/x, sin(x)/x**2 - cos(x)/x, jn(i))
-     enddo ! over i={0,nmax} loop
-
-     return
-  end subroutine s_sph_jn
-
-!!
-!! @sub s_sph_jn_impl
-!!
-!! core subroutine for the calculation of spherical Bessel functions
-!!
-  subroutine s_sph_jn_impl(n, x, f0, f1, val)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! order of spherical Bessel function
-     integer, intent(in)   :: n
-
-! real argument
-     real(dp), intent(in)  :: x
-
-! j_0(x) and j_1(x)
-     real(dp), intent(in)  :: f0, f1
-
-! returned value
-     real(dp), intent(out) :: val
-
-! local variables
-     integer  :: start_order, idx
-     real(dp) :: jout, jlp1, jlm1, jl
-     real(dp) :: o_approx
-     real(dp) :: o_min
-     real(dp) :: o_max
-
-!
-! note:
-!
-! 1. we use the Liang-Wu Cai (2011) algorithm to calculate the spherical
-!    Bessel functions. see:
-!        http://dx.doi.org/10.1016/j.cpc.2010.11.019
-!    for more details.
-!
-! 2. this implementation is inspired by the corresponding python code in
-!    the spf package. see:
-!        https://github.com/tpudlik/sbf
-!    for more details.
-!
-
-! quick return
-     if ( n == 0 ) then
-         val = f0; RETURN
-     endif ! back if ( n == 0 ) block
-
-     if ( n == 1 ) then
-         val = f1; RETURN
-     endif ! back if ( n == 1 ) block
-
-! determine start_order
-     o_approx = floor( 1.83_dp * abs(x)**0.91_dp + 9.0_dp )
-     o_min = n + 1.0_dp
-     o_max = floor( 235.0_dp + 50.0_dp * sqrt( abs(x) ) )
-     if ( o_approx < o_min ) then
-         start_order = int(o_min)
-     else if ( o_approx > o_max ) then
-         start_order = int(o_max)
-     else
-         start_order = int(o_approx)
-     endif ! back if ( o_approx < o_min ) block
-
-! determine jlm1 and jlp1
-     jlp1 = 0.0_dp
-     jl = 10.0_dp**(-305.0_dp)
-     do idx=0,start_order - n - 1
-         jlm1 = ( 2 * ( start_order - idx ) + 1 ) * jl / x - jlp1
-         jlp1 = jl
-         jl = jlm1
-     enddo ! over idx={0,start_order - n - 1} loop
-     jout = jlm1
-     do idx=0,n-1
-         jlm1 = ( 2 * ( n - idx ) + 1 ) * jl / x - jlp1
-         jlp1 = jl
-         jl = jlm1
-     enddo ! over idx={0,n-1} loop
-
-! evaluate returned value
-     if ( abs(f1) <= abs(f0) ) then
-         val = jout * ( f0 / jlm1 )
-     else
-         val = jout * ( f1 / jlp1 )
-     endif ! back if ( abs(f1) <= abs(f0) ) block
-
-     return
-  end subroutine s_sph_jn_impl
-
-!!>>> s_sbessel: computes the spherical Bessel functions of the first
-!!>>> kind, j_l(x), for argument x and l=0,1,\ldots,l_{max}.
   subroutine s_sbessel(lmax, x, jl)
-     use constants, only : dp, zero, one, two, eps8
+     use constants, only : dp
+     use constants, only : zero, one, two
+     use constants, only : eps8
 
      implicit none
 
