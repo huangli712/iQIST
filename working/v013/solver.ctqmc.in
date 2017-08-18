@@ -1,6 +1,8 @@
 # v013/solver.ctqmc.in
 
 #
+# note:
+#
 # 1. for the first step, please:
 #
 #     1) comment out the last two lines
@@ -30,5 +32,5 @@ mune   = 4.00
 beta   = 50.0
 part   = 1.00
 
-isscf  = 1
-isvrt  = 2
+#isscf  = 1
+#isvrt  = 2
