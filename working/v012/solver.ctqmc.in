@@ -1,17 +1,21 @@
 # v012/solver.ctqmc.in
 
-isscf  = 1
+#
+# note:
+#
+# 1. how to generate the initial hybridization function?
+#
+#    u_hyb.py -e [-1.0,0.0,1.0] -v 0.5 -b 10.0 -m 8193 -n 2 solver.hyb.in
+#
+# 2. you can change isort to 1, it will be much faster
+#
+
 isspn  = 2
+isort  = 2
 isvrt  = 16
 nffrq  = 64
 nbfrq  = 1
-nsweep = 10000000
+nsweep = 20000000
 Uc     = 2.00
 mune   = 1.00
 beta   = 10.0
-
-#
-# how to generate the initial hybridization function?
-#
-# u_hyb.py -e [-1.0,0.0,1.0] -v 0.5 -b 10.0 -m 8193 -n 2 solver.hyb.in
-#
