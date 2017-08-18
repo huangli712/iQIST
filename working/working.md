@@ -12,7 +12,7 @@ Ref.: ALPSCore/CT-HYB-SEGMENT
 * v011 // 1-band model, density-density interaction (static )
 * v012 // 1-band model, density-density interaction (static )
 
-Ref.: POMEROL
+Ref.: POMEROL+POMEROL2TRIQS
 
 * v013 // 1-band model, density-density interaction (dynamic)
 * v014 // 1-band model, density-density interaction (dynamic)
