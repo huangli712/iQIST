@@ -565,3 +565,10 @@
 
      return
   end subroutine s_mix_z
+
+!!========================================================================
+!!>>> vector add operations                                            <<<
+!!========================================================================
+
+  subroutine s_vecadd_z()
+  end subroutine s_vecadd_z
