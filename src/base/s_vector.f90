@@ -570,5 +570,31 @@
 !!>>> vector add operations                                            <<<
 !!========================================================================
 
-  subroutine s_vecadd_z()
+  subroutine s_vecadd_z(n, zx, zy, alpha)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of complex(dp) vector
+     integer, intent(in)        :: n
+
+! prefactor
+     real(dp), intent(in)       :: alpha
+
+! complex(dp) vector X
+     complex(dp), intent(inout) :: zx(n)
+
+! complex(dp) matrix Y
+     complex(dp), intent(in)    :: zy(n,n)
+
+! local variables
+! loop index
+     integer :: i
+
+     do i=1,n
+         zx(i) = zx(i) + alpha * zy(i,i) 
+     enddo ! over i={1,n} loop
+
+     return
   end subroutine s_vecadd_z
