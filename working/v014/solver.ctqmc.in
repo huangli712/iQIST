@@ -32,5 +32,5 @@ mune   = 4.00
 beta   = 50.0
 part   = 1.00
 
-#isscf  = 1
-#isvrt  = 2
+isscf  = 1
+isvrt  = 2
