@@ -101,8 +101,9 @@
 
                      call cat_bse_solver(Bmat, vertexD, gammaM)
                      call cat_bse_iterator(1, one, Bmat, vertexD, gammaM2)
-                     gammaM = half * 1.0 * (gammaM - half * gammaM2)
-                     call dt_df_ladd(full_v(:,o,k), gammaM)
+                     gammaM = gammaM - half * gammaM2
+                     !call dt_df_ladd(full_v(:,o,k), gammaM)
+                     call s_vecadd_z(nffrq, full_v(:,o,k), gammaM, half * 1.0_dp)
 
                  enddo K_LOOP
 
