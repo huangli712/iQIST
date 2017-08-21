@@ -2,7 +2,7 @@
 
   subroutine df_print_header()
      use constants, only : mystd
-     use version, only : FULL_VER
+     use version, only : V_FULL
 
      use df_control, only : cname
      use df_control, only : nprocs
@@ -19,7 +19,7 @@
      write(mystd,'(2X,a)') '>>> A Modern Dual Fermion Framework For Quantum Lattice Models'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at SPCLab/CAEP)'
      write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
