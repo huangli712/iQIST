@@ -570,6 +570,11 @@
 !!>>> vector add operations                                            <<<
 !!========================================================================
 
+!!
+!! @sub s_vecadd_z
+!!
+!! add diagonal elements of a matrix to a vector, complex(dp) version
+!!
   subroutine s_vecadd_z(n, zx, zy, alpha)
      use constants, only : dp
 
