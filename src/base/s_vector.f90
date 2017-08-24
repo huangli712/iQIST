@@ -587,18 +587,18 @@
 ! prefactor
      real(dp), intent(in)       :: alpha
 
-! complex(dp) vector X
-     complex(dp), intent(inout) :: zx(n)
+! integer vector X
+     complex(dp), intent(inout) :: ix(n)
 
-! complex(dp) matrix Y
-     complex(dp), intent(in)    :: zy(n,n)
+! integer matrix Y
+     complex(dp), intent(in)    :: iy(n,n)
 
 ! local variables
 ! loop index
      integer :: i
 
      do i=1,n
-         zx(i) = zx(i) + alpha * zy(i,i) 
+         ix(i) = ix(i) + int( alpha * iy(i,i) )
      enddo ! over i={1,n} loop
 
      return
