@@ -582,16 +582,16 @@
 
 ! external arguments
 ! dimension of integer vector
-     integer, intent(in)        :: n
+     integer, intent(in)    :: n
 
 ! prefactor
-     real(dp), intent(in)       :: alpha
+     real(dp), intent(in)   :: alpha
 
 ! integer vector X
-     complex(dp), intent(inout) :: ix(n)
+     integer, intent(inout) :: ix(n)
 
 ! integer matrix Y
-     complex(dp), intent(in)    :: iy(n,n)
+     integer, intent(in)    :: iy(n,n)
 
 ! local variables
 ! loop index
