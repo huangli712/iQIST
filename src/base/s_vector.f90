@@ -605,34 +605,34 @@
   end subroutine s_vecadd_i
 
 !!
-!! @sub s_vecadd_z
+!! @sub s_vecadd_d
 !!
-!! add diagonal elements of a matrix to a vector, complex(dp) version
+!! add diagonal elements of a matrix to a vector, real(dp) version
 !!
-  subroutine s_vecadd_d(n, zx, zy, alpha)
+  subroutine s_vecadd_d(n, dx, dy, alpha)
      use constants, only : dp
 
      implicit none
 
 ! external arguments
-! dimension of complex(dp) vector
-     integer, intent(in)        :: n
+! dimension of real(dp) vector
+     integer, intent(in)     :: n
 
 ! prefactor
-     real(dp), intent(in)       :: alpha
+     real(dp), intent(in)    :: alpha
 
-! complex(dp) vector X
-     complex(dp), intent(inout) :: zx(n)
+! real(dp) vector X
+     real(dp), intent(inout) :: dx(n)
 
-! complex(dp) matrix Y
-     complex(dp), intent(in)    :: zy(n,n)
+! real(dp) matrix Y
+     real(dp), intent(in)    :: dy(n,n)
 
 ! local variables
 ! loop index
      integer :: i
 
      do i=1,n
-         zx(i) = zx(i) + alpha * zy(i,i) 
+         dx(i) = dx(i) + alpha * dy(i,i) 
      enddo ! over i={1,n} loop
 
      return
