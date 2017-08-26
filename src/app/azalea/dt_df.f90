@@ -15,6 +15,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+  subroutine dt_df_std()
+     implicit none
+
+     return
+  end subroutine dt_df_std
+
 !!
 !! @sub dt_df_ladder
 !!
