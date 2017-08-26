@@ -50,7 +50,7 @@
 
      complex(dp), allocatable :: gstp(:,:,:)
      complex(dp), allocatable :: gnew(:,:,:)
-     complex(dp), allocatable :: full_v(:,:,:)
+     complex(dp), allocatable :: gvrt(:,:,:)
      complex(dp), allocatable :: bubble(:,:,:)
 
      complex(dp), allocatable :: Bmat(:,:)
@@ -61,7 +61,7 @@
 
      allocate(gstp(nffrq,norbs,nkpts))
      allocate(gnew(nffrq,norbs,nkpts))
-     allocate(full_v(nffrq,norbs,nkpts))
+     allocate(gvrt(nffrq,norbs,nkpts))
      allocate(bubble(nffrq,norbs,nkpts))
 
      allocate(Bmat(nffrq,nffrq))
@@ -81,7 +81,7 @@
 
              call cat_fill_k(dual_g, gstp, om)
              call cat_dia_2d(dual_g, gstp, bubble)
-             full_v = czero
+             gvrt = czero
 
              O_LOOP: do o=1,norbs
 
@@ -95,17 +95,17 @@
                      call cat_bse_solver(Bmat, vertexM, gammaM)
                      call cat_bse_iterator(1, one, Bmat, vertexM, gammaM2)
                      gammaM =  gammaM - half * gammaM2
-                     call s_vecadd_z(nffrq, full_v(:,o,k), gammaM, half * 3.0_dp)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 3.0_dp)
 
                      call cat_bse_solver(Bmat, vertexD, gammaM)
                      call cat_bse_iterator(1, one, Bmat, vertexD, gammaM2)
                      gammaM = gammaM - half * gammaM2
-                     call s_vecadd_z(nffrq, full_v(:,o,k), gammaM, half * 1.0_dp)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 1.0_dp)
 
                  enddo K_LOOP
 
                  do w=1,nffrq
-                     call cat_fft_2d(+1, nkp_x, nkp_y, full_v(w,o,:), vr)
+                     call cat_fft_2d(+1, nkp_x, nkp_y, gvrt(w,o,:), vr)
                      call cat_fft_2d(-1, nkp_x, nkp_y, gstp(w,o,:), gr)
                      gr = vr * gr / real(nkpts * nkpts)
                      call cat_fft_2d(+1, nkp_x, nkp_y, gr, vr)
@@ -134,7 +134,7 @@
 
      deallocate(gstp)
      deallocate(gnew)
-     deallocate(full_v)
+     deallocate(gvrt)
      deallocate(bubble)
      deallocate(Bmat)
      deallocate(vertexM)
