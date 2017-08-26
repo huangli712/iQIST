@@ -51,7 +51,7 @@
      complex(dp), allocatable :: gstp(:,:,:)
      complex(dp), allocatable :: gnew(:,:,:)
      complex(dp), allocatable :: gvrt(:,:,:)
-     complex(dp), allocatable :: gcnv(:,:,:)
+     complex(dp), allocatable :: g2(:,:,:)
 
      complex(dp), allocatable :: Bmat(:,:)
      complex(dp), allocatable :: vertexM(:,:)
@@ -62,7 +62,7 @@
      allocate(gstp(nffrq,norbs,nkpts))
      allocate(gnew(nffrq,norbs,nkpts))
      allocate(gvrt(nffrq,norbs,nkpts))
-     allocate(gcnv(nffrq,norbs,nkpts))
+     allocate(g2(nffrq,norbs,nkpts))
 
      allocate(Bmat(nffrq,nffrq))
      allocate(vertexM(nffrq,nffrq))
@@ -80,7 +80,7 @@
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', om
 
              call cat_fill_k(dual_g, gstp, om)
-             call cat_dia_2d(dual_g, gstp, gcnv)
+             call cat_dia_2d(dual_g, gstp, g2)
              gvrt = czero
 
              O_LOOP: do o=1,norbs
@@ -90,7 +90,7 @@
 
                  K_LOOP: do k=1,nkpts
 
-                     call s_diag_z(nffrq, gcnv(:,o,k), Bmat)
+                     call s_diag_z(nffrq, g2(:,o,k), Bmat)
 
                      call cat_bse_solver(Bmat, vertexM, gammaM)
                      call cat_bse_iterator(1, one, Bmat, vertexM, gammaM2)
@@ -135,7 +135,7 @@
      deallocate(gstp)
      deallocate(gnew)
      deallocate(gvrt)
-     deallocate(gcnv)
+     deallocate(g2)
      deallocate(Bmat)
      deallocate(vertexM)
      deallocate(vertexD)
