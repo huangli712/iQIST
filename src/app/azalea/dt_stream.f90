@@ -46,6 +46,11 @@
 ! used to check whether the input file (dt.config.in) exists
      logical :: exists
 
+! setup general control flags
+!-------------------------------------------------------------------------
+     isdia = 2       ! self-consistent scheme
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! setup common variables for interacting lattice model
 !-------------------------------------------------------------------------
      nband = 1       ! number of correlated bands
@@ -90,6 +95,8 @@
              call p_parse('dt.config.in')
 
 ! extract parameters
+             call p_get('isdia' , isdia )
+
              call p_get('nband' , nband )
              call p_get('nspin' , nspin )
              call p_get('norbs' , norbs )
@@ -120,6 +127,9 @@
 ! since config parameters may be updated in master node, it is crucial
 ! to broadcast config parameters from root to all children processes
 # if defined (MPI)
+
+     call mp_bcast( isdia , master )
+     call mp_barrier()
 
      call mp_bcast( nband , master )
      call mp_bcast( nspin , master )
