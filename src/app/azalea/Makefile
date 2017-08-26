@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 01/17/2017 by li huang (created)
-## 08/29/2017 by li huang (last modified)
+## 01/10/2018 by li huang (last modified)
 ##
 ##
 
@@ -30,7 +30,7 @@
 include ../../../build/make.sys
 
 modc = dt_control.o dt_context.o
-lev1 = dt_df.o
+lev1 = dt_run.o dt_df.o
 lev2 = dt_stream.o dt_util.o
 lev3 = dt_dump.o dt_print.o
 main = dt_main.o

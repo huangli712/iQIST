@@ -102,6 +102,8 @@
          call s_print_error('dt_df_core','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+
+
      DF_LOOP: do it=1,ndfit
 
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
