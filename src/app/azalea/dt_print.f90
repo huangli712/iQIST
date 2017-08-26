@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           01/04/2018 by li huang (last modified)
+!!!           01/10/2018 by li huang (last modified)
 !!! purpose : provide printing infrastructure for dual fermion engine.
 !!! status  : unstable
 !!! comment :
@@ -121,6 +121,10 @@
      use control ! ALL
 
      implicit none
+
+     write(mystd,'(2X,a)') 'configuration parameters -> core control'
+     write(mystd,'(2X,a)') '----------------------------------------------------'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'isdia  /', isdia , 'type / i'
 
      write(mystd,'(2X,a)') 'configuration parameters -> lattice model'
      write(mystd,'(2X,a)') '----------------------------------------------------'
