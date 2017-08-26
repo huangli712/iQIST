@@ -1,6 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
-!!! program : dt_df_core
+!!! program : dt_df_std
+!!!           dt_df_ladder
 !!!           dt_df_dual
 !!!           dt_df_schi
 !!!           dt_df_cchi
@@ -21,7 +22,7 @@
 !!
   subroutine dt_df_core()
      use constants, only : dp
-     use constants, only : zero, one, half, epss, czero, cone
+     use constants, only : one, half, czero
      use constants, only : mystd
 
      use control, only : norbs
@@ -37,11 +38,19 @@
      implicit none
 
 ! local variables
-! loop index
+! loop index for dual fermion iterations
      integer :: it
+
+! loop index for k-points
      integer :: k
+
+! loop index for orbitals
      integer :: o
+
+! loop index for bosonic frequency \nu
      integer :: v
+
+! loop index for fermionic frequency \omega
      integer :: w
 
      real(dp) :: om
