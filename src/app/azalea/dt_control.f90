@@ -33,6 +33,24 @@
 !!========================================================================
 
 !!
+!! @var isdia
+!!
+!! control flag, define the running scheme of the code
+!!
+!! if isdia == 1:
+!!     standard dual fermion approximation scheme
+!!
+!! if isdia == 2:
+!!     ladder dual fermion approximation scheme
+!!
+!! if isdia == 3:
+!!     reserved
+!!
+     integer, public, save :: isdia  = 2
+
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!
 !! @var nband
 !!
 !! number of correlated bands
