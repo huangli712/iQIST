@@ -2,7 +2,7 @@
 !!! project : azalea
 !!! program : dt_df_std
 !!!           dt_df_ladder
-!!!           dt_df_dual
+!!!           dt_df_dyson
 !!!           dt_df_schi
 !!!           dt_df_cchi
 !!! source  : dt_df.f90
@@ -161,7 +161,7 @@
 
          enddo V_LOOP
 
-         call dt_df_dual(+1, gnew, dual_s, dual_b)
+         call dt_df_dyson(+1, gnew, dual_s, dual_b)
          call s_mix_z( size(gnew), dual_g, gnew, dfmix)
 
          dual_g = gnew
@@ -170,7 +170,7 @@
          write(mystd,*)
      enddo DF_LOOP
 
-     call dt_df_dual(-1, dual_g, dual_s, dual_b)
+     call dt_df_dyson(-1, dual_g, dual_s, dual_b)
 
      do w=1,nffrq
        print *, w, fmesh(w)
@@ -190,12 +190,12 @@
   end subroutine dt_df_ladder
 
 !!
-!! @sub dt_df_dual
+!! @sub dt_df_dyson
 !!
 !! try to calculate the dual green's function or self-energy function by
 !! using the dyson equation
 !!
-  subroutine dt_df_dual(op, dual_g, dual_s, dual_b)
+  subroutine dt_df_dyson(op, dual_g, dual_s, dual_b)
      use constants, only : dp
      use constants, only : one
 
@@ -219,7 +219,7 @@
      endif ! back if ( op == 1 ) block
 
      return
-  end subroutine dt_df_dual
+  end subroutine dt_df_dyson
 
 !!
 !! @sub dt_df_schi
