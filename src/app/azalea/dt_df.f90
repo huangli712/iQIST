@@ -16,11 +16,11 @@
 !!!-----------------------------------------------------------------------
 
 !!
-!! @sub dt_df_core
+!! @sub dt_df_ladder
 !!
 !! implement the dual fermion framework
 !!
-  subroutine dt_df_core()
+  subroutine dt_df_ladder()
      use constants, only : dp
      use constants, only : one, half, czero
      use constants, only : mystd
@@ -176,7 +176,7 @@
      deallocate(Gmat)
 
      return
-  end subroutine dt_df_core
+  end subroutine dt_df_ladder
 
 !!
 !! @sub dt_df_dual
