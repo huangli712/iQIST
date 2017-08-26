@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           01/04/2018 by li huang (last modified)
+!!!           01/10/2018 by li huang (last modified)
 !!! purpose : main subroutines for the dual fermion framework.
 !!! status  : unstable
 !!! comment :
@@ -56,7 +56,7 @@
      complex(dp), allocatable :: imat(:,:)
      complex(dp), allocatable :: mmat(:,:)
      complex(dp), allocatable :: dmat(:,:)
-     complex(dp), allocatable :: gammaM(:,:)
+     complex(dp), allocatable :: Gmat(:,:)
 
      allocate(gstp(nffrq,norbs,nkpts))
      allocate(gnew(nffrq,norbs,nkpts))
@@ -66,7 +66,7 @@
      allocate(imat(nffrq,nffrq))
      allocate(mmat(nffrq,nffrq))
      allocate(dmat(nffrq,nffrq))
-     allocate(gammaM(nffrq,nffrq))
+     allocate(Gmat(nffrq,nffrq))
 
      DF_LOOP: do it=1,ndfit
 
@@ -90,15 +90,15 @@
 
                      call s_diag_z(nffrq, g2(:,o,k), imat)
 
-                     call cat_bse_solver(imat, mmat, gammaM)
-                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 3.0_dp)
-                     call cat_bse_iterator(1, one, imat, mmat, gammaM)
-                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, -half * half * 3.0_dp)
+                     call cat_bse_solver(imat, mmat, Gmat)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), Gmat, half * 3.0_dp)
+                     call cat_bse_iterator(1, one, imat, mmat, Gmat)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), Gmat, -half * half * 3.0_dp)
 
-                     call cat_bse_solver(imat, dmat, gammaM)
-                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 1.0_dp)
-                     call cat_bse_iterator(1, one, imat, dmat, gammaM)
-                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, -half * half * 1.0_dp)
+                     call cat_bse_solver(imat, dmat, Gmat)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), Gmat, half * 1.0_dp)
+                     call cat_bse_iterator(1, one, imat, dmat, Gmat)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), Gmat, -half * half * 1.0_dp)
 
                  enddo K_LOOP
 
@@ -137,7 +137,7 @@
      deallocate(imat)
      deallocate(mmat)
      deallocate(dmat)
-     deallocate(gammaM)
+     deallocate(Gmat)
 
      return
   end subroutine dt_df_core
