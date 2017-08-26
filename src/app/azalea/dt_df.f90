@@ -60,13 +60,25 @@
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
 
+! bubble function
      complex(dp), allocatable :: g2  (:,:,:)
+
+! shifted dual green's function
      complex(dp), allocatable :: gstp(:,:,:)
+
+! new dual green's function
      complex(dp), allocatable :: gnew(:,:,:)
+
+! ladder green's function, used to calculate dual self-energy function
      complex(dp), allocatable :: gvrt(:,:,:)
 
+! diagonal matrix for bubble function
      complex(dp), allocatable :: imat(:,:)
+
+! matrix form for vertex function (magnetic channel)
      complex(dp), allocatable :: mmat(:,:)
+
+! matrix form for vertex function (density channel)
      complex(dp), allocatable :: dmat(:,:)
      complex(dp), allocatable :: Gmat(:,:)
 
