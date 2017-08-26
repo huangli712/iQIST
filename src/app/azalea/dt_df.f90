@@ -48,16 +48,15 @@
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
 
+     complex(dp), allocatable :: g2  (:,:,:)
      complex(dp), allocatable :: gstp(:,:,:)
      complex(dp), allocatable :: gnew(:,:,:)
      complex(dp), allocatable :: gvrt(:,:,:)
-     complex(dp), allocatable :: g2(:,:,:)
 
      complex(dp), allocatable :: Bmat(:,:)
      complex(dp), allocatable :: vertexM(:,:)
      complex(dp), allocatable :: vertexD(:,:)
      complex(dp), allocatable :: gammaM(:,:)
-     complex(dp), allocatable :: gammaM2(:,:)
 
      allocate(gstp(nffrq,norbs,nkpts))
      allocate(gnew(nffrq,norbs,nkpts))
@@ -68,7 +67,6 @@
      allocate(vertexM(nffrq,nffrq))
      allocate(vertexD(nffrq,nffrq))
      allocate(gammaM(nffrq,nffrq))
-     allocate(gammaM2(nffrq,nffrq))
 
      DF_LOOP: do it=1,ndfit
 
@@ -93,14 +91,14 @@
                      call s_diag_z(nffrq, g2(:,o,k), Bmat)
 
                      call cat_bse_solver(Bmat, vertexM, gammaM)
-                     call cat_bse_iterator(1, one, Bmat, vertexM, gammaM2)
-                     gammaM =  gammaM - half * gammaM2
                      call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 3.0_dp)
+                     call cat_bse_iterator(1, one, Bmat, vertexM, gammaM)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, -half * half * 3.0_dp)
 
                      call cat_bse_solver(Bmat, vertexD, gammaM)
-                     call cat_bse_iterator(1, one, Bmat, vertexD, gammaM2)
-                     gammaM = gammaM - half * gammaM2
                      call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 1.0_dp)
+                     call cat_bse_iterator(1, one, Bmat, vertexD, gammaM)
+                     call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, -half * half * 1.0_dp)
 
                  enddo K_LOOP
 
@@ -140,7 +138,6 @@
      deallocate(vertexM)
      deallocate(vertexD)
      deallocate(gammaM)
-     deallocate(gammaM2)
 
      return
   end subroutine dt_df_core
