@@ -49,7 +49,7 @@
      complex(dp) :: gr(nkpts)
 
      complex(dp), allocatable :: gstp(:,:,:)
-     complex(dp), allocatable :: dual_g_new(:,:,:)
+     complex(dp), allocatable :: gnew(:,:,:)
      complex(dp), allocatable :: full_v(:,:,:)
      complex(dp), allocatable :: bubble(:,:,:)
 
@@ -60,7 +60,7 @@
      complex(dp), allocatable :: gammaM2(:,:)
 
      allocate(gstp(nffrq,norbs,nkpts))
-     allocate(dual_g_new(nffrq,norbs,nkpts))
+     allocate(gnew(nffrq,norbs,nkpts))
      allocate(full_v(nffrq,norbs,nkpts))
      allocate(bubble(nffrq,norbs,nkpts))
 
@@ -116,10 +116,10 @@
 
          enddo V_LOOP
 
-         call dt_df_dual(+1, dual_g_new, dual_s, dual_b)
-         call s_mix_z( size(dual_g_new), dual_g, dual_g_new, dfmix)
+         call dt_df_dual(+1, gnew, dual_s, dual_b)
+         call s_mix_z( size(gnew), dual_g, gnew, dfmix)
 
-         dual_g = dual_g_new
+         dual_g = gnew
          dual_s = czero
 
          write(mystd,*)
@@ -133,7 +133,7 @@
      enddo
 
      deallocate(gstp)
-     deallocate(dual_g_new)
+     deallocate(gnew)
      deallocate(full_v)
      deallocate(bubble)
      deallocate(Bmat)
