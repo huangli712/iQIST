@@ -39,19 +39,22 @@
 
 ! local variables
 ! loop index for dual fermion iterations
-     integer :: it
+     integer  :: it
 
 ! loop index for k-points
-     integer :: k
+     integer  :: k
 
 ! loop index for orbitals
-     integer :: o
+     integer  :: o
 
 ! loop index for bosonic frequency \nu
-     integer :: v
+     integer  :: v
 
 ! loop index for fermionic frequency \omega
-     integer :: w
+     integer  :: w
+
+! status flag
+     integer  :: istat
 
 ! current bosonic frequency
      real(dp) :: om
@@ -84,15 +87,20 @@
 ! fully dressed vertex function, \Gamma 
      complex(dp), allocatable :: Gmat(:,:)
 
-     allocate(gstp(nffrq,norbs,nkpts))
-     allocate(gnew(nffrq,norbs,nkpts))
-     allocate(gvrt(nffrq,norbs,nkpts))
-     allocate(g2(nffrq,norbs,nkpts))
+! allocate memory
+     allocate(g2  (nffrq,norbs,nkpts), stat=istat)
+     allocate(gstp(nffrq,norbs,nkpts), stat=istat)
+     allocate(gnew(nffrq,norbs,nkpts), stat=istat)
+     allocate(gvrt(nffrq,norbs,nkpts), stat=istat)
 
-     allocate(imat(nffrq,nffrq))
-     allocate(mmat(nffrq,nffrq))
-     allocate(dmat(nffrq,nffrq))
-     allocate(Gmat(nffrq,nffrq))
+     allocate(imat(nffrq,nffrq),       stat=istat)
+     allocate(mmat(nffrq,nffrq),       stat=istat)
+     allocate(dmat(nffrq,nffrq),       stat=istat)
+     allocate(Gmat(nffrq,nffrq),       stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('dt_df_core','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      DF_LOOP: do it=1,ndfit
 
