@@ -53,9 +53,9 @@
      complex(dp), allocatable :: gnew(:,:,:)
      complex(dp), allocatable :: gvrt(:,:,:)
 
-     complex(dp), allocatable :: Bmat(:,:)
-     complex(dp), allocatable :: vertexM(:,:)
-     complex(dp), allocatable :: vertexD(:,:)
+     complex(dp), allocatable :: imat(:,:)
+     complex(dp), allocatable :: mmat(:,:)
+     complex(dp), allocatable :: dmat(:,:)
      complex(dp), allocatable :: gammaM(:,:)
 
      allocate(gstp(nffrq,norbs,nkpts))
@@ -63,9 +63,9 @@
      allocate(gvrt(nffrq,norbs,nkpts))
      allocate(g2(nffrq,norbs,nkpts))
 
-     allocate(Bmat(nffrq,nffrq))
-     allocate(vertexM(nffrq,nffrq))
-     allocate(vertexD(nffrq,nffrq))
+     allocate(imat(nffrq,nffrq))
+     allocate(mmat(nffrq,nffrq))
+     allocate(dmat(nffrq,nffrq))
      allocate(gammaM(nffrq,nffrq))
 
      DF_LOOP: do it=1,ndfit
@@ -83,21 +83,21 @@
 
              O_LOOP: do o=1,norbs
 
-                 vertexM = vert_m(:,:,v)
-                 vertexD = vert_d(:,:,v)
+                 mmat = vert_m(:,:,v)
+                 dmat = vert_d(:,:,v)
 
                  K_LOOP: do k=1,nkpts
 
-                     call s_diag_z(nffrq, g2(:,o,k), Bmat)
+                     call s_diag_z(nffrq, g2(:,o,k), imat)
 
-                     call cat_bse_solver(Bmat, vertexM, gammaM)
+                     call cat_bse_solver(imat, mmat, gammaM)
                      call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 3.0_dp)
-                     call cat_bse_iterator(1, one, Bmat, vertexM, gammaM)
+                     call cat_bse_iterator(1, one, imat, mmat, gammaM)
                      call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, -half * half * 3.0_dp)
 
-                     call cat_bse_solver(Bmat, vertexD, gammaM)
+                     call cat_bse_solver(imat, dmat, gammaM)
                      call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, half * 1.0_dp)
-                     call cat_bse_iterator(1, one, Bmat, vertexD, gammaM)
+                     call cat_bse_iterator(1, one, imat, dmat, gammaM)
                      call s_vecadd_z(nffrq, gvrt(:,o,k), gammaM, -half * half * 1.0_dp)
 
                  enddo K_LOOP
@@ -134,9 +134,9 @@
      deallocate(gnew)
      deallocate(gvrt)
      deallocate(g2)
-     deallocate(Bmat)
-     deallocate(vertexM)
-     deallocate(vertexD)
+     deallocate(imat)
+     deallocate(mmat)
+     deallocate(dmat)
      deallocate(gammaM)
 
      return
