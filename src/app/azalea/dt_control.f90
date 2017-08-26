@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           01/04/2018 by li huang (last modified)
+!!!           01/10/2018 by li huang (last modified)
 !!! purpose : define global control parameters for diagrammatic framework
 !!!           for dynamical mean field theory.
 !!! status  : unstable
@@ -53,6 +53,8 @@
 !!
      integer, public, save :: norbs  = 2
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 !!
 !! @var nffrq
 !!
@@ -66,6 +68,8 @@
 !! number of bosonic frequncies for the two-particle green's function
 !!
      integer, public, save :: nbfrq  = 8
+
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!
 !! @var nkpts
@@ -94,6 +98,8 @@
 !! number of k-points (z-axis)
 !!
      integer, public, save :: nkp_z  = 8
+
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!
 !! @var ndfit
@@ -133,6 +139,8 @@
 !! hopping parameter t for Hubbard model
 !!
      real(dp), public, save :: part  = 0.50_dp
+
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!
 !! @var dfmix
