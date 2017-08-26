@@ -41,6 +41,7 @@
      use control, only : nkpts, nkp_x, nkp_y
      use control, only : ndfit, dfmix
      use control, only : beta
+     use control, only : myid, master
 
      use context, only : fmesh, bmesh
      use context, only : dual_g, dual_s, dual_b
@@ -117,12 +118,16 @@
 
      DF_LOOP: do it=1,ndfit
 
-         write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
+         if ( myid == master ) then ! only master node can do it
+             write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
+         endif ! back if ( myid == master ) block
 
          V_LOOP: do v=1,nbfrq
 
              om = bmesh(v)
-             write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', om
+             if ( myid == master ) then ! only master node can do it
+                 write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', om
+             endif ! back if ( myid == master ) block
 
              call cat_fill_k(dual_g, gstp, om)
              call cat_dia_2d(dual_g, gstp, g2)
