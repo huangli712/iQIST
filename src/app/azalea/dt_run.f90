@@ -1,2 +1,5 @@
-  subroutine test
-  end subroutine test
+  subroutine dt_run()
+     implicit none
+
+     return
+  end subroutine dt_run
