@@ -114,7 +114,9 @@
          call s_print_error('dt_df_core','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-
+!!========================================================================
+!!>>> starting ladder dual fermion iteration                           <<<
+!!========================================================================
 
      DF_LOOP: do it=1,ndfit
 
@@ -174,6 +176,10 @@
 
          write(mystd,*)
      enddo DF_LOOP
+
+!!========================================================================
+!!>>> finishing ladder dual fermion iteration                          <<<
+!!========================================================================
 
      call dt_df_dyson(-1, dual_g, dual_s, dual_b)
 
