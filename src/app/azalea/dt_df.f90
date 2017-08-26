@@ -60,7 +60,7 @@
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
 
-! bubble function
+! two-particle bubble function
      complex(dp), allocatable :: g2  (:,:,:)
 
 ! shifted dual green's function
@@ -72,14 +72,16 @@
 ! ladder green's function, used to calculate dual self-energy function
      complex(dp), allocatable :: gvrt(:,:,:)
 
-! diagonal matrix for bubble function
+! matrix form for bubble function, \chi
      complex(dp), allocatable :: imat(:,:)
 
-! matrix form for vertex function (magnetic channel)
+! matrix form for vertex function (magnetic channel, \gamma^m)
      complex(dp), allocatable :: mmat(:,:)
 
-! matrix form for vertex function (density channel)
+! matrix form for vertex function (density channel, \gamma^d)
      complex(dp), allocatable :: dmat(:,:)
+
+! fully dressed vertex function, \Gamma 
      complex(dp), allocatable :: Gmat(:,:)
 
      allocate(gstp(nffrq,norbs,nkpts))
