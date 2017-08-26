@@ -48,7 +48,7 @@
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
 
-     complex(dp), allocatable :: gshift(:,:,:)
+     complex(dp), allocatable :: gstp(:,:,:)
      complex(dp), allocatable :: dual_g_new(:,:,:)
      complex(dp), allocatable :: full_v(:,:,:)
      complex(dp), allocatable :: bubble(:,:,:)
@@ -59,7 +59,7 @@
      complex(dp), allocatable :: gammaM(:,:)
      complex(dp), allocatable :: gammaM2(:,:)
 
-     allocate(gshift(nffrq,norbs,nkpts))
+     allocate(gstp(nffrq,norbs,nkpts))
      allocate(dual_g_new(nffrq,norbs,nkpts))
      allocate(full_v(nffrq,norbs,nkpts))
      allocate(bubble(nffrq,norbs,nkpts))
@@ -79,8 +79,8 @@
              om = bmesh(v)
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', om
 
-             call cat_fill_k(dual_g, gshift, om)
-             call cat_dia_2d(dual_g, gshift, bubble)
+             call cat_fill_k(dual_g, gstp, om)
+             call cat_dia_2d(dual_g, gstp, bubble)
              full_v = czero
 
              O_LOOP: do o=1,norbs
@@ -106,7 +106,7 @@
 
                  do w=1,nffrq
                      call cat_fft_2d(+1, nkp_x, nkp_y, full_v(w,o,:), vr)
-                     call cat_fft_2d(-1, nkp_x, nkp_y, gshift(w,o,:), gr)
+                     call cat_fft_2d(-1, nkp_x, nkp_y, gstp(w,o,:), gr)
                      gr = vr * gr / real(nkpts * nkpts)
                      call cat_fft_2d(+1, nkp_x, nkp_y, gr, vr)
                      dual_s(w,o,:) = dual_s(w,o,:) + vr / beta
@@ -132,7 +132,7 @@
        print *, dual_s(w,1,:)
      enddo
 
-     deallocate(gshift)
+     deallocate(gstp)
      deallocate(dual_g_new)
      deallocate(full_v)
      deallocate(bubble)
