@@ -1,3 +1,15 @@
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : dt_run
+!!! source  : dt_run.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 01/10/2018 by li huang (created)
+!!!           01/10/2018 by li huang (last modified)
+!!! purpose : main entry of the program.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !!
 !! @sub dt_run
