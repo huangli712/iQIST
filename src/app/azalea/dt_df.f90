@@ -15,6 +15,11 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! @sub dt_df_std
+!!
+!! implement the standard dual fermion approximation framework
+!!
   subroutine dt_df_std()
      implicit none
 
@@ -24,7 +29,7 @@
 !!
 !! @sub dt_df_ladder
 !!
-!! implement the dual fermion framework
+!! implement the ladder dual fermion approximation framework
 !!
   subroutine dt_df_ladder()
      use constants, only : dp
