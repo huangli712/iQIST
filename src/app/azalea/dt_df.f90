@@ -53,7 +53,10 @@
 ! loop index for fermionic frequency \omega
      integer :: w
 
+! current bosonic frequency
      real(dp) :: om
+
+! dummy complex(dp) arrays, used to do fourier transformation
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
 
