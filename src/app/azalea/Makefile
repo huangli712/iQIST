@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 01/17/2017 by li huang (created)
-## 02/01/2017 by li huang (last modified)
+## 08/29/2017 by li huang (last modified)
 ##
 ##
 
@@ -29,19 +29,14 @@
 
 include ../../../build/make.sys
 
-modc = df_control.o df_context.o
-dual = df_diag.o
-core = df_core.o
-lev1 = df_solver.o df_susc.o
-lev2 = df_stream.o df_util.o
-lev3 = df_dump.o df_print.o
-main = df_main.o
+modc = dmft_control.o dmft_context.o
+impl = impl_dmft.o impl_df.o
+lev1 = dmft_stream.o dmft_util.o
+lev2 = dmft_dump.o dmft_print.o
+main = dmft_main.o
+mlib = libMM.a
 
-CLIB = libMM.a
-
-objects = $(modc) $(dual) $(core) $(lev1) $(lev2) $(lev3)
-exe_obj = $(objects) $(main) $(CLIB)
-lib_obj = $(objects)
+objects = $(modc) $(impl) $(lev1) $(lev2) $(main) $(mlib)
 
 default: all
 
