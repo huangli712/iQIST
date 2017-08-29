@@ -128,10 +128,15 @@
   end subroutine dt_run
 
   subroutine cat_dual_shift(dual_in, dual_out, shift)
-     use constants
+     use constants, only : dp
+     use constants, only : one, two, pi, czero
 
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+     use control, only : beta
+
+     use context, only : fmesh
 
      implicit none
 
