@@ -185,7 +185,8 @@
 !!========================================================================
 
   module context
-     use constants
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control
 
