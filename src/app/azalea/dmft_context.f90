@@ -128,16 +128,26 @@
 !!>>> module df_latt                                                   <<<
 !!========================================================================
 
-!! lattice variables
+!!
+!! @mod latt
+!!
   module df_latt
      use constants, only : dp
 
      implicit none
 
-! lattice green's function
+!!
+!! @var latt_g
+!!
+!! lattice green's function
+!!
      complex(dp), public, save, allocatable :: latt_g(:,:,:)
 
-! lattice self-energy function
+!!
+!! @var latt_s
+!!
+!! lattice self-energy function
+!!
      complex(dp), public, save, allocatable :: latt_s(:,:,:)
 
   end module df_latt
