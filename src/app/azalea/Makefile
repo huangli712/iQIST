@@ -61,9 +61,7 @@ exe: cssl csml $(objects)
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f *.so
-	rm -f df
-	rm -f libdf.a
+	rm -f dmft
 	rm -f libMM.a
 
 clean-dat:
