@@ -17,11 +17,11 @@
   end subroutine df_config
 
   subroutine df_setup_array()
-     use df_context ! ALL
+     use context ! ALL
 
      implicit none
 
-! allocate memory for df_context module
+! allocate memory for context module
      call df_allocate_memory_mesh()
      call df_allocate_memory_dmft()
      call df_allocate_memory_dual()
@@ -35,7 +35,7 @@
      use constants, only : dp, two, pi
 
      use control
-     use df_context
+     use context
 
      implicit none
 
@@ -81,7 +81,7 @@
      use constants, only : dp, mytmp
 
      use control
-     use df_context
+     use context
 
      implicit none
 
@@ -144,7 +144,7 @@
      use constants, only : dp, one
 
      use control
-     use df_context
+     use context
 
      implicit none
 
@@ -168,7 +168,7 @@
      use constants, only : dp 
 
      use control
-     use df_context
+     use context
 
      implicit none
 
@@ -197,11 +197,11 @@
   end subroutine df_vert_init
 
   subroutine df_final_array()
-     use df_context ! ALL
+     use context ! ALL
 
      implicit none
 
-! deallocate memory for df_context module
+! deallocate memory for context module
      call df_deallocate_memory_mesh()
      call df_deallocate_memory_dmft()
      call df_deallocate_memory_dual()
