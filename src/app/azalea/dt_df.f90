@@ -18,11 +18,12 @@
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
+     use control, only : nkp_x, nkp_y
      use control, only : ndfit
 
      use context, only : bmesh
      use context, only : dual_g
-     use context, only : vert_m
+     use context, only : vert_d, vert_m
 
      implicit none
 
