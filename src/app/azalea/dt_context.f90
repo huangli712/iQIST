@@ -274,7 +274,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_dmft','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      dmft_g = czero
@@ -295,7 +295,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_dual','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      dual_g = czero
@@ -315,7 +315,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_latt','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      latt_g = czero
@@ -334,7 +334,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_vert','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      vert_d = czero
