@@ -1,6 +1,6 @@
 
 
-  subroutine df_print_header()
+  subroutine dt_print_header()
      use constants, only : mystd
      use version, only : V_FULL
 
@@ -40,9 +40,9 @@
      write(mystd,*)
 
      return
-  end subroutine df_print_header
+  end subroutine dt_print_header
 
-  subroutine df_print_footer()
+  subroutine dt_print_footer()
      use constants, only : dp, mystd
 
      use control, only : cname
@@ -68,9 +68,9 @@
      write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
 
      return
-  end subroutine df_print_footer
+  end subroutine dt_print_footer
 
-  subroutine df_print_summary()
+  subroutine dt_print_summary()
      use constants, only : mystd, ev2k
 
      use control ! ALL
@@ -82,16 +82,16 @@
      write(mystd,*)
 
      return
-  end subroutine df_print_summary
+  end subroutine dt_print_summary
 
-  subroutine df_print_runtime()
+  subroutine dt_print_runtime()
      implicit none
 
      return
-  end subroutine df_print_runtime
+  end subroutine dt_print_runtime
 
-  subroutine df_print_it_info()
+  subroutine dt_print_it_info()
      implicit none
 
      return
-  end subroutine df_print_it_info
+  end subroutine dt_print_it_info
