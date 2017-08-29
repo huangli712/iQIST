@@ -4,6 +4,8 @@
 !!!           cat_dual_shift
 !!!           dt_static_bubble
 !!!           dt_bubble
+!!!           dt_bse_solver
+!!!           dt_bse_solver_iter
 !!! source  : dt_df.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -268,10 +270,9 @@
   end subroutine dt_bubble
 
   subroutine dt_bse_solver(bubbleM, vertexM, gammaM)
-     use constants
+     use constants, only : dp
 
-     use control
-     use context
+     use control, only : nffrq
 
      implicit none
 
