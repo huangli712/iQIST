@@ -101,7 +101,7 @@
 !!
 !! @var part
 !!
-!! coupling parameter t for Hubbard model
+!! hopping parameter t for Hubbard model
 !!
      real(dp), public, save :: part  = 0.50_dp
 
