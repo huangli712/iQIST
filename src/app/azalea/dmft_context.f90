@@ -181,10 +181,10 @@
   end module df_vert
 
 !!========================================================================
-!!>>> module df_context                                                <<<
+!!>>> module context                                                   <<<
 !!========================================================================
 
-  module df_context
+  module context
      use constants
 
      use control
@@ -376,4 +376,4 @@
      return
   end subroutine df_deallocate_memory_vert
 
-  end module df_context
+  end module context
