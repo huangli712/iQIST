@@ -29,14 +29,14 @@
 
 include ../../../build/make.sys
 
-modc = dmft_control.o dmft_context.o
-impl = impl_dmft.o impl_df.o
-lev1 = dmft_stream.o dmft_util.o
-lev2 = dmft_dump.o dmft_print.o
-main = dmft_main.o
+modc = dt_control.o dt_context.o
+lev1 = dt_dmft.o dt_df.o
+lev2 = dt_stream.o dt_util.o
+lev3 = dt_dump.o dt_print.o
+main = dt_main.o
 mlib = libMM.a
 
-objects = $(modc) $(impl) $(lev1) $(lev2) $(main) $(mlib)
+objects = $(modc) $(lev1) $(lev2) $(lev3) $(main) $(mlib)
 
 default: all
 
