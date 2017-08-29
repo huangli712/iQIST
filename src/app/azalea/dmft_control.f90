@@ -53,10 +53,18 @@
 !!
      integer, public, save :: norbs  = 2
 
-! number of matsubara frequency for the two-particle green's function
+!!
+!! @var nffrq
+!!
+!! number of fermionic frequencies for the two-particle green's function
+!!
      integer, public, save :: nffrq  = 32
 
-! number of bosonic frequncy for the two-particle green's function
+!!
+!! @var nbfrq
+!!
+!! number of bosonic frequncies for the two-particle green's function
+!!
      integer, public, save :: nbfrq  = 8
 
      integer, public, save :: nkp_x  = 8
