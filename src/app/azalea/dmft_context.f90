@@ -58,19 +58,33 @@
 !!>>> module df_dmft                                                   <<<
 !!========================================================================
 
-!! dmft variables
+!!
+!! @mod df_dmft
+!!
   module df_dmft
      use constants, only : dp
 
      implicit none
 
-! dmft green's function
+!!
+!! @var dmft_g
+!!
+!! impurity green's function from dmft
+!!
      complex(dp), public, save, allocatable :: dmft_g(:,:)
 
-! dmft self-energy function
+!!
+!! @var dmft_s
+!!
+!! self-energy function from dmft
+!!
      complex(dp), public, save, allocatable :: dmft_s(:,:)
 
-! dmft hybridization function
+!!
+!! @var dmft_h
+!!
+!! hybridization function from dmft
+!!
      complex(dp), public, save, allocatable :: dmft_h(:,:)
 
   end module df_dmft
