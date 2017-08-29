@@ -210,11 +210,11 @@
 !!========================================================================
 
 ! declaration of module procedures: allocate memory
-     public :: dt_allocate_memory_mesh
-     public :: dt_allocate_memory_dmft
-     public :: dt_allocate_memory_dual
-     public :: dt_allocate_memory_latt
-     public :: dt_allocate_memory_vert
+     public :: cat_allocate_mesh
+     public :: cat_allocate_dmft
+     public :: cat_allocate_dual
+     public :: cat_allocate_latt
+     public :: cat_allocate_vert
 
 ! declaration of module procedures: deallocate memory
      public :: dt_deallocate_memory_mesh
@@ -234,7 +234,7 @@
 !!
 !! allocate memory for clur-related variables
 !!
-  subroutine dt_allocate_memory_mesh()
+  subroutine cat_alloc_mesh()
      implicit none
 
      allocate(kx(nkp_x), stat=istat)
@@ -246,7 +246,7 @@
      allocate(bmesh(nbfrq), stat=istat)
 
      if ( istat /= 0 ) then
-         call s_print_error('dt_allocate_memory_mesh','can not allocate enough memory')
+         call s_print_error('cat_alloc_mesh','can not allocate enough memory')
      endif
 
      kx = zero
@@ -258,9 +258,9 @@
      bmesh = zero
 
      return
-  end subroutine dt_allocate_memory_mesh
+  end subroutine cat_alloc_mesh
 
-  subroutine dt_allocate_memory_dmft()
+  subroutine cat_alloc_dmft()
      implicit none
 
      allocate(dmft_g(nffrq,norbs), stat=istat)
@@ -268,7 +268,7 @@
      allocate(dmft_h(nffrq,norbs), stat=istat)
 
      if ( istat /= 0 ) then
-         call s_print_error('dt_allocate_memory_dmft','can not allocate enough memory')
+         call s_print_error('cat_alloc_dmft','can not allocate enough memory')
      endif
 
      dmft_g = czero
@@ -276,9 +276,9 @@
      dmft_h = czero
 
      return
-  end subroutine dt_allocate_memory_dmft
+  end subroutine cat_alloc_dmft
 
-  subroutine dt_allocate_memory_dual()
+  subroutine cat_alloc_dual()
      implicit none
 
      allocate(dual_g(nkpts,nffrq,norbs), stat=istat)
@@ -286,7 +286,7 @@
      allocate(dual_b(nkpts,nffrq,norbs), stat=istat)
 
      if ( istat /= 0 ) then
-         call s_print_error('dt_allocate_memory_dual','can not allocate enough memory')
+         call s_print_error('cat_alloc_dual','can not allocate enough memory')
      endif
 
      dual_g = czero
@@ -294,39 +294,39 @@
      dual_b = czero
 
      return
-  end subroutine dt_allocate_memory_dual
+  end subroutine cat_alloc_dual
 
-  subroutine dt_allocate_memory_latt()
+  subroutine cat_alloc_latt()
      implicit none
 
      allocate(latt_g(nkpts,nffrq,norbs), stat=istat)
      allocate(latt_s(nkpts,nffrq,norbs), stat=istat)
 
      if ( istat /= 0 ) then
-         call s_print_error('dt_allocate_memory_latt','can not allocate enough memory')
+         call s_print_error('cat_alloc_latt','can not allocate enough memory')
      endif
 
      latt_g = czero
      latt_s = czero
 
      return
-  end subroutine dt_allocate_memory_latt
+  end subroutine cat_alloc_latt
 
-  subroutine dt_allocate_memory_vert()
+  subroutine cat_alloc_vert()
      implicit none
 
      allocate(vert_d(nffrq,nffrq,nbfrq), stat=istat)
      allocate(vert_m(nffrq,nffrq,nbfrq), stat=istat)
 
      if ( istat /= 0 ) then
-         call s_print_error('dt_allocate_memory_vert','can not allocate enough memory')
+         call s_print_error('cat_alloc_vert','can not allocate enough memory')
      endif
 
      vert_d = czero
      vert_m = czero
 
      return
-  end subroutine dt_allocate_memory_vert
+  end subroutine cat_alloc_vert
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
