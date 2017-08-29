@@ -1,5 +1,5 @@
 
-  subroutine df_dump_dmft_grnf(rmesh, grnf)
+  subroutine dt_dump_dmft_grnf(rmesh, grnf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -36,9 +36,9 @@
      close(mytmp)
 
      return
-  end subroutine df_dump_dmft_grnf
+  end subroutine dt_dump_dmft_grnf
 
-  subroutine df_dump_dmft_sigf(rmesh, sigf)
+  subroutine dt_dump_dmft_sigf(rmesh, sigf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -75,9 +75,9 @@
      close(mytmp)
 
      return
-  end subroutine df_dump_dmft_sigf
+  end subroutine dt_dump_dmft_sigf
 
-  subroutine df_dump_dmft_hybf(rmesh, hybf)
+  subroutine dt_dump_dmft_hybf(rmesh, hybf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -114,64 +114,64 @@
      close(mytmp)
 
      return
-  end subroutine df_dump_dmft_hybf
+  end subroutine dt_dump_dmft_hybf
 
-  subroutine df_dump_dual_grnf()
+  subroutine dt_dump_dual_grnf()
      implicit none
 
      return
-  end subroutine df_dump_dual_grnf
+  end subroutine dt_dump_dual_grnf
 
-  subroutine df_dump_dual_sigf()
+  subroutine dt_dump_dual_sigf()
      implicit none
 
      return
-  end subroutine df_dump_dual_sigf
+  end subroutine dt_dump_dual_sigf
 
-  subroutine df_dump_dual_wssf()
+  subroutine dt_dump_dual_wssf()
      implicit none
 
      return
-  end subroutine df_dump_dual_wssf
+  end subroutine dt_dump_dual_wssf
 
-  subroutine df_dump_latt_grnf()
+  subroutine dt_dump_latt_grnf()
      implicit none
 
      return
-  end subroutine df_dump_latt_grnf
+  end subroutine dt_dump_latt_grnf
 
-  subroutine df_dump_latt_sigf()
+  subroutine dt_dump_latt_sigf()
      implicit none
 
      return
-  end subroutine df_dump_latt_sigf
+  end subroutine dt_dump_latt_sigf
 
-  subroutine df_dump_spin_susc()
+  subroutine dt_dump_spin_susc()
      implicit none
 
      return
-  end subroutine df_dump_spin_susc
+  end subroutine dt_dump_spin_susc
 
-  subroutine df_dump_char_susc()
+  subroutine dt_dump_char_susc()
      implicit none
 
      return
-  end subroutine df_dump_char_susc
+  end subroutine dt_dump_char_susc
 
-  subroutine df_dump_dens_vert()
+  subroutine dt_dump_dens_vert()
      implicit none
 
      return
-  end subroutine df_dump_dens_vert
+  end subroutine dt_dump_dens_vert
 
-  subroutine df_dump_magn_vert()
+  subroutine dt_dump_magn_vert()
      implicit none
 
      return
-  end subroutine df_dump_magn_vert
+  end subroutine dt_dump_magn_vert
 
-  subroutine df_dump_full_vert()
+  subroutine dt_dump_full_vert()
      implicit none
 
      return
-  end subroutine df_dump_full_vert
+  end subroutine dt_dump_full_vert
