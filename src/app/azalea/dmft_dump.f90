@@ -2,8 +2,8 @@
   subroutine df_dump_dmft_grnf(rmesh, grnf)
      use constants, only : dp, zero, mytmp
 
-     use df_control, only : norbs
-     use df_control, only : nffrq
+     use control, only : norbs
+     use control, only : nffrq
 
      implicit none
 
@@ -41,8 +41,8 @@
   subroutine df_dump_dmft_sigf(rmesh, sigf)
      use constants, only : dp, zero, mytmp
 
-     use df_control, only : norbs
-     use df_control, only : nffrq
+     use control, only : norbs
+     use control, only : nffrq
 
      implicit none
 
@@ -80,8 +80,8 @@
   subroutine df_dump_dmft_hybf(rmesh, hybf)
      use constants, only : dp, zero, mytmp
 
-     use df_control, only : norbs
-     use df_control, only : nffrq
+     use control, only : norbs
+     use control, only : nffrq
 
      implicit none
 
