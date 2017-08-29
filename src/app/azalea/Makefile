@@ -30,7 +30,7 @@
 include ../../../build/make.sys
 
 modc = dt_control.o dt_context.o
-lev1 = dt_dmft.o dt_df.o
+lev1 = dt_df.o
 lev2 = dt_stream.o dt_util.o
 lev3 = dt_dump.o dt_print.o
 main = dt_main.o
