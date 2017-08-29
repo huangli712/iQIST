@@ -1,15 +1,13 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : azalea
 !!! program : control    module
-!!! source  : ctqmc_control.f90
+!!! source  : dmft_control.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           07/21/2017 by li huang (last modified)
-!!! purpose : define global control parameters for hybridization expansion
-!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!!!           impurity solver and dynamical mean field theory (DMFT) self-
-!!!           consistent engine.
+!!!           08/29/2017 by li huang (last modified)
+!!! purpose : define global control parameters for diagrammatic framework
+!!!           for dynamical mean-field theory.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
