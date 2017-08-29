@@ -13,11 +13,14 @@
 
   subroutine dt_run()
      use constants, only : dp
+     use constants, only : zero
      use constants, only : mystd
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
+     use control, only : ndfit
 
+     use context, only : bmesh
      use context, only : dual_g
 
      implicit none
