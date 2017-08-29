@@ -367,6 +367,11 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
+!!
+!! @sub cat_free_mesh
+!!
+!! deallocate memory for mesh-related variables
+!!
   subroutine cat_free_mesh()
      implicit none
 
@@ -381,6 +386,11 @@
      return
   end subroutine cat_free_mesh
 
+!!
+!! @sub cat_free_dmft
+!!
+!! deallocate memory for dmft-related variables
+!!
   subroutine cat_free_dmft()
      implicit none
 
@@ -391,6 +401,11 @@
      return
   end subroutine cat_free_dmft
 
+!!
+!! @sub cat_free_dual
+!!
+!! deallocate memory for dual-related variables
+!!
   subroutine cat_free_dual()
      implicit none
 
@@ -401,6 +416,11 @@
      return
   end subroutine cat_free_dual
 
+!!
+!! @sub cat_free_latt
+!!
+!! deallocate memory for latt-related variables
+!!
   subroutine cat_free_latt()
      implicit none
 
@@ -410,6 +430,11 @@
      return
   end subroutine cat_free_latt
 
+!!
+!! @sub cat_free_vert
+!!
+!! deallocate memory for vert-related variables
+!!
   subroutine cat_free_vert()
      implicit none
 
