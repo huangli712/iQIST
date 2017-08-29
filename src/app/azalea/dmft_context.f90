@@ -103,7 +103,7 @@
   module df_context
      use constants
 
-     use df_control
+     use control
 
      use df_mesh
      use df_dmft

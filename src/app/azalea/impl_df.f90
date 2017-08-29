@@ -2,7 +2,7 @@
   subroutine df_run()
      use constants
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -108,7 +108,7 @@
   subroutine cat_dual_shift(dual_in, dual_out, shift)
      use constants
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -140,7 +140,7 @@
   subroutine df_static_bubble(bubble, w)
      use constants
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -174,7 +174,7 @@
   subroutine df_bubble(bubble, w)
      use constants
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -229,7 +229,7 @@
   subroutine df_bse_solver(bubbleM, vertexM, gammaM)
      use constants
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -258,7 +258,7 @@
   subroutine df_bse_solver_iter(niter, mix, bubbleM, vertexM, gammaM)
      use constants
 
-     use df_control
+     use control
      use df_context
 
      implicit none

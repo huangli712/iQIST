@@ -2,7 +2,7 @@
   subroutine df_config()
      use constants, only : dp
 
-     use df_control
+     use control
 
      implicit none
 
@@ -34,7 +34,7 @@
   subroutine df_mesh_init()
      use constants, only : dp, two, pi
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -80,7 +80,7 @@
   subroutine df_dmft_init()
      use constants, only : dp, mytmp
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -143,7 +143,7 @@
   subroutine df_latt_init()
      use constants, only : dp, one
 
-     use df_control
+     use control
      use df_context
 
      implicit none
@@ -167,7 +167,7 @@
   subroutine df_dual_init()
      use constants, only : dp 
 
-     use df_control
+     use control
      use df_context
 
      implicit none

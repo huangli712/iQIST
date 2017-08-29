@@ -3,7 +3,7 @@
      use iso_c_binding
      use constants
 
-     use df_control
+!!     use df_control
 
      implicit none
 
@@ -42,7 +42,7 @@
      use iso_c_binding
      use constants
 
-     use df_control
+!!     use df_control
 
      implicit none
 
@@ -82,7 +82,7 @@
      use iso_c_binding
      use constants
 
-     use df_control
+!!     use df_control
 
      implicit none
 
