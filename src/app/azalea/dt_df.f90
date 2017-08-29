@@ -22,7 +22,7 @@
      use control, only : ndfit
 
      use context, only : bmesh
-     use context, only : dual_g
+     use context, only : dual_g, dual_s
      use context, only : vert_d, vert_m
 
      implicit none
