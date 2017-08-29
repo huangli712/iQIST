@@ -1,9 +1,9 @@
 
-  subroutine df_fft1d(op, nx, fin, fout)
+  subroutine dt_fft1d(op, nx, fin, fout)
      use iso_c_binding
      use constants
 
-!!     use df_control
+!!     use dt_control
 
      implicit none
 
@@ -36,13 +36,13 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine df_fft1d
+  end subroutine dt_fft1d
 
-  subroutine df_fft2d(op, nx, ny, fin, fout)
+  subroutine dt_fft2d(op, nx, ny, fin, fout)
      use iso_c_binding
      use constants
 
-!!     use df_control
+!!     use dt_control
 
      implicit none
 
@@ -76,13 +76,13 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine df_fft2d
+  end subroutine dt_fft2d
 
-  subroutine df_fft3d(op, nx, ny, nz, fin, fout)
+  subroutine dt_fft3d(op, nx, ny, nz, fin, fout)
      use iso_c_binding
      use constants
 
-!!     use df_control
+!!     use dt_control
 
      implicit none
 
@@ -117,4 +117,4 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine df_fft3d
+  end subroutine dt_fft3d
