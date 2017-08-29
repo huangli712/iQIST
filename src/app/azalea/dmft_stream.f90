@@ -11,6 +11,7 @@
      nbfrq = 7
 
      part  = 1.0_dp 
+     beta  = 1.0_dp
 
      return
   end subroutine df_config
