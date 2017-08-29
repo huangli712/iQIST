@@ -1,6 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : dt_run
+!!!           cat_dual_shift
+!!!           dt_static_bubble
 !!! source  : dt_df.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -165,10 +167,11 @@
   end subroutine cat_dual_shift
 
   subroutine dt_static_bubble(bubble, w)
-     use constants
+     use constants, only : dp
 
-     use control
-     use context
+     use control, only : norbs
+
+     use context, only : dual_g
 
      implicit none
 
