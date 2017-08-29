@@ -22,11 +22,11 @@
      implicit none
 
 ! allocate memory for context module
-     call dt_allocate_memory_mesh()
-     call dt_allocate_memory_dmft()
-     call dt_allocate_memory_dual()
-     call dt_allocate_memory_latt()
-     call dt_allocate_memory_vert()
+     call cat_alloc_mesh()
+     call cat_alloc_dmft()
+     call cat_alloc_dual()
+     call cat_alloc_latt()
+     call cat_alloc_vert()
      
      return
   end subroutine dt_setup_array
