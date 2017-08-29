@@ -156,16 +156,26 @@
 !!>>> module df_vert                                                   <<<
 !!========================================================================
 
-!! vertex variables
+!!
+!! @mod df_vert
+!!
   module df_vert
      use constants, only : dp
 
      implicit none
 
-! density vertex
+!!
+!! @var vert_d
+!!
+!! density vertex
+!!
      complex(dp), public, save, allocatable :: vert_d(:,:,:)
 
-! magnetic vertex
+!!
+!! @var vert_m
+!!
+!! magnetic vertex
+!!
      complex(dp), public, save, allocatable :: vert_m(:,:,:)
 
   end module df_vert
