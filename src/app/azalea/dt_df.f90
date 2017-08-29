@@ -208,13 +208,14 @@
 
   subroutine dt_bubble(bubble, w)
      use constants, only : dp
-     use constants, only : one, pi, czero
+     use constants, only : one, two, pi, czero
 
      use control, only : norbs
      use control, only : nffrq
      use control, only : nkpts, nkp_x, nkp_y
      use control, only : beta
 
+     use context, only : fmesh
      use context, only : dual_g
 
      implicit none
