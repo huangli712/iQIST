@@ -45,7 +45,7 @@
   subroutine df_print_footer()
      use constants, only : dp, mystd
 
-     use df_control, only : cname
+     use control, only : cname
 
      implicit none
 
@@ -73,7 +73,7 @@
   subroutine df_print_summary()
      use constants, only : mystd, ev2k
 
-     use df_control ! ALL
+     use control ! ALL
 
      implicit none
 
