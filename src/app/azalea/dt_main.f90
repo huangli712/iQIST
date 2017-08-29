@@ -1,5 +1,5 @@
 
-  program df_main
+  program dt_main
      use mmpi, only : mp_init, mp_finalize
      use mmpi, only : mp_comm_rank, mp_comm_size
      use mmpi, only : mp_barrier
@@ -23,29 +23,29 @@
 # endif  /* MPI */
 
      if ( myid == master ) then
-         call df_print_header()
+         call dt_print_header()
      endif
 
-     call df_config()
+     call dt_config()
 
      if ( myid == master ) then
-         call df_print_summary()
+         call dt_print_summary()
      endif
 
-     call df_setup_array()
+     call dt_setup_array()
 
-     call df_mesh_init()
-     call df_dmft_init()
-     call df_latt_init()
-     call df_dual_init()
-     call df_vert_init()
+     call dt_mesh_init()
+     call dt_dmft_init()
+     call dt_latt_init()
+     call dt_dual_init()
+     call dt_vert_init()
 
-     call df_run()
+     call dt_run()
 
-     call df_final_array()
+     call dt_final_array()
 
      if ( myid == master ) then
-         call df_print_footer()
+         call dt_print_footer()
      endif
 
 ! finalize mpi envirnoment
@@ -59,4 +59,4 @@
 
 # endif  /* MPI */
 
-  end program df_main
+  end program dt_main
