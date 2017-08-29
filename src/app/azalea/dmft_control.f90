@@ -12,7 +12,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  module df_control
+  module control
      use constants, only : dp
 
      implicit none
