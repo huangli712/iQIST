@@ -4,7 +4,7 @@
      use mmpi, only : mp_comm_rank, mp_comm_size
      use mmpi, only : mp_barrier
 
-     use df_control, only : nprocs, myid, master
+     use control, only : nprocs, myid, master
 
      implicit none
 
