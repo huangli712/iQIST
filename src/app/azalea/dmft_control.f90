@@ -7,7 +7,7 @@
 !!! history : 09/15/2009 by li huang (created)
 !!!           08/29/2017 by li huang (last modified)
 !!! purpose : define global control parameters for diagrammatic framework
-!!!           for dynamical mean-field theory.
+!!!           for dynamical mean field theory.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -25,6 +25,7 @@
 !! @var cname
 !!
 !! code name of the diagrammatic framework
+!!
      character(len = 06), public, save :: cname = 'AZALEA'
 
 !!========================================================================
