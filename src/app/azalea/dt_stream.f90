@@ -202,11 +202,11 @@
      implicit none
 
 ! deallocate memory for context module
-     call dt_deallocate_memory_mesh()
-     call dt_deallocate_memory_dmft()
-     call dt_deallocate_memory_dual()
-     call dt_deallocate_memory_latt()
-     call dt_deallocate_memory_vert()
+     call cat_free_mesh()
+     call cat_free_dmft()
+     call cat_free_dual()
+     call cat_free_latt()
+     call cat_free_vert()
 
      return
   end subroutine dt_final_array
