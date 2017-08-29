@@ -32,7 +32,7 @@
   end subroutine dt_setup_array
 
   subroutine dt_mesh_init()
-     use constants, only : dp, two, pi
+     use constants, only : dp, one, two, pi
 
      use control
      use context

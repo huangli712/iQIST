@@ -188,7 +188,9 @@
      use constants, only : dp
      use constants, only : zero, czero
 
-     use control
+     use control, only : nkp_x, nkp_y, nkp_z, nkpts
+     use control, only : nffrq, nbfrq
+     use control, only : norbs
 
      use dt_mesh
      use dt_dmft
