@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
-!!! program : control    module
+!!! program : control module
 !!! source  : dmft_control.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)

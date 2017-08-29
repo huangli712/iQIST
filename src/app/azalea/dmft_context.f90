@@ -1,3 +1,21 @@
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : df_mesh module
+!!!           df_dmft module
+!!!           df_dual module
+!!!           df_latt module
+!!!           df_vert module
+!!!           context module
+!!! source  : dmft_context.f90
+!!! type    : modules
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/29/2017 by li huang (last modified)
+!!! purpose : define the key data structure and global arrays/variables
+!!!           for diagrammatic framework for dynamical mean field theory.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !!========================================================================
 !!>>> module df_mesh                                                   <<<
