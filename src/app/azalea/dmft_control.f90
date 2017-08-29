@@ -79,13 +79,25 @@
 !!>>> MPI related common variables                                     <<<
 !!========================================================================
 
-! number of processors: default value 1
+!!
+!! @var nprocs
+!!
+!! number of processors: default value 1
+!!
      integer, public, save :: nprocs = 1
 
-! the id of current process: default value 0
+!!
+!! @var myid
+!!
+!! the id of current process: default value 0
+!!
      integer, public, save :: myid   = 0
 
-! denote as the controller process: default value 0
+!!
+!! @var master
+!!
+!! denote as the controller process: default value 0
+!!
      integer, public, save :: master = 0
 
 ! the id of current process in cartesian topology (cid == myid)
