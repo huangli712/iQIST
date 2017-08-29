@@ -97,4 +97,4 @@
 ! the y coordinates of current process in cartesian topology
      integer, public, save :: cy     = 0
 
-  end module df_control
+  end module control
