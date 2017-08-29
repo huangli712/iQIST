@@ -298,10 +298,9 @@
   end subroutine dt_bse_solver
 
   subroutine dt_bse_solver_iter(niter, mix, bubbleM, vertexM, gammaM)
-     use constants
+     use constants, only : dp
 
-     use control
-     use context
+     use control, only : nffrq
 
      implicit none
 
