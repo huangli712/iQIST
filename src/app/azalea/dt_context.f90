@@ -10,7 +10,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/29/2017 by li huang (last modified)
+!!!           08/30/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for diagrammatic framework for dynamical mean field theory.
 !!! status  : unstable
@@ -210,11 +210,11 @@
 !!========================================================================
 
 ! declaration of module procedures: allocate memory
-     public :: cat_allocate_mesh
-     public :: cat_allocate_dmft
-     public :: cat_allocate_dual
-     public :: cat_allocate_latt
-     public :: cat_allocate_vert
+     public :: cat_alloc_mesh
+     public :: cat_alloc_dmft
+     public :: cat_alloc_dual
+     public :: cat_alloc_latt
+     public :: cat_alloc_vert
 
 ! declaration of module procedures: deallocate memory
      public :: cat_free_mesh
