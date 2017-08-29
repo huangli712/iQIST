@@ -271,6 +271,7 @@
      allocate(dmft_s(nffrq,norbs), stat=istat)
      allocate(dmft_h(nffrq,norbs), stat=istat)
 
+! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_dmft','can not allocate enough memory')
      endif
@@ -290,6 +291,7 @@
      allocate(dual_s(nkpts,nffrq,norbs), stat=istat)
      allocate(dual_b(nkpts,nffrq,norbs), stat=istat)
 
+! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_dual','can not allocate enough memory')
      endif
@@ -308,6 +310,7 @@
      allocate(latt_g(nkpts,nffrq,norbs), stat=istat)
      allocate(latt_s(nkpts,nffrq,norbs), stat=istat)
 
+! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_latt','can not allocate enough memory')
      endif
@@ -325,6 +328,7 @@
      allocate(vert_d(nffrq,nffrq,nbfrq), stat=istat)
      allocate(vert_m(nffrq,nffrq,nbfrq), stat=istat)
 
+! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_vert','can not allocate enough memory')
      endif
