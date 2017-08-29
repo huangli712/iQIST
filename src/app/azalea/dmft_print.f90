@@ -4,8 +4,8 @@
      use constants, only : mystd
      use version, only : V_FULL
 
-     use df_control, only : cname
-     use df_control, only : nprocs
+     use control, only : cname
+     use control, only : nprocs
 
      implicit none
 
