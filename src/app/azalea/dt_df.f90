@@ -1,3 +1,15 @@
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : dt_run
+!!! source  : dt_df.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/30/2017 by li huang (last modified)
+!!! purpose :
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   subroutine dt_run()
      use constants
@@ -293,8 +305,8 @@
 
      return
   end subroutine dt_bse_solver_iter
-! calculate resulting observables
 
+! calculate resulting observables
   subroutine dt_spin_susc()
      implicit none
 
