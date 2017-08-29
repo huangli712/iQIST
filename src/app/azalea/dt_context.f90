@@ -263,6 +263,11 @@
      return
   end subroutine cat_alloc_mesh
 
+!!
+!! @sub cat_alloc_dmft
+!!
+!! allocate memory for dmft-related variables
+!!
   subroutine cat_alloc_dmft()
      implicit none
 
@@ -284,6 +289,11 @@
      return
   end subroutine cat_alloc_dmft
 
+!!
+!! @sub cat_alloc_dual
+!!
+!! allocate memory for dual-related variables
+!!
   subroutine cat_alloc_dual()
      implicit none
 
@@ -305,6 +315,11 @@
      return
   end subroutine cat_alloc_dual
 
+!!
+!! @sub cat_alloc_latt
+!!
+!! allocate memory for latt-related variables
+!!
   subroutine cat_alloc_latt()
      implicit none
 
@@ -324,6 +339,11 @@
      return
   end subroutine cat_alloc_latt
 
+!!
+!! @sub cat_alloc_vert
+!!
+!! allocate memory for vert-related variables
+!!
   subroutine cat_alloc_vert()
      implicit none
 
