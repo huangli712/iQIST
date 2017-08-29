@@ -266,6 +266,7 @@
   subroutine cat_alloc_dmft()
      implicit none
 
+! allocate memory
      allocate(dmft_g(nffrq,norbs), stat=istat)
      allocate(dmft_s(nffrq,norbs), stat=istat)
      allocate(dmft_h(nffrq,norbs), stat=istat)
@@ -284,6 +285,7 @@
   subroutine cat_alloc_dual()
      implicit none
 
+! allocate memory
      allocate(dual_g(nkpts,nffrq,norbs), stat=istat)
      allocate(dual_s(nkpts,nffrq,norbs), stat=istat)
      allocate(dual_b(nkpts,nffrq,norbs), stat=istat)
@@ -302,6 +304,7 @@
   subroutine cat_alloc_latt()
      implicit none
 
+! allocate memory
      allocate(latt_g(nkpts,nffrq,norbs), stat=istat)
      allocate(latt_s(nkpts,nffrq,norbs), stat=istat)
 
@@ -318,6 +321,7 @@
   subroutine cat_alloc_vert()
      implicit none
 
+! allocate memory
      allocate(vert_d(nffrq,nffrq,nbfrq), stat=istat)
      allocate(vert_m(nffrq,nffrq,nbfrq), stat=istat)
 
