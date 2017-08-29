@@ -22,13 +22,14 @@
      use control, only : ndfit
      use control, only : beta
 
-     use context, only : bmesh
+     use context, only : fmesh, bmesh
      use context, only : dual_g, dual_s
      use context, only : vert_d, vert_m
 
      implicit none
 
 ! local variables
+! loop index
      integer :: i
      integer :: j
      integer :: k
