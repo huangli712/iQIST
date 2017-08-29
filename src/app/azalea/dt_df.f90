@@ -12,10 +12,13 @@
 !!!-----------------------------------------------------------------------
 
   subroutine dt_run()
-     use constants
+     use constants, only : dp
+     use constants, only : mystd
 
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+
+     use context, only : dual_g
 
      implicit none
 
