@@ -93,19 +93,33 @@
 !!>>> module df_dual                                                   <<<
 !!========================================================================
 
-!! dual variables
+!!
+!! @mod df_dual
+!!
   module df_dual
      use constants, only : dp
 
      implicit none
 
-! dual green's function
+!!
+!! @var dual_g
+!!
+!! dual green's function
+!!
      complex(dp), public, save, allocatable :: dual_g(:,:,:)
 
-! dual self-energy function
+!!
+!! @var dual_s
+!!
+!! dual self-energy function
+!!
      complex(dp), public, save, allocatable :: dual_s(:,:,:)
 
-! dual bare green's function
+!!
+!! @var dual_b
+!!
+!! dual bare green's function
+!!
      complex(dp), public, save, allocatable :: dual_b(:,:,:)
 
   end module df_dual
