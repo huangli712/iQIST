@@ -52,13 +52,8 @@ csml:
 	cp ../../base/linkedlist.mod .
 	cp ../../base/version.mod .
 
-exe: cssl csml df-exe
-df-exe: $(exe_obj)
-	$(LINKER) $(exe_obj) -o df $(LFLAGS) $(LIBS) -L/opt/local/lib/ -lfftw3
-
-lib: cssl csml df-lib
-df-lib: $(lib_obj)
-	$(ARCHIVER) libdf.a $(lib_obj)
+exe: cssl csml $(objects)
+	$(LINKER) $(objects) -o dmft $(LFLAGS) $(LIBS) -L/opt/local/lib/ -lfftw3
 
 .f90.o:
 	$(F90) -I/opt/local/include $(FFLAGS) $*.f90
