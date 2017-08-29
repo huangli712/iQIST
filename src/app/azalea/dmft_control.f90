@@ -107,10 +107,18 @@
 !!
      integer, public, save :: cid    = 0
 
-! the x coordinates of current process in cartesian topology
+!!
+!! @var cx
+!!
+!! the x coordinates of current process in cartesian topology
+!!
      integer, public, save :: cx     = 0
 
-! the y coordinates of current process in cartesian topology
+!!
+!! @var cy
+!!
+!! the y coordinates of current process in cartesian topology
+!!
      integer, public, save :: cy     = 0
 
   end module control
