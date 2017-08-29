@@ -276,6 +276,7 @@
          call s_print_error('cat_alloc_dmft','can not allocate enough memory')
      endif
 
+! initialize them
      dmft_g = czero
      dmft_s = czero
      dmft_h = czero
@@ -296,6 +297,7 @@
          call s_print_error('cat_alloc_dual','can not allocate enough memory')
      endif
 
+! initialize them
      dual_g = czero
      dual_s = czero
      dual_b = czero
@@ -315,6 +317,7 @@
          call s_print_error('cat_alloc_latt','can not allocate enough memory')
      endif
 
+! initialize them
      latt_g = czero
      latt_s = czero
 
@@ -333,6 +336,7 @@
          call s_print_error('cat_alloc_vert','can not allocate enough memory')
      endif
 
+! initialize them
      vert_d = czero
      vert_m = czero
 
