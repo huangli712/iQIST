@@ -98,7 +98,11 @@
 !!
      real(dp), public, save :: beta  = 8.00_dp
 
-! coupling parameter t for Hubbard model
+!!
+!! @var part
+!!
+!! coupling parameter t for Hubbard model
+!!
      real(dp), public, save :: part  = 0.50_dp
 
 ! mixing parameter for dynamical mean field theory self-consistent engine
