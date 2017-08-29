@@ -3,6 +3,7 @@
 !!! program : dt_run
 !!!           cat_dual_shift
 !!!           dt_static_bubble
+!!!           dt_bubble
 !!! source  : dt_df.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -206,10 +207,13 @@
   end subroutine dt_static_bubble
 
   subroutine dt_bubble(bubble, w)
-     use constants
+     use constants, only : dp
 
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+
+     use context, only : dual_g
 
      implicit none
 
