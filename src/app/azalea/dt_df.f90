@@ -13,7 +13,7 @@
 
   subroutine dt_run()
      use constants, only : dp
-     use constants, only : zero
+     use constants, only : zero, epss
      use constants, only : mystd
 
      use control, only : norbs
@@ -22,6 +22,7 @@
 
      use context, only : bmesh
      use context, only : dual_g
+     use context, only : vert_m
 
      implicit none
 
