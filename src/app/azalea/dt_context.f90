@@ -217,11 +217,11 @@
      public :: cat_allocate_vert
 
 ! declaration of module procedures: deallocate memory
-     public :: dt_deallocate_memory_mesh
-     public :: dt_deallocate_memory_dmft
-     public :: dt_deallocate_memory_dual
-     public :: dt_deallocate_memory_latt
-     public :: dt_deallocate_memory_vert
+     public :: cat_free_mesh
+     public :: cat_free_dmft
+     public :: cat_free_dual
+     public :: cat_free_latt
+     public :: cat_free_vert
 
   contains ! encapsulated functionality
 
@@ -332,7 +332,7 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-  subroutine dt_deallocate_memory_mesh()
+  subroutine cat_free_mesh()
      implicit none
 
      if ( allocated(kx) ) deallocate(kx)
@@ -344,9 +344,9 @@
      if ( allocated(bmesh) ) deallocate(bmesh)
 
      return
-  end subroutine dt_deallocate_memory_mesh
+  end subroutine cat_free_mesh
 
-  subroutine dt_deallocate_memory_dmft()
+  subroutine cat_free_dmft()
      implicit none
 
      if ( allocated(dmft_g) ) deallocate(dmft_g)
@@ -354,9 +354,9 @@
      if ( allocated(dmft_h) ) deallocate(dmft_h)
 
      return
-  end subroutine dt_deallocate_memory_dmft
+  end subroutine cat_free_dmft
 
-  subroutine dt_deallocate_memory_dual()
+  subroutine cat_free_dual()
      implicit none
 
      if ( allocated(dual_g) ) deallocate(dual_g)
@@ -364,24 +364,24 @@
      if ( allocated(dual_b) ) deallocate(dual_b)
 
      return
-  end subroutine dt_deallocate_memory_dual
+  end subroutine cat_free_dual
 
-  subroutine dt_deallocate_memory_latt()
+  subroutine cat_free_latt()
      implicit none
 
      if ( allocated(latt_g) ) deallocate(latt_g)
      if ( allocated(latt_s) ) deallocate(latt_s)
 
      return
-  end subroutine dt_deallocate_memory_latt
+  end subroutine cat_free_latt
 
-  subroutine dt_deallocate_memory_vert()
+  subroutine cat_free_vert()
      implicit none
 
      if ( allocated(vert_d) ) deallocate(vert_d)
      if ( allocated(vert_m) ) deallocate(vert_m)
 
      return
-  end subroutine dt_deallocate_memory_vert
+  end subroutine cat_free_vert
 
   end module context
