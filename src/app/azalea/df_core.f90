@@ -44,7 +44,7 @@
      DF_LOOP: do i=1,ndfit
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', i
 
-         Q_LOOP: do j=2,nbfrq-1
+         Q_LOOP: do j=1,nbfrq-1
              w = bmesh(j)
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', w
              call cat_dual_shift(dual_g, gshift, w)
@@ -84,9 +84,9 @@
                  print *, n, fmesh(n)
                  print *, dual_s(:,n,1)
              enddo
+         STOP
 
          enddo Q_LOOP
-         STOP
 
          write(mystd,*)
      enddo DF_LOOP
