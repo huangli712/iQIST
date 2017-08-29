@@ -229,6 +229,11 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
+!!
+!! @sub
+!!
+!! allocate memory for clur-related variables
+!!
   subroutine dt_allocate_memory_mesh()
      implicit none
 
