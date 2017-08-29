@@ -8,7 +8,7 @@
 ## Usage
 ## =====
 ##
-## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+## 'make', 'make clean', 'make clean-dat' or 'make clean-all'
 ##
 ## Author
 ## ======
