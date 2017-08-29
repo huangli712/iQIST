@@ -171,9 +171,11 @@
      use constants, only : czero
 
      use control, only : norbs
+     use control, only : nffrq
      use control, only : nkpts
      use control, only : nkp_x
      use control, only : nkp_y
+     use control, only : beta
 
      use context, only : dual_g
 
