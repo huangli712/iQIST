@@ -46,7 +46,11 @@
 !!
      integer, public, save :: nspin  = 2
 
-! number of correlated orbitals (= nband * nspin)
+!!
+!! @var norbs
+!!
+!! number of correlated orbitals (= nband * nspin)
+!!
      integer, public, save :: norbs  = 2
 
 ! number of matsubara frequency for the two-particle green's function
