@@ -1,5 +1,5 @@
 ! parse input files, readin data
-  subroutine df_config()
+  subroutine dt_config()
      use constants, only : dp
 
      use control
@@ -14,24 +14,24 @@
      beta  = 1.0_dp
 
      return
-  end subroutine df_config
+  end subroutine dt_config
 
-  subroutine df_setup_array()
+  subroutine dt_setup_array()
      use context ! ALL
 
      implicit none
 
 ! allocate memory for context module
-     call df_allocate_memory_mesh()
-     call df_allocate_memory_dmft()
-     call df_allocate_memory_dual()
-     call df_allocate_memory_latt()
-     call df_allocate_memory_vert()
+     call dt_allocate_memory_mesh()
+     call dt_allocate_memory_dmft()
+     call dt_allocate_memory_dual()
+     call dt_allocate_memory_latt()
+     call dt_allocate_memory_vert()
      
      return
-  end subroutine df_setup_array
+  end subroutine dt_setup_array
 
-  subroutine df_mesh_init()
+  subroutine dt_mesh_init()
      use constants, only : dp, two, pi
 
      use control
@@ -75,9 +75,9 @@
      enddo ! over i={1,nbfrq} loop
 
      return
-  end subroutine df_mesh_init
+  end subroutine dt_mesh_init
 
-  subroutine df_dmft_init()
+  subroutine dt_dmft_init()
      use constants, only : dp, mytmp
 
      use control
@@ -138,9 +138,9 @@
      close(mytmp)
 
      return
-  end subroutine df_dmft_init
+  end subroutine dt_dmft_init
 
-  subroutine df_latt_init()
+  subroutine dt_latt_init()
      use constants, only : dp, one
 
      use control
@@ -162,9 +162,9 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine df_latt_init
+  end subroutine dt_latt_init
 
-  subroutine df_dual_init()
+  subroutine dt_dual_init()
      use constants, only : dp 
 
      use control
@@ -188,25 +188,25 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine df_dual_init
+  end subroutine dt_dual_init
 
-  subroutine df_vert_init()
+  subroutine dt_vert_init()
      implicit none
 
      return
-  end subroutine df_vert_init
+  end subroutine dt_vert_init
 
-  subroutine df_final_array()
+  subroutine dt_final_array()
      use context ! ALL
 
      implicit none
 
 ! deallocate memory for context module
-     call df_deallocate_memory_mesh()
-     call df_deallocate_memory_dmft()
-     call df_deallocate_memory_dual()
-     call df_deallocate_memory_latt()
-     call df_deallocate_memory_vert()
+     call dt_deallocate_memory_mesh()
+     call dt_deallocate_memory_dmft()
+     call dt_deallocate_memory_dual()
+     call dt_deallocate_memory_latt()
+     call dt_deallocate_memory_vert()
 
      return
-  end subroutine df_final_array
+  end subroutine dt_final_array
