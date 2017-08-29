@@ -6,6 +6,8 @@
 !!!           dt_bubble
 !!!           dt_bse_solver
 !!!           dt_bse_solver_iter
+!!!           dt_spin_susc
+!!!           dt_char_susc
 !!! source  : dt_df.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
