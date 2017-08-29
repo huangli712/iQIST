@@ -39,7 +39,11 @@
 !!
      integer, public, save :: nband  = 1
 
-! number of spin projection
+!!
+!! @var nspin
+!!
+!! number of spin projections
+!!
      integer, public, save :: nspin  = 2
 
 ! number of correlated orbitals (= nband * nspin)
