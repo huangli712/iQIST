@@ -13,7 +13,7 @@
 ## Author
 ## ======
 ##
-## This building system is designed, created, implemented, and maintained by
+## This building system is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
