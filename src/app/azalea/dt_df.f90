@@ -18,8 +18,9 @@
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
-     use control, only : nkp_x, nkp_y
+     use control, only : nkpts, nkp_x, nkp_y
      use control, only : ndfit
+     use control, only : beta
 
      use context, only : bmesh
      use context, only : dual_g, dual_s
