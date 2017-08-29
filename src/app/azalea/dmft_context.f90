@@ -21,6 +21,9 @@
 !!>>> module df_mesh                                                   <<<
 !!========================================================================
 
+!!
+!! @mod df_mesh
+!!
   module df_mesh
      use constants, only : dp
 
@@ -28,10 +31,25 @@
      real(dp), public, save, allocatable :: ky(:)
      real(dp), public, save, allocatable :: kz(:)
 
-! band dispersion
+!!
+!! @var ek
+!!
+!! band dispersion
+!!
      real(dp), public, save, allocatable :: ek(:)
 
+!!
+!! @var fmesh
+!!
+!! fermionic frequencies
+!!
      real(dp), public, save, allocatable :: fmesh(:)
+
+!!
+!! @var bmesh
+!!
+!! bosonic frequencies
+!!
      real(dp), public, save, allocatable :: bmesh(:)
 
   end module df_mesh
