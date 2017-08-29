@@ -208,11 +208,12 @@
 
   subroutine dt_bubble(bubble, w)
      use constants, only : dp
-     use constants, only : one
+     use constants, only : one, pi, czero
 
      use control, only : norbs
      use control, only : nffrq
      use control, only : nkpts, nkp_x, nkp_y
+     use control, only : beta
 
      use context, only : dual_g
 
