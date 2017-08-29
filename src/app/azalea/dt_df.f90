@@ -168,8 +168,12 @@
 
   subroutine dt_static_bubble(bubble, w)
      use constants, only : dp
+     use constants, only : czero
 
      use control, only : norbs
+     use control, only : nkpts
+     use control, only : nkp_x
+     use control, only : nkp_y
 
      use context, only : dual_g
 
