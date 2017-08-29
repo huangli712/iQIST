@@ -100,7 +100,11 @@
 !!
      integer, public, save :: master = 0
 
-! the id of current process in cartesian topology (cid == myid)
+!!
+!! @var cid
+!!
+!! the id of current process in cartesian topology (cid == myid)
+!!
      integer, public, save :: cid    = 0
 
 ! the x coordinates of current process in cartesian topology
