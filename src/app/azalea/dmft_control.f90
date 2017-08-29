@@ -21,7 +21,10 @@
 !!>>> character variables                                              <<<
 !!========================================================================
 
-! the code name of the current dual fermion framework
+!!
+!! @var cname
+!!
+!! code name of the diagrammatic framework
      character(len = 06), public, save :: cname = 'AZALEA'
 
 !!========================================================================
