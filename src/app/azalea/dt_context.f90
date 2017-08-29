@@ -230,13 +230,14 @@
 !!========================================================================
 
 !!
-!! @sub
+!! @sub cat_alloc_mesh
 !!
-!! allocate memory for clur-related variables
+!! allocate memory for mesh-related variables
 !!
   subroutine cat_alloc_mesh()
      implicit none
 
+! allocate memory
      allocate(kx(nkp_x), stat=istat)
      allocate(ky(nkp_y), stat=istat)
      allocate(kz(nkp_z), stat=istat)
@@ -245,10 +246,12 @@
      allocate(fmesh(nffrq), stat=istat)
      allocate(bmesh(nbfrq), stat=istat)
 
+! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_mesh','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
+! initialize them
      kx = zero
      ky = zero
      kz = zero
