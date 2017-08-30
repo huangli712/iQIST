@@ -1,5 +1,7 @@
+
+
 ! parse input files, readin data
-  subroutine dt_config()
+  subroutine dt_setup_param()
      use constants, only : dp
 
      use control
@@ -14,7 +16,7 @@
      beta  = 1.0_dp
 
      return
-  end subroutine dt_config
+  end subroutine dt_setup_param
 
   subroutine dt_setup_array()
      use context ! ALL
