@@ -18,6 +18,14 @@
      return
   end subroutine dt_setup_param
 
+  subroutine dt_setup_model()
+     call dt_mesh_init()
+     call dt_dmft_init()
+     call dt_latt_init()
+     call dt_dual_init()
+     call dt_vert_init()
+  end subroutine dt_setup_model
+
   subroutine dt_setup_array()
      use context ! ALL
 
