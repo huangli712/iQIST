@@ -44,7 +44,7 @@
      return
   end subroutine dt_dump_grnf
 
-  subroutine dt_dump_dmft_sigf(rmesh, sigf)
+  subroutine dt_dump_sigf(rmesh, sigf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -81,7 +81,7 @@
      close(mytmp)
 
      return
-  end subroutine dt_dump_dmft_sigf
+  end subroutine dt_dump_sigf
 
   subroutine dt_dump_dmft_hybf(rmesh, hybf)
      use constants, only : dp, zero, mytmp
