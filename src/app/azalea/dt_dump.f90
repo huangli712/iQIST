@@ -47,7 +47,7 @@
 !!
 !! @sub dt_dump_sigf
 !!
-!! write out self-energy function in matsubara frequency space
+!! write out impurity self-energy function in matsubara frequency space
 !!
   subroutine dt_dump_sigf(rmesh, sigf)
      use constants, only : dp
@@ -92,7 +92,7 @@
 !!
 !! @sub dt_dump_hybf
 !!
-!! write out hybridization function in matsubara frequency space
+!! write out impurity hybridization function in matsubara frequency space
 !!
   subroutine dt_dump_hybf(rmesh, hybf)
      use constants, only : dp
@@ -134,35 +134,49 @@
      return
   end subroutine dt_dump_hybf
 
-  subroutine dt_dump_dual_grnf()
+!!
+!! @sub dt_dump_grnd
+!!
+!! write out dual green's function in matsubara frequency space
+!!
+  subroutine dt_dump_grnd()
      implicit none
 
      return
-  end subroutine dt_dump_dual_grnf
+  end subroutine dt_dump_grnd
 
-  subroutine dt_dump_dual_sigf()
+!!
+!! @sub dt_dump_sigd
+!!
+!! write out dual self-energy function in matsubara frequency space
+!!
+  subroutine dt_dump_sigd()
      implicit none
 
      return
-  end subroutine dt_dump_dual_sigf
+  end subroutine dt_dump_sigd
 
-  subroutine dt_dump_dual_wssf()
+!!
+!! @sub dt_dump_grnd
+!!
+!! write out lattice green's function in matsubara frequency space
+!!
+  subroutine dt_dump_grnk()
      implicit none
 
      return
-  end subroutine dt_dump_dual_wssf
+  end subroutine dt_dump_grnk
 
-  subroutine dt_dump_latt_grnf()
+!!
+!! @sub dt_dump_sigk
+!!
+!! write out lattice self-energy function in matsubara frequency space
+!!
+  subroutine dt_dump_sigk()
      implicit none
 
      return
-  end subroutine dt_dump_latt_grnf
-
-  subroutine dt_dump_latt_sigf()
-     implicit none
-
-     return
-  end subroutine dt_dump_latt_sigf
+  end subroutine dt_dump_sigk
 
   subroutine dt_dump_spin_susc()
      implicit none
