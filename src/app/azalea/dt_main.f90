@@ -66,11 +66,17 @@
 
      call dt_df_core()
 
-     call dt_final_array()
+     DMFT_SLEEP: BLOCK
 
-     if ( myid == master ) then
-         call dt_print_footer()
-     endif
+! deallocate memory spaces
+         call dt_final_array()
+
+! print the ending messages
+         if ( myid == master ) then ! only master node can do it
+             call dt_print_footer()
+         endif ! back if ( myid == master ) block
+
+     END BLOCK DMFT_SLEEP
 
 ! finalize mpi envirnoment
 # if defined (MPI)
