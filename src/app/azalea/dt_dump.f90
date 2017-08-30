@@ -200,18 +200,33 @@
      return
   end subroutine dt_dump_cchi
 
+!!
+!! @sub dt_dump_v4_d
+!!
+!! write out vertex function (density channel) 
+!!
   subroutine dt_dump_v4_d()
      implicit none
 
      return
   end subroutine dt_dump_v4_d
 
+!!
+!! @sub dt_dump_v4_m
+!!
+!! write out vertex function (magnetic channel)
+!!
   subroutine dt_dump_v4_m()
      implicit none
 
      return
   end subroutine dt_dump_v4_m
 
+!!
+!! @sub dt_dump_v4_f
+!!
+!! write out vertex function (full vertex)
+!!
   subroutine dt_dump_v4_f()
      implicit none
 
