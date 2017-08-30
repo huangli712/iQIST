@@ -40,7 +40,7 @@
      call dt_dual_init()
      call dt_vert_init()
 
-     call dt_run()
+     call dt_df_core()
 
      call dt_final_array()
 
