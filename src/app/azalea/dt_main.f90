@@ -1,9 +1,9 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! AZALEA    @ iQIST                                                    !
+!!! AZALEA @ iQIST                                                       !
 !!!                                                                      !
-!!! A highly optimized hybridization expansion version continuous time   !
-!!! quantum Monte Carlo (CTQMC) quantum impurity solver plus a classic   !
-!!! dynamical mean field theory (DMFT) self-consistent engine            !
+!!! A highly optimized diagrammatic framework for dynamical mean field   ! 
+!!! theory which can be used to treat non-local correlations in strongly !
+!!! correlated systems
 !!!                                                                      !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
