@@ -16,6 +16,8 @@
 !!
 !! @sub dt_df_core
 !!
+!! implement the dual fermion framework
+!!
   subroutine dt_df_core()
      use constants, only : dp
      use constants, only : zero, epss
