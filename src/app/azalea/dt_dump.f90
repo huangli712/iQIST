@@ -44,8 +44,15 @@
      return
   end subroutine dt_dump_grnf
 
+!!
+!! @sub dt_dump_sigf
+!!
+!! write out self-energy function in matsubara frequency space
+!!
   subroutine dt_dump_sigf(rmesh, sigf)
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : nffrq
@@ -64,14 +71,13 @@
      integer :: i
      integer :: j
 
-! open data file: df.dmft_s.dat
-     open(mytmp, file='df.dmft_s.dat', form='formatted', status='unknown')
+! open data file: dt.dmft_s.dat
+     open(mytmp, file='dt.dmft_s.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,norbs
          do j=1,nffrq
-             write(mytmp,'(i6,5f16.8)') &
-                 i, rmesh(j), real(sigf(j,i)), aimag(sigf(j,i)), zero, zero
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), sigf(j,i), czero
          enddo ! over j={1,nffrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
