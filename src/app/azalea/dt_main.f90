@@ -58,9 +58,10 @@
          call dt_dual_init()
          call dt_vert_init()
 
-         if ( myid == master ) then
+! print the runtime parameters
+         if ( myid == master ) then ! only master node can do it
              call dt_print_summary()
-         endif
+         endif ! back if ( myid == master ) block
 
      END BLOCK DMFT_START
 
