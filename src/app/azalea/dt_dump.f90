@@ -178,17 +178,27 @@
      return
   end subroutine dt_dump_sigk
 
-  subroutine dt_dump_spin_susc()
+!!
+!! @sub dt_dump_schi
+!!
+!! write out spin susceptibility
+!!
+  subroutine dt_dump_schi()
      implicit none
 
      return
-  end subroutine dt_dump_spin_susc
+  end subroutine dt_dump_schi
 
-  subroutine dt_dump_char_susc()
+!!
+!! @sub dt_dump_cchi
+!!
+!! write out charge susceptibility
+!!
+  subroutine dt_dump_cchi()
      implicit none
 
      return
-  end subroutine dt_dump_char_susc
+  end subroutine dt_dump_cchi
 
   subroutine dt_dump_dens_vert()
      implicit none
