@@ -15,11 +15,15 @@
   PROGRAM DT_MAIN !                                                    <<<
 !!========================================================================
 
-     use mmpi, only : mp_init, mp_finalize
-     use mmpi, only : mp_comm_rank, mp_comm_size
-     use mmpi, only : mp_barrier
+     use mmpi, only : mp_init      ! init mpi environment
+     use mmpi, only : mp_finalize  ! finalize mpi environment
+     use mmpi, only : mp_barrier   ! barrier to synchronize the data
+     use mmpi, only : mp_comm_rank ! get index of current process
+     use mmpi, only : mp_comm_size ! get number of processes
 
-     use control, only : nprocs, myid, master
+     use control, only : nprocs    ! number of processes
+     use control, only : myid      ! index of current process
+     use control, only : master    ! index of master process
 
      implicit none
 
