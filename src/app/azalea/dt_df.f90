@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
-!!! program : dt_run
-!!!           dt_schi
-!!!           dt_cchi
+!!! program : dt_df_core
+!!!           dt_df_schi
+!!!           dt_df_cchi
 !!!           cat_dual_shift
 !!!           dt_static_bubble
 !!!           dt_bubble
