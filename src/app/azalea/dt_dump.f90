@@ -1,7 +1,9 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
-!!! program : ctqmc_dump_ac_f <<<---
-!!! source  : ctqmc_dump.f90
+!!! project : azalea
+!!! program : dt_dump_grnf
+!!!           dt_dump_sigf
+!!!           dt_dump_hybf <<<---
+!!! source  : dt_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
