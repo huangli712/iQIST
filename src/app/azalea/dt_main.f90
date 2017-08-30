@@ -41,23 +41,28 @@
 
 # endif  /* MPI */
 
-     if ( myid == master ) then
-         call dt_print_header()
-     endif
+     DMFT_START: BLOCK
 
-     call dt_config()
+! print the welcome messages
+         if ( myid == master ) then ! only master node can do it
+             call dt_print_header()
+         endif ! back if ( myid == master ) block
 
-     if ( myid == master ) then
-         call dt_print_summary()
-     endif
+         call dt_config()
 
-     call dt_setup_array()
+         call dt_setup_array()
 
-     call dt_mesh_init()
-     call dt_dmft_init()
-     call dt_latt_init()
-     call dt_dual_init()
-     call dt_vert_init()
+         call dt_mesh_init()
+         call dt_dmft_init()
+         call dt_latt_init()
+         call dt_dual_init()
+         call dt_vert_init()
+
+         if ( myid == master ) then
+             call dt_print_summary()
+         endif
+
+     END BLOCK DMFT_START
 
      call dt_df_core()
 
