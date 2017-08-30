@@ -89,8 +89,15 @@
      return
   end subroutine dt_dump_sigf
 
-  subroutine dt_dump_dmft_hybf(rmesh, hybf)
-     use constants, only : dp, zero, mytmp
+!!
+!! @sub dt_dump_hybf
+!!
+!! write out hybridization function in matsubara frequency space
+!!
+  subroutine dt_dump_hybf(rmesh, hybf)
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : nffrq
@@ -109,14 +116,13 @@
      integer :: i
      integer :: j
 
-! open data file: df.dmft_h.dat
-     open(mytmp, file='df.dmft_h.dat', form='formatted', status='unknown')
+! open data file: dt.dmft_h.dat
+     open(mytmp, file='dt.dmft_h.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,norbs
          do j=1,nffrq
-             write(mytmp,'(i6,5f16.8)') &
-                 i, rmesh(j), real(hybf(j,i)), aimag(hybf(j,i)), zero, zero
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), hybf(j,i), czero
          enddo ! over j={1,nffrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -126,7 +132,7 @@
      close(mytmp)
 
      return
-  end subroutine dt_dump_dmft_hybf
+  end subroutine dt_dump_hybf
 
   subroutine dt_dump_dual_grnf()
      implicit none
