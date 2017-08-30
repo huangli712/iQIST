@@ -1,5 +1,5 @@
 
-  subroutine dt_dump_dmft_grnf(rmesh, grnf)
+  subroutine dt_dump_grnf(rmesh, grnf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -36,7 +36,7 @@
      close(mytmp)
 
      return
-  end subroutine dt_dump_dmft_grnf
+  end subroutine dt_dump_grnf
 
   subroutine dt_dump_dmft_sigf(rmesh, sigf)
      use constants, only : dp, zero, mytmp
