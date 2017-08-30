@@ -1,6 +1,8 @@
 
   subroutine dt_dump_grnf(rmesh, grnf)
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : nffrq
