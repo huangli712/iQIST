@@ -3,11 +3,6 @@
 !!! program : dt_df_core
 !!!           dt_df_schi
 !!!           dt_df_cchi
-!!!           cat_dual_shift
-!!!           dt_static_bubble
-!!!           dt_bubble
-!!!           dt_bse_solver
-!!!           dt_bse_solver_iter
 !!! source  : dt_df.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
