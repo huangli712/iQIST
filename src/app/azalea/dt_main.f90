@@ -52,7 +52,7 @@
          call dt_setup_param()
 
 ! allocate memory spaces
-         call dt_setup_array()
+         call dt_alloc_array()
 
 ! setup the quantum lattice model
          call dt_setup_model()

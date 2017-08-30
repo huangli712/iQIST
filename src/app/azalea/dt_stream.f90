@@ -1,6 +1,5 @@
 
 
-! parse input files, readin data
   subroutine dt_setup_param()
      use constants, only : dp
 
@@ -19,27 +18,16 @@
   end subroutine dt_setup_param
 
   subroutine dt_setup_model()
+     implicit none
+
      call dt_mesh_init()
      call dt_dmft_init()
      call dt_latt_init()
      call dt_dual_init()
      call dt_vert_init()
-  end subroutine dt_setup_model
 
-  subroutine dt_setup_array()
-     use context ! ALL
-
-     implicit none
-
-! allocate memory for context module
-     call cat_alloc_mesh()
-     call cat_alloc_dmft()
-     call cat_alloc_dual()
-     call cat_alloc_latt()
-     call cat_alloc_vert()
-     
      return
-  end subroutine dt_setup_array
+  end subroutine dt_setup_model
 
   subroutine dt_mesh_init()
      use constants, only : dp, one, two, pi
@@ -205,6 +193,27 @@
 
      return
   end subroutine dt_vert_init
+
+  subroutine dt_alloc_array()
+     use context ! ALL
+
+     implicit none
+
+! allocate memory for context module
+     call cat_alloc_mesh()
+     call cat_alloc_dmft()
+     call cat_alloc_dual()
+     call cat_alloc_latt()
+     call cat_alloc_vert()
+     
+     return
+  end subroutine dt_alloc_array
+
+  subroutine dt_reset_array()
+     implicit none
+
+     return
+  end subroutine dt_reset_array
 
   subroutine dt_final_array()
      use context ! ALL
