@@ -48,15 +48,14 @@
              call dt_print_header()
          endif ! back if ( myid == master ) block
 
-         call dt_config()
+! setup the parameters
+         call dt_setup_param()
 
+! allocate memory spaces
          call dt_setup_array()
 
-         call dt_mesh_init()
-         call dt_dmft_init()
-         call dt_latt_init()
-         call dt_dual_init()
-         call dt_vert_init()
+! setup the quantum lattice model
+         call dt_setup_model()
 
 ! print the runtime parameters
          if ( myid == master ) then ! only master node can do it
