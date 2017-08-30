@@ -11,7 +11,10 @@
 !!!           any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
-  program dt_main
+!!========================================================================
+  PROGRAM DT_MAIN !                                                    <<<
+!!========================================================================
+
      use mmpi, only : mp_init, mp_finalize
      use mmpi, only : mp_comm_rank, mp_comm_size
      use mmpi, only : mp_barrier
