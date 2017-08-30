@@ -200,20 +200,20 @@
      return
   end subroutine dt_dump_cchi
 
-  subroutine dt_dump_dens_vert()
+  subroutine dt_dump_v4_d()
      implicit none
 
      return
-  end subroutine dt_dump_dens_vert
+  end subroutine dt_dump_v4_d
 
-  subroutine dt_dump_magn_vert()
+  subroutine dt_dump_v4_m()
      implicit none
 
      return
-  end subroutine dt_dump_magn_vert
+  end subroutine dt_dump_v4_m
 
-  subroutine dt_dump_full_vert()
+  subroutine dt_dump_v4_f()
      implicit none
 
      return
-  end subroutine dt_dump_full_vert
+  end subroutine dt_dump_v4_f
