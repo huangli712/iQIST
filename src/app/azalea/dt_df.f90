@@ -135,6 +135,8 @@
 !!
 !! @sub dt_df_schi
 !!
+!! calculate the spin susceptibility within the dual fermion framework
+!!
   subroutine dt_df_schi()
      implicit none
 
@@ -143,6 +145,8 @@
 
 !!
 !! @sub dt_df_cchi
+!!
+!! calculate the charge susceptibility within the dual fermion framework
 !!
   subroutine dt_df_cchi()
      implicit none
