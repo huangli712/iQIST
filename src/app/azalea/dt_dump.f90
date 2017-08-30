@@ -1,4 +1,9 @@
 
+!!
+!! @sub dt_dump_grnf
+!!
+!! write out impurity green's function in matsubara frequency space
+!!
   subroutine dt_dump_grnf(rmesh, grnf)
      use constants, only : dp
      use constants, only : czero
