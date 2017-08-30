@@ -1,3 +1,15 @@
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! AZALEA    @ iQIST                                                    !
+!!!                                                                      !
+!!! A highly optimized hybridization expansion version continuous time   !
+!!! quantum Monte Carlo (CTQMC) quantum impurity solver plus a classic   !
+!!! dynamical mean field theory (DMFT) self-consistent engine            !
+!!!                                                                      !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
+!!! comment : now only the dual fermion approach is implemented          !
+!!!           any question, please contact with lihuang.dmft@gmail.com   !
+!!!=========+=========+=========+=========+=========+=========+=========+!
 
   program dt_main
      use mmpi, only : mp_init, mp_finalize
