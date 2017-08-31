@@ -79,9 +79,9 @@
              call cat_shift_k(dual_g, gshift, w)
 
              if ( abs(w - zero) < epss ) then
-                 call dt_static_bubble(bubble, w)
+                 call cat_bubble0(bubble, w)
              else
-                 call dt_bubble(bubble, w)
+                 call cat_bubble1(bubble, w)
              endif
 
              vertexM = vert_m(:,:,j)
