@@ -5,8 +5,8 @@
 !!!           cat_fft3d
 !!!           cat_shift_l
 !!!           cat_shift_k
-!!!           dt_static_bubble
-!!!           dt_bubble
+!!!           cat_bubble0
+!!!           cat_bubble1
 !!!           dt_bse_solver
 !!!           dt_bse_solver_iter
 !!! source  : dt_util.f90
@@ -178,7 +178,7 @@
      return
   end subroutine cat_shift_k
 
-  subroutine dt_static_bubble(bubble, w)
+  subroutine cat_bubble0(bubble, w)
      use constants, only : dp
      use constants, only : czero
 
@@ -215,9 +215,9 @@
      bubble = bubble / real(nkpts * nkpts * beta)
 
      return
-  end subroutine dt_static_bubble
+  end subroutine cat_bubble0
 
-  subroutine dt_bubble(bubble, w)
+  subroutine cat_bubble1(bubble, w)
      use constants, only : dp
      use constants, only : one, two, pi, czero
 
@@ -276,7 +276,7 @@
      bubble = bubble / real(nkpts * nkpts * beta)
 
      return
-  end subroutine dt_bubble
+  end subroutine cat_bubble1
 
   subroutine dt_bse_solver(bubbleM, vertexM, gammaM)
      use constants, only : dp
