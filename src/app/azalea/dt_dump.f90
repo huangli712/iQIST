@@ -314,8 +314,47 @@
 !!
 !! write out lattice green's function in matsubara frequency space
 !!
-  subroutine dt_dump_grnk()
+  subroutine dt_dump_grnk(rmesh, grnk)
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+
      implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(nffrq)
+
+! lattice green's function
+     complex(dp), intent(in) :: grnk(nffrq,norbs,nkpts)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! open data file: dt.latt_g.dat
+     open(mytmp, file='dt.latt_g.dat', form='formatted', status='unknown')
+
+! write it
+     do k=1,nkpts
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# kpt:', k, '  orb:', j
+             do i=1,nffrq
+                 write(mytmp,'(i6,5f16.8)') i, rmesh(i), grnk(i,j,k), czero
+             enddo ! over i={1,nffrq} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,nkpts} loop
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine dt_dump_grnk
@@ -325,8 +364,47 @@
 !!
 !! write out lattice self-energy function in matsubara frequency space
 !!
-  subroutine dt_dump_sigk()
+  subroutine dt_dump_sigk(rmesh, sigk)
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+
      implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(nffrq)
+
+! lattice self-energy function
+     complex(dp), intent(in) :: sigk(nffrq,norbs,nkpts)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! open data file: dt.latt_s.dat
+     open(mytmp, file='dt.latt_s.dat', form='formatted', status='unknown')
+
+! write it
+     do k=1,nkpts
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# kpt:', k, '  orb:', j
+             do i=1,nffrq
+                 write(mytmp,'(i6,5f16.8)') i, rmesh(i), sigk(i,j,k), czero
+             enddo ! over i={1,nffrq} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,nkpts} loop
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine dt_dump_sigk
