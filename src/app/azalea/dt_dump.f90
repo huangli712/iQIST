@@ -4,7 +4,8 @@
 !!!           dt_dump_sigf
 !!!           dt_dump_hybf <<<---
 !!!           dt_dump_grnd
-!!!           dt_dump_sigd <<<---
+!!!           dt_dump_sigd
+!!!           dt_dump_wssd <<<---
 !!!           dt_dump_grnk
 !!!           dt_dump_sigk <<<---
 !!!           dt_dump_v4_d
@@ -16,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           009/02/2017 by li huang (last modified)
+!!!           09/02/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the diagrammatic framework
 !!!           for dynamical mean field theory to external files.
 !!! status  : unstable
@@ -179,7 +180,7 @@
      real(dp), intent(in)    :: rmesh(nffrq)
 
 ! dual green's function
-     complex(dp), intent(in) :: grnd(nkpts,nffrq,norbs)
+     complex(dp), intent(in) :: grnd(nffrq,norbs,nkpts)
 
 ! local variables
 ! loop index
@@ -191,13 +192,16 @@
      open(mytmp, file='dt.dual_g.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,norbs
-         do j=1,nffrq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), grnd(k,j,i), czero
-         enddo ! over j={1,nffrq} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,norbs} loop
+     do k=1,nkpts
+         do j=1,norbs
+             write(mytmp,'(2(a8,i6))') '# kpt:', k, 'orb:', j
+             do i=1,nffrq
+                 write(mytmp,'(i6,5f16.8)') j, rmesh(i), grnd(i,j,k), czero
+             enddo ! over i={1,nffrq} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,nkpts} loop
 
 ! close data file
      close(mytmp)
