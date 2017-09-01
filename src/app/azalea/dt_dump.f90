@@ -260,7 +260,57 @@
   end subroutine dt_dump_sigd
 
 !!
-!! @sub dt_dump_grnd
+!! @sub dt_dump_wssd
+!!
+!! write out dual bare green's function in matsubara frequency space
+!!
+  subroutine dt_dump_wssd(rmesh, wssd)
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+
+     implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(nffrq)
+
+! dual bare green's function
+     complex(dp), intent(in) :: wssd(nffrq,norbs,nkpts)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! open data file: dt.dual_b.dat
+     open(mytmp, file='dt.dual_b.dat', form='formatted', status='unknown')
+
+! write it
+     do k=1,nkpts
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# kpt:', k, '  orb:', j
+             do i=1,nffrq
+                 write(mytmp,'(i6,5f16.8)') i, rmesh(i), wssd(i,j,k), czero
+             enddo ! over i={1,nffrq} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,nkpts} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine dt_dump_wssd
+
+!!
+!! @sub dt_dump_grnk
 !!
 !! write out lattice green's function in matsubara frequency space
 !!
