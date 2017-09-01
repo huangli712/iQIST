@@ -8,7 +8,7 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
 !!!           08/30/2017 by li huang (last modified)
-!!! purpose :
+!!! purpose : main subroutines for the dual fermion framework.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------

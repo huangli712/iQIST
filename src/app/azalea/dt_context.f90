@@ -10,7 +10,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/30/2017 by li huang (last modified)
+!!!           09/02/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for diagrammatic framework for dynamical mean field theory.
 !!! status  : unstable
@@ -298,9 +298,9 @@
      implicit none
 
 ! allocate memory
-     allocate(dual_g(nkpts,nffrq,norbs), stat=istat)
-     allocate(dual_s(nkpts,nffrq,norbs), stat=istat)
-     allocate(dual_b(nkpts,nffrq,norbs), stat=istat)
+     allocate(dual_g(nffrq,norbs,nkpts), stat=istat)
+     allocate(dual_s(nffrq,norbs,nkpts), stat=istat)
+     allocate(dual_b(nffrq,norbs,nkpts), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -324,8 +324,8 @@
      implicit none
 
 ! allocate memory
-     allocate(latt_g(nkpts,nffrq,norbs), stat=istat)
-     allocate(latt_s(nkpts,nffrq,norbs), stat=istat)
+     allocate(latt_g(nffrq,norbs,nkpts), stat=istat)
+     allocate(latt_s(nffrq,norbs,nkpts), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then

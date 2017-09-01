@@ -16,7 +16,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/15/2017 by li huang (last modified)
+!!!           009/02/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the diagrammatic framework
 !!!           for dynamical mean field theory to external files.
 !!! status  : unstable
@@ -163,8 +163,44 @@
 !!
 !! write out dual green's function in matsubara frequency space
 !!
-  subroutine dt_dump_grnd()
+  subroutine dt_dump_grnd(rmesh, grnd)
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+
      implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(nffrq)
+
+! dual green's function
+     complex(dp), intent(in) :: grnd(nkpts,nffrq,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! open data file: dt.dual_g.dat
+     open(mytmp, file='dt.dual_g.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,nffrq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), grnd(k,j,i), czero
+         enddo ! over j={1,nffrq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine dt_dump_grnd
