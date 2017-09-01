@@ -214,8 +214,47 @@
 !!
 !! write out dual self-energy function in matsubara frequency space
 !!
-  subroutine dt_dump_sigd()
+  subroutine dt_dump_sigd(rmesh, sigd)
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+
      implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(nffrq)
+
+! dual green's function
+     complex(dp), intent(in) :: grnd(nffrq,norbs,nkpts)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! open data file: dt.dual_g.dat
+     open(mytmp, file='dt.dual_g.dat', form='formatted', status='unknown')
+
+! write it
+     do k=1,nkpts
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# kpt:', k, '  orb:', j
+             do i=1,nffrq
+                 write(mytmp,'(i6,5f16.8)') i, rmesh(i), grnd(i,j,k), czero
+             enddo ! over i={1,nffrq} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,nkpts} loop
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine dt_dump_sigd
