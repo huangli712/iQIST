@@ -194,9 +194,9 @@
 ! write it
      do k=1,nkpts
          do j=1,norbs
-             write(mytmp,'(2(a8,i6))') '# kpt:', k, 'orb:', j
+             write(mytmp,'(2(a,i6))') '# kpt:', k, '  orb:', j
              do i=1,nffrq
-                 write(mytmp,'(i6,5f16.8)') j, rmesh(i), grnd(i,j,k), czero
+                 write(mytmp,'(i6,5f16.8)') i, rmesh(i), grnd(i,j,k), czero
              enddo ! over i={1,nffrq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
