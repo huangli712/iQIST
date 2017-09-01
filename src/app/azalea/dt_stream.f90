@@ -25,6 +25,7 @@
      call dt_mesh_init()
 
      call dt_dump_grnd(fmesh,dual_g)
+     call dt_dump_sigd(fmesh,dual_s)
      STOP
      call dt_dmft_init()
      call dt_latt_init()
