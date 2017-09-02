@@ -85,7 +85,12 @@
              call p_parse('dt.config.in')
 
 ! extract parameters
+             call p_get('nband' , nband )
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+
              call p_get('nffrq' , nffrq )
+             call p_get('nbfrq' , nbfrq )
 
 ! destroy the parser
              call p_destroy()
