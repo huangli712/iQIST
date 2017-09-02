@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : azalea
 !!! program : dt_setup_param
 !!!           dt_setup_model <<<---
 !!!           dt_input_mesh_
@@ -14,12 +14,17 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           09/05/2017 by li huang (last modified)
+!!!           01/02/2018 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! @sub dt_setup_param
+!!
+!!
+!!
   subroutine dt_setup_param()
      use constants, only : dp
 
@@ -37,6 +42,11 @@
      return
   end subroutine dt_setup_param
 
+!!
+!! @sub dt_setup_model
+!!
+!!
+!!
   subroutine dt_setup_model()
      implicit none
 
@@ -49,6 +59,11 @@
      return
   end subroutine dt_setup_model
 
+!!
+!! @sub dt_input_mesh_
+!!
+!!
+!!
   subroutine dt_input_mesh_()
      use constants, only : dp
      use constants, only : one, two, pi
@@ -101,6 +116,11 @@
      return
   end subroutine dt_input_mesh_
 
+!!
+!! @sub dt_input_dmft_
+!!
+!!
+!!
   subroutine dt_input_dmft_()
      use constants, only : dp
      use constants, only : mytmp
@@ -167,6 +187,11 @@
      return
   end subroutine dt_input_dmft_
 
+!!
+!! @sub dt_input_latt_
+!!
+!!
+!!
   subroutine dt_input_latt_()
      use constants, only : dp
      use constants, only : one
@@ -197,6 +222,11 @@
      return
   end subroutine dt_input_latt_
 
+!!
+!! @sub dt_input_dual_
+!!
+!!
+!!
   subroutine dt_input_dual_()
      use constants, only : dp
      use constants, only : czero
@@ -228,12 +258,22 @@
      return
   end subroutine dt_input_dual_
 
+!!
+!! @sub dt_input_vert_
+!!
+!!
+!!
   subroutine dt_input_vert_()
      implicit none
 
      return
   end subroutine dt_input_vert_
 
+!!
+!! @sub dt_alloc_array
+!!
+!!
+!!
   subroutine dt_alloc_array()
      use context ! ALL
 
@@ -249,12 +289,22 @@
      return
   end subroutine dt_alloc_array
 
+!!
+!! @sub dt_reset_array
+!!
+!!
+!!
   subroutine dt_reset_array()
      implicit none
 
      return
   end subroutine dt_reset_array
 
+!!
+!! @sub dt_final_array
+!!
+!!
+!!
   subroutine dt_final_array()
      use context ! ALL
 
