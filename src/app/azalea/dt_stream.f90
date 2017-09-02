@@ -47,11 +47,27 @@
      logical :: exists
 
 ! only for debug
+     nband = 1
+     nspin = 2
+     norbs = 2
+
      nffrq = 16
      nbfrq = 7
 
-     part  = 1.0_dp 
-     beta  = 1.0_dp
+     nkpts = 64
+     nkp_x = 8
+     nkp_y = 8
+     nkp_z = 8
+
+     ndfit = 1
+     nbsit = 10
+
+     mune  = 2.00_dp
+     beta  = 1.00_dp
+     part  = 1.00_dp
+
+     dfmix = 0.70_dp
+     bsmix = 0.70_dp
 
 ! read in input file if possible, only master node can do it
      if ( myid == master ) then
