@@ -446,6 +446,9 @@
      complex(dp) :: g1(nkpts)
      complex(dp) :: g2(nkpts)
 
+! we have to make sure nkpts == nkp_x * nkp_y * nkp_z
+     call s_assert2(nkpts == (nkp_x * nkp_y * nkp_z), 'nkpts != (nkp_x * nkp_y * nkp_z)') 
+
      do i=1,norbs
          do j=1,nffrq
              gk = gin(j,i,:)
