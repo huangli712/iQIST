@@ -3,7 +3,8 @@
 !!! program : cat_fft1d
 !!!           cat_fft2d
 !!!           cat_fft3d
-!!!           cat_dual_shift
+!!!           cat_shift_l
+!!!           cat_shift_k
 !!!           dt_static_bubble
 !!!           dt_bubble
 !!!           dt_bse_solver
@@ -132,7 +133,13 @@
      return
   end subroutine cat_fft3d
 
-  subroutine cat_dual_shift(dual_in, dual_out, shift)
+  subroutine cat_shift_l()
+     implicit none
+
+     return
+  end subroutine cat_shift_l
+
+  subroutine cat_shift_k(dual_in, dual_out, shift)
      use constants, only : dp
      use constants, only : one, two, pi, czero
 
@@ -169,7 +176,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine cat_dual_shift
+  end subroutine cat_shift_k
 
   subroutine dt_static_bubble(bubble, w)
      use constants, only : dp
