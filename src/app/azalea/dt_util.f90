@@ -15,7 +15,8 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
 !!!           01/02/2018 by li huang (last modified)
-!!! purpose :
+!!! purpose : provide some utility subroutines, such as FFT, convolution,
+!!!           and Bethe-Salpter equation solver, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -128,6 +129,12 @@
 !!========================================================================
 !!>>> fast fourier transformation                                      <<<
 !!========================================================================
+
+!!
+!! note:
+!!
+!! need fftw3 software package
+!!
 
 !!
 !! @sub cat_fft_1d
@@ -316,6 +323,9 @@
      complex(dp) :: gr(nkpts)
      complex(dp) :: g1(nkpts)
      complex(dp) :: g2(nkpts)
+
+! we have to make sure nkpts == nkp_x
+     call s_assert2(nkpts == nkp_x, 'nkpts != nkp_x') 
 
      do i=1,norbs
          do j=1,nffrq
