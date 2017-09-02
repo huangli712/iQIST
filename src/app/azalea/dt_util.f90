@@ -535,7 +535,7 @@
 
 
 
-  subroutine cat_bse_iterator(niter, mix, bubbleM, vertexM, gammaM)
+  subroutine cat_bse_iterator(niter, mix, chiM, vrtM, GamM)
      use constants, only : dp
 
      use control, only : nffrq
@@ -546,9 +546,9 @@
      integer, intent(in) :: niter
      real(dp), intent(in) :: mix
 
-     complex(dp), intent(in) :: bubbleM(nffrq,nffrq)
-     complex(dp), intent(in) :: vertexM(nffrq,nffrq)
-     complex(dp), intent(out) :: gammaM(nffrq,nffrq)
+     complex(dp), intent(in) :: chiM(nffrq,nffrq)
+     complex(dp), intent(in) :: vrtM(nffrq,nffrq)
+     complex(dp), intent(out) :: GamM(nffrq,nffrq)
 
 ! local variables
      integer :: it
@@ -556,18 +556,18 @@
      complex(dp) :: V4chi(nffrq,nffrq)
      complex(dp) :: diff
 
-     gammaM = vertexM
-     V4old = vertexM
-     V4chi = matmul(vertexM, bubbleM)
+     GamM = vrtM
+     V4old = vrtM
+     V4chi = matmul(vrtM, chiM)
 
      do it=1,niter
          if ( it == niter ) then
-             gammaM = ( vertexM + matmul(V4chi,V4old) ) * mix + (1.0 - mix) * V4old
+             GamM = ( vrtM + matmul(V4chi,V4old) ) * mix + (1.0 - mix) * V4old
          else
-             gammaM = ( matmul(V4chi,V4old) ) * mix + (1.0 - mix) * V4old
+             GamM = ( matmul(V4chi,V4old) ) * mix + (1.0 - mix) * V4old
          endif
-         diff = abs(sum(gammaM - V4old)) / real(nffrq * nffrq)
-         V4old = gammaM
+         diff = abs(sum(GamM - V4old)) / real(nffrq * nffrq)
+         V4old = GamM
      enddo
 
      return
