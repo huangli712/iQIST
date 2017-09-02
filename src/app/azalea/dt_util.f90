@@ -533,8 +533,11 @@
      return
   end subroutine cat_bse_solver
 
-
-
+!!
+!! @sub cat_bse_iterator
+!!
+!! try to solve the bethe-salpeter equation iterately
+!!
   subroutine cat_bse_iterator(niter, mix, chiM, vrtM, GamM)
      use constants, only : dp
 
@@ -543,32 +546,50 @@
      implicit none
 
 ! external arguments
-     integer, intent(in) :: niter
+! number of iteration
+     integer, intent(in)  :: niter
+
+! mixing factor
      real(dp), intent(in) :: mix
 
-     complex(dp), intent(in) :: chiM(nffrq,nffrq)
-     complex(dp), intent(in) :: vrtM(nffrq,nffrq)
+! two-particle bubble, \chi
+     complex(dp), intent(in)  :: chiM(nffrq,nffrq)
+
+! impurity vertex function, \gamma
+     complex(dp), intent(in)  :: vrtM(nffrq,nffrq)
+
+! fully dressed vertex function, \Gamma
      complex(dp), intent(out) :: GamM(nffrq,nffrq)
 
 ! local variables
+! loop index
      integer :: it
-     complex(dp) :: V4old(nffrq,nffrq)
-     complex(dp) :: V4chi(nffrq,nffrq)
+
+! difference between two successive iterations
      complex(dp) :: diff
 
-     GamM = vrtM
-     V4old = vrtM
-     V4chi = matmul(vrtM, chiM)
+! used to save old GamM
+     complex(dp) :: Vold(nffrq,nffrq)
 
-     do it=1,niter
-         if ( it == niter ) then
-             GamM = ( vrtM + matmul(V4chi,V4old) ) * mix + (1.0 - mix) * V4old
-         else
-             GamM = ( matmul(V4chi,V4old) ) * mix + (1.0 - mix) * V4old
-         endif
-         diff = abs(sum(GamM - V4old)) / real(nffrq * nffrq)
-         V4old = GamM
-     enddo
+! used to save \gamma * \chi
+     complex(dp) :: Vchi(nffrq,nffrq)
+
+! init Vold and Vchi
+     Vold = vrtM
+     Vchi = matmul(vrtM, chiM)
+
+     BSE_ITERATOR: do it=1,niter
+
+! calculate new \Gamma, and then mix it with Vold
+         GamM = ( vrtM + matmul(Vchi,Vold) ) * mix + (1.0_dp - mix) * Vold
+
+! calculate the difference
+         diff = abs(sum(GamM - Vold)) / real(nffrq * nffrq)
+
+! update Vold with new GamM
+         Vold = GamM
+
+     enddo BSE_ITERATOR ! over it={1,niter} loop 
 
      return
   end subroutine cat_bse_iterator
