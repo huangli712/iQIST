@@ -15,22 +15,36 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
 !!!           01/02/2018 by li huang (last modified)
-!!! purpose :
+!!! purpose : initialize and finalize the dual fermion engine.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> config dual fermion engine                                       <<<
+!!========================================================================
+
 !!
 !! @sub dt_setup_param
 !!
-!!
+!! setup key parameters for dual fermion engine
 !!
   subroutine dt_setup_param()
-     use constants, only : dp
+     use parser, only : p_create
+     use parser, only : p_parse
+     use parser, only : p_get
+     use parser, only : p_destroy
 
-     use control
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
+
+     use control ! ALL
 
      implicit none
+
+! local variables
+! used to check whether the input file (dt.config.in) exists
+     logical :: exists
 
 ! only for debug
      nffrq = 16
@@ -38,6 +52,38 @@
 
      part  = 1.0_dp 
      beta  = 1.0_dp
+
+! read in input file if possible, only master node can do it
+     if ( myid == master ) then
+         exists = .false.
+
+! inquire file status: dt.config.in
+         inquire (file = 'dt.config.in', exist = exists)
+
+! read in parameters, default setting should be overrided
+         if ( exists .eqv. .true. ) then
+! create the file parser
+             call p_create()
+
+! parse the config file
+             call p_parse('dt.config.in')
+
+! extract parameters
+             call p_get('nffrq' , nffrq )
+
+! destroy the parser
+             call p_destroy()
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+
+! since config parameters may be updated in master node, it is crucial
+! to broadcast config parameters from root to all children processes
+# if defined (MPI)
+
+     call mp_bcast( nffrq , master )
+     call mp_barrier()
+
+# endif  /* MPI */
 
      return
   end subroutine dt_setup_param
