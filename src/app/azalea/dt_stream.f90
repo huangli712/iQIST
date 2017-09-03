@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           01/02/2018 by li huang (last modified)
+!!!           01/03/2018 by li huang (last modified)
 !!! purpose : initialize and finalize the dual fermion engine.
 !!! status  : unstable
 !!! comment :
@@ -46,28 +46,33 @@
 ! used to check whether the input file (dt.config.in) exists
      logical :: exists
 
-! only for debug
-     nband = 1
-     nspin = 2
-     norbs = 2
+! setup common variables for interacting lattice model
+!-------------------------------------------------------------------------
+     nband = 1       ! number of correlated bands
+     nspin = 2       ! number of spin projections
+     norbs = 2       ! number of correlated orbitals
+!-------------------------------------------------------------------------
+     nkpts = 64      ! number of k-points
+     nkp_x = 8       ! number of k-points (x_axis)
+     nkp_y = 8       ! number of k-points (y_axis)
+     nkp_z = 8       ! number of k-points (z_axis)
+!-------------------------------------------------------------------------
+     mune  = 2.00_dp ! chemical potential or fermi level
+     beta  = 1.00_dp ! inversion of temperature
+     part  = 1.00_dp ! hopping parameter t for Hubbard model
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     nffrq = 16
-     nbfrq = 7
-
-     nkpts = 64
-     nkp_x = 8
-     nkp_y = 8
-     nkp_z = 8
-
-     ndfit = 1
-     nbsit = 10
-
-     mune  = 2.00_dp
-     beta  = 1.00_dp
-     part  = 1.00_dp
-
-     dfmix = 0.70_dp
-     bsmix = 0.70_dp
+! setup common variables for quantum impurity solver
+!-------------------------------------------------------------------------
+     nffrq = 16      ! number of fermionic frequencies
+     nbfrq = 7       ! number of bosonic frequncies
+!-------------------------------------------------------------------------
+     ndfit = 1       ! number of dual fermion iteration
+     nbsit = 10      ! number of BSE iteration
+!-------------------------------------------------------------------------
+     dfmix = 0.70_dp ! mixing parameter (dual fermion iteration)
+     bsmix = 0.70_dp ! mixing parameter (BSE solver)
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in input file if possible, only master node can do it
      if ( myid == master ) then
@@ -91,6 +96,9 @@
 
              call p_get('nffrq' , nffrq )
              call p_get('nbfrq' , nbfrq )
+
+             call p_get('nkpts' , nkpts )
+             call p_get('nkp_x' , nkp_x )
 
 ! destroy the parser
              call p_destroy()
