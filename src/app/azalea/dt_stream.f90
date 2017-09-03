@@ -94,11 +94,21 @@
              call p_get('nspin' , nspin )
              call p_get('norbs' , norbs )
 
+             call p_get('nkpts' , nkpts )
+             call p_get('nkp_x' , nkp_x )
+             call p_get('nkp_y' , nkp_y )
+             call p_get('nkp_z' , nkp_z )
+
+             call p_get('mune'  , mune  )
+             call p_get('beta'  , beta  )
+             call p_get('part'  , part  )
+
              call p_get('nffrq' , nffrq )
              call p_get('nbfrq' , nbfrq )
 
-             call p_get('nkpts' , nkpts )
-             call p_get('nkp_x' , nkp_x )
+             call p_get('ndfit' , ndfit )
+             call p_get('nbsit' , nbsit )
+
 
 ! destroy the parser
              call p_destroy()
