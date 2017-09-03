@@ -485,22 +485,22 @@
          exists = .false.
 
 ! inquire about file's existence
-         inquire (file = 'dt.dmft_g.in', exist = exists)
+         inquire (file = 'dt.vert_m.in', exist = exists)
 
-! find input file: dt.dmft_g.in, read it
+! find input file: dt.vert_m.in, read it
          if ( exists .eqv. .true. ) then
 
-     open(mytmp, file = 'dt.vert_m.in', form = 'formatted', status = 'unknown')
-     do i=1,nbfrq
-         do if1=1,nffrq
-             do if2=1,nffrq
-                 read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
-                 vert_m(if2,if1,i) = dcmplx(v1, v2)
+             open(mytmp, file = 'dt.vert_m.in', form = 'formatted', status = 'unknown')
+             do i=1,nbfrq
+                 do if1=1,nffrq
+                     do if2=1,nffrq
+                         read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
+                         vert_m(if2,if1,i) = dcmplx(v1, v2)
+                     enddo
+                     read(mytmp,*) ! skip one line
+                 enddo
              enddo
-             read(mytmp,*) ! skip one line
-         enddo
-     enddo
-     close(mytmp)
+             close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
