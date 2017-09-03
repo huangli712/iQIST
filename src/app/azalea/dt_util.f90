@@ -18,7 +18,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  subroutine dt_fft1d(op, nx, fin, fout)
+  subroutine cat_fft1d(op, nx, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
@@ -53,9 +53,9 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine dt_fft1d
+  end subroutine cat_fft1d
 
-  subroutine dt_fft2d(op, nx, ny, fin, fout)
+  subroutine cat_fft2d(op, nx, ny, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
@@ -91,9 +91,9 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine dt_fft2d
+  end subroutine cat_fft2d
 
-  subroutine dt_fft3d(op, nx, ny, nz, fin, fout)
+  subroutine cat_fft3d(op, nx, ny, nz, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
@@ -130,7 +130,7 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine dt_fft3d
+  end subroutine cat_fft3d
 
   subroutine cat_dual_shift(dual_in, dual_out, shift)
      use constants, only : dp
