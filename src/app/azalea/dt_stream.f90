@@ -301,21 +301,37 @@
      endif ! back if ( myid == master ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! read in hybridization function
-     open(mytmp, file = 'df.dmft_h.in', form = 'formatted', status = 'unknown')
-     do i=1,nffrq
-         read(mytmp,*) r1, r2, c1, c2
-         dmft_h(i,1) = dcmplx(c1, c2)
-         dmft_h(i,2) = dcmplx(c1, c2)
-     enddo ! over i={1,nffrq} loop
-     close(mytmp)
+! read in hybridization function if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
 
-! since the hybridization function may be updated in master node, it is
-! important to broadcast it from root to all children processes
+! inquire about file's existence
+         inquire (file = 'dt.dmft_h.in', exist = exists)
+
+! find input file: dt.dmft_h.in, read it
+         if ( exists .eqv. .true. ) then
+
+! read in hybridization function from dt.dmft_h.in
+             open(mytmp, file = 'dt.dmft_h.in', form = 'formatted', status = 'unknown')
+             do i=1,nffrq
+                 read(mytmp,*) r1, r2, c1, c2
+                 dmft_h(i,1) = dcmplx(c1, c2)
+                 dmft_h(i,2) = dcmplx(c1, c2)
+             enddo ! over i={1,nffrq} loop
+             close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! since the data/arrays may be updated in master node, it is important to
+! broadcast them from root to all children processes
 # if defined (MPI)
 
 ! broadcast data
      call mp_bcast(dmft_g, master)
+     call mp_bcast(dmft_h, master)
 
 ! block until all processes have reached here
      call mp_barrier()
