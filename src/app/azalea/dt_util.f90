@@ -199,9 +199,9 @@
          do j=1,nffrq
              gk = dual_g(j,i,:)
              gr = czero
-             call dt_fft2d(+1, nkp_x, nkp_y, gk, gr) ! gk -> gr
+             call cat_fft2d(+1, nkp_x, nkp_y, gk, gr) ! gk -> gr
              gr = gr * gr
-             call dt_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
+             call cat_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
              bubble(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
@@ -255,14 +255,14 @@
          do j=1,nffrq
              gk = dual_g(j,i,:)
              gr1 = czero
-             call dt_fft2d(+1, nkp_x, nkp_y, gk, gr1) ! gk -> gr
+             call cat_fft2d(+1, nkp_x, nkp_y, gk, gr1) ! gk -> gr
 
              gk = gs(j,i,:)
              gr2 = czero
-             call dt_fft2d(+1, nkp_x, nkp_y, gk, gr2) ! gk -> gr
+             call cat_fft2d(+1, nkp_x, nkp_y, gk, gr2) ! gk -> gr
 
              gr = gr1 * gr2
-             call dt_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
+             call cat_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
              bubble(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
