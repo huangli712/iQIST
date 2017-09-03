@@ -480,6 +480,16 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in vertex function (magentic channel) if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'dt.dmft_g.in', exist = exists)
+
+! find input file: dt.dmft_g.in, read it
+         if ( exists .eqv. .true. ) then
+
      open(mytmp, file = 'dt.vert_m.in', form = 'formatted', status = 'unknown')
      do i=1,nbfrq
          do if1=1,nffrq
@@ -491,6 +501,10 @@
          enddo
      enddo
      close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! since the data/arrays may be updated in master node, it is important to
 ! broadcast them from root to all children processes
