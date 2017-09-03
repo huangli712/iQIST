@@ -109,6 +109,8 @@
              call p_get('ndfit' , ndfit )
              call p_get('nbsit' , nbsit )
 
+             call p_get('dfmix' , dfmix )
+             call p_get('bsmix' , bsmix )
 
 ! destroy the parser
              call p_destroy()
