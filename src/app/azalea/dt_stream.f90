@@ -157,15 +157,25 @@
 !!
 !! @sub dt_setup_model
 !!
-!!
+!! prepare the model, including frequency mesh, local variables, lattice
+!! variables, dual variables, vertex functions, etc
 !!
   subroutine dt_setup_model()
      implicit none
 
+! setup frequency mesh
      call dt_input_mesh_()
+
+! setup local variables (from quantum impurity solver)
      call dt_input_dmft_()
+
+! setup lattice variables (from scratch)
      call dt_input_latt_()
+
+! setup dual variables (from scratch)
      call dt_input_dual_()
+
+! setup vertex functions (from quantum impurity solver)
      call dt_input_vert_()
 
      return
