@@ -181,10 +181,14 @@
      return
   end subroutine dt_setup_model
 
+!!========================================================================
+!!>>> config dual fermion model                                        <<<
+!!========================================================================
+
 !!
 !! @sub dt_input_mesh_
 !!
-!!
+!! prepare some essential meshes
 !!
   subroutine dt_input_mesh_()
      use constants, only : dp
@@ -390,6 +394,10 @@
 
      return
   end subroutine dt_input_vert_
+
+!!========================================================================
+!!>>> manage memory for dual fermion engine                            <<<
+!!========================================================================
 
 !!
 !! @sub dt_alloc_array
