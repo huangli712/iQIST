@@ -428,7 +428,11 @@
      use constants, only : dp
      use constants, only : mytmp
 
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
+
      use control, only : nffrq, nbfrq
+     use control, only : myid, master
 
      use context, only : vert_d, vert_m
 
@@ -439,6 +443,9 @@
      integer  :: i
      integer  :: if1, if2
 
+! used to check whether the input file (dt.vert_d.in) exists
+     logical  :: exists
+
 ! dummy real(dp) variables
      real(dp) :: r1, r2
      real(dp) :: c1, c2
@@ -446,7 +453,7 @@
      real(dp) :: v1, v2
 
 ! read in vertex function, density channel
-     open(mytmp, file = 'df.vert_d.in', form = 'formatted', status = 'unknown')
+     open(mytmp, file = 'dt.vert_d.in', form = 'formatted', status = 'unknown')
      do i=1,nbfrq
          do if1=1,nffrq
              do if2=1,nffrq
@@ -459,7 +466,7 @@
      close(mytmp)
 
 ! read in vertex function, magentic channel
-     open(mytmp, file = 'df.vert_m.in', form = 'formatted', status = 'unknown')
+     open(mytmp, file = 'dt.vert_m.in', form = 'formatted', status = 'unknown')
      do i=1,nbfrq
          do if1=1,nffrq
              do if2=1,nffrq
