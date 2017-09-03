@@ -452,7 +452,17 @@
      real(dp) :: d1, d2
      real(dp) :: v1, v2
 
-! read in vertex function, density channel
+! read in vertex function (density channel) if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'dt.dmft_g.in', exist = exists)
+
+! find input file: dt.dmft_g.in, read it
+         if ( exists .eqv. .true. ) then
+
      open(mytmp, file = 'dt.vert_d.in', form = 'formatted', status = 'unknown')
      do i=1,nbfrq
          do if1=1,nffrq
@@ -465,7 +475,11 @@
      enddo ! over i={1,nbfrq} loop
      close(mytmp)
 
-! read in vertex function, magentic channel
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! read in vertex function (magentic channel) if available
      open(mytmp, file = 'dt.vert_m.in', form = 'formatted', status = 'unknown')
      do i=1,nbfrq
          do if1=1,nffrq
@@ -477,6 +491,19 @@
          enddo
      enddo
      close(mytmp)
+
+! since the data/arrays may be updated in master node, it is important to
+! broadcast them from root to all children processes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(vert_d, master)
+     call mp_bcast(vert_m, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
 
      return
   end subroutine dt_input_vert_
