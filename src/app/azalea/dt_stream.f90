@@ -256,7 +256,11 @@
      use constants, only : dp
      use constants, only : mytmp
 
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
+
      use control, only : nffrq
+     use control, only : myid, master
 
      use context, only : dmft_g, dmft_h
 
@@ -266,18 +270,36 @@
 ! loop index
      integer  :: i
 
+! used to check whether the input file (dt.dmft_g.in) exists
+     logical  :: exists
+
 ! dummy real(dp) variables
      real(dp) :: r1, r2
      real(dp) :: c1, c2
 
-! read in impurity green's function
-     open(mytmp, file = 'df.dmft_g.in', form = 'formatted', status = 'unknown')
-     do i=1,nffrq
-         read(mytmp,*) r1, r2, c1, c2
-         dmft_g(i,1) = dcmplx(c1, c2)
-         dmft_g(i,2) = dcmplx(c1, c2)
-     enddo ! over i={1,nffrq} loop
-     close(mytmp)
+! read in impurity green's function if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'dt.dmft_g.in', exist = exists)
+
+! find input file: dt.dmft_g.in, read it
+         if ( exists .eqv. .true. ) then
+
+! read in impurity green's function from dt.dmft_g.in
+             open(mytmp, file = 'dt.dmft_g.in', form = 'formatted', status = 'unknown')
+             do i=1,nffrq
+                 read(mytmp,*) r1, r2, c1, c2
+                 dmft_g(i,1) = dcmplx(c1, c2)
+                 dmft_g(i,2) = dcmplx(c1, c2)
+             enddo ! over i={1,nffrq} loop
+             close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in hybridization function
      open(mytmp, file = 'df.dmft_h.in', form = 'formatted', status = 'unknown')
@@ -287,6 +309,18 @@
          dmft_h(i,2) = dcmplx(c1, c2)
      enddo ! over i={1,nffrq} loop
      close(mytmp)
+
+! since the hybridization function may be updated in master node, it is
+! important to broadcast it from root to all children processes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(dmft_g, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
 
      return
   end subroutine dt_input_dmft_
