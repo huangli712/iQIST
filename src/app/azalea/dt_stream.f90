@@ -215,15 +215,15 @@
      integer :: j
      integer :: k
 
-     do i=1,norbs
-         do j=1,nffrq
-             do k=1,nkpts
-                 dual_b(k,j,i) = latt_g(k,j,i) - dmft_g(j,i) 
-                 dual_g(k,j,i) = dual_b(k,j,i)
-                 dual_s(k,j,i) = czero
-             enddo ! over k={1,nkpts} loop
-         enddo ! over j={1,nffrq} loop
-     enddo ! over i={1,norbs} loop
+     do k=1,nkpts
+         do j=1,norbs
+             do i=1,nffrq
+                 dual_b(i,j,k) = latt_g(i,j,k) - dmft_g(i,j) 
+                 dual_g(i,j,k) = dual_b(i,j,k)
+                 dual_s(i,j,k) = czero
+             enddo ! over i={1,nffrq} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,nkpts} loop
 
      return
   end subroutine dt_input_dual_
