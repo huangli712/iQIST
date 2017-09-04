@@ -1,3 +1,17 @@
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : dt_fft1d
+!!!           dt_fft2d
+!!!           dt_fft3d
+!!! source  : dt_util.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 10/01/2008 by li huang (created)
+!!!           09/05/2017 by li huang (last modified)
+!!! purpose :
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   subroutine dt_fft1d(op, nx, fin, fout)
      use iso_c_binding
