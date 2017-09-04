@@ -49,7 +49,7 @@
      return
   end subroutine dt_setup_model
 
-  subroutine dt_mesh_init()
+  subroutine dt_input_mesh_()
      use constants, only : dp, one, two, pi
 
      use control
@@ -93,7 +93,7 @@
      enddo ! over i={1,nbfrq} loop
 
      return
-  end subroutine dt_mesh_init
+  end subroutine dt_input_mesh_
 
   subroutine dt_dmft_init()
      use constants, only : dp, mytmp
