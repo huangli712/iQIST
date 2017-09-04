@@ -1,11 +1,13 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
-!!! program : dt_fft1d
-!!!           dt_fft2d
-!!!           dt_fft3d
+!!! program : cat_fft1d
+!!!           cat_fft2d
+!!!           cat_fft3d
 !!!           cat_dual_shift
 !!!           dt_static_bubble
 !!!           dt_bubble
+!!!           dt_bse_solver
+!!!           dt_bse_solver_iter
 !!! source  : dt_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
