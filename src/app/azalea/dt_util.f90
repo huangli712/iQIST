@@ -4,6 +4,7 @@
 !!!           dt_fft2d
 !!!           dt_fft3d
 !!!           cat_dual_shift
+!!!           dt_static_bubble
 !!! source  : dt_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -182,7 +183,7 @@
 
 ! external arguments
      real(dp), intent(in) :: w
-     complex(dp), intent(out) :: bubble(nkpts,nffrq,norbs)
+     complex(dp), intent(out) :: bubble(nffrq,norbs,nkpts)
 
 ! local variables
      integer :: i
@@ -193,12 +194,12 @@
 
      do i=1,norbs
          do j=1,nffrq
-             gk = dual_g(:,j,i)
+             gk = dual_g(j,i,:)
              gr = czero
              call dt_fft2d(+1, nkp_x, nkp_y, gk, gr) ! gk -> gr
              gr = gr * gr
              call dt_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
-             bubble(:,j,i) = -gk
+             bubble(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
      bubble = bubble / real(nkpts * nkpts * beta)
