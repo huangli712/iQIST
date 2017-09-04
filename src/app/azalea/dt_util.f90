@@ -5,6 +5,7 @@
 !!!           dt_fft3d
 !!!           cat_dual_shift
 !!!           dt_static_bubble
+!!!           dt_bubble
 !!! source  : dt_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -223,7 +224,7 @@
 
 ! external arguments
      real(dp), intent(in) :: w
-     complex(dp), intent(out) :: bubble(nkpts,nffrq,norbs)
+     complex(dp), intent(out) :: bubble(nffrq,norbs,nkpts)
 
 ! local variables
      integer :: i
@@ -234,33 +235,33 @@
 
      complex(dp) :: gk(nkpts)
      complex(dp) :: gr(nkpts), gr1(nkpts), gr2(nkpts)
-     complex(dp) :: gs(nkpts,nffrq,norbs)
+     complex(dp) :: gs(nffrq,norbs,nkpts)
 
      do i=1,norbs
          do j=1,nffrq
              fw = fmesh(j) + w
              k = floor( (fw * beta / pi + nffrq + one) / two + 0.5 )
              if ( k >= 1 .and. k <= nffrq ) then
-                 gs(:,j,i) = dual_g(:,k,i)
+                 gs(j,i,:) = dual_g(k,i,:)
              else
-                 gs(:,j,i) = czero
+                 gs(j,i,:) = czero
              endif
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
 
      do i=1,norbs
          do j=1,nffrq
-             gk = dual_g(:,j,i)
+             gk = dual_g(j,i,:)
              gr1 = czero
              call dt_fft2d(+1, nkp_x, nkp_y, gk, gr1) ! gk -> gr
 
-             gk = gs(:,j,i)
+             gk = gs(j,i,:)
              gr2 = czero
              call dt_fft2d(+1, nkp_x, nkp_y, gk, gr2) ! gk -> gr
 
              gr = gr1 * gr2
              call dt_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
-             bubble(:,j,i) = -gk
+             bubble(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
      bubble = bubble / real(nkpts * nkpts * beta)
