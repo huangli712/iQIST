@@ -116,13 +116,33 @@
 !! print the running parameters, only for reference
 !!
   subroutine dt_print_summary()
-     use constants, only : mystd, ev2k
+     use constants, only : mystd
 
      use control ! ALL
 
      implicit none
 
-     write(mystd,'(2X,a)') cname//' >>> parameters list:'
+     write(mystd,'(2X,a)') 'configuration parameters -> interacting lattice model'
+     write(mystd,'(2X,a)') '----------------------------------------------------'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nband  /', nband , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nspin  /', nspin , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'norbs  /', norbs , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nkpts  /', nkpts , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nkp_x  /', nkp_x , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nkp_y  /', nkp_y , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nkp_z  /', nkp_z , 'type / i'
+     write(mystd,'(4X,a8,f10.5,2X,a8)') 'mune   /', mune  , 'type / d'
+     write(mystd,'(4X,a8,f10.5,2X,a8)') 'beta   /', beta  , 'type / d'
+     write(mystd,'(4X,a8,f10.5,2X,a8)') 'part   /', part  , 'type / d'
+
+     write(mystd,'(2X,a)') 'configuration parameters -> dual fermion engine'
+     write(mystd,'(2X,a)') '----------------------------------------------------'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nffrq  /', nffrq , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nbfrq  /', nbfrq , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'ndfit  /', ndfit , 'type / i'
+     write(mystd,'(4X,a8,i10,  2X,a8)') 'nbsit  /', nbsit , 'type / i'
+     write(mystd,'(4X,a8,f10.5,2X,a8)') 'dfmix  /', dfmix , 'type / d'
+     write(mystd,'(4X,a8,f10.5,2X,a8)') 'bsmix  /', bsmix , 'type / d'
 
      write(mystd,*)
 

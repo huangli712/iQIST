@@ -62,7 +62,7 @@
      part  = 1.00_dp ! hopping parameter t for Hubbard model
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! setup common variables for quantum impurity solver
+! setup common variables for dual fermion engine
 !-------------------------------------------------------------------------
      nffrq = 16      ! number of fermionic frequencies
      nbfrq = 7       ! number of bosonic frequncies
