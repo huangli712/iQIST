@@ -168,14 +168,20 @@
   end subroutine dt_input_dmft_
 
   subroutine dt_input_latt_()
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+     use context, only : ek
+     use context, only : dmft_g, dmft_h
+     use context, only : latt_g
 
      implicit none
 
 ! local variables
+! loop index
      integer :: i
      integer :: j
      integer :: k
