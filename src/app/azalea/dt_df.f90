@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/30/2017 by li huang (last modified)
+!!!           09/05/2017 by li huang (last modified)
 !!! purpose : main subroutines for the dual fermion framework.
 !!! status  : unstable
 !!! comment :
@@ -59,9 +59,9 @@
      complex(dp), allocatable :: gammaM2(:,:)
      complex(dp), allocatable :: gammaD2(:,:)
 
-     allocate(gshift(nkpts,nffrq,norbs))
-     allocate(full_v(nkpts,nffrq,norbs))
-     allocate(bubble(nkpts,nffrq,norbs))
+     allocate(gshift(nffrq,norbs,nkpts))
+     allocate(full_v(nffrq,norbs,nkpts))
+     allocate(bubble(nffrq,norbs,nkpts))
      allocate(bubbleM(nffrq,nffrq))
      allocate(vertexM(nffrq,nffrq))
      allocate(vertexD(nffrq,nffrq))
@@ -89,7 +89,7 @@
 
              K_LOOP: do k=1,nkpts
                  print *, 'K:', k
-                 call s_diag_z(nffrq, bubble(k,:,1), bubbleM)
+                 call s_diag_z(nffrq, bubble(:,1,k), bubbleM)
                  call dt_bse_solver(bubbleM, vertexM, gammaM)
                  call dt_bse_solver(bubbleM, vertexD, gammaD)
 
@@ -99,19 +99,19 @@
                  W_LOOP: do l=1,nffrq
                      mval = gammaM(l,l) - 0.5*gammaM2(l,l)
                      dval = gammaD(l,l) - 0.5*gammaD2(l,l)
-                     full_v(k,l,1) = 0.5 * (3.0 * mval + dval) 
-                     full_v(k,l,2) = 0.5 * (3.0 * mval + dval) 
+                     full_v(l,1,k) = 0.5 * (3.0 * mval + dval) 
+                     full_v(l,2,k) = 0.5 * (3.0 * mval + dval) 
                  enddo W_LOOP
              enddo K_LOOP
 
              do n=1,nffrq
-                 call dt_fft2d(+1, nkp_x, nkp_y, full_v(:,n,1), vr)
-                 call dt_fft2d(-1, nkp_x, nkp_y, gshift(:,n,1), gr)
+                 call dt_fft2d(+1, nkp_x, nkp_y, full_v(n,1,:), vr)
+                 call dt_fft2d(-1, nkp_x, nkp_y, gshift(n,1,:), gr)
                  gr = vr * gr / real(nkpts * nkpts)
                  call dt_fft2d(+1, nkp_x, nkp_y, gr, vr)
-                 dual_s(:,n,1) = dual_s(:,n,1) + vr / beta
+                 dual_s(n,1,:) = dual_s(n,1,:) + vr / beta
                  print *, n, fmesh(n)
-                 print *, dual_s(:,n,1)
+                 print *, dual_s(n,1,:)
              enddo
          STOP
 
