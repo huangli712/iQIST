@@ -158,7 +158,7 @@
      return
   end subroutine dt_input_dmft_
 
-  subroutine dt_latt_init()
+  subroutine dt_input_latt_()
      use constants, only : dp, one
 
      use control
@@ -180,7 +180,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine dt_latt_init
+  end subroutine dt_input_latt_
 
   subroutine dt_dual_init()
      use constants, only : dp 
