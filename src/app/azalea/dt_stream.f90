@@ -182,7 +182,7 @@
      return
   end subroutine dt_input_latt_
 
-  subroutine dt_dual_init()
+  subroutine dt_input_dual_()
      use constants, only : dp 
 
      use control
@@ -206,7 +206,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine dt_dual_init
+  end subroutine dt_input_dual_
 
   subroutine dt_vert_init()
      implicit none
