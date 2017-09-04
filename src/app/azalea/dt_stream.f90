@@ -40,11 +40,11 @@
   subroutine dt_setup_model()
      implicit none
 
-     call dt_mesh_init()
-     call dt_dmft_init()
-     call dt_latt_init()
-     call dt_dual_init()
-     call dt_vert_init()
+     call dt_input_mesh_()
+     call dt_input_dmft_()
+     call dt_input_latt_()
+     call dt_input_dual_()
+     call dt_input_vert_()
 
      return
   end subroutine dt_setup_model
