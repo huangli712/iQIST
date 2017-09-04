@@ -1,4 +1,20 @@
-
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : dt_print_header
+!!!           dt_print_footer
+!!!           dt_print_summary
+!!!           dt_print_control
+!!!           dt_print_runtime
+!!!           dt_print_it_info
+!!! source  : dt_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/15/2009 by li huang (created)
+!!!           09/05/2017 by li huang (last modified)
+!!! purpose :
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   subroutine dt_print_header()
      use constants, only : mystd
