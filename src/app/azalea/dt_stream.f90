@@ -1,4 +1,24 @@
-
+!!!-----------------------------------------------------------------------
+!!! project : narcissus
+!!! program : dt_setup_param
+!!!           dt_setup_model <<<---
+!!!           dt_input_mesh_
+!!!           dt_input_dmft_
+!!!           dt_input_latt_
+!!!           dt_input_dual_
+!!!           dt_input_vert_ <<<---
+!!!           dt_alloc_array
+!!!           dt_reset_array
+!!!           dt_final_array <<<---
+!!! source  : dt_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/16/2009 by li huang (created)
+!!!           09/05/2017 by li huang (last modified)
+!!! purpose :
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   subroutine dt_setup_param()
      use constants, only : dp
