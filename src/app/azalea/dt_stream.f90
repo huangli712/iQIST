@@ -95,7 +95,7 @@
      return
   end subroutine dt_input_mesh_
 
-  subroutine dt_dmft_init()
+  subroutine dt_input_dmft_()
      use constants, only : dp, mytmp
 
      use control
@@ -156,7 +156,7 @@
      close(mytmp)
 
      return
-  end subroutine dt_dmft_init
+  end subroutine dt_input_dmft_
 
   subroutine dt_latt_init()
      use constants, only : dp, one
