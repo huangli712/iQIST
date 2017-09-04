@@ -160,12 +160,23 @@
      return
   end subroutine dt_print_control
 
+!!
+!! @sub dt_print_runtime
+!!
+!! print the runtime information, including some physical observables and
+!! statistic data, only for reference
+!!
   subroutine dt_print_runtime()
      implicit none
 
      return
   end subroutine dt_print_runtime
 
+!!
+!! @sub dt_print_it_info
+!!
+!! print the iteration information to the screen
+!!
   subroutine dt_print_it_info()
      implicit none
 
