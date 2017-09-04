@@ -110,6 +110,11 @@
      return
   end subroutine dt_print_footer
 
+!!
+!! @sub dt_print_summary
+!!
+!! print the running parameters, only for reference
+!!
   subroutine dt_print_summary()
      use constants, only : mystd, ev2k
 
