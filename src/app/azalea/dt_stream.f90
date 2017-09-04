@@ -198,11 +198,14 @@
   end subroutine dt_input_latt_
 
   subroutine dt_input_dual_()
-     use constants, only : dp 
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : norbs
      use control, only : nffrq
      use control, only : nkpts
+     use context, only : dmft_g
+     use context, only : latt_g
      use context, only : dual_g, dual_s, dual_b
 
      implicit none
