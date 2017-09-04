@@ -122,7 +122,7 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'configuration parameters -> interacting lattice model'
+     write(mystd,'(2X,a)') 'configuration parameters -> lattice model'
      write(mystd,'(2X,a)') '----------------------------------------------------'
      write(mystd,'(4X,a8,i10,  2X,a8)') 'nband  /', nband , 'type / i'
      write(mystd,'(4X,a8,i10,  2X,a8)') 'nspin  /', nspin , 'type / i'
@@ -148,6 +148,17 @@
 
      return
   end subroutine dt_print_summary
+
+!!
+!! @sub dt_print_control
+!!
+!! print the control parameters, only for reference
+!!
+  subroutine dt_print_control()
+     implicit none
+
+     return
+  end subroutine dt_print_control
 
   subroutine dt_print_runtime()
      implicit none
