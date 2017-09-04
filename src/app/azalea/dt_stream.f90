@@ -200,8 +200,10 @@
   subroutine dt_input_dual_()
      use constants, only : dp 
 
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+     use context, only : dual_g, dual_s, dual_b
 
      implicit none
 
