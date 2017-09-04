@@ -3,6 +3,7 @@
 !!! program : dt_fft1d
 !!!           dt_fft2d
 !!!           dt_fft3d
+!!!           cat_dual_shift
 !!! source  : dt_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -140,10 +141,12 @@
 
      implicit none
 
+! external arguments
      real(dp), intent(in) :: shift
-     complex(dp), intent(in) :: dual_in(nkpts,nffrq,norbs)
-     complex(dp), intent(out) :: dual_out(nkpts,nffrq,norbs)
+     complex(dp), intent(in) :: dual_in(nffrq,norbs,nkpts)
+     complex(dp), intent(out) :: dual_out(nffrq,norbs,nkpts)
 
+! local variables
      integer :: i
      integer :: j
      integer :: k
@@ -154,9 +157,9 @@
              fw = fmesh(j) + shift
              k = floor( (fw * beta / pi + nffrq + one) / two + 0.5 )
              if ( k >= 1 .and. k <= nffrq ) then
-                 dual_out(:,j,i) = dual_in(:,k,i)
+                 dual_out(j,i,:) = dual_in(k,i,:)
              else
-                 dual_out(:,j,i) = czero
+                 dual_out(j,i,:) = czero
              endif
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
