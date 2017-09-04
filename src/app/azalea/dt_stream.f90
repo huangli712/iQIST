@@ -208,11 +208,11 @@
      return
   end subroutine dt_input_dual_
 
-  subroutine dt_vert_init()
+  subroutine dt_input_vert_()
      implicit none
 
      return
-  end subroutine dt_vert_init
+  end subroutine dt_input_vert_
 
   subroutine dt_alloc_array()
      use context ! ALL
