@@ -15,9 +15,7 @@
 
   subroutine dt_fft1d(op, nx, fin, fout)
      use iso_c_binding
-     use constants
-
-!!     use dt_control
+     use constants, only : dp
 
      implicit none
 
@@ -54,9 +52,7 @@
 
   subroutine dt_fft2d(op, nx, ny, fin, fout)
      use iso_c_binding
-     use constants
-
-!!     use dt_control
+     use constants, only : dp
 
      implicit none
 
@@ -94,9 +90,7 @@
 
   subroutine dt_fft3d(op, nx, ny, nz, fin, fout)
      use iso_c_binding
-     use constants
-
-!!     use dt_control
+     use constants, only : dp
 
      implicit none
 
