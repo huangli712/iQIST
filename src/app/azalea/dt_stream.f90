@@ -102,7 +102,8 @@
   end subroutine dt_input_mesh_
 
   subroutine dt_input_dmft_()
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control
      use context
@@ -110,6 +111,7 @@
      implicit none
 
 ! local variables
+! loop index
      integer  :: i
      integer  :: if1, if2
      real(dp) :: r1, r2
