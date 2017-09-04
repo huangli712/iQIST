@@ -11,7 +11,7 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
 !!!           01/04/2018 by li huang (last modified)
-!!! purpose :
+!!! purpose : provide printing infrastructure for dual fermion engine.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -75,13 +75,20 @@
      return
   end subroutine dt_print_header
 
+!!
+!! @sub dt_print_footer
+!!
+!! print the ending information for dual fermion engine
+!!
   subroutine dt_print_footer()
-     use constants, only : dp, mystd
+     use constants, only : dp
+     use constants, only : mystd
 
      use control, only : cname
 
      implicit none
 
+! local variables
 ! string for current date and time
      character (len = 20) :: date_time_string
 
