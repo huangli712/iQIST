@@ -10,50 +10,67 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           09/05/2017 by li huang (last modified)
+!!!           01/04/2018 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! @sub dt_print_header
+!!
+!! print the startup information for dual fermion engine 
+!!
   subroutine dt_print_header()
      use constants, only : mystd
+
      use version, only : V_FULL
+     use version, only : V_AUTH
+     use version, only : V_MAIL
+     use version, only : V_GPL3
 
      use control, only : cname
      use control, only : nprocs
 
      implicit none
 
+! local variables
 ! string for current date and time
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') cname
-     write(mystd,'(2X,a)') '>>> A Modern Dual Fermion Framework For Quantum Lattice Models'
-     write(mystd,*)
-
-     write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: by li huang (at SPCLab/CAEP)'
-     write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
-     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
-     write(mystd,*)
-
-     write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
-
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a)') cname//' (parallelized edition)'
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a)') cname//' (sequential edition)'
 
 # endif  /* MPI */
 
+     write(mystd,'(2X,a)') 'A Modern Dual Fermion Framework For Quantum Lattice Models'
      write(mystd,*)
+
+     write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: '//V_AUTH
+     write(mystd,'(2X,a)') 'Support: '//V_MAIL
+     write(mystd,'(2X,a)') 'License: '//V_GPL3
+     write(mystd,*)
+
+     write(mystd,'(2X,a)') 'start running at '//date_time_string
+
+# if defined (MPI)
+
+     write(mystd,'(2X,a,i4)') 'currently using cpu cores:', nprocs
+
+# else   /* MPI */
+
+     write(mystd,'(2X,a,i4)') 'currently using cpu cores:', 1
+
+# endif  /* MPI */
 
      return
   end subroutine dt_print_header
