@@ -54,7 +54,8 @@
      use constants, only : one, two, pi
 
      use control, only : nkp_x, nkp_y, nkp_z
-     use context, only : kx, ky, kz
+     use context, only : kx, ky, kz, ek
+     use context, only : fmesh, bmesh
 
      implicit none
 
