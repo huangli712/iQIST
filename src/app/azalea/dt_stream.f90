@@ -53,12 +53,13 @@
      use constants, only : dp
      use constants, only : one, two, pi
 
-     use control
-     use context
+     use control, only : nkp_x, nkp_y, nkp_z
+     use context, only : kx, ky, kz
 
      implicit none
 
 ! local variables
+! loop index
      integer :: i
      integer :: j
      integer :: k
