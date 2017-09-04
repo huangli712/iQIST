@@ -105,8 +105,9 @@
      use constants, only : dp
      use constants, only : mytmp
 
-     use control, only : nffrq
+     use control, only : nffrq, nbfrq
      use context, only : dmft_g, dmft_h
+     use context, only : vert_d, vert_m
 
      implicit none
 
