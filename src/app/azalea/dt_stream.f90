@@ -186,13 +186,13 @@
      integer :: j
      integer :: k
 
-     do i=1,norbs
-         do j=1,nffrq
-             do k=1,nkpts
-                 latt_g(k,j,i) = one / ( one / dmft_g(j,i) + dmft_h(j,i) - ek(k) ) 
-             enddo ! over k={1,nkpts} loop
-         enddo ! over j={1,nffrq} loop
-     enddo ! over i={1,norbs} loop
+     do k=1,nkpts
+         do j=1,norbs
+             do i=1,nffrq
+                 latt_g(i,j,k) = one / ( one / dmft_g(i,j) + dmft_h(i,j) - ek(k) ) 
+             enddo ! over i={1,nffrq} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,nkpts} loop
 
      return
   end subroutine dt_input_latt_
