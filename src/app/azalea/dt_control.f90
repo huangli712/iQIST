@@ -105,7 +105,7 @@
 !!
 !! @var nbsit
 !!
-!! number of BSE iteration
+!! number of Bethe-Salpter equation iteration
 !!
      integer, public, save :: nbsit  = 10
 
@@ -134,8 +134,18 @@
 !!
      real(dp), public, save :: part  = 0.50_dp
 
-! mixing parameter for dynamical mean field theory self-consistent engine
+!!
+!! @var dfmix
+!!
+!! mixing parameter for dual fermion iteration
+!!
      real(dp), public, save :: dfmix = 0.70_dp
+
+!!
+!! @var bsmix
+!!
+!! mixing parameter for Bethe-Salpter equation iteration
+!!
      real(dp), public, save :: bsmix = 0.70_dp
 
 !!========================================================================
