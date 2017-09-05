@@ -76,7 +76,7 @@
          Q_LOOP: do j=1,nbfrq-1
              w = bmesh(j)
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', w
-             call cat_shift_k(dual_g, gshift, w)
+             call cat_fill_k(dual_g, gshift, w)
 
              if ( abs(w - zero) < epss ) then
                  call cat_bubble0(bubble, w)
