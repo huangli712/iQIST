@@ -1,12 +1,13 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
-!!! program : cat_fft1d
-!!!           cat_fft2d
-!!!           cat_fft3d
-!!!           cat_shift_l
-!!!           cat_shift_k
-!!!           cat_bubble0
-!!!           cat_bubble1
+!!! program : cat_fill_l
+!!!           cat_fill_k
+!!!           cat_fft_1d
+!!!           cat_fft_2d
+!!!           cat_fft_3d
+!!!           cat_dia_1d
+!!!           cat_dia_2d
+!!!           cat_dia_3d
 !!!           dt_bse_solver
 !!!           dt_bse_solver_iter
 !!! source  : dt_util.f90
@@ -18,6 +19,51 @@
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+  subroutine cat_shift_l()
+     implicit none
+
+     return
+  end subroutine cat_shift_l
+
+  subroutine cat_shift_k(dual_in, dual_out, shift)
+     use constants, only : dp
+     use constants, only : one, two, pi, czero
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+     use control, only : beta
+
+     use context, only : fmesh
+
+     implicit none
+
+! external arguments
+     real(dp), intent(in) :: shift
+     complex(dp), intent(in) :: dual_in(nffrq,norbs,nkpts)
+     complex(dp), intent(out) :: dual_out(nffrq,norbs,nkpts)
+
+! local variables
+     integer :: i
+     integer :: j
+     integer :: k
+     real(dp) :: fw
+
+     do i=1,norbs
+         do j=1,nffrq
+             fw = fmesh(j) + shift
+             k = floor( (fw * beta / pi + nffrq + one) / two + 0.5 )
+             if ( k >= 1 .and. k <= nffrq ) then
+                 dual_out(j,i,:) = dual_in(k,i,:)
+             else
+                 dual_out(j,i,:) = czero
+             endif
+         enddo ! over j={1,nffrq} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_shift_k
 
   subroutine cat_fft1d(op, nx, fin, fout)
      use iso_c_binding
@@ -132,51 +178,6 @@
 
      return
   end subroutine cat_fft3d
-
-  subroutine cat_shift_l()
-     implicit none
-
-     return
-  end subroutine cat_shift_l
-
-  subroutine cat_shift_k(dual_in, dual_out, shift)
-     use constants, only : dp
-     use constants, only : one, two, pi, czero
-
-     use control, only : norbs
-     use control, only : nffrq
-     use control, only : nkpts
-     use control, only : beta
-
-     use context, only : fmesh
-
-     implicit none
-
-! external arguments
-     real(dp), intent(in) :: shift
-     complex(dp), intent(in) :: dual_in(nffrq,norbs,nkpts)
-     complex(dp), intent(out) :: dual_out(nffrq,norbs,nkpts)
-
-! local variables
-     integer :: i
-     integer :: j
-     integer :: k
-     real(dp) :: fw
-
-     do i=1,norbs
-         do j=1,nffrq
-             fw = fmesh(j) + shift
-             k = floor( (fw * beta / pi + nffrq + one) / two + 0.5 )
-             if ( k >= 1 .and. k <= nffrq ) then
-                 dual_out(j,i,:) = dual_in(k,i,:)
-             else
-                 dual_out(j,i,:) = czero
-             endif
-         enddo ! over j={1,nffrq} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_shift_k
 
   subroutine cat_bubble0(bubble, w)
      use constants, only : dp
