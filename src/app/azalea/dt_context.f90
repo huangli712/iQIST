@@ -10,7 +10,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           09/02/2017 by li huang (last modified)
+!!!           01/04/2018 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for diagrammatic framework for dynamical mean field theory.
 !!! status  : unstable
@@ -27,8 +27,25 @@
   module dt_mesh
      use constants, only : dp
 
+!!
+!! @var kx
+!!
+!! k-mesh along x-axis
+!!
      real(dp), public, save, allocatable :: kx(:)
+
+!!
+!! @var ky
+!!
+!! k-mesh along y-axis
+!!
      real(dp), public, save, allocatable :: ky(:)
+
+!!
+!! @var kz
+!!
+!! k-mesh along z-axis
+!!
      real(dp), public, save, allocatable :: kz(:)
 
 !!
