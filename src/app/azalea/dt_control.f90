@@ -70,17 +70,43 @@
 !!
 !! @var nkpts
 !!
-!! number of k-points (total)
+!! number of k-points (totally)
 !!
      integer, public, save :: nkpts  = 64
+
+!!
+!! @var nkp_x
+!!
+!! number of k-points (x-axis)
+!!
      integer, public, save :: nkp_x  = 8
+
+!!
+!! @var nkp_y
+!!
+!! number of k-points (y-axis)
+!!
      integer, public, save :: nkp_y  = 8
+
+!!
+!! @var nkp_z
+!!
+!! number of k-points (z-axis)
+!!
      integer, public, save :: nkp_z  = 8
 
-! number of dual fermion iteration
+!!
+!! @var ndfit
+!!
+!! number of dual fermion iteration
+!!
      integer, public, save :: ndfit  = 1
 
-! number of BSE iteration
+!!
+!! @var nbsit
+!!
+!! number of BSE iteration
+!!
      integer, public, save :: nbsit  = 10
 
 !!========================================================================
