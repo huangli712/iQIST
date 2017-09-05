@@ -20,13 +20,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  subroutine cat_shift_l()
+  subroutine cat_fill_l()
      implicit none
 
      return
-  end subroutine cat_shift_l
+  end subroutine cat_fill_l
 
-  subroutine cat_shift_k(dual_in, dual_out, shift)
+  subroutine cat_fill_k(dual_in, dual_out, shift)
      use constants, only : dp
      use constants, only : one, two, pi, czero
 
@@ -63,7 +63,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine cat_shift_k
+  end subroutine cat_fill_k
 
   subroutine cat_fft1d(op, nx, fin, fout)
      use iso_c_binding
