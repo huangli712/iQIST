@@ -24,8 +24,52 @@
 !!>>> fast fourier transformation                                      <<<
 !!========================================================================
 
-  subroutine cat_fill_l()
+!!
+!! @sub cat_fill_l
+!!
+!! try to fill G(\nu + \omega) by G(\nu)
+!!
+  subroutine cat_fill_l(gin, gout, shift)
+     use constants, only : dp
+     use constants, only : one, two, half, pi, czero
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : beta
+
+     use context, only : fmesh
+
      implicit none
+
+! external arguments
+! shifted frequency, \omega
+     real(dp), intent(in) :: shift
+
+! input array, G(\nu)
+     complex(dp), intent(in)  :: gin(nffrq,norbs)
+
+! filled array, G(\nu + \omega)
+     complex(dp), intent(out) :: gout(nffrq,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+
+! resultant index for \nu + \omega
+     integer  :: k
+
+! resultant frequency, \nu + \omega
+     real(dp) :: fw
+
+     do i=1,nffrq
+         fw = fmesh(i) + shift
+         k = floor( (fw * beta / pi + nffrq + one) / two + half )
+         if ( k >= 1 .and. k <= nffrq ) then
+             gout(i,:) = gin(k,:)
+         else
+             gout(i,:) = czero
+         endif ! back if ( k >= 1 .and. k <= nffrq ) block
+     enddo ! over i={1,nffrq} loop
 
      return
   end subroutine cat_fill_l
