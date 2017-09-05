@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           08/29/2017 by li huang (last modified)
+!!!           01/04/2018 by li huang (last modified)
 !!! purpose : define global control parameters for diagrammatic framework
 !!!           for dynamical mean field theory.
 !!! status  : unstable
@@ -67,7 +67,11 @@
 !!
      integer, public, save :: nbfrq  = 8
 
-! number of k-points
+!!
+!! @var nkpts
+!!
+!! number of k-points (total)
+!!
      integer, public, save :: nkpts  = 64
      integer, public, save :: nkp_x  = 8
      integer, public, save :: nkp_y  = 8
