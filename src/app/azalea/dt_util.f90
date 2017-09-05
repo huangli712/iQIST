@@ -37,7 +37,7 @@
 !!
   subroutine cat_fill_k(gin, gout, shift)
      use constants, only : dp
-     use constants, only : one, two, pi, czero
+     use constants, only : one, two, half, pi, czero
 
      use control, only : norbs
      use control, only : nffrq
@@ -49,27 +49,34 @@
      implicit none
 
 ! external arguments
+! shifted frequency, \omega
      real(dp), intent(in) :: shift
-     complex(dp), intent(in) :: gin(nffrq,norbs,nkpts)
+
+! input array, G(\nu, K)
+     complex(dp), intent(in)  :: gin(nffrq,norbs,nkpts)
+
+! filled array, G(\nu + \omega, K)
      complex(dp), intent(out) :: gout(nffrq,norbs,nkpts)
 
 ! local variables
-     integer :: i
-     integer :: j
-     integer :: k
+! loop index
+     integer  :: i
+
+! resultant index for \nu + \omega
+     integer  :: k
+
+! resultant frequency, \nu + \omega
      real(dp) :: fw
 
-     do i=1,norbs
-         do j=1,nffrq
-             fw = fmesh(j) + shift
-             k = floor( (fw * beta / pi + nffrq + one) / two + 0.5 )
-             if ( k >= 1 .and. k <= nffrq ) then
-                 gout(j,i,:) = gin(k,i,:)
-             else
-                 gout(j,i,:) = czero
-             endif
-         enddo ! over j={1,nffrq} loop
-     enddo ! over i={1,norbs} loop
+     do i=1,nffrq
+         fw = fmesh(i) + shift
+         k = floor( (fw * beta / pi + nffrq + one) / two + half )
+         if ( k >= 1 .and. k <= nffrq ) then
+             gout(i,:,:) = gin(k,:,:)
+         else
+             gout(i,:,:) = czero
+         endif ! back if ( k >= 1 .and. k <= nffrq ) block
+     enddo ! over i={1,nffrq} loop
 
      return
   end subroutine cat_fill_k
