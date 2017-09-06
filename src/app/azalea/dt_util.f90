@@ -477,9 +477,9 @@
 !!
 !! @sub cat_bse_solver
 !!
+!! try to solve the bethe-salpeter equation directly
 !!
-!!
-  subroutine cat_bse_solver(bubbleM, vertexM, gammaM)
+  subroutine cat_bse_solver(chiM, vrtM, GamM)
      use constants, only : dp
 
      use control, only : nffrq
@@ -487,21 +487,17 @@
      implicit none
 
 ! external arguments
-     complex(dp), intent(in) :: bubbleM(nffrq,nffrq)
-     complex(dp), intent(in) :: vertexM(nffrq,nffrq)
-     complex(dp), intent(out) :: gammaM(nffrq,nffrq)
+     complex(dp), intent(in) :: chiM(nffrq,nffrq)
+     complex(dp), intent(in) :: vrtM(nffrq,nffrq)
+     complex(dp), intent(out) :: GamM(nffrq,nffrq)
 
 ! local variables
      complex(dp) :: Imat(nffrq,nffrq)
-     complex(dp) :: v4chi(nffrq,nffrq)
-     complex(dp) :: zdet
 
      call s_identity_z(nffrq, Imat)
-     v4chi = Imat - matmul(vertexM,bubbleM)
-     gammaM = v4chi
-     call s_det_z(nffrq, v4chi, zdet)
-     call s_inv_z(nffrq, gammaM)
-     gammaM = matmul(gammaM, vertexM)
+     GamM = Imat - matmul(vrtM,chiM)
+     call s_inv_z(nffrq, GamM)
+     GamM = matmul(GamM, vrtM)
 
      return
   end subroutine cat_bse_solver
