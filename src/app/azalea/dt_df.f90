@@ -77,12 +77,7 @@
              w = bmesh(j)
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', w
              call cat_fill_k(dual_g, gshift, w)
-
-             !if ( abs(w - zero) < epss ) then
-             !    call cat_bubble0(bubble, w)
-             !else
-             !    call cat_bubble1(bubble, w)
-             !endif
+             call cat_dia_2d(dual_g, gshift, bubble)
 
              vertexM = vert_m(:,:,j)
              vertexD = vert_d(:,:,j)
