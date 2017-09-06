@@ -129,7 +129,7 @@
 !!>>> fast fourier transformation                                      <<<
 !!========================================================================
 
-  subroutine cat_fft1d(op, nx, fin, fout)
+  subroutine cat_fft_1d(op, nx, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
@@ -164,9 +164,9 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine cat_fft1d
+  end subroutine cat_fft_1d
 
-  subroutine cat_fft2d(op, nx, ny, fin, fout)
+  subroutine cat_fft_2d(op, nx, ny, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
@@ -202,9 +202,9 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine cat_fft2d
+  end subroutine cat_fft_2d
 
-  subroutine cat_fft3d(op, nx, ny, nz, fin, fout)
+  subroutine cat_fft_3d(op, nx, ny, nz, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
@@ -241,7 +241,7 @@
      call fftw_destroy_plan(plan)
 
      return
-  end subroutine cat_fft3d
+  end subroutine cat_fft_3d
 
   subroutine cat_bubble0(bubble, w)
      use constants, only : dp
@@ -271,9 +271,9 @@
          do j=1,nffrq
              gk = dual_g(j,i,:)
              gr = czero
-             call cat_fft2d(+1, nkp_x, nkp_y, gk, gr) ! gk -> gr
+             call cat_fft_2d(+1, nkp_x, nkp_y, gk, gr) ! gk -> gr
              gr = gr * gr
-             call cat_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
+             call cat_fft_2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
              bubble(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
@@ -327,14 +327,14 @@
          do j=1,nffrq
              gk = dual_g(j,i,:)
              gr1 = czero
-             call cat_fft2d(+1, nkp_x, nkp_y, gk, gr1) ! gk -> gr
+             call cat_fft_2d(+1, nkp_x, nkp_y, gk, gr1) ! gk -> gr
 
              gk = gs(j,i,:)
              gr2 = czero
-             call cat_fft2d(+1, nkp_x, nkp_y, gk, gr2) ! gk -> gr
+             call cat_fft_2d(+1, nkp_x, nkp_y, gk, gr2) ! gk -> gr
 
              gr = gr1 * gr2
-             call cat_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
+             call cat_fft_2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
              bubble(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop

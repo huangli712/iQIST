@@ -105,10 +105,10 @@
              enddo K_LOOP
 
              do n=1,nffrq
-                 call cat_fft2d(+1, nkp_x, nkp_y, full_v(n,1,:), vr)
-                 call cat_fft2d(-1, nkp_x, nkp_y, gshift(n,1,:), gr)
+                 call cat_fft_2d(+1, nkp_x, nkp_y, full_v(n,1,:), vr)
+                 call cat_fft_2d(-1, nkp_x, nkp_y, gshift(n,1,:), gr)
                  gr = vr * gr / real(nkpts * nkpts)
-                 call cat_fft2d(+1, nkp_x, nkp_y, gr, vr)
+                 call cat_fft_2d(+1, nkp_x, nkp_y, gr, vr)
                  dual_s(n,1,:) = dual_s(n,1,:) + vr / beta
                  print *, n, fmesh(n)
                  print *, dual_s(n,1,:)
