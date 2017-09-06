@@ -285,7 +285,7 @@
 !!
 !! calculate the two-particle bubble diagram, 2d version
 !!
-  subroutine cat_dia_2d(gin, ginp, bubble)
+  subroutine cat_dia_2d(gin, ginp, chiq)
      use constants, only : dp
      use constants, only : czero
 
@@ -297,14 +297,14 @@
      implicit none
 
 ! external arguments
-! G(\nu, Q)
+! G(\nu, K)
      complex(dp), intent(in)  :: gin(nffrq,norbs,nkpts)
 
-! G(\nu + \omega, Q + K)
+! G(\nu + \omega, K + Q)
      complex(dp), intent(in)  :: ginp(nffrq,norbs,nkpts)
 
 ! two-particle bubble diagram
-     complex(dp), intent(out) :: bubble(nffrq,norbs,nkpts)
+     complex(dp), intent(out) :: chiq(nffrq,norbs,nkpts)
 
 ! local variables
 ! loop index
@@ -313,24 +313,27 @@
 
 ! dummy complex(dp) variables
      complex(dp) :: gk(nkpts)
-     complex(dp) :: gr(nkpts), gr1(nkpts), gr2(nkpts)
+     complex(dp) :: gr(nkpts)
+     complex(dp) :: g1(nkpts)
+     complex(dp) :: g2(nkpts)
 
      do i=1,norbs
          do j=1,nffrq
              gk = gin(j,i,:)
-             gr1 = czero
-             call cat_fft_2d(+1, nkp_x, nkp_y, gk, gr1) ! gk -> gr
+             g1 = czero
+             call cat_fft_2d(+1, nkp_x, nkp_y, gk, g1) ! gk -> gr
 
              gk = ginp(j,i,:)
-             gr2 = czero
-             call cat_fft_2d(+1, nkp_x, nkp_y, gk, gr2) ! gk -> gr
+             g2 = czero
+             call cat_fft_2d(+1, nkp_x, nkp_y, gk, g2) ! gk -> gr
 
-             gr = gr1 * gr2
+             gr = g1 * g2
+             gk = czero
              call cat_fft_2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
-             bubble(j,i,:) = -gk
+             chiq(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
-     bubble = bubble / real(nkpts * nkpts * beta)
+     chiq = chiq / real(nkpts * nkpts * beta)
 
      return
   end subroutine cat_dia_2d
