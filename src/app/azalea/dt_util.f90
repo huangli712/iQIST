@@ -291,7 +291,7 @@
 
      use control, only : norbs
      use control, only : nffrq
-     use control, only : nkpts, nkp_x, nkp_y
+     use control, only : nkpts, nkp_x
      use control, only : beta
 
      implicit none
@@ -321,15 +321,15 @@
          do j=1,nffrq
              gk = gin(j,i,:)
              g1 = czero
-             call cat_fft_2d(+1, nkp_x, nkp_y, gk, g1) ! gk -> gr
+             call cat_fft_1d(+1, nkp_x, gk, g1) ! gk -> gr
 
              gk = ginp(j,i,:)
              g2 = czero
-             call cat_fft_2d(+1, nkp_x, nkp_y, gk, g2) ! gk -> gr
+             call cat_fft_1d(+1, nkp_x, gk, g2) ! gk -> gr
 
              gr = g1 * g2
              gk = czero
-             call cat_fft_2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
+             call cat_fft_1d(-1, nkp_x, gr, gk) ! gr -> gk
              chiq(j,i,:) = -gk
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
