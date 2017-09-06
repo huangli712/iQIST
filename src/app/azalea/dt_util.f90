@@ -384,6 +384,7 @@
 
   subroutine cat_dia_2d(gin, bubble, w)
      use constants, only : dp
+     use constants, only : czero, epss
 
      use control, only : norbs
      use control, only : nffrq
