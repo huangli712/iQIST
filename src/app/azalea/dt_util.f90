@@ -405,7 +405,7 @@
      complex(dp) :: gr(nkpts), gr1(nkpts), gr2(nkpts)
      complex(dp) :: ginp(nffrq,norbs,nkpts)
 
-     if ( abs(w - zero) < epss ) then
+     if ( abs(w) < epss ) then
          ginp = gin
      else
          call cat_fill_k(gin, ginp, w)
