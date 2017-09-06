@@ -388,12 +388,45 @@
      use control, only : norbs
      use control, only : nffrq
      use control, only : nkpts, nkp_x, nkp_y
+     use control, only : beta
 
      implicit none
 
 ! external arguments
      real(dp), intent(in) :: w
+     complex(dp), intent(in)  :: gin(nffrq,norbs,nkpts)
      complex(dp), intent(out) :: bubble(nffrq,norbs,nkpts)
+
+! local variables
+     integer :: i
+     integer :: j
+
+     complex(dp) :: gk(nkpts)
+     complex(dp) :: gr(nkpts), gr1(nkpts), gr2(nkpts)
+     complex(dp) :: ginp(nffrq,norbs,nkpts)
+
+     if ( abs(w - zero) < epss ) then
+         ginp = gin
+     else
+         call cat_fill_k(gin, ginp, w)
+     endif
+
+     do i=1,norbs
+         do j=1,nffrq
+             gk = gin(j,i,:)
+             gr1 = czero
+             call cat_fft_2d(+1, nkp_x, nkp_y, gk, gr1) ! gk -> gr
+
+             gk = ginp(j,i,:)
+             gr2 = czero
+             call cat_fft_2d(+1, nkp_x, nkp_y, gk, gr2) ! gk -> gr
+
+             gr = gr1 * gr2
+             call cat_fft_2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
+             bubble(j,i,:) = -gk
+         enddo ! over j={1,nffrq} loop
+     enddo ! over i={1,norbs} loop
+     bubble = bubble / real(nkpts * nkpts * beta)
 
      return
   end subroutine cat_dia_2d
