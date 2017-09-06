@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           09/05/2017 by li huang (last modified)
+!!!           09/06/2017 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -59,11 +59,11 @@
      integer  :: k
 
 ! resultant frequency, \nu + \omega
-     real(dp) :: fw
+     real(dp) :: w
 
      do i=1,nffrq
-         fw = fmesh(i) + shift
-         k = floor( (fw * beta / pi + nffrq + one) / two + half )
+         w = fmesh(i) + shift
+         k = floor( (w * beta / pi + nffrq + one) / two + half )
          if ( k >= 1 .and. k <= nffrq ) then
              gout(i,:) = gin(k,:)
          else
@@ -110,11 +110,11 @@
      integer  :: k
 
 ! resultant frequency, \nu + \omega
-     real(dp) :: fw
+     real(dp) :: w
 
      do i=1,nffrq
-         fw = fmesh(i) + shift
-         k = floor( (fw * beta / pi + nffrq + one) / two + half )
+         w = fmesh(i) + shift
+         k = floor( (w * beta / pi + nffrq + one) / two + half )
          if ( k >= 1 .and. k <= nffrq ) then
              gout(i,:,:) = gin(k,:,:)
          else
