@@ -129,12 +129,18 @@
 !!>>> fast fourier transformation                                      <<<
 !!========================================================================
 
+!!
+!! @sub cat_fft_1d
+!!
+!! conduct fast fourier transformation in 1d
+!!
   subroutine cat_fft_1d(op, nx, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
      implicit none
 
+! import fftw header file
      include 'fftw3.f03'
 
 ! external arguments
@@ -166,12 +172,18 @@
      return
   end subroutine cat_fft_1d
 
+!!
+!! @sub cat_fft_2d
+!!
+!! conduct fast fourier transformation in 2d
+!!
   subroutine cat_fft_2d(op, nx, ny, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
      implicit none
 
+! import fftw header file
      include 'fftw3.f03'
 
 ! external arguments
@@ -204,12 +216,18 @@
      return
   end subroutine cat_fft_2d
 
+!!
+!! @sub cat_fft_3d
+!!
+!! conduct fast fourier transformation in 3d
+!!
   subroutine cat_fft_3d(op, nx, ny, nz, fin, fout)
      use iso_c_binding
      use constants, only : dp
 
      implicit none
 
+! import fftw header file
      include 'fftw3.f03'
 
 ! external arguments
