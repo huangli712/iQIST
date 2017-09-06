@@ -24,6 +24,8 @@
 !!
 !! @mod dt_mesh
 !!
+!! define some essential k-meshes and frequency meshes 
+!!
   module dt_mesh
      use constants, only : dp
 
@@ -78,6 +80,8 @@
 !!
 !! @mod dt_dmft
 !!
+!! define some local variables from the output of quantum impurity solver
+!!
   module dt_dmft
      use constants, only : dp
 
@@ -86,21 +90,21 @@
 !!
 !! @var dmft_g
 !!
-!! impurity green's function from dmft
+!! local impurity green's function
 !!
      complex(dp), public, save, allocatable :: dmft_g(:,:)
 
 !!
 !! @var dmft_s
 !!
-!! self-energy function from dmft
+!! local self-energy function
 !!
      complex(dp), public, save, allocatable :: dmft_s(:,:)
 
 !!
 !! @var dmft_h
 !!
-!! hybridization function from dmft
+!! local hybridization function
 !!
      complex(dp), public, save, allocatable :: dmft_h(:,:)
 
