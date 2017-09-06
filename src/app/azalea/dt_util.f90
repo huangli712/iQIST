@@ -454,10 +454,32 @@
      return
   end subroutine cat_dia_3d
 
+!!========================================================================
+!!>>> solve bethe-salpeter equation                                    <<<
+!!========================================================================
 
+!!
+!! note:
+!!
+!! the bethe-salpeter equation reads
+!!
+!!     \Gamma = \gamma + \gamma \chi \Gamma
+!!
+!! or equivalently
+!!
+!!     1 / \gamma - 1 / \Gamma = \chi
+!!
+!! here \Gamma is called the fully dressed vertex function, \gamma is the
+!! impurity vertex function, and \chi is the two-particle bubble. we can
+!! solve it directly by matrix inversion, or iterately.
+!!
 
-
-  subroutine dt_bse_solver(bubbleM, vertexM, gammaM)
+!!
+!! @sub cat_bse_solver
+!!
+!!
+!!
+  subroutine cat_bse_solver(bubbleM, vertexM, gammaM)
      use constants, only : dp
 
      use control, only : nffrq
@@ -479,11 +501,12 @@
      gammaM = v4chi
      call s_det_z(nffrq, v4chi, zdet)
      call s_inv_z(nffrq, gammaM)
-     gammaM = matmul(gammaM, vertexM) 
+     gammaM = matmul(gammaM, vertexM)
 
-     !print *, zdet
      return
-  end subroutine dt_bse_solver
+  end subroutine cat_bse_solver
+
+
 
   subroutine dt_bse_solver_iter(niter, mix, bubbleM, vertexM, gammaM)
      use constants, only : dp

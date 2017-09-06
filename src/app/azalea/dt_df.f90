@@ -85,8 +85,8 @@
              K_LOOP: do k=1,nkpts
                  print *, 'K:', k
                  call s_diag_z(nffrq, bubble(:,1,k), bubbleM)
-                 call dt_bse_solver(bubbleM, vertexM, gammaM)
-                 call dt_bse_solver(bubbleM, vertexD, gammaD)
+                 call cat_bse_solver(bubbleM, vertexM, gammaM)
+                 call cat_bse_solver(bubbleM, vertexD, gammaD)
 
                  call dt_bse_solver_iter(1, 1.0_dp, bubbleM, vertexM, gammaM2)
                  call dt_bse_solver_iter(1, 1.0_dp, bubbleM, vertexD, gammaD2)
