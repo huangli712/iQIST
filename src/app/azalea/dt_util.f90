@@ -276,6 +276,10 @@
      return
   end subroutine cat_fft_3d
 
+!!========================================================================
+!!>>> calculate bubble diagram                                         <<<
+!!========================================================================
+
   subroutine cat_bubble0(bubble, w)
      use constants, only : dp
      use constants, only : czero
@@ -375,6 +379,28 @@
 
      return
   end subroutine cat_bubble1
+
+
+
+  subroutine cat_dia_2d(gin, bubble, w)
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts, nkp_x, nkp_y
+
+     implicit none
+
+! external arguments
+     real(dp), intent(in) :: w
+     complex(dp), intent(out) :: bubble(nffrq,norbs,nkpts)
+
+     return
+  end subroutine cat_dia_2d
+
+
+
+
 
   subroutine dt_bse_solver(bubbleM, vertexM, gammaM)
      use constants, only : dp
