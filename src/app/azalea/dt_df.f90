@@ -78,11 +78,11 @@
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', w
              call cat_fill_k(dual_g, gshift, w)
 
-             if ( abs(w - zero) < epss ) then
-                 call cat_bubble0(bubble, w)
-             else
-                 call cat_bubble1(bubble, w)
-             endif
+             !if ( abs(w - zero) < epss ) then
+             !    call cat_bubble0(bubble, w)
+             !else
+             !    call cat_bubble1(bubble, w)
+             !endif
 
              vertexM = vert_m(:,:,j)
              vertexD = vert_d(:,:,j)

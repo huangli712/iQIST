@@ -382,9 +382,9 @@
 
 
 
-  subroutine cat_dia_2d(gin, bubble, w)
+  subroutine cat_dia_2d(gin, ginp, bubble)
      use constants, only : dp
-     use constants, only : czero, epss
+     use constants, only : czero
 
      use control, only : norbs
      use control, only : nffrq
@@ -394,8 +394,8 @@
      implicit none
 
 ! external arguments
-     real(dp), intent(in) :: w
      complex(dp), intent(in)  :: gin(nffrq,norbs,nkpts)
+     complex(dp), intent(in)  :: ginp(nffrq,norbs,nkpts)
      complex(dp), intent(out) :: bubble(nffrq,norbs,nkpts)
 
 ! local variables
@@ -404,13 +404,6 @@
 
      complex(dp) :: gk(nkpts)
      complex(dp) :: gr(nkpts), gr1(nkpts), gr2(nkpts)
-     complex(dp) :: ginp(nffrq,norbs,nkpts)
-
-     if ( abs(w) < epss ) then
-         ginp = gin
-     else
-         call cat_fill_k(gin, ginp, w)
-     endif
 
      do i=1,norbs
          do j=1,nffrq
