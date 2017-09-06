@@ -280,6 +280,11 @@
 !!>>> calculate bubble diagram                                         <<<
 !!========================================================================
 
+!!
+!! @cat_dia_2d
+!!
+!! calculate the two-particle bubble diagram, 2d version
+!!
   subroutine cat_dia_2d(gin, ginp, bubble)
      use constants, only : dp
      use constants, only : czero
@@ -292,14 +297,21 @@
      implicit none
 
 ! external arguments
+! G(\nu, Q)
      complex(dp), intent(in)  :: gin(nffrq,norbs,nkpts)
+
+! G(\nu + \omega, Q + K)
      complex(dp), intent(in)  :: ginp(nffrq,norbs,nkpts)
+
+! two-particle bubble diagram
      complex(dp), intent(out) :: bubble(nffrq,norbs,nkpts)
 
 ! local variables
+! loop index
      integer :: i
      integer :: j
 
+! dummy complex(dp) variables
      complex(dp) :: gk(nkpts)
      complex(dp) :: gr(nkpts), gr1(nkpts), gr2(nkpts)
 
