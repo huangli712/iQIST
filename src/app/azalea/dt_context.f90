@@ -117,6 +117,8 @@
 !!
 !! @mod dt_dual
 !!
+!! define dual fermion variables
+!!
   module dt_dual
      use constants, only : dp
 
@@ -151,6 +153,8 @@
 
 !!
 !! @mod latt
+!!
+!! define some momentum-dependent (lattice) variables
 !!
   module dt_latt
      use constants, only : dp
