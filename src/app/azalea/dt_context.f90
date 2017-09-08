@@ -184,6 +184,8 @@
 !!
 !! @mod dt_vert
 !!
+!! define some vertex functions from the output of quantum impurity solver
+!!
   module dt_vert
      use constants, only : dp
 
@@ -209,6 +211,12 @@
 !!>>> module context                                                   <<<
 !!========================================================================
 
+!!
+!! @mod context
+!!
+!! containing memory management subroutines, which initialize all of the
+!! global variables and arrays
+!!
   module context
      use constants, only : dp
      use constants, only : zero, czero
@@ -400,13 +408,13 @@
   subroutine cat_free_mesh()
      implicit none
 
-     if ( allocated(kx) ) deallocate(kx)
-     if ( allocated(ky) ) deallocate(ky)
-     if ( allocated(kz) ) deallocate(kz)
-     if ( allocated(ek) ) deallocate(ek)
+     if ( allocated(kx)    )  deallocate(kx   )
+     if ( allocated(ky)    )  deallocate(ky   )
+     if ( allocated(kz)    )  deallocate(kz   )
+     if ( allocated(ek)    )  deallocate(ek   )
 
-     if ( allocated(fmesh) ) deallocate(fmesh)
-     if ( allocated(bmesh) ) deallocate(bmesh)
+     if ( allocated(fmesh) )  deallocate(fmesh)
+     if ( allocated(bmesh) )  deallocate(bmesh)
 
      return
   end subroutine cat_free_mesh
