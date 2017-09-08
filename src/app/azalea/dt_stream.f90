@@ -67,7 +67,7 @@
      nffrq = 16      ! number of fermionic frequencies
      nbfrq = 7       ! number of bosonic frequncies
 !-------------------------------------------------------------------------
-     ndfit = 1       ! number of dual fermion iteration
+     ndfit = 3       ! number of dual fermion iteration
      nbsit = 10      ! number of BSE iteration
 !-------------------------------------------------------------------------
      dfmix = 0.70_dp ! mixing parameter (dual fermion iteration)
