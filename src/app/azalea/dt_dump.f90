@@ -17,12 +17,16 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           09/02/2017 by li huang (last modified)
+!!!           01/04/2018 by li huang (last modified)
 !!! purpose : dump key observables produced by the diagrammatic framework
 !!!           for dynamical mean field theory to external files.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!========================================================================
+!!>>> dump data of local variables                                     <<<
+!!========================================================================
 
 !!
 !! @sub dt_dump_grnf
@@ -158,6 +162,10 @@
 
      return
   end subroutine dt_dump_hybf
+
+!!========================================================================
+!!>>> dump data of dual variables                                      <<<
+!!========================================================================
 
 !!
 !! @sub dt_dump_grnd
@@ -309,6 +317,10 @@
      return
   end subroutine dt_dump_wssd
 
+!!========================================================================
+!!>>> dump data of lattice variables                                   <<<
+!!========================================================================
+
 !!
 !! @sub dt_dump_grnk
 !!
@@ -409,6 +421,10 @@
      return
   end subroutine dt_dump_sigk
 
+!!========================================================================
+!!>>> dump data of vertex functions                                    <<<
+!!========================================================================
+
 !!
 !! @sub dt_dump_v4_d
 !!
@@ -441,6 +457,10 @@
 
      return
   end subroutine dt_dump_v4_f
+
+!!========================================================================
+!!>>> dump data of dynamical quantities                                <<<
+!!========================================================================
 
 !!
 !! @sub dt_dump_schi
