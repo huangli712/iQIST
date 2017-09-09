@@ -48,6 +48,7 @@
      complex(dp) :: dval
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
+
      complex(dp), allocatable :: gshift(:,:,:), dual_g_new(:,:,:)
      complex(dp), allocatable :: full_v(:,:,:)
      complex(dp), allocatable :: bubble(:,:,:)
@@ -114,9 +115,6 @@
 
          enddo Q_LOOP
 
-
-
-
      do k=1,nkpts
          do j=1,norbs
              do l=1,nffrq
@@ -125,19 +123,11 @@
          enddo ! over j={1,norbs} loop
      enddo ! over k={1,nkpts} loop
 
-!     do n=1,nffrq
-!       print *, n, fmesh(n)
-!       print *, dual_g_new(n,1,:)
-!     enddo
-
-!         STOP
-
          dual_g = dual_g_new
          dual_s = czero
 
          write(mystd,*)
      enddo DF_LOOP
-
 
      do k=1,nkpts
          do j=1,norbs
