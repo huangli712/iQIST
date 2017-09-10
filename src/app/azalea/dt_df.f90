@@ -38,11 +38,10 @@
 ! local variables
 ! loop index
      integer :: it
-     integer :: i
-     integer :: j
      integer :: k
      integer :: m
      integer :: n
+     integer :: v
 
      real(dp) :: w
      complex(dp) :: mval
@@ -77,14 +76,14 @@
      DF_LOOP: do it=1,ndfit
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
 
-         V_LOOP: do j=1,nbfrq
-             w = bmesh(j)
+         V_LOOP: do v=1,nbfrq
+             w = bmesh(v)
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', w
              call cat_fill_k(dual_g, gshift, w)
              call cat_dia_2d(dual_g, gshift, bubble)
 
-             vertexM = vert_m(:,:,j)
-             vertexD = vert_d(:,:,j)
+             vertexM = vert_m(:,:,v)
+             vertexD = vert_d(:,:,v)
 
              K_LOOP: do k=1,nkpts
                  call s_diag_z(nffrq, bubble(:,1,k), bubbleM)
@@ -114,9 +113,9 @@
          enddo V_LOOP
 
      do k=1,nkpts
-         do j=1,norbs
+         do v=1,norbs
              do m=1,nffrq
-                 dual_g_new(m,j,k) = one / ( one / dual_b(m,j,k) - dual_s(m,j,k) ) * dfmix + dual_g(m,j,k) * ( one - dfmix )
+                 dual_g_new(m,v,k) = one / ( one / dual_b(m,v,k) - dual_s(m,v,k) ) * dfmix + dual_g(m,v,k) * ( one - dfmix )
              enddo ! over i={1,nffrq} loop
          enddo ! over j={1,norbs} loop
      enddo ! over k={1,nkpts} loop
@@ -128,9 +127,9 @@
      enddo DF_LOOP
 
      do k=1,nkpts
-         do j=1,norbs
+         do v=1,norbs
              do m=1,nffrq
-                 dual_s(m,j,k) = one / dual_b(m,j,k) - one / dual_g(m,j,k)
+                 dual_s(m,v,k) = one / dual_b(m,v,k) - one / dual_g(m,v,k)
              enddo ! over i={1,nffrq} loop
          enddo ! over j={1,norbs} loop
      enddo ! over k={1,nkpts} loop
