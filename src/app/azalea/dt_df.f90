@@ -37,6 +37,7 @@
 
 ! local variables
 ! loop index
+     integer :: it
      integer :: i
      integer :: j
      integer :: k
@@ -49,7 +50,8 @@
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
 
-     complex(dp), allocatable :: gshift(:,:,:), dual_g_new(:,:,:)
+     complex(dp), allocatable :: gshift(:,:,:)
+     complex(dp), allocatable :: dual_g_new(:,:,:)
      complex(dp), allocatable :: full_v(:,:,:)
      complex(dp), allocatable :: bubble(:,:,:)
      complex(dp), allocatable :: bubbleM(:,:)
@@ -72,8 +74,8 @@
      allocate(gammaM2(nffrq,nffrq))
      allocate(gammaD2(nffrq,nffrq))
 
-     DF_LOOP: do i=1,ndfit
-         write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', i
+     DF_LOOP: do it=1,ndfit
+         write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
 
 
 
@@ -109,8 +111,6 @@
                  call cat_fft_2d(+1, nkp_x, nkp_y, gr, vr)
                  dual_s(n,1,:) = dual_s(n,1,:) + vr / beta
                  dual_s(n,2,:) = dual_s(n,2,:) + vr / beta
-                 !print *, n, fmesh(n)
-                 !print *, dual_s(n,1,:)
              enddo
 
          enddo Q_LOOP
