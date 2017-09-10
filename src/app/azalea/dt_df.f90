@@ -77,9 +77,7 @@
      DF_LOOP: do it=1,ndfit
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
 
-
-
-         Q_LOOP: do j=1,nbfrq
+         V_LOOP: do j=1,nbfrq
              w = bmesh(j)
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', w
              call cat_fill_k(dual_g, gshift, w)
@@ -113,7 +111,7 @@
                  dual_s(n,2,:) = dual_s(n,2,:) + vr / beta
              enddo
 
-         enddo Q_LOOP
+         enddo V_LOOP
 
      do k=1,nkpts
          do j=1,norbs
