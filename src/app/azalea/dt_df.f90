@@ -74,52 +74,58 @@
      allocate(gammaD2(nffrq,nffrq))
 
      DF_LOOP: do it=1,ndfit
+
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
 
          V_LOOP: do v=1,nbfrq
+
              om = bmesh(v)
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', om
+
              call cat_fill_k(dual_g, gshift, om)
              call cat_dia_2d(dual_g, gshift, bubble)
 
              O_LOOP: do o=1,norbs
 
-             vertexM = vert_m(:,:,v)
-             vertexD = vert_d(:,:,v)
+                 vertexM = vert_m(:,:,v)
+                 vertexD = vert_d(:,:,v)
 
-             K_LOOP: do k=1,nkpts
-                 call s_diag_z(nffrq, bubble(:,o,k), bubbleM)
-                 call cat_bse_solver(bubbleM, vertexM, gammaM)
-                 call cat_bse_solver(bubbleM, vertexD, gammaD)
+                 K_LOOP: do k=1,nkpts
 
-                 call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
-                 call cat_bse_iterator(1, one, bubbleM, vertexD, gammaD2)
+                     call s_diag_z(nffrq, bubble(:,o,k), bubbleM)
+                     call cat_bse_solver(bubbleM, vertexM, gammaM)
+                     call cat_bse_solver(bubbleM, vertexD, gammaD)
 
-                 W_LOOP: do w=1,nffrq
-                     mval = gammaM(w,w) - half * gammaM2(w,w)
-                     dval = gammaD(w,w) - half * gammaD2(w,w)
-                     full_v(w,o,k) = half * (3.0 * mval + dval) 
-                 enddo W_LOOP
-             enddo K_LOOP
+                     call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
+                     call cat_bse_iterator(1, one, bubbleM, vertexD, gammaD2)
 
-             do w=1,nffrq
-                 call cat_fft_2d(+1, nkp_x, nkp_y, full_v(w,o,:), vr)
-                 call cat_fft_2d(-1, nkp_x, nkp_y, gshift(w,o,:), gr)
-                 gr = vr * gr / real(nkpts * nkpts)
-                 call cat_fft_2d(+1, nkp_x, nkp_y, gr, vr)
-                 dual_s(w,o,:) = dual_s(w,o,:) + vr / beta
-             enddo
+                     W_LOOP: do w=1,nffrq
+                         mval = gammaM(w,w) - half * gammaM2(w,w)
+                         dval = gammaD(w,w) - half * gammaD2(w,w)
+                         full_v(w,o,k) = half * (3.0 * mval + dval) 
+                     enddo W_LOOP
 
-         enddo O_LOOP
+                 enddo K_LOOP
+
+                 do w=1,nffrq
+                     call cat_fft_2d(+1, nkp_x, nkp_y, full_v(w,o,:), vr)
+                     call cat_fft_2d(-1, nkp_x, nkp_y, gshift(w,o,:), gr)
+                     gr = vr * gr / real(nkpts * nkpts)
+                     call cat_fft_2d(+1, nkp_x, nkp_y, gr, vr)
+                     dual_s(w,o,:) = dual_s(w,o,:) + vr / beta
+                 enddo
+
+             enddo O_LOOP
+
          enddo V_LOOP
 
-     do k=1,nkpts
-         do v=1,norbs
-             do w=1,nffrq
-                 dual_g_new(w,v,k) = one / ( one / dual_b(w,v,k) - dual_s(w,v,k) ) * dfmix + dual_g(w,v,k) * ( one - dfmix )
-             enddo ! over i={1,nffrq} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over k={1,nkpts} loop
+         do k=1,nkpts
+             do v=1,norbs
+                 do w=1,nffrq
+                     dual_g_new(w,v,k) = one / ( one / dual_b(w,v,k) - dual_s(w,v,k) ) * dfmix + dual_g(w,v,k) * ( one - dfmix )
+                 enddo ! over i={1,nffrq} loop
+             enddo ! over j={1,norbs} loop
+         enddo ! over k={1,nkpts} loop
 
          dual_g = dual_g_new
          dual_s = czero
