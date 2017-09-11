@@ -39,9 +39,9 @@
 ! loop index
      integer :: it
      integer :: k
-     integer :: m
+     !integer :: m
      integer :: n
-     integer :: v
+     integer :: v, w
 
      real(dp) :: om
      complex(dp) :: mval
@@ -93,11 +93,11 @@
                  call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
                  call cat_bse_iterator(1, one, bubbleM, vertexD, gammaD2)
 
-                 W_LOOP: do m=1,nffrq
-                     mval = gammaM(m,m) - half * gammaM2(m,m)
-                     dval = gammaD(m,m) - half * gammaD2(m,m)
-                     full_v(m,1,k) = half * (3.0 * mval + dval) 
-                     full_v(m,2,k) = half * (3.0 * mval + dval) 
+                 W_LOOP: do w=1,nffrq
+                     mval = gammaM(w,w) - half * gammaM2(w,w)
+                     dval = gammaD(w,w) - half * gammaD2(w,w)
+                     full_v(w,1,k) = half * (3.0 * mval + dval) 
+                     full_v(w,2,k) = half * (3.0 * mval + dval) 
                  enddo W_LOOP
              enddo K_LOOP
 
@@ -114,8 +114,8 @@
 
      do k=1,nkpts
          do v=1,norbs
-             do m=1,nffrq
-                 dual_g_new(m,v,k) = one / ( one / dual_b(m,v,k) - dual_s(m,v,k) ) * dfmix + dual_g(m,v,k) * ( one - dfmix )
+             do w=1,nffrq
+                 dual_g_new(w,v,k) = one / ( one / dual_b(w,v,k) - dual_s(w,v,k) ) * dfmix + dual_g(w,v,k) * ( one - dfmix )
              enddo ! over i={1,nffrq} loop
          enddo ! over j={1,norbs} loop
      enddo ! over k={1,nkpts} loop
@@ -128,8 +128,8 @@
 
      do k=1,nkpts
          do v=1,norbs
-             do m=1,nffrq
-                 dual_s(m,v,k) = one / dual_b(m,v,k) - one / dual_g(m,v,k)
+             do w=1,nffrq
+                 dual_s(w,v,k) = one / dual_b(w,v,k) - one / dual_g(w,v,k)
              enddo ! over i={1,nffrq} loop
          enddo ! over j={1,norbs} loop
      enddo ! over k={1,nkpts} loop
