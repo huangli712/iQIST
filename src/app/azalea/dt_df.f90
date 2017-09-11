@@ -39,9 +39,9 @@
 ! loop index
      integer :: it
      integer :: k
-     !integer :: m
-     integer :: n
-     integer :: v, w
+     integer :: o
+     integer :: v
+     integer :: w
 
      real(dp) :: om
      complex(dp) :: mval
@@ -82,11 +82,13 @@
              call cat_fill_k(dual_g, gshift, om)
              call cat_dia_2d(dual_g, gshift, bubble)
 
+             O_LOOP: do o=1,norbs
+
              vertexM = vert_m(:,:,v)
              vertexD = vert_d(:,:,v)
 
              K_LOOP: do k=1,nkpts
-                 call s_diag_z(nffrq, bubble(:,1,k), bubbleM)
+                 call s_diag_z(nffrq, bubble(:,o,k), bubbleM)
                  call cat_bse_solver(bubbleM, vertexM, gammaM)
                  call cat_bse_solver(bubbleM, vertexD, gammaD)
 
@@ -96,20 +98,19 @@
                  W_LOOP: do w=1,nffrq
                      mval = gammaM(w,w) - half * gammaM2(w,w)
                      dval = gammaD(w,w) - half * gammaD2(w,w)
-                     full_v(w,1,k) = half * (3.0 * mval + dval) 
-                     full_v(w,2,k) = half * (3.0 * mval + dval) 
+                     full_v(w,o,k) = half * (3.0 * mval + dval) 
                  enddo W_LOOP
              enddo K_LOOP
 
-             do n=1,nffrq
-                 call cat_fft_2d(+1, nkp_x, nkp_y, full_v(n,1,:), vr)
-                 call cat_fft_2d(-1, nkp_x, nkp_y, gshift(n,1,:), gr)
+             do w=1,nffrq
+                 call cat_fft_2d(+1, nkp_x, nkp_y, full_v(w,o,:), vr)
+                 call cat_fft_2d(-1, nkp_x, nkp_y, gshift(w,o,:), gr)
                  gr = vr * gr / real(nkpts * nkpts)
                  call cat_fft_2d(+1, nkp_x, nkp_y, gr, vr)
-                 dual_s(n,1,:) = dual_s(n,1,:) + vr / beta
-                 dual_s(n,2,:) = dual_s(n,2,:) + vr / beta
+                 dual_s(w,o,:) = dual_s(w,o,:) + vr / beta
              enddo
 
+         enddo O_LOOP
          enddo V_LOOP
 
      do k=1,nkpts
@@ -134,9 +135,9 @@
          enddo ! over j={1,norbs} loop
      enddo ! over k={1,nkpts} loop
 
-     do n=1,nffrq
-       print *, n, fmesh(n)
-       print *, dual_s(n,1,:)
+     do w=1,nffrq
+       print *, w, fmesh(w)
+       print *, dual_s(w,1,:)
      enddo
 
      deallocate(gshift)
