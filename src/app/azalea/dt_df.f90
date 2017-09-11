@@ -43,7 +43,7 @@
      integer :: n
      integer :: v
 
-     real(dp) :: w
+     real(dp) :: om
      complex(dp) :: mval
      complex(dp) :: dval
      complex(dp) :: vr(nkpts)
@@ -77,9 +77,9 @@
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', it
 
          V_LOOP: do v=1,nbfrq
-             w = bmesh(v)
-             write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', w
-             call cat_fill_k(dual_g, gshift, w)
+             om = bmesh(v)
+             write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', om
+             call cat_fill_k(dual_g, gshift, om)
              call cat_dia_2d(dual_g, gshift, bubble)
 
              vertexM = vert_m(:,:,v)
