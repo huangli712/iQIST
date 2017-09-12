@@ -3,6 +3,7 @@
 !!! program : dt_df_core
 !!!           dt_df_schi
 !!!           dt_df_cchi
+!!!           dt_df_dyson
 !!! source  : dt_df.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -93,6 +94,7 @@
                  K_LOOP: do k=1,nkpts
 
                      call s_diag_z(nffrq, bubble(:,o,k), bubbleM)
+
                      call cat_bse_solver(bubbleM, vertexM, gammaM)
                      call cat_bse_solver(bubbleM, vertexD, gammaD)
 
@@ -119,13 +121,7 @@
 
          enddo V_LOOP
 
-         do k=1,nkpts
-             do v=1,norbs
-                 do w=1,nffrq
-                     dual_g_new(w,v,k) = one / ( one / dual_b(w,v,k) - dual_s(w,v,k) ) * dfmix + dual_g(w,v,k) * ( one - dfmix )
-                 enddo ! over i={1,nffrq} loop
-             enddo ! over j={1,norbs} loop
-         enddo ! over k={1,nkpts} loop
+         dual_g_new = one / ( one / dual_b - dual_s ) * dfmix + dual_g * ( one - dfmix )
 
          dual_g = dual_g_new
          dual_s = czero
@@ -133,13 +129,14 @@
          write(mystd,*)
      enddo DF_LOOP
 
-     do k=1,nkpts
-         do v=1,norbs
-             do w=1,nffrq
-                 dual_s(w,v,k) = one / dual_b(w,v,k) - one / dual_g(w,v,k)
-             enddo ! over i={1,nffrq} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over k={1,nkpts} loop
+!     do k=1,nkpts
+!         do v=1,norbs
+!             do w=1,nffrq
+!                 dual_s(w,v,k) = one / dual_b(w,v,k) - one / dual_g(w,v,k)
+!             enddo ! over i={1,nffrq} loop
+!         enddo ! over j={1,norbs} loop
+!     enddo ! over k={1,nkpts} loop
+     dual_s = one / dual_b - one / dual_g
 
      do w=1,nffrq
        print *, w, fmesh(w)
