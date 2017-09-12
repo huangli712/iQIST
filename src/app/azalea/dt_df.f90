@@ -1,9 +1,9 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : dt_df_core
+!!!           dt_df_dual
 !!!           dt_df_schi
 !!!           dt_df_cchi
-!!!           dt_df_dyson
 !!! source  : dt_df.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -129,13 +129,6 @@
          write(mystd,*)
      enddo DF_LOOP
 
-!     do k=1,nkpts
-!         do v=1,norbs
-!             do w=1,nffrq
-!                 dual_s(w,v,k) = one / dual_b(w,v,k) - one / dual_g(w,v,k)
-!             enddo ! over i={1,nffrq} loop
-!         enddo ! over j={1,norbs} loop
-!     enddo ! over k={1,nkpts} loop
      dual_s = one / dual_b - one / dual_g
 
      do w=1,nffrq
@@ -156,6 +149,30 @@
 
      return
   end subroutine dt_df_core
+
+  subroutine dt_df_dual(op, dual_g, dual_s, dual_b)
+     use constants, only : dp
+     use constants, only : one
+
+     use control, only : norbs
+     use control, only : nffrq
+     use control, only : nkpts
+
+     implicit none
+
+     integer, intent(in) :: op
+     complex(dp), intent(inout) :: dual_g(nffrq,norbs,nkpts)
+     complex(dp), intent(inout) :: dual_s(nffrq,norbs,nkpts)
+     complex(dp), intent(inout) :: dual_b(nffrq,norbs,nkpts)
+
+     if ( op == 1 ) then
+         dual_g = one / ( one / dual_b - dual_s )
+     else
+         dual_s = one / dual_b - one / dual_g
+     endif
+
+     return
+  end subroutine dt_df_dual
 
 !!
 !! @sub dt_df_schi
