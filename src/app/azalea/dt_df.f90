@@ -129,7 +129,8 @@
          write(mystd,*)
      enddo DF_LOOP
 
-     dual_s = one / dual_b - one / dual_g
+     !!dual_s = one / dual_b - one / dual_g
+     call dt_df_dual(-1, dual_g, dual_s, dual_b)
 
      do w=1,nffrq
        print *, w, fmesh(w)
