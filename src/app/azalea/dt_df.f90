@@ -129,7 +129,6 @@
          write(mystd,*)
      enddo DF_LOOP
 
-     !!dual_s = one / dual_b - one / dual_g
      call dt_df_dual(-1, dual_g, dual_s, dual_b)
 
      do w=1,nffrq
@@ -151,6 +150,11 @@
      return
   end subroutine dt_df_core
 
+!!
+!! @sub dt_df_dual
+!!
+!!
+!!
   subroutine dt_df_dual(op, dual_g, dual_s, dual_b)
      use constants, only : dp
      use constants, only : one
