@@ -1,6 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : dt_df_core
+!!!           dt_df_ladd
 !!!           dt_df_dual
 !!!           dt_df_schi
 !!!           dt_df_cchi
@@ -150,6 +151,25 @@
 
      return
   end subroutine dt_df_core
+
+  subroutine dt_df_ladd(gamm_v, gamm_m)
+     use constants, only : dp
+
+     use control, only : nffrq
+
+     implicit none
+
+     complex(dp), intent(inout) :: gamm_v(nffrq)
+     complex(dp), intent(in)    :: gamm_m(nffrq,nffrq)
+
+     integer :: w
+
+     do w=1,nffrq
+         gamm_v(w) = gamm_v(w) + gamm_m(w,w)
+     enddo
+
+     return 
+  end subroutine dt_df_ladd
 
 !!
 !! @sub dt_df_dual
