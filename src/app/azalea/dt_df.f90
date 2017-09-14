@@ -122,9 +122,7 @@
          enddo V_LOOP
 
          call dt_df_dual(+1, dual_g_new, dual_s, dual_b)
-         !dual_g_new = dual_g_new * dfmix + dual_g * ( one - dfmix )
          call s_mix_z( size(dual_g_new), dual_g, dual_g_new, dfmix)
-         !STOP
 
          dual_g = dual_g_new
          dual_s = czero
@@ -156,7 +154,8 @@
 !!
 !! @sub dt_df_dual
 !!
-!!
+!! try to calculate the dual green's function or self-energy function by
+!! using the dyson equation
 !!
   subroutine dt_df_dual(op, dual_g, dual_s, dual_b)
      use constants, only : dp
@@ -168,7 +167,9 @@
 
      implicit none
 
+! external arguments
      integer, intent(in) :: op
+
      complex(dp), intent(inout) :: dual_g(nffrq,norbs,nkpts)
      complex(dp), intent(inout) :: dual_s(nffrq,norbs,nkpts)
      complex(dp), intent(inout) :: dual_b(nffrq,norbs,nkpts)
@@ -177,7 +178,7 @@
          dual_g = one / ( one / dual_b - dual_s )
      else
          dual_s = one / dual_b - one / dual_g
-     endif
+     endif ! back if ( op == 1 ) block
 
      return
   end subroutine dt_df_dual
