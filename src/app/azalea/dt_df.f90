@@ -46,8 +46,6 @@
      integer :: w
 
      real(dp) :: om
-     complex(dp) :: mval
-     complex(dp) :: dval
      complex(dp) :: vr(nkpts)
      complex(dp) :: gr(nkpts)
 
@@ -102,12 +100,7 @@
                      call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
                      call cat_bse_iterator(1, one, bubbleM, vertexD, gammaD2)
 
-                     !W_LOOP: do w=1,nffrq
-                     !    mval = gammaM(w,w) - half * gammaM2(w,w)
-                     !    dval = gammaD(w,w) - half * gammaD2(w,w)
-                     !    full_v(w,o,k) = half * (3.0 * mval + dval) 
-                     !enddo W_LOOP
-
+                     full_v(:,o,k) = czero
                      call dt_df_ladd(full_v(:,o,k), half * 3.0 * (gammaM - half * gammaM2))
                      call dt_df_ladd(full_v(:,o,k), half * 1.0 * (gammaD - half * gammaD2))
 
