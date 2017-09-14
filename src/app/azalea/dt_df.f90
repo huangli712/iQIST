@@ -93,11 +93,13 @@
 
                      call cat_bse_solver(bubbleM, vertexM, gammaM)
                      call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
-                     call dt_df_ladd(full_v(:,o,k), half * 3.0 * (gammaM - half * gammaM2))
+                     gammaM = half * 3.0 * (gammaM - half * gammaM2)
+                     call dt_df_ladd(full_v(:,o,k), gammaM)
 
                      call cat_bse_solver(bubbleM, vertexD, gammaM)
                      call cat_bse_iterator(1, one, bubbleM, vertexD, gammaM2)
-                     call dt_df_ladd(full_v(:,o,k), half * 1.0 * (gammaM - half * gammaM2))
+                     gammaM = half * 1.0 * (gammaM - half * gammaM2)
+                     call dt_df_ladd(full_v(:,o,k), gammaM)
 
                  enddo K_LOOP
 
