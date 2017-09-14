@@ -122,7 +122,9 @@
          enddo V_LOOP
 
          call dt_df_dual(+1, dual_g_new, dual_s, dual_b)
-         dual_g_new = dual_g_new * dfmix + dual_g * ( one - dfmix )
+         !dual_g_new = dual_g_new * dfmix + dual_g * ( one - dfmix )
+         call s_mix_z( size(dual_g_new), dual_g, dual_g_new, dfmix)
+         !STOP
 
          dual_g = dual_g_new
          dual_s = czero
