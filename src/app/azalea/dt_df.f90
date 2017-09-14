@@ -94,14 +94,14 @@
 
                      call s_diag_z(nffrq, bubble(:,o,k), bubbleM)
 
-                     call cat_bse_solver(bubbleM, vertexM, gammaM)
-                     call cat_bse_solver(bubbleM, vertexD, gammaD)
-
-                     call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
-                     call cat_bse_iterator(1, one, bubbleM, vertexD, gammaD2)
-
                      full_v(:,o,k) = czero
+
+                     call cat_bse_solver(bubbleM, vertexM, gammaM)
+                     call cat_bse_iterator(1, one, bubbleM, vertexM, gammaM2)
                      call dt_df_ladd(full_v(:,o,k), half * 3.0 * (gammaM - half * gammaM2))
+
+                     call cat_bse_solver(bubbleM, vertexD, gammaD)
+                     call cat_bse_iterator(1, one, bubbleM, vertexD, gammaD2)
                      call dt_df_ladd(full_v(:,o,k), half * 1.0 * (gammaD - half * gammaD2))
 
                  enddo K_LOOP
