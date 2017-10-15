@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           09/06/2017 by li huang (last modified)
+!!!           10/15/2017 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -477,7 +477,9 @@
 !!
 !! @sub cat_bse_solver
 !!
-!! try to solve the bethe-salpeter equation directly
+!! try to solve the bethe-salpeter equation directly by matrix inversion
+!!
+!!     \Gamma = \gamma / ( I - \gamma \chi )
 !!
   subroutine cat_bse_solver(chiM, vrtM, GamM)
      use constants, only : dp
@@ -487,16 +489,29 @@
      implicit none
 
 ! external arguments
-     complex(dp), intent(in) :: chiM(nffrq,nffrq)
-     complex(dp), intent(in) :: vrtM(nffrq,nffrq)
+! two-particle bubble, \chi
+     complex(dp), intent(in)  :: chiM(nffrq,nffrq)
+
+! impurity vertex function, \gamma
+     complex(dp), intent(in)  :: vrtM(nffrq,nffrq)
+
+! fully dressed vertex function, \Gamma
      complex(dp), intent(out) :: GamM(nffrq,nffrq)
 
 ! local variables
+! unit matrix
      complex(dp) :: Imat(nffrq,nffrq)
 
+! build unit matrix
      call s_identity_z(nffrq, Imat)
+
+! eval I - \gamma \chi
      GamM = Imat - matmul(vrtM,chiM)
+
+! eval ( I - \gamma \chi )^-1 
      call s_inv_z(nffrq, GamM)
+
+! eval ( I - \gamma \chi )^-1 \gamma
      GamM = matmul(GamM, vrtM)
 
      return
@@ -504,7 +519,7 @@
 
 
 
-  subroutine dt_bse_solver_iter(niter, mix, bubbleM, vertexM, gammaM)
+  subroutine cat_bse_iterator(niter, mix, bubbleM, vertexM, gammaM)
      use constants, only : dp
 
      use control, only : nffrq
@@ -540,4 +555,4 @@
      enddo
 
      return
-  end subroutine dt_bse_solver_iter
+  end subroutine cat_bse_iterator

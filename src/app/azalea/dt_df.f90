@@ -88,8 +88,8 @@
                  call cat_bse_solver(bubbleM, vertexM, gammaM)
                  call cat_bse_solver(bubbleM, vertexD, gammaD)
 
-                 call dt_bse_solver_iter(1, 1.0_dp, bubbleM, vertexM, gammaM2)
-                 call dt_bse_solver_iter(1, 1.0_dp, bubbleM, vertexD, gammaD2)
+                 call cat_bse_iterator(1, 1.0_dp, bubbleM, vertexM, gammaM2)
+                 call cat_bse_iterator(1, 1.0_dp, bubbleM, vertexD, gammaD2)
 
                  W_LOOP: do l=1,nffrq
                      mval = gammaM(l,l) - 0.5*gammaM2(l,l)
