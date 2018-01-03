@@ -265,6 +265,8 @@
 ! local variables
 ! loop index
      integer  :: i
+
+! dummy real(dp) variables
      real(dp) :: r1, r2
      real(dp) :: c1, c2
 
@@ -338,6 +340,7 @@
      use control, only : norbs
      use control, only : nffrq
      use control, only : nkpts
+
      use context, only : dmft_g
      use context, only : latt_g
      use context, only : dual_g, dual_s, dual_b
@@ -345,10 +348,13 @@
      implicit none
 
 ! local variables
+! loop index
      integer :: i
      integer :: j
      integer :: k
 
+! calculate dual green's functions, dual self-energy functions, and dual
+! bath's functions
      do k=1,nkpts
          do j=1,norbs
              do i=1,nffrq
@@ -368,13 +374,23 @@
 !!
 !!
   subroutine dt_input_vert_()
+     use constants, only : dp
+     use constants, only : mytmp
+
+     use control, only : nffrq, nbfrq
+
      use context, only : vert_d, vert_m
 
      implicit none
 
 ! local variables
 ! loop index
+     integer  :: i
      integer  :: if1, if2
+
+! dummy real(dp) variables
+     real(dp) :: r1, r2
+     real(dp) :: c1, c2
      real(dp) :: d1, d2
      real(dp) :: v1, v2
 
