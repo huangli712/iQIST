@@ -198,6 +198,7 @@
      use control, only : nkpts, nkp_x, nkp_y, nkp_z
      use control, only : beta
      use control, only : part
+
      use context, only : kx, ky, kz, ek
      use context, only : fmesh, bmesh
 
@@ -256,8 +257,8 @@
      use constants, only : mytmp
 
      use control, only : nffrq, nbfrq
-     use context, only : dmft_g
-     use context, only : dmft_h
+
+     use context, only : dmft_g, dmft_h
 
      implicit none
 
@@ -291,7 +292,7 @@
 !!
 !! @sub dt_input_latt_
 !!
-!!
+!! prepare some lattice variables
 !!
   subroutine dt_input_latt_()
      use constants, only : dp
@@ -300,6 +301,7 @@
      use control, only : norbs
      use control, only : nffrq
      use control, only : nkpts
+
      use context, only : ek
      use context, only : dmft_g, dmft_h
      use context, only : latt_g
