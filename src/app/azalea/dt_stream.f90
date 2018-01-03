@@ -209,6 +209,7 @@
      integer :: j
      integer :: k
 
+! setup k-mesh
      do i=1,nkp_x
          kx(i) = (two * pi) * float(i - 1)/ float(nkp_x)
      enddo ! over i={1,nkp_x} loop
@@ -221,7 +222,7 @@
          kz(i) = (two * pi) * float(i - 1)/ float(nkp_z)
      enddo ! over i={1,nkp_z} loop
 
-! build a 2d lattice
+! build a 2d lattice (band dispersion)
      k = 0
      do i=1,nkp_x
          do j=1,nkp_y
@@ -229,12 +230,14 @@
              ek(k) = -two * part * ( cos( kx(i) ) + cos( ky(j) ) )
          enddo ! over j={1,nkp_y} loop
      enddo ! over i={1,nkp_x} loop     
-     call s_assert(k == nkpts)
+     call s_assert(k == nkpts) ! we have to make sure this
 
+! setup fermionic mesh
      do i=1,nffrq
          fmesh(i) = (two * i - one - nffrq) * pi / beta
      enddo ! over i={1,nffrq} loop
 
+! setup bosonic mesh
      do i=1,nbfrq
          bmesh(i) = (two * i - one - nbfrq) * pi / beta
      enddo ! over i={1,nbfrq} loop
@@ -245,7 +248,8 @@
 !!
 !! @sub dt_input_dmft_
 !!
-!!
+!! prepare some local variables, they are from the output of quantum
+!! impurity solver
 !!
   subroutine dt_input_dmft_()
      use constants, only : dp
@@ -253,7 +257,6 @@
 
      use control, only : nffrq, nbfrq
      use context, only : dmft_g, dmft_h
-     use context, only : vert_d, vert_m
 
      implicit none
 
@@ -282,32 +285,6 @@
          dmft_h(i,1) = dcmplx(c1, c2)
          dmft_h(i,2) = dcmplx(c1, c2)
      enddo ! over i={1,nffrq} loop
-     close(mytmp)
-
-! read in vertex function, density channel
-     open(mytmp, file = 'df.vert_d.in', form = 'formatted', status = 'unknown')
-     do i=1,nbfrq
-         do if1=1,nffrq
-             do if2=1,nffrq
-                 read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
-                 vert_d(if2,if1,i) = dcmplx(v1, v2)
-             enddo ! over if2={1,nffrq} loop
-             read(mytmp,*) ! skip one line
-         enddo ! over if1={1,nffrq} loop
-     enddo ! over i={1,nbfrq} loop
-     close(mytmp)
-
-! read in vertex function, magentic channel
-     open(mytmp, file = 'df.vert_m.in', form = 'formatted', status = 'unknown')
-     do i=1,nbfrq
-         do if1=1,nffrq
-             do if2=1,nffrq
-                 read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
-                 vert_m(if2,if1,i) = dcmplx(v1, v2)
-             enddo
-             read(mytmp,*) ! skip one line
-         enddo
-     enddo
      close(mytmp)
 
      return
@@ -390,7 +367,35 @@
 !!
 !!
   subroutine dt_input_vert_()
+     use context, only : vert_d, vert_m
+
      implicit none
+
+! read in vertex function, density channel
+     open(mytmp, file = 'df.vert_d.in', form = 'formatted', status = 'unknown')
+     do i=1,nbfrq
+         do if1=1,nffrq
+             do if2=1,nffrq
+                 read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
+                 vert_d(if2,if1,i) = dcmplx(v1, v2)
+             enddo ! over if2={1,nffrq} loop
+             read(mytmp,*) ! skip one line
+         enddo ! over if1={1,nffrq} loop
+     enddo ! over i={1,nbfrq} loop
+     close(mytmp)
+
+! read in vertex function, magentic channel
+     open(mytmp, file = 'df.vert_m.in', form = 'formatted', status = 'unknown')
+     do i=1,nbfrq
+         do if1=1,nffrq
+             do if2=1,nffrq
+                 read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
+                 vert_m(if2,if1,i) = dcmplx(v1, v2)
+             enddo
+             read(mytmp,*) ! skip one line
+         enddo
+     enddo
+     close(mytmp)
 
      return
   end subroutine dt_input_vert_
