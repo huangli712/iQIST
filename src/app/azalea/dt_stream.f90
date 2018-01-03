@@ -371,7 +371,8 @@
 !!
 !! @sub dt_input_vert_
 !!
-!!
+!! prepare vertex functions, they are from the output of quantum impurity
+!! solver as well
 !!
   subroutine dt_input_vert_()
      use constants, only : dp
