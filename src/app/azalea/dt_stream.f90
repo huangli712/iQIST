@@ -292,7 +292,7 @@
 !!
 !! @sub dt_input_latt_
 !!
-!! prepare some lattice variables
+!! prepare some lattice variables from scratch
 !!
   subroutine dt_input_latt_()
      use constants, only : dp
@@ -314,6 +314,7 @@
      integer :: j
      integer :: k
 
+! calculate lattice green's function
      do k=1,nkpts
          do j=1,norbs
              do i=1,nffrq
@@ -328,7 +329,7 @@
 !!
 !! @sub dt_input_dual_
 !!
-!!
+!! prepare some dual variables from scratch
 !!
   subroutine dt_input_dual_()
      use constants, only : dp
