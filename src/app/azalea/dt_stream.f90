@@ -256,18 +256,16 @@
      use constants, only : mytmp
 
      use control, only : nffrq, nbfrq
-     use context, only : dmft_g, dmft_h
+     use context, only : dmft_g
+     use context, only : dmft_h
 
      implicit none
 
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: if1, if2
      real(dp) :: r1, r2
      real(dp) :: c1, c2
-     real(dp) :: d1, d2
-     real(dp) :: v1, v2
 
 ! read in impurity green's function
      open(mytmp, file = 'df.dmft_g.in', form = 'formatted', status = 'unknown')
@@ -370,6 +368,12 @@
      use context, only : vert_d, vert_m
 
      implicit none
+
+! local variables
+! loop index
+     integer  :: if1, if2
+     real(dp) :: d1, d2
+     real(dp) :: v1, v2
 
 ! read in vertex function, density channel
      open(mytmp, file = 'df.vert_d.in', form = 'formatted', status = 'unknown')
