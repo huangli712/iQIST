@@ -431,7 +431,7 @@
 !!
 !! @sub dt_alloc_array
 !!
-!!
+!! allocate memory for global variables and then initialize them
 !!
   subroutine dt_alloc_array()
      use context ! ALL
@@ -451,7 +451,7 @@
 !!
 !! @sub dt_reset_array
 !!
-!!
+!! reset the key variables for dual fermion engine 
 !!
   subroutine dt_reset_array()
      implicit none
@@ -462,7 +462,7 @@
 !!
 !! @sub dt_final_array
 !!
-!!
+!! garbage collection for this code, please refer to dt_alloc_array
 !!
   subroutine dt_final_array()
      use context ! ALL
