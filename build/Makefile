@@ -69,16 +69,16 @@ help:
 	@echo '     all               build all components and tools        '
 	@echo '     clean             clean all directories                 '
 	@echo
-	@echo '     solver            build all impurity solver             '
-	@echo '     clean-solver      clean all impurity solvers            '
-	@echo 
-	@echo '     ct-hyb1           build ct_hyb1 impurity solver         '
-	@echo '     clean-ct-hyb1     clean ct_hyb1 impurity solver         '
-	@echo '     ct_hyb2           build ct_hyb2 impurity solver         '
-	@echo '     clean-ct-hyb2     clean ct_hyb2 impurity solver         '
+	@echo '     solver            build all quantum impurity solvers    '
+	@echo '     clean-solver      clean all quantum impurity solvers    '
 	@echo
 	@echo '     atomic            build atomic eigenvalue solver        '
 	@echo '     clean-atomic      clean atomic eigenvalue solver        '
+	@echo
+	@echo '     ct-hyb1           build ct_hyb1 quantum impurity solver '
+	@echo '     clean-ct-hyb1     clean ct_hyb1 quantum impurity solver '
+	@echo '     ct_hyb2           build ct_hyb2 quantum impurity solver '
+	@echo '     clean-ct-hyb2     clean ct_hyb2 quantum impurity solver '
 
 # all-in-one building target
 all: solver atomic
@@ -90,23 +90,23 @@ clean: clean-solver clean-atomic
 solver: ct-hyb1 ct-hyb2
 clean-solver: clean-ct-hyb1 clean-ct-hyb2
 
-# targets for ctqmc codes: segment version (narcissus)
-ct-hyb1:
-	cd ../src/ct_hyb1/; pwd; make
-
-clean-ct-hyb1:
-	cd ../src/ct_hyb1/; pwd; make clean
-
-# targets for ctqmc codes: general version (manjushaka)
-ct-hyb2:
-	cd ../src/ct_hyb2/; pwd; make
-
-clean-ct-hyb2:
-	cd ../src/ct_hyb2/; pwd; make clean
-
 # targets for atomic eigenvalue solver: jasmine
 atomic:
 	cd ../src/atomic/; pwd; make
 
 clean-atomic:
 	cd ../src/atomic/; pwd; make clean
+
+# targets for ctqmc quantum impurity solver: segment version (narcissus)
+ct-hyb1:
+	cd ../src/ct_hyb1/; pwd; make
+
+clean-ct-hyb1:
+	cd ../src/ct_hyb1/; pwd; make clean
+
+# targets for ctqmc quantum impurity solver: general version (manjushaka)
+ct-hyb2:
+	cd ../src/ct_hyb2/; pwd; make
+
+clean-ct-hyb2:
+	cd ../src/ct_hyb2/; pwd; make clean
