@@ -69,8 +69,8 @@ help:
 	@echo '     all               build all components and tools        '
 	@echo '     clean             clean all directories                 '
 	@echo
-	@echo '     solver            build impurity solver components      '
-	@echo '     clean-solver      clean objects for impurity solvers    '
+	@echo '     solver            build all impurity solver             '
+	@echo '     clean-solver      clean all impurity solvers            '
 	@echo 
 	@echo '     ct-hyb1           build ct_hyb1 impurity solver         '
 	@echo '     clean-ct-hyb1     clean ct_hyb1 impurity solver         '
@@ -87,44 +87,26 @@ all: solver atomic
 clean: clean-solver clean-atomic
 
 # targets for solver
-solver: base narcissus manjushaka
-clean-solver: clean-base clean-narcissus clean-manjushaka
-
-# targets for tool
-tool: base jasmine hibiscus
-clean-tool: clean-base clean-jasmine clean-hibiscus
+solver: ct-hyb1 ct-hyb2
+clean-solver: clean-ct-hyb1 clean-ct-hyb2
 
 # targets for ctqmc codes: segment version (narcissus)
-narcissus:
-	cd ../src/ctqmc/narcissus/; pwd; make
+ct-hyb1:
+	cd ../src/ct_hyb1/; pwd; make
 
-clean-narcissus:
-	cd ../src/ctqmc/narcissus/; pwd; make clean
+clean-ct-hyb1:
+	cd ../src/ct_hyb1/; pwd; make clean
 
 # targets for ctqmc codes: general version (manjushaka)
-manjushaka:
-#	cd ../src/ctqmc/manjushaka/; pwd; make
+ct-hyb2:
+	cd ../src/ct_hyb2/; pwd; make
 
-clean-manjushaka:
-#	cd ../src/ctqmc/manjushaka/; pwd; make clean
+clean-ct-hyb2:
+	cd ../src/ct_hyb2/; pwd; make clean
 
-# targets for atomic codes: jasmine
-jasmine:
-#	cd ../src/tools/jasmine/; pwd; make
+# targets for atomic eigenvalue solver: jasmine
+atomic:
+	cd ../src/atomic/; pwd; make
 
-clean-jasmine:
-#	cd ../src/tools/jasmine/; pwd; make clean
-
-# targets for toolkit codes: hibiscus
-hibiscus:
-	cd ../src/tools/hibiscus/; pwd; make
-
-clean-hibiscus:
-	cd ../src/tools/hibiscus/; pwd; make clean
-
-# targets for csml and cssl: base
-base:
-	cd ../src/base/; pwd; make
-
-clean-base:
-	cd ../src/base/; pwd; make clean
+clean-atomic:
+	cd ../src/atomic/; pwd; make clean
