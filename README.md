@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package was created for studying the strongly correlated electron systems. It contains several hybridization expansion continuous-time quantum Monte Carlo impurity solvers, auxiliary tools, numerical libraries and some typical applications.
+The iQIST software package was created for studying the strongly correlated electron systems. It contains several hybridization expansion continuous-time quantum Monte Carlo impurity solvers and some auxiliary scripts. 
 
 ## Version
 
@@ -60,7 +60,7 @@ GNU General Public License Version 3
 
 * Many tools are provided
     * Atomic eigenvalue problem solver
-    * Some users-oriented and developers-oriented scripts, etc.
+    * Some users-oriented scripts
 
 The iQIST software package is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed or removed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
 
