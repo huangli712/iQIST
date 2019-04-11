@@ -13,7 +13,7 @@
 ## 1. get help
 ## -----------
 ##
-## 'make help' or 'make help-more'
+## 'make help'
 ##
 ## 2. quick build
 ## --------------
@@ -25,17 +25,17 @@
 ##
 ## 'make solver'
 ##
-## 4. build auxiliary tools
-## ------------------------
+## 4. build atomic eigenvalue solver
+## ---------------------------------
 ##
-## 'make tool'
+## 'make atomic'
 ##
 ## 5. build specified code
 ## -----------------------
 ##
 ## 'make xxx'
 ##
-## here xxx is the code name, please type 'make help-more' to obtain more
+## here xxx is the code name, please type 'make help' to obtain more
 ## information about the possible values of xxx
 ##
 ## 6. clean the directories
