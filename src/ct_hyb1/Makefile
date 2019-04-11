@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/narcissus directory.
+## Makefile for iqist/src/ct_hyb1 directory.
 ##
 ## Usage
 ## =====
@@ -21,13 +21,13 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 04/21/2017 by li huang (last modified)
+## 04/11/2019 by li huang (last modified)
 ##
 ##
 
 .SUFFIXES: .f90
 
-include ../../../build/make.sys
+include ../../build/make.sys
 
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
