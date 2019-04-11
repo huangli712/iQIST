@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 08/02/2017 by li huang (last modified)
+## 04/11/2019 by li huang (last modified)
 ##
 ##
 
@@ -64,40 +64,21 @@ help:
 	@echo
 	@echo
 	@echo '  targets:'
-	@echo '     help              print short usage information         '
-	@echo '     help-more         print full usage information          '
+	@echo '     help              print full usage information          '
 	@echo
 	@echo '     all               build all components and tools        '
 	@echo '     clean             clean all directories                 '
 	@echo
 	@echo '     solver            build impurity solver components      '
 	@echo '     clean-solver      clean objects for impurity solvers    '
+	@echo 
+	@echo '     ct-hyb1           build ct_hyb1 impurity solver         '
+	@echo '     clean-ct-hyb1     clean ct_hyb1 impurity solver         '
+	@echo '     ct_hyb2           build ct_hyb2 impurity solver         '
+	@echo '     clean-ct-hyb2     clean ct_hyb2 impurity solver         '
 	@echo
-	@echo '     tool              build auxiliary tool components       '
-	@echo '     clean-tool        clean objects for auxiliary tools     '
-
-help-more:
-	@echo '  Interacting Quantum Impurity Solver Toolkit Building System'
-	@echo
-	@echo
-	@echo '  targets:'
-	@echo '     help              print short usage information         '
-	@echo '     help-more         print full usage information          '
-	@echo
-	@echo '     narcissus         build narcissus code                  '
-	@echo '     clean-narcissus   clean narcissus directory             '
-	@echo
-	@echo '     manjushaka        build manjushaka code                 '
-	@echo '     clean-manjushaka  clean manjushaka directory            '
-	@echo
-	@echo '     jasmine           build jasmine code                    '
-	@echo '     clean-jasmine     clean jasmine directory               '
-	@echo
-	@echo '     hibiscus          build hibiscus code                   '
-	@echo '     clean-hibiscus    clean hibiscus directory              '
-	@echo
-	@echo '     base              build base library                    '
-	@echo '     clean-base        clean base directory                  '
+	@echo '     atomic            build atomic eigenvalue solver        '
+	@echo '     clean-atomic      clean atomic eigenvalue solver        '
 
 # all-in-one building target
 all: base solver tool
