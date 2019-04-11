@@ -17,6 +17,6 @@ fort.*
 atom.cix
 test.py
 test.f90
-src/app/azalea/dmft
-src/ctqmc/*/ctqmc
-src/tools/jasmine/atomic
+src/ct_hyb1/ctqmc
+src/ct_hyb2/ctqmc
+src/atomic/atom.x
