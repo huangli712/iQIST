@@ -137,7 +137,7 @@ Collection of Fortran compiler options. Do not modify them for ever.
 
 Collection of linker options. Do not modify them unless you know what you are doing.
 
-Possible options:
+**Possible options**:
 
 * $(OMP)
 * -Wl,-no_pie
@@ -148,7 +148,7 @@ The '-Wl,-no_pie' option is useful when you are using the macOS system and want 
 
 Specify the external libraries. Now the iQIST software package depends on LAPACK and BLAS heavily. To achieve good performance, the highly optimized LAPACK and BLAS implementations are essential.
 
-Possible options:
+**Possible options**:
 
 * -framework Accelerate
 * -L/home/lihuang/lapack -llapack -lblas
