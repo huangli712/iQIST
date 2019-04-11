@@ -36,7 +36,7 @@ Though it is not mandatory, we still strongly recommend to update the above soft
 
 The Fortran compiler. Both the parallel and sequential fortran compilers are supported. Note that only the Intel fortran compiler was extensively tested. And we recommend to use the very latest version of Intel fortran compiler (i.e, Intel Parallel Studio 2017).
 
-Possible options:
+**Possible options**:
 
 * mpif90
 * mpifort
@@ -47,7 +47,7 @@ Possible options:
 
 Linker. Here it should be the same with the fortran compiler. Do not change it.
 
-Possible options:
+**Possible options**:
 
 * $(F90)
 
@@ -55,7 +55,7 @@ Possible options:
 
 Archiver. It is used to pack the binary objects into a library. Do not modify it for ever.
 
-Possible options:
+**Possible options**:
 
 * ar -ruv
 
@@ -63,7 +63,7 @@ Possible options:
 
 Specify whether MPI is enable. If you want to compile a sequential code, please comment it out with '#' symbol and then setup F90 to 'ifort'. We strongly suggest to compile the MPI parallelized codes.
 
-Possible options:
+**Possible options**:
 
 * -DMPI
 
@@ -71,7 +71,7 @@ Possible options:
 
 Specify whether OpenMP is enable. If you want to disable it, please comment it out. In default it is disabled. So far the OpenMP was used to speedup the measurements of some selected two-particle quantities.
 
-Possible options:
+**Possible options**:
 
 * -qopenmp
 
@@ -81,7 +81,7 @@ If you are using old version Intel fortran compiler, this option may be '-openmp
 
 Specify whether the fortran preprocessor (FPP) is used. It has to be enabled or else the iQIST can not be compiled correctly.
 
-Possible options:
+**Possible options**:
 
 * -fpp
 
@@ -89,7 +89,7 @@ Possible options:
 
 Collection of preprocessor directives. Do not modify it unless you are an expert of iQIST.
 
-Possible options:
+**Possible options**:
 
 * $(FPP)
 * $(MPI)
@@ -101,7 +101,7 @@ Please make sure that the '$(FPP)' option is always present.
 
 Used to specify what types of check should be done.
 
-Possible options:
+**Possible options**:
 
 * -nogen-interfaces
 * -warn all
@@ -115,7 +115,7 @@ The '-nogen-interfaces' option ask the compiler to do not generate an interface 
 
 Collection of optimization options.
 
-Possible options:
+**Possible options**:
 
 * -O3
 * -xHost
@@ -126,7 +126,7 @@ The '-O3' option means the highest optimization. The '-xHost' option enables the
 
 Collection of Fortran compiler options. Do not modify them for ever.
 
-Possible options:
+**Possible options**:
 
 * -c
 * $(CPP)
