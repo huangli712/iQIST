@@ -81,10 +81,10 @@ help:
 	@echo '     clean-atomic      clean atomic eigenvalue solver        '
 
 # all-in-one building target
-all: base solver tool
+all: solver atomic
 
 # all-in-one cleaning target
-clean: clean-base clean-solver clean-tool
+clean: clean-solver clean-atomic
 
 # targets for solver
 solver: base narcissus manjushaka
