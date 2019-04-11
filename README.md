@@ -4,7 +4,7 @@ The iQIST software package was created for studying the strongly correlated elec
 
 ## Version
 
-v0.7.0 (devel)
+v0.8.0 (devel)
 
 ## License
 
@@ -82,7 +82,7 @@ $ editor make.sys
 $ make component
 ```
 
-Here **iqist** is the directory where the iQIST software package is uncompressed, **editor** could be any ascii text editor which you prefer, **component** could be **atomic**, **ct\_hyb1**, **ct\_hyb2**, etc. Please type **make help-more** in the terminal for more details. **Sometimes the latest commit will not be compiled correctly. So, please download the released version of the iQIST software package which should have an unique version tag**.
+Here **iqist** is the directory where the iQIST software package is uncompressed, **editor** could be any ascii text editor which you prefer, **component** could be **atomic**, **ct\_hyb1**, and **ct\_hyb2**, etc. Please type **make help-more** in the terminal for more details. **Sometimes the latest commit will not be compiled correctly. So, please download the released version of the iQIST software package which should have an unique version tag**.
 
 ## Documentation
 

@@ -1,5 +1,11 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+## v0.8.0 @ // Apr 11, 2019
+
+* Reorganize the directories.
+* Remove the numerical library (see flink repo)
+* Remove some useful scripts (see hdev repo)
+
 ## v0.7.0 @ 77fe111 // Aug 19, 2017
 
 * Remove azalea component.
