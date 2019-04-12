@@ -163,3 +163,5 @@ Specify where the FLINK is. Now the iQIST software package depends on FLINK heav
 **Possible options**:
 
 * /Users/lihuang/Working/dmft/flink/src
+
+You can download the latest version of FLINK in the following website:
