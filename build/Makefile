@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 04/11/2019 by li huang (last modified)
+## 04/12/2019 by li huang (last modified)
 ##
 ##
 
@@ -75,10 +75,10 @@ help:
 	@echo '     atomic            build atomic eigenvalue solver        '
 	@echo '     clean-atomic      clean atomic eigenvalue solver        '
 	@echo
-	@echo '     ct-hyb1           build ct_hyb1 quantum impurity solver '
-	@echo '     clean-ct-hyb1     clean ct_hyb1 quantum impurity solver '
-	@echo '     ct_hyb2           build ct_hyb2 quantum impurity solver '
-	@echo '     clean-ct-hyb2     clean ct_hyb2 quantum impurity solver '
+	@echo '     ct-hyb1           build ct-hyb1 quantum impurity solver '
+	@echo '     clean-ct-hyb1     clean ct-hyb1 quantum impurity solver '
+	@echo '     ct_hyb2           build ct-hyb2 quantum impurity solver '
+	@echo '     clean-ct-hyb2     clean ct-hyb2 quantum impurity solver '
 
 # all-in-one building target
 all: solver atomic
@@ -97,14 +97,14 @@ atomic:
 clean-atomic:
 	cd ../src/atomic/; pwd; make clean
 
-# targets for ctqmc quantum impurity solver: segment version (narcissus)
+# targets for ct-hyb quantum impurity solver: segment version (narcissus)
 ct-hyb1:
 	cd ../src/ct_hyb1/; pwd; make
 
 clean-ct-hyb1:
 	cd ../src/ct_hyb1/; pwd; make clean
 
-# targets for ctqmc quantum impurity solver: general version (manjushaka)
+# targets for ct-hyb quantum impurity solver: general version (manjushaka)
 ct-hyb2:
 	cd ../src/ct_hyb2/; pwd; make
 
