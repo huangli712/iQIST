@@ -155,3 +155,11 @@ Specify the external libraries. Now the iQIST software package depends on LAPACK
 * -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
 Here we provide three typical choices. (1) In the macOS system, we can use the Apple Accelerate framework. (2) We use the home-built BLAS and LAPACK libraries. Please pay attention to the path. You have to modify it to meet your software environment. (3) We link the iQIST code with the Intel MKL. Please pay attention to the path and the library's name. You have to modify them to meet your software environment. Please see the documentation about Intel MKL for more details.
+
+### FLINK
+
+Specify where the FLINK is. Now the iQIST software package depends on FLINK heavily.
+
+**Possible options**:
+
+* /Users/lihuang/Working/dmft/flink/src
