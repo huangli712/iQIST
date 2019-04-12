@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 04/11/2019 by li huang (last modified)
+## 04/12/2019 by li huang (last modified)
 ##
 ##
 
@@ -36,7 +36,7 @@ lev1 = ctqmc_flavor.o ctqmc_hybmat.o ctqmc_update.o
 lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o ctqmc_util.o
 lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
-mlib = libMM.a
+mlib = libflink.a
 
 objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(mlib)
 
@@ -44,19 +44,21 @@ default: all
 
 all: exe
 
-cssl:
-	cp ../../base/libMM.a .
+flink: flink_lib flink_mod
 
-csml:
-	cp ../../base/constants.mod .
-	cp ../../base/mmpi.mod .
-	cp ../../base/spring.mod .
-	cp ../../base/stack.mod .
-	cp ../../base/parser.mod .
-	cp ../../base/linkedlist.mod .
-	cp ../../base/version.mod .
+flink_lib:
+	cp $(FLINK)/libflink.a .
 
-exe: cssl csml $(objects)
+flink_mod:
+	cp $(FLINK)/constants.mod .
+	cp $(FLINK)/mmpi.mod .
+	cp $(FLINK)/spring.mod .
+	cp $(FLINK)/stack.mod .
+	cp $(FLINK)/parser.mod .
+	cp $(FLINK)/linkedlist.mod .
+	cp $(FLINK)/version.mod .
+
+exe: flink $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
 .f90.o:
@@ -66,7 +68,7 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f ctqmc
-	rm -f libMM.a
+	rm -f libflink.a
 
 clean-dat:
 	rm -f *.dat
