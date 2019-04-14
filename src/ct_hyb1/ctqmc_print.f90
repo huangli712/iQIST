@@ -208,9 +208,9 @@
 ! predefined strings for control parameters
      character (len = 4) :: scf(2) = ['nscf', 'scf ']
      character (len = 7) :: scr(4) = ['static ', 'dyn_ppm', 'dyn_om ', 'dyn_rm ']
-     character (len = 3) :: bnd(2) = ['no', 'yes']
-     character (len = 3) :: spn(2) = ['no', 'yes']
-     character (len = 3) :: wor(2) = ['no', 'yes']
+     character (len = 3) :: bnd(2) = ['no ', 'yes']
+     character (len = 3) :: spn(2) = ['no ', 'yes']
+     character (len = 3) :: wor(2) = ['no ', 'yes']
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
      character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
      character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
