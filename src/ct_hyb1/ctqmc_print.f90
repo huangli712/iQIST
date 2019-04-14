@@ -212,7 +212,7 @@
      character (len = 3) :: spn(2) = ['no ', 'yes']
      character (len = 3) :: wor(2) = ['no ', 'yes']
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
-     character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
+     character (len = 8) :: obs(4) = ['none    ', 'kinetic ', 'fidelity', 'binder  ']
      character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
      character (len = 9) :: vrt(5) = ['none', 'g2ph_aabb', 'g2ph_abba', 'g2pp_aabb', 'g2pp_abba']
 
