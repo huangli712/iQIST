@@ -206,7 +206,7 @@
      integer :: i
 
 ! predefined strings for control parameters
-     character (len = 4) :: scf(2) = ['nscf', 'scf']
+     character (len = 4) :: scf(2) = ['nscf', 'scf ']
      character (len = 7) :: scr(4) = ['static', 'dyn_ppm', 'dyn_om', 'dyn_rm']
      character (len = 3) :: bnd(2) = ['no', 'yes']
      character (len = 3) :: spn(2) = ['no', 'yes']
