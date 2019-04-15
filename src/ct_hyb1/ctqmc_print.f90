@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/12/2019 by li huang (last modified)
+!!!           04/15/2019 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -30,6 +30,7 @@
 
      use version, only : V_FULL_IQ
      use version, only : V_AUTH_IQ
+     use version, only : V_INST_IQ
      use version, only : V_MAIL_IQ
      use version, only : V_GPL3_IQ
 
@@ -59,7 +60,7 @@
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: '//V_FULL_IQ//' (built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: '//V_AUTH_IQ
+     write(mystd,'(2X,a)') 'Develop: '//V_AUTH_IQ//' ('//V_INST_IQ//')'
      write(mystd,'(2X,a)') 'Support: '//V_MAIL_IQ
      write(mystd,'(2X,a)') 'License: '//V_GPL3_IQ
      write(mystd,*)
