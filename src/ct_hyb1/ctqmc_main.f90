@@ -5,7 +5,7 @@
 !!! quantum Monte Carlo (CTQMC) quantum impurity solver plus a classic   !
 !!! dynamical mean field theory (DMFT) self-consistent engine            !
 !!!                                                                      !
-!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! author  : Li Huang (China Academy of Engineering Physics)            !
 !!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           any question, please contact with lihuang.dmft@gmail.com   !
