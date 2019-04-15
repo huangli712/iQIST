@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/14/2017 by li huang (last modified)
+!!!           04/16/2019 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -43,7 +43,7 @@
      use control, only : nffrq, nbfrq        ! fermionic and bosonic frequencies
      use control, only : ntime               ! imaginary time slice
      use control, only : nsweep, nwrite      ! monte carlo sampling
-     use control, only : nmonte              ! interval for measurement
+     use control, only : nmonte              ! interval between successive measurements
      use control, only : myid, master        ! mpi environment
                                              !
      use context, only : hist                ! histogram
@@ -63,7 +63,7 @@
      use context, only : g2pp                ! two-particle green's function (pp)
      use context, only : h2pp                ! two-particle vertex function (pp)
                                              !
-     use context, only : symm                ! symmetry vector
+     use context, only : symm                ! symmetry indicator
                                              !
      use context, only : gtau, ftau          ! imaginary time green's function
      use context, only : grnf, frnf          ! matsubara green's function
@@ -419,7 +419,7 @@
 
 ! record the impurity (double) occupation number (matrix)
              if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_nmat() ! EMPTY CALL
+                 call ctqmc_record_nmat() ! AN EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 !!========================================================================
@@ -444,12 +444,12 @@
 
 ! record the auxiliary correlation function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_frnf() ! EMPTY CALL
+                 call ctqmc_record_frnf() ! AN EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the self-energy function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_sig2() ! EMPTY CALL
+                 call ctqmc_record_sig2() ! AN EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 !!========================================================================
@@ -659,7 +659,7 @@
      END BLOCK AVERAGE_DATA
 
 ! calculate some essential observables which are not measured directly
-     UPDATE1_DATA: BLOCK
+     COMPUTE_DATA: BLOCK
 
 ! try to evaluate the self-energy function
          call ctqmc_make_hub2()
@@ -680,7 +680,7 @@
              call ctqmc_tran_twop(h2pp, h2pp_mpi); h2pp = h2pp_mpi
          endif ! back if ( btest(isvrt, 3) .or. btest(isvrt, 4) ) block
 
-     END BLOCK UPDATE1_DATA
+     END BLOCK COMPUTE_DATA
 
 ! collect data from all children processes
      COLLECT_DATA: BLOCK
@@ -711,7 +711,7 @@
      END BLOCK COLLECT_DATA
 
 ! update original data
-     UPDATE2_DATA: BLOCK
+     REPLACE_DATA: BLOCK
 
          hist = hist_mpi
          prob = prob_mpi
@@ -744,7 +744,7 @@
          g2pp = g2pp_mpi
          h2pp = h2pp_mpi
 
-     END BLOCK UPDATE2_DATA
+     END BLOCK REPLACE_DATA
 
      call cpu_time(time_end) ! record ending time
 
