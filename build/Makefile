@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 04/12/2019 by li huang (last modified)
+## 04/15/2019 by li huang (last modified)
 ##
 ##
 
@@ -77,7 +77,7 @@ help:
 	@echo
 	@echo '     ct-hyb1           build ct-hyb1 quantum impurity solver '
 	@echo '     clean-ct-hyb1     clean ct-hyb1 quantum impurity solver '
-	@echo '     ct_hyb2           build ct-hyb2 quantum impurity solver '
+	@echo '     ct-hyb2           build ct-hyb2 quantum impurity solver '
 	@echo '     clean-ct-hyb2     clean ct-hyb2 quantum impurity solver '
 
 # all-in-one building target
