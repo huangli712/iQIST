@@ -257,7 +257,7 @@
      write(mystd,'(4X,2a)') 'symmetry (band part)     / ', bnd(isbnd)
      write(mystd,'(4X,2a)') 'symmetry (spin part)     / ', spn(isspn)
      write(mystd,'(4X,2a)') 'worm algorithm           / ', wor(iswor)
-     write(mystd,'(4X,2a)') 'advanced basis           / ', ort(isort)
+     write(mystd,'(4X,2a)') 'advanced representation  / ', ort(isort)
 
      write(mystd,'(4X,2a)') 'fidelity susceptibility  / ', trim(str_obs)
      write(mystd,'(4X,2a)') 'sp/ch susceptibility     / ', trim(str_sus)
