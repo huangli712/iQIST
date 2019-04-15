@@ -963,14 +963,14 @@
          do i=1,num_try
              m = ceiling( spring_sfmt_stream() * ntime )
              if ( oaux(m,f1) > zero ) then
-! n - m + ntime \in [ntime - m + 1, ntime]
+! when n - m + ntime \in [ntime - m + 1, ntime]
                  do n=1,m
                      associate ( val => oaux(n,f1) - oaux(n,f1+nband) )
                          schi(n-m+ntime) = schi(n-m+ntime) + val
                          sp_t(n-m+ntime,f1) = sp_t(n-m+ntime,f1) + val
                      end associate
                  enddo ! over n={1,m} loop
-! n - m \in [1, ntime - m]
+! when n - m \in [1, ntime - m]
                  do n=m+1,ntime
                      associate ( val => oaux(n,f1) - oaux(n,f1+nband) )
                          schi(n-m) = schi(n-m) + val
@@ -980,14 +980,14 @@
              endif ! back if ( oaux(m,f1) > zero ) block
 
              if ( oaux(m,f1+nband) > zero ) then
-! n - m + ntime \in [ntime - m + 1, ntime]
+! when n - m + ntime \in [ntime - m + 1, ntime]
                  do n=1,m
                      associate ( val => oaux(n,f1+nband) - oaux(n,f1) )
                          schi(n-m+ntime) = schi(n-m+ntime) + val
                          sp_t(n-m+ntime,f1) = sp_t(n-m+ntime,f1) + val
                      end associate
                  enddo ! over n={1,m} loop
-! n - m \in [1, ntime - m]
+! when n - m \in [1, ntime - m]
                  do n=m+1,ntime
                      associate ( val => oaux(n,f1+nband) - oaux(n,f1) )
                          schi(n-m) = schi(n-m) + val
@@ -1211,12 +1211,12 @@
              do i=1,num_try
                  m = ceiling( spring_sfmt_stream() * ntime )
                  if ( oaux(m,f2) > zero ) then
-! n - m + ntime \in [ntime - m + 1, ntime]
+! when n - m + ntime \in [ntime - m + 1, ntime]
                      do n=1,m
                          cchi(n-m+ntime) = cchi(n-m+ntime) + fa * oaux(n,f1)
                          ch_t(n-m+ntime,f2,f1) = ch_t(n-m+ntime,f2,f1) + oaux(n,f1)
                      enddo ! over n={1,m} loop
-! n - m \in [1, ntime - m]
+! when n - m \in [1, ntime - m]
                      do n=m+1,ntime
                          cchi(n-m) = cchi(n-m) + fa * oaux(n,f1)
                          ch_t(n-m,f2,f1) = ch_t(n-m,f2,f1) + oaux(n,f1)
