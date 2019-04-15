@@ -308,7 +308,7 @@
 !!
 !! @var smesh
 !!
-!! uniform mesh on interval [-1,1] for svd orthogonal polynomial
+!! uniform mesh on interval [-1,1] for svd-type orthogonal polynomial
 !!
      real(dp), public, save, allocatable :: smesh(:)
 
@@ -322,7 +322,7 @@
 !!
 !! @var rep_s
 !!
-!! svd orthogonal polynomial defined on [-1,1]
+!! svd-type orthogonal polynomial defined on [-1,1]
 !!
      real(dp), public, save, allocatable :: rep_s(:,:)
 
@@ -407,7 +407,7 @@
 !!
 !! K = current perturbation expansion order * 2. the < K^2 >, < K^3 >,
 !! and < K^4 > can be used to calculate the skewness and kurtosis of the
-!! perturbation expansion order. of course, < K^1 > is essential. It can
+!! perturbation expansion order. of course, < K^1 > is essential. it can
 !! be evaluated from Ekin
 !!
      real(dp), public, save, allocatable :: paux(:)
