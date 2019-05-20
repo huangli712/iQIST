@@ -48,11 +48,11 @@
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a)') cname//' (parallelized edition)'
+     write(mystd,'(2X,a)') cname//' (Parallelized Edition)'
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a)') cname//' (sequential edition)'
+     write(mystd,'(2X,a)') cname//' (Sequential Edition)'
 
 # endif  /* MPI */
 
