@@ -18,6 +18,9 @@ The make.sys file is the key component of the building system. You have to modif
 * Reference implementations for BLAS and LAPACK at Netlib
 * Intel Math Kernel Library
 
+### Utility library
+* FLINK
+
 ### MPI environment
 * MPICH
 * Openmpi
