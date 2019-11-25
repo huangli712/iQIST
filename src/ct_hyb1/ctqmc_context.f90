@@ -378,7 +378,7 @@
 !!
 !! auxiliary physical observables, it is a vector with fixed size = 9
 !!
-!! if p == 00:
+!! if p == 01:
 !!     paux(p) -> total energy, Etot
 !!
 !! if p == 02:
