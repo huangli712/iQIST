@@ -1,4 +1,4 @@
-# iQIST (Interacting Quantum Impurity Solver Toolkit)
+# iQIST
 
 ## v0.8.0 @         // Apr 11, 2019
 
