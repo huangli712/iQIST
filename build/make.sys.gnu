@@ -61,4 +61,4 @@ LFLAGS = $(OMP)
 # External linear algebra library
 #-------------------------------------------------------------------------
 LIBS   = -framework Accelerate
-FLINK  = /Users/lihuang/Working/dmft/flink/src
+FLINK  = /Users/lihuang/Working/devel/flink/src
