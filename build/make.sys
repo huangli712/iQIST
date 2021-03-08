@@ -37,21 +37,21 @@
 
 # Fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
-F90    = /opt/local/mpich/bin/mpif90
+F90    = mpif90
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
 # Fortran preprocessor options
 #-------------------------------------------------------------------------
 MPI    = -DMPI
-OMP    = #-fopenmp
-FPP    = -cpp
+OMP    = #-qopenmp
+FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP)
 
 # Machine tuning options
 #-------------------------------------------------------------------------
-CHECK  = -Wall -Wunused -Wextra #-fbacktrace -fcheck=all -g
-MTUNE  = -Ofast -faggressive-loop-optimizations -fno-tree-pre -fPIC -msse4
+CHECK  = -nogen-interfaces -warn all #-check all -traceback -g
+MTUNE  = -O3 -xHost
 
 # Flags for fortran compiler and linker
 #-------------------------------------------------------------------------
@@ -60,5 +60,5 @@ LFLAGS = $(OMP)
 
 # External linear algebra library
 #-------------------------------------------------------------------------
-LIBS   = -framework Accelerate
+LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 FLINK  = /Users/lihuang/Working/dmft/flink/src
