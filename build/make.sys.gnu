@@ -8,18 +8,6 @@
 ## the key component of the building system. If it is not configured
 ## correctly, the building system won't work correctly as well.
 ##
-## Warning
-## =======
-##
-## Be careful! This file may be not suitable for your situation. It is
-## designed for my own hardware and software environment only. Please
-## check and improve it before starting to compile your iQIST code.
-##
-## Explanations
-## ============
-##
-## Please refer to the build.md file.
-##
 ## Author
 ## ======
 ##
