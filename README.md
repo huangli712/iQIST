@@ -4,7 +4,7 @@ The iQIST (abbreviation for **I**nteracting **Q**uantum **I**mpurity **S**olver 
 
 ## Version
 
-v0.8.0 (devel)
+v0.8.1-devel.210509
 
 ## License
 
