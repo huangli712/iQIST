@@ -1,9 +1,9 @@
 # Summary
 
 * [Cover](index.md)
-* [Team](TEAM.md)
-* [Copyright](COPY.md)
-* [Dedication](THANKS.md)
+* [Team](team.md)
+* [Copyright](copy.md)
+* [Dedication](thanks.md)
 * [Introduction](ch01/README.md)
    * [What's iQIST?](ch01/what.md)
    * [Motivation](ch01/motivation.md)
@@ -263,5 +263,4 @@
        * [How to add new parameter?](ch10/new_param.md)
        * [How to add new observable?](ch10/new_obs.md)
 * [Appendix](appendix/README.md)
-* [Glossary](GLOSSARY.md)
-
+* [Glossary](glossary.md)
