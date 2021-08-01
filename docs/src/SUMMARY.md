@@ -1,6 +1,6 @@
 # Summary
 
-* [Cover](README.md)
+* [Cover](index.md)
 * [Team](TEAM.md)
 * [Copyright](COPY.md)
 * [Dedication](THANKS.md)

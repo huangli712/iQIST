@@ -8,17 +8,19 @@ ch01 = Any[
             "Features" => "ch01/feature.md",
             "Software architecture" => "ch01/architecture.md",
             "Policy" => "ch01/policy.md",
-        ]
+       ]
 
+ch02 = Any[
+            "README" => "ch02/README.md",
+            "Obtain" => "ch02/obtain.md",
+            "Uncompress" => "ch02/uncompress.md",
+            "Directory structures" => "ch02/directory.md",
+            "Compiling environment" => "ch02/envir.md",
+            "Compiling system" => "ch02/system.md",
+            "Build iQIST at one step" => "ch02/full.md",
+            "Build iQIST at multiple steps" => "ch02/multi.md",
+       ]
 #=
-* [Installation](ch02/README.md)
-   * [Obtain](ch02/obtain.md)
-   * [Uncompress](ch02/uncompress.md)
-   * [Directory structures](ch02/directory.md)
-   * [Compiling environment](ch02/envir.md)
-   * [Compiling system](ch02/system.md)
-   * [Build iQIST at one step](ch02/full.md)
-   * [Build iQIST at multiple steps](ch02/multi.md)
        * [Build base library](ch02/base.md)
        * [Build application programming interfaces](ch02/apis.md)
        * [Build quantum impurity solvers](ch02/solvers.md)
@@ -27,13 +29,19 @@ ch01 = Any[
        * [Build auxiliary tools](ch02/tools.md)
        * [Build libraries for Fortran](ch02/fortran.md)
        * [Build modules for Python](ch02/python.md)
-* [Getting started](ch03/README.md)
-   * [Configure your system](ch03/config.md)
-   * [iQIST recipes](ch03/recipes.md)
-   * [Prepare input files](ch03/create.md)
-   * [Execute the codes](ch03/execute.md)
-   * [Monitor the codes](ch03/monitor.md)
-   * [Profile the codes](ch03/profile.md)
+=#
+
+ch03 = Any[
+            "README" => "ch03/README.md",
+            "Configure your system" => "ch03/config.md",
+            "iQIST recipes" => "ch03/recipes.md",
+            "Prepare input files" => "ch03/create.md",
+            "Execute the codes" => "ch03/execute.md",
+            "Monitor the codes" => "ch03/monitor.md",
+            "Profile the codes" => "ch03/profile.md",
+       ]
+
+#=
 * [Quantum Monte Carlo impurity solvers](ch04/README.md)
    * [How to choose suitable quantum impurity solvers?](ch04/choose.md)
    * [Standard input files](ch04/input.md)
@@ -262,8 +270,6 @@ ch01 = Any[
        * [A guide to the source codes of the CT-HYB components](ch10/struct.md)
        * [How to add new parameter?](ch10/new_param.md)
        * [How to add new observable?](ch10/new_obs.md)
-* [Appendix](appendix/README.md)
-* [Glossary](GLOSSARY.md)
 =#
 
 makedocs(
@@ -280,5 +286,9 @@ makedocs(
         "Copyright" => "COPY.md",
         "Dedication" => "THANKS.md",
         "Introduction" => ch01,
+        "Installation" => ch02,
+        "Getting started" => ch03,
+        "Appendix" => "appendix/README.md",
+        "Glossary" => "GLOSSARY.md",
     ],
 )
