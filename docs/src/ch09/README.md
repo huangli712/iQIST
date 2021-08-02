@@ -1,26 +1,15 @@
-# iQIST in action
+# Inside iQIST
 
-You may have learnt a lot about iQIST from the previous chapters. In this chapter, we will show you how to do calculations using iQIST through many case studies. Before this, we presume that you have successfully installed iQIST package in your systems, and the install directory is */opt/iqist*, and the directory */opt/iqist/build* has been added to the PATH environment variable:
+There are three aspects for this chapter. 
 
-```
-$ export PATH=/opt/iqist/build:$PATH
-```
+First of all, we will present the basic principles of CT-QMC quantum impurity solvers, with an emphasis on the hybridization expansion technique. For detailed derivations and explanations, please refer to the great review article[^1]. Second, the algorithms, tricks, and optimization implemented in the iQIST software package are all discussed in details. Finally, we will introduce some technical and programming details for the iQIST from the programmer's perspective. We believe that those guys who would like to hack the iQIST software package to realize their own ideas will benefit from this.
 
-If you are new to iQIST, please follow the tutorials to learn it step by step. We believe that you will have become a master of iQIST after finishing all the tutorials. If you have been familiar with iQIST, there is no need to start from the beginning, you can choose some cases with your interests to learn directly.
+The main topics are as follows:
 
-Now the available tutorials will cover the following topics:
+* [Basic theory and methods](basic.md) // Principles for the CT-HYB quantum impurity solvers.
+* [Algorithms](algo.md) // Why is it so fast and so powerful?
+* [Codes](code.md) // Want to be a developer of the iQIST software package?
 
-* [Basic applications](basic.md)
-* [Advanced applications I: Complex systems](complex.md)
-* [Advanced applications II: Accurate measurement of physical observable](accurate.md)
-* [Advanced applications III: Post-processing procedures](post.md)
-* [Practical exercises](practical.md)
-* [Library mode](library.md)
+**Reference**
 
-Beyond that，we also introduce some concrete examples to illustrate the correctness of the iQIST software package.
-
-* [Code validation](valid.md)
-
-Some successful stories and representative applications published in the scientific journals are also collected and listed here as a reference.
-
-* [Successful stories](story.md)
+[^1] Emanuel Gull, Andrew J. Millis, Alexander I. Lichtenstein, Alexey N. Rubtsov, Matthias Troyer, and Philipp Werner, *Rev. Mod. Phys.* **83**, 349 (2011).

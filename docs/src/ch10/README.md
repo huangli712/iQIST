@@ -1,15 +1,7 @@
-# Inside iQIST
+# Typical examples
 
-There are three aspects for this chapter. 
+This chapter includes examples from basic application to real material calculation, which are recommended for the users to master the usage of iQIST.
 
-First of all, we will present the basic principles of CT-QMC quantum impurity solvers, with an emphasis on the hybridization expansion technique. For detailed derivations and explanations, please refer to the great review article[^1]. Second, the algorithms, tricks, and optimization implemented in the iQIST software package are all discussed in details. Finally, we will introduce some technical and programming details for the iQIST from the programmer's perspective. We believe that those guys who would like to hack the iQIST software package to realize their own ideas will benefit from this.
+We start from the half filled single Hubbard band model based on bethe lattice. And then we will illustrate the Mott transition through increasing Coulomb interaction strength. After that we would like to introduce the advanced physics by considering the general interaction and dynamical screening effect, etc. Finally, real material calculation will be addressed. Especially, the input and output files mentioned in previous chapters will be given in these examples. Postprocessing tools are in detailed description and figures are plotted to show the physics. 
 
-The main topics are as follows:
-
-* [Basic theory and methods](basic.md) // Principles for the CT-HYB quantum impurity solvers.
-* [Algorithms](algo.md) // Why is it so fast and so powerful?
-* [Codes](code.md) // Want to be a developer of the iQIST software package?
-
-**Reference**
-
-[^1] Emanuel Gull, Andrew J. Millis, Alexander I. Lichtenstein, Alexey N. Rubtsov, Matthias Troyer, and Philipp Werner, *Rev. Mod. Phys.* **83**, 349 (2011).
+Hope you enjoy these typical examples listed below to begin a new journey of learning and using iQIST.

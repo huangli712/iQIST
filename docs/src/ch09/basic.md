@@ -1,10 +1,7 @@
-## Basic applications
+## Basic theory and methods
 
-Well, are you newbie to the iQIST software package? 
+In this section, you will learn the basic principles of continuous-time quantum Monte Carlo impurity solver. Especially, the powerful hybridization expansion version is emphasized.
 
-Don't worry! 
-
-In this section, we will help you to be familiar with it step by step. The examples shown in this section are very simple. It is easy to finish them within a few hours under normal conditions. Now please start your computer, and let's go!
-
-* [Hello iQIST!](hello.md)
-* [Mott metal-insulator transition](mott.md)
+* [Quantum impurity model](qim.md) // Anderson impurity model.
+* [Principles of continuous-time quantum Monte Carlo algorithm](ct.md) // Diagrammatic Monte Carlo.
+* [Hybridization expansion](hyb.md) // Core spirit of it.

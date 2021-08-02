@@ -1,25 +1,26 @@
-# Application programming interfaces
+# iQIST in action
 
-The users can not only execute the components of the iQIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the iQIST software package in the Fortran and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB/HF-QMC quantum impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
+You may have learnt a lot about iQIST from the previous chapters. In this chapter, we will show you how to do calculations using iQIST through many case studies. Before this, we presume that you have successfully installed iQIST package in your systems, and the install directory is */opt/iqist*, and the directory */opt/iqist/build* has been added to the PATH environment variable:
 
-```python
-import mpi4py
-import pyiqist as iqist
-...
-iqist.init_ctqmc(myid = 0, num_procs = 10)
-iqist.exec_ctqmc(iter = 20)
-iqist.stop_ctqmc()
+```
+$ export PATH=/opt/iqist/build:$PATH
 ```
 
-When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
+If you are new to iQIST, please follow the tutorials to learn it step by step. We believe that you will have become a master of iQIST after finishing all the tutorials. If you have been familiar with iQIST, there is no need to start from the beginning, you can choose some cases with your interests to learn directly.
 
-* [Fortran APIs](fortran.md)
-* [Python APIs](python.md)
+Now the available tutorials will cover the following topics:
 
-Besides the APIs, we also provide some Python modules to facilitate the development of your own computational codes/scripts.
+* [Basic applications](basic.md)
+* [Advanced applications I: Complex systems](complex.md)
+* [Advanced applications II: Accurate measurement of physical observable](accurate.md)
+* [Advanced applications III: Post-processing procedures](post.md)
+* [Practical exercises](practical.md)
+* [Library mode](library.md)
 
-* [script/u_atomic.py](../ch07/atomic.md) // For the **JASMINE** component.
-* [script/u_ctqmc.py](../ch07/ctqmc.md) // For the CT-HYB impurity solver components.
-* [script/u_hfqmc.py](../ch07/hfqmc.md) // For the **DAISY** component.
-* [script/u_reader.py](../ch07/reader.md) // Read the output data.
-* [script/u_writer.py](../ch07/writer.md) // Prepare the input data.
+Beyond that，we also introduce some concrete examples to illustrate the correctness of the iQIST software package.
+
+* [Code validation](valid.md)
+
+Some successful stories and representative applications published in the scientific journals are also collected and listed here as a reference.
+
+* [Successful stories](story.md)
