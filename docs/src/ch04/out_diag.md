@@ -71,4 +71,4 @@ The corresponding Fortran code block for the writing of *solver.diag.dat* file i
      close(mytmp)
 ```
 
-You can use the *u_animator.py* to visualize the diagram configurations in the *solver.diag.dat* file. See also [script/u_animator.py](../chap07/animator.md) for more details.
+You can use the *u_animator.py* to visualize the diagram configurations in the *solver.diag.dat* file. See also [script/u_animator.py](../ch07/animator.md) for more details.
