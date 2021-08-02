@@ -20,16 +20,6 @@ ch02 = Any[
             "Build iQIST at one step" => "ch02/full.md",
             "Build iQIST at multiple steps" => "ch02/multi.md",
        ]
-#=
-       * [Build base library](ch02/base.md)
-       * [Build application programming interfaces](ch02/apis.md)
-       * [Build quantum impurity solvers](ch02/solvers.md)
-       * [Build applications](ch02/apps.md)
-       * [Build atomic eigenvalue problem solver](ch02/atomic.md)
-       * [Build auxiliary tools](ch02/tools.md)
-       * [Build libraries for Fortran](ch02/fortran.md)
-       * [Build modules for Python](ch02/python.md)
-=#
 
 ch03 = Any[
             "README" => "ch03/README.md",
@@ -41,93 +31,15 @@ ch03 = Any[
             "Profile the codes" => "ch03/profile.md",
        ]
 
+ch04 = Any[
+            "README" => "ch04/README.md",
+            "How to choose suitable quantum impurity solvers?" => "ch04/choose.md",
+            "Standard input files" => "ch04/input.md",
+            "Standard output files" => "ch04/output.md",
+            "Parameters" => "ch04/parameters.md",
+       ]
+
 #=
-* [Quantum Monte Carlo impurity solvers](ch04/README.md)
-   * [How to choose suitable quantum impurity solvers?](ch04/choose.md)
-   * [Standard input files](ch04/input.md)
-       * [solver.ctqmc.in](ch04/in_ctqmc.md)
-       * [solver.hfqmc.in](ch04/in_hfqmc.md)
-       * [solver.umat.in](ch04/in_umat.md)
-       * [solver.eimp.in](ch04/in_eimp.md)
-       * [solver.anydos.in](ch04/in_anydos.md)
-       * [solver.ktau.in](ch04/in_ktau.md)
-       * [atom.cix](ch04/in_atom.md)
-   * [Standard output files](ch04/output.md)
-       * [Terminal output](ch04/out_term.md)
-       * [solver.green.dat](ch04/out_green.md)
-       * [solver.weiss.dat](ch04/out_weiss.md)
-       * [solver.hybri.dat](ch04/out_hybri.md)
-       * [solver.grn.dat](ch04/out_grn.md)
-       * [solver.wss.dat](ch04/out_wss.md)
-       * [solver.hyb.dat](ch04/out_hyb.md)
-       * [solver.sgm.dat](ch04/out_sgm.md)
-       * [solver.hub.dat](ch04/out_hub.md)
-       * [solver.hist.dat](ch04/out_hist.md)
-       * [solver.prob.dat](ch04/out_prob.md)
-       * [solver.nmat.dat](ch04/out_nmat.md)
-       * [solver.kmat.dat](ch04/out_kmat.md)
-       * [solver.lmat.dat](ch04/out_lmat.md)
-       * [solver.schi.dat](ch04/out_schi.md)
-       * [solver.sfom.dat](ch04/out_sfom.md)
-       * [solver.ochi.dat](ch04/out_ochi.md)
-       * [solver.ofom.dat](ch04/out_ofom.md)
-       * [solver.twop.dat](ch04/out_twop.md)
-       * [solver.vrtx.dat](ch04/out_vrtx.md)
-       * [solver.pair.dat](ch04/out_pair.md)
-       * [solver.diag.dat](ch04/out_diag.md)
-       * [solver.kernel.dat](ch04/out_kern.md)
-       * [solver.status.dat](ch04/out_stat.md)
-   * [Parameters](ch04/parameters.md)
-       * [isscf](ch04/p_isscf.md)
-       * [issun](ch04/p_issun.md)
-       * [isspn](ch04/p_isspn.md)
-       * [isbin](ch04/p_isbin.md)
-       * [isort](ch04/p_isort.md)
-       * [issus](ch04/p_issus.md)
-       * [isvrt](ch04/p_isvrt.md)
-       * [isscr](ch04/p_isscr.md)
-       * [ifast](ch04/p_ifast.md)
-       * [itrun](ch04/p_itrun.md)
-       * [nband](ch04/p_nband.md)
-       * [nspin](ch04/p_nspin.md)
-       * [norbs](ch04/p_norbs.md)
-       * [ncfgs](ch04/p_ncfgs.md)
-       * [nzero](ch04/p_nzero.md)
-       * [niter](ch04/p_niter.md)
-       * [lemax](ch04/p_lemax.md)
-       * [legrd](ch04/p_legrd.md)
-       * [chmax](ch04/p_chmax.md)
-       * [chgrd](ch04/p_chgrd.md)
-       * [mkink](ch04/p_mkink.md)
-       * [mstep](ch04/p_mstep.md)
-       * [mfreq](ch04/p_mfreq.md)
-       * [nffrq](ch04/p_nffrq.md)
-       * [nbfrq](ch04/p_nbfrq.md)
-       * [nfreq](ch04/p_nfreq.md)
-       * [nsing](ch04/p_nsing.md)
-       * [ntime](ch04/p_ntime.md)
-       * [nvect](ch04/p_nvect.md)
-       * [nleja](ch04/p_nleja.md)
-       * [npart](ch04/p_npart.md)
-       * [nflip](ch04/p_nflip.md)
-       * [ntherm](ch04/p_ntherm.md)
-       * [nsweep](ch04/p_nsweep.md)
-       * [nwrite](ch04/p_nwrite.md)
-       * [nclean](ch04/p_nclean.md)
-       * [nmonte](ch04/p_nmonte.md)
-       * [ncarlo](ch04/p_ncarlo.md)
-       * [U](ch04/p_u.md)
-       * [Uc](ch04/p_uc.md)
-       * [Uv](ch04/p_uv.md)
-       * [Jz](ch04/p_jz.md)
-       * [Js](ch04/p_js.md)
-       * [Jp](ch04/p_jp.md)
-       * [lc](ch04/p_lc.md)
-       * [wc](ch04/p_wc.md)
-       * [mune](ch04/p_mune.md)
-       * [beta](ch04/p_beta.md)
-       * [part](ch04/p_part.md)
-       * [alpha](ch04/p_alpha.md)
 * [Applications](ch05/README.md)
    * [DFT + DMFT](ch05/dft_dmft.md)
    * [Ladder dual fermions](ch05/ladder.md)
@@ -288,6 +200,7 @@ makedocs(
         "Introduction" => ch01,
         "Installation" => ch02,
         "Getting started" => ch03,
+        "Quantum Monte Carlo impurity solvers" => ch04,
         "Appendix" => "appendix/README.md",
         "Glossary" => "glossary.md",
     ],
