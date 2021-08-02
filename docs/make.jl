@@ -66,17 +66,17 @@ ch08 = Any[
             "Basic applications" => "ch08/basic.md",
             "Advanced applications I: Complex systems" => "ch08/complex.md",
             "Advanced applications II: Accurate measurements" => "ch08/accurate.md",
-            "Advanced applications III: Post-processing procedures" => "ch09/post.md",
-            "Practical exercises" => "ch09/practical.md",
-            "Code validation" => "ch09/valid.md",
-            "Successful stories" => "ch09/story.md",
+            "Advanced applications III: Post-processing procedures" => "ch08/post.md",
+            "Practical exercises" => "ch08/practical.md",
+            "Code validation" => "ch08/valid.md",
+            "Successful stories" => "ch08/story.md",
        ]
 
 ch09 = Any[
-            "README" => "ch10/README.md",
-            "Basic theory and methods" => "ch10/basic.md",
-            "Algorithms" => "ch10/algo.md",
-            "Codes" => "ch10/code.md",
+            "README" => "ch09/README.md",
+            "Basic theory and methods" => "ch09/basic.md",
+            "Algorithms" => "ch09/algo.md",
+            "Codes" => "ch09/code.md",
        ]
 
 makedocs(
