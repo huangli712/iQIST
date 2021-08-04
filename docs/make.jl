@@ -295,16 +295,16 @@ ch09 = Any[
             ],
             "Codes" => Any[
                 "README" => "ch09/code.md",
-                * [Development platform](ch10/platform.md)
-                * [Common service module library](ch10/csml.md)
-                * [Common service subroutine library](ch10/cssl.md)
-                * [Fast Fourier transformation](ch10/fft.md)
-                * [Interpolation](ch10/inter.md)
-                * [Random number generators](ch10/rng.md)
-                * [Parallelization](ch10/parallel.md)
-                * [A guide to the source codes of the CT-HYB components](ch10/struct.md)
-                * [How to add new parameter?](ch10/new_param.md)
-                * [How to add new observable?](ch10/new_obs.md)
+                "Development platform" => "ch09/platform.md"
+                "Common service module library" => "ch09/csml.md",
+                "Common service subroutine library" => "ch09/cssl.md",
+                "Fast Fourier transformation" => "ch09/fft.md",
+                "Interpolation" => "ch09/inter.md",
+                "Random number generators" => "ch09/rng.md",
+                "Parallelization" => "ch09/parallel.md",
+                "A guide to the source codes of the CT-HYB components" => "ch09/struct.md",
+                "How to add new parameter?" => "ch09/new_param.md",
+                "How to add new observable?" => "ch09/new_obs.md",
            ],
        ]
 
