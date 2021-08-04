@@ -51,55 +51,53 @@ ch04 = Any[
                 "isscf" => "ch04/p_isscf.md",
                 "issun" => "ch04/p_issun.md",
                 "isspn" => "ch04/p_isspn.md",
-       "isbin" => "ch04/p_isbin.md",
-       "isort" => "ch04/p_isort.md",
-       "issus" => "ch04/p_issus.md",
-       "isvrt" => "ch04/p_isvrt.md",
-       "isscr" => "ch04/p_isscr.md",
-       "ifast" => "ch04/p_ifast.md",
-       "itrun" => "ch04/p_itrun.md",
-       "nband" => "ch04/p_nband.md",
-       "nspin" => "ch04/p_nspin.md",
-       "norbs" => "ch04/p_norbs.md",
-       "ncfgs" => "ch04/p_ncfgs.md",
-       "nzero" => "ch04/p_nzero.md",
-       "niter" => "ch04/p_niter.md",
-       "lemax" => "ch04/p_lemax.md",
-       "legrd" => "ch04/p_legrd.md",
-       "chmax" => "ch04/p_chmax.md",
-       "chgrd" => "ch04/p_chgrd.md",
-       "mkink" => "ch04/p_mkink.md",
-       "mstep" => "ch04/p_mstep.md",
-#=
-       mfreq](ch04/p_mfreq.md)
-       nffrq](ch04/p_nffrq.md)
-       nbfrq](ch04/p_nbfrq.md)
-       nfreq](ch04/p_nfreq.md)
-       nsing](ch04/p_nsing.md)
-       ntime](ch04/p_ntime.md)
-       nvect](ch04/p_nvect.md)
-       nleja](ch04/p_nleja.md)
-       npart](ch04/p_npart.md)
-       nflip](ch04/p_nflip.md)
-       ntherm](ch04/p_ntherm.md)
-       nsweep](ch04/p_nsweep.md)
-       nwrite](ch04/p_nwrite.md)
-       nclean](ch04/p_nclean.md)
-       nmonte](ch04/p_nmonte.md)
-       ncarlo](ch04/p_ncarlo.md)
-       U](ch04/p_u.md)
-       Uc](ch04/p_uc.md)
-       Uv](ch04/p_uv.md)
-       Jz](ch04/p_jz.md)
-       Js](ch04/p_js.md)
-       Jp](ch04/p_jp.md)
-       lc](ch04/p_lc.md)
-       wc](ch04/p_wc.md)
-       mune](ch04/p_mune.md)
-       beta](ch04/p_beta.md)
-       part](ch04/p_part.md)
-       alpha](ch04/p_alpha.md)
-=#
+                "isbin" => "ch04/p_isbin.md",
+                "isort" => "ch04/p_isort.md",
+                "issus" => "ch04/p_issus.md",
+                "isvrt" => "ch04/p_isvrt.md",
+                "isscr" => "ch04/p_isscr.md",
+                "ifast" => "ch04/p_ifast.md",
+                "itrun" => "ch04/p_itrun.md",
+                "nband" => "ch04/p_nband.md",
+                "nspin" => "ch04/p_nspin.md",
+                "norbs" => "ch04/p_norbs.md",
+                "ncfgs" => "ch04/p_ncfgs.md",
+                "nzero" => "ch04/p_nzero.md",
+                "niter" => "ch04/p_niter.md",
+                "lemax" => "ch04/p_lemax.md",
+                "legrd" => "ch04/p_legrd.md",
+                "chmax" => "ch04/p_chmax.md",
+                "chgrd" => "ch04/p_chgrd.md",
+                "mkink" => "ch04/p_mkink.md",
+                "mstep" => "ch04/p_mstep.md",
+                "mfreq" => "ch04/p_mfreq.md",
+                "nffrq" => "ch04/p_nffrq.md",
+                "nbfrq" => "ch04/p_nbfrq.md",
+                "nfreq" => "ch04/p_nfreq.md",
+                "nsing" => "ch04/p_nsing.md",
+                "ntime" => "ch04/p_ntime.md",
+                "nvect" => "ch04/p_nvect.md",
+                "nleja" => "ch04/p_nleja.md",
+                "npart" => "ch04/p_npart.md",
+                "nflip" => "ch04/p_nflip.md",
+                "ntherm" => "ch04/p_ntherm.md",
+                "nsweep" => "ch04/p_nsweep.md",
+                "nwrite" => "ch04/p_nwrite.md",
+                "nclean" => "ch04/p_nclean.md",
+                "nmonte" => "ch04/p_nmonte.md",
+                "ncarlo" => "ch04/p_ncarlo.md",
+                "U" => "ch04/p_u.md",
+                "Uc" => "ch04/p_uc.md",
+                "Uv" => "ch04/p_uv.md",
+                "Jz" => "ch04/p_jz.md",
+                "Js" => "ch04/p_js.md",
+                "Jp" => "ch04/p_jp.md",
+                "lc" => "ch04/p_lc.md",
+                "wc" => "ch04/p_wc.md",
+                "mune" => "ch04/p_mune.md",
+                "beta" => "ch04/p_beta.md",
+                "part" => "ch04/p_part.md",
+                "alpha" => "ch04/p_alpha.md",
             ],
        ]
 
