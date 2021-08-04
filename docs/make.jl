@@ -18,7 +18,17 @@ ch02 = Any[
             "Compiling environment" => "ch02/envir.md",
             "Compiling system" => "ch02/system.md",
             "Build iQIST at one step" => "ch02/full.md",
-            "Build iQIST at multiple steps" => "ch02/multi.md",
+            "Build iQIST at multiple steps" => Any[
+                "README" => "ch02/multi.md",
+                "Build base library" => "ch02/base.md",
+                "Build application programming interfaces" => "ch02/apis.md",
+                "Build quantum impurity solvers" => "ch02/solvers.md",
+                "Build applications" => "ch02/apps.md",
+                "Build atomic eigenvalue problem solver" => "ch02/atomic.md",
+                "Build auxiliary tools" => "ch02/tools.md",
+                "Build libraries for Fortran "=> "ch02/fortran.md",
+                "Build modules for Python" => "ch02/python.md",
+            ],
        ]
 
 ch03 = Any[
