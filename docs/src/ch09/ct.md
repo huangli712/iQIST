@@ -39,10 +39,10 @@ In the CT-INT and CT-AUX quantum impurity solvers[^1,2], the interaction term is
 
 **Reference**
 
-[^1] A. N. Rubtsov, V. V. Savkin, and A. I. Lichtenstein, *Phys. Rev. B* **72**, 035122 (2005)
+[^1]: A. N. Rubtsov, V. V. Savkin, and A. I. Lichtenstein, *Phys. Rev. B* **72**, 035122 (2005)
 
-[^2] Emanuel Gull, Philipp Werner, Olivier Parcollet, Matthias Troyer, *EPL* **82**, 57003 (2008)
+[^2]: Emanuel Gull, Philipp Werner, Olivier Parcollet, Matthias Troyer, *EPL* **82**, 57003 (2008)
 
-[^3] Philipp Werner, Armin Comanac, Luca de’ Medici, Matthias Troyer, and Andrew J. Millis, *Phys. Rev. Lett.* **97**, 076405 (2006)
+[^3]: Philipp Werner, Armin Comanac, Luca de’ Medici, Matthias Troyer, and Andrew J. Millis, *Phys. Rev. Lett.* **97**, 076405 (2006)
 
-[^4] Junya Otsuki, Hiroaki Kusunose, Philipp Werner, and Yoshio Kuramoto, *J. Phys. Soc. Jpn.* **76**, 114707 (2007)
+[^4]: Junya Otsuki, Hiroaki Kusunose, Philipp Werner, and Yoshio Kuramoto, *J. Phys. Soc. Jpn.* **76**, 114707 (2007)
