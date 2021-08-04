@@ -12,15 +12,14 @@ $ make jasmine
 $ ./x_setup.sh
 ```
 
-> NOTE: 
+!!! note
 
-> 1. Here **editor** means any ascii text editor you prefer.
-
-> 2. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
-```
-$ make base
-$ make capi
-```
+    1. Here **editor** means any ascii text editor you prefer.
+    2. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
+    ```sh
+    $ make base
+    $ make capi
+    ```
 
 This is the most common and direct method. After a few minutes, you will find a *jasmine.x* file in the *iqist/build* directory. That is what you need, the executable program for the **JASMINE** component. After that you can add it to the system path, and do some tests.
 
@@ -35,9 +34,9 @@ $ make
 
 Here, we assume that the compiling system was correctly configured, the base library and the application programming interfaces were already compiled successfully.
 
-> NOTE: 
+!!! note
 
-> Now the executable program will not be copied into the *iqist/build* directory. You have to go to the *iqist/build* directory, and execute
-```
-$ ./x_setup.sh
-```
+    Now the executable program will not be copied into the *iqist/build* directory. You have to go to the *iqist/build* directory, and execute
+    ```sh
+    $ ./x_setup.sh
+    ```
