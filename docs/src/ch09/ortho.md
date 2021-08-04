@@ -102,4 +102,4 @@ See [isort](../ch04/p_isort.md), [legrd](../ch04/p_legrd.md), [lemax](../ch04/p_
 
 **Reference**
 
-[^1] Lewin Boehnke, Hartmut Hafermann, Michel Ferrero, Frank Lechermann, and Olivier Parcollet, *Phys. Rev. B* **84**, 075145 (2011)
+[^1]: Lewin Boehnke, Hartmut Hafermann, Michel Ferrero, Frank Lechermann, and Olivier Parcollet, *Phys. Rev. B* **84**, 075145 (2011)

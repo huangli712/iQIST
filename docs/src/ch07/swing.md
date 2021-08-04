@@ -6,18 +6,15 @@ The calculated results for the self-energy function on the real axis using Pade 
 
 The **HIBISCUS**/swing code is used to continue self-energy analytically from imaginary axis to real axis using K. Haule's strategy. 
 
-[^1] K. Haule, C.-H. Yee, and K. Kim, Phys. Rev. B 81, 195107 (2010)
+[^1]: K. Haule, C.-H. Yee, and K. Kim, Phys. Rev. B 81, 195107 (2010)
 
-> NOTE:
+!!! note
 
-> This code was written by K. Haule originally. See
-
-> 
-```
-http://hauleweb.rutgers.edu/downloads/
-```
-
-> And then we adapted this code such that it can be used with the iQIST software package.
+    This code was written by K. Haule originally. See
+    ```
+    http://hauleweb.rutgers.edu/downloads/
+    ```
+    And then we adapted this code such that it can be used with the iQIST software package.
 
 ### Usage
 
@@ -25,11 +22,10 @@ http://hauleweb.rutgers.edu/downloads/
 $ python ./swing_main.py [options]
 ```
 
-> NOTE:
+!!! note
 
-> 1. In order to run this code properly, you need to ensure *scipy* and *numpy* were correctly installed on your system. This code was tested on *scipy* 0.14.0 and *numpy* 1.7.0 only. So for the older versions of scipy and numpy, we can not guarantee that it can work always.
-
-> 2. To run this code, please use the 'make' command in the source directory (i.e., *iqist/src/tools/hibiscus/swing*) to build the dynamical library *swing_fast.so* at first. The *f2py* package must be installed and configured correctly in advance. 
+    1. In order to run this code properly, you need to ensure *scipy* and *numpy* were correctly installed on your system. This code was tested on *scipy* 0.14.0 and *numpy* 1.7.0 only. So for the older versions of scipy and numpy, we can not guarantee that it can work always.
+    2. To run this code, please use the 'make' command in the source directory (i.e., *iqist/src/tools/hibiscus/swing*) to build the dynamical library *swing_fast.so* at first. The *f2py* package must be installed and configured correctly in advance. 
 
 ### Input
 
@@ -127,6 +123,6 @@ Execute the **HIBISCUS**/swing code via the Bash shell script.
 
 Validate the real-frequency self-energy function $$\Sigma(\omega)$$ in the *sigr.dat* file or *sigr_linear.dat* file. That is what you need.
 
-> NOTE:
+!!! note
 
-> The **HIBISCUS**/swing code does not support multi-orbital models. So if you want to use it to post-process multi-orbital systems, you have to split the self-energy function at first by youself. Once the analytical continuation is finished, you have to combine the different *sigr.dat* or *sigr_linear.dat* files to a single file. It is a trivial task. 
+    The **HIBISCUS**/swing code does not support multi-orbital models. So if you want to use it to post-process multi-orbital systems, you have to split the self-energy function at first by youself. Once the analytical continuation is finished, you have to combine the different *sigr.dat* or *sigr_linear.dat* files to a single file. It is a trivial task. 

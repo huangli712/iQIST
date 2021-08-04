@@ -16,7 +16,7 @@ $$
     K(\tau,\omega) = \frac{ \exp{(-\tau\omega)} }{1.0+\exp{(-\beta\omega)}}
 $$
 
-[^1] M. Jarrell and J. Gubernatis, Phys. Rep. 269, 133 (1996).
+[^1]: M. Jarrell and J. Gubernatis, Phys. Rep. 269, 133 (1996).
 
 > NOTE: 
 
@@ -42,9 +42,9 @@ or
 $ mpiexec -n number_of_cores ./entropy
 ```
 
-> NOTE:
+!!! note
 
-> The **HIBISCUS**/entropy code also support the MPI parallelism. So you can apply MPI to improve the computational accuracy of it.
+    The **HIBISCUS**/entropy code also support the MPI parallelism. So you can apply MPI to improve the computational accuracy of it.
 
 ### Input
 
