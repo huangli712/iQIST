@@ -44,9 +44,9 @@ iqist/src/app
 iqist/src/base
 ```
 
-> NOTE:
+!!! note
 
-> The base library includes CSSL and CSML, which provide the numerical infrastructures for the other components of iQIST.
+    The base library includes CSSL and CSML, which provide the numerical infrastructures for the other components of iQIST.
 
 ### Where are the application programming interfaces?
 
