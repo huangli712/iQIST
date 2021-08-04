@@ -163,6 +163,7 @@ ch06 = Any[
                 "atom.eigvec.dat" => "ch06/out_vec.md",
                 "atom.sector.dat" => "ch06/out_sector.md",
                 "atom.cix" => "ch06/out_cix.md",
+            ],
             "Parameters" => Any[
                 "README" => "ch06/parameters.md",
                 "ibasis" => "ch06/p_ibasis.md",
