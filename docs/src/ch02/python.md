@@ -2,12 +2,12 @@
 
 In the previous section, we introduce how to build Fortran library for a given component. In the section, we will introduce how to generate the required Python module.
 
-> NOTE: 
+!!! note 
 
-> In order to generate the Python modules, the f2py package is of course necessary. Please check the following website for more details:
-```
-www.f2py.com
-```
+    In order to generate the Python modules, the f2py package is of course necessary. Please check the following website for more details:
+    ```
+    www.f2py.com
+    ```
 
 Let's use the **AZALEA** component as example again.
 
@@ -21,17 +21,15 @@ $ make capi
 $ make azalea-pylib
 ```
 
-> NOTE: 
+!!! note 
 
-> 1. Here **editor** means any ascii text editor you prefer.
-
-> 2. **azalea** can be any other component's name, such as **begonia**, **pansy**, **gardenia**, etc.
-
-> 3. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
-```
-$ make base
-$ make capi
-```
+    1. Here **editor** means any ascii text editor you prefer.
+    2. **azalea** can be any other component's name, such as **begonia**, **pansy**, **gardenia**, etc.
+    3. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
+    ```
+    $ make base
+    $ make capi
+    ```
 
 After a few minutes, you will find *pyiqist.so* in the *iqist/src/ctqmc/azalea* directory. That is what you need, the Python module for the **AZALEA** component. Then you can add it to the system path, and do your great research.
 
