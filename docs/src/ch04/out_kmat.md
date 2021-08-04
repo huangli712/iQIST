@@ -4,21 +4,19 @@
 
 The *solver.kmat.dat* is used to store the orbital-dependent kinetic energy data (Here we use the expectation value of the perturbation expansion order $$\langle k \rangle$$ to represent the kinetic energy). It will be output by the quantum impurity solvers when they are **shut down**.
 
-> NOTE:
+!!! note
 
-> Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.kmat.dat* file.
+    Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.kmat.dat* file.
 
 **Format**
 
 The *solver.kmat.dat* file contains two blocks. One is for the orbital-dependent kinetic energy $$\langle k_i\rangle$$, and another one is for the double kinetic energy matrix $$\langle k_i k_j\rangle$$. In each block, the error bar data are always shown in the rightmost column.
 
-> NOTE:
+!!! note
 
-> In the *solver.kmat.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.kmat.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
