@@ -47,5 +47,7 @@ $ ./your_python_script.py
     ```
     $ export OMP_NUM_THREADS=number_of_cpu_cores_per_node
     ```
-    5. As for the Python script, the mpi4py package can be used to implement parallelism.
-    6. Even the iQIST is compiled as a paralleled program, it still can run in a sequential mode.
+
+!!! note
+    1. As for the Python script, the mpi4py package can be used to implement parallelism.
+    2. Even the iQIST is compiled as a paralleled program, it still can run in a sequential mode.
