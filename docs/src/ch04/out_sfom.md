@@ -4,9 +4,9 @@
 
 The *solver.sfom.dat* file is used to store the spin-spin correlation function in frequency space, $$\chi_{\text{spin}}(i\nu_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
 
-> NOTE:
+!!! note
 
-> Only the **GARDENIA** and **NARCISSUS** components can generate the *solver.sfom.dat* file.
+    Only the **GARDENIA** and **NARCISSUS** components can generate the *solver.sfom.dat* file.
 
 **Format**
 
@@ -22,9 +22,9 @@ The *solver.sfom.dat* file contains *nband* blocks. Each block is appended by tw
 
 ---
 
-> NOTE:
+!!! note
 
-> The imaginary part of $$\chi_{\text{spin}}(i\nu_n)$$ should be kept zero.
+    The imaginary part of $$\chi_{\text{spin}}(i\nu_n)$$ should be kept zero.
 
 **Code**
 
