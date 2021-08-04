@@ -88,68 +88,47 @@ The main features of the core components (i.e., quantum impurity solvers) of the
  
 [^03]: Only for the **NARCISSUS**.
 
-> 
-[^04] Only for the **NARCISSUS**.
+[^04]: Only for the **NARCISSUS**.
 
-> 
-[^05] Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
+[^05]: Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
 
-> 
-[^06] Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
+[^06]: Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
 
-> 
-[^07] Only for the **GARDENIA** and **NARCISSUS**.
+[^07]: Only for the **GARDENIA** and **NARCISSUS**.
 
-> 
-[^08] Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
+[^08]: Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
 
-> 
-[^09] Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
+[^09]: Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
 
-> 
-[^10] Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
+[^10]: Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
 
-> 
-[^11] Only for the **AZALEA**, **GARDENIA**, and **NARCISSUS**.
+[^11]: Only for the **AZALEA**, **GARDENIA**, and **NARCISSUS**.
 
-> 
-[^12] Only for the **AZALEA**, **GARDENIA**, and **NARCISSUS**.
+[^12]: Only for the **AZALEA**, **GARDENIA**, and **NARCISSUS**.
 
-> 
-[^13] Only for the **GARDENIA** and **NARCISSUS**.
+[^13]: Only for the **GARDENIA** and **NARCISSUS**.
 
-> 
-[^14] Only for the **GARDENIA** and **NARCISSUS**.
+[^14]: Only for the **GARDENIA** and **NARCISSUS**.
 
-> 
-[^15] Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
+[^15]: Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
 
-> 
-[^16] Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
+[^16]: Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJUSHAKA**.
 
-> 
-[^17] Only for the **AZALEA**, **GARDENIA**, and **NARCISSUS**.
+[^17]: Only for the **AZALEA**, **GARDENIA**, and **NARCISSUS**.
 
-> 
-[^18] Only for the **BEGONIA**, **LAVENDER**, **PANSY**, and **MANJUSHAKA**.
+[^18]: Only for the **BEGONIA**, **LAVENDER**, **PANSY**, and **MANJUSHAKA**.
 
-> 
-[^19] Only for the **BEGONIA**, **LAVENDER**, and **CAMELLIA**.
+[^19]: Only for the **BEGONIA**, **LAVENDER**, and **CAMELLIA**.
 
-> 
-[^20] Only for the **PANSY** and **MANJUSHAKA**.
+[^20]: Only for the **PANSY** and **MANJUSHAKA**.
 
-> 
-[^21] Only for the **MANJUSHAKA**.
+[^21]: Only for the **MANJUSHAKA**.
 
-> 
-[^22] Only for the **MANJUSHAKA**.
+[^22]: Only for the **MANJUSHAKA**.
 
-> 
-[^23] Only for the **CAMELLIA**.
+[^23]: Only for the **CAMELLIA**.
 
-> 
-[^24] Only for the measurement of two-particle quantities.
+[^24]: Only for the measurement of two-particle quantities.
 
 [^25]: Only for the **JASMINE**.
 
