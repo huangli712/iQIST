@@ -32,6 +32,6 @@ Here ```43e2cbb``` is the abbreviated commit hash tag, and ```1441276643``` is t
 
 To use this script, the *git* tool must be installed. 
 
-> NOTE:
+!!! note
 
-> This script is used by the iQIST Developer Team *internally*.
+    This script is used by the iQIST Developer Team *internally*.

@@ -18,9 +18,9 @@ $ ./u_animator.py movie.mp4
 
 Here *movie.mp4* is the output file. We can use the VLC to play it. If you don't supply any valid filename, the default output should be *diag.mp4*.
 
-> NOTE:
+!!! note
 
-> Usually, the default setting in this script is not good. You have to adjust them again and again to obtain a good mp4 video.
+    Usually, the default setting in this script is not good. You have to adjust them again and again to obtain a good mp4 video.
 
 **Input**
 

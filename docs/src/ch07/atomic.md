@@ -57,12 +57,12 @@ p.write()
 del p
 ```
 
-> NOTE:
+!!! note
 
-> You can not execute *u_atomic.py* in the terminal or Python environment directly, like this:
-```
-$ python u_atomic.py
-```
+    You can not execute *u_atomic.py* in the terminal or Python environment directly, like this:
+    ```sh
+    $ python u_atomic.py
+    ```
 
 **Comment**
 
