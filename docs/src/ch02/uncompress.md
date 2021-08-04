@@ -27,6 +27,6 @@ $ bzip2 -d iqist.tar.bz2
 $ tar xvf iqist.tar
 ```
 
-> NOTE:
+!!! note
 
-> The *tar*, *unzip*, *bzip2* are all Linux terminal commands. Please consult your system administrator for more details.
+    The *tar*, *unzip*, *bzip2* are all Linux terminal commands. Please consult your system administrator for more details.

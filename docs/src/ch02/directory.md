@@ -18,13 +18,13 @@ iqist/build
 iqist/build
 ```
 
-> NOTE: 
+!!! warning 
 
-> You have to compile the iQIST successfully, and then execute 
-```
-$ iqist/build/x_setup.sh
-```
-at first. So that the executable programs will be copied into the iqist/build directory.
+    You have to compile the iQIST successfully, and then execute 
+    ```
+    $ iqist/build/x_setup.sh
+    ```
+    at first. So that the executable programs will be copied into the iqist/build directory.
 
 ### Where are the source codes?
 
