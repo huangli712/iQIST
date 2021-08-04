@@ -9,14 +9,14 @@ The *atom.eigval.dat* file contains the eigenvalues of the atomic Hamiltonian. A
 The *atom.eigval.dat* file has two different file formats. They depends on the *ictqmc* parameter.
 
 * **File Format A**, should be compatible with the **CAMELLIA**, **BEGONIA**, and **LAVENDER** components
-> NOTE:
->
-> *ictqmc* = 0, 1.
+!!! note
+
+    *ictqmc* = 0, 1.
 
 * **File Format B**, should be compatible with the **MANJUSHAKA** and **PANSY** components
-> NOTE:
-> 
-> *ictqmc* = 2, 3, 4, 5.
+!!! note
+
+    *ictqmc* = 2, 3, 4, 5.
 
 See [ictqmc](p_ictqmc.md) parameter for more details.
 
