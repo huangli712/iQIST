@@ -1,8 +1,8 @@
 ### Parameter: nspin
 
-> NOTE: 
+!!! warning
 
-> Please DO NOT modify it.
+    Please DO NOT modify it.
 
 **Definition**:
 
