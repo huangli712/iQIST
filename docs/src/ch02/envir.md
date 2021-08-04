@@ -1,8 +1,8 @@
 ## Compiling environment
 
-> NOTE: 
+!!! note 
 
-> The URLs/links provided in this page may be broken sometimes. If you meet the broken links, please contact us.
+    The URLs/links provided in this page may be broken sometimes. If you meet the broken links, please contact us.
 
 In order to compile/execute the iQIST software package successfully, please confirm whether the following software/libraries are correctly installed and configured in your system.
 
@@ -15,9 +15,9 @@ Check the following websites for more details:
 * [Intel Fortran compiler](https://software.intel.com/en-us/fortran-compilers)
 * [GNU Fortran compiler](http://gcc.gnu.org/fortran/)
 
-> NOTE: 
+!!! note 
 
-> Besides ifort and gfortran, in principle the iQIST software package can be compiled by any other Fortran 90 compilers, but we can not guarantee it.
+    Besides ifort and gfortran, in principle the iQIST software package can be compiled by any other Fortran 90 compilers, but we can not guarantee it.
 
 ### Parallel environment
 
