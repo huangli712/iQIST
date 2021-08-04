@@ -18,11 +18,11 @@ $$
     K(\tau,\omega) = \frac{ \exp{(-\tau\omega)} }{1.0+\exp{(-\beta\omega)}}
 $$
 
-[^1] K. S. D. Beach, arXiv:0403055 [cond-mat]
+[^1]: K. S. D. Beach, arXiv:0403055 [cond-mat]
 
-> NOTE:
+!!! note
 
-> This code is based originally on Dr. QuanSheng. Wu's code. Now QuanSheng is a postdoc in ETH Zurich, Switzerland. 
+    This code is based originally on Dr. QuanSheng. Wu's code. Now QuanSheng is a postdoc in ETH Zurich, Switzerland. 
 
 ### Usage
 

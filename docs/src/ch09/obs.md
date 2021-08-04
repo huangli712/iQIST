@@ -167,12 +167,12 @@ $$
 
 **Reference**
 
-[^1] Jan Kuneš, *Phys. Rev. B* **83**, 085102 (2011)
+[^1]: Jan Kuneš, *Phys. Rev. B* **83**, 085102 (2011)
 
-[^2] Lewin Boehnke, Hartmut Hafermann, Michel Ferrero, Frank Lechermann, and Olivier Parcollet, *Phys. Rev. B* **84**, 075145 (2011)
+[^2]: Lewin Boehnke, Hartmut Hafermann, Michel Ferrero, Frank Lechermann, and Olivier Parcollet, *Phys. Rev. B* **84**, 075145 (2011)
 
-[^3] Hartmut Hafermann, *Phys. Rev. B* **89**, 235128 (2014)
+[^3]: Hartmut Hafermann, *Phys. Rev. B* **89**, 235128 (2014)
 
-[^4] Hartmut Hafermann, Kelly R. Patton, and Philipp Werner, *Phys. Rev. B* **85**, 205106 (2012)
+[^4]: Hartmut Hafermann, Kelly R. Patton, and Philipp Werner, *Phys. Rev. B* **85**, 205106 (2012)
 
-[^5] G. Rohringer, A. Valli, and A. Toschi, *Phys. Rev. B* **86**, 125114 (2012)
+[^5]: G. Rohringer, A. Valli, and A. Toschi, *Phys. Rev. B* **86**, 125114 (2012)

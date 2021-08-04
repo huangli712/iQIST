@@ -6,4 +6,4 @@ Currently, we adopted two truncation schemes in our codes. The first scheme reli
 
 **Reference**
 
-[^1] Kristjan Haule, Phys. Rev. B 75, 155113 (2007)
+[^1]: Kristjan Haule, Phys. Rev. B 75, 155113 (2007)
