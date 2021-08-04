@@ -4,9 +4,9 @@
 
 The *solver.pair.dat* file is designed to store the particle-particle pairing susceptibility. It will be output by the quantum impurity solvers when they are **shut down**.
 
-> NOTE:
+!!! note
 
-> Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.pair.dat* file.
+    Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.pair.dat* file.
 
 **Format**
 
@@ -28,13 +28,11 @@ blocks. Each block is appended by two blank lines. The format of each block is a
 
 ---
 
-> NOTE:
+!!! note
 
-> In the *solver.pair.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.pair.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
