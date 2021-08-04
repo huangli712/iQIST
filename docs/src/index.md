@@ -8,7 +8,7 @@ Obi-Wan Kenobi:
     2. May the Manual be with you. (To Anakin Skywalker)
 ```
 
-# Reference Manual <font face = 'times'><i>for</i></font> <br/> <font color = 'purple'>I</font>nteracting <font color = 'orange'>Q</font>uantum <font color = 'orange'>I</font>mpurity <font color = 'orange'>S</font>olver <font color = 'orange'>T</font>oolkit
+# Reference Manual for<br/> Interacting Quantum Impurity Solver Toolkit
 
 
 Draft Version January 20, 2017 (in progress)
