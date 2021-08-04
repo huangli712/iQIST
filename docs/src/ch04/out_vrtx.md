@@ -13,7 +13,9 @@ The *solver.vrtx.dat* file is designed to store the two-particle Green's functio
 
 The *solver.vrtx.dat* file contains 
 
-$$ \left(\sum\limits^{\text{norbs}}_{n=1} \frac{n(n+1)}{2}\right)\times \text{nbfrq}$$
+```math
+ \left(\sum\limits^{\text{norbs}}_{n=1} \frac{n(n+1)}{2}\right)\times \text{nbfrq}
+```
 
 blocks. Each block is appended by two blank lines. The format of each block is as follows:
 
