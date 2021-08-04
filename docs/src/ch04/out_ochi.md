@@ -4,21 +4,19 @@
 
 The *solver.ochi.dat* file is used to store the orbital-orbital correlation function in time space, $$\chi_{\text{charge}}(\tau) = \langle n(0)n(\tau)\rangle$$. It will be output by the quantum impurity solvers when they are **shut down**.
 
-> NOTE:
+!!! note
 
-> Only the **GARDENIA** and **NARCISSUS** components can generate the *solver.ochi.dat* file.
+    Only the **GARDENIA** and **NARCISSUS** components can generate the *solver.ochi.dat* file.
 
 **Format**
 
 The *solver.ochi.dat* file contains a few (*norbs*$$\times$$*norbs* + 2) blocks. The first *norbs*$$\times$$*norbs* blocks are orbital-resolved orbital-orbital correlation functions. The next block is the total orbital-orbital correlation function. The final block is the sum of orbital-resolved orbital-orbital correlation functions. Each block is appended by two blank lines. In each block, the error bar data are always shown in the rightmost column.
 
-> NOTE:
+!!! note
 
-> In the *solver.ochi.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.ochi.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
