@@ -232,28 +232,28 @@ ch08 = Any[
             "Advanced applications I: Complex systems" => Any[
                 "README" => "ch08/complex.md",
                 "General Coulomb interaction" => "ch08/general.md",
-                "Spin-orbital coupling" => "ch09/soc.md",
-                "Crystal field splitting" => "ch09/cfs.md",
-                "Retarded interaction and dynamical screening effect" => "ch09/screening.md",
+                "Spin-orbital coupling" => "ch08/soc.md",
+                "Crystal field splitting" => "ch08/cfs.md",
+                "Retarded interaction and dynamical screening effect" => "ch08/screening.md",
             ],
             "Advanced applications II: Accurate measurements" => Any[
                 "README" => "ch08/accurate.md",
-                * [One-shot and self-consistent calculations](ch09/self.md)
-                * [Data binning mode](ch09/binning.md)
-                * [Imaginary-time Green's function](ch09/gtau.md)
-                * [Matsubara Green's function and self-energy function](ch09/matsubara.md)
-                * [Spin-spin correlation function and orbital-orbital correlation function](ch09/chi.md)
-                * [Two-particle Green's function and vertex function](ch09/vertex.md)
+                "One-shot and self-consistent calculations" => "ch08/self.md",
+                "Data binning mode" => "ch08/binning.md",
+                "Imaginary-time Green's function" => "ch08/gtau.md",
+                "Matsubara Green's function and self-energy function" => "ch08/matsubara.md",
+                "Spin-spin correlation function and orbital-orbital correlation function" => "ch08/chi.md",
+                "Two-particle Green's function and vertex function" => "ch08/vertex.md",
             ],
             "Advanced applications III: Post-processing procedures" => Any[
-                "ch08/post.md",
-                * [Analytical continuation for imaginary-time Green's function](ch09/mem.md)
-                * [Analytical continuation for Matsubara self-energy function](ch09/swing.md)
+                "README" => "ch08/post.md",
+                "Analytical continuation for imaginary-time Green's function" => "ch08/mem.md",
+                "Analytical continuation for Matsubara self-energy function" => "ch08/swing.md",
             ],
             "Practical exercises" => Any[
-                "ch08/practical.md",
-                * [Orbital-selective Mott transition in two-band Hubbard model](ch09/osmt.md)
-                * [Orbital Kondo and spin Kondo effects in three-band Anderson impurity model](ch09/kondo.md)
+                "README" => "ch08/practical.md",
+                "Orbital-selective Mott transition in two-band Hubbard model](ch09/osmt.md)
+                "Orbital Kondo and spin Kondo effects in three-band Anderson impurity model](ch09/kondo.md)
             ],
             "Code validation" => "ch08/valid.md",
             "Successful stories" => "ch08/story.md",
