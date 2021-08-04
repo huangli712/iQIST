@@ -4,21 +4,19 @@
 
 The *solver.lmat.dat* file is used to store the necessary data used to build the generalized fidelity susceptibility $$\chi_{\text{FS}}$$, which can be calculated via $$\chi_{\text{FS}} = \langle k_L k_R \rangle - \langle k_L \rangle \langle k_R \rangle$$. It will be output by the quantum impurity solvers when they are **shut down**.
 
-> NOTE:
+!!! note
 
-> Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.lmat.dat* file.
+    Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.lmat.dat* file.
 
 **Format**
 
 The *solver.lmat.dat* file contains two blocks. One is for the $$\langle k_L \rangle$$ and $$\langle k_R \rangle$$ data, and another one is for the $$\langle k_L k_R \rangle$$. In each block, the error bar data are always shown in the rightmost column.
 
-> NOTE:
+!!! note
 
-> In the *solver.lmat.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.lmat.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
