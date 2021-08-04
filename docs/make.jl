@@ -44,7 +44,16 @@ ch03 = Any[
 ch04 = Any[
             "README" => "ch04/README.md",
             "How to choose suitable quantum impurity solvers?" => "ch04/choose.md",
-            "Standard input files" => "ch04/input.md",
+            "Standard input files" => Any[
+                "README" => "ch04/input.md",
+                * [solver.ctqmc.in](ch04/in_ctqmc.md)
+                * [solver.hfqmc.in](ch04/in_hfqmc.md)
+                * [solver.umat.in](ch04/in_umat.md)
+                * [solver.eimp.in](ch04/in_eimp.md)
+                * [solver.anydos.in](ch04/in_anydos.md)
+                * [solver.ktau.in](ch04/in_ktau.md)
+                * [atom.cix](ch04/in_atom.md)
+            ],
             "Standard output files" => "ch04/output.md",
             "Parameters" => Any[
                 "README" => "ch04/parameters.md",
