@@ -4,9 +4,9 @@
 
 The *solver.ofom.dat* file is used to store the orbital-orbital correlation function in frequency space, $$\chi_{\text{charge}}(i\nu_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
 
-> NOTE:
+!!! note
 
-> Only the **GARDENIA** and **NARCISSUS** components can generate the *solver.ofom.dat* file.
+    Only the **GARDENIA** and **NARCISSUS** components can generate the *solver.ofom.dat* file.
 
 **Format**
 
@@ -22,17 +22,15 @@ The *solver.ofom.dat* file contains *norbs*$$\times$$*norbs* blocks. Each block 
 
 ---
 
-> NOTE:
+!!! note
 
-> The imaginary part of $$\chi_{\text{charge}}(i\nu_n)$$ should keeps zero.
+    The imaginary part of $$\chi_{\text{charge}}(i\nu_n)$$ should keeps zero.
 
-> NOTE:
+!!! note
 
-> In the *solver.ofom.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.ofom.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
