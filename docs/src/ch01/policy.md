@@ -26,14 +26,18 @@ We **DO NOT** need any donations now.
 
 ### Contact
 
-**Dr. Li Huang**<br/>
-**Affiliation**: *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou, PRC*<br/>
+**Dr. Li Huang**
+
+**Affiliation**: *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou, PRC*
+
 **Email**: *lihuang.dmft at gmail.com*
 
 or
 
-**Dr. Yilin Wang**<br/>
-**Affiliation**: *Institute of Physics, Chinese Academy of Sciences, Beijing, PRC*<br/>
+**Dr. Yilin Wang**
+
+**Affiliation**: *Institute of Physics, Chinese Academy of Sciences, Beijing, PRC*
+
 **Email**: *qhwyl2006 at 126.com*
 
 ### Citation
