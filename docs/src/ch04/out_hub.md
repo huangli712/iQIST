@@ -24,13 +24,11 @@ The *solver.hub.dat* file contains *norbs* block. Each block is appended by two 
 
 ---
 
-> NOTE:
+!!! note
 
-> In the *solver.hub.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> That is to say, the spin up part is always before the spin down part.
+    In the *solver.hub.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    That is to say, the spin up part is always before the spin down part.
 
 **Code**
 
