@@ -295,7 +295,7 @@ ch09 = Any[
             ],
             "Codes" => Any[
                 "README" => "ch09/code.md",
-                "Development platform" => "ch09/platform.md"
+                "Development platform" => "ch09/platform.md",
                 "Common service module library" => "ch09/csml.md",
                 "Common service subroutine library" => "ch09/cssl.md",
                 "Fast Fourier transformation" => "ch09/fft.md",
