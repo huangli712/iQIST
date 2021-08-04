@@ -224,27 +224,37 @@ ch07 = Any[
 
 ch08 = Any[
             "README" => "ch08/README.md",
-            "Basic applications" => "ch08/basic.md",
-       * [Hello iQIST!](ch09/hello.md)
-       * [Mott metal-insulator transition](ch09/mott.md)
-            "Advanced applications I: Complex systems" => "ch08/complex.md",
-       * [General Coulomb interaction](ch09/general.md)
-       * [Spin-orbital coupling](ch09/soc.md)
-       * [Crystal field splitting](ch09/cfs.md)
-       * [Retarded interaction and dynamical screening effect](ch09/screening.md)
-            "Advanced applications II: Accurate measurements" => "ch08/accurate.md",
-       * [One-shot and self-consistent calculations](ch09/self.md)
-       * [Data binning mode](ch09/binning.md)
-       * [Imaginary-time Green's function](ch09/gtau.md)
-       * [Matsubara Green's function and self-energy function](ch09/matsubara.md)
-       * [Spin-spin correlation function and orbital-orbital correlation function](ch09/chi.md)
-       * [Two-particle Green's function and vertex function](ch09/vertex.md)
-            "Advanced applications III: Post-processing procedures" => "ch08/post.md",
-       * [Analytical continuation for imaginary-time Green's function](ch09/mem.md)
-       * [Analytical continuation for Matsubara self-energy function](ch09/swing.md)
-            "Practical exercises" => "ch08/practical.md",
-       * [Orbital-selective Mott transition in two-band Hubbard model](ch09/osmt.md)
-       * [Orbital Kondo and spin Kondo effects in three-band Anderson impurity model](ch09/kondo.md)
+            "Basic applications" => Any[
+                "README" => "ch08/basic.md",
+                "Hello iQIST!" => "ch08/hello.md",
+                "Mott metal-insulator transition" => "ch08/mott.md",
+            ],
+            "Advanced applications I: Complex systems" => Any[
+                "README" => "ch08/complex.md",
+                General Coulomb interaction](ch09/general.md)
+                Spin-orbital coupling](ch09/soc.md)
+                Crystal field splitting](ch09/cfs.md)
+                Retarded interaction and dynamical screening effect](ch09/screening.md)
+            ],
+            "Advanced applications II: Accurate measurements" => Any[
+                "README" => "ch08/accurate.md",
+                * [One-shot and self-consistent calculations](ch09/self.md)
+                * [Data binning mode](ch09/binning.md)
+                * [Imaginary-time Green's function](ch09/gtau.md)
+                * [Matsubara Green's function and self-energy function](ch09/matsubara.md)
+                * [Spin-spin correlation function and orbital-orbital correlation function](ch09/chi.md)
+                * [Two-particle Green's function and vertex function](ch09/vertex.md)
+            ],
+            "Advanced applications III: Post-processing procedures" => Any[
+                "ch08/post.md",
+                * [Analytical continuation for imaginary-time Green's function](ch09/mem.md)
+                * [Analytical continuation for Matsubara self-energy function](ch09/swing.md)
+            ],
+            "Practical exercises" => Any[
+                "ch08/practical.md",
+                * [Orbital-selective Mott transition in two-band Hubbard model](ch09/osmt.md)
+                * [Orbital Kondo and spin Kondo effects in three-band Anderson impurity model](ch09/kondo.md)
+            ],
             "Code validation" => "ch08/valid.md",
             "Successful stories" => "ch08/story.md",
        ]
