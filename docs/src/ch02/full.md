@@ -9,9 +9,9 @@ $ make all
 $ ./x_setup.sh
 ```
 
-> NOTE: 
+!!! note 
 
-> Here **editor** means any ascii text editor you prefer. The *vim* is our favorite.
+    Here **editor** means any ascii text editor you prefer. The *vim* is our favorite.
 
 After a few minutes (it depends on the performance of your system), if everything is OK you will find some executable programs in the *iqist/build* directory, which means the compiling is completed. Now all of the components of the iQIST software package are successfully built. Congratulations! You can start to enjoy using iQIST and begin with your great research!
 

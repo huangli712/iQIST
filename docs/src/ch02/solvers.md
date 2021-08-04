@@ -15,11 +15,10 @@ $ make solver
 $ ./x_setup.sh
 ```
 
-> NOTE: 
+!!! note 
 
-> 1. Here **editor** means any ascii text editor you prefer.
-
-> 2. The base library and the application programming interfaces should be compiled implicitly.
+    1. Here **editor** means any ascii text editor you prefer.
+    2. The base library and the application programming interfaces should be compiled implicitly.
 
 Finally, you will see a lot of executable programs, such as *azalea.x*, *begonia.x*, *daisy.x*, etc., in the *iqist/build* directory. They are the CT-HYB and HF-QMC impurity solvers. You can execute them in the terminal directly.
 
@@ -40,17 +39,15 @@ $ make azalea
 $ ./x_setup.sh
 ```
 
-> NOTE: 
+!!! note 
 
-> 1. Here **editor** means any ascii text editor you prefer.
-
-> 2. **azalea** can be any other component's name, such as **begonia**, **pansy**, **gardenia**, etc.
-
-> 3. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
-```
-$ make base
-$ make capi
-```
+    1. Here **editor** means any ascii text editor you prefer.
+    2. **azalea** can be any other component's name, such as **begonia**, **pansy**, **gardenia**, etc.
+    3. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
+    ```sh
+    $ make base
+    $ make capi
+    ```
 
 After a few minutes, you will find an *azalea.x* file in the *iqist/build* directory. That is what you need, the executable program for the **AZALEA** component. Then you can add it to the system path, and do your great research.
 
@@ -65,10 +62,9 @@ $ make
 
 Here, we assume that the compiling system was correctly configured, the base library and the application programming interfaces were already compiled successfully.
 
+!!! note 
 
-> NOTE: 
-
-> Now the executable programs will not be copied into the *iqist/build* directory. You have to go to the *iqist/build* directory, and execute
-```
-$ ./x_setup.sh
-```
+    Now the executable programs will not be copied into the *iqist/build* directory. You have to go to the *iqist/build* directory, and execute
+    ```sh
+    $ ./x_setup.sh
+    ```
