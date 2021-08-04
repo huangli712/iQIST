@@ -2,7 +2,7 @@
 
 Core Developers:
 
-**Li Huang<sup>†</sup>** and **Yilin Wang<sup>‡</sup>** 
+**Li Huang``^\dagger``** and **Yilin Wang``^\dagger``** 
 
 Key Contributors:
 
@@ -23,11 +23,11 @@ Directors and Supervisors:
 
 &nbsp;
 
-> FUNDINGS:
+!!! info "FUNDINGS:"
 
-> This project has been financed by the following fundings:
+    This project has been financed by the following fundings:
 
->* DARPA Grant No. D13AP00052 (**LD**)
->* Swiss National Science Foundation, Grant No. 200021_140648 (**PW**, **LH**)
->* National Science Foundation of China, No. 2011CBA00108 (**XD**, **YLW**, **HYL**)
->* National Science Foundation of China, No. 11504340 (**LH**)
+    * DARPA Grant No. D13AP00052 (**LD**)
+    * Swiss National Science Foundation, Grant No. 200021_140648 (**PW**, **LH**)
+    * National Science Foundation of China, No. 2011CBA00108 (**XD**, **YLW**, **HYL**)
+    * National Science Foundation of China, No. 11504340 (**LH**)
