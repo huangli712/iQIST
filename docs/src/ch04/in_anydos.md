@@ -30,11 +30,10 @@ to
 
 You have to be very careful. Finally, recompiling the CT-QMC impurity solvers is necessary.
 
-> NOTE:
+!!! note
 
-> 1. Don't forget to set the *isscf* parameter to 2, or else the CT-QMC impurity solvers will skip the dynamical mean-field theory engine and perform one-shot calculation only.
-
-> 2. The HF-QMC impurity solver (the **DAISY** component) does not support this file/feature.
+    1. Don't forget to set the *isscf* parameter to 2, or else the CT-QMC impurity solvers will skip the dynamical mean-field theory engine and perform one-shot calculation only.
+    2. The HF-QMC impurity solver (the **DAISY** component) does not support this file/feature.
 
 **Format**
 
@@ -48,15 +47,12 @@ The format of the *solver.anydos.in* file is as follows:
 
 ---
 
-> NOTE:
+!!! note
 
-> We assume that:
-
-> 1. The orbitals are degenerated.
-
-> 2. The number of frequency points is 801.
-
-> If you are not satisfied with these assumptions, you have to hack the corresponding *ctqmc\_dmft.f90* by yourself.
+    We assume that:
+    1. The orbitals are degenerated.
+    2. The number of frequency points is 801.
+    If you are not satisfied with these assumptions, you have to hack the corresponding *ctqmc\_dmft.f90* by yourself.
 
 **Code**
 
