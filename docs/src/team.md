@@ -14,8 +14,8 @@ Directors and Supervisors:
 
 **``^\dagger``** *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou 621900, China*
 
-**``^\ddagger``** *Beijing National Laboratory for Condensed Matter Physics, and Institute of Physics,*<br/>
-&nbsp;&nbsp;*Chinese Academy of Sciences, Beijing 100190, China*
+**``^\ddagger``** *Beijing National Laboratory for Condensed Matter Physics, and Institute of Physics,*
+*Chinese Academy of Sciences, Beijing 100190, China*
 
 **``^\rceil``** *Department of Physics, The University of Texas at Austin, Austin, Texas 78712, USA*
 
@@ -23,7 +23,7 @@ Directors and Supervisors:
 
 &nbsp;
 
-!!! info "FUNDINGS:"
+!!! tip "FUNDINGS"
 
     This project has been financed by the following fundings:
 
