@@ -1,16 +1,16 @@
 # Dedication
 
-    *To **Xin** and **Yun-Zheng***
+*To Xin and Yun-Zheng*
 
-    by **Li**
+by **Li**
 
 ![alps image](figure/alps.png)
 
 **Figure** | Xin and the Matterhorn. Photo by **Li**.
 
-    *To **my family***
+*To my family*
 
-    by **Haiyan**
+by **Haiyan**
 
 ![lily image](figure/lily.jpg)
 
