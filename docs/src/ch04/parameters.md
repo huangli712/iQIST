@@ -96,13 +96,11 @@ The following parameters will affect the computational accuracy.
 
 ---
 
-> NOTE:
+!!! tip
 
-> 1. All of the parameters are case-insensitive.
-
-> 2. All of the parameters have default values. You can override them via the *solver.ctqmc.in* and *solver.hfqmc.in* files.
-
-> 3. The quantum impurity solvers won't check the correctness, rationality of the parameters. They won't adjust the parameters automatically. For example, if you setup *nband = 2* in the *solver.ctqmc.in*, you have to setup *norbs*, *ncfgs* parameters by yourself at the same time. The quantum impurity solvers won't do that.
+    1. All of the parameters are case-insensitive.
+    2. All of the parameters have default values. You can override them via the *solver.ctqmc.in* and *solver.hfqmc.in* files.
+    3. The quantum impurity solvers won't check the correctness, rationality of the parameters. They won't adjust the parameters automatically. For example, if you setup *nband = 2* in the *solver.ctqmc.in*, you have to setup *norbs*, *ncfgs* parameters by yourself at the same time. The quantum impurity solvers won't do that.
 
 **See also**:
 

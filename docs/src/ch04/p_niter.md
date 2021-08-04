@@ -20,9 +20,9 @@ ALL
 
 Terminate the quantum impurity solvers when the *niter* DMFT iteration is reached.
 
-> NOTE: 
+!!! note
 
-> If the convergence is obtained and the minimal iteration number is reached (the default value is 16, you can modify it in the *ctqmc\_dmft.f90*), the quantum impurity solvers will exit as well.
+    If the convergence is obtained and the minimal iteration number is reached (the default value is 16, you can modify it in the *ctqmc\_dmft.f90*), the quantum impurity solvers will exit as well.
 
 If *isscf* = 1, the *niter* becomes meaningless. The self-consistent iteration won't be carried out which is equivalent to *niter* = 1.
 

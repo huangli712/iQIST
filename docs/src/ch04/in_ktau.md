@@ -4,9 +4,9 @@
 
 The *solver.ktau.in* is used to store the screening function $$K(\tau)$$ and its derivates $$K'(\tau)$$ in imaginary-time space. It is only useful for the **NARCISSUS** component.
 
-> NOTE:
+!!! note
 
-> Only when *isscr* = 99, the *solver.ktau.in* is essential for the **NARCISSUS** component. See [isscr](p_isscr.md) for more details.
+    Only when *isscr* = 99, the *solver.ktau.in* is essential for the **NARCISSUS** component. See [isscr](p_isscr.md) for more details.
 
 **Format**
 

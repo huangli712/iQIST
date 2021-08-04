@@ -4,9 +4,9 @@
 
 We use the *atom.cix* file to store the eigensystem of the local interaction Hamiltonian. It is necessary for the general matrix version of the CT-QMC impurity solvers.
 
-> NOTE:
+!!! warning
 
-> The iQIST won't provide a default *atom.cix* file. Without this file, the general matrix version of the CT-QMC impurity solvers won't be started correctly.
+    The iQIST won't provide a default *atom.cix* file. Without this file, the general matrix version of the CT-QMC impurity solvers won't be started correctly.
 
 **Format**
 
@@ -18,9 +18,9 @@ Now the **JASMINE** component can generate three kinds of *atom.cix* files.
 * *TYPE 1*, only valid for the **BEGONIA** and **LAVENDER** components.
 * *TYPE 2*, only valid for the **MANJUSHAKA** and **PANSY** components.
 
-> NOTE:
+!!! warning
 
-> The format of the *atom.cix* file may be modified in the near future. So we don't describe its format here.
+    The format of the *atom.cix* file may be modified in the near future. So we don't describe its format here.
 
 **Code**
 

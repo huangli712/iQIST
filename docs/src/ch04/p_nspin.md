@@ -24,6 +24,6 @@ Determine the size of involved arrays.
 
 See also [nband](p_nband.md), [norbs](p_norbs.md), and [ncfgs](p_ncfgs.md) parameters.
 
-> NOTE: 
+!!! note
 
-> Please DO NOT modify it. Now the quantum impurity solvers in the iQIST software package don't support *nspin* = 1.
+    Please DO NOT modify it. Now the quantum impurity solvers in the iQIST software package don't support *nspin* = 1.

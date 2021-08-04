@@ -34,6 +34,6 @@ $$
 
 See also [Uc](p_uc.md), [Jz](p_jz.md) parameters for more details.
 
-> NOTE: 
+!!! note
 
-> For the **AZALEA**, **GARDENIA**, **NARCISSUS** components, the Coulomb interaction matrix can be imported via the *solver.umat.in* file which has the highest priority. See [solver.umat.in](in_umat.md) for more details.
+    For the **AZALEA**, **GARDENIA**, **NARCISSUS** components, the Coulomb interaction matrix can be imported via the *solver.umat.in* file which has the highest priority. See [solver.umat.in](in_umat.md) for more details.
