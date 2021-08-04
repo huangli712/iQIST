@@ -24,13 +24,11 @@ The *solver.hyb.dat* file contains *norbs* block. Each block is appended by two 
 
 ---
 
-> NOTE:
+!!! note
 
-> In the *solver.hyb.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.hyb.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
@@ -55,8 +53,8 @@ The corresponding Fortran code block for the writing of *solver.hyb.dat* file is
      close(mytmp)
 ```
 
-> NOTE:
+!!! note
 
-> The columns for the error bar are always zero in this file.
+    The columns for the error bar are always zero in this file.
 
 In the **HIBISCUS** component, we provide a Python module to read the output files of quantum impurity solvers. You can use it to read the *solver.hyb.dat* file. See [script/u_reader.py](../ch07/reader.md) for more details.
