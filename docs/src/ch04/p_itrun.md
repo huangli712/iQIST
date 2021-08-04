@@ -23,9 +23,10 @@ There are two possible values for *itrun* parameter so far:
 * *itrun* = 1, don't truncate it.
 
 * *itrun* = 2, those atomic states with low probability ($$P_{\Gamma} < 1.0E − 6$$) will be truncated for next DMFT iteration.
-> NOTE: 
->
-> The truncation according to the occupancy has been done in the **JASMINE** component. See [Atomic eigenvalue problem solver](../ch06/README.md) for more details.
+
+!!! note 
+
+    The truncation according to the occupancy has been done in the **JASMINE** component. See [Atomic eigenvalue problem solver](../ch06/README.md) for more details.
 
 If the truncation is applied, the quantum impurity solvers will discard the un-selected atomic states which can improve the computational efficiency. On the other hand, the accuracy will be deteriorated. So it is a trade-off.
 

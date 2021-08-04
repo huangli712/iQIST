@@ -36,6 +36,6 @@ See also [Uc](p_uc.md), [Uv](p_uv.md) parameters for more details.
 
 Usually, $$J_z = J_s = J_p = J$$. As for a single-band model, they are zero. See also [Js](p_js.md), [Jp](p_jp.md) parameters for more details.
 
-> NOTE: 
+!!! note
 
-> For the **AZALEA**, **GARDENIA**, **NARCISSUS** components, the Coulomb interaction matrix can be imported via the *solver.umat.in* file which has the highest priority. See [solver.umat.in](in_umat.md) for more details.
+    For the **AZALEA**, **GARDENIA**, **NARCISSUS** components, the Coulomb interaction matrix can be imported via the *solver.umat.in* file which has the highest priority. See [solver.umat.in](in_umat.md) for more details.
