@@ -52,7 +52,7 @@ where $$\omega$$ and $$\omega'$$ [$$\equiv (2n+1)\pi\beta$$] are fermionic frequ
 
 **Local irreducible vertex functions $$\Gamma_{\alpha\beta}(\omega,\omega',\nu)$$**
 
-From the two-particle Green's function $$\chi_{\alpha\beta}(\omega,\omega',\nu)$$, the local irreducible vertex function $$\Gamma_{\alpha\beta}(\omega,\omega',\nu)$$ can be calculated easily, via the Bethe-Salpeter equation[^3,4,5]:
+From the two-particle Green's function $$\chi_{\alpha\beta}(\omega,\omega',\nu)$$, the local irreducible vertex function $$\Gamma_{\alpha\beta}(\omega,\omega',\nu)$$ can be calculated easily, via the Bethe-Salpeter equation[^3][^4][^5]:
 $$
 \begin{equation}
 \Gamma_{\alpha\beta}(\omega,\omega',\nu) = 
@@ -74,7 +74,7 @@ $$
 \Sigma(i\omega_n) = G^{-1}_{0}(i\omega_n) - G^{-1}(i\omega_n),
 \end{equation}
 $$
- or measured using the so-called improved estimator[^3,4]. Noted that now the latter approach only works when the segment representation is used. 
+ or measured using the so-called improved estimator[^3][^4]. Noted that now the latter approach only works when the segment representation is used. 
 
 **Histogram of the perturbation expansion order**
 

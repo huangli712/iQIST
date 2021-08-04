@@ -36,9 +36,9 @@ or
 $ mpiexec -n number_of_cores ./sac
 ```
 
-> NOTE:
+!!! note
 
-> The **HIBISCUS**/stoch code also support the MPI parallelism. So you can apply MPI to improve the computational accuracy of it.
+    The **HIBISCUS**/stoch code also support the MPI parallelism. So you can apply MPI to improve the computational accuracy of it.
 
 ### Input
 
@@ -156,9 +156,9 @@ Execute the **HIBISCUS**/sac code, the *tau.grn.dat* and *sac.in* files are nece
 
 Validate the impurity spectral function $$A(\omega)$$ in the *sac.imsum.dat* file. That is what you need.
 
-> NOTE:
+!!! note
 
-> The **HIBISCUS**/stoch code does not support multi-orbital models. So if you want to use it to post-process multi-orbital systems, you have to split the Green's function at first by yourself. Once the analytical continuation is finished, you have to combine the different *sac.imsum.dat* files to a single file. It is a trivial task. 
+    The **HIBISCUS**/stoch code does not support multi-orbital models. So if you want to use it to post-process multi-orbital systems, you have to split the Green's function at first by yourself. Once the analytical continuation is finished, you have to combine the different *sac.imsum.dat* files to a single file. It is a trivial task. 
 
 **Step 6**:
 

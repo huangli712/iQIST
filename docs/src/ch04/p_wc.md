@@ -32,7 +32,7 @@ There are five possible choices for the *wc* parameter so far:
 
 **Comment**
 
-Only when *isscr* > 1, it matters. Please see [isscr](p_isscr.md) parameter for more details. About CT-QMC algorithms for the Hubbard-Holstein model and dynamical screening effect (including plasmon-pole model and ohmic model), please refer to Philipp Werner's papers[^1,2].
+Only when *isscr* > 1, it matters. Please see [isscr](p_isscr.md) parameter for more details. About CT-QMC algorithms for the Hubbard-Holstein model and dynamical screening effect (including plasmon-pole model and ohmic model), please refer to Philipp Werner's papers[^1][^2].
 
 **Reference**
 

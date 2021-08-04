@@ -35,7 +35,7 @@ Depending on the different choices of $$H_{2}$$ term, there are multiple variati
 * CT-J
 * CT-AUX
 
-In the CT-INT and CT-AUX quantum impurity solvers[^1,2], the interaction term is the perturbation term, namely, $$H_2 = H_{\text{int}}$$, while $$H_2 = H_{\text{hyb}}$$ is chosen for the CT-HYB quantum impurity solver[^3]. The CT-J quantum impurity solver is designed for the Kondo lattice model only[^4]. We won't discuss it at here. In the intermediate and strong interaction region, CT-HYB is much more efficient than CT-INT and CT-AUX. We could even say that it is the most powerful and efficient quantum impurity solver so far. This is also the main reason that we only implemented the CT-HYB quantum impurity solvers in the $$i$$QIST software package.
+In the CT-INT and CT-AUX quantum impurity solvers[^1][^2], the interaction term is the perturbation term, namely, $$H_2 = H_{\text{int}}$$, while $$H_2 = H_{\text{hyb}}$$ is chosen for the CT-HYB quantum impurity solver[^3]. The CT-J quantum impurity solver is designed for the Kondo lattice model only[^4]. We won't discuss it at here. In the intermediate and strong interaction region, CT-HYB is much more efficient than CT-INT and CT-AUX. We could even say that it is the most powerful and efficient quantum impurity solver so far. This is also the main reason that we only implemented the CT-HYB quantum impurity solvers in the $$i$$QIST software package.
 
 **Reference**
 

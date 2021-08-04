@@ -23,7 +23,7 @@ $$
 (\mathcal{M}^{-1})_{ij} = \Delta(\tau_i - \tau_j).
 $$ 
 
-The $$\omega_{d}(\mathcal{C}_n)$$ part can be expressed using segment representation when $$[n_{\alpha}, H_{\text{loc}}] = 0$$[^1]. However, if this condition is not fulfilled, we have to calculate the trace explicitly, which is called the general matrix algorithm[^2,3]. The explicit calculation of the trace for a large multi-orbital AIM with general interactions is computationally expensive. Many tricks and strategies have been implemented in the iQIST software package to address this challenge. Please refer to next section for more details.
+The $$\omega_{d}(\mathcal{C}_n)$$ part can be expressed using segment representation when $$[n_{\alpha}, H_{\text{loc}}] = 0$$[^1]. However, if this condition is not fulfilled, we have to calculate the trace explicitly, which is called the general matrix algorithm[^2][^3]. The explicit calculation of the trace for a large multi-orbital AIM with general interactions is computationally expensive. Many tricks and strategies have been implemented in the iQIST software package to address this challenge. Please refer to next section for more details.
 
 In this package, we used importance sampling and the Metropolis algorithm to evaluate the partition function $$\mathcal{Z}$$. The following four local update procedures, with which the ergodicity of Monte Carlo algorithm is guaranteed, are used to generate the Markov chain: 
 
