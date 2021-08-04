@@ -46,4 +46,4 @@ If $$r>p_{\text{max}}$$, we reject this move immediately. If $$r<p_{\text{min}}$
 
 **Reference**
 
-[^1] P. Sémon, Chuck-Hou Yee, Kristjan Haule, and A.-M. S. Tremblay, Phys. Rev. B 90, 075149
+[^1]: P. Sémon, Chuck-Hou Yee, Kristjan Haule, and A.-M. S. Tremblay, Phys. Rev. B 90, 075149

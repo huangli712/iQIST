@@ -92,8 +92,8 @@ where $$\alpha$$ is the orbital index, $$\{\uparrow, \downarrow\}$$ is spin inde
 
 **Reference**
 
-[^1] Emanuel Gull, Andrew J. Millis, Alexander I. Lichtenstein, Alexey N. Rubtsov, Matthias Troyer, and Philipp Werner, *Rev. Mod. Phys.* **83**, 349 (2011)
+[^1]: Emanuel Gull, Andrew J. Millis, Alexander I. Lichtenstein, Alexey N. Rubtsov, Matthias Troyer, and Philipp Werner, *Rev. Mod. Phys.* **83**, 349 (2011)
 
-[^2] Kristjan Haule, *Phys. Rev. B* **75**, 155113 (2007)
+[^2]: Kristjan Haule, *Phys. Rev. B* **75**, 155113 (2007)
 
-[^3] Nicolaus Parragh, Alessandro Toschi, Karsten Held, and Giorgio Sangiovanni, *Phys. Rev. B* **86**, 155158
+[^3]: Nicolaus Parragh, Alessandro Toschi, Karsten Held, and Giorgio Sangiovanni, *Phys. Rev. B* **86**, 155158

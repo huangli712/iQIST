@@ -12,4 +12,4 @@ The main topics are as follows:
 
 **Reference**
 
-[^1] Emanuel Gull, Andrew J. Millis, Alexander I. Lichtenstein, Alexey N. Rubtsov, Matthias Troyer, and Philipp Werner, *Rev. Mod. Phys.* **83**, 349 (2011).
+[^1]: Emanuel Gull, Andrew J. Millis, Alexander I. Lichtenstein, Alexey N. Rubtsov, Matthias Troyer, and Philipp Werner, *Rev. Mod. Phys.* **83**, 349 (2011).

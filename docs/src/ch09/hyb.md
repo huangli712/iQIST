@@ -38,8 +38,8 @@ In the Monte Carlo simulations, sometimes the system can be trapped by some (for
 
 **Reference**
 
-[^1] Philipp Werner, Armin Comanac, Luca de’ Medici, Matthias Troyer, and Andrew J. Millis, Phys. Rev. Lett. 97, 076405 (2006)
+[^1]: Philipp Werner, Armin Comanac, Luca de’ Medici, Matthias Troyer, and Andrew J. Millis, Phys. Rev. Lett. 97, 076405 (2006)
 
-[^2] Philipp Werner and Andrew J. Millis, *Phys. Rev. B* **74**, 155107 (2006)
+[^2]: Philipp Werner and Andrew J. Millis, *Phys. Rev. B* **74**, 155107 (2006)
 
-[^3] Kristjan Haule, *Phys. Rev. B* **75**, 155113 (2007)
+[^3]: Kristjan Haule, *Phys. Rev. B* **75**, 155113 (2007)
