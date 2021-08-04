@@ -10,10 +10,10 @@ The Mott metal-insulator transitions in strongly correlated electron systems are
 
 The Hamiltonian for the single-band Hubbard model is just the same with the one we have studied in the previous section. Here we won't write it down again. The model parameters are as follows:
 
-* $$U$$ = 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, and 6.0
-* $$t$$ = 0.5
-* $$\beta$$ = 40
-* $$\mu = U/2$$ 
+* ``U`` = 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, and 6.0
+* ``t`` = 0.5
+* ``\beta`` = 40
+* ``\mu = U/2``
 
 We will perform a series calculations with various Coulomb interaction $$U$$ in this tutorial. The calculated Matsubara Green's function $$G(i\omega_n)$$ and self-energy function $$\Sigma(i\omega_n)$$ will exhibit drastic changes with respect to the increment of $$U$$.
 
@@ -29,9 +29,9 @@ Since it is a single-band model, all of the quantum impurity solver components i
 
 Since the Hubbard model is defined in a Bethe lattice whose density of states is semi-circular, the self-consistent equation for the dynamical mean-field theory reads:
 
-$$
+```math
 G(\tau) = t^2 \Delta(\tau)
-$$
+```
 
 As mentioned before, the **AZALEA** component (and the other quantum impurity solver components) contains a mini dynamical mean-field engine and the above self-consistent equation is already implemented by default. So, we can use the **AZALEA** component alone without help from any external programs or scripts.
 
