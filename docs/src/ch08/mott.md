@@ -210,9 +210,9 @@ Next we will show some visualized results. The following figures were generated 
 
 According to the $$\Im G(i\omega_n)$$, we can conclude that the Mott metal-insulator transition occurs at $$U \in [2,3]$$. It would be very helpful if we can determine the critical Coulomb interaction $$U$$ for the Mott transition. In the DMFT community, the two quantities are usually used to detect the Mott transition: $$ |\beta G(\beta/2)| $$ and quasiparticle weight $$Z$$. At low temperature, we can use the following approximated equation to calculate $$Z$$:
 
-$$
+```math
 Z \cong \left[1 - \frac{\Im \Sigma(i\omega_0)}{\omega_0} \right]^{-1},
-$$
+```
 
 where $$\omega_0 \equiv \pi /\beta$$ is the lowest Matsubara frequency. When $$ |\beta G(\beta/2)| $$ and $$Z$$ are larger than zero, it is metallic, and vice versa. Then we gather the $$ |\beta G(\beta/2)| $$ and $$Z$$ data from the *solver.green.dat* and *solver.sgm.dat* files, respectively, and then plot figure using them. The figure is shown as follows. As is seen in this figure, the critical $$U$$ is 2.5.
 
