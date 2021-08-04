@@ -8,9 +8,9 @@ The only configuration file for the HF-QMC impurity solver in the iQIST software
 
 The *solver.hfqmc.in* file shares the same format with the *solver.ctqmc.in* file. See [solver.ctqmc.in](in_ctqmc.md) for more details.
 
-> NOTE:
+!!! warning
 
-> The quantum impurity solver will not check whether the settings in the *solver.hfqmc.in* file is reasonable and correct. It is the user's responsibility.
+    The quantum impurity solver will not check whether the settings in the *solver.hfqmc.in* file is reasonable and correct. It is the user's responsibility.
 
 **Code**
 

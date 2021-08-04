@@ -73,9 +73,9 @@ model = anderson, hubbard            ! 2 items
 
 9. If one key occurs in the input file for more than 1 times, only the last occurrence is recognized.
 
-> NOTE:
+!!! warning
 
-> We mention that the quantum impurity solvers will not check whether the settings in the *solver.ctqmc.in* file are reasonable and correct. It is the user's responsibility.
+    We mention that the quantum impurity solvers will not check whether the settings in the *solver.ctqmc.in* file are reasonable and correct. It is the user's responsibility.
 
 **Code**
 

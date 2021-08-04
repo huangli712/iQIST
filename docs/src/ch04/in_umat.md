@@ -10,9 +10,9 @@ Yes, of course.
 
 You can define your Coulomb interaction matrix in the *solver.umat.in* file. And the iQIST codes will read data from it if it is available. Then the default Coulomb interaction matrix will be replaced with the new one. That's all.
 
-> NOTE: 
+!!! warning 
 
-> The HF-QMC impurity solver (the **DAISY** component) does not support the *solver.umat.in* file. The continuous-time quantum Monte Carlo impurity solvers in the general matrix representation, i.e., the **BEGONIA**, **LAVENDER**, **CAMELLIA**, **MANJUSHAKA**, and **PANSY** components don't support this file/feature as well.
+    The HF-QMC impurity solver (the **DAISY** component) does not support the *solver.umat.in* file. The continuous-time quantum Monte Carlo impurity solvers in the general matrix representation, i.e., the **BEGONIA**, **LAVENDER**, **CAMELLIA**, **MANJUSHAKA**, and **PANSY** components don't support this file/feature as well.
 
 **Format**
 
@@ -28,13 +28,11 @@ The format of the *solver.umat.in* file is as follows:
 
 ---
 
-> NOTE:
+!!! tip
 
-> In the *solver.umat.in* file, we employed the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> Namely, we put the spin up part before the spin down part.
+    In the *solver.umat.in* file, we employed the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    Namely, we put the spin up part before the spin down part.
 
 **Code**
 
