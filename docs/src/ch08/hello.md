@@ -1,8 +1,8 @@
 ### Hello iQIST!
 
-> NOTE:
+!!! info
 
-> This tutorial will take you about half an hour.
+    This tutorial will take you about half an hour.
 
 **Introduction**
 
@@ -124,9 +124,9 @@ Now everything is ready. We can perform the calculation. Please execute the foll
 $ ctqmc
 ```
 
-> NOTE:
+!!! note
 
-> Here we assume that the executable program for the **AZALEA** component is in *iqist/build/ctqmc*, and the directory *iqist/build* has been appended to the environment variable **PATH**.
+    Here we assume that the executable program for the **AZALEA** component is in *iqist/build/ctqmc*, and the directory *iqist/build* has been appended to the environment variable **PATH**.
 
 From the terminal output, we can learn a lot of useful information about the simulation, such as the total energy $$E_{\text{tot}}$$, potential energy $$E_{\text{pot}}$$, kinetic energy $$E_{\text{kin}}$$, magnetic moment $$\langle S_z \rangle$$, occupation number $$\langle N^1 \rangle$$ and $$\langle N^2 \rangle$$ (they can be used to calculate the charge fluctuation), perturbation expansion order $$\langle K^2 \rangle$$, $$\langle K^3 \rangle$$ and $$\langle K^4 \rangle$$ (they can be used to calculate the skewness and kurtosis), Monte Carlo update action statistics, etc. As for more details of the terminal output, please check the [Terminal output](../ch04/out_term.md) section.
 

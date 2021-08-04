@@ -1,8 +1,8 @@
 ### Mott metal-insulator transition
 
-> NOTE:
+!!! info
 
-> This tutorial will take you about two hours.
+    This tutorial will take you about two hours.
 
 **Introduction**
 

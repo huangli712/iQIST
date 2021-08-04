@@ -1,8 +1,8 @@
 ### General Coulomb interaction
 
-> NOTE:
+!!! info
 
-> This tutorial will take you about five hours.
+    This tutorial will take you about five hours.
 
 **Introduction**
 
@@ -191,9 +191,9 @@ Now everything is ready. We can perform the calculation. Please execute the foll
 $ ctqmc
 ```
 
-> NOTE:
+!!! note
 
-> Here we assume that the executable program for the **BEGONIA** component is in *iqist/build/ctqmc*, and the directory *iqist/build* has been appended to the environment variable **PATH**.
+    Here we assume that the executable program for the **BEGONIA** component is in *iqist/build/ctqmc*, and the directory *iqist/build* has been appended to the environment variable **PATH**.
 
 **(5)** Post-processing
 
