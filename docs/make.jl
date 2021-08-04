@@ -165,26 +165,26 @@ ch06 = Any[
                 "atom.cix" => "ch06/out_cix.md",
             "Parameters" => Any[
                 "README" => "ch06/parameters.md",
-                * [ibasis](ch06/p_ibasis.md)
-                * [ictqmc](ch06/p_ictqmc.md)
-                * [icu](ch06/p_icu.md)
-                * [icf](ch06/p_icf.md)
-                * [isoc](ch06/p_isoc.md)
-                * [nband](ch06/p_nband.md)
-                * [nspin](ch06/p_nspin.md)
-                * [norbs](ch06/p_norbs.md)
-                * [ncfgs](ch06/p_ncfgs.md)
-                * [nmini](ch06/p_nmini.md)
-                * [nmaxi](ch06/p_nmaxi.md)
-                * [Uc](ch06/p_uc.md)
-                * [Uv](ch06/p_uv.md)
-                * [Jz](ch06/p_jz.md)
-                * [Js](ch06/p_js.md)
-                * [Jp](ch06/p_jp.md)
-                * [Ud](ch06/p_ud.md)
-                * [Jh](ch06/p_jh.md)
-                * [mune](ch06/p_mune.md)
-                * [lambda](ch06/p_lambda.md)
+                "ibasis" => "ch06/p_ibasis.md",
+                "ictqmc" => "ch06/p_ictqmc.md",
+                "icu" => "ch06/p_icu.md",
+                "icf" => "ch06/p_icf.md",
+                "isoc" => "ch06/p_isoc.md",
+                "nband" => "ch06/p_nband.md",
+                "nspin" => "ch06/p_nspin.md",
+                "norbs" => "ch06/p_norbs.md",
+                "ncfgs" => "ch06/p_ncfgs.md",
+                "nmini" => "ch06/p_nmini.md",
+                "nmaxi" => "ch06/p_nmaxi.md",
+                "Uc" => "ch06/p_uc.md",
+                "Uv" => "ch06/p_uv.md",
+                "Jz" => "ch06/p_jz.md",
+                "Js" => "ch06/p_js.md",
+                "Jp" => "ch06/p_jp.md",
+                "Ud" => "ch06/p_ud.md",
+                "Jh" => "ch06/p_jh.md",
+                "mune" => "ch06/p_mune.md",
+                "lambda" => "ch06/p_lambda.md",
             ],
        ]
 
