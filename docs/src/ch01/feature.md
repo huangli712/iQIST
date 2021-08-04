@@ -82,14 +82,11 @@ The main features of the core components (i.e., quantum impurity solvers) of the
 
 > **Additional Limitations:**
 
-> 
-[^01] Only for the **BEGONIA**, **LAVENDER**, **CAMELLIA**, **PANSY**, and **MANJUSHAKA**.
+[^01]: Only for the **BEGONIA**, **LAVENDER**, **CAMELLIA**, **PANSY**, and **MANJUSHAKA**.
 
-> 
-[^02] Only for the **BEGONIA**, **LAVENDER**, **PANSY**, and **MANJUSHAKA**.
-
-> 
-[^03] Only for the **NARCISSUS**.
+[^02]: Only for the **BEGONIA**, **LAVENDER**, **PANSY**, and **MANJUSHAKA**.
+ 
+[^03]: Only for the **NARCISSUS**.
 
 > 
 [^04] Only for the **NARCISSUS**.
@@ -154,20 +151,14 @@ The main features of the core components (i.e., quantum impurity solvers) of the
 > 
 [^24] Only for the measurement of two-particle quantities.
 
-> 
-[^25] Only for the **JASMINE**.
+[^25]: Only for the **JASMINE**.
 
-> 
-[^26] Only for the **HIBISCUS**.
+[^26]: Only for the **HIBISCUS**.
 
-> 
-[^27] Only for the **HIBISCUS**.
+[^27]: Only for the **HIBISCUS**.
 
-> 
-[^28] Only for the **HIBISCUS**.
+[^28]: Only for the **HIBISCUS**.
 
-> 
-[^29] Only for the **HIBISCUS**.
+[^29]: Only for the **HIBISCUS**.
 
-> 
-[^30] Only for the **HIBISCUS**.
+[^30]: Only for the **HIBISCUS**.
