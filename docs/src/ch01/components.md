@@ -56,6 +56,6 @@ Besides the above components, the iQIST software package also includes many usef
 * **Common Service Subroutines Library** (**CSSL**)
 * **Tutorials** and **Examples**
 
-> NOTE:
+!!! note
 
-> In the **Common Service Modules Library** and **Common Service Subroutines Library**, we implement the numerical infrastructures for the iQIST software package. They can be reused in the other scientific computation projects.
+    In the **Common Service Modules Library** and **Common Service Subroutines Library**, we implement the numerical infrastructures for the iQIST software package. They can be reused in the other scientific computation projects.
