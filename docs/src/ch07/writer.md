@@ -75,12 +75,12 @@ iqistWriter.out_umat(norbs, umat)
 iqistWriter.out_ktau(ntime, tmesh, ktau, ptau)
 ```
 
-> NOTE:
+!!! note
 
-> You can not execute *u_writer.py* in the terminal or Python environment directly, like this:
-```
-$ python u_writer.py
-```
+    You can not execute *u_writer.py* in the terminal or Python environment directly, like this:
+    ```
+    $ python u_writer.py
+    ```
 
 **Comment**
 

@@ -39,15 +39,13 @@ $ ./mups
 * See the terminal prompt
 * *mem.dos.dat* (necessary)
 
-> NOTE:
+!!! note
 
-> About the smearing parameter $$\sigma$$: 
+    About the smearing parameter $$\sigma$$: 
+    The standard deviation smearing parameter was chosen to be in the same range as estimates of experimental resolution (which are around 0.1 for high resolution PES, and approximately 0.2 to 0.4 for XAS. A good test to decide if the broadening is correct is the comparison of the Fermi edge in theory and experiment.
 
-> The standard deviation smearing parameter was chosen to be in the same range as estimates of experimental resolution (which are around 0.1 for high resolution PES, and approximately 0.2 to 0.4 for XAS. A good test to decide if the broadening is correct is the comparison of the Fermi edge in theory and experiment.
-
-> About the beta parameter $$\beta (\equiv 1/T)$$:
-
-> The beta parameter practically plays no role if one uses the Fermi function at the experimental temperature or at the temperature of the CT-QMC calculations.
+    About the beta parameter $$\beta (\equiv 1/T)$$:
+    The beta parameter practically plays no role if one uses the Fermi function at the experimental temperature or at the temperature of the CT-QMC calculations.
 
 **Output**
 

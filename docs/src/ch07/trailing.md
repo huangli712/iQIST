@@ -26,6 +26,6 @@ See the terminal output.
 
 **Comment**
 
-> NOTE:
+!!! note
 
-> This script is used by the iQIST Developer Team *internally*.
+    This script is used by the iQIST Developer Team *internally*.
