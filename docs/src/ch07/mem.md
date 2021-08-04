@@ -18,17 +18,15 @@ $$
 
 [^1]: M. Jarrell and J. Gubernatis, Phys. Rep. 269, 133 (1996).
 
-> NOTE: 
+!!! note
 
-> The code is originally written by
-
-> **Anders W. Sandvik**
-
-> *Akademi University, Finland*
-
-> *email:asandvik@ra.abo.fi*
-  
-> and modified and improved by the iQIST Developer Team using Fortran 90 language.
+    The code is originally written by
+    ```
+    **Anders W. Sandvik**
+    *Akademi University, Finland*
+    *email:asandvik@ra.abo.fi*
+    ```
+    and modified and improved by the iQIST Developer Team using Fortran 90 language.
 
 ### Usage
 

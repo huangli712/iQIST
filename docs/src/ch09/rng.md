@@ -6,6 +6,6 @@ The Mersenne Twister is a bit slow by today's standards. So in 2006, a variant o
 
 **Reference**
 
-[^1] M. Matsumoto, T. Nishimura, *ACM Transactions on Modeling and Computer Simulation* **8 ** 3(1998)
+[^1]: M. Matsumoto, T. Nishimura, *ACM Transactions on Modeling and Computer Simulation* **8 ** 3(1998)
 
-[^2] Mutsuo Saito and Makoto Matsumoto, *Monte Carlo and Quasi-Monte Carlo Methods*, **Springer**, 607 -- 622 (2008)
+[^2]: Mutsuo Saito and Makoto Matsumoto, *Monte Carlo and Quasi-Monte Carlo Methods*, **Springer**, 607 -- 622 (2008)
