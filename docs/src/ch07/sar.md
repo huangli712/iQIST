@@ -41,6 +41,6 @@ However, for Linux-based system, the grammar for *sed* is
 sed -i ...
 ```
 
-> NOTE:
+!!! note:
 
-> This script is used by the iQIST Developer Team *internally*.
+    This script is used by the iQIST Developer Team *internally*.
