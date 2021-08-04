@@ -54,7 +54,33 @@ ch04 = Any[
                 "solver.ktau.in" => "ch04/in_ktau.md",
                 "atom.cix" => "ch04/in_atom.md",
             ],
-            "Standard output files" => "ch04/output.md",
+            "Standard output files" => Any[
+                "README" => "ch04/output.md",
+                "Terminal output" => "ch04/out_term.md",
+                "solver.green.dat" => "ch04/out_green.md",
+                "solver.weiss.dat" => "ch04/out_weiss.md",
+                "solver.hybri.dat" => "ch04/out_hybri.md",
+                "solver.grn.dat" => "ch04/out_grn.md",
+                "solver.wss.dat" => "ch04/out_wss.md",
+                "solver.hyb.dat" => "ch04/out_hyb.md",
+                "solver.sgm.dat" => "ch04/out_sgm.md",
+                "solver.hub.dat" => "ch04/out_hub.md",
+                "solver.hist.dat" => "ch04/out_hist.md",
+                "solver.prob.dat" => "ch04/out_prob.md",
+                "solver.nmat.dat" => "ch04/out_nmat.md",
+                "solver.kmat.dat" => "ch04/out_kmat.md",
+                "solver.lmat.dat" => "ch04/out_lmat.md",
+                "solver.schi.dat" => "ch04/out_schi.md",
+                "solver.sfom.dat" => "ch04/out_sfom.md",
+                "solver.ochi.dat" => "ch04/out_ochi.md",
+                "solver.ofom.dat" => "ch04/out_ofom.md",
+                "solver.twop.dat" => "ch04/out_twop.md",
+                "solver.vrtx.dat" => "ch04/out_vrtx.md",
+                "solver.pair.dat" => "ch04/out_pair.md",
+                "solver.diag.dat" => "ch04/out_diag.md",
+                "solver.kernel.dat" => "ch04/out_kern.md",
+                "solver.status.dat" => "ch04/out_stat.md",
+            ],
             "Parameters" => Any[
                 "README" => "ch04/parameters.md",
                 "isscf" => "ch04/p_isscf.md",
@@ -118,9 +144,48 @@ ch05 = Any[
 
 ch06 = Any[
             "README" => "ch06/README.md",
-            "Standard input files" => "ch06/input.md",
-            "Standard output files" => "ch06/output.md",
-            "Parameters" => "ch06/parameters.md",
+            "Standard input files" => Any[
+                "README" => "ch06/input.md",
+                "atom.config.in" => "ch06/in_atom.md",
+                "atom.cmat.in" => "ch06/in_cmat.md",
+                "atom.emat.in" => "ch06/in_emat.md",
+                "atom.tmat.in" => "ch06/in_tmat.md",
+            ],
+            "Standard output files" => Any[
+                "README" => "ch06/output.md",
+                "Terminal output" => "ch06/out_term.md",
+                "solver.umat.in" => "ch06/out_umat1.md",
+                "atom.fock.dat" => "ch06/out_fock.md",
+                "atom.tmat.dat" => "ch06/out_tmat.md",
+                "atom.emat.dat" => "ch06/out_emat.md",
+                "atom.umat.dat" => "ch06/out_umat2.md",
+                "atom.eigval.dat" => "ch06/out_val.md",
+                "atom.eigvec.dat" => "ch06/out_vec.md",
+                "atom.sector.dat" => "ch06/out_sector.md",
+                "atom.cix" => "ch06/out_cix.md",
+            "Parameters" => Any[
+                "README" => "ch06/parameters.md",
+                * [ibasis](ch06/p_ibasis.md)
+                * [ictqmc](ch06/p_ictqmc.md)
+                * [icu](ch06/p_icu.md)
+                * [icf](ch06/p_icf.md)
+                * [isoc](ch06/p_isoc.md)
+                * [nband](ch06/p_nband.md)
+                * [nspin](ch06/p_nspin.md)
+                * [norbs](ch06/p_norbs.md)
+                * [ncfgs](ch06/p_ncfgs.md)
+                * [nmini](ch06/p_nmini.md)
+                * [nmaxi](ch06/p_nmaxi.md)
+                * [Uc](ch06/p_uc.md)
+                * [Uv](ch06/p_uv.md)
+                * [Jz](ch06/p_jz.md)
+                * [Js](ch06/p_js.md)
+                * [Jp](ch06/p_jp.md)
+                * [Ud](ch06/p_ud.md)
+                * [Jh](ch06/p_jh.md)
+                * [mune](ch06/p_mune.md)
+                * [lambda](ch06/p_lambda.md)
+            ],
        ]
 
 ch07 = Any[
