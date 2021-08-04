@@ -12,9 +12,9 @@ $ editor make.sys
 $ make base
 ```
 
-> NOTE: 
+!!! tip
 
-> Here **editor** means any ascii text editor you prefer, such as *vim*.
+    Here **editor** means any ascii text editor you prefer, such as *vim*.
 
 This is the most common and direct method.
 
