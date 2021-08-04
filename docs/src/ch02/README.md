@@ -27,12 +27,8 @@ Advanced recipes:
 * [Build libraries for Fortran](fortran.md) // Get binary library used by your own Fortran codes.
 * [Build modules for Python](python.md) // Get Python modules.
 
-> NOTE:
+!!! note
 
-> 1. We assume that you are familiar with the basic terminal commands/operations of Linux system.
+    1. We assume that you are familiar with the basic terminal commands/operations of Linux system.
 
-> 2. We assume that the **root directory** of the iQIST software package is just **iqist** in the manual, except stated explicitly. For example, if the iQIST software package was installed at 
-```
-/home/lihuang/iqist2016
-```
-then we just use **iqist** to denote this directory.
+    2. We assume that the **root directory** of the iQIST software package is just **iqist** in the manual, except stated explicitly. For example, if the iQIST software package was installed at `/home/lihuang/iqist2016`, then we just use **iqist** to denote this directory.

@@ -11,9 +11,9 @@ Download it directly from the online repository. Now we *ONLY* maintain two repo
 
 The newest release of iQIST software package is **v0.6.7 @ 2016.02.13T (testing)**.
 
-> NOTE: 
+!!! note 
 
-> Sometimes the latest commit will not be compiled correctly. So, please download the released version of iQIST which has an **unique version tag**.
+    Sometimes the latest commit will not be compiled correctly. So, please download the released version of iQIST which has an **unique version tag**.
 
 **Method 2**:
 
