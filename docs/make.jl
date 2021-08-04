@@ -269,29 +269,29 @@ ch09 = Any[
             ],
             "Algorithms" => Any[
                 "README" => "ch09/algo.md",
-                * [Transition probability](ch10/tran.md)
-                * [Hubbard-Holstein model](ch10/holstein.md)
-                * [Dynamical screening effect](ch10/screening.md)
-                * [Physical observable](ch10/obs.md)
-                * [Orthogonal polynomial representation](ch10/ortho.md)
-                * [Kernel polynomial method](ch10/kpm.md)
-                * [Improved estimator for the self-energy function](ch10/sig.md)
-                * [Fast matrix update](ch10/fast.md)
-                * [Good quantum number, subspace, and symmetry](ch10/symmetry.md)
-                * [Krylov subspace iteration](ch10/krylov.md)
-                * [Newton-Leja polynomial interpolation](ch10/leja.md)
-                * [Truncation approximation](ch10/truncation.md)
-                * [Lazy trace evaluation](ch10/lazy.md)
-                * [Skip listing algorithm](ch10/skip.md)
-                * [Divide-and-conquer algorithm](ch10/dac.md)
-                * [Sparse matrix tricks](ch10/sparse.md)
-                * [Delayed update algorithm](ch10/delay.md)
-                * [Atomic eigenvalue solver](ch10/atomic.md)
-                * [Single particle basis](ch10/basis.md)
-                * [Spin-orbit coupling](ch10/soc.md)
-                * [Coulomb interaction matrix](ch10/coulomb.md)
-                * [Maximum entropy method](ch10/mem.md)
-                * [Stochastic analytical continuation](ch10/sac.md)
+                "Transition probability" => "ch10/tran.md",
+                "Hubbard-Holstein model" => "ch10/holstein.md",
+                "Dynamical screening effect" => "ch10/screening.md",
+                "Physical observable" => "ch10/obs.md",
+                "Orthogonal polynomial representation" => "ch10/ortho.md",
+                "Kernel polynomial method" => "ch10/kpm.md",
+                "Improved estimator for the self-energy function" => "ch10/sig.md",
+                "Fast matrix update" => "ch10/fast.md",
+                "Good quantum number, subspace, and symmetry" => "ch10/symmetry.md",
+                "Krylov subspace iteration" => "ch10/krylov.md",
+                "Newton-Leja polynomial interpolation" => "ch10/leja.md",
+                "Truncation approximation" => "ch10/truncation.md",
+                "Lazy trace evaluation" => "ch10/lazy.md",
+                "Skip listing algorithm" => "ch10/skip.md",
+                "Divide-and-conquer algorithm" => "ch10/dac.md",
+                "Sparse matrix tricks" => "ch10/sparse.md",
+                "Delayed update algorithm" => "ch10/delay.md",
+                "Atomic eigenvalue solver" => "ch10/atomic.md",
+                "Single particle basis" => "ch10/basis.md",
+                "Spin-orbit coupling" => "ch10/soc.md",
+                "Coulomb interaction matrix" => "ch10/coulomb.md",
+                "Maximum entropy method" => "ch10/mem.md",
+                "Stochastic analytical continuation" => "ch10/sac.md",
             ],
             "Codes" => Any[
                 "README" => "ch09/code.md",
