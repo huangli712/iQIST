@@ -6,20 +6,20 @@ Core Developers:
 
 Key Contributors:
 
-**Zi Yang Meng<sup>‡</sup>**, **Haiyan Lu<sup>†,‡</sup>**, and **Liang Du<sup>⎤</sup>**
+**Zi Yang Meng``^\dagger``**, **Haiyan Lu``^{\dagger,\ddagger}``**, and **Liang Du``^\rceil``**
 
 Directors and Supervisors: 
 
-**Philipp Werner<sup>✶</sup>** and **Xi Dai<sup>‡</sup>**
+**Philipp Werner``^✶``** and **Xi Dai``^\dagger``**
 
-**<sup>†</sup>** *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou 621900, China*
+**``^\dagger``** *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou 621900, China*
 
-**<sup>‡</sup>** *Beijing National Laboratory for Condensed Matter Physics, and Institute of Physics,*<br/>
+**``^\ddagger``** *Beijing National Laboratory for Condensed Matter Physics, and Institute of Physics,*<br/>
 &nbsp;&nbsp;*Chinese Academy of Sciences, Beijing 100190, China*
 
-**<sup>⎤</sup>** *Department of Physics, The University of Texas at Austin, Austin, Texas 78712, USA*
+**``^\rceil``** *Department of Physics, The University of Texas at Austin, Austin, Texas 78712, USA*
 
-**<sup>✶</sup>** *Department of Physics, University of Fribourg, 1700 Fribourg, Switzerland*
+**``^✶``** *Department of Physics, University of Fribourg, 1700 Fribourg, Switzerland*
 
 &nbsp;
 
