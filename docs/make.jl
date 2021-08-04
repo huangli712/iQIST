@@ -252,8 +252,8 @@ ch08 = Any[
             ],
             "Practical exercises" => Any[
                 "README" => "ch08/practical.md",
-                "Orbital-selective Mott transition in two-band Hubbard model](ch09/osmt.md)
-                "Orbital Kondo and spin Kondo effects in three-band Anderson impurity model](ch09/kondo.md)
+                "Orbital-selective Mott transition in two-band Hubbard model" => "ch08/osmt.md",
+                "Orbital Kondo and spin Kondo effects in three-band Anderson impurity model" => "ch08/kondo.md",
             ],
             "Code validation" => "ch08/valid.md",
             "Successful stories" => "ch08/story.md",
