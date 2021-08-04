@@ -34,10 +34,10 @@ This method can be combined with the orthogonal polynomial representation[^4] as
 
 **Reference**
 
-[^1] Hartmut Hafermann, *Phys. Rev. B* **89**, 235128 (2014)
+[^1]: Hartmut Hafermann, *Phys. Rev. B* **89**, 235128 (2014)
 
-[^2] Hartmut Hafermann, Kelly R. Patton, and Philipp Werner, *Phys. Rev. B* **85**, 205106 (2012)
+[^2]: Hartmut Hafermann, Kelly R. Patton, and Philipp Werner, *Phys. Rev. B* **85**, 205106 (2012)
 
-[^3] Philipp Werner, Armin Comanac, Luca de’ Medici, Matthias Troyer, and Andrew J. Millis, *Phys. Rev. Lett.* **97**, 076405 (2006)
+[^3]: Philipp Werner, Armin Comanac, Luca de’ Medici, Matthias Troyer, and Andrew J. Millis, *Phys. Rev. Lett.* **97**, 076405 (2006)
 
-[^4] Lewin Boehnke, Hartmut Hafermann, Michel Ferrero, Frank Lechermann, and Olivier Parcollet, *Phys. Rev. B* **84**, 075145 (2011)
+[^4]: Lewin Boehnke, Hartmut Hafermann, Michel Ferrero, Frank Lechermann, and Olivier Parcollet, *Phys. Rev. B* **84**, 075145 (2011)
