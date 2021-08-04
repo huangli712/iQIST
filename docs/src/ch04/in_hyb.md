@@ -26,14 +26,12 @@ Similar to all the components in iQIST software package, the format of the *solv
 
 ---
 
-> NOTE:
+!!! note
 
-> In the *solver.hyb.in* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
-> The first block stores the data of the first energy band, the second block stores the data of the second energy band and so on. Here we don't consider the nondiagonal term.
+    In the *solver.hyb.in* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
+    The first block stores the data of the first energy band, the second block stores the data of the second energy band and so on. Here we don't consider the nondiagonal term.
 
 **Code**
 
