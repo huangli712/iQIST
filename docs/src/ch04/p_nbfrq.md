@@ -38,6 +38,6 @@ If the *nbfrq* is too large, the computational time is not bearable. So we recom
 
 See [nffrq](p_nffrq.md) and [nfreq](p_nfreq.md) for more details.
 
-> NOTE:
+!!! note
 
-> The computation of two-particle quantities has been optimized using the OpenMP multi-thread technology. You can enable this feature in the compiling procedure. See also [Compiling environment](../ch02/envir.md) for more details.
+    The computation of two-particle quantities has been optimized using the OpenMP multi-thread technology. You can enable this feature in the compiling procedure. See also [Compiling environment](../ch02/envir.md) for more details.

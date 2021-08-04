@@ -26,9 +26,9 @@ Every *ncarlo* Monte Carlo sampling steps, the quantum impurity solvers try to m
 
 The measuring period for the other physical observables are controlled by the *nmonte* parameter. See also [nmonte](p_nmonte.md) parameter for more details.
 
-> NOTE:
+!!! note
 
-> The histogram for the perturbation expansion series is measured in each Monte Carlo sampling step.
+    The histogram for the perturbation expansion series is measured in each Monte Carlo sampling step.
 
 **Comment**
 

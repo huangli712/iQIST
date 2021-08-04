@@ -44,6 +44,6 @@ Now we use the sign of *nflip* to control flip schemes
 
 If *nflip /= 0*, the absolute value of *nflip* is the flip period.
 
-> NOTE: 
+!!! note
 
-> When *cflip = 1*, the symmetry of all orbitals must be taken into consideration, otherwise the code may be trapped by a deadlock.
+    When *cflip = 1*, the symmetry of all orbitals must be taken into consideration, otherwise the code may be trapped by a deadlock.
