@@ -90,9 +90,9 @@ In this part, we can get the following information:
 * Is the data binning activated?
 * What's the random number seed?
 
-> NOTE:
+!!! note
 
-> The random number seed is very important. With it we can recover the scene once a fatal error/exception occurs.
+    The random number seed is very important. With it we can recover the scene once a fatal error/exception occurs.
 
 ---
 

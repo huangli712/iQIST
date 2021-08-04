@@ -4,11 +4,10 @@
 
 The *solver.twop.dat* file is designed to store the two-particle Green's function $$\chi(i\omega_n, i\omega'_n, i\nu_n)$$ and vertex function $$\mathcal{F}(i\omega_n, i\omega'_n, i\nu_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
 
-> NOTE:
+!!! note
 
-> 1. Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.twop.dat* file.
-
-> 2. The data stored in the *solver.twop.dat* file are generated using standard algorithm. However, those data in the *solver.vrtx.dat* file are generated using the improved estimator algorithm.
+    1. Only the **GARDENIA**, **NARCISSUS**, **CAMELLIA**, **LAVENDER**, and **MANJUSHAKA** components can generate the *solver.twop.dat* file.
+    2. The data stored in the *solver.twop.dat* file are generated using standard algorithm. However, those data in the *solver.vrtx.dat* file are generated using the improved estimator algorithm.
 
 **Format**
 
@@ -34,13 +33,11 @@ blocks. Each block is appended by two blank lines. The format of each block is a
 
 ---
 
-> NOTE:
+!!! note
 
-> In the *solver.twop.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.twop.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 
 **Code**
