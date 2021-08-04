@@ -4,9 +4,9 @@ The quantum impurity solvers in the iQIST can not only run as standalone program
 
 Thus, in this section we will show you how to compile the quantum impurity solvers as Fortran libraries, instead of executable programs.
 
-> NOTE: 
+!!! note
 
-> Not only the quantum impurity solvers, but also the atomic eigenvalues solver can be compiled into Fortran libraries and Python modules.
+    Not only the quantum impurity solvers, but also the atomic eigenvalues solver can be compiled into Fortran libraries and Python modules.
 
 Supposed that we would like to compile the **AZALEA** component.
 
@@ -20,17 +20,15 @@ $ make capi
 $ make azalea-lib
 ```
 
-> NOTE: 
+!!! note
 
-> 1. Here **editor** means any ascii text editor you prefer.
-
-> 2. **azalea** can be any other component's name, such as **begonia**, **pansy**, **gardenia**, etc.
-
-> 3. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
-```
-$ make base
-$ make capi
-```
+    1. Here **editor** means any ascii text editor you prefer.
+    2. **azalea** can be any other component's name, such as **begonia**, **pansy**, **gardenia**, etc.
+    3. If the base library and the application programming interfaces were already compiled successfully, then you can skip the following commands:
+    ```sh
+    $ make base
+    $ make capi
+    ```
 
 After a few minutes, you will find *libctqmc.a* in the *iqist/src/ctqmc/azalea* directory. That is what you need, the Fortran library for the **AZALEA** component. Then you can add it to the system path, and start with your research. We are looking forward to your great finding!
 
