@@ -6,15 +6,15 @@ In the Monte Carlo community, the maximum entropy method[^1] is often employed t
 
 The **HIBISCUS**/entropy code is often used to perform the analytical continuation to build impurity spectral function from imaginary-time Green's function using the well-known maximum entropy method. In principle, it solves the Laplace transformation
 
-$$
+```math
     G(\tau) = \int K(\tau,\omega) A(\omega) d\omega
-$$
+```
 
 where $$K(\tau,\omega)$$ is the so-called kernel function. Its definition is as follows:
 
-$$
+```math
     K(\tau,\omega) = \frac{ \exp{(-\tau\omega)} }{1.0+\exp{(-\beta\omega)}}
-$$
+```
 
 [^1]: M. Jarrell and J. Gubernatis, Phys. Rep. 269, 133 (1996).
 

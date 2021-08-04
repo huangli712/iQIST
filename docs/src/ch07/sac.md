@@ -8,15 +8,15 @@ In the **HIBISCUS** component, we also implemented the stochastic analytical con
 
 The **HIBISCUS**/stoch code is often used to perform the analytical continuation to build impurity spectral function from imaginary-time Green's function using the modern stochastic analytic continuation method. In principle, it solves the Laplace transformation
 
-$$
+```math
     G(\tau) = \int K(\tau,\omega) A(\omega) d\omega
-$$
+```
 
 where $$K(\tau,\omega)$$ is the so-called kernel function. Its definition is as follows:
 
-$$
+```math
     K(\tau,\omega) = \frac{ \exp{(-\tau\omega)} }{1.0+\exp{(-\beta\omega)}}
-$$
+```
 
 [^1]: K. S. D. Beach, arXiv:0403055 [cond-mat]
 

@@ -31,7 +31,7 @@ $$
 
 **Two-particle correlation function $$\chi_{\alpha\beta}(\omega,\omega',\nu)$$**
 
-The two-particle correlation functions are often used to construct lattice susceptibilities within DMFT and diagrammatic extensions of DMFT. However, the measurements of two-particle correlation functions are a nontrivial task[^1] as it is very time-consuming to obtain good quality data, and most of the previous publications in this field are restricted to measurements of two-particle correlation functions in one-band models. Thanks to the development of efficient CT-HYB algorithms, the calculation of two-particle correlation functions for multi-orbital impurity models now become affordable[^2,3,4]. In the iQIST software package, we implemented the measurement for the two-particle correlation function $$\chi_{\alpha\beta}(\tau_a,\tau_b,\tau_c,\tau_d)$$, which is defined as follows:
+The two-particle correlation functions are often used to construct lattice susceptibilities within DMFT and diagrammatic extensions of DMFT. However, the measurements of two-particle correlation functions are a nontrivial task[^1] as it is very time-consuming to obtain good quality data, and most of the previous publications in this field are restricted to measurements of two-particle correlation functions in one-band models. Thanks to the development of efficient CT-HYB algorithms, the calculation of two-particle correlation functions for multi-orbital impurity models now become affordable[^2][^3][^4]. In the iQIST software package, we implemented the measurement for the two-particle correlation function $$\chi_{\alpha\beta}(\tau_a,\tau_b,\tau_c,\tau_d)$$, which is defined as follows:
 $$
 \begin{equation}
 \chi_{\alpha\beta}(\tau_a,\tau_b,\tau_c,\tau_d)
