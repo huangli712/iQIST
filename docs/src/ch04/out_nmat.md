@@ -8,13 +8,11 @@ The *solver.nmat.dat* file is used to memory the impurity occupancy and double o
 
 The *solver.nmat.dat* file contains two blocks. One is for the impurity occupancy $$\langle n_i\rangle$$, and another one is for the double occupancy matrix $$\langle n_i n_j\rangle$$. In each block, the error bar data are always shown in the rightmost column.
 
-> NOTE:
+!!! note
 
-> In the *solver.nmat.dat* file, we adopt the following orbital sequence:
-
-> $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-
-> In other words, the spin up part is always before the spin down part.
+    In the *solver.nmat.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
