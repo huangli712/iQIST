@@ -36,6 +36,6 @@ Only when *isscr* > 1, it matters. Please see [isscr](p_isscr.md) parameter for 
 
 **Reference**
 
-[^1] Philipp Werner and Andrew J. Millis, Phys. Rev. Lett 99, 146404 (2007).
+[^1]: Philipp Werner and Andrew J. Millis, Phys. Rev. Lett 99, 146404 (2007).
 
-[^2] Philipp Werner and Andrew J. Millis, Phys. Rev. Lett. 104, 146401 (2010).
+[^2]: Philipp Werner and Andrew J. Millis, Phys. Rev. Lett. 104, 146401 (2010).

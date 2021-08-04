@@ -30,4 +30,4 @@ There are two possible choices for *mstep* parameter so far:
 
 **Reference**
 
-[^1] Phani K. V. V. Nukala, Thomas A. Maier, Michael S. Summers, Gonzalo Alvarez, and Thomas C. Schulthess, *Phys. Rev. B* **80**, 195111 (2009)
+[^1]: Phani K. V. V. Nukala, Thomas A. Maier, Michael S. Summers, Gonzalo Alvarez, and Thomas C. Schulthess, *Phys. Rev. B* **80**, 195111 (2009)

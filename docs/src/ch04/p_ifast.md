@@ -42,4 +42,4 @@ In the **MANJUSHAKA** code, the Lazy trace evaluation trick[^1] is always used. 
 
 **Reference**
 
-[^1]P. Sémon, Chuck-Hou Yee, Kristjan Haule, and A.-M. S. Tremblay, *Phys. Rev. B* **90**, 075149 (2014).
+[^1]: P. Sémon, Chuck-Hou Yee, Kristjan Haule, and A.-M. S. Tremblay, *Phys. Rev. B* **90**, 075149 (2014).
