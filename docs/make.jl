@@ -261,10 +261,12 @@ ch08 = Any[
 
 ch09 = Any[
             "README" => "ch09/README.md",
-            "Basic theory and methods" => "ch09/basic.md",
-       * [Quantum impurity model](ch10/qim.md)
-       * [Principles of continuous-time quantum Monte Carlo algorithm](ch10/ct.md)
-       * [Hybridization expansion](ch10/hyb.md)
+            "Basic theory and methods" => Any[
+                "README" => "ch09/basic.md",
+                * [Quantum impurity model](ch10/qim.md)
+                * [Principles of continuous-time quantum Monte Carlo algorithm](ch10/ct.md)
+                * [Hybridization expansion](ch10/hyb.md)
+            ],
             "Algorithms" => "ch09/algo.md",
        * [Transition probability](ch10/tran.md)
        * [Hubbard-Holstein model](ch10/holstein.md)
