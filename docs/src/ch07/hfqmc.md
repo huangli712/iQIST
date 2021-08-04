@@ -58,12 +58,12 @@ p.write()
 del p
 ```
 
-> NOTE:
+!!! note
 
-> You can not execute *u_hfqmc.py* in the terminal or Python environment directly, like this:
-```
-$ python u_hfqmc.py
-```
+    You can not execute *u_hfqmc.py* in the terminal or Python environment directly, like this:
+    ```
+    $ python u_hfqmc.py
+    ```
 
 **Comment**
 

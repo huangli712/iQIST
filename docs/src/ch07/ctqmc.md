@@ -58,12 +58,12 @@ p.write()
 del p
 ```
 
-> NOTE:
+!!! note
 
-> You can not execute *u_ctqmc.py* in the terminal or Python environment directly, like this:
-```
-$ python u_ctqmc.py
-```
+    You can not execute *u_ctqmc.py* in the terminal or Python environment directly, like this:
+    ```sh
+    $ python u_ctqmc.py
+    ```
 
 **Comment**
 
