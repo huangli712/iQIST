@@ -12,7 +12,7 @@ $ editor make.sys
 $ make capi
 ```
 
-!!! note 
+!!! tip
 
     Here **editor** means any ascii text editor you prefer, such as *vim*.
 
