@@ -9,9 +9,9 @@ the valence fluctuation.
 
 The format of the *solver.prob.dat* file is somewhat complex. It contains three blocks. They show the probabilities for atomic states, orbitals, and spins, respectively. In the first block, the fifth column is used to represent the error bar.
 
-> NOTE:
+!!! note
 
-> For the **MANJUSHAKA** and **PANSY** components, there is an additional block for showing the probabilities for sectors/superstates.
+    For the **MANJUSHAKA** and **PANSY** components, there is an additional block for showing the probabilities for sectors/superstates.
 
 **Code**
 
