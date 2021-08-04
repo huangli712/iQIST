@@ -18,9 +18,9 @@ $ make
 
 The CSML contains many files (modules). Next we will introduce them one by one, so that the developers can be familiar with their functionality and limitations. Except where stated explicitly, these modules could be used individually.
 
-> NOTE:
+!!! note
 
-> This is not a API reference documentation. You should read the source codes by yourself to obtain detailed information.
+    This is not a API reference documentation. You should read the source codes by yourself to obtain detailed information.
 
 **m_constants.f90**
 
