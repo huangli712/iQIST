@@ -80,8 +80,6 @@ The main features of the core components (i.e., quantum impurity solvers) of the
 
 ---
 
-> **Additional Limitations:**
-
 [^01]: Only for the **BEGONIA**, **LAVENDER**, **CAMELLIA**, **PANSY**, and **MANJUSHAKA**.
 
 [^02]: Only for the **BEGONIA**, **LAVENDER**, **PANSY**, and **MANJUSHAKA**.
