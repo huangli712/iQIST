@@ -231,10 +231,10 @@ ch08 = Any[
             ],
             "Advanced applications I: Complex systems" => Any[
                 "README" => "ch08/complex.md",
-                General Coulomb interaction](ch09/general.md)
-                Spin-orbital coupling](ch09/soc.md)
-                Crystal field splitting](ch09/cfs.md)
-                Retarded interaction and dynamical screening effect](ch09/screening.md)
+                "General Coulomb interaction" => "ch08/general.md",
+                "Spin-orbital coupling" => "ch09/soc.md",
+                "Crystal field splitting" => "ch09/cfs.md",
+                "Retarded interaction and dynamical screening effect" => "ch09/screening.md",
             ],
             "Advanced applications II: Accurate measurements" => Any[
                 "README" => "ch08/accurate.md",
