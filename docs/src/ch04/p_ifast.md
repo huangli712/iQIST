@@ -25,14 +25,16 @@ There are three possible values for *ifast* parameter so far:
 * *ifast* = 1, the divide-and-conquer algorithm will be used. At this time, you have to adjust *npart* parameter carefully to obtain good computational efficiency. (see [npart](p_npart.md) parameter as well)
 
 * *ifast* = 2, the classic time evolution algorithm will be used. 
-> WARNING: 
->
-> This algorithm is not implemented in the public version. We are sorry for that.
+
+!!! warning
+
+    This algorithm is not implemented in the public version. We are sorry for that.
 
 * *ifast* = 3, the skip listing algorithm will be used. 
-> WARNING: 
->
-> This algorithm is not implemented in the public version. We are sorry for that.
+
+!!! warning
+
+    This algorithm is not implemented in the public version. We are sorry for that.
 
 All in all, now only *ifast* = 1 is valid. Even you set *ifast* = 2 or *ifast* = 3, the **MANJUSHAKA** code will still use the divide-and-conquer algorithm to calculate the operator trace.
 
