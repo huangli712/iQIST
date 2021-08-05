@@ -20,9 +20,9 @@ Only for the **JASMINE** component.
 
 Now there are two possible values for the *ibasis* parameter:
 
-* *ibasis* = 1, make natural basis inside of this program. The code will build crystal field splitting $$\Delta_{\alpha,\beta}$$ and spin-orbital coupling terms $$\Delta_{\text{SOC}}$$ at first, and then use them to generate the transformation matrix $$\mathcal{T}_{\alpha,\beta}$$ and on-site impurity level $$E_{\alpha,\beta}$$.
+* *ibasis* = 1, make natural basis inside of this program. The code will build crystal field splitting ``\Delta_{\alpha,\beta}`` and spin-orbital coupling terms ``\Delta_{\text{SOC}}`` at first, and then use them to generate the transformation matrix ``\mathcal{T}_{\alpha,\beta}`` and on-site impurity level ``E_{\alpha,\beta}``.
 
-* *ibasis* = 2, make natural basis outside of this program. The code will read the on-site impurity level $$E_{\alpha,\beta}$$ (in the *atom.emat.in* file) and transformation matrix $$\mathcal{T}_{\alpha,\beta}$$ (in the *atom.tmat.in* file) from external files directly. See also [atom.emat.in](in_emat.md) and [atom.tmat.in](in_tmat.md) for more details.
+* *ibasis* = 2, make natural basis outside of this program. The code will read the on-site impurity level ``E_{\alpha,\beta}`` (in the *atom.emat.in* file) and transformation matrix ``\mathcal{T}_{\alpha,\beta}`` (in the *atom.tmat.in* file) from external files directly. See also [atom.emat.in](in_emat.md) and [atom.tmat.in](in_tmat.md) for more details.
 
 **Comment**
 

@@ -9,11 +9,13 @@ The *atom.eigvec.dat* file contains the eigenvectors of the atomic Hamiltonian. 
 The *atom.eigvec.dat* file has two different file formats. They depends on the *ictqmc* parameter.
 
 * **File Format A**, should be compatible with the **CAMELLIA**, **BEGONIA**, and **LAVENDER** components
+
 !!! note
 
     *ictqmc* = 0, 1.
 
 * **File Format B**, should be compatible with the **MANJUSHAKA** and **PANSY** components
+
 !!! note
 
     *ictqmc* = 2, 3, 4, 5.
