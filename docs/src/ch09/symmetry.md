@@ -64,7 +64,7 @@ where ``\{ \Gamma_{\alpha_{i}} \}`` are the eigenstates of subspace ``\alpha_{i}
 As a result, the original ``4k+1`` matrix-matrix multiplications with large dimension reduces to several ``4k+1`` matrix-matrix multiplications with much smaller dimensions, resulting in a huge speedup.
 
 | GQNs                 | Kanamori-``U`` | Slater-``U`` | SOC  |
-| --                   | --             | --           | --   |
+|----------------------|----------------|--------------|------|
 |``N``, ``S_{z}``      | Yes            | Yes          | No   |
 |``N``, ``S_{z}``, PS  | Yes            | No           | No   | 
 |``N``, ``J_{z}``      | Yes            | Yes          | Yes  |
@@ -88,11 +88,6 @@ where ``\alpha`` is the orbital index, ``\{\uparrow, \downarrow\}`` is spin inde
 |``N``, ``S_{z}``, PS |  14/2/1.14     | 44/3/1.45      | 352/10/2.91    | 2368/35/6.92     |
 |``N``, ``J_{z}``     |  -             | 26/5/2.46      | 96/37/10.67    | 246/327/66.60    |
 |``N``                |  5/6/3.20      | 7/20/9.14      | 11/252/93.09   | 15/3432/1092.27  |
-
-| object | implemented |      value |
-|--------|-------------|------------|
-| `A`    |      ✓      |      10.00 |
-| `BB`   |      ✓      | 1000000.00 |
 
 **Table** | The total number of subspaces ``N``, maximum and mean dimension of subspaces for different GQNs schemes and multi-orbital models.
 
