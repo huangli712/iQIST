@@ -22,11 +22,11 @@ There are five possible choices for the *lc* parameter so far:
 
 * *isscr* = 1, no meaning.
 
-* *isscr* = 2, the $$\lambda$$ parameter in the Hubbard-Holstein model.
+* *isscr* = 2, the ``\lambda`` parameter in the Hubbard-Holstein model.
 
-* *isscr* = 3, the $$\lambda$$ parameter in the plasmon-pole model for dynamical screening effect.
+* *isscr* = 3, the ``\lambda`` parameter in the plasmon-pole model for dynamical screening effect.
 
-* *isscr* = 4, the $$\alpha$$ parameter in the ohmic model for dynamical screening effect.
+* *isscr* = 4, the ``\alpha`` parameter in the ohmic model for dynamical screening effect.
 
 * *isscr* = 99, shift for the chemical potential and Coulomb interaction (when we consider the dynamical screening effect in the DFT + DMFT calculations for realistic materials). You can obtain this value from the output of **HIBISCUS**/toolbox/makescr. See also [toolbox/makescr](../ch07/scr.md) for more details.
 
