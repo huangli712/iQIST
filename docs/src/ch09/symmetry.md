@@ -69,6 +69,7 @@ As a result, the original ``4k+1`` matrix-matrix multiplications with large dime
 |``N``, ``S_{z}``, PS      | Yes          | No         | No   | 
 |``N``, ``J_{z}``          | Yes          | Yes        | Yes  |
 |``N``                     | Yes          | Yes        | Yes  |
+
 **Table** | The GQNs supports for various types of local Hamiltonians ``H_{\text{loc}}``.
 
 In our codes, we implemented several GQNs schemes for different types of local Hamiltonians ``H_{\text{loc}}``, which is summarized in the above table. For ``H_{\text{loc}}`` without spin-orbit coupling (SOC), we have two choices: (1) with Slater parameterized Coulomb interaction matrix, we use the total occupation number ``N``, the ``z`` component of total spin ``S_{z}`` as GQNs; (2) with Kanamori parameterized Coulomb interaction matrix, besides ``N`` and ``S_{z}``, we can use another powerful GQN, the so-called PS number[^3]. It is defined as,
@@ -87,6 +88,7 @@ where ``\alpha`` is the orbital index, ``\{\uparrow, \downarrow\}`` is spin inde
 |``N``, ``S_{z}``, PS |  14/2/1.14   | 44/3/1.45    | 352/10/2.91  | 2368/35/6.92   |
 |``N``, ``J_{z}``     |  -           | 26/5/2.46    | 96/37/10.67  | 246/327/66.60  |
 |``N``            |  5/6/3.20    | 7/20/9.14    | 11/252/93.09 | 15/3432/1092.27|
+
 **Table** | The total number of subspaces ``N``, maximum and mean dimension of subspaces for different GQNs schemes and multi-orbital models.
 
 **Reference**
