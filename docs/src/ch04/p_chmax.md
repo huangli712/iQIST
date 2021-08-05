@@ -6,32 +6,33 @@ The maximum allowable expansion order $$n$$ for the second kind Chebyshev orthog
 
 The recursive definition for the second kind Chebyshev polynomials is as follows:
 
-$$
+```math
 U_{0} = 1
-$$
+```
 
-$$
+```math
 U_{1} = 2x
-$$
+```
 
-$$
+```math
 U_{n+1}(x) = 2xU_{n}(x) - U_{n-1}(x)
-$$
+```
 
 The second kind Chebyshev polynomials are orthogonal with respect to the weight 
 
-$$
+```math
 \sqrt{1-x^2}
-$$
+```
 
 on the interval [-1,1], i.e., we have:
 
-$$
+```math
 \begin{equation}
 \int_{-1}^1 U_n(x)U_m(x)\sqrt{1-x^2}\,dx = 
 \begin{cases} 0 &: n\ne m, \\ \pi/2 &: n=m. \end{cases} 
 \end{equation}
-$$
+```
+
 **Type**
 
 Integer
