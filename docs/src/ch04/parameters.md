@@ -4,12 +4,12 @@ In this section, we will introduce all of the valid parameters which can be used
 
 ### Classification of the parameters
 
-* ** Parameters for the dynamical mean-field theory engine **
+* **Parameters for the dynamical mean-field theory engine**
     * [isscf](p_isscf.md)
     * [isbin](p_isbin.md)
     * [niter](p_niter.md)
     * [alpha](p_alpha.md)
-* ** Parameters for the strongly correlated models **
+* **Parameters for the strongly correlated models**
     * [issun](p_issun.md)
     * [isspn](p_isspn.md)
     * [isscr](p_isscr.md)
@@ -29,7 +29,7 @@ In this section, we will introduce all of the valid parameters which can be used
     * [mune](p_mune.md)
     * [beta](p_beta.md)
     * [part](p_part.md)
-* ** Parameters for the quantum impurity solvers **
+* **Parameters for the quantum impurity solvers**
     * [ifast](p_ifast.md)
     * [itrun](p_itrun.md)
     * [mkink](p_mkink.md)
@@ -47,7 +47,7 @@ In this section, we will introduce all of the valid parameters which can be used
     * [nclean](p_nclean.md)
     * [ncarlo](p_ncarlo.md)
     * [nmonte](p_nmonte.md)
-* ** Parameters for the Monte Carlo sampling **
+* **Parameters for the Monte Carlo sampling**
     * [isort](p_isort.md)
     * [issus](p_issus.md)
     * [isvrt](p_isvrt.md)
