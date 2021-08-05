@@ -2,27 +2,27 @@
 
 **Definition**
 
-The maximum allowable expansion order $$n$$ for the Legendre orthogonal polynomials. It must be greater than 2.
+The maximum allowable expansion order ``n`` for the Legendre orthogonal polynomials. It must be greater than 2.
 
 The recursive definition for the Legendre polynomials is as follows:
 
-$$
+```math
 P_{0}(x) =1
-$$
+```
 
-$$
+```math
 P_{1}(x) = x
-$$
+```
 
-$$
+```math
 (n+1) P_{n+1}(x) = (2n+1)xP_{n}(x) - n P_{n-1}(x)
-$$
+```
 
-An important property of the Legendre polynomials is that they are orthogonal with respect to the $$L^2$$ inner product on the interval $$−1 \leq x\leq 1$$:
+An important property of the Legendre polynomials is that they are orthogonal with respect to the ``L^2`` inner product on the interval ``−1 \leq x\leq 1``:
 
-$$
+```math
 \int^{1}_{-1} P_{m}(x) P_{n}(x) dx = \frac{2}{2n+1}\delta_{mn}
-$$
+```
 
 **Type**
 
