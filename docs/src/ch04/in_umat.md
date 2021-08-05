@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The quantum impurity solvers will generate the Coulomb interaction matrix using the $$U$$ and $$J$$ parameters provided by you automatically. But sometimes you may want to customize the Coulomb interaction matrix by yourself. 
+The quantum impurity solvers will generate the Coulomb interaction matrix using the ``U`` and ``J`` parameters provided by you automatically. But sometimes you may want to customize the Coulomb interaction matrix by yourself. 
 
 Is it possible within the iQIST code? 
 

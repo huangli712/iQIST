@@ -2,7 +2,7 @@
 
 **Introduction**
 
-In the CT-QMC impurity solvers contained in the iQIST software package, we provide a mini dynamical mean-field theory engine. This engine implements a self-consistent condition for the Bethe lattice which has a semi-circular density of states with bandwith $$4t$$. Sometimes you may want to try the other models with arbitrary density of states.
+In the CT-QMC impurity solvers contained in the iQIST software package, we provide a mini dynamical mean-field theory engine. This engine implements a self-consistent condition for the Bethe lattice which has a semi-circular density of states with bandwith ``4t``. Sometimes you may want to try the other models with arbitrary density of states.
 
 Is it possible?
 
@@ -41,9 +41,9 @@ The format of the *solver.anydos.in* file is as follows:
 
 ---
 
-*column 1*: frequency point, $$\epsilon$$, double precision
+*column 1*: frequency point, ``\epsilon``, double precision
 
-*column 2*: density of states, $$\rho(\epsilon)$$, double precision
+*column 2*: density of states, ``\rho(\epsilon)``, double precision
 
 ---
 

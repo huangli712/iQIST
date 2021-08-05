@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.ktau.in* is used to store the screening function $$K(\tau)$$ and its derivates $$K'(\tau)$$ in imaginary-time space. It is only useful for the **NARCISSUS** component.
+The *solver.ktau.in* is used to store the screening function ``K(\tau)`` and its derivates ``K'(\tau)`` in imaginary-time space. It is only useful for the **NARCISSUS** component.
 
 !!! note
 
@@ -14,15 +14,15 @@ The format of the *solver.ktau.in* file is as follows:
 
 ---
 
-*column 1*: imaginary-time point, $$\tau$$, double precision
+*column 1*: imaginary-time point, ``\tau``, double precision
 
-*column 2*: screening function, $$K(\tau)$$, double precision
+*column 2*: screening function, ``K(\tau)``, double precision
 
-*column 3*: the first derivates of screening function, $$K'(\tau)$$, double precision
+*column 3*: the first derivates of screening function, ``K'(\tau)``, double precision
 
 ---
 
-In principle, $$K(\tau)$$ and $$K'(\tau)$$ should be orbital-dependent. However in the **NARCISSUS** component, for the sake of simplicity, we treat them as orbital-independent vectors.
+In principle, ``K(\tau)`` and ``K'(\tau)`` should be orbital-dependent. However in the **NARCISSUS** component, for the sake of simplicity, we treat them as orbital-independent vectors.
 
 **Code**
 
