@@ -2,7 +2,7 @@
 
 **Definition**
 
-Hopping (or coupling) parameter $$t$$ for Hubbard model.
+Hopping (or coupling) parameter ``t`` for Hubbard model.
  
 **Type**
 
@@ -18,21 +18,23 @@ ALL
 
 **Behavior**
 
-It is used to initialize the default hybridization function $$\Delta(i\omega_n)$$, and in the implementation of the dynamical mean-field theory self-consistent equation for the Bethe lattice.
+It is used to initialize the default hybridization function ``\Delta(i\omega_n)``, and in the implementation of the dynamical mean-field theory self-consistent equation for the Bethe lattice.
 
 Para-magnetic phase:
 
-$$
+```math
 \begin{equation}
 G_{\alpha\sigma}(i\omega_n) = t^2 \Delta_{\alpha\sigma}(i\omega_n)
 \end{equation}
-$$
+```
 
 Anti-ferromagnetic phase:
 
+```math
 \begin{equation}
 G_{\alpha\bar{\sigma}}(i\omega_n) = t^2 \Delta_{\alpha\bar{\sigma}}(i\omega_n)
 \end{equation}
+```
 
 **Comment**
 
