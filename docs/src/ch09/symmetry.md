@@ -47,7 +47,7 @@ The path may break at some point because it goes outside of the full Hilbert spa
 \sum_{\{ \Gamma_{\alpha_{1}}, \Gamma_{\alpha_{2}}, \cdots, \Gamma_{\alpha_{2k}}\}}
 \langle\Gamma_{\alpha_{1}}|T_{2k+1}|\Gamma_{\alpha_{1}}\rangle
 \langle\Gamma_{\alpha_{1}}|F_{2k}|\Gamma_{\alpha_{2k}}\rangle
-\langle\Gamma_{\alpha_{2k}}|T_{2k}|\Gamma_{\alpha_{2k}}\rangle \cdots \nonumber \\ 
+\langle\Gamma_{\alpha_{2k}}|T_{2k}|\Gamma_{\alpha_{2k}}\rangle \cdots \\ 
 & & \times 
 \langle\Gamma_{\alpha_{3}}|F_{2}|\Gamma_{\alpha_{2}}\rangle
 \langle\Gamma_{\alpha_{2}}|T_{2}|\Gamma_{\alpha_{2}}\rangle
