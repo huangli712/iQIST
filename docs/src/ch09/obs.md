@@ -108,62 +108,62 @@ where ``k`` is the perturbation expansion order.
 
 **Occupation number and double occupation number**
 
-The orbital occupation number $$\langle n_\alpha\rangle$$ and double occupation number $$\langle n_\alpha n_\beta \rangle$$ are measured. From them we can calculate for example the charge fluctuation $$\sqrt{\langle N^2 \rangle - \langle N \rangle^2}$$, where $$N$$ is the total occupation number:
-$$
+The orbital occupation number ``\langle n_\alpha\rangle`` and double occupation number ``\langle n_\alpha n_\beta \rangle`` are measured. From them we can calculate for example the charge fluctuation ``\sqrt{\langle N^2 \rangle - \langle N \rangle^2}``, where ``N`` is the total occupation number:
+```math
 \begin{equation}
 N = \sum_{\alpha} n_{\alpha}.
 \end{equation}
-$$
+```
 
 **Magnetic moment**
 
-Actually, we only measure $$\langle S_{z} \rangle$$.
+Actually, we only measure ``\langle S_{z} \rangle``.
 
 **Spin-spin correlation function**
 
 For a system with spin rotational symmetry, the expression for the spin-spin correlation function reads
-$$
+```math
 \begin{equation}
 \chi_{ss}(\tau) = \langle S_{z}(\tau) S_{z}(0) \rangle,
 \end{equation}
-$$
-where $$S_{z} = n_{\uparrow} - n_{\downarrow}$$. From it we can calculate the effective magnetic moment:
-$$
+```
+where ``S_{z} = n_{\uparrow} - n_{\downarrow}``. From it we can calculate the effective magnetic moment:
+```math
 \begin{equation}
 \mu_{\text{eff}} = \int^{\beta}_{0}d\tau \chi_{ss}(\tau).
 \end{equation}
-$$
+```
 
 **Orbital-orbital correlation function**
 
 The expression for the orbital-orbital correlation function reads 
-$$
+```math
 \begin{equation}
 \chi^{nn}_{\alpha\beta}(\tau) = \langle n_{\alpha}(\tau) n_{\beta}(0) \rangle.
 \end{equation}
-$$
+```
 
 **Atomic state probability**
 
 The expression for the atomic state probability is 
-$$
+```math
 \begin{equation}
 p_{\Gamma} = \langle |\Gamma \rangle \langle \Gamma| \rangle,
 \end{equation}
-$$
-where $$\Gamma$$ is the atomic state.
+```
+where ``\Gamma`` is the atomic state.
 
 **Fidelity susceptibility**
 
-$$
+```math
 \chi_{\text{FS}} = \langle k_{L} k_{R} \rangle - \langle k_{L} \rangle \langle k_{R} \rangle
-$$
+```
 
 **Kinetic energy fluctuation**
 
-$$
+```math
 \chi_{\text{k}} = \langle k^2 \rangle - \langle k \rangle^2 - \langle k \rangle
-$$
+```
 
 **Reference**
 
