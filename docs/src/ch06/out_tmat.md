@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *atom.tmat.dat* file contains the transformation matrix $$\mathcal{T}_{\alpha,\beta}$$ from the original basis to natural basis.
+The *atom.tmat.dat* file contains the transformation matrix ``\mathcal{T}_{\alpha,\beta}`` from the original basis to natural basis.
 
 **Format**
 
@@ -10,21 +10,21 @@ The format of the *atom.tmat.dat* file is as follows:
 
 ---
 
-*column 1*: orbital index $$\alpha$$, integer
+*column 1*: orbital index ``\alpha``, integer
 
-*column 2*: orbital index $$\beta$$, integer
+*column 2*: orbital index ``\beta``, integer
 
-*column 3*: Elements of the transformation matrix $$\mathcal{T}_{\alpha,\beta}$$, real part, double precision
+*column 3*: Elements of the transformation matrix ``\mathcal{T}_{\alpha,\beta}``, real part, double precision
 
-*column 4*: Elements of the transformation matrix $$\mathcal{T}_{\alpha,\beta}$$, imaginary part, double precision
+*column 4*: Elements of the transformation matrix ``\mathcal{T}_{\alpha,\beta}``, imaginary part, double precision
 
 ---
 
 !!! note
 
-In the *atom.tmat.dat* file, we adopt the following orbital sequence:
-$$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-In other words, the spin up part is always before the spin down part.
+    In the *atom.tmat.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 

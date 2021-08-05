@@ -10,7 +10,7 @@ The format of the *atom.fock.dat* file is as follows:
 
 ---
 
-*column 1*: unified index $$i$$, integer
+*column 1*: unified index ``i``, integer
 
 *column 2*: decimal number, integer
 

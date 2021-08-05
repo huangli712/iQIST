@@ -10,19 +10,19 @@ The format of the *solver.umat.in* file is as follows:
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: orbital index $$j$$, integer
+*column 2*: orbital index ``j``, integer
 
-*column 3*: Coulomb interaction matrix element $$U(i,j)$$, double precision
+*column 3*: Coulomb interaction matrix element ``U(i,j)``, double precision
 
 ---
 
 !!! note
 
-In the *solver.umat.in* file, we adopt the following orbital sequence:
-$$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-In other words, the spin up part is always before the spin down part.
+    In the *solver.umat.in* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
