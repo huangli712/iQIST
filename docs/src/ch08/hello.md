@@ -10,21 +10,21 @@ Now we will introduce the easiest and simplest application of the iQIST software
 
 The general Hubbard model reads:
 
-$$
+```math
 \begin{equation}
 \hat{H} = -t \sum_{\langle ij \rangle\sigma}c^{\dagger}_{i\sigma}c_{j\sigma} + \sum_i \hat{H}^{i}_{\text{loc}},
 \end{equation}
-$$
+```
 
-where $$\hat{H}^{i}_{\text{loc}}$$ is the local Hamiltonian on each site $$i$$. In the case of the single-band Hubbard model, $$\hat{H}_{\text{loc}}$$ reads 
+where ``\hat{H}^{i}_{\text{loc}}`` is the local Hamiltonian on each site ``i``. In the case of the single-band Hubbard model, ``\hat{H}_{\text{loc}}`` reads 
 
-$$
+```math
 \begin{equation}
 \hat{H}_{\text{loc}} =  -\mu \sum_{\sigma}n_{\sigma} + U n_{\uparrow} n_{\downarrow}.
 \end{equation}
-$$
+```
 
-where $$\mu$$ is the chemical potential and $$U$$ the Coulomb interaction strength. We will solve it using the dynamical mean-field theory with a CT-HYB quantum impurity solver. Then the problem is that how to use the iQIST software package to reach this goal?
+where ``\mu`` is the chemical potential and ``U`` the Coulomb interaction strength. We will solve it using the dynamical mean-field theory with a CT-HYB quantum impurity solver. Then the problem is that how to use the iQIST software package to reach this goal?
 
 **Recipes**
 
@@ -38,9 +38,9 @@ Since it is a single-band model, all of the quantum impurity solver components i
 
 Since the Hubbard model is defined in a Bethe lattice whose density of states is semi-circular, the self-consistent equation for the dynamical mean-field theory reads:
 
-$$
+```math
 G(\tau) = t^2 \Delta(\tau)
-$$
+```
 
 As mentioned before, the **AZALEA** component (and the other quantum impurity solver components) contains a mini dynamical mean-field engine and the above self-consistent equation is already implemented by default. So, we can use the **AZALEA** component alone without help from any external programs or scripts.
 
@@ -110,9 +110,9 @@ The important parameters are as follows:
 
 * *isscf = 2*: Define the DMFT self-consistent computational mode.
 * *nband = 1*, *norbs = 2*, and *ncfgs = 4*: Specify a single-band Hubbard model.
-* *Uc = 2.0*   : Coulomb interaction $$U = 2$$.
-* *mune = 1.0* : Chemical potential $$\mu$$, $$\mu = U/2$$ leads to half-filling.
-* *beta = 40.0* : Inverse temperature $$\beta$$.
+* *Uc = 2.0*   : Coulomb interaction ``U = 2``.
+* *mune = 1.0* : Chemical potential ``\mu``, ``\mu = U/2`` leads to half-filling.
+* *beta = 40.0* : Inverse temperature ``\beta``.
 
 In fact, you can create a simplified *solver.ctqmc.in* file which contains only the *Uc*, *mune*, and *beta* parameters. The **AZALEA** component will supplement the rest using default settings. As for the format and grammar for the *solver.ctqmc.in* file, see [solver.ctqmc.in](../ch04/in_ctqmc.md) for more details.
 
@@ -128,9 +128,9 @@ $ ctqmc
 
     Here we assume that the executable program for the **AZALEA** component is in *iqist/build/ctqmc*, and the directory *iqist/build* has been appended to the environment variable **PATH**.
 
-From the terminal output, we can learn a lot of useful information about the simulation, such as the total energy $$E_{\text{tot}}$$, potential energy $$E_{\text{pot}}$$, kinetic energy $$E_{\text{kin}}$$, magnetic moment $$\langle S_z \rangle$$, occupation number $$\langle N^1 \rangle$$ and $$\langle N^2 \rangle$$ (they can be used to calculate the charge fluctuation), perturbation expansion order $$\langle K^2 \rangle$$, $$\langle K^3 \rangle$$ and $$\langle K^4 \rangle$$ (they can be used to calculate the skewness and kurtosis), Monte Carlo update action statistics, etc. As for more details of the terminal output, please check the [Terminal output](../ch04/out_term.md) section.
+From the terminal output, we can learn a lot of useful information about the simulation, such as the total energy ``E_{\text{tot}}``, potential energy ``E_{\text{pot}}``, kinetic energy ``E_{\text{kin}}``, magnetic moment ``\langle S_z \rangle``, occupation number ``\langle N^1 \rangle`` and ``\langle N^2 \rangle`` (they can be used to calculate the charge fluctuation), perturbation expansion order ``\langle K^2 \rangle``, ``\langle K^3 \rangle`` and ``\langle K^4 \rangle`` (they can be used to calculate the skewness and kurtosis), Monte Carlo update action statistics, etc. As for more details of the terminal output, please check the [Terminal output](../ch04/out_term.md) section.
 
-On the other hand, the CT-HYB quantum impurity solvers will generate a few files in the current directory (i.e., *test11* folder in this tutorial), such as *solver.hist.dat*, *solver.green.dat*, etc. You can visualize them using some plotting tools (such as *gnuplot*) occasionally to see whether the results are reasonable. For example, the system with the given parameters must be metallic and half-filling. As for the metallicity, you should check whether the low-frequency $$\Im G(i\omega_n)$$ is monotonically increasing (using the *solver.grn.dat* file). For the half-filling criterion, you should check the orbital occupancy in the *solver.nmat.dat* file. The total occupation number should be $$N \cong 1.0$$, and the orbital occupation numbers $$n_1 \cong n_2 \cong 0.5$$. Due to the numerical noise and round-off error, tiny deviation is inevitable and acceptable.
+On the other hand, the CT-HYB quantum impurity solvers will generate a few files in the current directory (i.e., *test11* folder in this tutorial), such as *solver.hist.dat*, *solver.green.dat*, etc. You can visualize them using some plotting tools (such as *gnuplot*) occasionally to see whether the results are reasonable. For example, the system with the given parameters must be metallic and half-filling. As for the metallicity, you should check whether the low-frequency ``\Im G(i\omega_n)`` is monotonically increasing (using the *solver.grn.dat* file). For the half-filling criterion, you should check the orbital occupancy in the *solver.nmat.dat* file. The total occupation number should be ``N \cong 1.0``, and the orbital occupation numbers ``n_1 \cong n_2 \cong 0.5``. Due to the numerical noise and round-off error, tiny deviation is inevitable and acceptable.
 
 After a few minutes (in my laptop, it cost about 23 minutes), the calculation is finished.
 
@@ -206,7 +206,7 @@ Next we will show some visualized results. The following figures were generated 
 
 ![gtau image](../figure/11gtau.png)
 
-**Figure** | The imaginary-time Green's function $$G(\tau)$$.
+**Figure** | The imaginary-time Green's function ``G(\tau)``.
 
 ---
 
@@ -214,7 +214,7 @@ Next we will show some visualized results. The following figures were generated 
 
 ![grnf image](../figure/11grnf.png)
 
-**Figure** | The imaginary part of Matsubara Green's function $$\Im G(i\omega_n)$$.
+**Figure** | The imaginary part of Matsubara Green's function ``\Im G(i\omega_n)``.
 
 ---
 
@@ -222,11 +222,11 @@ Next we will show some visualized results. The following figures were generated 
 
 ![sigf image](../figure/11sigf.png)
 
-**Figure** | The imaginary part of Matsubara self-energy function $$\Im \Sigma(i\omega_n)$$.
+**Figure** | The imaginary part of Matsubara self-energy function ``\Im \Sigma(i\omega_n)``.
 
 ---
 
-Clearly, from the $$ G(i\omega_n) $$ and $$\Sigma(i\omega_n)$$ data, we can speculate that this system is exactly metallic.
+Clearly, from the `` G(i\omega_n) `` and ``\Sigma(i\omega_n)`` data, we can speculate that this system is exactly metallic.
 
 OK. Now this tutorial is over. How do you feel?
 
@@ -248,7 +248,7 @@ Pay attention to the numerical noises and data fluctuations of physical observab
 
 ![grnf_error image](../figure/11grnf_err.png)
 
-**Figure** | The imaginary part of Matsubara Green's function $$\Im G(i\omega_n)$$. The error bar data are magnified by a factor of 10 for a better visualization.
+**Figure** | The imaginary part of Matsubara Green's function ``\Im G(i\omega_n)``. The error bar data are magnified by a factor of 10 for a better visualization.
 
 **(3)** Generate animation movie
 
@@ -258,9 +258,9 @@ Really? It is funny.
 
 Yes. To use this feature, please setup the *nwrite* and *nsweep* parameters carefully. Only when
 
-$$
+```math
 \text{nwrite} / \text{nsweep} \geq 100,
-$$
+```
 
 this feature is actived. Then redo the calculation, and you will get a *solver.diag.dat* file. With the help of *script/u_animator.py*, an animation movie is generated.
 

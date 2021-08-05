@@ -10,25 +10,25 @@ In this tutorial, we will show you how to use the iQIST software package to solv
 
 The interaction term of the Hubbard model are as follows:
 
-$$
+```math
 \begin{align}
 \hat{H}_{\text{loc}} = &- \mu \sum_{\alpha\sigma}n_{\alpha\sigma} + U\sum_{\alpha} n_{\alpha\uparrow}n_{\alpha\downarrow} \\
     & + U^{\prime} \sum_{\alpha > \gamma, \sigma} n_{\alpha\sigma}n_{\gamma\bar{\sigma}}
-    + (U^{\prime} - J) \sum_{\alpha > \gamma, \sigma} n_{\alpha\sigma}n_{\gamma\sigma} \nonumber \\
-    & - J \sum_{\alpha \neq \gamma} (d^{\dagger}_{\alpha\downarrow}d^{\dagger}_{\gamma\uparrow}d_{\gamma\downarrow}d_{\alpha\uparrow} + d^{\dagger}_{\gamma\uparrow}d^{\dagger}_{\gamma\downarrow}d_{\alpha\uparrow}d_{\alpha\downarrow} + h.c.).\nonumber
+    + (U^{\prime} - J) \sum_{\alpha > \gamma, \sigma} n_{\alpha\sigma}n_{\gamma\sigma} \\
+    & - J \sum_{\alpha \neq \gamma} (d^{\dagger}_{\alpha\downarrow}d^{\dagger}_{\gamma\uparrow}d_{\gamma\downarrow}d_{\alpha\uparrow} + d^{\dagger}_{\gamma\uparrow}d^{\dagger}_{\gamma\downarrow}d_{\alpha\uparrow}d_{\alpha\downarrow} + h.c.).
 \end{align}
-$$
+```
 
-Here $$\alpha$$ and $$\gamma$$ are the orbital indices, $$\sigma$$ the spin index, $$\mu$$ the chemical potential, $$U$$ ($$U^{\prime}$$) the intra-orbital (inter-orbital) Coulomb interaction, and $$J$$ the Hund's exchange interaction. Unless otherwise specified, $$\mu$$ is chosen to meet the half-filling condition. The $$U$$ ($$U^{\prime}$$) and $$J$$ parameters fulfill the relation $$U^{\prime} = U - 2J$$. In this tutorial, a semicircular density of states with half bandwidth $$D = 2t$$ is used, which corresponds to the infinite-dimensional Bethe lattice. We solve the Hubbard model using single-site DMFT with a state-of-the-art CT-HYB quantum Monte Carlo impurity solver.
+Here ``\alpha`` and ``\gamma`` are the orbital indices, ``\sigma`` the spin index, ``\mu`` the chemical potential, ``U`` (``U^{\prime}``) the intra-orbital (inter-orbital) Coulomb interaction, and ``J`` the Hund's exchange interaction. Unless otherwise specified, ``\mu`` is chosen to meet the half-filling condition. The ``U`` (``U^{\prime}``) and ``J`` parameters fulfill the relation ``U^{\prime} = U - 2J``. In this tutorial, a semicircular density of states with half bandwidth ``D = 2t`` is used, which corresponds to the infinite-dimensional Bethe lattice. We solve the Hubbard model using single-site DMFT with a state-of-the-art CT-HYB quantum Monte Carlo impurity solver.
 
 The model parameters are as follows:
 
-* $$U_c$$ = 4.0
-* $$U_v$$ = 2.0
-* $$J_z$$ = 1.0
-* $$J_s$$ = 1.0
-* $$J_p$$ = 1.0
-* $$\mu$$ = 3.50
+* ``U_c`` = 4.0
+* ``U_v`` = 2.0
+* ``J_z`` = 1.0
+* ``J_s`` = 1.0
+* ``J_p`` = 1.0
+* ``\mu`` = 3.50
 
 **Recipes**
 
@@ -42,9 +42,9 @@ Since the local Hamiltonian contain the spin-flip and pair-hopping terms, it is 
 
 Since the Hubbard model is defined in a Bethe lattice whose density of states is semi-circular, the self-consistent equation for the dynamical mean-field theory reads:
 
-$$
+```math
 G(\tau) = t^2 \Delta(\tau)
-$$
+```
 
 As mentioned before, the **BEGONIA** component (and the other quantum impurity solver components) contains a mini dynamical mean-field engine and the above self-consistent equation is already implemented by default. So, we can use the **BEGONIA** component alone without help from any external programs or scripts.
 
@@ -166,7 +166,7 @@ Next we have to prepare the *solver.ctqmc.in* file for the **BEGONIA** component
 
 But you can also copy it from the *iqist/tutor/t21* directory:
 
-```
+```sh
 $ cp iqist/tutor/t21/solver.ctqmc.in .
 ```
 
@@ -175,8 +175,8 @@ The important parameters in the *solver.ctqmc.in* file are as follows:
 * *isscf = 2*: Define the DMFT self-consistent computational mode.
 * *nband = 2*, *norbs = 4*, and *ncfgs = 16*: Specify a two-band Hubbard model.
 * *nzero = 256*: Maximum number of non-zero matrix elements for *F*-matrix.
-* *mune = 3.5* : Chemical potential $$\mu$$.
-* *beta = 10.0* : Inverse temperature $$\beta$$.
+* *mune = 3.5* : Chemical potential ``\mu``.
+* *beta = 10.0* : Inverse temperature ``\beta``.
 * *npart = 4*: Number of parts that the imaginary-time axis is splitted.
 
 In fact, you can create a simplified *solver.ctqmc.in* file which contains only the *nband*, *norbs*, *ncfgs*, *nzero*, *mune*, and *beta* parameters. The **BEGONIA** component will supplement the rest using default settings. Noted that now the *Uc*, *Uv*, *Jz*, *Js* and *Jp* parameters in the *solver.ctqmc.in* file are used as a reference. All of the information about the local Hamiltonian is defined in the *atom.config.in* file and dealed with the **JASMINE** component. The **BEGONIA** component is not responsible for constructing the local Hamiltonian model.
@@ -197,7 +197,7 @@ $ ctqmc
 
 **(5)** Post-processing
 
-As usual we use the Python/matplotlib package to visualize the calculated results. If you are not familiar with this powerful tool, please visit its official website:`http://matplotlib.org`. Here is a sample Python script for plotting the imaginary-time Green's function $$G(\tau)$$, you can modify it to fit your requirements.
+As usual we use the Python/matplotlib package to visualize the calculated results. If you are not familiar with this powerful tool, please visit its official website:`http://matplotlib.org`. Here is a sample Python script for plotting the imaginary-time Green's function ``G(\tau)``, you can modify it to fit your requirements.
 
 ```python
 #!/usr/bin/env python
@@ -250,7 +250,7 @@ Next we will show some visualized results. The following figures were generated 
 
 ![gtau image](../figure/21gtau.png)
 
-**Figure** | The imaginary-time Green's function $$G(\tau)$$.
+**Figure** | The imaginary-time Green's function ``G(\tau)``.
 
 ---
 
@@ -258,7 +258,7 @@ Next we will show some visualized results. The following figures were generated 
 
 ![grnf image](../figure/21grnf.png)
 
-**Figure** | The imaginary part of Matsubara Green's function $$\Im G(i\omega_n)$$.
+**Figure** | The imaginary part of Matsubara Green's function ``\Im G(i\omega_n)``.
 
 ---
 
@@ -266,11 +266,11 @@ Next we will show some visualized results. The following figures were generated 
 
 ![sigf image](../figure/21sigf.png)
 
-**Figure** | The imaginary part of Matsubara self-energy function $$\Im \Sigma(i\omega_n)$$.
+**Figure** | The imaginary part of Matsubara self-energy function ``\Im \Sigma(i\omega_n)``.
 
 ---
 
-Since the orbitals in this model are degenerated, so for $$G(\tau)$$, $$G(i\omega_n)$$, and $$\Sigma(i\omega_n)$$ we only plot the data for the first band. Clearly, the system is in insulating state.
+Since the orbitals in this model are degenerated, so for ``G(\tau)``, ``G(i\omega_n)``, and ``\Sigma(i\omega_n)`` we only plot the data for the first band. Clearly, the system is in insulating state.
 
 **Adventures**
 
