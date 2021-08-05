@@ -2,7 +2,7 @@
 
 **Definition**
 
-Inversion of temperature $$\beta\ (\equiv 1/T)$$.
+Inversion of temperature ``\beta\ (\equiv 1/T)``.
 
 **Type**
 
@@ -24,8 +24,8 @@ It is used to determine the system temperature. The larger $$\beta$$ is, the slo
 
 To convert beta to real temperature, you can use the following formula:
 
-$$
+```math
 T = 11604.505008098 / \beta
-$$
+```
 
-The unit is Kelvin ($$K$$). For $$\beta = 40.0$$, the corresponding temperature (290.11262520245 $$ K$$) is roughly the room temperature.
+The unit is Kelvin (``K``). For ``\beta = 40.0``, the corresponding temperature (290.11262520245 ``K``) is roughly the room temperature.
