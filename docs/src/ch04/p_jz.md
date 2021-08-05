@@ -2,7 +2,7 @@
 
 **Definition**
 
-Coupling constant for the Hund's exchange interaction in z axis, $$J_z$$ 
+Coupling constant for the Hund's exchange interaction in z axis, ``J_z``.
 
 **Type**:
 

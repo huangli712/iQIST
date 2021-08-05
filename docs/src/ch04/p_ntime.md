@@ -10,7 +10,7 @@ In the iQIST software package, the imaginary time mesh is calculated as follows:
 \tau_i = \frac{\beta (i-1)}{n-1} 
 ```
 
-where ``i \in [1,n] `` and ``\tau_i \in [0,\beta]``. So, the value of $$n$$ is just *ntime*.
+where ``i \in [1,n] `` and ``\tau_i \in [0,\beta]``. So, the value of ``n`` is just *ntime*.
 
 **Type**
 

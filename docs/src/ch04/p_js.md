@@ -2,7 +2,7 @@
 
 **Definition**
 
-Strength of the spin-flip term in the interaction term, $$J_s$$.
+Strength of the spin-flip term in the interaction term, ``J_s``.
 
 **Type**
 

@@ -2,7 +2,7 @@
 
 **Definition**
 
-Intra-orbital Coulomb interaction $$U_c$$.
+Intra-orbital Coulomb interaction ``U_c``.
 
 **Type**
 

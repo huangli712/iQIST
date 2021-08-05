@@ -2,7 +2,7 @@
 
 **Definition**
 
-Averaged Coulomb interaction $$U$$.
+Averaged Coulomb interaction ``U``.
 
 **Type**
 

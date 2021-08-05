@@ -34,7 +34,7 @@ Determine the size of involved arrays. Only useful when we need to compute the t
 
 **Comment**
 
-If the *nbfrq* is too large, the computational time is not bearable. So we recommend to set *nbfrq* $$ \leq 32$$ The computation of two-particle quantities is extremely time-consuming, though we have tried our best optimizing it.
+If the *nbfrq* is too large, the computational time is not bearable. So we recommend to set *nbfrq* `` \leq 32`` The computation of two-particle quantities is extremely time-consuming, though we have tried our best optimizing it.
 
 See [nffrq](p_nffrq.md) and [nfreq](p_nfreq.md) for more details.
 

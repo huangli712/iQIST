@@ -22,7 +22,7 @@ Determine the size of involved arrays.
 
 **Comment**
 
-In iQIST software package, when we say *nband*, we always do not consider the spin degree of freedom. So for $$d$$−electron system, it should be a five-band model (*nband* = 5), while for $$f$$−electron, it should be a seven-band model (*nband* = 7).
+In iQIST software package, when we say *nband*, we always do not consider the spin degree of freedom. So for ``d``−electron system, it should be a five-band model (*nband* = 5), while for ``f``−electron, it should be a seven-band model (*nband* = 7).
 
 When you try to setup the *nband* parameter in the *solver.ctqmc.in* or *solver.hfqmc.in* file, the corresponding *norbs* and *ncfgs* parameters must be set as well.
 

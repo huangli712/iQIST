@@ -2,7 +2,7 @@
 
 **Definition**
 
-Inter-orbital Coulomb interaction $$U_v$$.
+Inter-orbital Coulomb interaction ``U_v``.
 
 **Type**
 

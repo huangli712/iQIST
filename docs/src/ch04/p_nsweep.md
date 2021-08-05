@@ -18,7 +18,7 @@ ALL
 
 **Behavior**
 
-This is the number of Monte Carlo sampling steps conducted by the current process. If you run the quantum impurity solvers parallelly with $$N_{\text{procs}}$$ processes, then the total number of Monte Carlo sampling steps in the calculation is 
+This is the number of Monte Carlo sampling steps conducted by the current process. If you run the quantum impurity solvers parallelly with ``N_{\text{procs}}`` processes, then the total number of Monte Carlo sampling steps in the calculation is 
 
 ```math
 N_{\text{procs}} \times \text{nsweep}
