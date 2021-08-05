@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The purpose of the *atom.tmat.in* file is to supply the transformation matrix $$\mathcal{T}_{\alpha,\beta}$$, which transforms an operator from its original basis to the natural basis. Only when *ibasis* = 2, the *atom.tmat.in* file is used. See [ibasis](p_ibasis.md) for more details.
+The purpose of the *atom.tmat.in* file is to supply the transformation matrix ``\mathcal{T}_{\alpha,\beta}``, which transforms an operator from its original basis to the natural basis. Only when *ibasis* = 2, the *atom.tmat.in* file is used. See [ibasis](p_ibasis.md) for more details.
 
 **Format**
 
@@ -10,19 +10,19 @@ The format of the *atom.tmat.in* file is as follows:
 
 ---
 
-*column 1*: orbital index $$\alpha$$, integer
+*column 1*: orbital index ``\alpha``, integer
 
-*column 2*: orbital index $$\beta$$, integer
+*column 2*: orbital index ``\beta``, integer
 
-*column 3*: Elements of the transformation matrix $$\mathcal{T}_{\alpha,\beta}$$, double precision
+*column 3*: Elements of the transformation matrix ``\mathcal{T}_{\alpha,\beta}``, double precision
 
 ---
 
 !!! note
 
-In the *atom.tmat.in* file, we adopt the following orbital sequence:
-$$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-In other words, the spin up part is always before the spin down part.
+    In the *atom.tmat.in* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 

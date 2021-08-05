@@ -10,19 +10,19 @@ The format of the *atom.emat.dat* file is as follows:
 
 ---
 
-*column 1*: orbital index $$\alpha$$, integer
+*column 1*: orbital index ``\alpha``, integer
 
-*column 2*: On-site impurity energy level $$E_{\alpha,\alpha}$$, real part, double precision
+*column 2*: On-site impurity energy level ``E_{\alpha,\alpha}``, real part, double precision
 
-*column 3*: On-site impurity energy level $$E_{\alpha,\alpha}$$, imaginary part, double precision
+*column 3*: On-site impurity energy level ``E_{\alpha,\alpha}``, imaginary part, double precision
 
 ---
 
 !!! note
 
-In the *atom.emat.dat* file, we adopt the following orbital sequence:
-$$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-In other words, the spin up part is always before the spin down part.
+    In the *atom.emat.dat* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
