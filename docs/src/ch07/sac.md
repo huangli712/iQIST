@@ -2,7 +2,7 @@
 
 ### Introduction
 
-An alternative way to extract the $$A(\omega)$$ from $$G(\tau)$$ is using the stochastic analytical continuation[^1]. Unlike the maximum entropy method, the stochastic analytical continuation does not depend on any *a priori* parameters. It has been argued that the stochastic analytical continuation can produce more accurate spectral functions with more subtle structures. 
+An alternative way to extract the ``A(\omega)`` from ``G(\tau)`` is using the stochastic analytical continuation[^1]. Unlike the maximum entropy method, the stochastic analytical continuation does not depend on any *a priori* parameters. It has been argued that the stochastic analytical continuation can produce more accurate spectral functions with more subtle structures. 
 
 In the **HIBISCUS** component, we also implemented the stochastic analytical continuation which can be viewed as a useful complementary procedure to the maximum entropy method. Since the stochastic analytical continuation is computationally much heavier than the maximum entropy method, we parallelized it with MPI and OpenMP.
 
@@ -12,7 +12,7 @@ The **HIBISCUS**/stoch code is often used to perform the analytical continuation
     G(\tau) = \int K(\tau,\omega) A(\omega) d\omega
 ```
 
-where $$K(\tau,\omega)$$ is the so-called kernel function. Its definition is as follows:
+where ``K(\tau,\omega)`` is the so-called kernel function. Its definition is as follows:
 
 ```math
     K(\tau,\omega) = \frac{ \exp{(-\tau\omega)} }{1.0+\exp{(-\beta\omega)}}
@@ -45,7 +45,7 @@ $ mpiexec -n number_of_cores ./sac
 * *tau.grn.dat* (necessary)
 * *sac.in* (necessary)
 
-The *tau.grn.dat* file contains the $$G(\tau)$$ data. It has to be generated using the **HIBISCUS**/toolbox/maketau code. 
+The *tau.grn.dat* file contains the ``G(\tau)`` data. It has to be generated using the **HIBISCUS**/toolbox/maketau code. 
 
 See also [toolbox/maketau](tau.md) for more details.
 
@@ -60,7 +60,7 @@ See also [solver.ctqmc.in](../ch04/in_ctqmc.md) for more details.
 * *sac.move.dat*
 * *sac.swap.dat*
 
-The $$\alpha$$-resolved and $$\alpha$$-averaged impurity spectral functions are stored in the *sac.image.dat* and *sac.imsum.dat* files, respectively. In the *sac.move.dat* and *sac.swap.dat* files, the statistics for the Monte Carlo move/swap operations are recorded.
+The ``\alpha``-resolved and ``\alpha``-averaged impurity spectral functions are stored in the *sac.image.dat* and *sac.imsum.dat* files, respectively. In the *sac.move.dat* and *sac.swap.dat* files, the statistics for the Monte Carlo move/swap operations are recorded.
 
 ### Parameters
 
@@ -134,15 +134,15 @@ In the following, we will show the original definitions for the control paramete
      real(dp), public, save :: wstep = 0.05_dp
 ```
 
-### Recipe: how to convert $$G(\tau)$$ to $$A(\omega)$$ using the **HIBISCUS**/stoch code
+### Recipe: how to convert ``G(\tau)`` to ``A(\omega)`` using the **HIBISCUS**/stoch code
 
 **Step 1**: 
 
-Perform CT-HYB or HF-QMC calculations, generate a *solver.green.dat* file or multiple *solver.green.dat.$$*$$* files.
+Perform CT-HYB or HF-QMC calculations, generate a *solver.green.dat* file or multiple *solver.green.dat.``*``* files.
 
 **Step 2**:
 
-Using the **HIBISCUS**/toolbox/maketau to post-process the *solver.green.dat file* or *solver.green.dat.$$*$$* files. The output should be *tau.grn.dat* file.
+Using the **HIBISCUS**/toolbox/maketau to post-process the *solver.green.dat file* or *solver.green.dat.``*``* files. The output should be *tau.grn.dat* file.
 
 **Step 3**:
 
@@ -154,7 +154,7 @@ Execute the **HIBISCUS**/sac code, the *tau.grn.dat* and *sac.in* files are nece
 
 **Step 5**:
 
-Validate the impurity spectral function $$A(\omega)$$ in the *sac.imsum.dat* file. That is what you need.
+Validate the impurity spectral function ``A(\omega)`` in the *sac.imsum.dat* file. That is what you need.
 
 !!! note
 
