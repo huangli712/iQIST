@@ -10,17 +10,17 @@ The *solver.grn.dat* file contains *norbs* block. Each block is appended by two 
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: Matsubara frequency point, $$\omega_n$$, double precision
+*column 2*: Matsubara frequency point, ``\omega_n``, double precision
 
-*column 3*: Matsubara Green's function, $$\Re G(i\omega_n)$$, double precision
+*column 3*: Matsubara Green's function, ``\Re G(i\omega_n)``, double precision
 
-*column 4*: Matsubara Green's function, $$\Im G(i\omega_n)$$, double precision
+*column 4*: Matsubara Green's function, ``\Im G(i\omega_n)``, double precision
 
-*column 5*: error bar, $$\Re [\delta G(i\omega_n)]$$, double precision
+*column 5*: error bar, ``\Re [\delta G(i\omega_n)]``, double precision
 
-*column 6*: error bar, $$\Im [\delta G(i\omega_n)]$$, double precision
+*column 6*: error bar, ``\Im [\delta G(i\omega_n)]``, double precision
 
 ---
 

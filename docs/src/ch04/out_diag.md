@@ -24,9 +24,9 @@ The *solver.diag.dat* file consists many blocks. The blocks are separated by two
 
 Here *cur_iter* means current iteration number, *tot_iter* the total iteration number, *cur_diag* the index of the current diagram configuration, *tot_diag* the total number of diagram configurations. Actually, we have
 
-$$
+```math
 \text{tot_diag} = \frac{\text{nsweep}}{\text{nwrite}}.
-$$
+```
 
 Next, the positions for creator/destroy operators are given for all orbitals (flavors).
 

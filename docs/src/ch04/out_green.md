@@ -10,15 +10,15 @@ The *solver.green.dat* file contains *norbs* block. Each block is appended by tw
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: imaginary-time index $$j$$, integer
+*column 2*: imaginary-time index ``j``, integer
 
-*column 3*: imaginary-time point, $$\tau$$, double precision
+*column 3*: imaginary-time point, ``\tau``, double precision
 
-*column 4*: imaginary-time Green's function, $$G(\tau)$$, double precision
+*column 4*: imaginary-time Green's function, ``G(\tau)``, double precision
 
-*column 5*: error bar, $$\delta G(\tau)$$, double precision
+*column 5*: error bar, ``\delta G(\tau)``, double precision
 
 ---
 

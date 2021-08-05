@@ -22,11 +22,11 @@ There are five possible choices for the *wc* parameter so far:
 
 * *isscr* = 1, no meaning.
 
-* *isscr* = 2, the $$\omega_0$$ parameter in the Hubbard-Holstein model.
+* *isscr* = 2, the ``\omega_0`` parameter in the Hubbard-Holstein model.
 
-* *isscr* = 3, the $$\omega'$$ parameter in the plasmon-pole model for dynamical screening effect.
+* *isscr* = 3, the ``\omega'`` parameter in the plasmon-pole model for dynamical screening effect.
 
-* *isscr* = 4, the $$\omega_c$$ parameter in the ohmic model for dynamical screening effect.
+* *isscr* = 4, the ``\omega_c`` parameter in the ohmic model for dynamical screening effect.
 
 * *isscr* = 99, no meaning.
 

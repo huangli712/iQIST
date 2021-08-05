@@ -10,17 +10,17 @@ The *solver.hub.dat* file contains *norbs* block. Each block is appended by two 
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: Matsubara frequency point, $$\omega_n$$, double precision
+*column 2*: Matsubara frequency point, ``\omega_n``, double precision
 
-*column 3*: atomic Green's function, $$\Re G_{\text{atomic}}(i\omega_n)$$, double precision
+*column 3*: atomic Green's function, ``\Re G_{\text{atomic}}(i\omega_n)``, double precision
 
-*column 4*: atomic Green's function, $$\Im G_{\text{atomic}}(i\omega_n)$$, double precision
+*column 4*: atomic Green's function, ``\Im G_{\text{atomic}}(i\omega_n)``, double precision
 
-*column 5*: atomic self-energy function, $$\Re \Sigma_{\text{atomic}}(i\omega_n)$$, double precision
+*column 5*: atomic self-energy function, ``\Re \Sigma_{\text{atomic}}(i\omega_n)``, double precision
 
-*column 6*: atomic self-energy function, $$\Im \Sigma_{\text{atomic}}(i\omega_n)$$, double precision
+*column 6*: atomic self-energy function, ``\Im \Sigma_{\text{atomic}}(i\omega_n)``, double precision
 
 ---
 
