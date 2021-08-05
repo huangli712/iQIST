@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.kmat.dat* is used to store the orbital-dependent kinetic energy data (Here we use the expectation value of the perturbation expansion order $$\langle k \rangle$$ to represent the kinetic energy). It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.kmat.dat* is used to store the orbital-dependent kinetic energy data (Here we use the expectation value of the perturbation expansion order ``\langle k \rangle`` to represent the kinetic energy). It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 
@@ -10,7 +10,7 @@ The *solver.kmat.dat* is used to store the orbital-dependent kinetic energy data
 
 **Format**
 
-The *solver.kmat.dat* file contains two blocks. One is for the orbital-dependent kinetic energy $$\langle k_i\rangle$$, and another one is for the double kinetic energy matrix $$\langle k_i k_j\rangle$$. In each block, the error bar data are always shown in the rightmost column.
+The *solver.kmat.dat* file contains two blocks. One is for the orbital-dependent kinetic energy ``\langle k_i\rangle``, and another one is for the double kinetic energy matrix ``\langle k_i k_j\rangle``. In each block, the error bar data are always shown in the rightmost column.
 
 !!! note
 

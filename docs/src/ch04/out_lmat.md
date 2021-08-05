@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.lmat.dat* file is used to store the necessary data used to build the generalized fidelity susceptibility $$\chi_{\text{FS}}$$, which can be calculated via $$\chi_{\text{FS}} = \langle k_L k_R \rangle - \langle k_L \rangle \langle k_R \rangle$$. It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.lmat.dat* file is used to store the necessary data used to build the generalized fidelity susceptibility ``\chi_{\text{FS}}``, which can be calculated via ``\chi_{\text{FS}} = \langle k_L k_R \rangle - \langle k_L \rangle \langle k_R \rangle``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 
@@ -10,7 +10,7 @@ The *solver.lmat.dat* file is used to store the necessary data used to build the
 
 **Format**
 
-The *solver.lmat.dat* file contains two blocks. One is for the $$\langle k_L \rangle$$ and $$\langle k_R \rangle$$ data, and another one is for the $$\langle k_L k_R \rangle$$. In each block, the error bar data are always shown in the rightmost column.
+The *solver.lmat.dat* file contains two blocks. One is for the ``\langle k_L \rangle`` and ``\langle k_R \rangle`` data, and another one is for the ``\langle k_L k_R \rangle``. In each block, the error bar data are always shown in the rightmost column.
 
 !!! note
 

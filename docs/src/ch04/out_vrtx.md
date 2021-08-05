@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.vrtx.dat* file is designed to store the two-particle Green's function $$\chi(i\omega_n, i\omega'_n, i\nu_n)$$ and vertex function $$\mathcal{F}(i\omega_n, i\omega'_n, i\nu_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.vrtx.dat* file is designed to store the two-particle Green's function ``\chi(i\omega_n, i\omega'_n, i\nu_n)`` and vertex function ``\mathcal{F}(i\omega_n, i\omega'_n, i\nu_n)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 
@@ -21,17 +21,17 @@ blocks. Each block is appended by two blank lines. The format of each block is a
 
 ---
 
-*column 1*: Matsubara frequency point (fermionic type), $$\omega_n$$, integer, the unit is $$\pi/\beta$$
+*column 1*: Matsubara frequency point (fermionic type), ``\omega_n``, integer, the unit is ``\pi/\beta``
 
-*column 2*: Matsubara frequency point (fermionic type), $$\omega'_n$$, integer, the unit is $$\pi/\beta$$
+*column 2*: Matsubara frequency point (fermionic type), ``\omega'_n``, integer, the unit is ``\pi/\beta``
 
-*column 3*: two-particle Green's function, $$\chi(i\omega_n, i\omega'_n, i\nu_n)$$, double precision
+*column 3*: two-particle Green's function, ``\chi(i\omega_n, i\omega'_n, i\nu_n)``, double precision
 
-*column 4*: bubble function, $$\chi_0(i\omega_n, i\omega'_n, i\nu_n)$$, double precision
+*column 4*: bubble function, ``\chi_0(i\omega_n, i\omega'_n, i\nu_n)``, double precision
 
-*column 5*: irreducible part of the two-particle Green's function, $$\chi_\text{irr}(i\omega_n, i\omega'_n, i\nu_n)$$, double precision
+*column 5*: irreducible part of the two-particle Green's function, ``\chi_\text{irr}(i\omega_n, i\omega'_n, i\nu_n)``, double precision
 
-*column 6*: full vertex function, $$\mathcal{F}(i\omega_n, i\omega'_n, i\nu_n)$$, double precision
+*column 6*: full vertex function, ``\mathcal{F}(i\omega_n, i\omega'_n, i\nu_n)``, double precision
 
 ---
 

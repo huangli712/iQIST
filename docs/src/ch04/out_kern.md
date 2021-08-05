@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.kernel.dat* is designed to store the screening function $$K(\tau)$$ and it derivates $$K'(\tau)$$ in imaginary-time space. It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.kernel.dat* is designed to store the screening function ``K(\tau)`` and it derivates ``K'(\tau)`` in imaginary-time space. It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 

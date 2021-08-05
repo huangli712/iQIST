@@ -2,7 +2,7 @@
 
 **Introduction**
 
-This file is used to store the imaginary-time Weiss's function $$G_0(\tau)$$. It will be output by the quantum impurity solvers when they are **shut down**.
+This file is used to store the imaginary-time Weiss's function ``G_0(\tau)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 **Format**
 
@@ -10,15 +10,15 @@ The *solver.weiss.dat* file contains *norbs* block. Each block is appended by tw
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: imaginary-time index $$j$$, integer
+*column 2*: imaginary-time index ``j``, integer
 
-*column 3*: imaginary-time point, $$\tau$$, double precision
+*column 3*: imaginary-time point, ``\tau``, double precision
 
-*column 4*: imaginary-time Weiss's function, $$G_0(\tau)$$, double precision
+*column 4*: imaginary-time Weiss's function, ``G_0(\tau)``, double precision
 
-*column 5*: error bar, $$\delta G_0(\tau)$$, double precision
+*column 5*: error bar, ``\delta G_0(\tau)``, double precision
 
 ---
 

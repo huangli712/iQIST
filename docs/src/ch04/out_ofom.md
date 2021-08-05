@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.ofom.dat* file is used to store the orbital-orbital correlation function in frequency space, $$\chi_{\text{charge}}(i\nu_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.ofom.dat* file is used to store the orbital-orbital correlation function in frequency space, ``\chi_{\text{charge}}(i\nu_n)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 
@@ -14,11 +14,11 @@ The *solver.ofom.dat* file contains *norbs*$$\times$$*norbs* blocks. Each block 
 
 ---
 
-*column 1*: Matsubara frequency point (bosonic type), $$\nu_n$$, double precision
+*column 1*: Matsubara frequency point (bosonic type), ``\nu_n``, double precision
 
-*column 2*: orbital-orbital correlation function, $$\Re \chi_{\text{charge}}(i\nu_n)$$, double precision
+*column 2*: orbital-orbital correlation function, ``\Re \chi_{\text{charge}}(i\nu_n)``, double precision
 
-*column 3*: error bar, $$\Re [\delta\chi_{\text{charge}}(i\nu_n)]$$, double precision
+*column 3*: error bar, ``\Re [\delta\chi_{\text{charge}}(i\nu_n)]``, double precision
 
 ---
 

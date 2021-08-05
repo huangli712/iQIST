@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.sfom.dat* file is used to store the spin-spin correlation function in frequency space, $$\chi_{\text{spin}}(i\nu_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.sfom.dat* file is used to store the spin-spin correlation function in frequency space, ``\chi_{\text{spin}}(i\nu_n)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 
@@ -14,11 +14,11 @@ The *solver.sfom.dat* file contains *nband* blocks. Each block is appended by tw
 
 ---
 
-*column 1*: Matsubara frequency point (bosonic type), $$\nu_n$$, double precision
+*column 1*: Matsubara frequency point (bosonic type), ``\nu_n``, double precision
 
-*column 2*: spin-spin correlation function, $$\Re \chi_{\text{spin}}(i\nu_n)$$, double precision
+*column 2*: spin-spin correlation function, ``\Re \chi_{\text{spin}}(i\nu_n)``, double precision
 
-*column 3*: error bar, $$\Re [\delta\chi_{\text{spin}}(i\nu_n)]$$, double precision
+*column 3*: error bar, ``\Re [\delta\chi_{\text{spin}}(i\nu_n)]``, double precision
 
 ---
 

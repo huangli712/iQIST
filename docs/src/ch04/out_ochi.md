@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.ochi.dat* file is used to store the orbital-orbital correlation function in time space, $$\chi_{\text{charge}}(\tau) = \langle n(0)n(\tau)\rangle$$. It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.ochi.dat* file is used to store the orbital-orbital correlation function in time space, ``\chi_{\text{charge}}(\tau) = \langle n(0)n(\tau)\rangle``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 

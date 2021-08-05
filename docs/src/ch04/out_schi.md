@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The *solver.schi.dat* file is used to store the spin-spin correlation function in time space, $$\chi_{\text{spin}}(\tau) = \langle S_z(0)S_z(\tau)\rangle$$. It will be output by the quantum impurity solvers when they are **shut down**.
+The *solver.schi.dat* file is used to store the spin-spin correlation function in time space, ``\chi_{\text{spin}}(\tau) = \langle S_z(0)S_z(\tau)\rangle``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 !!! note
 

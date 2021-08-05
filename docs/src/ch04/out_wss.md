@@ -2,7 +2,7 @@
 
 **Introduction**
 
-This file is used to store the Matsubara Weiss's function $$G_0(i\omega_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
+This file is used to store the Matsubara Weiss's function ``G_0(i\omega_n)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 **Format**
 
@@ -10,17 +10,17 @@ The *solver.wss.dat* file contains *norbs* block. Each block is appended by two 
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: Matsubara frequency point, $$\omega_n$$, double precision
+*column 2*: Matsubara frequency point, ``\omega_n``, double precision
 
-*column 3*: Matsubara Weiss's function, $$\Re G_0(i\omega_n)$$, double precision
+*column 3*: Matsubara Weiss's function, ``\Re G_0(i\omega_n)``, double precision
 
-*column 4*: Matsubara Weiss's function, $$\Im G_0(i\omega_n)$$, double precision
+*column 4*: Matsubara Weiss's function, ``\Im G_0(i\omega_n)``, double precision
 
-*column 5*: error bar, $$\Re [\delta G_0(i\omega_n)]$$, double precision
+*column 5*: error bar, ``\Re [\delta G_0(i\omega_n)]``, double precision
 
-*column 6*: error bar, $$\Im [\delta G_0(i\omega_n)]$$, double precision
+*column 6*: error bar, ``\Im [\delta G_0(i\omega_n)]``, double precision
 
 ---
 

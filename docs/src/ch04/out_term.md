@@ -137,9 +137,9 @@ In this part, we can gain the following information:
 * Total energy, etot
 * Potential energy, epot
 * Kinetic energy, ekin
-* Magnetic momentum, $$ \langle S_z \rangle $$
-* Total occupancy, $$\langle N^1 \rangle$$, $$\langle N^2\rangle$$
-* Average of histogram, $$\langle K^2 \rangle$$, $$\langle K^3 \rangle$$, $$\langle K^4 \rangle$$
+* Magnetic momentum, `` \langle S_z \rangle ``
+* Total occupancy, ``\langle N^1 \rangle``, ``\langle N^2\rangle``
+* Average of histogram, ``\langle K^2 \rangle``, ``\langle K^3 \rangle``, ``\langle K^4 \rangle``
 * Probability for the accept/reject events for various update 
 * Is the status of the solver normal?
 * How long did the solver spend in this period?
