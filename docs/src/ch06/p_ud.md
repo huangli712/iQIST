@@ -18,7 +18,7 @@ Only for the **JASMINE** component.
 
 **Behavior**
 
-It is useful when *icu* = 2. The *Ud* and *Jh* parameters are used to calculate the $$F_0$$, $$F_2$$, $$F_4$$, and $$F_6$$.
+It is useful when *icu* = 2. The *Ud* and *Jh* parameters are used to calculate the ``F_0``, ``F_2``, ``F_4``, and ``F_6``.
 
 **Comment**
 

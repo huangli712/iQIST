@@ -2,7 +2,7 @@
 
 **Definition**
 
-Chemical potential or fermi level $$\mu$$.
+Chemical potential or fermi level ``\mu``.
 
 **Type**
 

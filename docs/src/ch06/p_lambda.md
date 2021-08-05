@@ -2,7 +2,7 @@
 
 **Definition**
 
-Strength of the spin-orbital coupling $$\lambda$$.
+Strength of the spin-orbital coupling ``\lambda``.
 
 **Type**
 
@@ -20,9 +20,9 @@ Only for the **JASMINE** component.
 
 This parameter is used to build the spin-orbital coupling term of the local interaction Hamiltonian. It is valid only when *isoc* = 1.
 
-$$
+```math
 H_{\text{SOC}} = \lambda \textbf{L} \cdot \textbf{S}
-$$
+```
 
 **Comment**
 
