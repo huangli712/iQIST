@@ -1,13 +1,13 @@
 ### Subspace and symmetry
 
-For a local Hamiltonian $$H_{\text{loc}}$$ with general interactions, the evaluation of local trace is heavily time-consuming,
-$$
+For a local Hamiltonian ``H_{\text{loc}}`` with general interactions, the evaluation of local trace is heavily time-consuming,
+```math
 \begin{equation}
 \omega_{d}(\mathcal{C}) = 
 \text{Tr}_{\text{loc}} (T_{2k+1}F_{2k}T_{2k} \cdots F_{2}T_{2}F_{1}T_{1}),
 \end{equation}  
-$$
-where $$T=e^{-\tau H_{\text{loc}}}$$ is time evolution operator, $$F$$ is a fermion creation or annihilation operator, and $$k$$ is the expansion order for the current diagrammatic configuration $$\mathcal{C}$$. The straightforward method to evaluate this trace is to insert the complete eigenstates $$\{ \Gamma \}$$ of $$H_{\text{loc}}$$ into the RHS of the above equation, then 
+```
+where ``T=e^{-\tau H_{\text{loc}}}`` is time evolution operator, ``F`` is a fermion creation or annihilation operator, and ``k`` is the expansion order for the current diagrammatic configuration ``\mathcal{C}``. The straightforward method to evaluate this trace is to insert the complete eigenstates ``\{ \Gamma \}`` of ``H_{\text{loc}}`` into the RHS of the above equation, then 
 $$
 \begin{eqnarray}
 \text{Tr}_{\text{loc}} &= &\sum_{\{\Gamma_{1}\Gamma_{2} \cdots \Gamma_{2k}\}} 
