@@ -10,7 +10,7 @@ The *solver.ofom.dat* file is used to store the orbital-orbital correlation func
 
 **Format**
 
-The *solver.ofom.dat* file contains *norbs*$$\times$$*norbs* blocks. Each block is appended by two blank lines. The format of each block is as follows:
+The *solver.ofom.dat* file contains *norbs*``\times``*norbs* blocks. Each block is appended by two blank lines. The format of each block is as follows:
 
 ---
 

@@ -10,7 +10,7 @@ The *solver.ochi.dat* file is used to store the orbital-orbital correlation func
 
 **Format**
 
-The *solver.ochi.dat* file contains a few (*norbs*$$\times$$*norbs* + 2) blocks. The first *norbs*$$\times$$*norbs* blocks are orbital-resolved orbital-orbital correlation functions. The next block is the total orbital-orbital correlation function. The final block is the sum of orbital-resolved orbital-orbital correlation functions. Each block is appended by two blank lines. In each block, the error bar data are always shown in the rightmost column.
+The *solver.ochi.dat* file contains a few (*norbs*``\times``*norbs* + 2) blocks. The first *norbs*``\times``*norbs* blocks are orbital-resolved orbital-orbital correlation functions. The next block is the total orbital-orbital correlation function. The final block is the sum of orbital-resolved orbital-orbital correlation functions. Each block is appended by two blank lines. In each block, the error bar data are always shown in the rightmost column.
 
 !!! note
 

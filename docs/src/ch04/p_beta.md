@@ -18,7 +18,7 @@ ALL
 
 **Behavior**
 
-It is used to determine the system temperature. The larger $$\beta$$ is, the slower computation is.
+It is used to determine the system temperature. The larger ``\beta`` is, the slower computation is.
 
 **Comment**
 

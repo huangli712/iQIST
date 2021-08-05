@@ -20,13 +20,13 @@ blocks. Each block is appended by two blank lines. The format of each block is a
 
 ---
 
-*column 1*: Matsubara frequency point (fermionic type), $$\omega_n$$, integer, the unit is $$\pi/\beta$$
+*column 1*: Matsubara frequency point (fermionic type), ``\omega_n``, integer, the unit is ``\pi/\beta``
 
-*column 2*: Matsubara frequency point (fermionic type), $$\omega'_n$$, integer, the unit is $$\pi/\beta$$
+*column 2*: Matsubara frequency point (fermionic type), ``\omega'_n``, integer, the unit is ``\pi/\beta``
 
-*column 3*: real part of the pairing susceptibility, $$\Re \chi_{\text{pair}}(i\omega_n, i\omega'_n, i\nu_n)$$, double precision
+*column 3*: real part of the pairing susceptibility, ``\Re \chi_{\text{pair}}(i\omega_n, i\omega'_n, i\nu_n)``, double precision
 
-*column 4*: imaginary part of the pairing susceptibility, $$\Im \chi_{\text{pair}}(i\omega_n, i\omega'_n, i\nu_n)$$, double precision
+*column 4*: imaginary part of the pairing susceptibility, ``\Im \chi_{\text{pair}}(i\omega_n, i\omega'_n, i\nu_n)``, double precision
 
 ---
 

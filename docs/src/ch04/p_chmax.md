@@ -2,7 +2,7 @@
 
 **Definition**
 
-The maximum allowable expansion order $$n$$ for the second kind Chebyshev orthogonal polynomials. It must be greater than 2.
+The maximum allowable expansion order ``n`` for the second kind Chebyshev orthogonal polynomials. It must be greater than 2.
 
 The recursive definition for the second kind Chebyshev polynomials is as follows:
 

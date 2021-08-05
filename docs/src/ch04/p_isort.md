@@ -38,7 +38,7 @@ Here ``G(\tau)`` is the imaginary-time Green's function and ``F(\tau)`` auxiliar
 \Sigma(i\omega_n) = \frac{F(i\omega_n)}{G(i\omega_n)}
 ```
 
-If the orthogonal polynomials trick is used, the $$G(\tau)$$ and $$F(\tau)$$ are expanded using orthogonal polynomials. And then the expansion coefficients are measured during Monte Carlo sampling procedure. Finally, according the expansion coefficients the ``G(\tau)`` and ``F(\tau)`` can be calculated analytically.
+If the orthogonal polynomials trick is used, the ``G(\tau)`` and ``F(\tau)`` are expanded using orthogonal polynomials. And then the expansion coefficients are measured during Monte Carlo sampling procedure. Finally, according the expansion coefficients the ``G(\tau)`` and ``F(\tau)`` can be calculated analytically.
 
 The expansion series are defined by the *chmax*, *chgrd*, *lemax*, and *legrd* parameters.
 

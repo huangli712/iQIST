@@ -17,15 +17,15 @@ The *solver.kernel.dat* file only contains one block. The format of the block is
 
 *column 1*: index of imaginary-time point, integer
 
-*column 2*: imaginary-time point, $$\tau$$, double precision
+*column 2*: imaginary-time point, ``\tau``, double precision
 
-*column 3*: screening function, $$K(\tau)$$, double precision
+*column 3*: screening function, ``K(\tau)``, double precision
 
-*column 4*: the first derivate of screening function, $$K'(\tau)$$, double precision
+*column 4*: the first derivate of screening function, ``K'(\tau)``, double precision
 
-*column 5*: the second derivate of screening function, $$K''(\tau)$$, double precision
+*column 5*: the second derivate of screening function, ``K''(\tau)``, double precision
 
-*column 6*: the third derivate of screening function, $$K'''(\tau)$$, double precision
+*column 6*: the third derivate of screening function, ``K'''(\tau)``, double precision
 
 ---
 

@@ -22,7 +22,7 @@ There are two possible values for *itrun* parameter so far:
 
 * *itrun* = 1, don't truncate it.
 
-* *itrun* = 2, those atomic states with low probability ($$P_{\Gamma} < 1.0E − 6$$) will be truncated for next DMFT iteration.
+* *itrun* = 2, those atomic states with low probability (``P_{\Gamma} < 1.0E − 6``) will be truncated for next DMFT iteration.
 
 !!! note 
 
