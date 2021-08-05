@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The purpose of this script is to compare the output files between two cases when testing solvers. With this script, we can judge whether the new results generated with a new version of iQIST are consistent with the previous generated with an old iQIST code. In this script, the histogram of perturbation expansion order, $$G(\tau)$$, $$G(i\omega_n)$$, and  $$\Sigma(i\omega_n)$$ are used as criteria.
+The purpose of this script is to compare the output files between two cases when testing solvers. With this script, we can judge whether the new results generated with a new version of iQIST are consistent with the previous generated with an old iQIST code. In this script, the histogram of perturbation expansion order, ``G(\tau)``, ``G(i\omega_n)``, and  ``\Sigma(i\omega_n)`` are used as criteria.
 
 **Type**
 

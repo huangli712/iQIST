@@ -2,17 +2,17 @@
 
 **Introduction**
 
-Once the analytical continuation is finished, we can obtain the spectral function $$A(\omega)$$ and the imaginary part of the real-frequency Green's function $$\Im G(\omega)$$,
+Once the analytical continuation is finished, we can obtain the spectral function ``A(\omega)`` and the imaginary part of the real-frequency Green's function ``\Im G(\omega)``,
 
-$$
+```math
 A(\omega) = -\frac{\Im G(\omega)}{\pi}
-$$
+```
 
-From the well-known Kramers-Kronig transformation, the real part of $$G(\omega)$$ can be determined as well:
+From the well-known Kramers-Kronig transformation, the real part of ``G(\omega)`` can be determined as well:
 
-$$
+```math
 \Re G(\omega) = -\frac{1}{\pi} \int^{\infty}_{-\infty} d\omega' \frac{\Im G(\omega)}{\omega - \omega'}
-$$
+```
 
 In the **HIBISCUS** component, we offer a Fortran code to do this job. This is the toolbox/makekra code.
 
@@ -20,7 +20,7 @@ The *makekra* code reads the density of states data, and then calculate the imag
 
 **Usage**
 
-```
+```sh
 $ ./mkra
 ```
 

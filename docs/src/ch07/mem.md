@@ -2,7 +2,7 @@
 
 ### Introduction
 
-In the Monte Carlo community, the maximum entropy method[^1] is often employed to extract the impurity spectral function $$A(\omega)$$ from the imaginary-time Green's function $$G(\tau)$$. Thus, in the **HIBISCUS** component, we implemented the standard maximum entropy algorithm. In the E-DMFT calculations, sometimes we have to perform analytical continuation for the retarded interaction function $$U(i\nu)$$ to obtain $$U(\nu)$$. So we developed a modified version of the maximum entropy method to enable this calculation.
+In the Monte Carlo community, the maximum entropy method[^1] is often employed to extract the impurity spectral function ``A(\omega)`` from the imaginary-time Green's function ``G(\tau)``. Thus, in the **HIBISCUS** component, we implemented the standard maximum entropy algorithm. In the E-DMFT calculations, sometimes we have to perform analytical continuation for the retarded interaction function ``U(i\nu)`` to obtain ``U(\nu)``. So we developed a modified version of the maximum entropy method to enable this calculation.
 
 The **HIBISCUS**/entropy code is often used to perform the analytical continuation to build impurity spectral function from imaginary-time Green's function using the well-known maximum entropy method. In principle, it solves the Laplace transformation
 
@@ -10,7 +10,7 @@ The **HIBISCUS**/entropy code is often used to perform the analytical continuati
     G(\tau) = \int K(\tau,\omega) A(\omega) d\omega
 ```
 
-where $$K(\tau,\omega)$$ is the so-called kernel function. Its definition is as follows:
+where ``K(\tau,\omega)`` is the so-called kernel function. Its definition is as follows:
 
 ```math
     K(\tau,\omega) = \frac{ \exp{(-\tau\omega)} }{1.0+\exp{(-\beta\omega)}}
@@ -30,7 +30,7 @@ where $$K(\tau,\omega)$$ is the so-called kernel function. Its definition is as 
 
 ### Usage
 
-```
+```sh
 $ ./entropy
 ```
 
@@ -49,7 +49,7 @@ $ mpiexec -n number_of_cores ./entropy
 * *tau.grn.dat* (necessary)
 * *entropy.in* (necessary)
 
-The *tau.grn.dat* file contains the $$G(\tau)$$ data. It has to be generated using the **HIBISCUS**/toolbox/maketau code. 
+The *tau.grn.dat* file contains the ``G(\tau)`` data. It has to be generated using the **HIBISCUS**/toolbox/maketau code. 
 
 See also [toolbox/maketau](tau.md) for more details.
 
@@ -62,7 +62,7 @@ See also [solver.ctqmc.in](../ch04/in_ctqmc.md) for more details.
 * *mem.dos.dat*
 * *mem.sum.dat*
 
-The impurity spectral function $$A(\omega)$$ is stored in the *mem.dos.dat* file. In the *mem.sum.dat* file, the sum-rules for the impurity spectral function are examined.
+The impurity spectral function ``A(\omega)`` is stored in the *mem.dos.dat* file. In the *mem.sum.dat* file, the sum-rules for the impurity spectral function are examined.
 
 ### Parameters
 
@@ -121,15 +121,15 @@ In the following, we will show the original definitions for the control paramete
      real(dp), public, save :: wstep = 0.025_dp
 ```
 
-### Recipe: how to convert $$G(\tau)$$ to $$A(\omega)$$ using the **HIBISCUS**/entropy code
+### Recipe: how to convert ``G(\tau)`` to ``A(\omega)`` using the **HIBISCUS**/entropy code
 
 **Step 1**: 
 
-Perform CT-HYB or HF-QMC calculations, generate a *solver.green.dat* file or multiple *solver.green.dat.$$*$$* files.
+Perform CT-HYB or HF-QMC calculations, generate a *solver.green.dat* file or multiple *solver.green.dat.``*``* files.
 
 **Step 2**:
 
-Using the **HIBISCUS**/toolbox/maketau to post-process the *solver.green.dat file* or *solver.green.dat.$$*$$* files. The output should be *tau.grn.dat* file.
+Using the **HIBISCUS**/toolbox/maketau to post-process the *solver.green.dat file* or *solver.green.dat.``*``* files. The output should be *tau.grn.dat* file.
 
 **Step 3**:
 
@@ -141,7 +141,7 @@ Execute the **HIBISCUS**/entropy code, the *tau.grn.dat* and *entropy.in* files 
 
 **Step 5**:
 
-Validate the impurity spectral function $$A(\omega)$$ in the *mem.dos.dat* file. That is what you need.
+Validate the impurity spectral function ``A(\omega)`` in the *mem.dos.dat* file. That is what you need.
 
 **Step 6**:
 
