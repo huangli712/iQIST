@@ -10,19 +10,19 @@ The format of the *atom.cmat.in* file is as follows:
 
 ---
 
-*column 1*: orbital index $$\alpha$$, integer
+*column 1*: orbital index ``\alpha``, integer
 
-*column 2*: orbital index $$\beta$$, integer
+*column 2*: orbital index ``\beta``, integer
 
-*column 3*: Crystal field splitting matrix element $$\Delta_{\alpha,\beta}$$, double precision
+*column 3*: Crystal field splitting matrix element ``\Delta_{\alpha,\beta}``, double precision
 
 ---
 
 !!! note
 
-In the *atom.cmat.in* file, we adopt the following orbital sequence:
-$$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
-In other words, the spin up part is always before the spin down part.
+    In the *atom.cmat.in* file, we adopt the following orbital sequence:
+    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    In other words, the spin up part is always before the spin down part.
 
 **Code**
 
