@@ -2,16 +2,16 @@
 
 Many physical observables are measured in our CT-HYB quantum impurity solvers. Here we provide a list of them.
 
-**Single-particle Green's function $$G(\tau)$$**
+**Single-particle Green's function ``G(\tau)``**
 
-The most important observable is the single-particle Green's function $$G(\tau)$$, which is measured using the elements of the matrix $$\mathcal{M}$$, 
-$$
+The most important observable is the single-particle Green's function ``G(\tau)``, which is measured using the elements of the matrix ``\mathcal{M}``, 
+```math
 \begin{align}
 G(\tau) = \left\langle \frac{1}{\beta} \sum_{ij}\delta^{-}(\tau, \tau_i - \tau_j) \mathcal{M}_{ji}\right\rangle,
 \end{align}
-$$
+```
 with
-$$
+```math
 \begin{align}
 \delta^{-}(\tau, \tau') = 
 \begin{cases} 
@@ -19,41 +19,41 @@ $$
 -\delta(\tau - \tau' + \beta), & \tau' < 0.
 \end{cases}
 \end{align}
-$$
+```
 
-**Single-particle Green's function $$G(i\omega_n)$$**
+**Single-particle Green's function ``G(i\omega_n)``**
 
-Note that in the iQIST software package, the Matsubara Green's function $$G(i\omega_n)$$ is also measured directly, instead of being calculated from $$G(\tau)$$ using Fourier transformation.
+Note that in the iQIST software package, the Matsubara Green's function ``G(i\omega_n)`` is also measured directly, instead of being calculated from ``G(\tau)`` using Fourier transformation.
 
-$$
+```math
 G(i\omega_n) = -\frac{1}{\beta} \sum_{ij} e^{i\omega_n\tau_i}\mathcal{M}_{ij}e^{-i\omega_n\tau_j}
-$$
+```
 
-**Two-particle correlation function $$\chi_{\alpha\beta}(\omega,\omega',\nu)$$**
+**Two-particle correlation function ``\chi_{\alpha\beta}(\omega,\omega',\nu)``**
 
-The two-particle correlation functions are often used to construct lattice susceptibilities within DMFT and diagrammatic extensions of DMFT. However, the measurements of two-particle correlation functions are a nontrivial task[^1] as it is very time-consuming to obtain good quality data, and most of the previous publications in this field are restricted to measurements of two-particle correlation functions in one-band models. Thanks to the development of efficient CT-HYB algorithms, the calculation of two-particle correlation functions for multi-orbital impurity models now become affordable[^2][^3][^4]. In the iQIST software package, we implemented the measurement for the two-particle correlation function $$\chi_{\alpha\beta}(\tau_a,\tau_b,\tau_c,\tau_d)$$, which is defined as follows:
-$$
+The two-particle correlation functions are often used to construct lattice susceptibilities within DMFT and diagrammatic extensions of DMFT. However, the measurements of two-particle correlation functions are a nontrivial task[^1] as it is very time-consuming to obtain good quality data, and most of the previous publications in this field are restricted to measurements of two-particle correlation functions in one-band models. Thanks to the development of efficient CT-HYB algorithms, the calculation of two-particle correlation functions for multi-orbital impurity models now become affordable[^2][^3][^4]. In the iQIST software package, we implemented the measurement for the two-particle correlation function ``\chi_{\alpha\beta}(\tau_a,\tau_b,\tau_c,\tau_d)``, which is defined as follows:
+```math
 \begin{equation}
 \chi_{\alpha\beta}(\tau_a,\tau_b,\tau_c,\tau_d)
 = \langle c_{\alpha}(\tau_a)c^{\dagger}_{\alpha}(\tau_b)c_{\beta}(\tau_c)c^{\dagger}_{\beta}(\tau_d)\rangle.
 \end{equation}
-$$
+```
 Due to the memory restrictions, the actual measurement is performed in the frequency space, for which we use the following definition of the Fourier transform:
-$$
+```math
 \begin{align}
 \chi_{\alpha\beta}(\omega,\omega',\nu) &= \frac{1}{\beta}
 \int^{\beta}_{0}d\tau_a\int^{\beta}_{0}d\tau_b\int^{\beta}_{0}d\tau_c\int^{\beta}_{0}d\tau_d
-\nonumber\\
+\\
 &\times \chi_{\alpha\beta}(\tau_a,\tau_b,\tau_c,\tau_d) 
 e^{i(\omega+\nu)\tau_a}e^{-i\omega\tau_b}e^{-i\omega'\tau_c}e^{-i(\omega'+\nu)\tau_d}.
 \end{align}
-$$
-where $$\omega$$ and $$\omega'$$ [$$\equiv (2n+1)\pi\beta$$] are fermionic frequencies, and $$\nu$$ is bosonic ($$\equiv 2n\pi/\beta$$).
+```
+where ``\omega`` and ``\omega'`` [``\equiv (2n+1)\pi\beta``] are fermionic frequencies, and ``\nu`` is bosonic (``\equiv 2n\pi/\beta``).
 
-**Local irreducible vertex functions $$\Gamma_{\alpha\beta}(\omega,\omega',\nu)$$**
+**Local irreducible vertex functions ``\Gamma_{\alpha\beta}(\omega,\omega',\nu)``**
 
-From the two-particle Green's function $$\chi_{\alpha\beta}(\omega,\omega',\nu)$$, the local irreducible vertex function $$\Gamma_{\alpha\beta}(\omega,\omega',\nu)$$ can be calculated easily, via the Bethe-Salpeter equation[^3][^4][^5]:
-$$
+From the two-particle Green's function ``\chi_{\alpha\beta}(\omega,\omega',\nu)``, the local irreducible vertex function ``\Gamma_{\alpha\beta}(\omega,\omega',\nu)`` can be calculated easily, via the Bethe-Salpeter equation[^3][^4][^5]:
+```math
 \begin{equation}
 \Gamma_{\alpha\beta}(\omega,\omega',\nu) = 
 \frac{\chi_{\alpha\beta}(\omega,\omega',\nu) 
@@ -61,48 +61,48 @@ $$
 - G_\alpha(\omega+\nu) G_\beta(\omega') \delta_{\alpha\beta}\delta_{\omega\omega'}]}
 {G_\alpha(\omega+\nu)G_\alpha(\omega)G_\beta(\omega')G_\beta(\omega'+\nu)}.
 \end{equation}
-$$
-The $$G(i\omega_n)$$ and $$\Gamma_{\alpha\beta}(\omega,\omega',\nu)$$ are essential inputs for the ladder dual fermion code **ROSEMARY**, see section [Ladder dual fermions](../ch05/ladder.md) for more details.
+```
+The ``G(i\omega_n)`` and ``\Gamma_{\alpha\beta}(\omega,\omega',\nu)`` are essential inputs for the ladder dual fermion code **ROSEMARY**, see section [Ladder dual fermions](../ch05/ladder.md) for more details.
 
 **Pair susceptibility**
 
-**Impurity self-energy function $$\Sigma(i\omega_n)$$**
+**Impurity self-energy function ``\Sigma(i\omega_n)``**
 
-The self-energy $$\Sigma(i\omega_n)$$ is calculated using Dyson's equation directly
-$$
+The self-energy ``\Sigma(i\omega_n)`` is calculated using Dyson's equation directly
+```math
 \begin{equation}
 \Sigma(i\omega_n) = G^{-1}_{0}(i\omega_n) - G^{-1}(i\omega_n),
 \end{equation}
-$$
- or measured using the so-called improved estimator[^3][^4]. Noted that now the latter approach only works when the segment representation is used. 
+```
+or measured using the so-called improved estimator[^3][^4]. Noted that now the latter approach only works when the segment representation is used. 
 
 **Histogram of the perturbation expansion order**
 
-We record the histogram of the perturbation expansion order $$k$$, which can be used to evaluate the kinetic energy.
+We record the histogram of the perturbation expansion order ``k``, which can be used to evaluate the kinetic energy.
 
 **Kurtosis and skewness of perturbation expansion order**
 
 Skewness
 
-$$
+```math
 \gamma_1 = \frac{E[(k - \langle k \rangle)^3]}{(E[(k - \langle k \rangle)^2])^{3/2}}
-$$
+```
 
 Kurtosis
 
-$$
+```math
 \frac{E[(k - \langle k \rangle)^4]}{(E[(k - \langle k \rangle)^2])^{2}}
-$$
+```
 
-Actually, in the iQIST software package, only the $$\langle k \rangle$$, $$\langle k^2 \rangle$$, $$\langle k^3 \rangle$$, and $$\langle k^4 \rangle$$ are measured. And then they are used to evaluate the skewness and kurtosis.
+Actually, in the iQIST software package, only the ``\langle k \rangle``, ``\langle k^2 \rangle``, ``\langle k^3 \rangle``, and ``\langle k^4 \rangle`` are measured. And then they are used to evaluate the skewness and kurtosis.
 
 **Kinetic energy**
 
 The expression for the system kinetic energy reads
-$$
+```math
 E_{\text{kin}} = -\frac{1}{\beta} \langle k \rangle,
-$$
-where $$k$$ is the perturbation expansion order.
+```
+where ``k`` is the perturbation expansion order.
 
 **Potential energy**
 
