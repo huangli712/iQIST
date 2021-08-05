@@ -20,25 +20,25 @@ Only for the **GARDENIA**, **NARCISSUS**, **LAVENDER**, **CAMELLIA**, and **MANJ
 
 There are six possible values for *isort* parameter so far:
 
-* *isort* = 1, the standard method is used to measure $$G(\tau)$$.
+* *isort* = 1, the standard method is used to measure ``G(\tau)``.
 
-* *isort* = 2, the Legendre orthogonal polynomials trick is used to measure $$G(\tau)$$.
+* *isort* = 2, the Legendre orthogonal polynomials trick is used to measure ``G(\tau)``.
 
-* *isort* = 3, the Chebyshev orthogonal polynomials trick is used to measure $$G(\tau)$$.
+* *isort* = 3, the Chebyshev orthogonal polynomials trick is used to measure ``G(\tau)``.
 
-* *isort* = 4, the standard method is used to measure $$G(\tau)$$ and $$F(\tau)$$.
+* *isort* = 4, the standard method is used to measure ``G(\tau)`` and ``F(\tau)``.
 
-* *isort* = 5, the Legendre orthogonal polynomials trick is used to measure $$G(\tau)$$ and $$F(\tau)$$.
+* *isort* = 5, the Legendre orthogonal polynomials trick is used to measure ``G(\tau)`` and ``F(\tau)``.
 
-* *isort* = 6, the Chebyshev orthogonal polynomials trick is used to measure $$G(\tau)$$ and $$F(\tau)$$.
+* *isort* = 6, the Chebyshev orthogonal polynomials trick is used to measure ``G(\tau)`` and ``F(\tau)``.
 
-Here $$G(\tau)$$ is the imaginary-time Green's function and $$F(\tau)$$ auxiliary imaginary-time function which can be used to calculate $$\Sigma(i\omega_n)$$ analytically. 
+Here ``G(\tau)`` is the imaginary-time Green's function and ``F(\tau)`` auxiliary imaginary-time function which can be used to calculate ``\Sigma(i\omega_n)`` analytically. 
 
-$$
+```math
 \Sigma(i\omega_n) = \frac{F(i\omega_n)}{G(i\omega_n)}
-$$
+```
 
-If the orthogonal polynomials trick is used, the $$G(\tau)$$ and $$F(\tau)$$ are expanded using orthogonal polynomials. And then the expansion coefficients are measured during Monte Carlo sampling procedure. Finally, according the expansion coefficients the $$G(\tau)$$ and $$F(\tau)$$ can be calculated analytically.
+If the orthogonal polynomials trick is used, the $$G(\tau)$$ and $$F(\tau)$$ are expanded using orthogonal polynomials. And then the expansion coefficients are measured during Monte Carlo sampling procedure. Finally, according the expansion coefficients the ``G(\tau)`` and ``F(\tau)`` can be calculated analytically.
 
 The expansion series are defined by the *chmax*, *chgrd*, *lemax*, and *legrd* parameters.
 
