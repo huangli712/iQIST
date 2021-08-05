@@ -81,13 +81,18 @@ In our codes, we implemented several GQNs schemes for different types of local H
 ```
 where ``\alpha`` is the orbital index, ``\{\uparrow, \downarrow\}`` is spin index, ``n_{\alpha\uparrow}`` and ``n_{\alpha\downarrow}`` are the orbital occupancy numbers. The PS number labels the occupation number basis with the same singly occupied orbitals. With its help, the dimensions of the subspaces become very small, such that we can treat 5-band Kanamori systems efficiently without any approximations. For ``H_{\text{loc}}`` with SOC, we can use the total occupancy number ``N`` and the ``z`` component of total angular momentum ``J_{z}`` as GQNs. We summarize the total number of subspaces, maximum and mean dimension of subspaces for different GQNs schemes and multi-orbital impurity models in the below table. Obviously, using these GQNs can largely reduce the dimension of the ``F``-matrix, and make accurate DMFT calculations for complex electronic systems (such as ``d``- and ``f``-electron materials) possible. 
 
-|               | 2-band       | 3-band       | 5-band       | 7-band      |
-| -- | -- | -- | -- | -- |
-|GQNs           | ``N``/max/mean | ``N``/max/mean | ``N``/max/mean | ``N``/max/mean   | 
-|``N``, ``S_{z}``     |  9/4/1.78    | 16/9/4.00    | 36/100/28.44 | 64/1225/256.00 |
-|``N``, ``S_{z}``, PS |  14/2/1.14   | 44/3/1.45    | 352/10/2.91  | 2368/35/6.92   |
-|``N``, ``J_{z}``     |  -           | 26/5/2.46    | 96/37/10.67  | 246/327/66.60  |
-|``N``            |  5/6/3.20    | 7/20/9.14    | 11/252/93.09 | 15/3432/1092.27|
+|                     | 2-band         | 3-band         | 5-band         | 7-band           |
+| --                  | --             | --             | --             | --               |
+|GQNs                 | ``N``/max/mean | ``N``/max/mean | ``N``/max/mean | ``N``/max/mean   | 
+|``N``, ``S_{z}``     |  9/4/1.78      | 16/9/4.00      | 36/100/28.44   | 64/1225/256.00   |
+|``N``, ``S_{z}``, PS |  14/2/1.14     | 44/3/1.45      | 352/10/2.91    | 2368/35/6.92     |
+|``N``, ``J_{z}``     |  -             | 26/5/2.46      | 96/37/10.67    | 246/327/66.60    |
+|``N``                |  5/6/3.20      | 7/20/9.14      | 11/252/93.09   | 15/3432/1092.27  |
+
+| object | implemented |      value |
+|--------|-------------|------------|
+| `A`    |      ✓      |      10.00 |
+| `BB`   |      ✓      | 1000000.00 |
 
 **Table** | The total number of subspaces ``N``, maximum and mean dimension of subspaces for different GQNs schemes and multi-orbital models.
 
