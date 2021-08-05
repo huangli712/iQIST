@@ -22,4 +22,4 @@ All operators in the imaginary time axis are grouped into *npart* parts accordin
 
 **Comment**
 
-$$ 2\sqrt{3 \langle k \rangle \text{nband}} \sim 4\sqrt{3 \langle k \rangle \text{nband}}$$ may be the optimal value for *npart* to achieve maximum performance where $$\langle k \rangle$$ is the averaged perturbation expansion order. See [nband](p_nband.md) for more details.
+`` 2\sqrt{3 \langle k \rangle \text{nband}} \sim 4\sqrt{3 \langle k \rangle \text{nband}}`` may be the optimal value for *npart* to achieve maximum performance where ``\langle k \rangle`` is the averaged perturbation expansion order. See [nband](p_nband.md) for more details.
