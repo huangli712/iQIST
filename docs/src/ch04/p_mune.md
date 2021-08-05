@@ -2,7 +2,7 @@
 
 **Definition**
 
-It means chemical potential $$\mu$$ or fermi level $$E_F$$.
+It means chemical potential ``\mu`` or fermi level ``E_F``.
 
 **Type**
 
@@ -22,4 +22,4 @@ It is a model parameter and can be used to determine the impurity occupancy.
 
 **Comment**
 
-For single-band model, the half-filling condition is $$\mu = U/2$$.
+For single-band model, the half-filling condition is ``\mu = U/2``.
