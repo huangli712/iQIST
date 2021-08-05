@@ -27,7 +27,7 @@ The CSML contains many files (modules). Next we will introduce them one by one, 
 ```fortran
 module constants
 ```
-Some selected physical and numerical constants are provided in this modules, such as $$\pi$$ and $$1i$$.
+Some selected physical and numerical constants are provided in this modules, such as ``\pi`` and ``1i``.
 
 **m_leja.f90**
 
@@ -36,9 +36,9 @@ module leja
 ```
 In this module, the Newton-Leja polynomial interpolation algorithm is implemented, which is used to evaluate 
 
-$$
+```math
 |\psi_f\rangle = e^{-H\tau} | \psi_i \rangle.
-$$
+```
 
 Now this module is only useful for the **CAMELLIA** component.
 
