@@ -21,8 +21,6 @@ Directors and Supervisors:
 
 **``^✶``** *Department of Physics, University of Fribourg, 1700 Fribourg, Switzerland*
 
-&nbsp;
-
 !!! tip "FUNDINGS"
 
     This project has been financed by the following fundings:
