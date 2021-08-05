@@ -20,7 +20,9 @@ ALL
 
 This is the number of Monte Carlo sampling steps conducted by the current process. If you run the quantum impurity solvers parallelly with $$N_{\text{procs}}$$ processes, then the total number of Monte Carlo sampling steps in the calculation is 
 
-$$N_{\text{procs}} \times \text{nsweep}$$
+```math
+N_{\text{procs}} \times \text{nsweep}
+```
 
 Larger the *nsweep* is, more accurate and more time-consuming the calculation is. If you conduct the quantum impurity solver on many cores, you can decrease *nsweep*. But the minimal value of it should not be less than its default value. 
 
