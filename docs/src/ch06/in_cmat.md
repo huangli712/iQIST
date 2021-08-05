@@ -21,7 +21,7 @@ The format of the *atom.cmat.in* file is as follows:
 !!! note
 
     In the *atom.cmat.in* file, we adopt the following orbital sequence:
-    $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
+    ``1\uparrow``, ``2\uparrow``, ``3\uparrow``, ``\cdots``, ``1\downarrow``, ``2\downarrow``, ``3\downarrow``, ``\cdots``
     In other words, the spin up part is always before the spin down part.
 
 **Code**
