@@ -2,7 +2,7 @@
 
 **Introduction**
 
-This file is used to save the atomic self-energy function $$\Sigma_{\text{atomic}}(i\omega_n)$$ and Green's function $$G_{\text{atomic}}(i\omega_n)$$, which are calculated using the Hubbard-I approximation. It will be output by the quantum impurity solvers when they are **shut down**.
+This file is used to save the atomic self-energy function ``\Sigma_{\text{atomic}}(i\omega_n)`` and Green's function ``G_{\text{atomic}}(i\omega_n)``, which are calculated using the Hubbard-I approximation. It will be output by the quantum impurity solvers when they are **shut down**.
 
 **Format**
 

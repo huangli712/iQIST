@@ -2,7 +2,7 @@
 
 **Introduction**
 
-This file is used to store the Matsubara Green's function $$G(i\omega_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
+This file is used to store the Matsubara Green's function ``G(i\omega_n)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 **Format**
 

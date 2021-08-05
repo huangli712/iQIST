@@ -2,7 +2,7 @@
 
 **Introduction**
 
-This file is used to store the Matsubara hybridization function $$\Delta(i\omega_n)$$. It will be output by the quantum impurity solvers when they are **shut down**.
+This file is used to store the Matsubara hybridization function ``\Delta(i\omega_n)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 **Format**
 
@@ -10,17 +10,17 @@ The *solver.hyb.dat* file contains *norbs* block. Each block is appended by two 
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: Matsubara frequency point, $$\omega_n$$, double precision
+*column 2*: Matsubara frequency point, ``\omega_n``, double precision
 
-*column 3*: Matsubara hybridization function, $$\Re \Delta(i\omega_n)$$, double precision
+*column 3*: Matsubara hybridization function, ``\Re \Delta(i\omega_n)``, double precision
 
-*column 4*: Matsubara hybridization function, $$\Im \Delta(i\omega_n)$$, double precision
+*column 4*: Matsubara hybridization function, ``\Im \Delta(i\omega_n)``, double precision
 
-*column 5*: error bar, $$\Re [\delta \Delta(i\omega_n)]$$, double precision
+*column 5*: error bar, ``\Re [\delta \Delta(i\omega_n)]``, double precision
 
-*column 6*: error bar, $$\Im [\delta \Delta(i\omega_n)]$$, double precision
+*column 6*: error bar, ``\Im [\delta \Delta(i\omega_n)]``, double precision
 
 ---
 

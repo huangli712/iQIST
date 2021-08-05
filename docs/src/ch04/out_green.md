@@ -2,7 +2,7 @@
 
 **Introduction**
 
-This file is used to store the imaginary-time Green's function $$G(\tau)$$. It will be output by the quantum impurity solvers periodically (every *nwrite* Monte Carlo sampling steps, see [nwrite](p_nwrite.md) for more details).
+This file is used to store the imaginary-time Green's function ``G(\tau)``. It will be output by the quantum impurity solvers periodically (every *nwrite* Monte Carlo sampling steps, see [nwrite](p_nwrite.md) for more details).
 
 **Format**
 
