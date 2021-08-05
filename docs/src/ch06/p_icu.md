@@ -20,11 +20,11 @@ Only for the **JASMINE** component.
 
 There are three possible values for the *icu* parameter.
 
-* *icu* = 1, Kanamori scheme, using $$U_c$$, $$U_v$$, $$J_z$$, $$J_s$$, $$J_p$$ parameters, isotropic Hund's rule coupling.
+* *icu* = 1, Kanamori scheme, using ``U_c``, ``U_v``, ``J_z``, ``J_s``, ``J_p`` parameters, isotropic Hund's rule coupling.
 
-* *icu* = 2, Slater-Cordon scheme, using $$U_d$$, $$J_h$$ parameters to build $$F_0$$, $$F_2$$, $$F_4$$, $$F_6$$.
+* *icu* = 2, Slater-Cordon scheme, using ``U_d``, ``J_h`` parameters to build ``F_0``, ``F_2``, ``F_4``, ``F_6``.
 
-* *icu* = 3, Kanamori scheme, using $$U_c$$, $$U_v$$, $$J_z$$, $$J_s$$, $$J_p$$ parameters, anisotropic Hund's rule coupling.
+* *icu* = 3, Kanamori scheme, using ``U_c``, ``U_v``, ``J_z``, ``J_s``, ``J_p`` parameters, anisotropic Hund's rule coupling.
 
 When *icu* = 2, it is not compatible with *ictqmc* = 4.
 
