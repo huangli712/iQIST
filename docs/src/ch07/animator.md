@@ -10,7 +10,7 @@ Python script
 
 **Usage**
 
-First, please edit the configuration parameters (such as inverse temperature $$\beta$$, number of orbitals *norbs*, number of frames *nsweep/nwrite*, etc) in the script carefully, and then execute it in the terminal:
+First, please edit the configuration parameters (such as inverse temperature ``\beta``, number of orbitals *norbs*, number of frames *nsweep/nwrite*, etc) in the script carefully, and then execute it in the terminal:
 
 ```
 $ ./u_animator.py movie.mp4
