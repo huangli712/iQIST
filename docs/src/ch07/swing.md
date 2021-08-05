@@ -2,7 +2,7 @@
 
 ### Introduction
 
-The calculated results for the self-energy function on the real axis using Pade approximation strongly depend on the numerical accuracy of the original self-energy data. However, the CT-HYB/DMFT calculations usually yield a Matsubara self-energy function $$\Sigma(i\omega_n)$$ with numerical noises. In this case, the Pade approximation does not work well. To overcome this problem, Haule *et al*[^1]. suggested to split the Matsubara self-energy function into a low-frequency part and high-frequency tail. The low-frequency part is fitted by some sort of model functions which depends on whether the system is metallic or insulating, and the high-frequency part is fitted by modified Gaussian polynomials. It was shown that their trick works quite well even when the original self-energy function is noisy, and is superior to the Pade approximation in all cases. Thus, in the **HIBISCUS** component, we also implemented this algorithm. It has broad applications in the DFT + DMFT calculations.
+The calculated results for the self-energy function on the real axis using Pade approximation strongly depend on the numerical accuracy of the original self-energy data. However, the CT-HYB/DMFT calculations usually yield a Matsubara self-energy function ``\Sigma(i\omega_n)`` with numerical noises. In this case, the Pade approximation does not work well. To overcome this problem, Haule *et al*[^1]. suggested to split the Matsubara self-energy function into a low-frequency part and high-frequency tail. The low-frequency part is fitted by some sort of model functions which depends on whether the system is metallic or insulating, and the high-frequency part is fitted by modified Gaussian polynomials. It was shown that their trick works quite well even when the original self-energy function is noisy, and is superior to the Pade approximation in all cases. Thus, in the **HIBISCUS** component, we also implemented this algorithm. It has broad applications in the DFT + DMFT calculations.
 
 The **HIBISCUS**/swing code is used to continue self-energy analytically from imaginary axis to real axis using K. Haule's strategy. 
 
@@ -101,15 +101,15 @@ gaus.nnn
   current configuration for gaussians (nnn counts every 40000 steps)
 ```
 
-### Recipe: how to convert $$\Sigma(i\omega)$$ to $$\Sigma(\omega)$$ using the **HIBISCUS**/swing code
+### Recipe: how to convert ``\Sigma(i\omega)`` to ``\Sigma(\omega)`` using the **HIBISCUS**/swing code
 
 **Step 1**: 
 
-Perform CT-HYB or HF-QMC calculations, generate a *solver.sgm.dat* file or multiple *solver.sgm.dat.$$*$$* files.
+Perform CT-HYB or HF-QMC calculations, generate a *solver.sgm.dat* file or multiple *solver.sgm.dat.``*``* files.
 
 **Step 2**:
 
-Using the **HIBISCUS**/toolbox/makestd to post-process the *solver.sgm.dat file* or *solver.sgm.dat.$$*$$* files. The output should be *std.sgm.dat* file.
+Using the **HIBISCUS**/toolbox/makestd to post-process the *solver.sgm.dat file* or *solver.sgm.dat.``*``* files. The output should be *std.sgm.dat* file.
 
 **Step 3**:
 
@@ -121,7 +121,7 @@ Execute the **HIBISCUS**/swing code via the Bash shell script.
 
 **Step 5**:
 
-Validate the real-frequency self-energy function $$\Sigma(\omega)$$ in the *sigr.dat* file or *sigr_linear.dat* file. That is what you need.
+Validate the real-frequency self-energy function ``\Sigma(\omega)`` in the *sigr.dat* file or *sigr_linear.dat* file. That is what you need.
 
 !!! note
 
