@@ -2,7 +2,7 @@
 
 **Definition**
 
-Mixing parameter $$\alpha$$ for dynamical mean-field theory self-consistent engine.
+Mixing parameter ``\alpha`` for dynamical mean-field theory self-consistent engine.
 
 **Type**
 
@@ -20,19 +20,19 @@ ALL
 
 In the dynamical mean-field theory self-consistent engine, the new hybridization function and self-energy function are mixed using the following equations.
 
-$$
+```math
 \begin{equation}
 \Delta_{\text{new}} \leftarrow \Delta_{\text{old}}(1-\alpha) + \alpha \Delta_{\text{new}}
 \end{equation}
-$$
+```
 
-$$
+```math
 \begin{equation}
 \Sigma_{\text{new}} \leftarrow \Sigma_{\text{old}}(1-\alpha) + \alpha \Sigma_{\text{new}}
 \end{equation}
-$$
+```
 
-Here, $$\Delta_{\text{old}}$$ and $$\Sigma_{\text{old}}$$ are obtained in the previous iteration, while $$\Delta_{\text{new}}$$ and $$\Sigma_{\text{new}}$$ are derived in the current iteration.
+Here, ``\Delta_{\text{old}}`` and ``\Sigma_{\text{old}}`` are obtained in the previous iteration, while ``\Delta_{\text{new}}`` and ``\Sigma_{\text{new}}`` are derived in the current iteration.
 
 **Comment**
 
