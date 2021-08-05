@@ -15,7 +15,7 @@ The Hamiltonian for the single-band Hubbard model is just the same with the one 
 * ``\beta`` = 40
 * ``\mu = U/2``
 
-We will perform a series calculations with various Coulomb interaction $$U$$ in this tutorial. The calculated Matsubara Green's function $$G(i\omega_n)$$ and self-energy function $$\Sigma(i\omega_n)$$ will exhibit drastic changes with respect to the increment of $$U$$.
+We will perform a series calculations with various Coulomb interaction ``U`` in this tutorial. The calculated Matsubara Green's function ``G(i\omega_n)`` and self-energy function ``\Sigma(i\omega_n)`` will exhibit drastic changes with respect to the increment of ``U``.
 
 **Recipes**
 
@@ -37,7 +37,7 @@ As mentioned before, the **AZALEA** component (and the other quantum impurity so
 
 **(3)** Prepare the input files
 
-Next, we have to setup the necessary parameters for the **AZALEA** component via the *solver.ctqmc.in* file. Since we have to solve the Hubbard model for a few times with different $$U$$ parameters, so we have to prepare several *solver.ctqmc.in* files at the same time. You can find these files in the *iqist/tutor/t12* directory. Noted that there exist a few sub-folders in it. Each folder contains one unique *solver.ctqmc.in* file. For example, in the *iqist/tutor/t12/u40* directory, the *Uc* parameter in the *solver.ctqmc.in* file is just 4.0.
+Next, we have to setup the necessary parameters for the **AZALEA** component via the *solver.ctqmc.in* file. Since we have to solve the Hubbard model for a few times with different ``U`` parameters, so we have to prepare several *solver.ctqmc.in* files at the same time. You can find these files in the *iqist/tutor/t12* directory. Noted that there exist a few sub-folders in it. Each folder contains one unique *solver.ctqmc.in* file. For example, in the *iqist/tutor/t12/u40* directory, the *Uc* parameter in the *solver.ctqmc.in* file is just 4.0.
 
 Please create your own working directory, and copy the corresponding *solver.ctqmc.in* file to it.
 
@@ -196,7 +196,7 @@ Next we will show some visualized results. The following figures were generated 
 
 ![gtau image](../figure/12gtau.png)
 
-**Figure** | The imaginary-time Green's function $$G(\tau)$$.
+**Figure** | The imaginary-time Green's function ``G(\tau)``.
 
 ---
 
@@ -204,33 +204,33 @@ Next we will show some visualized results. The following figures were generated 
 
 ![grnf image](../figure/12grnf.png)
 
-**Figure** | The imaginary part of Matsubara Green's function $$\Im G(i\omega_n)$$.
+**Figure** | The imaginary part of Matsubara Green's function ``\Im G(i\omega_n)``.
 
 ---
 
-According to the $$\Im G(i\omega_n)$$, we can conclude that the Mott metal-insulator transition occurs at $$U \in [2,3]$$. It would be very helpful if we can determine the critical Coulomb interaction $$U$$ for the Mott transition. In the DMFT community, the two quantities are usually used to detect the Mott transition: $$ |\beta G(\beta/2)| $$ and quasiparticle weight $$Z$$. At low temperature, we can use the following approximated equation to calculate $$Z$$:
+According to the ``\Im G(i\omega_n)``, we can conclude that the Mott metal-insulator transition occurs at ``U \in [2,3]``. It would be very helpful if we can determine the critical Coulomb interaction ``U`` for the Mott transition. In the DMFT community, the two quantities are usually used to detect the Mott transition: `` |\beta G(\beta/2)| `` and quasiparticle weight ``Z``. At low temperature, we can use the following approximated equation to calculate ``Z``:
 
 ```math
 Z \cong \left[1 - \frac{\Im \Sigma(i\omega_0)}{\omega_0} \right]^{-1},
 ```
 
-where $$\omega_0 \equiv \pi /\beta$$ is the lowest Matsubara frequency. When $$ |\beta G(\beta/2)| $$ and $$Z$$ are larger than zero, it is metallic, and vice versa. Then we gather the $$ |\beta G(\beta/2)| $$ and $$Z$$ data from the *solver.green.dat* and *solver.sgm.dat* files, respectively, and then plot figure using them. The figure is shown as follows. As is seen in this figure, the critical $$U$$ is 2.5.
+where ``\omega_0 \equiv \pi /\beta`` is the lowest Matsubara frequency. When `` |\beta G(\beta/2)| `` and ``Z`` are larger than zero, it is metallic, and vice versa. Then we gather the `` |\beta G(\beta/2)| `` and ``Z`` data from the *solver.green.dat* and *solver.sgm.dat* files, respectively, and then plot figure using them. The figure is shown as follows. As is seen in this figure, the critical ``U`` is 2.5.
 
 * Quasiparticle weight (*solver.sgm.dat*)
 
 ![zb image](../figure/12zb.png)
 
-**Figure** | The $$|\beta G(\beta/2)|$$ and quasiparticle weight $$Z$$.
+**Figure** | The ``|\beta G(\beta/2)|`` and quasiparticle weight ``Z``.
 
 ---
 
-Besides the $$|\beta G(\beta/2)|$$ and quasiparticle weight $$Z$$, the double occupation number $$D = \langle nn \rangle$$ is another good observable to determine the transition point. In the metallic state, the double occupation number is large. However, it turns small in the insulating phase. See the below figure for a direct impression. The transition point determined by $$D$$ is consistent with those by the $$ |\beta G(\beta/2)| $$ and $$Z$$.
+Besides the ``|\beta G(\beta/2)|`` and quasiparticle weight ``Z``, the double occupation number ``D = \langle nn \rangle`` is another good observable to determine the transition point. In the metallic state, the double occupation number is large. However, it turns small in the insulating phase. See the below figure for a direct impression. The transition point determined by ``D`` is consistent with those by the ``|\beta G(\beta/2)|`` and ``Z``.
 
 * Double occupation number (*solver.nmat.dat*)
 
 ![nmat image](../figure/12nmat.png)
 
-**Figure** | The double occupation number $$D = \langle nn \rangle$$.
+**Figure** | The double occupation number ``D = \langle nn \rangle``.
 
 ---
 
@@ -244,7 +244,7 @@ In addition to the **AZALEA** component, you still can choose the **GARDENIA** o
 
 **(2)** Temperature and hopping parameter
 
-Please adjust the $$\beta$$ (*beta*) or $$t$$ (part) parameters, and re-visit the Mott metal-insulator transitions again. Pay attention to the evolution of the critical $$U$$.
+Please adjust the ``\beta`` (*beta*) or ``t`` (part) parameters, and re-visit the Mott metal-insulator transitions again. Pay attention to the evolution of the critical ``U``.
 
 **(3)** Mott metal-insulator transition in multi-orbital Hubbard model
 
