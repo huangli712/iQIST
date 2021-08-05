@@ -24,9 +24,13 @@ Determine the size of involved arrays.
 
 The following relations always hold.
 
-$$ \text{norbs} = \text{npsin} * \text{nband}$$
+```math 
+\text{norbs} = \text{npsin} * \text{nband}
+```
 
-$$ \text{ncfgs} = 2^{\text{norbs}}$$
+```math
+\text{ncfgs} = 2^{\text{norbs}}
+```
 
 You have to ensure the value of *norbs* is compatible with *nband*, *nspin* and *ncfgs*. The quantum impurity solvers will not check and correct them automatically. So you have to setup them in the *solver.ctqmc.in* and *solver.hfqmc.in* files explicitly.
 
