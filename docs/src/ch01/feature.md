@@ -37,7 +37,7 @@ The main features of the core components (i.e., quantum impurity solvers) of the
     * Orbital-orbital correlation function in imaginary time space[^14]
     * Orbital-orbital correlation function in matsubara frequency space[^14]
     * Fidelity susceptibility[^15]
-    * Kinetic energy fluctuation $$\langle k^2\rangle - \langle k\rangle^2 - \langle k\rangle$$[^16]
+    * Kinetic energy fluctuation ``\langle k^2\rangle - \langle k\rangle^2 - \langle k\rangle``[^16]
 
 ---
 
@@ -45,7 +45,7 @@ The main features of the core components (i.e., quantum impurity solvers) of the
     * Segment algorithm for density-density interaction[^17]
     * Divide-and-conquer algorithm[^18]
     * Sparse matrix multiplication[^19]
-    * Good quantum numbers ($$N, S_z, J_z$$, PS)[^20]
+    * Good quantum numbers (``N, S_z, J_z``, PS)[^20]
     * Lazy trace evaluation[^21]
     * Dynamical truncation approximation[^22]
     * Newton-Leja polynomial interpolation algorithm (*experimental*)[^23]

@@ -24,7 +24,7 @@ There is a bonus. When the users want to study the Hubbard model on Bethe/cubic 
 
 ### Prepare the input files
 
-Third, an important task is to prepare proper input data for the selected CT-HYB impurity solver. The optional inputs for the CT-HYB impurity solver are the hybridization function [$$\Delta(i\omega_n)$$], impurity energy level ($$E_{\alpha\beta}$$), interaction parameters ($$U$$, $$J$$, $$\lambda$$, and $$\mu$$), etc. If users do not provide them to the impurity solver, it will use the default settings automatically. Specifically, if the Coulomb interaction matrix is general or the spin-orbital coupling is considered, users should use the **JASMINE** component to solve the local atomic Hamiltonian problem at first to generate the necessary eigenvalues and eigenvectors. 
+Third, an important task is to prepare proper input data for the selected CT-HYB impurity solver. The optional inputs for the CT-HYB impurity solver are the hybridization function [``\Delta(i\omega_n)``], impurity energy level (``E_{\alpha\beta}``), interaction parameters (``U``, ``J``, ``\lambda``, and ``\mu``), etc. If users do not provide them to the impurity solver, it will use the default settings automatically. Specifically, if the Coulomb interaction matrix is general or the spin-orbital coupling is considered, users should use the **JASMINE** component to solve the local atomic Hamiltonian problem at first to generate the necessary eigenvalues and eigenvectors. 
 
 **See also**:
 
@@ -43,7 +43,7 @@ Fourth, execute the CT-HYB impurity solver directly or via some external scripts
 
 ### Post-processing
 
-Finally, when the calculations are finished, users can use the tools contained in the **HIBISCUS** component to post-process the output data, such as the imaginary-time Green's function $$G(\tau)$$, Matsubara self-energy function $$\Sigma(i\omega_n)$$, and other physical observables.
+Finally, when the calculations are finished, users can use the tools contained in the **HIBISCUS** component to post-process the output data, such as the imaginary-time Green's function ``G(\tau)``, Matsubara self-energy function ``\Sigma(i\omega_n)``, and other physical observables.
 
 **See also**:
 
