@@ -20,11 +20,11 @@ The format of the *solver.umat.in* file is as follows:
 
 ---
 
-*column 1*: orbital index $$i$$, integer
+*column 1*: orbital index ``i``, integer
 
-*column 2*: orbital index $$j$$, integer
+*column 2*: orbital index ``j``, integer
 
-*column 3*: Coulomb interaction matrix element $$U(i,j)$$, double precision
+*column 3*: Coulomb interaction matrix element ``U(i,j)``, double precision
 
 ---
 

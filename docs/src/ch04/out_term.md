@@ -146,7 +146,7 @@ In this part, we can gain the following information:
 
 !!! note
 
-    From $$\langle N^1 \rangle$$ and $$\langle N^2\rangle$$, we can calculate the charge fluctuation. From $$\langle K^2 \rangle$$, $$\langle K^3 \rangle$$, and $$\langle K^4 \rangle$$, we can calculate the skewness and kurtosis of the histogram of the perturbation expansion order.
+    From ``\langle N^1 \rangle`` and ``\langle N^2\rangle``, we can calculate the charge fluctuation. From ``\langle K^2 \rangle``, ``\langle K^3 \rangle``, and ``\langle K^4 \rangle``, we can calculate the skewness and kurtosis of the histogram of the perturbation expansion order.
 
 ---
 

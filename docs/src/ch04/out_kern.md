@@ -6,7 +6,7 @@ The *solver.kernel.dat* is designed to store the screening function ``K(\tau)`` 
 
 !!! note
 
-    1. The screening function $$K(\tau)$$ and its derivates $$K'(\tau)$$ are the input to the quantum impurity solvers (see [solver.ktau.in](in_ktau.md) for more details). In other words, they won't be changed by the quantum impurity solvers.
+    1. The screening function ``K(\tau)`` and its derivates ``K'(\tau)`` are the input to the quantum impurity solvers (see [solver.ktau.in](in_ktau.md) for more details). In other words, they won't be changed by the quantum impurity solvers.
     2. Only the **NARCISSUS** component can generate the *solver.kernel.dat* file.
 
 **Format**
@@ -31,7 +31,7 @@ The *solver.kernel.dat* file only contains one block. The format of the block is
 
 !!! note
 
-    In the **NARCISSUS** component, the $$K(\tau)$$ and $$K'(\tau)$$ are assumed to be orbital-independent.
+    In the **NARCISSUS** component, the ``K(\tau)`` and ``K'(\tau)`` are assumed to be orbital-independent.
 
 **Code**
 

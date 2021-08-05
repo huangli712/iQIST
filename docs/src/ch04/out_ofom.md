@@ -24,7 +24,7 @@ The *solver.ofom.dat* file contains *norbs*``\times``*norbs* blocks. Each block 
 
 !!! note
 
-    The imaginary part of $$\chi_{\text{charge}}(i\nu_n)$$ should keeps zero.
+    The imaginary part of ``\chi_{\text{charge}}(i\nu_n)`` should keeps zero.
 
 !!! note
 

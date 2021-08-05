@@ -24,7 +24,7 @@ The *solver.sfom.dat* file contains *nband* blocks. Each block is appended by tw
 
 !!! note
 
-    The imaginary part of $$\chi_{\text{spin}}(i\nu_n)$$ should be kept zero.
+    The imaginary part of ``\chi_{\text{spin}}(i\nu_n)`` should be kept zero.
 
 **Code**
 
