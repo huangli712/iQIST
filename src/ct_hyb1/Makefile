@@ -21,13 +21,13 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 05/09/2021 by li huang (last modified)
+## 08/06/2021 by li huang (last modified)
 ##
 ##
 
 .SUFFIXES: .f90
 
-include ../../build/make.sys
+include ../../build/make.inc
 
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
