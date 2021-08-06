@@ -4,7 +4,7 @@
 ## ============
 ##
 ## This is the official configuration file for the building system. You
-## should modify it to fulfill your requirements. The make.sys file is
+## should modify it to fulfill your requirements. The make.inc file is
 ## the key component of the building system. If it is not configured
 ## correctly, the building system won't work correctly as well.
 ##
@@ -19,7 +19,7 @@
 ## =======
 ##
 ## 05/11/2015 by li huang (created)
-## 04/12/2019 by li huang (last modified)
+## 08/06/2021 by li huang (last modified)
 ##
 ##
 
