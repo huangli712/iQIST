@@ -136,6 +136,8 @@
 
      implicit none
 
+!! [body
+
      write(mystd,'(2X,a)') '[configuration parameters] -> core control'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'isscf  / value :', isscf , 'type : i'
@@ -189,6 +191,8 @@
 
      write(mystd,*)
 
+!! body]
+
      return
   end subroutine ctqmc_print_summary
 
@@ -210,11 +214,11 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! predefined strings for control parameters
+     ! predefined strings for control parameters
      character (len = 4) :: scf(2) = ['nscf', 'scf ']
      character (len = 7) :: scr(4) = ['static ', 'dyn_ppm', 'dyn_om ', 'dyn_rm ']
      character (len = 3) :: bnd(2) = ['no ', 'yes']
@@ -225,12 +229,14 @@
      character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
      character (len = 9) :: vrt(5) = ['none     ', 'g2ph_aabb', 'g2ph_abba', 'g2pp_aabb', 'g2pp_abba']
 
-! predefined strings for control parameters
+     ! predefined strings for control parameters
      character (len = 99) :: str_obs
      character (len = 99) :: str_sus
      character (len = 99) :: str_vrt
 
-! build str_obs according to isobs
+!! [body
+
+     ! build str_obs according to isobs
      str_obs = ''
      do i=1,size(obs)
          if ( btest(isobs, i-1) ) then
@@ -239,7 +245,7 @@
      enddo ! over i={1,size(obs)} loop
      str_obs = adjustl(str_obs)
 
-! build str_sus according to issus
+     ! build str_sus according to issus
      str_sus = ''
      do i=1,size(sus)
          if ( btest(issus, i-1) ) then
@@ -248,7 +254,7 @@
      enddo ! over i={1,size(sus)} loop
      str_sus = adjustl(str_sus)
 
-! build str_vrt according to isvrt
+     ! build str_vrt according to isvrt
      str_vrt = ''
      do i=1,size(vrt)
          if ( btest(isvrt, i-1) ) then
@@ -257,7 +263,7 @@
      enddo ! over i={1,size(vrt)} loop
      str_vrt = adjustl(str_vrt)
 
-! write control parameters
+     ! write control parameters
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
 
      write(mystd,'(4X,2a)') 'self-consistent scheme   / ', scf(isscf)
@@ -272,6 +278,8 @@
      write(mystd,'(4X,2a)') 'two-particle quantities  / ', trim(str_vrt)
 
      write(mystd,*)
+
+!! body]
 
      return
   end subroutine ctqmc_print_control
