@@ -1,5 +1,5 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! NARCISSUS @ iQIST                                                    !
+!!! iQIST @ NARCISSUS                                                    !
 !!!                                                                      !
 !!! A highly optimized hybridization expansion version continuous time   !
 !!! quantum Monte Carlo (CTQMC) quantum impurity solver plus a classic   !
@@ -29,44 +29,46 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: iter = 1
 
-! convergence flag
+     ! convergence flag
      logical :: conv = .false.
+
+!! [body
 
 ! initialize mpi envirnoment
 # if defined (MPI)
 
-! initialize the mpi execution environment
+     ! initialize the mpi execution environment
      call mp_init()
 
-! determines the rank of the calling process in the communicator
+     ! determines the rank of the calling process in the communicator
      call mp_comm_rank(myid)
 
-! determines the size of the group associated with a communicator
+     ! determines the size of the group associated with a communicator
      call mp_comm_size(nprocs)
 
 # endif  /* MPI */
 
      CTQMC_START: BLOCK
 
-! print the welcome messages
+         ! print the welcome messages
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_header()
          endif ! back if ( myid == master ) block
 
-! setup the parameters
+         ! setup the parameters
          call ctqmc_setup_param()
 
-! allocate memory spaces
+         ! allocate memory spaces
          call ctqmc_alloc_array()
 
-! setup the quantum impurity model
+         ! setup the quantum impurity model
          call ctqmc_setup_model()
 
-! print the runtime parameters
+         ! print the runtime parameters
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_summary()
          endif ! back if ( myid == master ) block
@@ -79,26 +81,26 @@
 
      DMFT_CYCLE: do iter=1,niter
 
-! write the iter to screen
+         ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
-! call the quantum impurity solver
+         ! call the quantum impurity solver
          call ctqmc_impurity_solver(iter)
 
-! check the self-consistent mode
+         ! check the self-consistent mode
          if ( isscf == 1 ) then
              EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( isscf == 1 ) block
 
-! call the built-in self-consistent engine
+         ! call the built-in self-consistent engine
          call ctqmc_dmft_selfer()
 
-! check whether the convergence is reached
+         ! check whether the convergence is reached
          call ctqmc_dmft_conver(iter, conv)
 
-! now the convergence is achieved
+         ! now the convergence is achieved
          if ( conv .eqv. .true. ) then
              EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( conv .eqv. .true. ) block
@@ -111,10 +113,10 @@
 
      CTQMC_SLEEP: BLOCK
 
-! deallocate memory spaces
+         ! deallocate memory spaces
          call ctqmc_final_array()
 
-! print the ending messages
+         ! print the ending messages
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_footer()
          endif ! back if ( myid == master ) block
@@ -124,13 +126,15 @@
 ! finalize mpi envirnoment
 # if defined (MPI)
 
-! blocks until all processes have reached this routine
+     ! blocks until all processes have reached this routine
      call mp_barrier()
 
-! terminates mpi execution environment
+     ! terminates mpi execution environment
      call mp_finalize()
 
 # endif  /* MPI */
+
+!! body]
 
 !!========================================================================
   END PROGRAM CTQMC_MAIN !                                             <<<
