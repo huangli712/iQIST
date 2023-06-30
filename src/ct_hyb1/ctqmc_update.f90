@@ -229,18 +229,20 @@
 
      implicit none
 
-! external arguments
-! control flag
+!! external arguments
+     ! control flag
      integer, intent(inout) :: cflag
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
+!! [body
+
      if ( cflag == 1 ) then ! if cflag /= 1, nothing to do
 
-! check perturbation expansion order
+         ! check perturbation expansion order
          do i=1,norbs
              if ( stts(i) == 0 ) then
                  if ( rank(i) /= 0 ) cflag = 99
@@ -259,7 +261,7 @@
              endif ! back if ( stts(i) == 3 ) block
          enddo ! over i={1,norbs} loop
 
-! check time order of operators
+         ! check time order of operators
          do i=1,norbs
              do j=1,rank(i)-1
                  if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) then
@@ -271,7 +273,7 @@
              enddo ! over j={1,rank(i)-1} loop
          enddo ! over i={1,norbs} loop
 
-! check time order of operators
+         ! check time order of operators
          do i=1,norbs
              if ( stts(i) == 1 ) then
                  if ( time_s( index_s(1, i), i ) > time_e( index_e(1, i), i ) ) then
@@ -286,7 +288,7 @@
              endif ! back if ( stts(i) == 2 ) block
          enddo ! over i={1,norbs} loop
 
-! write the results, only master node can do it
+         ! write the results, only master node can do it
          if ( myid == master ) then
              if ( cflag == 99 ) then
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: fatal error'
@@ -299,6 +301,8 @@
          endif ! back if ( myid == master ) block
 
      endif ! back if ( cflag == 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_try_warning
