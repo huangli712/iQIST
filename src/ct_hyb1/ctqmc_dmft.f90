@@ -261,9 +261,13 @@
      ! impurity green's function
      complex(dp), intent(in)  :: grnf(mfreq,norbs,norbs)
 
+!! [body
+
      ! self-consistent condition is
      !    Delta = t^2 G
      hybf = part * part * grnf
+
+!! body]
 
      return
   end subroutine ctqmc_dmft_bethe
