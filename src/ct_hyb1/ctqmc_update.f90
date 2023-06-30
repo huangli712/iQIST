@@ -956,19 +956,23 @@
 
      implicit none
 
-! local variables
-! loop index for flavor channel
+!! local variables
+     ! loop index for flavor channel
      integer :: flvr
+
+!! [body
 
      do flvr=1,norbs
 
-! check the perturbation expansion order for current flavor channel
+         ! check the perturbation expansion order for current flavor channel
          if ( rank(flvr) == 0 ) CYCLE
 
-! generate the mmat matrix and gmat matrix from scratch
+         ! generate the mmat matrix and gmat matrix from scratch
          call cat_reload_matrix(flvr)
 
      enddo ! over flvr={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_reload_kink
