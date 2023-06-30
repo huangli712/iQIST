@@ -172,36 +172,38 @@
 
      implicit none
 
-! external arguments
-! current iteration number
+!! external arguments
+     ! current iteration number
      integer, intent(in)    :: iter
 
-! convergence flag
+     ! convergence flag
      logical, intent(inout) :: conv
 
-! local parameters
-! required minimum iteration number to achieive convergence
+!! local parameters
+     ! required minimum iteration number to achieive convergence
      integer, parameter :: minit = 16
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      real(dp) :: diff
      real(dp) :: norm
      real(dp) :: seps
 
-! write convergence information to screen
+!! [body
+
+     ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker running'
          write(mystd,'(4X,a,i03.2)') 'maximum iteration / ', niter
          write(mystd,'(4X,a,e10.3)') 'maximum epsilon   / ', eps8
      endif ! back if ( myid == master ) block
 
-! try to calculate diff and norm
-! why not using the whole matrix? since sometimes the off-diagonal
-! elementes may be NaN!
+     ! try to calculate diff and norm
+     ! why not using the whole matrix? since sometimes the off-diagonal
+     ! elementes may be NaN!
      diff = zero
      do i=1,norbs
          diff = diff + abs( sum( sig2(:,i,i) - sig1(:,i,i) ) )
@@ -213,16 +215,16 @@
      enddo ! over i={1,norbs} loop
      norm = norm / two
 
-! calculate seps
+     ! calculate seps
      seps = (diff / norm) / real(mfreq * norbs)
 
-! judge convergence status
+     ! judge convergence status
      conv = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
 
-! update sig1
+     ! update sig1
      call s_mix_z(size(sig1), sig2, sig1, one - alpha)
 
-! write convergence information to screen
+     ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i03.2)') 'current iteration / ', iter
          write(mystd,'(4X,a,e10.3)') 'current epsilon   / ', seps
@@ -231,6 +233,8 @@
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine ctqmc_dmft_conver
@@ -250,15 +254,15 @@
 
      implicit none
 
-! external arguments
-! hybridization function
+!! external arguments
+     ! hybridization function
      complex(dp), intent(out) :: hybf(mfreq,norbs,norbs)
 
-! impurity green's function
+     ! impurity green's function
      complex(dp), intent(in)  :: grnf(mfreq,norbs,norbs)
 
-! self-consistent condition is
-!    Delta = t^2 G
+     ! self-consistent condition is
+     !    Delta = t^2 G
      hybf = part * part * grnf
 
      return
