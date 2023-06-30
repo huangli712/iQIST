@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : iqist @ narcissus
 !!! program : ctqmc_dmft_selfer
 !!!           ctqmc_dmft_conver
 !!!           ctqmc_dmft_bethe
@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/31/2017 by li huang (last modified)
+!!!           07/01/2023 by li huang (last modified)
 !!! purpose : implement a hybridization expansion version continuous time
 !!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
 !!!           dynamical mean field theory (DMFT) self-consistent engine.
@@ -43,23 +43,25 @@
 
      implicit none
 
-! local variables
-! loop index over flavors
+!! local variables
+     ! loop index over flavors
      integer  :: i
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! effective chemical potential
+     ! effective chemical potential
      real(dp) :: qmune
 
-! dummy hybridization function in matsubara frequency axis
+     ! dummy hybridization function in matsubara frequency axis
      complex(dp), allocatable :: htmp(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(htmp(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
@@ -69,61 +71,61 @@
 !!>>> starting self-consistent engine                                  <<<
 !!========================================================================
 
-! print necessary self-consistent simulation information
+     ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine running'
          write(mystd,'(4X,2a)') 'interacting lattice model  / ', 'Hubbard model'
          write(mystd,'(4X,2a)') 'density of states          / ', 'semicircular'
      endif ! back if ( myid == master ) block
 
-! task 1: calculate new hybridization function
-!-------------------------------------------------------------------------
-! initialize htmp
+     ! task 1: calculate new hybridization function
+     !--------------------------------------------------------------------
+     ! initialize htmp
      htmp = hybf
 
-! apply the self-consistent condition. here we consider a Hubbard model
-! on a bethe lattice. of course you can replace it with your implements
+     ! apply the self-consistent condition. here we consider a Hubbard model
+     ! on a bethe lattice. of course you can replace it with your implements
      call ctqmc_dmft_bethe(hybf, grnf)
 
-! task 2: mix old and new hybridization functions
-!-------------------------------------------------------------------------
-! mix htmp and hybf using linear mixer
+     ! task 2: mix old and new hybridization functions
+     !--------------------------------------------------------------------
+     ! mix htmp and hybf using linear mixer
      call s_mix_z(size(hybf), htmp, hybf, alpha)
 
-! task 3: calculate new bath weiss's function
-!-------------------------------------------------------------------------
-! determine effective chemical potential using
-!     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
-! where N is the number of bands
+     ! task 3: calculate new bath weiss's function
+     !--------------------------------------------------------------------
+     ! determine effective chemical potential using
+     !     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
+     ! where N is the number of bands
      qmune = mune
      qmune = qmune - ( real(nband) - half ) * Uc
      qmune = qmune + ( real(nband) - one ) * 2.5_dp * Jz
 
-! apply dyson equation to get G^{-1}_0
-!     G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
+     ! apply dyson equation to get G^{-1}_0
+     !     G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
              wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
-! calculate inverse matrix
+     ! calculate inverse matrix
      do k=1,mfreq
          call s_inv_z(norbs, wssf(k,:,:))
      enddo ! over k={1,mfreq} loop
 
-! fourier transformation bath weiss's function from matsubara frequency
-! space to imaginary time space
+     ! fourier transformation bath weiss's function from matsubara frequency
+     ! space to imaginary time space
      call ctqmc_four_hybf(wssf, wtau)
 
-! task 4: dump the calculated results
-!-------------------------------------------------------------------------
-! write out the new bath weiss's function in matsubara frequency axis
+     ! task 4: dump the calculated results
+     !--------------------------------------------------------------------
+     ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wssf(wssf)
      endif ! back if ( myid == master ) block
 
-! write out the new bath weiss's function in imaginary time axis
+     ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wtau(wtau)
      endif ! back if ( myid == master ) block
@@ -132,7 +134,7 @@
 !!>>> finishing self-consistent engine                                 <<<
 !!========================================================================
 
-! print necessary self-consistent simulation information
+     ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,2a)') 'new hybridization function / ', 'calculated'
          write(mystd,'(4X,2a)') 'new bath weiss'//"'s"//' function  / ', 'calculated'
@@ -140,8 +142,10 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! deallocate memory
+     ! deallocate memory
      deallocate(htmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dmft_selfer
