@@ -808,71 +808,75 @@
 
      implicit none
 
-! external arguments
-! control flag
-! if cflip = 1, flip intra-orbital spins one by one
-! if cflip = 2, flip intra-orbital spins globally
+!! external arguments
+     ! control flag
+     ! if cflip = 1, flip intra-orbital spins one by one
+     ! if cflip = 2, flip intra-orbital spins globally
      integer, intent(in) :: cflip
 
-! local variables
-! whether the update operation is accepted
+!! local variables
+     ! whether the update operation is accepted
      logical  :: pass
 
-! selected flavor pairs
+     ! selected flavor pairs
      integer  :: fup
      integer  :: fdn
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: flvr
 
-! maximum rank order
+     ! maximum rank order
      integer  :: kmax
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! global flip determinant ratio
+     ! global flip determinant ratio
      real(dp) :: ratup
      real(dp) :: ratdn
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      pass = .false.
 
-! initialize transition probability
+     ! initialize transition probability
      p = one
 
-! case 1: cflip = 1, local flip
-!-------------------------------------------------------------------------
+     ! case 1: cflip = 1, local flip
+     !--------------------------------------------------------------------
      if ( cflip == 1 ) then
          do flvr=1,nband
 
-! get fup and fdn
+             ! get fup and fdn
              fup = flvr; fdn = flvr + nband
 
-! calculate the transition ratio for the determinant part, spin up case
+             ! calculate the transition ratio for the determinant part,
+             ! for spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
-! calculate the transition ratio for the determinant part, spin dn case
+             ! calculate the transition ratio for the determinant part,
+             ! for spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
-! calculate the transition probability
+             ! calculate the transition probability
              p = ratup * ratdn
 
-! determine pass using metropolis algorithm
+             ! determine pass using metropolis algorithm
              pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
-! if update action is accepted
+             ! if update action is accepted
              if ( pass .eqv. .true. ) then
 
-! get maximum rank order in spin up and spin down states
+                 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! exchange global variables between spin up and spin down states
+                 ! exchange global variables between spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              endif ! back if ( pass .eqv. .true. ) block
 
-! update monte carlo statistics
+             ! update monte carlo statistics
              rfl_t = rfl_t + one
              if ( pass .eqv. .true. ) then
                  rfl_a = rfl_a + one
@@ -883,47 +887,49 @@
          enddo ! over flvr={1,nband} loop
      endif ! back if ( cflip == 1 ) block
 
-! case 2: cflip = 2, global flip
-!-------------------------------------------------------------------------
+     ! case 2: cflip = 2, global flip
+     !--------------------------------------------------------------------
      if ( cflip == 2 ) then
          do flvr=1,nband
 
-! get fup and fdn
+             ! get fup and fdn
              fup = flvr; fdn = flvr + nband
 
-! calculate the transition ratio for the determinant part, spin up case
+             ! calculate the transition ratio for the determinant part,
+             ! for spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
-! calculate the transition ratio for the determinant part, spin dn case
+             ! calculate the transition ratio for the determinant part,
+             ! for spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
-! calculate the transition probability
+             ! calculate the transition probability
              p = p * ( ratup * ratdn )
 
          enddo ! over flvr={1,nband} loop
 
-! determine pass using metropolis algorithm
+         ! determine pass using metropolis algorithm
          pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
-! if update action is accepted
+         ! if update action is accepted
          if ( pass .eqv. .true. ) then
 
              do flvr=1,nband
 
-! get fup and fdn
+                 ! get fup and fdn
                  fup = flvr; fdn = flvr + nband
 
-! get maximum rank order in spin up and spin down states
+                 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! exchange global variables between spin up and spin down states
+                 ! exchange global variables between spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              enddo ! over flvr={1,nband} loop
 
          endif ! back if ( pass .eqv. .true. ) block
 
-! update monte carlo statistics
+         ! update monte carlo statistics
          rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
              rfl_a = rfl_a + one
@@ -931,6 +937,8 @@
              rfl_r = rfl_r + one
          endif ! back if ( pass .eqv. .true. ) block
      endif ! back if ( cflip == 2 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reflip_kink
