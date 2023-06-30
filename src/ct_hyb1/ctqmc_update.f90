@@ -698,43 +698,45 @@
 
      implicit none
 
-! local variables
-! whether the update operation winds around the circle
+!! local variables
+     ! whether the update operation winds around the circle
      logical  :: ring
 
-! whether the update operation is accepted
+     ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel
+     ! current flavor channel
      integer  :: flvr
 
-! index address to shift old annihilation operator
-! ieo and ien are for old and new indices, respectively
+     ! index address to shift old annihilation operator
+     ! ieo and ien are for old and new indices, respectively
      integer  :: ieo, ien
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! \tau_e, imaginary time point of the old annihilation operator
+     ! \tau_e, imaginary time point of the old annihilation operator
      real(dp) :: tau_end1
 
-! \tau_e, imaginary time point of the new annihilation operator
+     ! \tau_e, imaginary time point of the new annihilation operator
      real(dp) :: tau_end2
 
-! ratio between old and new configurations, the local trace part
+     ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part
+     ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      ring = .false.
      pass = .false.
 
-! select the flavor channel randomly among 1 ~ norbs
+     ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order for current flavor channel
+     ! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
          rsh_t = rsh_t + one
@@ -742,45 +744,47 @@
          RETURN
      endif ! back if ( ckink == 0 ) block
 
-! try to generate new configuration
-! (1) at first, we select ieo randomly
-! (2) obtain tau_end1 according to ieo
-! (3) based on the existing configuration, we determine tau_end2 and
-!     related index ien
-! (4) finally ring is evaluated
+     ! try to generate new configuration
+     ! (1) at first, we select ieo randomly
+     ! (2) obtain tau_end1 according to ieo
+     ! (3) based on the existing configuration, we determine tau_end2 and
+     !     related index ien
+     ! (4) finally ring is evaluated
      call try_rshift_colour(flvr, ieo, ien, ring, tau_end1, tau_end2)
 
-! calculate the transition ratio for the local trace part
+     ! calculate the transition ratio for the local trace part
      call cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
 
-! calculate the transition ratio for the determinant part
+     ! calculate the transition ratio for the determinant part
      call cat_rshift_detrat(flvr, ieo, tau_end1, tau_end2, deter_ratio)
 
-! calculate the transition probability
+     ! calculate the transition probability
      p = deter_ratio * trace_ratio
 
-! determine pass using metropolis algorithm
+     ! determine pass using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
-! if update action is accepted
+     ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively
-! the perturbation expansion series are updated as well
+         ! update the mmat matrix and gmat matrix, respectively
+         ! the perturbation expansion series are updated as well
          call cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
 
-! update stts for current flavor channel
+         ! update stts for current flavor channel
          stts(flvr) = cstat
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update monte carlo statistics
+     ! update monte carlo statistics
      rsh_t = rsh_t + one
      if ( pass .eqv. .true. ) then
          rsh_a = rsh_a + one
      else
          rsh_r = rsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine ctqmc_rshift_kink
