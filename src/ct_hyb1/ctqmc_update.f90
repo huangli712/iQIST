@@ -52,47 +52,49 @@
 
      implicit none
 
-! local parameters
-! possible (predefined) values for the nmonte parameter
+!! local parameters
+     ! possible (predefined) values for the nmonte parameter
      integer, parameter :: P_NMONTE(10) = (/10, 20, 40, 50, 100, 200, 400, 500, 1000, 2000/)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! estimated autocorrelation time
+     ! estimated autocorrelation time
      real(dp) :: ac_t
 
-! autocorrelation function
+     ! autocorrelation function
      real(dp) :: ac_f_mpi(ntime + 2)
      real(dp) :: ac_f_err(ntime + 2)
 
-! warm up the diagram series at first
+!! [body
+
+     ! warm up the diagram series at first
      do i=1,ntherm
          call ctqmc_try_walking(i)
      enddo ! over i={1,ntherm} loop
 
-! and then measure the autocorrelation function
+     ! and then measure the autocorrelation function
      do i=1,ntherm
          call ctqmc_try_walking(i)
          call ctqmc_record_ac_f()
      enddo ! over i={1,ntherm} loop
 
-! reduce the autocorrelation function, ac_f -> ac_f_mpi
+     ! reduce the autocorrelation function, ac_f -> ac_f_mpi
      call ctqmc_reduce_ac_f(ac_f_mpi, ac_f_err); ac_f = ac_f_mpi
 
-! normalize the autocorrelation function
+     ! normalize the autocorrelation function
      ac_f(1:ntime) = ac_f(1:ntime) / float( ntherm - ntime )
      ac_f(ntime + 1) = ac_f(ntime + 1) / float( ntherm )
      ac_f(ntime + 2) = ac_f(ntime + 2) / float( ntherm )
 
-! calculate the autocorrelation function (numerator part)
+     ! calculate the autocorrelation function (numerator part)
      ac_f(1:ntime) = ac_f(1:ntime) - ac_f(ntime + 1)**2
 
-! normalize the autocorrelation function again
+     ! normalize the autocorrelation function again
      ac_f(1:ntime) = ac_f(1:ntime) / ( ac_f(ntime + 2) - ac_f(ntime + 1)**2 )
 
-! evaluate the integrated autocorrelation time
+     ! evaluate the integrated autocorrelation time
      ac_t = 0.5_dp
      do i=2,ntime
          if ( ac_f(i) > zero ) then
@@ -102,28 +104,30 @@
          endif ! back if ( ac_f(i) > zero ) block
      enddo ! over i={2,ntime} loop
 
-! update nmonte parameter to reduce autocorrelation (old algorithm)
-!<     do while ( nmonte < ac_t )
-!<         nmonte = nmonte * 10
-!<     enddo ! over do while loop
-!<     if ( nmonte > ac_t * 5 ) nmonte = nmonte / 5 ! adjust nmonte further
+!<   ! update nmonte parameter to reduce autocorrelation (old algorithm)
+!<   do while ( nmonte < ac_t )
+!<       nmonte = nmonte * 10
+!<   enddo ! over do while loop
+!<   if ( nmonte > ac_t * 5 ) nmonte = nmonte / 5 ! adjust nmonte further
 
-! update nmonte parameter to reduce autocorrelation (new algorithm)
+     ! update nmonte parameter to reduce autocorrelation (new algorithm)
      nmonte = P_NMONTE( count ( real(P_NMONTE, dp) < ac_t ) + 1 )
 
-! write the autocorrelation function, only master node can do it
+     ! write the autocorrelation function, only master node can do it
      if ( myid == master ) then
          write(mystd,'(4X,a,f11.4)',advance='no') 'ac_t:', ac_t
          write(mystd,'(1X,a,i4,a)') '(nmonte ->', nmonte, ')'
          call ctqmc_dump_ac_f(ac_f)
      endif ! back if ( myid == master ) block
 
-! reset statistics variables
+     ! reset statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
      rmv_t = zero; rmv_a = zero; rmv_r = zero
      lsh_t = zero; lsh_a = zero; lsh_r = zero
      rsh_t = zero; rsh_a = zero; rsh_r = zero
      rfl_t = zero; rfl_a = zero; rfl_r = zero
+
+!! body]
 
      return
   end subroutine ctqmc_try_warming
