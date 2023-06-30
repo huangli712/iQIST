@@ -588,43 +588,45 @@
 
      implicit none
 
-! local variables
-! whether the update operation winds around the circle
+!! local variables
+     ! whether the update operation winds around the circle
      logical  :: ring
 
-! whether the update operation is accepted
+     ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel
+     ! current flavor channel
      integer  :: flvr
 
-! index address to shift old creation operator
-! iso and isn are for old and new indices, respectively
+     ! index address to shift old creation operator
+     ! iso and isn are for old and new indices, respectively
      integer  :: iso, isn
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! \tau_s, imaginary time point of the old creation operator
+     ! \tau_s, imaginary time point of the old creation operator
      real(dp) :: tau_start1
 
-! \tau_s, imaginary time point of the new creation operator
+     ! \tau_s, imaginary time point of the new creation operator
      real(dp) :: tau_start2
 
-! ratio between old and new configurations, the local trace part
+     ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part
+     ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      ring = .false.
      pass = .false.
 
-! select the flavor channel randomly among 1 ~ norbs
+     ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order for current flavor channel
+     ! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
          lsh_t = lsh_t + one
@@ -632,45 +634,47 @@
          RETURN
      endif ! back if ( ckink == 0 ) block
 
-! try to generate new configuration
-! (1) at first, we select iso randomly
-! (2) obtain tau_start1 according to iso
-! (3) based on the existing configuration, we determine tau_start2 and
-!     related index isn
-! (4) finally ring is evaluated
+     ! try to generate new configuration
+     ! (1) at first, we select iso randomly
+     ! (2) obtain tau_start1 according to iso
+     ! (3) based on the existing configuration, we determine tau_start2 and
+     !     related index isn
+     ! (4) finally ring is evaluated
      call try_lshift_colour(flvr, iso, isn, ring, tau_start1, tau_start2)
 
-! calculate the transition ratio for the local trace part
+     ! calculate the transition ratio for the local trace part
      call cat_lshift_ztrace(flvr, ring, tau_start1, tau_start2, trace_ratio)
 
-! calculate the transition ratio for the determinant part
+     ! calculate the transition ratio for the determinant part
      call cat_lshift_detrat(flvr, iso, tau_start1, tau_start2, deter_ratio)
 
-! calculate the transition probability
+     ! calculate the transition probability
      p = deter_ratio * trace_ratio
 
-! determine pass using metropolis algorithm
+     ! determine pass using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
-! if update action is accepted
+     ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively
-! the perturbation expansion series are updated as well
+         ! update the mmat matrix and gmat matrix, respectively
+         ! the perturbation expansion series are updated as well
          call cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
 
-! update stts for current flavor channel
+         ! update stts for current flavor channel
          stts(flvr) = cstat
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update monte carlo statistics
+     ! update monte carlo statistics
      lsh_t = lsh_t + one
      if ( pass .eqv. .true. ) then
          lsh_a = lsh_a + one
      else
          lsh_r = lsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine ctqmc_lshift_kink
