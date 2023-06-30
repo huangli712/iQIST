@@ -147,22 +147,24 @@
 
      implicit none
 
-! external arguments
-! current QMC sweep steps
+!! external arguments
+     ! current QMC sweep steps
      integer, intent(in) :: cstep
 
-! random walking in C_Z space
-!-------------------------------------------------------------------------
+!! [body
+
+     ! random walking in C_Z space
+     !--------------------------------------------------------------------
      C_Z_SPACE: BLOCK
 
-! change the order of perturbation expansion series
+         ! change the order of perturbation expansion series
          if ( spring_sfmt_stream() < 0.9_dp ) then
              if ( spring_sfmt_stream() > 0.5_dp ) then
                  call ctqmc_insert_kink()  ! insert one new kink
              else
                  call ctqmc_remove_kink()  ! remove one old kink
              endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
-! do not change the order of perturbation expansion series
+         ! do not change the order of perturbation expansion series
          else
              if ( spring_sfmt_stream() > 0.5_dp ) then
                  call ctqmc_lshift_kink()  ! shift the creation operators
@@ -173,8 +175,8 @@
 
      END BLOCK C_Z_SPACE
 
-! numerical trick: perform global spin flip periodically
-!-------------------------------------------------------------------------
+     ! numerical trick: perform global spin flip periodically
+     !--------------------------------------------------------------------
      GLOBAL_REFLIP: BLOCK
 
          if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) then
@@ -195,8 +197,8 @@
 
      END BLOCK GLOBAL_REFLIP
 
-! numerical trick: perform global update periodically
-!-------------------------------------------------------------------------
+     ! numerical trick: perform global update periodically
+     !--------------------------------------------------------------------
      GLOBAL_RELOAD: BLOCK
 
          if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
@@ -204,6 +206,8 @@
          endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      END BLOCK GLOBAL_RELOAD
+
+!! body]
 
      return
   end subroutine ctqmc_try_walking
