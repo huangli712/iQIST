@@ -333,52 +333,54 @@
 
      implicit none
 
-! local variables
-! whether the new creation and annihilation operators can be inserted
+!! local variables
+     ! whether the new creation and annihilation operators can be inserted
      logical  :: ladd
 
-! whether it is an anti-segment
-! if anti = .true., anti-segment
-! if anti = .false., segment
+     ! whether it is an anti-segment
+     ! if anti = .true., anti-segment
+     ! if anti = .false., segment
      logical  :: anti
 
-! whether the update operation is accepted
+     ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel
+     ! current flavor channel
      integer  :: flvr
 
-! index address to insert new creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to insert new creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer  :: is, ie
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! \tau_s, imaginary time point of the creation operator
+     ! \tau_s, imaginary time point of the creation operator
      real(dp) :: tau_start
 
-! \tau_e, imaginary time point of the annihilation operator
+     ! \tau_e, imaginary time point of the annihilation operator
      real(dp) :: tau_end
 
-! possible maximum length of the new segment
+     ! possible maximum length of the new segment
      real(dp) :: tau_max
 
-! ratio between old and new configurations, the local trace part
+     ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part
+     ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      ladd = .false.
      anti = .false.
      pass = .false.
 
-! select the flavor channel randomly among 1 ~ norbs
+     ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order for current flavor channel
+     ! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
          ins_t = ins_t + one
@@ -386,59 +388,61 @@
          RETURN
      endif ! back if ( ckink == mkink ) block
 
-! try to generate new configuration
-! (1) randomly choose anti and tau_start
-! (2) check whether tau_start is valid
-! (3) if tau_start is valid, determine tau_end, tau_max, is, and ie
-!     consistently, and set ladd to .true.
-! (4) if tau_start is not valid, set ladd to .false.
+     ! try to generate new configuration
+     ! (1) randomly choose anti and tau_start
+     ! (2) check whether tau_start is valid
+     ! (3) if tau_start is valid, determine tau_end, tau_max, is, and ie
+     !     consistently, and set ladd to .true.
+     ! (4) if tau_start is not valid, set ladd to .false.
      call try_insert_colour(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
 
-! calculate the transition ratio for the local trace part
+     ! calculate the transition ratio for the local trace part
      if ( ladd .eqv. .true. ) then
          call cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! calculate the transition ratio for the determinant part
+     ! calculate the transition ratio for the determinant part
      if ( ladd .eqv. .true. ) then
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
          deter_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! calculate the transition probability
+     ! calculate the transition probability
      p = deter_ratio * trace_ratio * ( beta * tau_max / real( ckink + 1 ) )
 
-! determine pass using metropolis algorithm
+     ! determine pass using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
-! if the update action is accepted
+     ! if the update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively
-! the perturbation expansion series are updated as well
+         ! update the mmat matrix and gmat matrix, respectively
+         ! the perturbation expansion series are updated as well
          call cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
 
-! update ckink for current flavor channel
+         ! update ckink for current flavor channel
          ckink = ckink + 1
 
-! update stts for current flavor channel
+         ! update stts for current flavor channel
          stts(flvr) = cstat
 
-! update rank for current flavor channel
+         ! update rank for current flavor channel
          rank(flvr) = rank(flvr) + 1
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update monte carlo statistics
+     ! update monte carlo statistics
      ins_t = ins_t + one
      if ( pass .eqv. .true. ) then
          ins_a = ins_a + one
      else
          ins_r = ins_r + one
      endif ! back if ( pass .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine ctqmc_insert_kink
