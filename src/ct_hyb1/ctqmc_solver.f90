@@ -486,17 +486,17 @@
                  call ctqmc_record_sp_t()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) block
 
-! record the charge-charge correlation function
+             ! record the charge-charge correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) then
                  call ctqmc_record_ch_t()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) block
 
-! record the spin-spin correlation function
+             ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) then
                  call ctqmc_record_sp_w()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) block
 
-! record the charge-charge correlation function
+             ! record the charge-charge correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) then
                  call ctqmc_record_ch_w()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
@@ -505,23 +505,23 @@
 !!>>> sampling the physical observables 5 (optional)                   <<<
 !!========================================================================
 
-! the following physical observables are measured optionally (by isvrt)
-! record the two-particle green's function, particle-hole channel, AABB
+             ! the following physical observables are measured optionally (by isvrt) 
+             ! record the two-particle green's function, particle-hole channel, AABB
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
-! record the two-particle green's function, particle-hole channel, ABBA
+             ! record the two-particle green's function, particle-hole channel, ABBA
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
                  call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
 
-! record the two-particle green's function, particle-particle channel, AABB
+             ! record the two-particle green's function, particle-particle channel, AABB
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_g2pp()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
-! record the two-particle green's function, particle-particle channel, ABBA
+             ! record the two-particle green's function, particle-particle channel, ABBA
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
                  call ctqmc_record_g2pp()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
