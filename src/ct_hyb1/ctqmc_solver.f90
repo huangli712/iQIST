@@ -220,7 +220,9 @@
      complex(dp), allocatable :: h2pp_err(:,:,:,:,:)
      !--------------------------------------------------------------------
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      allocate(hist_err(mkink),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
@@ -282,13 +284,13 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! setup cstep
+     ! setup cstep
      cstep = 0
 
-! setup cflag, check the status of quantum impurity solver periodically
+     ! setup cflag, check the status of quantum impurity solver periodically
      cflag = 1
 
-! setup timer
+     ! setup timer
      time_cur = zero
      time_sum = zero
 
