@@ -1,35 +1,35 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
-!!! program : ctqmc_dump_ac_f <<<---
+!!! project : iqist @ narcissus
+!!! program : ctqmc_dump_ac_f
 !!!           ctqmc_dump_hist
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_paux
-!!!           ctqmc_dump_nmat <<<---
+!!!           ctqmc_dump_nmat
 !!!           ctqmc_dump_gtau
 !!!           ctqmc_dump_ftau
 !!!           ctqmc_dump_htau
 !!!           ctqmc_dump_wtau
-!!!           ctqmc_dump_ktau <<<---
+!!!           ctqmc_dump_ktau
 !!!           ctqmc_dump_grnf
 !!!           ctqmc_dump_frnf
 !!!           ctqmc_dump_hybf
 !!!           ctqmc_dump_wssf
-!!!           ctqmc_dump_sig2 <<<---
+!!!           ctqmc_dump_sig2
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lrmm
-!!!           ctqmc_dump_szpw <<<---
+!!!           ctqmc_dump_szpw
 !!!           ctqmc_dump_sp_t
 !!!           ctqmc_dump_sp_w
 !!!           ctqmc_dump_ch_t
-!!!           ctqmc_dump_ch_w <<<---
+!!!           ctqmc_dump_ch_w
 !!!           ctqmc_dump_g2ph
-!!!           ctqmc_dump_g2pp <<<---
-!!!           ctqmc_dump_diag <<<---
+!!!           ctqmc_dump_g2pp
+!!!           ctqmc_dump_diag
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/15/2017 by li huang (last modified)
+!!!           07/01/2023 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
