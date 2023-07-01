@@ -560,33 +560,37 @@
 
      implicit none
 
-! external arguments
-! screening function, K(\tau)
+!! external arguments
+     ! screening function, K(\tau)
      real(dp), intent(in) :: ktau(ntime)
 
-! first order derivates for screening function, K'(\tau)
+     ! first order derivates for screening function, K'(\tau)
      real(dp), intent(in) :: ptau(ntime)
 
-! second order derivates for the screening function, K''(\tau)
+     ! second order derivates for the screening function, K''(\tau)
      real(dp), intent(in) :: ksed(ntime)
 
-! second order derivates for ptau, K'''(\tau)
+     ! second order derivates for ptau, K'''(\tau)
      real(dp), intent(in) :: psed(ntime)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! open data file: solver.kernel.dat
+!! [body
+
+     ! open data file: solver.kernel.dat
      open(mytmp, file='solver.kernel.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,ntime
          write(mytmp,'(i6,5f12.6)') i, tmesh(i), ktau(i), ptau(i), ksed(i), psed(i)
      enddo ! over i={1,ntime} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_ktau
