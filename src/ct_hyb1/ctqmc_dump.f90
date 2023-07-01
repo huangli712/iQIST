@@ -1203,29 +1203,31 @@
 
      implicit none
 
-! external arguments
-! totally-averaged charge-charge correlation function data
+!! external arguments
+     ! totally-averaged charge-charge correlation function and its error bar
      real(dp), intent(in) :: cchi(ntime)
      real(dp), intent(in) :: cerr(ntime)
 
-! orbital-resolved charge-charge correlation function data
+     ! orbital-resolved charge-charge correlation function and its error bar
      real(dp), intent(in) :: ch_t(ntime,norbs,norbs)
      real(dp), intent(in) :: cbar(ntime,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
 
-! check if we need to dump the charge-charge correlation function data
-! to solver.ch_t.dat
+!! [body
+
+     ! check if we need to dump the charge-charge correlation function data
+     ! to solver.ch_t.dat
      if ( .not. btest(issus, 2) ) RETURN
 
-! open data file: solver.ch_t.dat
+     ! open data file: solver.ch_t.dat
      open(mytmp, file='solver.ch_t.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do k=1,norbs
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
@@ -1251,8 +1253,10 @@
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_ch_t
