@@ -1746,32 +1746,34 @@
 
      implicit none
 
-! external arguments
-! current self-consistent iteration number
+!! external arguments
+     ! current self-consistent iteration number
      integer, intent(in) :: iter
 
-! current QMC sweeping steps
+     ! current QMC sweeping steps
      integer, intent(in) :: cstep
 
-! local variables
-! loop index for the flavor
+!! local variables
+     ! loop index for the flavor
      integer :: i
 
-! loop index for the operator pair
+     ! loop index for the operator pair
      integer :: j
 
-! setup the internal criterion
+!! [body
+
+     ! setup the internal criterion
      if ( nsweep / nwrite < 100 ) RETURN
 
-! write the snapshot
-! open data file: solver.diag.dat
+     ! write the snapshot
+     ! open data file: solver.diag.dat
      open(mytmp, file='solver.diag.dat', form='formatted', status='unknown', position='append')
 
-! write diagram info
+     ! write diagram info
      write(mytmp,'(2(a,i4))') '>> cur_iter:', iter, ' tot_iter:', niter
      write(mytmp,'(2(a,i4))') '>> cur_diag:', cstep/nwrite, ' tot_diag:', nsweep/nwrite
 
-! write the position of operators
+     ! write the position of operators
      do i=1,norbs
          write(mytmp,'(2(a,i4))') '# flvr:', i, ' rank:', rank(i)
          do j=1,rank(i)
@@ -1779,15 +1781,17 @@
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
 
-! write two blank lines
+     ! write two blank lines
      write(mytmp,*)
      write(mytmp,*)
 
-! close data file
+     ! close data file
      close(mytmp)
 
-! write the message to the terminal
+     ! write the message to the terminal
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
+
+!! body]
 
      return
   end subroutine ctqmc_dump_diag
