@@ -305,24 +305,26 @@
 
      implicit none
 
-! external arguments
-! occupation number data
+!! external arguments
+     ! occupation number data
      real(dp), intent(in) :: nimp(norbs)
      real(dp), intent(in) :: nerr(norbs)
 
-! double occupation matrix data
+     ! double occupation matrix data
      real(dp), intent(in) :: nmat(norbs,norbs)
      real(dp), intent(in) :: nbar(norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.nmat.dat
+!! [body
+
+     ! open data file: solver.nmat.dat
      open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, nimp(i), nerr(i)
@@ -338,8 +340,10 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_nmat
