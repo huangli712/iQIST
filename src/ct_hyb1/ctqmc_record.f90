@@ -1,48 +1,48 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
-!!! program : ctqmc_record_ac_f <<<---
+!!! project : iqist @ narcissus
+!!! program : ctqmc_record_ac_f
 !!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_paux
-!!!           ctqmc_record_nmat <<<---
+!!!           ctqmc_record_nmat
 !!!           ctqmc_record_gtau
 !!!           ctqmc_record_ftau
 !!!           ctqmc_record_grnf
 !!!           ctqmc_record_frnf
-!!!           ctqmc_record_sig2 <<<---
+!!!           ctqmc_record_sig2
 !!!           ctqmc_record_kmat
 !!!           ctqmc_record_lrmm
-!!!           ctqmc_record_szpw <<<---
+!!!           ctqmc_record_szpw
 !!!           ctqmc_record_sp_t
 !!!           ctqmc_record_sp_w
 !!!           ctqmc_record_ch_t
-!!!           ctqmc_record_ch_w <<<---
+!!!           ctqmc_record_ch_w
 !!!           ctqmc_record_g2ph
-!!!           ctqmc_record_g2pp <<<---
-!!!           ctqmc_reduce_ac_f <<<---
+!!!           ctqmc_record_g2pp
+!!!           ctqmc_reduce_ac_f
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_paux
-!!!           ctqmc_reduce_nmat <<<---
+!!!           ctqmc_reduce_nmat
 !!!           ctqmc_reduce_gtau
 !!!           ctqmc_reduce_ftau
 !!!           ctqmc_reduce_grnf
 !!!           ctqmc_reduce_frnf
-!!!           ctqmc_reduce_sig2 <<<---
+!!!           ctqmc_reduce_sig2
 !!!           ctqmc_reduce_kmat
 !!!           ctqmc_reduce_lrmm
-!!!           ctqmc_reduce_szpw <<<---
+!!!           ctqmc_reduce_szpw
 !!!           ctqmc_reduce_sp_t
 !!!           ctqmc_reduce_sp_w
 !!!           ctqmc_reduce_ch_t
-!!!           ctqmc_reduce_ch_w <<<---
+!!!           ctqmc_reduce_ch_w
 !!!           ctqmc_reduce_g2ph
-!!!           ctqmc_reduce_g2pp <<<---
+!!!           ctqmc_reduce_g2pp
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/21/2017 by li huang (last modified)
+!!!           07/02/2023 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
