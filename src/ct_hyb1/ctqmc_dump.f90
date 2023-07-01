@@ -98,21 +98,23 @@
 
      implicit none
 
-! external arguments
-! histogram data
+!! external arguments
+     ! histogram data
      real(dp), intent(in) :: hist(mkink)
      real(dp), intent(in) :: herr(mkink)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! scaled histogram data
+     ! scaled histogram data
      real(dp) :: hint(mkink)
      real(dp) :: haux(mkink)
      real(dp) :: htmp(mkink)
 
-! evaluate hint, haux, and htmp at first, and then transform them
+!! [body
+
+     ! evaluate hint, haux, and htmp at first, and then transform them
      hint = hist
      haux = hist / sum(hist)
      htmp = herr / sum(hist)
@@ -121,17 +123,19 @@
      haux = cshift(haux, -1)
      htmp = cshift(htmp, -1)
 
-! open data file: solver.hist.dat
+     ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
          write(mytmp,'(i6,i12,2f12.6)') i-1, int( hint(i) ), haux(i), htmp(i)
      enddo ! over i={1,mkink} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_hist
