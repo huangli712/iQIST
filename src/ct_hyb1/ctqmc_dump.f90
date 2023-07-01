@@ -858,36 +858,38 @@
 
      implicit none
 
-! external arguments
-! number of operators, < k >
+!! external arguments
+     ! number of operators, < k >, and its error bar
      real(dp), intent(in) :: knop(norbs)
      real(dp), intent(in) :: kerr(norbs)
 
-! crossing product of k_i and k_j, < k_i k_j >
+     ! crossing product of k_i and k_j, < k_i k_j >, and its error bar
      real(dp), intent(in) :: kmat(norbs,norbs)
      real(dp), intent(in) :: kbar(norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! final value and corresponding error
+     ! final value and corresponding error
      real(dp) :: f_val
      real(dp) :: f_err
 
-! calculate f_val and f_err
+!! [body
+
+     ! calculate f_val and f_err
      f_val = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
      f_err = sum( kbar ) - sum( kerr ) * ( two * sum( knop ) + one )
 
-! check if we need to dump the < k > and < k^2 > data
-! to solver.kmat.dat
+     ! check if we need to dump the < k > and < k^2 > data
+     ! to solver.kmat.dat
      if ( .not. btest(isobs, 1) ) RETURN
 
-! open data file: solver.kmat.dat
+     ! open data file: solver.kmat.dat
      open(mytmp, file='solver.kmat.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '# <  k  > data:'
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, knop(i), kerr(i)
@@ -903,8 +905,10 @@
      write(mytmp,'(a6,2f12.6)') 'kksum', sum( kmat ), sum( kbar )
      write(mytmp,'(a6,2f12.6)') 'final', f_val, f_err
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_kmat
