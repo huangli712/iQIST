@@ -340,7 +340,7 @@
      call ctqmc_retrieve_status()
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -350,8 +350,8 @@
 !!>>> warming quantum impurity solver                                  <<<
 !!========================================================================
 
-! warmup the continuous time quantum Monte Carlo quantum impurity solver
-! in order to achieve equilibrium state
+     ! warmup the continuous time quantum Monte Carlo quantum impurity
+     ! solver in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
      endif ! back if ( myid == master ) block
@@ -360,7 +360,7 @@
      call ctqmc_try_warming()
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -370,7 +370,7 @@
 !!>>> beginning main iteration                                         <<<
 !!========================================================================
 
-! start simulation
+     ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
          write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING BEGINS'
@@ -392,36 +392,36 @@
 
      MC_SWEEP: do i=1,nsweep,nwrite
 
-! record start time
+         ! record start time
          call cpu_time(time_begin)
 
          MC_WRITE: do j=1,nwrite
 
-! increase cstep by 1
+             ! increase cstep by 1
              cstep = cstep + 1
 
-! sampling the perturbation expansion feynman diagrams randomly
+             ! sampling the perturbation expansion feynman diagrams randomly
              call ctqmc_try_walking(cstep)
 
 !!========================================================================
 !!>>> sampling the physical observables 1 (always)                     <<<
 !!========================================================================
 
-! the following physical observables are always measured
-! record the histogram for perturbation expansion series
+             ! the following physical observables are always measured
+             ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
-! record the probability of atomic eigenstates
+             ! record the probability of atomic eigenstates
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_prob()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the auxiliary physical observables
+             ! record the auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the impurity (double) occupation number (matrix)
+             ! record the impurity (double) occupation number (matrix)
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat() ! AN EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
