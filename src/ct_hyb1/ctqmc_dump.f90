@@ -99,7 +99,7 @@
      implicit none
 
 !! external arguments
-     ! histogram data
+     ! histogram data and its error bar
      real(dp), intent(in) :: hist(mkink)
      real(dp), intent(in) :: herr(mkink)
 
@@ -155,7 +155,7 @@
      implicit none
 
 !! external arguments
-     ! probability data of eigenstates
+     ! probability data of eigenstates and its error bar
      real(dp), intent(in) :: prob(ncfgs)
      real(dp), intent(in) :: perr(ncfgs)
 
@@ -264,7 +264,7 @@
      implicit none
 
 !! external arguments
-     ! auxiliary physical observables
+     ! auxiliary physical observables and its error bar
      real(dp), intent(in) :: paux(9)
      real(dp), intent(in) :: perr(9)
 
@@ -306,11 +306,11 @@
      implicit none
 
 !! external arguments
-     ! occupation number data
+     ! occupation number data and its error bar
      real(dp), intent(in) :: nimp(norbs)
      real(dp), intent(in) :: nerr(norbs)
 
-     ! double occupation matrix data
+     ! double occupation matrix data and its error bar
      real(dp), intent(in) :: nmat(norbs,norbs)
      real(dp), intent(in) :: nbar(norbs,norbs)
 
