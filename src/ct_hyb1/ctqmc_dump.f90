@@ -616,7 +616,7 @@
      implicit none
 
 !! external arguments
-     ! impurity green's function
+     ! impurity green's function and its error bar
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
      complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
 
