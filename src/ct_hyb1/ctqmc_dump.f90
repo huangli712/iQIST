@@ -513,19 +513,21 @@
 
      implicit none
 
-! external arguments
-! bath weiss's function
+!! external arguments
+     ! bath weiss's function
      real(dp), intent(in) :: wtau(ntime,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.weiss.dat
+!! [body
+
+     ! open data file: solver.weiss.dat
      open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,ntime
              write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
@@ -534,8 +536,10 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_wtau
