@@ -1350,58 +1350,60 @@
 
      implicit none
 
-! external arguments
-! two-particle green's functions
+!! external arguments
+     ! two-particle green's function and its error bar
      complex(dp), intent(in) :: g2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! two-particle vertex functions
+     ! two-particle vertex function and its error bar
      complex(dp), intent(in) :: h2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! local variables
-! loop index for frequencies
+!! local variables
+     ! loop index for frequencies
      integer :: i
      integer :: j
      integer :: k
      integer :: p
      integer :: q
 
-! loop index for orbitals
+     ! loop index for orbitals
      integer :: m
      integer :: n
 
-! dummy integer variables
-! jt: \nu, unit is \pi/\beta
-! it: \nu', unit is \pi/\beta
+     ! dummy integer variables
+     ! jt: \nu, unit is \pi/\beta
+     ! it: \nu', unit is \pi/\beta
      integer :: it
      integer :: jt
 
-! dummy complex(dp) variables
-! they are used to store the impurity green's function
+     ! dummy complex(dp) variables
+     ! they are used to store the impurity green's function
      complex(dp) :: fw
      complex(dp) :: g1
      complex(dp) :: g2
      complex(dp) :: g3
      complex(dp) :: g4
 
-! two-particle green's function, connected part, \chi_{irr}
+     ! two-particle green's function, connected part, \chi_{irr}
      complex(dp) :: chic
 
-! true two-particle vertex function, \gamma^{(4)}
+     ! true two-particle vertex function, \gamma^{(4)}
      complex(dp) :: chig
 
-! check whether we need to dump the two-particle green's function and
-! vertex function data to solver.g2ph.dat and solver.h2ph.dat
+!! [body
+
+     ! check whether we need to dump the two-particle green's function and
+     ! vertex function data to solver.g2ph.dat and solver.h2ph.dat
      if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
 
-! task 1: dump two-particle green's function
-!-------------------------------------------------------------------------
+     ! task 1: dump two-particle green's function
+     !--------------------------------------------------------------------
 
-! open data file: solver.g2ph.dat
+     ! open data file: solver.g2ph.dat
      open(mytmp, file='solver.g2ph.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do m=1,norbs
          do n=1,m
              do k=1,nbfrq
@@ -1420,16 +1422,16 @@
          enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
-! task 2: dump two-particle vertex function (auxiliary)
-!-------------------------------------------------------------------------
+     ! task 2: dump two-particle vertex function (auxiliary)
+     !--------------------------------------------------------------------
 
-! open data file: solver.h2ph.dat
+     ! open data file: solver.h2ph.dat
      open(mytmp, file='solver.h2ph.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do m=1,norbs
          do n=1,m
              do k=1,nbfrq
@@ -1448,16 +1450,16 @@
          enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
-! task 3: dump two-particle vertex function (true)
-!-------------------------------------------------------------------------
+     ! task 3: dump two-particle vertex function (true)
+     !--------------------------------------------------------------------
 
-! open data file: solver.v4ph.dat
+     ! open data file: solver.v4ph.dat
      open(mytmp, file='solver.v4ph.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do m=1,norbs
          do n=1,m
              do k=1,nbfrq
@@ -1466,8 +1468,8 @@
                  write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
-! evaluate g1: G(v+w)
-! evaluate fw: F(v+w)
+                     ! evaluate g1: G(v+w)
+                     ! evaluate fw: F(v+w)
                      p = j + k - 1
                      if ( p <= nffrq/2 ) then
                          g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
@@ -1477,7 +1479,7 @@
                          fw = frnf(p-nffrq/2,m,m)
                      endif ! back if ( p <= nffrq/2 ) block
 
-! evaluate g2: G(v)
+                     ! evaluate g2: G(v)
                      if ( j <= nffrq/2 ) then
                          g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
                      else
@@ -1486,14 +1488,14 @@
 
                      do i=1,nffrq
 
-! evaluate g3: G(v')
+                         ! evaluate g3: G(v')
                          if ( i <= nffrq/2 ) then
                              g3 = dconjg( grnf(nffrq/2-i+1,n,n) )
                          else
                              g3 = grnf(i-nffrq/2,n,n)
                          endif ! back if ( i <= nffrq/2 ) block
 
-! evaluate g4: G(v'+w)
+                         ! evaluate g4: G(v'+w)
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
                              g4 = dconjg( grnf(nffrq/2-q+1,n,n))
@@ -1501,10 +1503,10 @@
                              g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
-! evaluate chic
+                         ! evaluate chic
                          chic = g1 * h2ph(i,j,k,n,m) - fw * g2ph(i,j,k,n,m)
 
-! evaluate chig
+                         ! evaluate chig
                          chig = chic / (g1 * g2 * g3 * g4)
 
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
@@ -1517,8 +1519,10 @@
          enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_g2ph
