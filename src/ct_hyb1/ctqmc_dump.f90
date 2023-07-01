@@ -1140,32 +1140,34 @@
 
      implicit none
 
-! external arguments
-! orbital-resolved spin-spin correlation function
+!! external arguments
+     ! orbital-resolved spin-spin correlation function and its error bar
      real(dp), intent(in) :: sp_w(nbfrq,nband)
      real(dp), intent(in) :: serr(nbfrq,nband)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! bosonic frequency mesh
+     ! bosonic frequency mesh
      real(dp) :: bmesh(nbfrq)
 
-! build bmesh
+!! [body
+
+     ! build bmesh
      do i=1,nbfrq
          bmesh(i) = two * pi * float( i - 1 ) / beta
      enddo ! over i={1,nbfrq} loop
 
-! check if we need to dump the spin-spin correlation function data
-! to solver.sp_w.dat
+     ! check if we need to dump the spin-spin correlation function data
+     ! to solver.sp_w.dat
      if ( .not. btest(issus, 3) ) RETURN
 
-! open data file: solver.sp_w.dat
+     ! open data file: solver.sp_w.dat
      open(mytmp, file='solver.sp_w.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,nbfrq
@@ -1175,8 +1177,10 @@
          write(mytmp,*)
      enddo ! over j={1,nband} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_sp_w
