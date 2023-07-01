@@ -1587,6 +1587,8 @@
      ! true two-particle vertex function, \gamma^{(4)}
      complex(dp) :: chig
 
+!! [body
+
      ! check whether we need to dump the two-particle green's function and
      ! vertex function data to solver.g2pp.dat and solver.h2pp.dat
      if ( .not. ( btest(isvrt, 3) .or. btest(isvrt, 4) ) ) RETURN
@@ -1715,6 +1717,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_g2pp
