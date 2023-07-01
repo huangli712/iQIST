@@ -460,18 +460,18 @@
 !!>>> sampling the physical observables 3 (optional)                   <<<
 !!========================================================================
 
-! the following physical observables are measured optionally (by isobs)
-! record the kinetic energy fluctuation
+             ! the following physical observables are measured optionally
+             ! (by isobs) record the kinetic energy fluctuation
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) then
                  call ctqmc_record_kmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) block
 
-! record the fidelity susceptibility
+             ! record the fidelity susceptibility
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) then
                  call ctqmc_record_lrmm()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) block
 
-! record the powers of local magnetization
+             ! record the powers of local magnetization
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) then
                  call ctqmc_record_szpw()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) block
@@ -480,8 +480,8 @@
 !!>>> sampling the physical observables 4 (optional)                   <<<
 !!========================================================================
 
-! the following physical observables are measured optionally (by issus)
-! record the spin-spin correlation function
+             ! the following physical observables are measured optionally
+             ! (by issus) record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) then
                  call ctqmc_record_sp_t()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) block
