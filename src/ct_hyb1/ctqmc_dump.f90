@@ -663,20 +663,22 @@
 
      implicit none
 
-! external arguments
-! auxiliary correlation function
+!! external arguments
+     ! auxiliary correlation function and its error bar
      complex(dp), intent(in) :: frnf(mfreq,norbs,norbs)
      complex(dp), intent(in) :: ferr(mfreq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.frn.dat
+!! [body
+
+     ! open data file: solver.frn.dat
      open(mytmp, file='solver.frn.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), frnf(j,i,i), ferr(j,i,i)
@@ -685,8 +687,10 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_frnf
