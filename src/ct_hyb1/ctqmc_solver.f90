@@ -430,28 +430,28 @@
 !!>>> sampling the physical observables 2 (always)                     <<<
 !!========================================================================
 
-! the following physical observables are always measured
-! record the impurity green's function in imaginary time space
+             ! the following physical observables are always measured
+             ! record the impurity green's function in imaginary time space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the auxiliary correlation function in imaginary time space
+             ! record the auxiliary correlation function in imaginary time space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_ftau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the impurity green's function in matsubara frequency space
+             ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the auxiliary correlation function in matsubara frequency space
+             ! record the auxiliary correlation function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_frnf() ! AN EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the self-energy function in matsubara frequency space
+             ! record the self-energy function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_sig2() ! AN EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
