@@ -70,34 +70,36 @@
 
      implicit none
 
-! local variables
-! used to record how many times this subroutine were called
+!! local variables
+     ! used to record how many times this subroutine were called
      integer, save :: starter = 0
 
-! loop index
+     ! loop index
      integer  :: i
      integer  :: j
 
-! memory position for current observable, which is used to measure the
-! autocorrelation function
+     ! memory position for current observable, which is used to measure
+     ! the autocorrelation function
      integer  :: p
 
-! total length of segments for all flavor channels
+     ! total length of segments for all flavor channels
      real(dp) :: sgmt(norbs)
 
-! calculate occupation status
+!! [body
+
+     ! calculate occupation status
      call cat_occupy_single(sgmt)
 
-! record autocorrelation function: <A_{n} A_{n+k}>
-! s1: increase the counter
+     ! record autocorrelation function: <A_{n} A_{n+k}>
+     ! s1: increase the counter
      starter = starter + 1
 
-! s2: determine memory location used to store the observable
+     ! s2: determine memory location used to store the observable
      p = mod(starter, ntime)
      if ( p == 0 ) p = ntime
 
-! s3: measure the autocorrelation function, starter is used to ensure that
-! the vector ac_v is filled completely
+     ! s3: measure the autocorrelation function, starter is used to
+     ! ensure that the vector ac_v is filled completely
      if ( starter > ntime ) then
          i = 0
          do j=p,ntime
@@ -111,13 +113,16 @@
          call s_assert( i == ntime )
      endif ! back if ( starter > ntime ) block
 
-! s4: save the specified observable (the total occupation number) in ac_v
+     ! s4: save the specified observable (the total occupation number)
+     ! in ac_v
      ac_v(p) = sum(sgmt) / beta
 
-! s5: here, ac_f(ntime + 1) is used to store the mean value for the total
-! occupation number, it is very important
+     ! s5: here, ac_f(ntime + 1) is used to store the mean value for
+     ! the total occupation number, it is very important
      ac_f(ntime + 1) = ac_f(ntime + 1) + sum(sgmt) / beta
      ac_f(ntime + 2) = ac_f(ntime + 2) + ( sum(sgmt) / beta )**2
+
+!! body]
 
      return
   end subroutine ctqmc_record_ac_f
