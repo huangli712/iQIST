@@ -154,35 +154,37 @@
 
      implicit none
 
-! external arguments
-! probability data of eigenstates
+!! external arguments
+     ! probability data of eigenstates
      real(dp), intent(in) :: prob(ncfgs)
      real(dp), intent(in) :: perr(ncfgs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! occupation number of eigenstates
+     ! occupation number of eigenstates
      real(dp) :: noccs(ncfgs)
 
-! net spin of eigenstates
+     ! net spin of eigenstates
      real(dp) :: soccs(ncfgs)
 
-! atomic basis sets
+     ! atomic basis sets
      real(dp) :: basis(ncfgs,norbs)
 
-! probability of occupation number distribution
+     ! probability of occupation number distribution
      real(dp) :: oprob(0:norbs)
      real(dp) :: operr(0:norbs) ! error bar
 
-! probability of net spin distribution
+     ! probability of net spin distribution
      real(dp) :: sprob(-nband:nband)
      real(dp) :: sperr(-nband:nband) ! error bar
 
-! build atomic basis set (or equivalently atomic eigenstates), we do not
-! order them according to their occupation numbers
+!! [body
+
+     ! build atomic basis set (or equivalently atomic eigenstates), we
+     ! do not order them according to their occupation numbers
      do i=1,ncfgs
          do j=1,norbs
              if ( btest(i-1,j-1) .eqv. .true. ) then
@@ -193,17 +195,17 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
-! build occupation numbers for atomic eigenstates
+     ! build occupation numbers for atomic eigenstates
      do i=1,ncfgs
          noccs(i) = sum( basis(i,:) )
      enddo ! over i={1,ncfgs} loop
 
-! build net spin for atomic eigenstates
+     ! build net spin for atomic eigenstates
      do i=1,ncfgs
          soccs(i) = sum( basis(i,1:nband) ) - sum( basis(i,nband+1:norbs) )
      enddo ! over i={1,ncfgs} loop
 
-! evaluate oprob
+     ! evaluate oprob
      oprob = zero
      operr = zero
      do i=1,ncfgs
@@ -212,7 +214,7 @@
          operr(j) = operr(j) + perr(i)
      enddo ! over i={1,ncfgs} loop
 
-! evaluate sprob
+     ! evaluate sprob
      sprob = zero
      sperr = zero
      do i=1,ncfgs
@@ -221,10 +223,10 @@
          sperr(j) = sperr(j) + perr(i)
      enddo ! over i={1,ncfgs} loop
 
-! open data file: solver.prob.dat
+     ! open data file: solver.prob.dat
      open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
          write(mytmp,'(i6,4f12.6)') i, prob(i), noccs(i), soccs(i) * half, perr(i)
@@ -242,8 +244,10 @@
      enddo ! over i={-nband,nband} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_prob
