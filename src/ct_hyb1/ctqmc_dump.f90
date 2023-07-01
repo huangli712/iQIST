@@ -263,15 +263,17 @@
 
      implicit none
 
-! external arguments
-! auxiliary physical observables
+!! external arguments
+     ! auxiliary physical observables
      real(dp), intent(in) :: paux(9)
      real(dp), intent(in) :: perr(9)
 
-! open data file: solver.paux.dat
+!! [body
+
+     ! open data file: solver.paux.dat
      open(mytmp, file='solver.paux.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a,2f12.6)') 'etot:', paux(1), perr(1)
      write(mytmp,'(a,2f12.6)') 'epot:', paux(2), perr(2)
      write(mytmp,'(a,2f12.6)') 'ekin:', paux(3), perr(3)
@@ -282,8 +284,10 @@
      write(mytmp,'(a,2e12.4)') '<K3>:', paux(8), perr(8)
      write(mytmp,'(a,2e12.4)') '<K4>:', paux(9), perr(9)
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_paux
