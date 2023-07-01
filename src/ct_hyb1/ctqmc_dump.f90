@@ -1279,33 +1279,35 @@
 
      implicit none
 
-! external arguments
-! orbital-resolved charge-charge correlation function
+!! external arguments
+     ! orbital-resolved charge-charge correlation function and its error bar
      real(dp), intent(in) :: ch_w(nbfrq,norbs,norbs)
      real(dp), intent(in) :: cerr(nbfrq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
 
-! bosonic frequency mesh
+     ! bosonic frequency mesh
      real(dp) :: bmesh(nbfrq)
 
-! build bmesh
+!! [body
+
+     ! build bmesh
      do i=1,nbfrq
          bmesh(i) = two * pi * float( i - 1 ) / beta
      enddo ! over i={1,nbfrq} loop
 
-! check if we need to dump the charge-charge correlation function data
-! to solver.ch_w.dat
+     ! check if we need to dump the charge-charge correlation function data
+     ! to solver.ch_w.dat
      if ( .not. btest(issus, 4) ) RETURN
 
-! open data file: solver.ch_w.dat
+     ! open data file: solver.ch_w.dat
      open(mytmp, file='solver.ch_w.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do k=1,norbs
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
@@ -1317,8 +1319,10 @@
          enddo ! over j={1,norbs} loop
      enddo ! over k={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_ch_w
