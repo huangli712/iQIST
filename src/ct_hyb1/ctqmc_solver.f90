@@ -532,12 +532,12 @@
 !!>>> reporting quantum impurity solver                                <<<
 !!========================================================================
 
-! it is time to write out the statistics results
+         ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_runtime(iter, cstep)
          endif ! back if ( myid == master ) block
 
-! write out the snapshot for the current configuration if necessary
+         ! write out the snapshot for the current configuration if necessary
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_diag(iter, cstep)
          endif ! back if ( myid == master ) block
@@ -546,14 +546,14 @@
 !!>>> reducing immediate results                                       <<<
 !!========================================================================
 
-! collect the histogram data from hist to hist_mpi
+         ! collect the histogram data from hist to hist_mpi
          call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 !!========================================================================
 !!>>> writing immediate results                                        <<<
 !!========================================================================
 
-! write out the histogram data, hist_mpi
+         ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_hist(hist_mpi, hist_err)
          endif ! back if ( myid == master ) block
@@ -562,7 +562,7 @@
 !!>>> checking quantum impurity solver                                 <<<
 !!========================================================================
 
-! check the status at first
+         ! check the status at first
          call ctqmc_try_warning(cflag)
 
 !!========================================================================
