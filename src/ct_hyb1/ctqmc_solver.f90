@@ -150,75 +150,75 @@
      complex(dp), allocatable :: sig2_err(:,:,:)
      !--------------------------------------------------------------------
 
-! the following observables are measured optionally: real(dp)
-!-------------------------------------------------------------------------
-! number of operators, < k >
+     ! the following observables are measured optionally: real(dp)
+     !--------------------------------------------------------------------
+     ! number of operators, < k >
      real(dp), allocatable :: knop_mpi(:)
      real(dp), allocatable :: knop_err(:)
 
-! crossing product of k_i and k_j, < k_i k_j >
+     ! crossing product of k_i and k_j, < k_i k_j >
      real(dp), allocatable :: kmat_mpi(:,:)
      real(dp), allocatable :: kmat_err(:,:)
 
-! number of operators at left half axis, < k_l >
+     ! number of operators at left half axis, < k_l >
      real(dp), allocatable :: lnop_mpi(:)
      real(dp), allocatable :: lnop_err(:)
 
-! number of operators at right half axis, < k_r >
+     ! number of operators at right half axis, < k_r >
      real(dp), allocatable :: rnop_mpi(:)
      real(dp), allocatable :: rnop_err(:)
 
-! crossing product of k_l and k_r, < k_l k_r >
+     ! crossing product of k_l and k_r, < k_l k_r >
      real(dp), allocatable :: lrmm_mpi(:,:)
      real(dp), allocatable :: lrmm_err(:,:)
 
-! powers of local magnetization, < S^n_z>
+     ! powers of local magnetization, < S^n_z>
      real(dp), allocatable :: szpw_mpi(:,:)
      real(dp), allocatable :: szpw_err(:,:)
 
-! totally-averaged spin-spin correlation function
+     ! totally-averaged spin-spin correlation function
      real(dp), allocatable :: schi_mpi(:)
      real(dp), allocatable :: schi_err(:)
 
-! orbital-resolved spin-spin correlation function
+     ! orbital-resolved spin-spin correlation function
      real(dp), allocatable :: sp_t_mpi(:,:)
      real(dp), allocatable :: sp_t_err(:,:)
 
-! orbital-resolved spin-spin correlation function
+     ! orbital-resolved spin-spin correlation function
      real(dp), allocatable :: sp_w_mpi(:,:)
      real(dp), allocatable :: sp_w_err(:,:)
 
-! totally-averaged charge-charge correlation function
+     ! totally-averaged charge-charge correlation function
      real(dp), allocatable :: cchi_mpi(:)
      real(dp), allocatable :: cchi_err(:)
 
-! orbital-resolved charge-charge correlation function
+     ! orbital-resolved charge-charge correlation function
      real(dp), allocatable :: ch_t_mpi(:,:,:)
      real(dp), allocatable :: ch_t_err(:,:,:)
 
-! orbital-resolved charge-charge correlation function
+     ! orbital-resolved charge-charge correlation function
      real(dp), allocatable :: ch_w_mpi(:,:,:)
      real(dp), allocatable :: ch_w_err(:,:,:)
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
 
-! the following observables are measured optionally: complex(dp)
-!-------------------------------------------------------------------------
-! two-particle green's function (ph channel)
+     ! the following observables are measured optionally: complex(dp)
+     !--------------------------------------------------------------------
+     ! two-particle green's function (ph channel)
      complex(dp), allocatable :: g2ph_mpi(:,:,:,:,:)
      complex(dp), allocatable :: g2ph_err(:,:,:,:,:)
 
-! two-particle vertex function (ph channel)
+     ! two-particle vertex function (ph channel)
      complex(dp), allocatable :: h2ph_mpi(:,:,:,:,:)
      complex(dp), allocatable :: h2ph_err(:,:,:,:,:)
 
-! two-particle green's function (pp channel)
+     ! two-particle green's function (pp channel)
      complex(dp), allocatable :: g2pp_mpi(:,:,:,:,:)
      complex(dp), allocatable :: g2pp_err(:,:,:,:,:)
 
-! two-particle vertex function (pp channel)
+     ! two-particle vertex function (pp channel)
      complex(dp), allocatable :: h2pp_mpi(:,:,:,:,:)
      complex(dp), allocatable :: h2pp_err(:,:,:,:,:)
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
