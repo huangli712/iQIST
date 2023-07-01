@@ -92,63 +92,63 @@
      ! cflag = 99, the quantum impurity solver is out of control
      integer  :: cflag
 
-! starting time
+     ! starting time
      real(dp) :: time_begin
 
-! ending time
+     ! ending time
      real(dp) :: time_end
 
-! time consuming by current iteration
+     ! time consuming by current iteration
      real(dp) :: time_cur
 
-! time consuming by total iteration
+     ! time consuming by total iteration
      real(dp) :: time_sum
 
-! the following observables are always measured: real(dp)
-!-------------------------------------------------------------------------
-! histogram for perturbation expansion series
+     ! the following observables are always measured: real(dp)
+     !--------------------------------------------------------------------
+     ! histogram for perturbation expansion series
      real(dp), allocatable :: hist_mpi(:)
      real(dp), allocatable :: hist_err(:)
 
-! probability of atomic eigenstates
+     ! probability of atomic eigenstates
      real(dp), allocatable :: prob_mpi(:)
      real(dp), allocatable :: prob_err(:)
 
-! auxiliary physical observables
+     ! auxiliary physical observables
      real(dp), allocatable :: paux_mpi(:)
      real(dp), allocatable :: paux_err(:)
 
-! impurity occupation number, < n_i >
+     ! impurity occupation number, < n_i >
      real(dp), allocatable :: nimp_mpi(:)
      real(dp), allocatable :: nimp_err(:)
 
-! impurity double occupation number matrix, < n_i n_j >
+     ! impurity double occupation number matrix, < n_i n_j >
      real(dp), allocatable :: nmat_mpi(:,:)
      real(dp), allocatable :: nmat_err(:,:)
 
-! impurity green's function in imaginary time axis
+     ! impurity green's function in imaginary time axis
      real(dp), allocatable :: gtau_mpi(:,:,:)
      real(dp), allocatable :: gtau_err(:,:,:)
 
-! auxiliary correlation function in imaginary time axis
+     ! auxiliary correlation function in imaginary time axis
      real(dp), allocatable :: ftau_mpi(:,:,:)
      real(dp), allocatable :: ftau_err(:,:,:)
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
 
-! the following observables are always measured: complex(dp)
-!-------------------------------------------------------------------------
-! impurity green's function in matsubara frequency axis
+     ! the following observables are always measured: complex(dp)
+     !--------------------------------------------------------------------
+     ! impurity green's function in matsubara frequency axis
      complex(dp), allocatable :: grnf_mpi(:,:,:)
      complex(dp), allocatable :: grnf_err(:,:,:)
 
-! auxiliary correlation function in matsubara frequency axis
+     ! auxiliary correlation function in matsubara frequency axis
      complex(dp), allocatable :: frnf_mpi(:,:,:)
      complex(dp), allocatable :: frnf_err(:,:,:)
 
-! self-energy function in matsubara frequency axis
+     ! self-energy function in matsubara frequency axis
      complex(dp), allocatable :: sig2_mpi(:,:,:)
      complex(dp), allocatable :: sig2_err(:,:,:)
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
 
 ! the following observables are measured optionally: real(dp)
 !-------------------------------------------------------------------------
