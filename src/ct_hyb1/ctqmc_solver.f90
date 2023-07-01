@@ -1,12 +1,12 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : iqist @ narcissus
 !!! program : ctqmc_impurity_solver
 !!!           ctqmc_impurity_tester
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/16/2019 by li huang (last modified)
+!!!           07/01/2023 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -71,25 +71,25 @@
 
      implicit none
 
-! external arguments
-! current iteration number for self-consistent cycle
+!! external arguments
+     ! current iteration number for self-consistent cycle
      integer, intent(in) :: iter
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! current QMC sweeping steps
+     ! current QMC sweeping steps
      integer  :: cstep
 
-! control flag, whether the solver should be checked periodically
-! cflag = 0 , do not check the quantum impurity solver
-! cflag = 1 , check the quantum impurity solver periodically
-! cflag = 99, the quantum impurity solver is out of control
+     ! control flag, whether the solver should be checked periodically
+     ! cflag = 0 , do not check the quantum impurity solver
+     ! cflag = 1 , check the quantum impurity solver periodically
+     ! cflag = 99, the quantum impurity solver is out of control
      integer  :: cflag
 
 ! starting time
