@@ -957,12 +957,16 @@
 
      implicit none
 
-!-------------------------------------------------------------------------
-! please insert your debug code here
-!-------------------------------------------------------------------------
+!! [body
+
+     !--------------------------------------------------------------------
+     ! please insert your debug code here
+     !--------------------------------------------------------------------
 
      call cat_disp_diagrams(2)
      call s_print_error('ctqmc_impurity_tester','in debug mode')
+
+!! body]
 
      return
   end subroutine ctqmc_impurity_tester
