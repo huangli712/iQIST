@@ -769,29 +769,29 @@
 
      call cpu_time(time_begin) ! record starting time
 
-! symmetrize the occupation number matrix over spin or over bands
+     ! symmetrize the occupation number matrix over spin or over bands
      call ctqmc_symm_nimp(symm, nimp)
      call ctqmc_symm_nimp(symm, nimp_err)
 
-! symmetrize the impurity green's function over spin or over bands
+     ! symmetrize the impurity green's function over spin or over bands
      call ctqmc_symm_gtau(symm, gtau)
      call ctqmc_symm_gtau(symm, gtau_err)
      call ctqmc_symm_grnf(symm, grnf)
      call ctqmc_symm_grnf(symm, grnf_err)
 
-! symmetrize the auxiliary correlation function over spin or over bands
+     ! symmetrize the auxiliary correlation function over spin or over bands
      call ctqmc_symm_gtau(symm, ftau)
      call ctqmc_symm_gtau(symm, ftau_err)
      call ctqmc_symm_grnf(symm, frnf)
      call ctqmc_symm_grnf(symm, frnf_err)
 
-! symmetrize the self-energy function over spin or over bands
+     ! symmetrize the self-energy function over spin or over bands
      call ctqmc_symm_grnf(symm, sig2)
      call ctqmc_symm_grnf(symm, sig2_err)
 
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -801,14 +801,14 @@
 !!>>> writing final results                                            <<<
 !!========================================================================
 
-! start to write data
+     ! start to write data
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver writing'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
 
-! write out the final data to external files
+     ! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
          call ctqmc_dump_prob(prob, prob_err)
@@ -836,7 +836,7 @@
 
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -846,21 +846,21 @@
 !!>>> saving quantum impurity solver                                   <<<
 !!========================================================================
 
-! start to save the diagrammatic information
+     ! start to save the diagrammatic information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver saving'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
 
-! save the perturbation expansion series information to the disk file
+     ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -870,14 +870,14 @@
 !!>>> finishing quantum impurity solver                                <<<
 !!========================================================================
 
-! print the footer of continuous time quantum Monte Carlo quantum impurity
-! solver. to tell the user it is over
+     ! print the footer of continuous time quantum Monte Carlo quantum
+     ! impurity solver. to tell the user it is over
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! deallocate memory
+     ! deallocate memory
      deallocate(hist_mpi)
      deallocate(hist_err)
      deallocate(prob_mpi)
@@ -934,6 +934,8 @@
      deallocate(g2pp_err)
      deallocate(h2pp_mpi)
      deallocate(h2pp_err)
+
+!! body]
 
      return
   end subroutine ctqmc_impurity_solver
