@@ -569,17 +569,17 @@
 !!>>> timing quantum impurity solver                                   <<<
 !!========================================================================
 
-! record ending time for this iteration
+         ! record ending time for this iteration
          call cpu_time(time_end)
 
-! calculate timing information
+         ! calculate timing information
          time_cur = time_end - time_begin
          time_sum = time_sum + time_cur
 
-! reset timer
+         ! reset timer
          time_begin = time_end
 
-! print out the timing result
+         ! print out the timing result
          if ( myid == master ) then ! only master node can do it
              call s_time_analyzer(time_cur, time_sum)
              write(mystd,*)
@@ -589,7 +589,7 @@
 !!>>> escaping quantum impurity solver                                 <<<
 !!========================================================================
 
-! if the quantum impurity solver is out of control
+         ! if the quantum impurity solver is out of control
          if ( cflag == 99 ) then
              EXIT MC_SWEEP ! jump out the iteration
          endif ! back if ( cflag == 99 ) block
@@ -600,7 +600,7 @@
 !!>>> ending main iteration                                            <<<
 !!========================================================================
 
-! end simulation
+     ! end simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING STOPS'
          select case ( iswor )
