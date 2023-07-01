@@ -55,24 +55,28 @@
 
      implicit none
 
-! external arguments
-! autocorrelation function
+!! external arguments
+     ! autocorrelation function
      real(dp), intent(in) :: ac_f(ntime)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! open data file: solver.ac_f.dat
+!! [body
+
+     ! open data file: solver.ac_f.dat
      open(mytmp, file='solver.ac_f.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,ntime
          write(mytmp,'(i6,f12.6)') i, ac_f(i)
      enddo ! over i={1,ntime} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_ac_f
