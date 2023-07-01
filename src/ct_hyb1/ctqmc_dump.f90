@@ -1067,28 +1067,30 @@
 
      implicit none
 
-! external arguments
-! totally-averaged spin-spin correlation function data
+!! external arguments
+     ! totally-averaged spin-spin correlation function and its error bar
      real(dp), intent(in) :: schi(ntime)
      real(dp), intent(in) :: serr(ntime)
 
-! orbital-resolved spin-spin correlation function data
+     ! orbital-resolved spin-spin correlation function and its error bar
      real(dp), intent(in) :: sp_t(ntime,nband)
      real(dp), intent(in) :: sbar(ntime,nband)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! check if we need to dump the spin-spin correlation function data
-! to solver.sp_t.dat
+!! [body
+
+     ! check if we need to dump the spin-spin correlation function data
+     ! to solver.sp_t.dat
      if ( .not. btest(issus, 1) ) RETURN
 
-! open data file: solver.sp_t.dat
+     ! open data file: solver.sp_t.dat
      open(mytmp, file='solver.sp_t.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,ntime
@@ -1112,8 +1114,10 @@
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_sp_t
