@@ -465,19 +465,21 @@
 
      implicit none
 
-! external arguments
-! hybridization function
+!! external arguments
+     ! hybridization function
      real(dp), intent(in) :: htau(ntime,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.hybri.dat
+!! [body
+
+     ! open data file: solver.hybri.dat
      open(mytmp, file='solver.hybri.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,ntime
              write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), zero
@@ -486,8 +488,10 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_htau
