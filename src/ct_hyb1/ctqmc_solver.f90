@@ -619,14 +619,14 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
-! start to collect data
+     ! start to collect data
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver reducing'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
 
-! calculate the averaged values
+     ! calculate the averaged values
      AVERAGE_DATA: BLOCK
 
          hist = hist * one
@@ -662,23 +662,23 @@
 
      END BLOCK AVERAGE_DATA
 
-! calculate some essential observables which are not measured directly
+     ! calculate some essential observables which are not measured directly
      COMPUTE_DATA: BLOCK
 
-! try to evaluate the self-energy function
+         ! try to evaluate the self-energy function
          call ctqmc_make_hub2()
 
-! try to evaluate the imaginary time green's function
+         ! try to evaluate the imaginary time green's function
          call ctqmc_tran_gtau(gtau, gtau_mpi); gtau = gtau_mpi
          call ctqmc_tran_gtau(ftau, ftau_mpi); ftau = ftau_mpi
 
-! try to evaluate the two-particle green's function (ph channel)
+         ! try to evaluate the two-particle green's function (ph channel)
          if ( btest(isvrt, 1) .or. btest(isvrt, 2) ) then
              call ctqmc_tran_twop(g2ph, g2ph_mpi); g2ph = g2ph_mpi
              call ctqmc_tran_twop(h2ph, h2ph_mpi); h2ph = h2ph_mpi
          endif ! back if ( btest(isvrt, 1) .or. btest(isvrt, 2) ) block
 
-! try to evaluate the two-particle green's function (pp channel)
+         ! try to evaluate the two-particle green's function (pp channel)
          if ( btest(isvrt, 3) .or. btest(isvrt, 4) ) then
              call ctqmc_tran_twop(g2pp, g2pp_mpi); g2pp = g2pp_mpi
              call ctqmc_tran_twop(h2pp, h2pp_mpi); h2pp = h2pp_mpi
@@ -686,7 +686,7 @@
 
      END BLOCK COMPUTE_DATA
 
-! collect data from all children processes
+     ! collect data from all children processes
      COLLECT_DATA: BLOCK
 
          call ctqmc_reduce_hist(hist_mpi, hist_err)
@@ -714,7 +714,7 @@
 
      END BLOCK COLLECT_DATA
 
-! update original data
+     ! update original data
      REPLACE_DATA: BLOCK
 
          hist = hist_mpi
@@ -752,7 +752,7 @@
 
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -762,7 +762,7 @@
 !!>>> symmetrizing final results                                       <<<
 !!========================================================================
 
-! start to symmetrize data
+     ! start to symmetrize data
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver symmetrizing'
      endif ! back if ( myid == master ) block
