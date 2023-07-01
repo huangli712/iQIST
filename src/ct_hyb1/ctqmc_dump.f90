@@ -807,20 +807,22 @@
 
      implicit none
 
-! external arguments
-! self-energy function
+!! external arguments
+     ! self-energy function and its error bar
      complex(dp), intent(in) :: sig2(mfreq,norbs,norbs)
      complex(dp), intent(in) :: serr(mfreq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.sgm.dat
+!! [body
+
+     ! open data file: solver.sgm.dat
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), sig2(j,i,i), serr(j,i,i)
@@ -829,8 +831,10 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_sig2
