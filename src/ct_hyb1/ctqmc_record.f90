@@ -232,59 +232,63 @@
 
      implicit none
 
-! local variables
-! loop index for flavor channel
+!! local variables
+     ! loop index for flavor channel
      integer  :: flvr
      integer  :: i
 
-! total length of segments for all flavor channels
+     ! total length of segments for all flavor channels
      real(dp) :: sgmt(norbs)
 
-! overlap length of segments between different flavors
+     ! overlap length of segments between different flavors
      real(dp) :: ovlp(norbs,norbs)
 
-! prepare sgmt array
+     ! prepare sgmt array
      call cat_occupy_single(sgmt)
 
-! prepare ovlp array
+     ! prepare ovlp array
      call cat_occupy_double(ovlp)
 
-!-------------------------------------------------------------------------
+!! [body
+
+     !--------------------------------------------------------------------
 
      CALC_PAUX: BLOCK
 
-! evaluate < K^4 >
+         ! evaluate < K^4 >
          paux(9) = paux(9) + ( ckink * two )**4
 
-! evaluate < K^3 >
+         ! evaluate < K^3 >
          paux(8) = paux(8) + ( ckink * two )**3
 
-! evaluate < K^2 >
+         ! evaluate < K^2 >
          paux(7) = paux(7) + ( ckink * two )**2
 
-! evaluate < N^2 >
+         ! evaluate < N^2 >
          paux(6) = paux(6) + ( sum(sgmt) / beta )**2
 
-! evaluate < N^1 >
+         ! evaluate < N^1 >
          paux(5) = paux(5) + sum(sgmt) / beta
 
-! evaluate spin magnetization: < Sz >
+         ! evaluate spin magnetization: < Sz >
          do flvr=1,nband
              paux(4) = paux(4) + ( sgmt(flvr) - sgmt(flvr+nband) ) / beta
          enddo ! over flvr={1,nband} loop
 
-! evaluate kinetic energy: ekin
+         ! evaluate kinetic energy: ekin
          paux(3) = paux(3) - real(ckink * norbs) / beta
 
-! evaluate potential energy: epot
+         ! evaluate potential energy: epot
          do flvr=1,norbs
              do i=1,flvr
                  paux(2) = paux(2) + umat(flvr,i) * ovlp(flvr,i) / beta
              enddo ! over i={1,flvr} loop
          enddo ! over flvr={1,norbs} loop
 
-! evaluate total energy: etot
+         ! evaluate total energy: etot
          paux(1) = paux(2) + paux(3)
+
+!! body]
 
      END BLOCK CALC_PAUX
 
