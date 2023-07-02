@@ -317,7 +317,11 @@
   subroutine ctqmc_record_nmat()
      implicit none
 
+!! [body
+
      CONTINUE
+
+!! body]
 
      return
   end subroutine ctqmc_record_nmat
