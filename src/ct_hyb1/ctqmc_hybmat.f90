@@ -1218,49 +1218,52 @@
 
      implicit none
 
-! external arguments
-! band index for spin up state
+!! external arguments
+     ! band index for spin up state
      integer, intent(in)   :: up
 
-! band index for spin dn state
+     ! band index for spin dn state
      integer, intent(in)   :: dn
 
-! the desired determinant ratio
+     ! the desired determinant ratio
      real(dp), intent(out) :: ratio
 
-! external functions
-! used to interpolate the hybridization function
+!! external functions
+     ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! dummy perturbation expansion order
+     ! dummy perturbation expansion order
      integer  :: kaux
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! imaginary time for creation and annihilation operators
+     ! imaginary time for creation and annihilation operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
-! dummy mmat matrix
+     ! dummy mmat matrix
      real(dp), allocatable :: Dmm(:,:)
      real(dp), allocatable :: Tmm(:,:)
 
-! evaluate kaux
+!! [body
+
+     ! evaluate kaux
      kaux = rank(up)
 
-! check the status of kaux, if there does not exist any operators in up
-! state ( kaux == 0 ), we need to return immediately and the ratio is one
+     ! check the status of kaux, if there does not exist any operators
+     ! in up state ( kaux == 0 ), we need to return immediately and the
+     ! ratio is one
      if ( kaux == 0 ) then
          ratio = one; RETURN
      endif ! back if ( kaux == 0 ) block
 
-! allocate memory
+     ! allocate memory
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
 
@@ -1268,11 +1271,11 @@
          call s_print_error('cat_reflip_detrat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! init Dmm and Tmm matrix
+     ! init Dmm and Tmm matrix
      Dmm = zero
      Tmm = zero
 
-! recalculate Dmm from scratch
+     ! recalculate Dmm from scratch
      do j=1,kaux
          tau_end = time_e(index_e(j, up), up)
          do i=1,kaux
@@ -1285,15 +1288,17 @@
          enddo ! over i={1,kaux} loop
      enddo ! over j={1,kaux} loop
 
-! calculate Tmm: Tmm = Dmm . Mmat
+     ! calculate Tmm: Tmm = Dmm . Mmat
      call dgemm('N', 'N', kaux, kaux, kaux, one, Dmm, kaux, mmat(1:kaux, 1:kaux, up), kaux, zero, Tmm, kaux)
 
-! calculate the determinant of Tmm, it is the desired ratio
+     ! calculate the determinant of Tmm, it is the desired ratio
      call s_det_d(kaux, Tmm, ratio)
 
-! deallocate memory
+     ! deallocate memory
      deallocate(Dmm)
      deallocate(Tmm)
+
+!! body]
 
      return
   end subroutine cat_reflip_detrat
