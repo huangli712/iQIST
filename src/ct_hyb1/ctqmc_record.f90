@@ -1337,58 +1337,62 @@
 
      implicit none
 
-! local variables
-! loop index for flavor channel
+!! local variables
+     ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
 
-! loop index for operators
+     ! loop index for operators
      integer  :: it
 
-! the first bosonic frequency
+     ! the first bosonic frequency
      complex(dp) :: dw
 
-! occupation status for current flavor channel at \tau = 0
+     ! occupation status for current flavor channel at \tau = 0
      real(dp) :: oaux(norbs)
 
-! total length of segments
+     ! total length of segments
      real(dp) :: sgmt(norbs)
 
-! bosonic frequency mesh
+     ! bosonic frequency mesh
      complex(dp) :: mesh(2:nbfrq)
 
-! matsubara frequency exponents for creation operators
+     ! matsubara frequency exponents for creation operators
      complex(dp) :: bexp_s(2:nbfrq)
 
-! matsubara frequency exponents for annihilation operators
+     ! matsubara frequency exponents for annihilation operators
      complex(dp) :: bexp_e(2:nbfrq)
 
-! check whether there is conflict
+!! [body
+
+     ! check whether there is conflict
      call s_assert2( btest(issus, 4), 'in ctqmc_record_ch_w' )
 
-! build bosonic frequency mesh, zero frequency is not included
+     ! build bosonic frequency mesh, zero frequency is not included
      dw = czi * two * pi / beta
      mesh = dw
      call s_cumsum_z(nbfrq - 1, mesh, mesh)
 
-! calculate oaux, obtain occupation status
+     ! calculate oaux, obtain occupation status
      do f1=1,norbs
          call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
 
-! calculate sgmt, obtain total length of segments
+     ! calculate sgmt, obtain total length of segments
      call cat_occupy_single(sgmt)
 
-! calculate ch_w, it must be real
+     ! calculate ch_w, it must be real
      FLVR_CYCLE: do f1=1,norbs
          do f2=1,f1
              if ( oaux(f2) > zero ) then
-! special treatment for the first frequency
+                 ! special treatment for the first frequency
                  ch_w(1,f2,f1) = ch_w(1,f2,f1) + sgmt(f1)
-! loop over the segments
-! here we do not calculate bexp_s and bexp_e directly. we just utilize
-! the available data in exp_s and exp_e. so that the required exponent
-! functions are obtained via only a few complex number multiplications
+                 !
+                 ! loop over the segments
+                 ! here we do not calculate bexp_s and bexp_e directly.
+                 ! we just utilize the available data in exp_s and exp_e.
+                 ! so that the required exponent functions are obtained
+                 ! via only a few complex number multiplications
                  do it=1,rank(f1)
                      dw = exp_s(1,index_s(it, f1), f1)
                      bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
@@ -1397,11 +1401,14 @@
                      ch_w(2:,f2,f1) = ch_w(2:,f2,f1) + real( ( bexp_e - bexp_s ) / mesh )
                  enddo ! over do it={1,rank(f1)} loop
              endif ! back if ( oaux(f2) > zero ) block
+             !
              if ( f1 /= f2 ) then ! consider the symmetry
                  ch_w(:,f1,f2) = ch_w(:,f2,f1)
              endif ! back if ( f1 /= f2 ) block
          enddo ! over f2={1,f1} loop
      enddo FLVR_CYCLE ! over f1={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_ch_w
