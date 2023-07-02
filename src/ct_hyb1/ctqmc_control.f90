@@ -1,12 +1,12 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
-!!! program : control    module
-!!!           version    module
+!!! project : iqist @ narcissus
+!!! program : control module
+!!!           version module
 !!! source  : ctqmc_control.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/09/2021 by li huang (last modified)
+!!!           07/02/2023 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -15,6 +15,15 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> module control                                                   <<<
+!!========================================================================
+
+!!
+!! @mod control
+!!
+!! define the control parameters and dimensional parameters.
+!!
   module control
      use constants, only : dp
 
@@ -597,8 +606,15 @@
 
   end module control
 
+!!========================================================================
+!!>>> module version                                                   <<<
+!!========================================================================
 
-
+!!
+!! @mod version
+!!
+!! define the semantic version string.
+!!
   module version
      implicit none
 
