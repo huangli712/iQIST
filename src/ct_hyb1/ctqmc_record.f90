@@ -804,31 +804,33 @@
 
      implicit none
 
-! local variables
-! loop index over segments
+!! local variables
+     ! loop index over segments
      integer  :: i
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: flvr
 
-! imaginary time for start and end points
+     ! imaginary time for start and end points
      real(dp) :: ts
      real(dp) :: te
 
-! number of operators at left half axis for the current configuration
+     ! number of operators at left half axis for the current configuration
      real(dp) :: kl(norbs)
 
-! number of operators at right half axis for the current configuration
+     ! number of operators at right half axis for the current configuration
      real(dp) :: kr(norbs)
 
-! check whether there is conflict
+!! [body
+
+     ! check whether there is conflict
      call s_assert2( btest(isobs, 2), 'in ctqmc_record_lrmm' )
 
-! init k_l and k_r
+     ! init k_l and k_r
      kl = zero
      kr = zero
 
-! loop over flavors and segments to calculate k_l and k_r
+     ! loop over flavors and segments to calculate k_l and k_r
      do flvr=1,norbs
          do i=1,rank(flvr)
              ts = time_s(index_s(i, flvr), flvr)
@@ -847,16 +849,18 @@
          enddo ! over i={1,rank(flvr)} loop
      enddo ! over flvr={1,norbs} loop
 
-! add contribution to < k_l > and < k_r >
+     ! add contribution to < k_l > and < k_r >
      lnop = lnop + kl
      rnop = rnop + kr
 
-! add contribution to < k_l k_r >
+     ! add contribution to < k_l k_r >
      do flvr=1,norbs
          do i=1,norbs
              lrmm(i,flvr) = lrmm(i,flvr) + kl(i) * kr(flvr)
          enddo ! over i={1,norbs} loop
      enddo ! over flvr={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_lrmm
