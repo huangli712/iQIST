@@ -885,32 +885,34 @@
 
      implicit none
 
-! local variables
-! loop index over times
+!! local variables
+     ! loop index over times
      integer  :: i
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
 
-! \delta \tau
+     ! \delta \tau
      real(dp) :: step
 
-! integral of Sz(\tau), in order words:
-!     sint = 1/\beta \int^{\beta}_{0} Sz(\tau) d\tau
+     ! integral of Sz(\tau), in order words:
+     !     sint = 1/\beta \int^{\beta}_{0} Sz(\tau) d\tau
      real(dp) :: sint
 
-! used to record occupations for current flavor channel and time
+     ! used to record occupations for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
 
-! orbital-resolved Sz(\tau)
+     ! orbital-resolved Sz(\tau)
      real(dp) :: saux(ntime,nband)
 
-! check whether there is conflict
+!! [body
+
+     ! check whether there is conflict
      call s_assert2( btest(isobs, 3), 'in ctqmc_record_szpw' )
 
-! calculate oaux, obtain occupation status
-! calculate saux, obtain Sz(\tau)
+     ! calculate oaux, obtain occupation status
+     ! calculate saux, obtain Sz(\tau)
      oaux = zero
      saux = zero
      TIME_CYCLE: do i=1,ntime
@@ -923,35 +925,39 @@
          enddo ! over f2={1,nband} loop
      enddo TIME_CYCLE ! over i={1,ntime} loop
 
-! accumulate szpw(1:4,1:nband)
-! calculate \delta \tau
+     ! accumulate szpw(1:4,1:nband)
+     ! calculate \delta \tau
      step = ( tmesh(2) - tmesh(1) ) / two
      FLVR_CYCLE: do f2=1,nband
-! calculate sint using trapezoid algorithm
+         ! calculate sint using trapezoid algorithm
          sint = zero
          do i=1,ntime-1
              sint = sint + ( saux(i,f2) + saux(i+1,f2) ) * step
          enddo ! over i={1,ntime-1} loop
          sint = sint / beta
-! record the data
+         !
+         ! record the data
          szpw(1,f2) = szpw(1,f2) + sint**1.0
          szpw(2,f2) = szpw(2,f2) + sint**2.0
          szpw(3,f2) = szpw(3,f2) + sint**3.0
          szpw(4,f2) = szpw(4,f2) + sint**4.0
      enddo FLVR_CYCLE ! over f2={1,nband} loop
 
-! accumulate szpw(1:4,nband+1)
-! here we consider the contribution from all flavors
+     ! accumulate szpw(1:4,nband+1)
+     ! here we consider the contribution from all flavors
      sint = zero
      do i=1,ntime-1
          sint = sint + ( sum( saux(i,:) ) + sum( saux(i+1,:) ) ) * step
      enddo ! over i={1,ntime-1} loop
      sint = sint / beta
-! record the data
+     !
+     ! record the data
      szpw(1,nband+1) = szpw(1,nband+1) + sint**1.0
      szpw(2,nband+1) = szpw(2,nband+1) + sint**2.0
      szpw(3,nband+1) = szpw(3,nband+1) + sint**3.0
      szpw(4,nband+1) = szpw(4,nband+1) + sint**4.0
+
+!! body]
 
      return
   end subroutine ctqmc_record_szpw
