@@ -955,7 +955,9 @@
   subroutine cat_alloc_mesh()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(tmesh(ntime),       stat=istat)
      allocate(rmesh(mfreq),       stat=istat)
 
@@ -964,12 +966,12 @@
      allocate(rep_l(legrd,lemax), stat=istat)
      allocate(rep_s(svgrd,svmax), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_mesh','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      tmesh = zero
      rmesh = zero
 
@@ -977,6 +979,8 @@
      smesh = zero
      rep_l = zero
      rep_s = zero
+
+!! body]
 
      return
   end subroutine cat_alloc_mesh
@@ -989,7 +993,9 @@
   subroutine cat_alloc_meat()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(ac_v(ntime + 2),   stat=istat)
      allocate(ac_f(ntime + 2),   stat=istat)
 
@@ -1018,12 +1024,12 @@
      allocate(g2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_meat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      ac_v = zero
      ac_f = zero
 
@@ -1052,6 +1058,8 @@
      g2pp = czero
      h2pp = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_meat
 
@@ -1063,7 +1071,9 @@
   subroutine cat_alloc_umat()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(rank(norbs),       stat=istat)
      allocate(stts(norbs),       stat=istat)
 
@@ -1078,12 +1088,12 @@
      allocate(psed(ntime),       stat=istat)
      allocate(umat(norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_umat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      rank = 0
      stts = 0
 
@@ -1098,6 +1108,8 @@
      psed = zero
      umat = zero
 
+!! body]
+
      return
   end subroutine cat_alloc_umat
 
@@ -1109,7 +1121,9 @@
   subroutine cat_alloc_mmat()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(lspace(mkink,norbs),     stat=istat)
      allocate(rspace(mkink,norbs),     stat=istat)
 
@@ -1120,12 +1134,12 @@
 
      allocate(gmat(nfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_mmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      lspace = zero
      rspace = zero
 
@@ -1135,6 +1149,8 @@
      rsaves = czero
 
      gmat   = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_mmat
