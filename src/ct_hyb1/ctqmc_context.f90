@@ -1265,9 +1265,11 @@
   subroutine cat_free_clur()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
+
+!! [body
 
      do i=1,norbs
          call istack_destroy(empty_s(i))
@@ -1285,6 +1287,8 @@
 
      if ( allocated(empty_s) ) deallocate(empty_s)
      if ( allocated(empty_e) ) deallocate(empty_e)
+
+!! body]
 
      return
   end subroutine cat_free_clur
