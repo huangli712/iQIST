@@ -355,36 +355,38 @@
 
      implicit none
 
-! local variables
-! loop indices for start and end points
+!! local variables
+     ! loop indices for start and end points
      integer  :: is
      integer  :: ie
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: flvr
 
-! loop index for orthogonal polynomial
+     ! loop index for orthogonal polynomial
      integer  :: fleg
      integer  :: fsvd
 
-! index for imaginary time \tau
+     ! index for imaginary time \tau
      integer  :: curr
 
-! used to store the element of mmat matrix
+     ! used to store the element of mmat matrix
      real(dp) :: maux
 
-! imaginary time for start and end points
+     ! imaginary time for start and end points
      real(dp) :: taus
      real(dp) :: taue
 
-! distance betweem taus and taue
+     ! distance betweem taus and taue
      real(dp) :: dtau
      real(dp) :: daux
 
-! interval for imaginary time slice
+     ! interval for imaginary time slice
      real(dp) :: step
 
-! evaluate step at first
+!! [body
+
+     ! evaluate step at first
      select case ( isort )
 
          case (1)
@@ -400,21 +402,22 @@
 
      FLVR_CYCLE: do flvr=1,norbs
 
-! get imaginary time value for segments
+         ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
 
-! get imaginary time value for segments
+             ! get imaginary time value for segments
              do ie=1,rank(flvr)
                  taue = time_e( index_e(ie, flvr), flvr )
 
-! evaluate dtau
+                 ! evaluate dtau
                  dtau = taue - taus
 
-! get matrix element from mmat, pay special attention to the sign of dtau
+                 ! get matrix element from mmat, pay special attention to
+                 ! the sign of dtau
                  maux = mmat(ie, is, flvr) * sign(one, dtau)
 
-! adjust dtau, keep it stay in (zero, beta)
+                 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
