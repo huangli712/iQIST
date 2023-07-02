@@ -616,50 +616,52 @@
                  !--------------------------------------------------------
                  LEG_BLOCK: if ( isort == 2 ) then
 
-! convert dtau in [0,\beta] to daux in [0,2]
+                     ! convert dtau in [0,\beta] to daux in [0,2]
                      daux = two * dtau / beta
 
-! determine index for legendre orthogonal polynomial interval
+                     ! determine index for legendre orthogonal polynomial interval
                      curr = nint( daux * step ) + 1
 
-! special tricks for the first point and the last point
+                     ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == legrd ) then
                          maux = two * maux
                      endif ! back if ( curr == 1 .or. curr == legrd ) block
 
-! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
+                     ! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
                      LEG_CYCLE: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
                      enddo LEG_CYCLE ! over fleg={1,lemax} loop
 
                  endif LEG_BLOCK ! back if ( isort == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using svd orthogonal polynomial representation
-!-------------------------------------------------------------------------
+                 !--------------------------------------------------------
+                 ! using svd orthogonal polynomial representation
+                 !--------------------------------------------------------
                  SVD_BLOCK: if ( isort == 3 ) then
 
-! convert dtau in [0,\beta] to daux in [-1,1]
+                     ! convert dtau in [0,\beta] to daux in [-1,1]
                      daux = two * dtau / beta - one
 
-! determine index for svd orthogonal polynomial interval
+                     ! determine index for svd orthogonal polynomial interval
                      call s_svd_point(daux, step, curr)
 
-! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
+                     ! record ftau, we normalize ftau in ctqmc_tran_gtau() subroutine
                      SVD_CYCLE: do fsvd=1,svmax
                          dtau = rep_s(curr,fsvd)
                          ftau(fsvd, flvr, flvr) = ftau(fsvd, flvr, flvr) - maux * dtau
                      enddo SVD_CYCLE ! over fsvd={1,svmax} loop
 
                  endif SVD_BLOCK ! back if ( isort == 3 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_ftau
