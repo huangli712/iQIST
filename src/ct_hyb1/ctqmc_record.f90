@@ -3687,35 +3687,37 @@
 
      implicit none
 
-! external arguments
-! auxiliary correlation function
+!! external arguments
+     ! auxiliary correlation function
      complex(dp), intent(out) :: frnf_mpi(mfreq,norbs,norbs)
      complex(dp), intent(out) :: frnf_err(mfreq,norbs,norbs)
 
-! local variables
-! used to store the real and imaginary parts of auxiliary correlation function
+!! local variables
+     ! used to store the real and imaginary parts of auxiliary correlation function
      real(dp), allocatable :: f_re_err(:,:,:)
      real(dp), allocatable :: f_im_err(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(f_re_err(mfreq,norbs,norbs))
      allocate(f_im_err(mfreq,norbs,norbs))
 
-! initialize f_re_err and f_im_err
+     ! initialize f_re_err and f_im_err
      f_re_err = zero
      f_im_err = zero
 
-! initialize frnf_mpi and frnf_err
+     ! initialize frnf_mpi and frnf_err
      frnf_mpi = czero
      frnf_err = czero
 
 ! build frnf_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(frnf, frnf_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3724,33 +3726,35 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      frnf_mpi = frnf_mpi / real(nprocs)
 
 ! build frnf_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(( real(frnf - frnf_mpi))**2, f_re_err)
      call mp_allreduce((aimag(frnf - frnf_mpi))**2, f_im_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          f_re_err = sqrt( f_re_err / real( nprocs * ( nprocs - 1 ) ) )
          f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final frnf_err
+     ! construct the final frnf_err
      frnf_err = f_re_err + f_im_err * czi
 
-! deallocate memory
+     ! deallocate memory
      deallocate( f_re_err )
      deallocate( f_im_err )
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_frnf
