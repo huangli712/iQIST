@@ -4381,25 +4381,27 @@
 
      implicit none
 
-! external arguments
-! charge-charge correlation function, orbital-resolved
+!! external arguments
+     ! charge-charge correlation function, orbital-resolved
      real(dp), intent(out) :: ch_w_mpi(nbfrq,norbs,norbs)
      real(dp), intent(out) :: ch_w_err(nbfrq,norbs,norbs)
 
-! check whether this observable has been measured
+!! [body
+
+     ! check whether this observable has been measured
      if ( .not. btest(issus, 4) ) RETURN
 
-! initialize ch_w_mpi and ch_w_err
+     ! initialize ch_w_mpi and ch_w_err
      ch_w_mpi = zero
      ch_w_err = zero
 
 ! build ch_w_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(ch_w, ch_w_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -4408,24 +4410,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      ch_w_mpi = ch_w_mpi / real(nprocs)
 
 ! build ch_w_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((ch_w - ch_w_mpi)**2, ch_w_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_ch_w
