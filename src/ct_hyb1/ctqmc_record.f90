@@ -422,53 +422,53 @@
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
 
-!-------------------------------------------------------------------------
-! using standard representation
-!-------------------------------------------------------------------------
+                 !--------------------------------------------------------
+                 ! using standard representation
+                 !--------------------------------------------------------
                  STD_BLOCK: if ( isort == 1 ) then
 
-! determine index for imaginary time
+                     ! determine index for imaginary time
                      curr = nint( dtau * step ) + 1
 
-! special tricks for the first point and the last point
+                     ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == ntime ) then
                          maux = two * maux
                      endif ! back if ( curr == 1 .or. curr == ntime ) block
 
-! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
+                     ! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
                  endif STD_BLOCK ! back if ( isort == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using legendre orthogonal polynomial representation
-!-------------------------------------------------------------------------
+                 !--------------------------------------------------------
+                 ! using legendre orthogonal polynomial representation
+                 !--------------------------------------------------------
                  LEG_BLOCK: if ( isort == 2 ) then
 
-! convert dtau in [0,\beta] to daux in [0,2]
+                     ! convert dtau in [0,\beta] to daux in [0,2]
                      daux = two * dtau / beta
 
-! determine index for legendre orthogonal polynomial interval
+                     ! determine index for legendre orthogonal polynomial interval
                      curr = nint( daux * step ) + 1
 
-! special tricks for the first point and the last point
+                     ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == legrd ) then
                          maux = two * maux
                      endif ! back if ( curr == 1 .or. curr == legrd ) block
 
-! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
+                     ! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      LEG_CYCLE: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
                      enddo LEG_CYCLE ! over fleg={1,lemax} loop
 
                  endif LEG_BLOCK ! back if ( isort == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using svd orthogonal polynomial representation
-!-------------------------------------------------------------------------
+                 !--------------------------------------------------------
+                 ! using svd orthogonal polynomial representation
+                 !--------------------------------------------------------
                  SVD_BLOCK: if ( isort == 3 ) then
 
 ! convert dtau in [0,\beta] to daux in [-1,1]
