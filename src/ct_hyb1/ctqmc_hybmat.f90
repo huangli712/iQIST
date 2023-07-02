@@ -1,22 +1,22 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : iqist @ narcissus
 !!! program : cat_insert_matrix
 !!!           cat_remove_matrix
 !!!           cat_lshift_matrix
 !!!           cat_rshift_matrix
 !!!           cat_reflip_matrix
-!!!           cat_reload_matrix <<<---
+!!!           cat_reload_matrix
 !!!           cat_insert_detrat
 !!!           cat_remove_detrat
 !!!           cat_lshift_detrat
 !!!           cat_rshift_detrat
 !!!           cat_reflip_detrat
-!!!           cat_reload_detrat <<<---
+!!!           cat_reload_detrat
 !!! source  : ctqmc_hybmat.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/15/2017 by li huang (last modified)
+!!!           07/03/2023 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -52,38 +52,40 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new creation and annihilation operators
+     ! index address to insert new creation and annihilation operators
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time \tau_s for new creation operator
+     ! imaginary time \tau_s for new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time \tau_e for new annihilation operator
+     ! imaginary time \tau_e for new annihilation operator
      real(dp), intent(in) :: tau_end
 
-! previous calculated determinant ratio
+     ! previous calculated determinant ratio
      real(dp), intent(in) :: deter_ratio
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: p
 
-! evaluate p at first
+!! [body
+
+     ! evaluate p at first
      p = one / deter_ratio
 
-! shift lspace and rspace, and then supplement them with -1 at the end
+     ! shift lspace and rspace, and then supplement them with -1 at the end
      do i=ckink,ie,-1
          lspace(i+1, flvr) = lspace(i, flvr)
      enddo ! over i={ckink,ie,-1} loop
@@ -94,12 +96,12 @@
      enddo ! over j={ckink,is,-1} loop
      rspace(is, flvr) = -one
 
-! scale lspace with p
+     ! scale lspace with p
      do i=1,ckink+1
          lspace(i, flvr) = lspace(i, flvr) * p
      enddo ! over i={1,ckink+1} loop
 
-! shift mmat matrix
+     ! shift mmat matrix
      do j=ckink,is,-1
          do i=ckink,ie,-1
              mmat(i+1, j+1, flvr) = mmat(i, j, flvr)
@@ -118,7 +120,7 @@
          enddo ! over i={ckink,ie,-1} loop
      enddo ! over j={1,is-1} loop
 
-! supplement mmat matrix with zero
+     ! supplement mmat matrix with zero
      do i=1,ckink+1
          mmat(i, is, flvr) = zero
      enddo ! over i={1,ckink+1} loop
@@ -127,17 +129,17 @@
          mmat(ie, j, flvr) = zero
      enddo ! over j={1,ckink+1} loop
 
-! finally evaluate mmat matrix
+     ! finally evaluate mmat matrix
      do j=1,ckink+1
          do i=1,ckink+1
              mmat(i, j, flvr) = mmat(i, j, flvr) + lspace(i, flvr) * rspace(j, flvr)
          enddo ! over i={1,ckink+1} loop
      enddo ! over j={1,ckink+1} loop
 
-! update the perturbation expansion series
+     ! update the perturbation expansion series
      call cat_insert_colour(flvr, is, ie, tau_start, tau_end)
 
-! update gmat matrix
+     ! update gmat matrix
      lsaves(:, flvr) = czero
      rsaves(:, flvr) = czero
 
@@ -153,17 +155,19 @@
          gmat(k, flvr, flvr) = gmat(k, flvr, flvr) - lsaves(k, flvr) * rsaves(k, flvr) * p
      enddo ! over k={1,nfreq} loop
 
-! only for debug
-!<     do i=1,ckink+1
-!<         do j=1,ckink+1
-!<             print *, 'M:', i, j, mmat(i, j, flvr)
-!<         enddo ! over j={1,ckink+1} loop
-!<     enddo ! over i={1,ckink+1} loop
+!<   ! only for debug
+!<   do i=1,ckink+1
+!<       do j=1,ckink+1
+!<           print *, 'M:', i, j, mmat(i, j, flvr)
+!<       enddo ! over j={1,ckink+1} loop
+!<   enddo ! over i={1,ckink+1} loop
 !<
-!<     print *, 'G1:', flvr, gmat(1, flvr, flvr)
-!<     print *, 'G2:', flvr, gmat(2, flvr, flvr)
-!<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
-!<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+!<   print *, 'G1:', flvr, gmat(1, flvr, flvr)
+!<   print *, 'G2:', flvr, gmat(2, flvr, flvr)
+!<   print *, 'G3:', flvr, gmat(3, flvr, flvr)
+!<   print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+
+!! body]
 
      return
   end subroutine cat_insert_matrix
