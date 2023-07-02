@@ -243,13 +243,13 @@
      ! overlap length of segments between different flavors
      real(dp) :: ovlp(norbs,norbs)
 
+!! [body
+
      ! prepare sgmt array
      call cat_occupy_single(sgmt)
 
      ! prepare ovlp array
      call cat_occupy_double(ovlp)
-
-!! [body
 
      !--------------------------------------------------------------------
 
