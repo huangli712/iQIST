@@ -1163,24 +1163,28 @@
   subroutine cat_alloc_gmat()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(gtau(ntime,norbs,norbs), stat=istat)
      allocate(ftau(ntime,norbs,norbs), stat=istat)
 
      allocate(grnf(mfreq,norbs,norbs), stat=istat)
      allocate(frnf(mfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_gmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      gtau = zero
      ftau = zero
 
      grnf = czero
      frnf = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_gmat
