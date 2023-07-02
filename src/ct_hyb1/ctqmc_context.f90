@@ -1197,7 +1197,9 @@
   subroutine cat_alloc_wmat()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(wtau(ntime,norbs,norbs), stat=istat)
      allocate(htau(ntime,norbs,norbs), stat=istat)
      allocate(hsed(ntime,norbs,norbs), stat=istat)
@@ -1205,18 +1207,20 @@
      allocate(wssf(mfreq,norbs,norbs), stat=istat)
      allocate(hybf(mfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_wmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      wtau = zero
      htau = zero
      hsed = zero
 
      wssf = czero
      hybf = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_wmat
