@@ -634,7 +634,7 @@
                      enddo LEG_CYCLE ! over fleg={1,lemax} loop
 
                  endif LEG_BLOCK ! back if ( isort == 2 ) block
-                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
                  !--------------------------------------------------------
                  ! using svd orthogonal polynomial representation
