@@ -1367,6 +1367,8 @@
   subroutine cat_free_umat()
      implicit none
 
+!! [body
+
      if ( allocated(rank) )    deallocate(rank)
      if ( allocated(stts) )    deallocate(stts)
 
@@ -1381,6 +1383,8 @@
      if ( allocated(psed) )    deallocate(psed)
      if ( allocated(umat) )    deallocate(umat)
 
+!! body]
+
      return
   end subroutine cat_free_umat
 
@@ -1392,6 +1396,8 @@
   subroutine cat_free_mmat()
      implicit none
 
+!! [body
+
      if ( allocated(lspace) )  deallocate(lspace)
      if ( allocated(rspace) )  deallocate(rspace)
 
@@ -1401,6 +1407,8 @@
      if ( allocated(rsaves) )  deallocate(rsaves)
 
      if ( allocated(gmat)   )  deallocate(gmat  )
+
+!! body]
 
      return
   end subroutine cat_free_mmat
@@ -1413,11 +1421,15 @@
   subroutine cat_free_gmat()
      implicit none
 
+!! [body
+
      if ( allocated(gtau) )    deallocate(gtau)
      if ( allocated(ftau) )    deallocate(ftau)
 
      if ( allocated(grnf) )    deallocate(grnf)
      if ( allocated(frnf) )    deallocate(frnf)
+
+!! body]
 
      return
   end subroutine cat_free_gmat
@@ -1430,12 +1442,16 @@
   subroutine cat_free_wmat()
      implicit none
 
+!! [body
+
      if ( allocated(wtau) )    deallocate(wtau)
      if ( allocated(htau) )    deallocate(htau)
      if ( allocated(hsed) )    deallocate(hsed)
 
      if ( allocated(wssf) )    deallocate(wssf)
      if ( allocated(hybf) )    deallocate(hybf)
+
+!! body]
 
      return
   end subroutine cat_free_wmat
@@ -1448,8 +1464,12 @@
   subroutine cat_free_smat()
      implicit none
 
+!! [body
+
      if ( allocated(sig1) )    deallocate(sig1)
      if ( allocated(sig2) )    deallocate(sig2)
+
+!! body]
 
      return
   end subroutine cat_free_smat
