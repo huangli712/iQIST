@@ -193,26 +193,28 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address to remove old creation and annihilation operators
+     ! index address to remove old creation and annihilation operators
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: p
 
-! update gmat matrix
+!! [body
+
+     ! update gmat matrix
      lsaves(:, flvr) = czero
      rsaves(:, flvr) = czero
 
@@ -228,7 +230,7 @@
          gmat(k, flvr, flvr) = gmat(k, flvr, flvr) + lsaves(k, flvr) * rsaves(k, flvr) * p
      enddo ! over k={1,nfreq} loop
 
-! update mmat matrix
+     ! update mmat matrix
      p = one / mmat(ie, is, flvr) ! we redefine p here
      do j=1,ckink
          do i=1,ckink
@@ -256,20 +258,22 @@
          enddo ! over i={ie,ckink-1} loop
      enddo ! over j={1,is-1} loop
 
-! update the perturbation expansion series
+     ! update the perturbation expansion series
      call cat_remove_colour(flvr, is, ie)
 
-! only for debug
-!<     do i=1,ckink
-!<         do j=1,ckink
-!<             print *, 'M:', i, j, mmat(i, j, flvr)
-!<         enddo ! over j={1,ckink} loop
-!<     enddo ! over i={1,ckink} loop
+!<   ! only for debug
+!<   do i=1,ckink
+!<       do j=1,ckink
+!<           print *, 'M:', i, j, mmat(i, j, flvr)
+!<       enddo ! over j={1,ckink} loop
+!<   enddo ! over i={1,ckink} loop
 !<
-!<     print *, 'G1:', flvr, gmat(1, flvr, flvr)
-!<     print *, 'G2:', flvr, gmat(2, flvr, flvr)
-!<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
-!<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+!<   print *, 'G1:', flvr, gmat(1, flvr, flvr)
+!<   print *, 'G2:', flvr, gmat(2, flvr, flvr)
+!<   print *, 'G3:', flvr, gmat(3, flvr, flvr)
+!<   print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+
+!! body]
 
      return
   end subroutine cat_remove_matrix
