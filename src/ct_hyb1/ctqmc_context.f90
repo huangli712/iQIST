@@ -862,14 +862,14 @@
 !!>>> declare private variables                                        <<<
 !!========================================================================
 
-! status flag
+     ! status flag
      integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-! declaration of module procedures: allocate memory
+     ! declaration of module procedures: allocate memory
      public :: cat_alloc_clur
      public :: cat_alloc_mesh
      public :: cat_alloc_meat
@@ -879,7 +879,7 @@
      public :: cat_alloc_wmat
      public :: cat_alloc_smat
 
-! declaration of module procedures: deallocate memory
+     ! declaration of module procedures: deallocate memory
      public :: cat_free_clur
      public :: cat_free_mesh
      public :: cat_free_meat
@@ -903,11 +903,13 @@
   subroutine cat_alloc_clur()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(index_s(mkink,norbs),     stat=istat)
      allocate(index_e(mkink,norbs),     stat=istat)
 
@@ -920,12 +922,12 @@
      allocate(empty_s(norbs),           stat=istat)
      allocate(empty_e(norbs),           stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_clur','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      index_s = 0
      index_e = 0
 
@@ -939,6 +941,8 @@
          call istack_create(empty_s(i), mkink)
          call istack_create(empty_e(i), mkink)
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine cat_alloc_clur
