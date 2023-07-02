@@ -1233,18 +1233,22 @@
   subroutine cat_alloc_smat()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(sig1(mfreq,norbs,norbs), stat=istat)
      allocate(sig2(mfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_smat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      sig1 = czero
      sig2 = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_smat
