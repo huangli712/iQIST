@@ -288,21 +288,21 @@
          ! evaluate total energy: etot
          paux(1) = paux(2) + paux(3)
 
-!! body]
-
      END BLOCK CALC_PAUX
 
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
 
      CALC_NMAT: BLOCK
 
-! evaluate occupation matrix: < n_i >
+         ! evaluate occupation matrix: < n_i >
          nimp = nimp + sgmt / beta
 
-! evaluate double occupation matrix: < n_i n_j >
+         ! evaluate double occupation matrix: < n_i n_j >
          nmat = nmat + ovlp / beta
 
      END BLOCK CALC_NMAT
+
+!! body]
 
      return
   end subroutine ctqmc_record_paux
