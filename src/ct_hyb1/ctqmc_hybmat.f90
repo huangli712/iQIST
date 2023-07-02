@@ -1011,19 +1011,23 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to remove old creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)   :: is
      integer, intent(in)   :: ie
 
-! the desired determinant ratio
+     ! the desired determinant ratio
      real(dp), intent(out) :: deter_ratio
 
+!! [body
+
      deter_ratio = mmat(ie, is, flvr)
+
+!! body]
 
      return
   end subroutine cat_remove_detrat
