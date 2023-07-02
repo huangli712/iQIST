@@ -3875,19 +3875,21 @@
 
      implicit none
 
-! external arguments
-! number of operators
+!! external arguments
+     ! number of operators
      real(dp), intent(out) :: knop_mpi(norbs)
      real(dp), intent(out) :: knop_err(norbs)
 
-! crossing product of k_i and k_j
+     ! crossing product of k_i and k_j
      real(dp), intent(out) :: kmat_mpi(norbs,norbs)
      real(dp), intent(out) :: kmat_err(norbs,norbs)
 
-! check whether this observable has been measured
+!! [body
+
+     ! check whether this observable has been measured
      if ( .not. btest(isobs, 1) ) RETURN
 
-! initialize knop_mpi and kmat_mpi, knop_err and kmat_err
+     ! initialize knop_mpi and kmat_mpi, knop_err and kmat_err
      knop_mpi = zero
      kmat_mpi = zero
 
@@ -3897,11 +3899,11 @@
 ! build knop_mpi and kmat_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(knop, knop_mpi)
      call mp_allreduce(kmat, kmat_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3911,27 +3913,29 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      knop_mpi = knop_mpi / real(nprocs)
      kmat_mpi = kmat_mpi / real(nprocs)
 
 ! build knop_err and kmat_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((knop - knop_mpi)**2, knop_err)
      call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
          kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_kmat
