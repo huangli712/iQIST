@@ -146,12 +146,16 @@
 
      implicit none
 
-! if ckink == 0, we record its count in hist(mkink)
+!! [body
+
+     ! if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
          hist(ckink) = hist(ckink) + one
      else
          hist(mkink) = hist(mkink) + one
      endif ! back if ( ckink > 0 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_record_hist
