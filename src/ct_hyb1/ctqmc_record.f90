@@ -4221,25 +4221,27 @@
 
      implicit none
 
-! external arguments
-! spin-spin correlation function, orbital-resolved
+!! external arguments
+     ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: sp_w_mpi(nbfrq,nband)
      real(dp), intent(out) :: sp_w_err(nbfrq,nband)
 
-! check whether this observable has been measured
+!! [body
+
+     ! check whether this observable has been measured
      if ( .not. btest(issus, 3) ) RETURN
 
-! initialize sp_w_mpi and sp_w_err
+     ! initialize sp_w_mpi and sp_w_err
      sp_w_mpi = zero
      sp_w_err = zero
 
 ! build sp_w_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(sp_w, sp_w_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -4248,24 +4250,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      sp_w_mpi = sp_w_mpi / real(nprocs)
 
 ! build sp_w_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((sp_w - sp_w_mpi)**2, sp_w_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_sp_w
