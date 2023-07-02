@@ -471,25 +471,27 @@
                  !--------------------------------------------------------
                  SVD_BLOCK: if ( isort == 3 ) then
 
-! convert dtau in [0,\beta] to daux in [-1,1]
+                     ! convert dtau in [0,\beta] to daux in [-1,1]
                      daux = two * dtau / beta - one
 
-! determine index for svd orthogonal polynomial interval
+                     ! determine index for svd orthogonal polynomial interval
                      call s_svd_point(daux, step, curr)
 
-! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
+                     ! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      SVD_CYCLE: do fsvd=1,svmax
                          dtau = rep_s(curr,fsvd)
                          gtau(fsvd, flvr, flvr) = gtau(fsvd, flvr, flvr) - maux * dtau
                      enddo SVD_CYCLE ! over fsvd={1,svmax} loop
 
                  endif SVD_BLOCK ! back if ( isort == 3 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_gtau
