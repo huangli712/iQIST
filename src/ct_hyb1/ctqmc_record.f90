@@ -3595,35 +3595,37 @@
 
      implicit none
 
-! external arguments
-! impurity green's function
+!! external arguments
+     ! impurity green's function
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
      complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
 
-! local variables
-! used to store the real and imaginary parts of impurity green's function
+!! local variables
+     ! used to store the real and imaginary parts of impurity green's function
      real(dp), allocatable :: g_re_err(:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(g_re_err(mfreq,norbs,norbs))
      allocate(g_im_err(mfreq,norbs,norbs))
 
-! initialize g_re_err and g_im_err
+     ! initialize g_re_err and g_im_err
      g_re_err = zero
      g_im_err = zero
 
-! initialize grnf_mpi and grnf_err
+     ! initialize grnf_mpi and grnf_err
      grnf_mpi = czero
      grnf_err = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(grnf, grnf_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3632,33 +3634,35 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      grnf_mpi = grnf_mpi / real(nprocs)
 
 ! build grnf_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(( real(grnf - grnf_mpi))**2, g_re_err)
      call mp_allreduce((aimag(grnf - grnf_mpi))**2, g_im_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
          g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final grnf_err
+     ! construct the final grnf_err
      grnf_err = g_re_err + g_im_err * czi
 
-! deallocate memory
+     ! deallocate memory
      deallocate( g_re_err )
      deallocate( g_im_err )
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_grnf
