@@ -3525,22 +3525,24 @@
 
      implicit none
 
-! external arguments
-! auxiliary correlation function, F(\tau)
+!! external arguments
+     ! auxiliary correlation function, F(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ftau_err(ntime,norbs,norbs)
 
-! initialize ftau_mpi and ftau_err
+!! [body
+
+     ! initialize ftau_mpi and ftau_err
      ftau_mpi = zero
      ftau_err = zero
 
 ! build ftau_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(ftau, ftau_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3549,24 +3551,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      ftau_mpi = ftau_mpi / real(nprocs)
 
 ! build ftau_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((ftau - ftau_mpi)**2, ftau_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_ftau
