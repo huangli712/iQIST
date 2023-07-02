@@ -1301,6 +1301,8 @@
   subroutine cat_free_mesh()
      implicit none
 
+!! [body
+
      if ( allocated(tmesh) )   deallocate(tmesh)
      if ( allocated(rmesh) )   deallocate(rmesh)
 
@@ -1308,6 +1310,8 @@
      if ( allocated(smesh) )   deallocate(smesh)
      if ( allocated(rep_l) )   deallocate(rep_l)
      if ( allocated(rep_s) )   deallocate(rep_s)
+
+!! body]
 
      return
   end subroutine cat_free_mesh
