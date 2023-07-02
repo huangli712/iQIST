@@ -3369,16 +3369,18 @@
 
      implicit none
 
-! external arguments
-! occupation number
+!! external arguments
+     ! occupation number
      real(dp), intent(out) :: nimp_mpi(norbs)
      real(dp), intent(out) :: nimp_err(norbs)
 
-! double occupation number matrix
+     ! double occupation number matrix
      real(dp), intent(out) :: nmat_mpi(norbs,norbs)
      real(dp), intent(out) :: nmat_err(norbs,norbs)
 
-! initialize nimp_mpi and nmat_mpi, nimp_err and nmat_err
+!! [body
+
+     ! initialize nimp_mpi and nmat_mpi, nimp_err and nmat_err
      nimp_mpi = zero
      nmat_mpi = zero
 
@@ -3388,11 +3390,11 @@
 ! build nimp_mpi and nmat_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(nimp, nimp_mpi)
      call mp_allreduce(nmat, nmat_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3402,27 +3404,29 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      nimp_mpi = nimp_mpi / real(nprocs)
      nmat_mpi = nmat_mpi / real(nprocs)
 
 ! build nimp_err and nmat_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((nimp - nimp_mpi)**2, nimp_err)
      call mp_allreduce((nmat - nmat_mpi)**2, nmat_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          nimp_err = sqrt( nimp_err / real( nprocs * ( nprocs - 1 ) ) )
          nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_nmat
