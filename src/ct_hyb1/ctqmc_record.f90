@@ -3779,35 +3779,37 @@
 
      implicit none
 
-! external arguments
-! self-energy function
+!! external arguments
+     ! self-energy function
      complex(dp), intent(out) :: sig2_mpi(mfreq,norbs,norbs)
      complex(dp), intent(out) :: sig2_err(mfreq,norbs,norbs)
 
-! local variables
-! used to store the real and imaginary parts of self-energy function
+!! local variables
+     ! used to store the real and imaginary parts of self-energy function
      real(dp), allocatable :: s_re_err(:,:,:)
      real(dp), allocatable :: s_im_err(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(s_re_err(mfreq,norbs,norbs))
      allocate(s_im_err(mfreq,norbs,norbs))
 
-! initialize s_re_err and s_im_err
+     ! initialize s_re_err and s_im_err
      s_re_err = zero
      s_im_err = zero
 
-! initialize sig2_mpi and sig2_err
+     ! initialize sig2_mpi and sig2_err
      sig2_mpi = czero
      sig2_err = czero
 
 ! build sig2_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(sig2, sig2_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3816,33 +3818,35 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      sig2_mpi = sig2_mpi / real(nprocs)
 
 ! build sig2_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(( real(sig2 - sig2_mpi))**2, s_re_err)
      call mp_allreduce((aimag(sig2 - sig2_mpi))**2, s_im_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
          s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final sig2_err
+     ! construct the final sig2_err
      sig2_err = s_re_err + s_im_err * czi
 
-! deallocate memory
+     ! deallocate memory
      deallocate( s_re_err )
      deallocate( s_im_err )
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_sig2
