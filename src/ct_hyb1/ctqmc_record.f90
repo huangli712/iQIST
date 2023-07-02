@@ -3232,22 +3232,24 @@
 
      implicit none
 
-! external arguments
-! probability of atomic eigenstates
+!! external arguments
+     ! probability of atomic eigenstates
      real(dp), intent(out) :: prob_mpi(ncfgs)
      real(dp), intent(out) :: prob_err(ncfgs)
 
-! initialize prob_mpi and prob_err
+!! [body
+
+     ! initialize prob_mpi and prob_err
      prob_mpi = zero
      prob_err = zero
 
 ! build prob_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(prob, prob_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3256,24 +3258,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      prob_mpi = prob_mpi / real(nprocs)
 
 ! build prob_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((prob - prob_mpi)**2, prob_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_prob
