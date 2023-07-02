@@ -680,19 +680,23 @@
 
      implicit none
 
-! local variables
-! loop index over matsubara frequencies
+!! local variables
+     ! loop index over matsubara frequencies
      integer :: ifrq
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer :: flvr
 
-! only the first nfreq points of grnf are modified
+!! [body
+
+     ! only the first nfreq points of grnf are modified
      do flvr=1,norbs
          do ifrq=1,nfreq
              grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + gmat(ifrq, flvr, flvr)
          enddo ! over ifrq={1,nfreq} loop
      enddo ! over flvr={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_grnf
