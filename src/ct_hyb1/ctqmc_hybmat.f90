@@ -508,53 +508,55 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift annihilation operator
-! ieo and ien are old and new indices, respectively
+     ! index address to shift annihilation operator
+     ! ieo and ien are old and new indices, respectively
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time \tau_e for annihilation operator (the old one)
+     ! imaginary time \tau_e for annihilation operator (the old one)
      real(dp), intent(in) :: tau_end1
 
-! imaginary time \tau_e for annihilation operator (the new one)
+     ! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in) :: tau_end2
 
-! previous calculated determinant ratio
+     ! previous calculated determinant ratio
      real(dp), intent(in) :: deter_ratio
 
-! external arguments
-! used to interpolate the hybridization function
+!! external arguments
+     ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! used to store matrix element of mmat
+     ! used to store matrix element of mmat
      real(dp) :: md
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: xe
      real(dp) :: ls
 
-! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! real(dp) dummy arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
-! complex(dp) dummy arrays, used to calculate gmat matrix
+     ! complex(dp) dummy arrays, used to calculate gmat matrix
      complex(dp) :: rexp(nfreq)
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
 
-! evaluate rexp
+!! [body
+
+     ! evaluate rexp
      rexp = czero
      do k=1,nfreq
          xe = tau_end2 * rmesh(k)
@@ -562,7 +564,7 @@
      enddo ! over k={1,nfreq} loop
      rexp = rexp / beta
 
-! evaluate gsum
+     ! evaluate gsum
      gsum = czero
      do i=1,ckink
          md = mmat(ieo, i, flvr)
@@ -571,13 +573,13 @@
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,ckink} loop
 
-! evaluate gdel, \delta G for gmat matrix
+     ! evaluate gdel, \delta G for gmat matrix
      gdel = czero
      do k=1,nfreq
          gdel(k) = gsum(k) * rexp(k)
      enddo ! over k={1,nfreq} loop
 
-! calculate lvec by cubic spline interpolation
+     ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) then
              lvec(i) = -ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
@@ -586,7 +588,7 @@
          endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
-! calculate rvec by cubic spline interpolation
+     ! calculate rvec by cubic spline interpolation
      do j=1,ckink
          if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) then
              rvec(j) = -ctqmc_eval_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
@@ -595,12 +597,12 @@
          endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
-! adjust lvec
+     ! adjust lvec
      do i=1,ckink
          lvec(i) = rvec(i) - lvec(i)
      enddo ! over i={1,ckink} loop
 
-! prepare lspace
+     ! prepare lspace
      do i=1,ckink
          ls = zero
          do j=1,ckink
@@ -609,19 +611,19 @@
          lspace(i, flvr) = ls / deter_ratio
      enddo ! over i={1,ckink} loop
 
-! prepare rspace
+     ! prepare rspace
      do i=1,ckink
          rspace(i, flvr) = -mmat(ieo, i, flvr)
      enddo ! over i={1,ckink} loop
 
-! calculate mmat matrix
+     ! calculate mmat matrix
      do j=1,ckink
          do i=1,ckink
              mmat(i, j, flvr) = mmat(i, j, flvr) + lspace(i, flvr) * rspace(j, flvr)
          enddo ! over i={1,ckink} loop
      enddo ! over j={1,ckink} loop
 
-! shuffle columns if time order changed because of move
+     ! shuffle columns if time order changed because of move
      if ( ien /= ieo ) then
          ls = lspace(ieo, flvr)
          do i=1,ckink
@@ -653,10 +655,10 @@
          endif ! back if ( ien < ieo ) block
      endif ! back if ( ien /= ieo ) block
 
-! update the perturbation expansion series
+     ! update the perturbation expansion series
      call cat_rshift_colour(flvr, ieo, ien, tau_end2)
 
-! update gmat matrix
+     ! update gmat matrix
      lsaves(:, flvr) = czero
      rsaves(:, flvr) = czero
 
@@ -671,17 +673,19 @@
          gmat(k, flvr, flvr) = gmat(k, flvr, flvr) - lsaves(k, flvr) * rsaves(k, flvr) / beta + gdel(k)
      enddo ! over k={1,nfreq} loop
 
-! only for debug
-!<     do i=1,ckink
-!<         do j=1,ckink
-!<             print *,'M:',i, j, mmat(i, j, flvr)
-!<         enddo ! over j={1,ckink} loop
-!<     enddo ! over i={1,ckink} loop
+!<   ! only for debug
+!<   do i=1,ckink
+!<       do j=1,ckink
+!<           print *,'M:',i, j, mmat(i, j, flvr)
+!<       enddo ! over j={1,ckink} loop
+!<   enddo ! over i={1,ckink} loop
 !<
-!<     print *, 'G1:', flvr, gmat(1, flvr, flvr)
-!<     print *, 'G2:', flvr, gmat(2, flvr, flvr)
-!<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
-!<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+!<   print *, 'G1:', flvr, gmat(1, flvr, flvr)
+!<   print *, 'G2:', flvr, gmat(2, flvr, flvr)
+!<   print *, 'G3:', flvr, gmat(3, flvr, flvr)
+!<   print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+
+!! body]
 
      return
   end subroutine cat_rshift_matrix
