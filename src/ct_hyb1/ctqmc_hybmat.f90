@@ -1135,36 +1135,38 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift annihilation operator (old index = ieo)
+     ! index address to shift annihilation operator (old index = ieo)
      integer, intent(in)   :: addr
 
-! imaginary time \tau_e for annihilation operator (the old one)
+     ! imaginary time \tau_e for annihilation operator (the old one)
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time \tau_e for annihilation operator (the new one)
+     ! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in)  :: tau_end2
 
-! the desired determinant ratio
+     ! the desired determinant ratio
      real(dp), intent(out) :: deter_ratio
 
-! external functions
-! used to interpolate the hybridization function
+!! external functions
+     ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! real(dp) dummy arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
-! calculate lvec by cubic spline interpolation
+!! [body
+
+     ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) then
              lvec(i) = -ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
@@ -1173,7 +1175,7 @@
          endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
-! calculate rvec by cubic spline interpolation
+     ! calculate rvec by cubic spline interpolation
      do j=1,ckink
          if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) then
              rvec(j) = -ctqmc_eval_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
@@ -1182,16 +1184,18 @@
          endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
-! adjust lvec
+     ! adjust lvec
      do i=1,ckink
          lvec(i) = rvec(i) - lvec(i)
      enddo ! over i={1,ckink} loop
 
-! calculate final determinant ratio
+     ! calculate final determinant ratio
      deter_ratio = one
      do i=1,ckink
          deter_ratio = deter_ratio + mmat(addr, i, flvr) * lvec(i)
      enddo ! over i={1,ckink} loop
+
+!! body]
 
      return
   end subroutine cat_rshift_detrat
