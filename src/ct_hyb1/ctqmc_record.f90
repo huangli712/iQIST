@@ -1242,31 +1242,33 @@
 
      implicit none
 
-! local parameters
-! number of internal loop
-! if you want to obtain more accurate results, please increase it
+!! local parameters
+     ! number of internal loop
+     ! if you want to obtain more accurate results, please increase it
      integer, parameter :: num_try = 16
 
-! local variables
-! loop index over times
+!! local variables
+     ! loop index over times
      integer  :: i
      integer  :: m
      integer  :: n
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
 
-! factor for orbital symmetry
+     ! factor for orbital symmetry
      real(dp) :: fa
 
-! occupation status for current flavor channel and time
+     ! occupation status for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
 
-! check whether there is conflict
+!! [body
+
+     ! check whether there is conflict
      call s_assert2( btest(issus, 2), 'in ctqmc_record_ch_t' )
 
-! calculate oaux, obtain occupation status
+     ! calculate oaux, obtain occupation status
      oaux = zero
      TIME_CYCLE: do i=1,ntime
          do f1=1,norbs
@@ -1275,35 +1277,41 @@
      enddo TIME_CYCLE ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
 
-! calculate cchi and ch_t
+     ! calculate cchi and ch_t
      FLVR_CYCLE: do f1=1,norbs
          do f2=1,f1
-! evaluate the symmetry factor
+             ! evaluate the symmetry factor
              if ( f1 /= f2 ) then
                  fa = two
              else
                  fa = one
              endif ! back if ( f1 /= f2 ) block
+             !
              do i=1,num_try
                  m = ceiling( spring_sfmt_stream() * ntime )
                  if ( oaux(m,f2) > zero ) then
-! when n - m + ntime \in [ntime - m + 1, ntime]
+                     ! when n - m + ntime \in [ntime - m + 1, ntime]
                      do n=1,m
                          cchi(n-m+ntime) = cchi(n-m+ntime) + fa * oaux(n,f1)
                          ch_t(n-m+ntime,f2,f1) = ch_t(n-m+ntime,f2,f1) + oaux(n,f1)
                      enddo ! over n={1,m} loop
-! when n - m \in [1, ntime - m]
+                     !
+                     ! when n - m \in [1, ntime - m]
                      do n=m+1,ntime
                          cchi(n-m) = cchi(n-m) + fa * oaux(n,f1)
                          ch_t(n-m,f2,f1) = ch_t(n-m,f2,f1) + oaux(n,f1)
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
-             if ( f1 /= f2 ) then ! consider the symmetry
+             !
+             ! consider the symmetry
+             if ( f1 /= f2 ) then
                  ch_t(:,f1,f2) = ch_t(:,f2,f1)
              endif ! back if ( f1 /= f2 ) block
          enddo ! over f2={1,f1} loop
      enddo FLVR_CYCLE ! over f1={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_ch_t
