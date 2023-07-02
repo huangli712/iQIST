@@ -3090,22 +3090,24 @@
 
      implicit none
 
-! external arguments
-! autocorrelation function
+!! external arguments
+     ! autocorrelation function
      real(dp), intent(out) :: ac_f_mpi(ntime + 2)
      real(dp), intent(out) :: ac_f_err(ntime + 2)
 
-! initialize ac_f_mpi and ac_f_err
+!! [body
+
+     ! initialize ac_f_mpi and ac_f_err
      ac_f_mpi = zero
      ac_f_err = zero
 
 ! build ac_f_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(ac_f, ac_f_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3114,24 +3116,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      ac_f_mpi = ac_f_mpi / real(nprocs)
 
 ! build ac_f_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((ac_f - ac_f_mpi)**2, ac_f_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          ac_f_err = sqrt( ac_f_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_ac_f
