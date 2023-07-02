@@ -2251,11 +2251,13 @@
 
      implicit none
 
-! check whether there is conflict
-! this subroutine is only designed for the particle-particle channel
+!! [body
+
+     ! check whether there is conflict
+     ! this subroutine is only designed for the particle-particle channel
      call s_assert2( btest(isvrt, 3) .or. btest(isvrt, 4), 'in ctqmc_record_g2pp' )
 
-! you can not calculate the AABB and ABBA components at the same time
+     ! you can not calculate the AABB and ABBA components at the same time
      call s_assert2( .not. ( btest(isvrt, 3) .and. btest(isvrt, 4) ), 'in ctqmc_record_g2pp' )
 
      select case ( isort )
@@ -2273,6 +2275,8 @@
              call s_print_error('ctqmc_record_g2pp','this feature is not implemented')
 
      end select
+
+!! body]
 
      return
   end subroutine ctqmc_record_g2pp
