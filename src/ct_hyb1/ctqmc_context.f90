@@ -1324,6 +1324,8 @@
   subroutine cat_free_meat()
      implicit none
 
+!! [body
+
      if ( allocated(ac_v) )    deallocate(ac_v)
      if ( allocated(ac_f) )    deallocate(ac_f)
 
@@ -1351,6 +1353,8 @@
      if ( allocated(h2ph) )    deallocate(h2ph)
      if ( allocated(g2pp) )    deallocate(g2pp)
      if ( allocated(h2pp) )    deallocate(h2pp)
+
+!! body]
 
      return
   end subroutine cat_free_meat
