@@ -1311,7 +1311,11 @@
   subroutine cat_reload_detrat()
      implicit none
 
+!! [body
+
      CONTINUE
+
+!! body]
 
      return
   end subroutine cat_reload_detrat
