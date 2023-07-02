@@ -4135,19 +4135,21 @@
 
      implicit none
 
-! external arguments
-! spin-spin correlation function, totally-averaged
+!! external arguments
+     ! spin-spin correlation function, totally-averaged
      real(dp), intent(out) :: schi_mpi(ntime)
      real(dp), intent(out) :: schi_err(ntime)
 
-! spin-spin correlation function, orbital-resolved
+     ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: sp_t_mpi(ntime,nband)
      real(dp), intent(out) :: sp_t_err(ntime,nband)
 
-! check whether this observable has been measured
+!! [body
+
+     ! check whether this observable has been measured
      if ( .not. btest(issus, 1) ) RETURN
 
-! initialize schi_mpi and sp_t_mpi, schi_err and sp_t_err
+     ! initialize schi_mpi and sp_t_mpi, schi_err and sp_t_err
      schi_mpi = zero
      sp_t_mpi = zero
 
@@ -4157,11 +4159,11 @@
 ! build schi_mpi and sp_t_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(schi, schi_mpi)
      call mp_allreduce(sp_t, sp_t_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -4171,27 +4173,29 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      schi_mpi = schi_mpi / real(nprocs)
      sp_t_mpi = sp_t_mpi / real(nprocs)
 
 ! build schi_err and sp_t_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((schi - schi_mpi)**2, schi_err)
      call mp_allreduce((sp_t - sp_t_mpi)**2, sp_t_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
          sp_t_err = sqrt( sp_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_sp_t
