@@ -2337,17 +2337,17 @@
 
      implicit none
 
-! local variables
-! loop indices for start and end points
+!! local variables
+     ! loop indices for start and end points
      integer  :: is
      integer  :: ie
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
      integer  :: flvr
 
-! loop index for frequency
+     ! loop index for frequency
      integer  :: nfaux
      integer  :: wbn
      integer  :: w1n
@@ -2355,35 +2355,37 @@
      integer  :: w3n
      integer  :: w4n
 
-! used to store the element of mmat matrix
+     ! used to store the element of mmat matrix
      real(dp) :: maux
      real(dp) :: naux
 
-! dummy complex(dp) variables, used to calculate the g2pp and h2pp
+     ! dummy complex(dp) variables, used to calculate the g2pp and h2pp
      complex(dp) :: zg
      complex(dp) :: zh
 
-! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+     ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
 
-! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ i \omega_n \tau_j ]
-! where m and n are the first two frequency indices for g2aux and h2aux
+     ! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ i \omega_n \tau_j ]
+     ! where m and n are the first two frequency indices for g2aux and h2aux
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
 
-! evaluate nfaux, determine the size of g2aux and h2aux
+!! [body
+
+     ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
 
-! allocate memory for caux1 and caux2, and then initialize them
+     ! allocate memory for caux1 and caux2, and then initialize them
      allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
      allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
 
-! allocate memory for g2aux and h2aux, and then initialize them
+     ! allocate memory for g2aux and h2aux, and then initialize them
      allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
      allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
 
-! calculate prefactor: pref
+     ! calculate prefactor: pref
      call ctqmc_make_pref()
 
 ! calculate g2aux and h2aux
@@ -2454,8 +2456,8 @@
 
                          zg = czero; zh = czero
 
-! G2_PP_AABB component
-!-------------------------------------------------------------------------
+                     ! G2_PP_AABB component
+                     !----------------------------------------------------
                      CALC_G2_PP_AABB: BLOCK
 
                          if ( btest(isvrt,3) ) then
@@ -2470,8 +2472,8 @@
 
                      END BLOCK CALC_G2_PP_AABB
 
-! G2_PP_ABBA component
-!-------------------------------------------------------------------------
+                     ! G2_PP_ABBA component
+                     !----------------------------------------------------
                      CALC_G2_PP_ABBA: BLOCK
 
                          if ( btest(isvrt,4) ) then
@@ -2498,11 +2500,13 @@
 !$OMP END DO
 !$OMP END PARALLEL
 
-! deallocate memory
+     ! deallocate memory
      deallocate( caux1 )
      deallocate( caux2 )
      deallocate( g2aux )
      deallocate( h2aux )
+
+!! body]
 
      return
   end subroutine cat_record_g2pp_std
