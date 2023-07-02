@@ -1085,68 +1085,73 @@
 
      implicit none
 
-! local variables
-! loop index for flavor channel
+!! local variables
+     ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
 
-! loop index for operators
+     ! loop index for operators
      integer  :: it
 
-! the first bosonic frequency
+     ! the first bosonic frequency
      complex(dp) :: dw
 
-! occupation status for current flavor channel at \tau = 0
+     ! occupation status for current flavor channel at \tau = 0
      real(dp) :: oaux(norbs)
 
-! total length of segments
+     ! total length of segments
      real(dp) :: sgmt(norbs)
 
-! bosonic frequency mesh
+     ! bosonic frequency mesh
      complex(dp) :: mesh(2:nbfrq)
 
-! matsubara frequency exponents for creation operators
+     ! matsubara frequency exponents for creation operators
      complex(dp) :: bexp_s(2:nbfrq)
 
-! matsubara frequency exponents for annihilation operators
+     ! matsubara frequency exponents for annihilation operators
      complex(dp) :: bexp_e(2:nbfrq)
 
-! check whether there is conflict
+!! [body
+
+     ! check whether there is conflict
      call s_assert2( btest(issus, 3), 'in ctqmc_record_sp_w' )
 
-! build bosonic frequency mesh, zero frequency is not included
+     ! build bosonic frequency mesh, zero frequency is not included
      dw = czi * two * pi / beta
      mesh = dw
      call s_cumsum_z(nbfrq - 1, mesh, mesh)
 
-! calculate oaux, obtain occupation status
+     ! calculate oaux, obtain occupation status
      do f1=1,norbs
          call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
 
-! calculate sgmt, obtain total length of segments
+     ! calculate sgmt, obtain total length of segments
      call cat_occupy_single(sgmt)
 
-! calculate sp_w, it must be real
-! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
+     ! calculate sp_w, it must be real
+     ! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
      FLVR_CYCLE: do f1=1,nband
          f2 = f1 + nband
 
-!
-! note:
-!
-! the contribution from oaux(f1) = one and oaux(f2) = one is zero, and
-! the contribution from oaux(f1) = zero and oaux(f2) = zero is also zero
-!
-! here oaux(f1) = one; oaux(f2) = zero
+!!
+!! note:
+!!
+!! the contribution from oaux(f1) = one and oaux(f2) = one is zero, and
+!! the contribution from oaux(f1) = zero and oaux(f2) = zero is also zero
+!!
+
+         ! here oaux(f1) = one; oaux(f2) = zero
          if ( oaux(f1) > zero .and. oaux(f2) < one ) then
-! + nu(t)nu(0) term
-!-------------------------------------------------------------------------
+             ! + nu(t)nu(0) term
+             !------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) + sgmt(f1)
-! loop over the segments
-! here we do not calculate bexp_s and bexp_e directly. we just utilize
-! the available data in exp_s and exp_e. so that the required exponent
-! functions are obtained via only a few complex number multiplications
+
+             ! loop over the segments
+             ! here we do not calculate bexp_s and bexp_e directly. we
+             ! just utilize the available data in exp_s and exp_e. so
+             ! that the required exponent functions are obtained via only
+             ! a few complex number multiplications
              do it=1,rank(f1)
                  dw = exp_s(1,index_s(it, f1), f1)
                  bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
@@ -1155,13 +1160,15 @@
                  sp_w(2:,f1) = sp_w(2:,f1) + real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
 
-! - nd(t)nu(0) term
-!-------------------------------------------------------------------------
+             ! - nd(t)nu(0) term
+             !------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) - sgmt(f2)
-! loop over the segments
-! here we do not calculate bexp_s and bexp_e directly. we just utilize
-! the available data in exp_s and exp_e. so that the required exponent
-! functions are obtained via only a few complex number multiplications
+
+             ! loop over the segments
+             ! here we do not calculate bexp_s and bexp_e directly. we
+             ! just utilize the available data in exp_s and exp_e. so
+             ! that the required exponent functions are obtained via only
+             ! a few complex number multiplications
              do it=1,rank(f2)
                  dw = exp_s(1,index_s(it, f2), f2)
                  bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f2), f2)
@@ -1171,15 +1178,17 @@
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f1) > zero .and. oaux(f2) < one ) block
 
-! here oaux(f2) = one; oaux(f1) = zero
+         ! here oaux(f2) = one; oaux(f1) = zero
          if ( oaux(f2) > zero .and. oaux(f1) < one ) then
-! - nu(t)nd(0) term
-!-------------------------------------------------------------------------
+             ! - nu(t)nd(0) term
+             !------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) - sgmt(f1)
-! loop over the segments
-! here we do not calculate bexp_s and bexp_e directly. we just utilize
-! the available data in exp_s and exp_e. so that the required exponent
-! functions are obtained via only a few complex number multiplications
+
+             ! loop over the segments
+             ! here we do not calculate bexp_s and bexp_e directly. we
+             ! just utilize the available data in exp_s and exp_e. so
+             ! that the required exponent functions are obtained via only
+             ! a few complex number multiplications
              do it=1,rank(f1)
                  dw = exp_s(1,index_s(it, f1), f1)
                  bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f1), f1)
@@ -1188,13 +1197,15 @@
                  sp_w(2:,f1) = sp_w(2:,f1) - real( ( bexp_e - bexp_s ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
 
-! + nd(t)nd(0) term
-!-------------------------------------------------------------------------
+             ! + nd(t)nd(0) term
+             !------------------------------------------------------------
              sp_w(1,f1) = sp_w(1,f1) + sgmt(f2)
-! loop over the segments
-! here we do not calculate bexp_s and bexp_e directly. we just utilize
-! the available data in exp_s and exp_e. so that the required exponent
-! functions are obtained via only a few complex number multiplications
+
+             ! loop over the segments
+             ! here we do not calculate bexp_s and bexp_e directly. we
+             ! just utilize the available data in exp_s and exp_e. so
+             ! that the required exponent functions are obtained via only
+             ! a few complex number multiplications
              do it=1,rank(f2)
                  dw = exp_s(1,index_s(it, f2), f2)
                  bexp_s = dw * exp_s(1:nbfrq-1,index_s(it, f2), f2)
@@ -1205,6 +1216,8 @@
          endif ! back if ( oaux(f2) > zero .and. oaux(f1) < one ) block
 
      enddo FLVR_CYCLE ! over f1={1,nband} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_sp_w
