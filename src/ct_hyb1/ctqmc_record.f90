@@ -175,17 +175,19 @@
 
      implicit none
 
-! local variables
-! current flavor channel
+!! local variables
+     ! current flavor channel
      integer :: flvr
 
-! index of atomic eigenstate
+     ! index of atomic eigenstate
      integer :: pstat
 
-! current atomic eigenstate from segment representation
+     ! current atomic eigenstate from segment representation
      integer :: state(norbs)
 
-! generate current atomic eigenstate
+!! [body
+
+     ! generate current atomic eigenstate
      do flvr=1,norbs
          select case ( stts(flvr) )
 
@@ -198,11 +200,13 @@
          end select
      enddo ! over flvr={1,norbs} loop
 
-! convert atomic eigenstate array to index
+     ! convert atomic eigenstate array to index
      call ctqmc_make_fock(norbs, pstat, state)
 
-! accumulate the data
+     ! accumulate the data
      prob(pstat) = prob(pstat) + one
+
+!! body]
 
      return
   end subroutine ctqmc_record_prob
