@@ -1778,93 +1778,95 @@
 
      implicit none
 
-! local variables
-! loop index for flavor channel
+!! local variables
+     ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
 
-! loop index for frequency
+     ! loop index for frequency
      integer  :: wbn
      integer  :: l1
      integer  :: l2
 
-! loop indices for start and end points
+     ! loop indices for start and end points
      integer  :: is1
      integer  :: is2
      integer  :: ie1
      integer  :: ie2
 
-! index for imaginary time \tau
+     ! index for imaginary time \tau
      integer  :: curr
 
-! interval for imaginary time slice
+     ! interval for imaginary time slice
      real(dp) :: step
 
-! distance betweem \tau_s and \tau_e
+     ! distance betweem \tau_s and \tau_e
      real(dp) :: dt
 
-! sign for p_l(x(\tau))
+     ! sign for p_l(x(\tau))
      real(dp) :: ms
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: mm
      real(dp) :: pp
 
-! complex(dp) dummy variables
+     ! complex(dp) dummy variables
      complex(dp) :: ee
 
-! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
+     ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
      real(dp), allocatable :: lfun(:,:)
 
-! p_l(x(\tau_e - \tau_s))
+     ! p_l(x(\tau_e - \tau_s))
      real(dp), allocatable :: pfun(:,:,:,:,:)
 
-! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
-! note here \omega_n is bosonic
+     ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+     ! note here \omega_n is bosonic
      complex(dp), allocatable :: caux1(:,:,:)
      complex(dp), allocatable :: caux2(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate( lfun(lemax,lemax) ); lfun = zero
      allocate( pfun(lemax, maxval(rank), maxval(rank), norbs, norbs)); pfun = zero
 
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
-! calculate prefactor: pref
+     ! calculate prefactor: pref
      call ctqmc_make_pref()
 
-! prepare some important arrays: lfun
+     ! prepare some important arrays: lfun
      do l1=1,lemax     ! legendre polynomial index: l
          do l2=1,lemax ! legendre polynomial index: l'
              lfun(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
          enddo ! over l2={1,lemax} loop
      enddo ! over l1={1,lemax} loop
 
-! prepare some important arrays: pfun
+     ! prepare some important arrays: pfun
      step = real(legrd - 1) / two
      do f1=1,norbs
          do is1=1,rank(f1)
              do f2=1,norbs
                  do ie2=1,rank(f2)
-! determine dt (distance) and ms (sign)
+                     ! determine dt (distance) and ms (sign)
                      dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
                      ms = sign(one, dt)
 
-! adjust dt, keep it stay in (zero, beta)
+                     ! adjust dt, keep it stay in (zero, beta)
                      if ( dt < zero ) then
                          dt = dt + beta
                      endif ! back if ( dt < zero ) block
 
-! determine index for imaginary time
+                     ! determine index for imaginary time
                      curr = nint( ( two * dt / beta ) * step ) + 1
 
-! special tricks for the first point and the last point
+                     ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == legrd ) then
                          ms = two * ms
                      endif ! back if ( curr == 1 .or. curr == legrd ) block
 
-! fill pfun
+                     ! fill pfun
                      do l1=1,lemax
                          pfun(l1,ie2,is1,f2,f1) = ms * rep_l(curr,l1)
                      enddo ! over l1={1,lemax} loop
@@ -1873,15 +1875,15 @@
          enddo ! over is1={1,rank(f1)} loop
      enddo ! over f1={1,norbs} loop
 
-! prepare some important arrays: caux1 and caux2
+     ! prepare some important arrays: caux1 and caux2
      do f1=1,norbs
          call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
      enddo ! over f1={1,norbs} loop
 
-! calculate g2ph and h2ph
-!
-! G2_PH_AABB component
-!-------------------------------------------------------------------------
+     ! calculate g2ph and h2ph
+     !
+     ! G2_PH_AABB component
+     !--------------------------------------------------------------------
      CALC_G2_PH_AABB: BLOCK
 
          if ( btest(isvrt,1) ) then
@@ -1920,8 +1922,8 @@
 
      END BLOCK CALC_G2_PH_AABB
 
-! G2_PH_ABBA component
-!-------------------------------------------------------------------------
+     ! G2_PH_ABBA component
+     !--------------------------------------------------------------------
      CALC_G2_PH_ABBA: BLOCK
 
          if ( btest(isvrt,2) ) then
@@ -1960,11 +1962,13 @@
 
      END BLOCK CALC_G2_PH_ABBA
 
-! deallocate memory
+     ! deallocate memory
      deallocate( lfun  )
      deallocate( pfun  )
      deallocate( caux1 )
      deallocate( caux2 )
+
+!! body]
 
      return
   end subroutine cat_record_g2ph_leg
