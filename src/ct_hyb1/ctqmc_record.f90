@@ -757,16 +757,18 @@
 
      implicit none
 
-! local variables
-! loop index for flavor channel
+!! local variables
+     ! loop index for flavor channel
      integer :: i
      integer :: j
 
-! check whether there is conflict
+!! [body
+
+     ! check whether there is conflict
      call s_assert2( btest(isobs, 1), 'in ctqmc_record_kmat' )
 
-! since rank means the number of operator pairs, so we have to multiply
-! it with two
+     ! since rank means the number of operator pairs, so we have to
+     ! multiply it with two
      do i=1,norbs
          knop(i) = knop(i) + rank(i) * 2.0_dp
      enddo ! over i={1,norbs} loop
@@ -776,6 +778,8 @@
              kmat(i,j) = kmat(i,j) + rank(i) * rank(j) * 4.0_dp
          enddo ! over i={1,norbs} loop
      enddo ! over j={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_kmat
