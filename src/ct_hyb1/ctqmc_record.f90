@@ -3455,22 +3455,24 @@
 
      implicit none
 
-! external arguments
-! impurity green's function
+!! external arguments
+     ! impurity green's function
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
-! initialize gtau_mpi and gtau_err
+!! [body
+
+     ! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
      gtau_err = zero
 
 ! build gtau_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(gtau, gtau_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3479,24 +3481,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      gtau_mpi = gtau_mpi / real(nprocs)
 
 ! build gtau_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_gtau
