@@ -715,32 +715,34 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: fup
      integer, intent(in) :: fdn
 
-! maximum rank order for current flavor channel
+     ! maximum rank order for current flavor channel
      integer, intent(in) :: kmax
 
-! local variables
-! maximum memory index accessed by index_s and index_e
+!! local variables
+     ! maximum memory index accessed by index_s and index_e
      integer :: ismax
      integer :: iemax
 
-! dummy copy for rank and stts
+     ! dummy copy for rank and stts
      integer :: Trank
      integer :: Tstts
 
-! dummy copy for empty_s and empty_e
+     ! dummy copy for empty_s and empty_e
      type (istack) :: Tempty_s
      type (istack) :: Tempty_e
 
-! allocate memory for Tempty_s and Tempty_e
+!! [body
+
+     ! allocate memory for Tempty_s and Tempty_e
      call istack_create(Tempty_s, mkink)
      call istack_create(Tempty_e, mkink)
 
-! swap empty_s and empty_e
+     ! swap empty_s and empty_e
      call istack_copyer(empty_s(fup), Tempty_s)
      call istack_copyer(empty_e(fup), Tempty_e)
 
@@ -750,46 +752,48 @@
      call istack_copyer(Tempty_s, empty_s(fdn))
      call istack_copyer(Tempty_e, empty_e(fdn))
 
-! deallocate memory for Tempty_s and Tempty_e
+     ! deallocate memory for Tempty_s and Tempty_e
      call istack_destroy(Tempty_s)
      call istack_destroy(Tempty_e)
 
-! swap rank
+     ! swap rank
      Trank = rank(fup)
      rank(fup) = rank(fdn)
      rank(fdn) = Trank
 
-! swap stts
+     ! swap stts
      Tstts = stts(fup)
      stts(fup) = stts(fdn)
      stts(fdn) = Tstts
 
-! swap gmat matrix when needed
+     ! swap gmat matrix when needed
      call s_swap_z(nfreq, gmat(1:nfreq, fup, fup), gmat(1:nfreq, fdn, fdn))
 
      if ( kmax > 0 ) then
 
-! determine ismax and iemax
+         ! determine ismax and iemax
          ismax = max( maxval( index_s(1:kmax, fup) ), maxval( index_s(1:kmax, fdn) ) )
          iemax = max( maxval( index_e(1:kmax, fup) ), maxval( index_e(1:kmax, fdn) ) )
 
-! swap index_s and index_e
+         ! swap index_s and index_e
          call s_swap_i(kmax, index_s(1:kmax, fup), index_s(1:kmax, fdn))
          call s_swap_i(kmax, index_e(1:kmax, fup), index_e(1:kmax, fdn))
 
-! swap time_s and time_e
+         ! swap time_s and time_e
          call s_swap_d(ismax, time_s(1:ismax, fup), time_s(1:ismax, fdn))
          call s_swap_d(iemax, time_e(1:iemax, fup), time_e(1:iemax, fdn))
 
-! swap exp_s and exp_e
+         ! swap exp_s and exp_e
          call s_swap_z(nfreq*ismax, exp_s(1:nfreq, 1:ismax, fup), exp_s(1:nfreq, 1:ismax, fdn))
          call s_swap_z(nfreq*iemax, exp_e(1:nfreq, 1:iemax, fup), exp_e(1:nfreq, 1:iemax, fdn))
 
-! update mmat and gmat matrix when needed
+         ! update mmat and gmat matrix when needed
          if ( rank(fup) > 0 ) call cat_reload_matrix(fup)
          if ( rank(fdn) > 0 ) call cat_reload_matrix(fdn)
 
      endif ! back if ( kmax > 0 ) block
+
+!! body]
 
      return
   end subroutine cat_reflip_matrix
