@@ -863,46 +863,48 @@
 
      implicit none
 
-! external arguments
-! orthogonal polynomial coefficients for impurity green's function
+!! external arguments
+     ! orthogonal polynomial coefficients for impurity green's function
      real(dp), intent(in) :: gaux(ntime,norbs,norbs)
 
-! calculated impurity green's function
+     ! calculated impurity green's function
      complex(dp), intent(out) :: grnf(mfreq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
 
-! index for imaginary time \tau
+     ! index for imaginary time \tau
      integer  :: curr
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! dummy real(dp) variable
+     ! dummy real(dp) variable
      real(dp) :: raux
 
-! step for the linear frequency mesh
+     ! step for the linear frequency mesh
      real(dp) :: step
 
-! j_n(x), for legendre orthogonal polynomial representation
+     ! j_n(x), for legendre orthogonal polynomial representation
      real(dp), allocatable :: pfun(:,:)
 
-! u_l(x(\tau)), for svd orthogonal polynomial representation
+     ! u_l(x(\tau)), for svd orthogonal polynomial representation
      real(dp), allocatable :: ufun(:,:)
 
-! calculated impurity green's function, imaginary time axis
+     ! calculated impurity green's function, imaginary time axis
      real(dp), allocatable :: gtau(:,:,:)
 
-! unitary transformation matrix for orthogonal polynomials
+     ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
      complex(dp), allocatable :: tmpi(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(pfun(mfreq,lemax), stat=istat)
      allocate(ufun(ntime,svmax), stat=istat)
 
@@ -916,27 +918,27 @@
          call s_print_error('ctqmc_tran_grnf','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-!-------------------------------------------------------------------------
-! using normal representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using normal representation
+     !--------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
          call ctqmc_tran_gtau(gaux, gtau)
          call ctqmc_four_htau(gtau, grnf)
      endif STD_BLOCK ! back if ( isort == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using legendre orthogonal polynomial representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using legendre orthogonal polynomial representation
+     !--------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
 
-! calculate spherical Bessel functions at first
+         ! calculate spherical Bessel functions at first
          pfun = zero
          do k=1,mfreq
              call s_sph_jl(lemax-1, rmesh(k) * beta / two, pfun(k,:))
          enddo ! over k={1,mfreq} loop
 
-! build unitary transformation matrix: tleg
+         ! build unitary transformation matrix: tleg
          tleg = czero
          do i=1,lemax
              raux = sqrt(two * i - one)
@@ -945,12 +947,12 @@
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,lemax} loop
 
-! normalize tleg
-! note: the beta is from Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
+         ! normalize tleg
+         ! note: the beta is from Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
          tleg = tleg / beta
 
-! build impurity green's function on matsubara frequency using orthogonal
-! polynomial representation: grnf
+         ! build impurity green's function on matsubara frequency using
+         ! orthogonal polynomial representation: grnf
          grnf = czero
          do i=1,norbs
              do j=1,lemax
@@ -961,7 +963,7 @@
          enddo ! over i={1,norbs} loop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 ! using svd orthogonal polynomial representation
