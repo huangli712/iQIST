@@ -1908,39 +1908,43 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: k
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! it is used to backup the sampled impurity green's function
+     ! it is used to backup the sampled impurity green's function
      complex(dp), allocatable :: gtmp(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(gtmp(nfreq,norbs,norbs), stat=istat)
 
-! backup the sampled impurity green's function
+     ! backup the sampled impurity green's function
      gtmp = grnf(1:nfreq,:,:)
 
-! build impurity green's function and auxiliary correlation function
+     ! build impurity green's function and auxiliary correlation function
      call ctqmc_tran_grnf(gtau, grnf)
      call ctqmc_tran_grnf(ftau, frnf)
 
-! build final self-energy function by using improved estimator
+     ! build final self-energy function by using improved estimator
      do i=1,norbs
          do k=1,mfreq
              sig2(k,i,i) = frnf(k,i,i) / grnf(k,i,i)
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
 
-! restore the sampled impurity green's function
+     ! restore the sampled impurity green's function
      grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
 
-! deallocate memory
+     ! deallocate memory
      deallocate(gtmp)
+
+!! body]
 
      return
   end subroutine ctqmc_make_hub2
