@@ -1058,47 +1058,49 @@
 
      implicit none
 
-! external arguments
-! orthogonal polynomial coefficients for two-particle green's function
+!! external arguments
+     ! orthogonal polynomial coefficients for two-particle green's function
      complex(dp), intent(in)  :: gaux(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! calculated two-particle green's function
+     ! calculated two-particle green's function
      complex(dp), intent(out) :: grnf(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
      integer  :: l
 
-! index for imaginary time \tau
+     ! index for imaginary time \tau
      integer  :: curr
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! dummy real(dp) variable
+     ! dummy real(dp) variable
      real(dp) :: raux
 
-! step for the linear frequency mesh
+     ! step for the linear frequency mesh
      real(dp) :: step
 
-! symmetric fermionic matsubara frequency mesh
+     ! symmetric fermionic matsubara frequency mesh
      real(dp), allocatable :: fmesh(:)
 
-! p_l(x(\tau)), for legendre orthogonal polynomial representation
+     ! p_l(x(\tau)), for legendre orthogonal polynomial representation
      real(dp), allocatable :: pfun(:,:)
 
-! u_l(x(\tau)), for svd orthogonal polynomial representation
+     ! u_l(x(\tau)), for svd orthogonal polynomial representation
      real(dp), allocatable :: ufun(:,:)
 
-! unitary transformation matrix for orthogonal polynomials
+     ! unitary transformation matrix for orthogonal polynomials
      complex(dp), allocatable :: tleg(:,:)
      complex(dp), allocatable :: tsvd(:,:)
      complex(dp), allocatable :: tmpi(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(fmesh(nffrq),      stat=istat)
      allocate(pfun(ntime,lemax), stat=istat)
      allocate(ufun(ntime,svmax), stat=istat)
@@ -1109,27 +1111,27 @@
          call s_print_error('ctqmc_tran_twop','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! build symmetric fermionic matsubara frequency mesh
+     ! build symmetric fermionic matsubara frequency mesh
      do i=nffrq/2+1,nffrq
          fmesh(i) = rmesh(i-nffrq/2)  ! > 0
          fmesh(nffrq-i+1) = -fmesh(i) ! < 0
      enddo ! over i={nffrq/2+1,nffrq} loop
 
-!-------------------------------------------------------------------------
-! using normal representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using normal representation
+     !--------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
          allocate(tmpi(  1  ,  1  ), stat=istat); tmpi = czero
          grnf = gaux
      endif STD_BLOCK ! back if ( isort == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using legendre orthogonal polynomial representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using legendre orthogonal polynomial representation
+     !--------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
 
-! copy rep_l to pfun, prepare p_l(x(\tau))
+         ! copy rep_l to pfun, prepare p_l(x(\tau))
          step = real(legrd - 1) / two
          do i=1,ntime
              raux = two * tmesh(i) / beta
@@ -1137,10 +1139,10 @@
              pfun(i,:) = rep_l(curr,:)
          enddo ! over i={1,ntime} loop
 
-! build unitary transformation matrix: tleg
-! we do the fourier transformation directly using Eq. (E1) in Phys. Rev.
-! B 84, 075145 (2011). the advantage is that it doesn't depend on the
-! spherical Bessel functions any more
+         ! build unitary transformation matrix: tleg
+         ! we do the fourier transformation directly using Eq. (E1) in
+         ! Phys. Rev. B 84, 075145 (2011). the advantage is that it
+         ! doesn't depend on the spherical Bessel functions any more
          allocate(tmpi(nffrq,lemax), stat=istat); tmpi = czero
          do i=1+myid,lemax,nprocs
              call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, fmesh, tmpi(:,i))
@@ -1150,10 +1152,10 @@
 ! build tleg, collect data from children processes
 # if defined (MPI)
 
-! collect data
+         ! collect data
          call mp_allreduce(tmpi, tleg)
 
-! block until all processes have reached here
+         ! block until all processes have reached here
          call mp_barrier()
 
 # else  /* MPI */
@@ -1162,12 +1164,12 @@
 
 # endif /* MPI */
 
-! normalize tleg
-! note: the beta is from Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
+         ! normalize tleg
+         ! note: the beta is from Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
          tleg = tleg / beta
 
-! build two-particle green's function on matsubara frequency using
-! orthogonal polynomial representation: grnf
+         ! build two-particle green's function on matsubara frequency
+         ! using orthogonal polynomial representation: grnf
          grnf = czero
          do i=1,nffrq             ! for v' index
              do j=1,nffrq         ! for v  index
@@ -1183,14 +1185,14 @@
          enddo ! over i={1,nffrq} loop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using svd orthogonal polynomial representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using svd orthogonal polynomial representation
+     !--------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
 
-! copy rep_s to ufun, prepare u_l(x(\tau))
+         ! copy rep_s to ufun, prepare u_l(x(\tau))
          step = real(svgrd - 1) / two
          do i=1,ntime
              raux = two * tmesh(i) / beta - one
@@ -1198,8 +1200,8 @@
              ufun(i,:) = rep_s(curr,:)
          enddo ! over i={1,ntime} loop
 
-! build unitary transformation matrix: tsvd
-! actually, we do the fourier transformation
+         ! build unitary transformation matrix: tsvd
+         ! actually, we do the fourier transformation
          allocate(tmpi(nffrq,svmax), stat=istat); tmpi = czero
          do i=1+myid,svmax,nprocs
              call s_fft_forward(ntime, tmesh, ufun(:,i), nffrq, fmesh, tmpi(:,i))
@@ -1208,10 +1210,10 @@
 ! build tsvd, collect data from children processes
 # if defined (MPI)
 
-! collect data
+         ! collect data
          call mp_allreduce(tmpi, tsvd)
 
-! block until all processes have reached here
+         ! block until all processes have reached here
          call mp_barrier()
 
 # else  /* MPI */
@@ -1220,11 +1222,11 @@
 
 # endif /* MPI */
 
-! normalize tsvd
+         ! normalize tsvd
          tsvd = tsvd * (two / beta)
 
-! build two-particle green's function on matsubara frequency using
-! orthogonal polynomial representation: grnf
+         ! build two-particle green's function on matsubara frequency
+         ! using svd orthogonal polynomial representation: grnf
          grnf = czero
          do i=1,nffrq             ! for v' index
              do j=1,nffrq         ! for v  index
@@ -1240,15 +1242,17 @@
          enddo ! over i={1,nffrq} loop
 
      endif SVD_BLOCK ! back if ( isort == 3 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! deallocate memory
+     ! deallocate memory
      deallocate(fmesh)
      deallocate(pfun)
      deallocate(ufun)
      deallocate(tleg)
      deallocate(tsvd)
      deallocate(tmpi)
+
+!! body]
 
      return
   end subroutine ctqmc_tran_twop
