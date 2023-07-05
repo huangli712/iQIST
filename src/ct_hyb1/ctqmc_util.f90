@@ -371,30 +371,36 @@
 
      implicit none
 
-! external arguments
-! order for derivates
-! if mode = 1, K(\tau), ktau is considered
-! if mode = 2, K'(\tau), ptau is considered
+!! external arguments
+     ! order for derivates
+     ! if mode = 1, K(\tau), ktau is considered
+     ! if mode = 2, K'(\tau), ptau is considered
      integer, intent(in)  :: mode
 
-! current imaginary time
+     ! current imaginary time
      real(dp), intent(in) :: dtau
 
-! external functions
-! internal interpolation engine
+!! external functions
+     ! internal interpolation engine
      procedure( real(dp) ) :: s_spl_funct
 
-! local variables
-! return value
+!! local variables
+     ! return value
      real(dp) :: val
 
-! using cubic spline interpolation for K(\tau)
+!! [body
+
+     ! using cubic spline interpolation for K(\tau)
      if ( mode == 1 ) then
          val = s_spl_funct(ntime, tmesh, ktau, ksed, dtau)
-! using cubic spline interpolation for K'(\tau)
+     !
+     ! using cubic spline interpolation for K'(\tau)
      else
          val = s_spl_funct(ntime, tmesh, ptau, psed, dtau)
+     !
      endif ! back if ( mode == 1 ) block
+
+!! body]
 
      return
   end function ctqmc_eval_ktau
