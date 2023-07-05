@@ -1623,45 +1623,47 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! combination of nffrq and nbfrq
+     ! combination of nffrq and nbfrq
      integer, intent(in) :: nfaux
 
-! maximum number of operators in different flavor channels
+     ! maximum number of operators in different flavor channels
      integer, intent(in) :: mrank
 
-! matsubara frequency exponents for creation operators
+     ! matsubara frequency exponents for creation operators
      complex(dp), intent(out) :: caux1(nfaux,mrank)
 
-! matsubara frequency exponents for annihilation operators
+     ! matsubara frequency exponents for annihilation operators
      complex(dp), intent(out) :: caux2(nfaux,mrank)
 
-! local variables
-! loop indices for start and end points
+!! local variables
+     ! loop indices for start and end points
      integer :: is
      integer :: ie
 
-! loop index for frequency
+     ! loop index for frequency
      integer :: ix
 
-! index for frequency
+     ! index for frequency
      integer :: ir
 
-! make sure nfreq is larger than nfaux, or else this subroutine will fail
+!! [body
+
+     ! make sure nfreq is larger than nfaux, or else this subroutine will fail
      call s_assert2( nfreq > nfaux, 'in ctqmc_make_fexp' )
 
-! creation operators
-!-------------------------------------------------------------------------
-! for each \tau_s, we try to calculate
-!     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
-!     \omega_n = -(v + w), v: -v ---> +v, w: -0 ---> +w
-! so,
-!     \omega_n = +v,   when n = 1
-!     \omega_n = -v-w, when n = nfaux
-!
+     ! creation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_s, we try to calculate
+     !     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+     !     \omega_n = -(v + w), v: -v ---> +v, w: -0 ---> +w
+     ! so,
+     !     \omega_n = +v,   when n = 1
+     !     \omega_n = -v-w, when n = nfaux
+     !
      do is=1,rank(flvr)
          do ix=1,nffrq/2
              ir = nffrq / 2 + 1 - ix
@@ -1674,15 +1676,15 @@
          enddo ! over ix={nffrq/2+1,nfaux} loop
      enddo ! over is={1,rank(flvr)} loop
 
-! annihilation operators
-!-------------------------------------------------------------------------
-! for each \tau_e, we try to calculate
-!     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
-!     \omega_n = +(v + w), v: -v ---> +v, w: -0 ---> +w
-! so,
-!     \omega_n = -v,   when n = 1
-!     \omega_n = +v+w, when n = nfaux
-!
+     ! annihilation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_e, we try to calculate
+     !     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+     !     \omega_n = +(v + w), v: -v ---> +v, w: -0 ---> +w
+     ! so,
+     !     \omega_n = -v,   when n = 1
+     !     \omega_n = +v+w, when n = nfaux
+     !
      do ie=1,rank(flvr)
          do ix=1,nffrq/2
              ir = -nffrq/2 + ix
@@ -1694,6 +1696,8 @@
              caux2(ix,ie) = exp_e(ir, index_e(ie, flvr), flvr)
          enddo ! over ix={nffrq/2+1,nfaux} loop
      enddo ! over ie={1,rank(flvr)} loop
+
+!! body]
 
      return
   end subroutine ctqmc_make_fexp
