@@ -664,32 +664,34 @@
 
      implicit none
 
-! external arguments
-! symmetry vector
+!! external arguments
+     ! symmetry vector
      integer, intent(in) :: symm(norbs)
 
-! occupation number
+     ! occupation number
      real(dp), intent(inout) :: nimp(norbs)
 
-! local variables
-! loop index over bands
+!! local variables
+     ! loop index over bands
      integer  :: ibnd
      integer  :: jbnd
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! histogram vector
-! note: it is NOT the global one
+     ! histogram vector
+     ! note: it is NOT the global one
      integer  :: hist(norbs)
 
-! build histogram
+!! [body
+
+     ! build histogram
      hist = 0
      do ibnd=1,norbs
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals with the same symmetry
+     ! perform symmetrization for those orbitals with the same symmetry
      if ( isbnd == 2 ) then
          do ibnd=1,norbs
              if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
@@ -712,7 +714,7 @@
          enddo ! over ibnd={1,norbs} loop
      endif ! back if ( isbnd == 2 ) block
 
-! symmetrize nimp over spin
+     ! symmetrize nimp over spin
      if ( isspn == 2 ) then
          do jbnd=1,nband
              raux = ( nimp(jbnd) + nimp(jbnd+nband) ) / two
@@ -720,6 +722,8 @@
              nimp(jbnd+nband) = raux
          enddo ! over jbnd={1,nband} loop
      endif ! back if ( isspn == 2 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_symm_nimp
