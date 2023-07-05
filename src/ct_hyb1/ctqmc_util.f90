@@ -1392,22 +1392,24 @@
 
      implicit none
 
-! external arguments
-! Coulomb interaction matrix
+!! external arguments
+     ! Coulomb interaction matrix
      real(dp), intent(inout) :: umat(norbs,norbs)
 
-! sign for the shift, it should be 1.0_dp or -1.0_dp
+     ! sign for the shift, it should be 1.0_dp or -1.0_dp
      real(dp), intent(in)    :: ssign
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! Coulomb interaction shift introduced by dynamic screening effect
+     ! Coulomb interaction shift introduced by dynamic screening effect
      real(dp) :: shift
 
-! evaluate Coulomb interaction shift
+!! [body
+
+     ! evaluate Coulomb interaction shift
      DYNAMIC_MODEL: select case ( isscr )
 
          case (1) ! static interaction
@@ -1424,10 +1426,10 @@
 
      end select DYNAMIC_MODEL
 
-! multiple the shift with sign
+     ! multiple the shift with sign
      shift = shift * ssign
 
-! shift the Coulomb interaction matrix (skip the diagonal elements)
+     ! shift the Coulomb interaction matrix (skip the diagonal elements)
      do i=1,norbs-1
          do j=i+1,norbs
              umat(i,j) = umat(i,j) - shift
@@ -1435,8 +1437,10 @@
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
-! shift chemical potential as a byproduct
+     ! shift chemical potential as a byproduct
      mune = mune - shift / two
+
+!! body]
 
      return
   end subroutine ctqmc_make_lift
