@@ -1468,31 +1468,33 @@
 
      implicit none
 
-! external arguments
-! imaginary time point, in principle, it is \tau_end
+!! external arguments
+     ! imaginary time point, in principle, it is \tau_end
      real(dp), intent(in)  :: time
 
-! integral value for I(\tau_end)
+     ! integral value for I(\tau_end)
      real(dp), intent(out) :: iret
 
-! local variables
-! loop index for start and end points
+!! local variables
+     ! loop index for start and end points
      integer  :: it
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: flvr
 
-! length betweem two time points
+     ! length betweem two time points
      real(dp) :: dtau
      real(dp) :: daux
 
-! init integral I(\tau_end)
+!! [body
+
+     ! init integral I(\tau_end)
      iret = zero
 
      FLVR_CYCLE: do flvr=1,norbs
          do it=1,rank(flvr)
 
-! contribution from creation operators
+             ! contribution from creation operators
              dtau = time_s( index_s(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
                  call cat_weight_kernel(2, +dtau, daux)
@@ -1502,7 +1504,7 @@
                  iret = iret - daux
              endif ! back if ( dtau >= zero ) block
 
-! contribution from annihilation operators
+             ! contribution from annihilation operators
              dtau = time_e( index_e(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
                  call cat_weight_kernel(2, +dtau, daux)
@@ -1515,11 +1517,11 @@
          enddo ! over it={1,rank(flvr)} loop
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 
-! add additional term: -2K'(0^+)
-! note: this static contribution should already be accounted for by the
-! renormalization of the static U
-!<     call cat_weight_kernel(2, zero, daux)
-!<     iret = -iret - two * daux
+!<   ! add additional term: -2K'(0^+)
+!<   ! note: this static contribution should already be accounted for by the
+!<   ! renormalization of the static U
+!<   call cat_weight_kernel(2, zero, daux)
+!<   iret = -iret - two * daux
      iret = -iret
 
      return
