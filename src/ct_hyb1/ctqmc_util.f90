@@ -601,13 +601,15 @@
      ! note: it is NOT the global one
      integer :: hist(norbs)
 
+!! [body
+
      ! build histogram
      hist = 0
      do ibnd=1,norbs
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals with the same symmetry
+     ! perform symmetrization for those orbitals with the same symmetry
      if ( isbnd == 2 ) then
          do kfrq=1,mfreq
              do ibnd=1,norbs
@@ -632,7 +634,7 @@
          enddo ! over kfrq={1,mfreq} loop
      endif ! back if ( isbnd == 2 ) block
 
-! symmetrize grnf over spin
+     ! symmetrize grnf over spin
      if ( isspn == 2 ) then
          do kfrq=1,mfreq
              do jbnd=1,nband
@@ -642,6 +644,8 @@
              enddo ! over jbnd={1,nband} loop
          enddo ! over kfrq={1,mfreq} loop
      endif ! back if ( isspn == 2 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_symm_grnf
