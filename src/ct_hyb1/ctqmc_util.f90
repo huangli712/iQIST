@@ -233,22 +233,26 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! delta imaginary time
+     ! delta imaginary time
      real(dp), intent(in) :: dtau
 
-! external functions
-! internal interpolation engine
+!! external functions
+     ! internal interpolation engine
      procedure( real(dp) ) :: s_spl_funct
 
-! local variables
-! return value
+!! local variables
+     ! return value
      real(dp) :: val
 
+!! [body
+
      val = s_spl_funct(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
+
+!! body]
 
      return
   end function ctqmc_eval_htau
