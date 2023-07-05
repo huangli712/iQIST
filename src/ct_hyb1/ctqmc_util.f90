@@ -275,65 +275,69 @@
 
      implicit none
 
-! external arguments
-! hybridization function on imaginary time axis
+!! external arguments
+     ! hybridization function on imaginary time axis
      real(dp), intent(in)  :: htau(ntime,norbs,norbs)
 
-! second order derivates of hybridization function
+     ! second order derivates of hybridization function
      real(dp), intent(out) :: hsed(ntime,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! first derivate at start point
+     ! first derivate at start point
      real(dp) :: startu
 
-! first derivate at end   point
+     ! first derivate at end   point
      real(dp) :: startd
 
-! \delta \tau
+     ! \delta \tau
      real(dp) :: deltau
 
-! second-order derivates
+     ! second-order derivates
      real(dp) :: d2y(ntime)
 
-! calculate deltau
+!! [body
+
+     ! calculate deltau
      deltau = beta / real(ntime - 1)
 
-! initialize hsed
+     ! initialize hsed
      hsed = zero
 
-! calculate it
+     ! calculate it
      do j=1,norbs
          do i=1,norbs
 
-! calculate first-order derivate of \Delta(0): startu
+             ! calculate first-order derivate of \Delta(0): startu
              startu = (-25.0_dp*htau(1,       i, j) + &
                         48.0_dp*htau(2,       i, j) - &
                         36.0_dp*htau(3,       i, j) + &
                         16.0_dp*htau(4,       i, j) - &
                          3.0_dp*htau(5,       i, j)) / 12.0_dp / deltau
 
-! calculate first-order derivate of \Delta(\beta): startd
+             ! calculate first-order derivate of \Delta(\beta): startd
              startd = ( 25.0_dp*htau(ntime-0, i, j) - &
                         48.0_dp*htau(ntime-1, i, j) + &
                         36.0_dp*htau(ntime-2, i, j) - &
                         16.0_dp*htau(ntime-3, i, j) + &
                          3.0_dp*htau(ntime-4, i, j)) / 12.0_dp / deltau
 
-! reinitialize d2y to zero
+             ! reinitialize d2y to zero
              d2y = zero
 
-! call the service layer
+             ! call the service layer
              call s_spl_deriv2(ntime, tmesh, htau(:,i,j), startu, startd, d2y)
 
-! copy the results to hsed
+             ! copy the results to hsed
              hsed(:,i,j) = d2y
 
          enddo ! over i={1,norbs} loop
      enddo ! over j={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_eval_hsed
