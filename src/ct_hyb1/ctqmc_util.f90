@@ -1,30 +1,30 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : iqist @ narcissus
 !!! program : ctqmc_four_htau
-!!!           ctqmc_four_hybf <<<---
+!!!           ctqmc_four_hybf
 !!!           ctqmc_eval_htau
-!!!           ctqmc_eval_hsed <<<---
+!!!           ctqmc_eval_hsed
 !!!           ctqmc_eval_ktau
-!!!           ctqmc_eval_ksed <<<---
+!!!           ctqmc_eval_ksed
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf
-!!!           ctqmc_symm_nimp <<<---
+!!!           ctqmc_symm_nimp
 !!!           ctqmc_tran_gtau
 !!!           ctqmc_tran_grnf
-!!!           ctqmc_tran_twop <<<---
-!!!           ctqmc_make_fock <<<---
-!!!           ctqmc_make_umat <<<---
-!!!           ctqmc_make_lift <<<---
+!!!           ctqmc_tran_twop
+!!!           ctqmc_make_fock
+!!!           ctqmc_make_umat
+!!!           ctqmc_make_lift
 !!!           ctqmc_make_iret
-!!!           ctqmc_make_pref <<<---
+!!!           ctqmc_make_pref
 !!!           ctqmc_make_fexp
-!!!           ctqmc_make_bexp <<<---
-!!!           ctqmc_make_hub2 <<<---
+!!!           ctqmc_make_bexp
+!!!           ctqmc_make_hub2
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           08/17/2017 by li huang (last modified)
+!!!           07/05/2023 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
