@@ -1732,41 +1732,41 @@
 !<
 !<     implicit none
 !<
-!<! external arguments
-!<! current flavor channel
+!<!! external arguments
+!<     ! current flavor channel
 !<     integer, intent(in) :: flvr
 !<
-!<! combination of nffrq and nbfrq
+!<     ! combination of nffrq and nbfrq
 !<     integer, intent(in) :: nfaux
 !<
-!<! maximum number of operators in different flavor channels
+!<     ! maximum number of operators in different flavor channels
 !<     integer, intent(in) :: mrank
 !<
-!<! matsubara frequency exponents for creation operators
+!<     ! matsubara frequency exponents for creation operators
 !<     complex(dp), intent(out) :: caux1(nfaux,mrank)
 !<
-!<! matsubara frequency exponents for annihilation operators
+!<     ! matsubara frequency exponents for annihilation operators
 !<     complex(dp), intent(out) :: caux2(nfaux,mrank)
 !<
-!<! local variables
-!<! loop indices for start and end points
+!<!! local variables
+!<     ! loop indices for start and end points
 !<     integer :: is
 !<     integer :: ie
 !<
-!<! imaginary time for start and end points
-!<! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
+!<     ! imaginary time for start and end points
+!<     ! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
 !<     complex(dp) :: zs
 !<     complex(dp) :: ze
 !<
-!<! creation operators
-!<!-------------------------------------------------------------------------
-!<! for each \tau_s, we try to calculate
-!<!     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
-!<!     \omega_n = -(v + w), v: -v ---> +v, w: -0 ---> +w
-!<! so,
-!<!     \omega_n = +v,   when n = 1
-!<!     \omega_n = -v-w, when n = nfaux
-!<!
+!<     ! creation operators
+!<     !------------------------------------------------------------------
+!<     ! for each \tau_s, we try to calculate
+!<     !     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+!<     !     \omega_n = -(v + w), v: -v ---> +v, w: -0 ---> +w
+!<     ! so,
+!<     !     \omega_n = +v,   when n = 1
+!<     !     \omega_n = -v-w, when n = nfaux
+!<     !
 !<     do is=1,rank(flvr)
 !<         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
 !<         caux1(:,is) = exp(-two * zs)
