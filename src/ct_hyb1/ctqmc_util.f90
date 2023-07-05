@@ -1758,6 +1758,8 @@
 !<     complex(dp) :: zs
 !<     complex(dp) :: ze
 !<
+!<!! [body
+!<
 !<     ! creation operators
 !<     !------------------------------------------------------------------
 !<     ! for each \tau_s, we try to calculate
@@ -1774,21 +1776,23 @@
 !<         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * zs)
 !<     enddo ! over is={1,rank(flvr)} loop
 !<
-!<! annihilation operators
-!<!-------------------------------------------------------------------------
-!<! for each \tau_e, we try to calculate
-!<!     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
-!<!     \omega_n = +(v + w), v: -v ---> +v, w: -0 ---> +w
-!<! so,
-!<!     \omega_n = -v,   when n = 1
-!<!     \omega_n = +v+w, when n = nfaux
-!<!
+!<     ! annihilation operators
+!<     !------------------------------------------------------------------
+!<     ! for each \tau_e, we try to calculate
+!<     !     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+!<     !     \omega_n = +(v + w), v: -v ---> +v, w: -0 ---> +w
+!<     ! so,
+!<     !     \omega_n = -v,   when n = 1
+!<     !     \omega_n = +v+w, when n = nfaux
+!<     !
 !<     do ie=1,rank(flvr)
 !<         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
 !<         caux2(:,ie) = exp(+two * ze)
 !<         call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
 !<         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * ze)
 !<     enddo ! over ie={1,rank(flvr)} loop
+!<
+!<!! body]
 !<
 !<     return
 !<  end subroutine ctqmc_make_fexp
