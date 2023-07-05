@@ -965,12 +965,12 @@
      endif LEG_BLOCK ! back if ( isort == 2 ) block
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using svd orthogonal polynomial representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using svd orthogonal polynomial representation
+     !--------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
 
-! copy rep_s to ufun, prepare u_l(x(\tau))
+         ! copy rep_s to ufun, prepare u_l(x(\tau))
          step = real(svgrd - 1) / two
          do i=1,ntime
              raux = two * tmesh(i) / beta - one
@@ -978,8 +978,8 @@
              ufun(i,:) = rep_s(curr,:)
          enddo ! over i={1,ntime} loop
 
-! build unitary transformation matrix: tsvd
-! actually, we do the fourier transformation
+         ! build unitary transformation matrix: tsvd
+         ! actually, we do the fourier transformation
          tmpi = czero
          do i=1+myid,svmax,nprocs
              call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tmpi(:,i))
@@ -988,10 +988,10 @@
 ! build tsvd, collect data from children processes
 # if defined (MPI)
 
-! collect data
+         ! collect data
          call mp_allreduce(tmpi, tsvd)
 
-! block until all processes have reached here
+         ! block until all processes have reached here
          call mp_barrier()
 
 # else  /* MPI */
@@ -1000,13 +1000,13 @@
 
 # endif /* MPI */
 
-! normalize tsvd
-! note: the first beta is from Eq. (C19), while the second beta is from
-! Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
+         ! normalize tsvd
+         ! note: the first beta is from Eq. (C19), while the second beta
+         ! is from Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
          tsvd = tsvd * (two / beta / beta)
 
-! build impurity green's function on matsubara frequency using orthogonal
-! polynomial representation: grnf
+         ! build impurity green's function on matsubara frequency using
+         ! orthogonal polynomial representation: grnf
          grnf = czero
          do i=1,norbs
              do j=1,svmax
@@ -1017,9 +1017,11 @@
          enddo ! over i={1,norbs} loop
 
      endif SVD_BLOCK ! back if ( isort == 3 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! deallocate memory
+!! body]
+
+     ! deallocate memory
      deallocate(pfun)
      deallocate(ufun)
      deallocate(gtau)
