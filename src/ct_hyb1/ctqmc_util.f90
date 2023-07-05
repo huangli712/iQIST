@@ -753,37 +753,39 @@
 
      implicit none
 
-! external arguments
-! impurity green's function/orthogonal polynomial coefficients
+!! external arguments
+     ! impurity green's function/orthogonal polynomial coefficients
      real(dp), intent(in)  :: gaux(ntime,norbs,norbs)
 
-! calculated impurity green's function
+     ! calculated impurity green's function
      real(dp), intent(out) :: gtau(ntime,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! loop index for orthogonal polynomial
+     ! loop index for orthogonal polynomial
      integer  :: fleg
      integer  :: fsvd
 
-! index for imaginary time \tau
+     ! index for imaginary time \tau
      integer  :: curr
 
-! interval for imaginary time slice
+     ! interval for imaginary time slice
      real(dp) :: step
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! initialize gtau
+!! [body
+
+     ! initialize gtau
      gtau = zero
 
-!-------------------------------------------------------------------------
-! using normal representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using normal representation
+     !--------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
          raux = real(ntime) / (beta * beta)
          do i=1,norbs
@@ -792,11 +794,11 @@
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
      endif STD_BLOCK ! back if ( isort == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using legendre orthogonal polynomial representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using legendre orthogonal polynomial representation
+     !--------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
          step = real(legrd - 1) / two
          do i=1,norbs
@@ -810,11 +812,11 @@
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
      endif LEG_BLOCK ! back if ( isort == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! using svd orthogonal polynomial representation
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! using svd orthogonal polynomial representation
+     !--------------------------------------------------------------------
      SVD_BLOCK: if ( isort == 3 ) then
          step = real(svgrd - 1) / two
          do i=1,norbs
@@ -828,7 +830,9 @@
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
      endif SVD_BLOCK ! back if ( isort == 3 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!! body]
 
      return
   end subroutine ctqmc_tran_gtau
