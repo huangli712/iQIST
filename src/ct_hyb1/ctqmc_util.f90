@@ -492,35 +492,37 @@
 
      implicit none
 
-! external arguments
-! symmetry vector
+!! external arguments
+     ! symmetry vector
      integer, intent(in) :: symm(norbs)
 
-! impurity green's function
+     ! impurity green's function
      real(dp), intent(inout) :: gtau(ntime,norbs,norbs)
 
-! local variables
-! loop index over bands
+!! local variables
+     ! loop index over bands
      integer  :: ibnd
      integer  :: jbnd
 
-! loop index over imaginary time points
+     ! loop index over imaginary time points
      integer  :: ktau
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! histogram vector
-! note: it is NOT the global one
+     ! histogram vector
+     ! note: it is NOT the global one
      integer  :: hist(norbs)
 
-! build histogram
+!! [body
+
+     ! build histogram
      hist = 0
      do ibnd=1,norbs
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals with the same symmetry
+     ! perform symmetrization for those orbitals with the same symmetry
      if ( isbnd == 2 ) then
          do ktau=1,ntime
              do ibnd=1,norbs
@@ -545,7 +547,7 @@
          enddo ! over ktau={1,ntime} loop
      endif ! back if ( isbnd == 2 ) block
 
-! symmetrize gtau over spin
+     ! symmetrize gtau over spin
      if ( isspn == 2 ) then
          do ktau=1,ntime
              do jbnd=1,nband
@@ -555,6 +557,8 @@
              enddo ! over jbnd={1,nband} loop
          enddo ! over ktau={1,ntime} loop
      endif ! back if ( isspn == 2 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_symm_gtau
