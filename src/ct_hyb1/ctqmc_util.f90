@@ -424,46 +424,50 @@
 
      implicit none
 
-! external arguments
-! screening function on imaginary time axis
+!! external arguments
+     ! screening function on imaginary time axis
      real(dp), intent(in)  :: ktau(ntime)
 
-! second order derivates of screening function
+     ! second order derivates of screening function
      real(dp), intent(out) :: ksed(ntime)
 
-! local variables
-! first derivate at start point
+!! local variables
+     ! first derivate at start point
      real(dp) :: startu
 
-! first derivate at end   point
+     ! first derivate at end   point
      real(dp) :: startd
 
-! \delta \tau
+     ! \delta \tau
      real(dp) :: deltau
 
-! calculate deltau
+!! [body
+
+     ! calculate deltau
      deltau = beta / real(ntime - 1)
 
-! initialize ksed
+     ! initialize ksed
      ksed = zero
 
-! calculate it
-! calculate first-order derivate of K(0): startu
+     ! calculate it
+     ! calculate first-order derivate of K(0): startu
      startu = (-25.0_dp*ktau(1      ) + &
                 48.0_dp*ktau(2      ) - &
                 36.0_dp*ktau(3      ) + &
                 16.0_dp*ktau(4      ) - &
                  3.0_dp*ktau(5      )) / 12.0_dp / deltau
 
-! calculate first-order derivate of K(\beta): startd
+     ! calculate first-order derivate of K(\beta): startd
      startd = ( 25.0_dp*ktau(ntime-0) - &
                 48.0_dp*ktau(ntime-1) + &
                 36.0_dp*ktau(ntime-2) - &
                 16.0_dp*ktau(ntime-3) + &
                  3.0_dp*ktau(ntime-4)) / 12.0_dp / deltau
 
-! call the service layer
+     ! call the service layer
      call s_spl_deriv2(ntime, tmesh, ktau, startu, startd, ksed)
+
+!! body]
 
      return
   end subroutine ctqmc_eval_ksed
