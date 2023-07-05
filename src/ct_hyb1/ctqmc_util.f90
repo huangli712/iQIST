@@ -579,29 +579,29 @@
 
      implicit none
 
-! external arguments
-! symmetry vector
+!! external arguments
+     ! symmetry vector
      integer, intent(in) :: symm(norbs)
 
-! impurity green's function
+     ! impurity green's function
      complex(dp), intent(inout) :: grnf(mfreq,norbs,norbs)
 
-! local variables
-! loop index over bands
+!! local variables
+     ! loop index over bands
      integer :: ibnd
      integer :: jbnd
 
-! loop index over matsubara frequencies
+     ! loop index over matsubara frequencies
      integer :: kfrq
 
-! dummy variables
+     ! dummy variables
      complex(dp) :: caux
 
-! histogram vector
-! note: it is NOT the global one
+     ! histogram vector
+     ! note: it is NOT the global one
      integer :: hist(norbs)
 
-! build histogram
+     ! build histogram
      hist = 0
      do ibnd=1,norbs
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
