@@ -1524,6 +1524,8 @@
 !<   iret = -iret - two * daux
      iret = -iret
 
+!! body]
+
      return
   end subroutine ctqmc_make_iret
 
