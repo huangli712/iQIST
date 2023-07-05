@@ -62,40 +62,44 @@
 
      implicit none
 
-! external arguments
-! hybridization function on imaginary time axis
+!! external arguments
+     ! hybridization function on imaginary time axis
      real(dp), intent(in) :: htau(ntime,norbs,norbs)
 
-! hybridization function on matsubara frequency axis
+     ! hybridization function on matsubara frequency axis
      complex(dp), intent(out) :: hybf(mfreq,norbs,norbs)
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
      integer  :: j
 
-! dummy arrays
+     ! dummy arrays
      real(dp) :: raux(ntime)
      complex(dp) :: caux(mfreq)
 
-! initialize them
+!! [body
+
+     ! initialize them
      raux = zero
      caux = czero
 
      do i=1,norbs
          do j=1,norbs
 
-! copy the imaginary time data to raux
+             ! copy the imaginary time data to raux
              raux = htau(:,j,i)
 
-! call the service layer
+             ! call the service layer
              call s_fft_forward(ntime, tmesh, raux, mfreq, rmesh, caux)
 
-! copy the matsubara frequency data to hybf
+             ! copy the matsubara frequency data to hybf
              hybf(:,j,i) = caux
 
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_four_htau
@@ -119,51 +123,53 @@
 
      implicit none
 
-! external arguments
-! hybridization function on imaginary time axis
+!! external arguments
+     ! hybridization function on imaginary time axis
      real(dp), intent(out) :: htau(ntime,norbs,norbs)
 
-! hybridization function on matsubara frequency axis
+     ! hybridization function on matsubara frequency axis
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
      integer  :: j
 
-! used to determine the bottom region of hybridiaztion function
+     ! used to determine the bottom region of hybridiaztion function
      integer  :: start
      integer  :: last
 
-! dummy arrays
+     ! dummy arrays
      real(dp) :: raux(ntime)
      complex(dp) :: caux(mfreq)
 
-! initialize them
+!! [body
+
+     ! initialize them
      raux = zero
      caux = czero
 
      do i=1,norbs
          do j=1,norbs
 
-! copy matsubara frequency data to caux
+             ! copy matsubara frequency data to caux
              caux = hybf(:,j,i)
 
-! call the service layer
+             ! call the service layer
              call s_fft_backward(mfreq, rmesh, caux, ntime, tmesh, raux, beta)
 
-! copy imaginary time data to htau
+             ! copy imaginary time data to htau
              htau(:,j,i) = raux
 
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! checks for diagonal htau to be causal. htau should be concave. hence,
-! if it becomes very small at two points, it should remain zero in all
-! points between the two points. this is very important in insulators,
-! because htau can overshoot to positive values multiple times and kinks
-! can be trapped in the range between the two crossing points, where htau
-! is causal, but should be zero.
+     ! checks for diagonal htau to be causal. htau should be concave.
+     ! hence, if it becomes very small at two points, it should remain
+     ! zero in all points between the two points. this is very important
+     ! in insulators, because htau can overshoot to positive values
+     ! multiple times and kinks can be trapped in the range between the
+     ! two crossing points, where htau is causal, but should be zero.
      start = 1
      last = 1
      do i=1,norbs
@@ -179,21 +185,23 @@
              endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={ntime,1,-1} loop
 
-!-------------------------------------------------------------------------
-!<         if ( start > 1 .and. last > 1 ) then
-!<             do j=start,last
-!<                 htau(j,i,i) = -eps6
-!<             enddo ! over j={start,last} loop
-!<         endif ! back if ( start > 1 .and. last > 1 ) block
-!-------------------------------------------------------------------------
+!<!-----------------------------------------------------------------------
+!<       if ( start > 1 .and. last > 1 ) then
+!<           do j=start,last
+!<               htau(j,i,i) = -eps6
+!<           enddo ! over j={start,last} loop
+!<       endif ! back if ( start > 1 .and. last > 1 ) block
+!<!-----------------------------------------------------------------------
      enddo ! over i={1,norbs} loop
 
-! enforce hybridization function less than zero to ensure the causality
+     ! enforce hybridization function less than zero to ensure the causality
      do i=1,norbs
          do j=1,ntime
              if ( htau(j,i,i) > zero ) htau(j,i,i) = -eps6
          enddo ! over j={1,ntime} loop
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_four_hybf
