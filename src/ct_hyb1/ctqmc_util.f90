@@ -1549,39 +1549,43 @@
 
      implicit none
 
-! local variables
-! loop index for start and end points
+!! local variables
+     ! loop index for start and end points
      integer  :: it
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
 
-! occupation number at \tau_end
+     ! occupation number at \tau_end
      real(dp) :: occu
 
-! integral value for I(\tau_end)
+     ! integral value for I(\tau_end)
      real(dp) :: iret
+
+!! [body
 
      FLVR_CYCLE: do f1=1,norbs
          do it=1,rank(f1)
 
-! reset the prefactor
+             ! reset the prefactor
              pref(it,f1) = zero
 
-! calculate contribution from static interaction
+             ! calculate contribution from static interaction
              do f2=1,norbs
                  call cat_occupy_status(f2, time_e( index_e(it, f1), f1 ), occu)
                  pref(it,f1) = pref(it,f1) + half * ( umat(f1,f2) + umat(f2,f1) ) * occu
              enddo ! over f2={1,norbs} loop
 
-! calculate contribution from retarded (dynamic) interaction
+             ! calculate contribution from retarded (dynamic) interaction
              if ( isscr > 1 ) then
                  call ctqmc_make_iret(time_e( index_e(it, f1), f1 ), iret)
                  pref(it,f1) = pref(it,f1) + iret
              endif ! back if ( isscr > 1 ) block
          enddo ! over it={1,rank(f1)} loop
      enddo FLVR_CYCLE ! over f1={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_make_pref
