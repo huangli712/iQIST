@@ -1269,27 +1269,31 @@
   subroutine ctqmc_make_fock(norbs, pstat, state)
      implicit none
 
-! external arguments
-! index of atomic state
+!! external arguments
+     ! index of atomic state
      integer, intent(out) :: pstat
 
-! number of orbitals
+     ! number of orbitals
      integer, intent(in)  :: norbs
 
-! atomic state array
+     ! atomic state array
      integer, intent(in)  :: state(norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! init pstat
+!! [body
+
+     ! init pstat
      pstat = 1
 
-! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
+     ! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
      do i=1,norbs
          if ( state(i) > 0 ) pstat = pstat + ishft(1, i-1)
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_make_fock
