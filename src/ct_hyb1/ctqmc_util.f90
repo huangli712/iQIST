@@ -1821,41 +1821,43 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! number of frequency points, usually it is equal to nbfrq
+     ! number of frequency points, usually it is equal to nbfrq
      integer, intent(in) :: nfaux
 
-! maximum number of operators in different flavor channels
+     ! maximum number of operators in different flavor channels
      integer, intent(in) :: mrank
 
-! matsubara frequency exponents for creation operators
+     ! matsubara frequency exponents for creation operators
      complex(dp), intent(out) :: caux1(nfaux,mrank)
 
-! matsubara frequency exponents for annihilation operators
+     ! matsubara frequency exponents for annihilation operators
      complex(dp), intent(out) :: caux2(nfaux,mrank)
 
-! local variables
-! loop indices for start and end points
+!! local variables
+     ! loop indices for start and end points
      integer :: is
      integer :: ie
 
-! loop index for matsubara frequency
+     ! loop index for matsubara frequency
      integer :: iw
 
-! imaginary time for start and end points
-! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
+     ! imaginary time for start and end points
+     ! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
      complex(dp) :: zs
      complex(dp) :: ze
 
-! creation operators
-!-------------------------------------------------------------------------
-! for each \tau_s, we try to calculate
-!     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
-!     \omega_n = - 2 (n - 1) \pi / beta
-!
+!! [body
+
+     ! creation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_s, we try to calculate
+     !     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+     !     \omega_n = - 2 (n - 1) \pi / beta
+     !
      do is=1,rank(flvr)
          zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
          do iw=1,nfaux
@@ -1863,18 +1865,20 @@
          enddo ! over iw={1,nfaux} loop
      enddo ! over is={1,rank(flvr)} loop
 
-! annihilation operators
-!-------------------------------------------------------------------------
-! for each \tau_e, we try to calculate
-!     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
-!     \omega_n = + 2 (n - 1) \pi / beta
-!
+     ! annihilation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_e, we try to calculate
+     !     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+     !     \omega_n = + 2 (n - 1) \pi / beta
+     !
      do ie=1,rank(flvr)
          ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
          do iw=1,nfaux
              caux2(iw,ie) = exp( +two * float(iw - 1) * ze )
          enddo ! over iw={1,nfaux} loop
      enddo ! over ie={1,rank(flvr)} loop
+
+!! body]
 
      return
   end subroutine ctqmc_make_bexp
