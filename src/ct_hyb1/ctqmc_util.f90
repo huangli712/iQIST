@@ -1324,24 +1324,26 @@
 
      implicit none
 
-! external arguments
-! Coulomb interaction matrix
+!! external arguments
+     ! Coulomb interaction matrix
      real(dp), intent(out) :: umat(norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
      integer  :: m
 
-! dummy u vector
+     ! dummy u vector
      real(dp) :: ut(nband*(norbs-1))
 
-! initialize it
+!! [body
+
+     ! initialize it
      umat = zero
 
-! calculate it
+     ! calculate it
      k = 0
      do i=1,norbs-1
          do j=i+1,norbs
@@ -1361,6 +1363,8 @@
              umat(j,i) = ut(k)
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
+
+!! body]
 
      return
   end subroutine ctqmc_make_umat
