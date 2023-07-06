@@ -964,7 +964,9 @@
 
      implicit none
 
-! deallocate memory for context module
+!! [body
+
+     ! deallocate memory for context module
      call cat_free_clur()
 
      call cat_free_mesh()
@@ -975,6 +977,8 @@
      call cat_free_gmat()
      call cat_free_wmat()
      call cat_free_smat()
+
+!! body]
 
      return
   end subroutine ctqmc_final_array
