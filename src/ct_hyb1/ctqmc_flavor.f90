@@ -2045,31 +2045,33 @@
 
      implicit none
 
-! external arguments
-! total length of segments in every flavor
+!! external arguments
+     ! total length of segments in every flavor
      real(dp), intent(out) :: sgmt(norbs)
 
-! local variables
-! loop index over segments
+!! local variables
+     ! loop index over segments
      integer  :: i
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: flvr
 
-! imaginary time for start and end points
+     ! imaginary time for start and end points
      real(dp) :: ts
      real(dp) :: te
 
-! loop over flavors
+!! [body
+
+     ! loop over flavors
      FLVR_CYCLE: do flvr=1,norbs
 
          STATUS_BLOCK: select case ( stts(flvr) )
 
-! case 1: there is no segments, null configuration
+             ! case 1: there is no segments, null configuration
              case (0)
                  sgmt(flvr) = zero
 
-! case 2: there are segments, segment configuration
+             ! case 2: there are segments, segment configuration
              case (1)
                  sgmt(flvr) = zero
                  do i=1,rank(flvr)
@@ -2078,7 +2080,7 @@
                      sgmt(flvr) = sgmt(flvr) + abs( te - ts )
                  enddo ! over i={1,rank(flvr)} loop
 
-! case 3: there are segments, anti-segment configuration
+             ! case 3: there are segments, anti-segment configuration
              case (2)
                  sgmt(flvr) = beta
                  do i=1,rank(flvr)
@@ -2087,13 +2089,15 @@
                      sgmt(flvr) = sgmt(flvr) - abs( ts - te )
                  enddo ! over i={1,rank(flvr)} loop
 
-! case 4: there is no segments, full configuration
+             ! case 4: there is no segments, full configuration
              case (3)
                  sgmt(flvr) = beta
 
          end select STATUS_BLOCK
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+
+!! body]
 
      return
   end subroutine cat_occupy_single
