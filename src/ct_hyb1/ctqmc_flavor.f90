@@ -2354,46 +2354,50 @@
 
      implicit none
 
-! external arguments
-! segment 1, ts0 < te0 should be certified beforehand
+!! external arguments
+     ! segment 1, ts0 < te0 should be certified beforehand
      real(dp), intent(in)  :: ts0, te0
 
-! segment 2, ts1 < te1 should be certified beforehand
+     ! segment 2, ts1 < te1 should be certified beforehand
      real(dp), intent(in)  :: ts1, te1
 
-! the overlap length for segment1 and segment2
+     ! the overlap length for segment1 and segment2
      real(dp), intent(out) :: cover
 
-! local variables
-! left boundary
+!! local variables
+     ! left boundary
      real(dp) :: lb
 
-! right boundary
+     ! right boundary
      real(dp) :: rb
 
-! init cover
+!! [body
+
+     ! init cover
      cover = zero
 
-! determine left boundary, choose a larger value
+     ! determine left boundary, choose a larger value
      if ( ts0 < ts1 ) then
          lb = ts1
      else
          lb = ts0
      endif ! back if ( ts0 < ts1 ) block
 
-! determine right boundary, choose a smaller value
+     ! determine right boundary, choose a smaller value
      if ( te0 < te1 ) then
          rb = te0
      else
          rb = te1
      endif ! back if ( te0 < te1 ) block
 
-! compare left boundary and right boundary
+     ! compare left boundary and right boundary
      if ( lb < rb ) then
          cover = rb - lb
      else
          cover = zero
      endif ! back if ( lb < rb ) block
+
+!! body]
 
      return
   end subroutine cat_ovlp_service_
@@ -2416,52 +2420,54 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! imaginary time \tau_s for start point
+     ! imaginary time \tau_s for start point
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for end point
+     ! imaginary time \tau_e for end point
      real(dp), intent(in)  :: tau_end
 
-! segment overlap between different flavors
+     ! segment overlap between different flavors
      real(dp), intent(out) :: ovlp(norbs)
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
 
-! loop index over segments
+     ! loop index over segments
      integer  :: j
 
-! imaginary time for start and end points
+     ! imaginary time for start and end points
      real(dp) :: ts
      real(dp) :: te
 
-! dummy real(dp) variable
+     ! dummy real(dp) variable
      real(dp) :: raux
 
-! initialize ovlp
+!! [body
+
+     ! initialize ovlp
      ovlp = zero
 
-! loop over flavors
+     ! loop over flavors
      FLVR_CYCLE: do i=1,norbs
 
-! do not calculate overlap for the current flavor channel
+         ! do not calculate overlap for the current flavor channel
          if ( flvr == i ) CYCLE
 
          STATUS_BLOCK: select case ( stts(i) )
 
-! case 1: there is no segments, null configuration
+             ! case 1: there is no segments, null configuration
              case (0)
                  ovlp(i) = zero
 
-! case 2: there are segments, segment configuration
+             ! case 2: there are segments, segment configuration
              case (1)
                  ovlp(i) = zero
-! loop through all the segments
+                 ! loop through all the segments
                  do j=1,rank(i)
                      ts = time_s(index_s(j, i), i)
                      te = time_e(index_e(j, i), i)
@@ -2470,10 +2476,10 @@
                      ovlp(i) = ovlp(i) + raux
                  enddo ! over j={1,rank(i)} loop
 
-! case 3: there are segments, anti-segment configuration
+             ! case 3: there are segments, anti-segment configuration
              case (2)
                  ovlp(i) = tau_end - tau_start
-! loop through all the segments
+                 ! loop through all the segments
                  do j=1,rank(i)
                      ts = time_s(index_s(j, i), i)
                      te = time_e(index_e(j, i), i)
@@ -2482,13 +2488,15 @@
                      ovlp(i) = ovlp(i) - raux
                  enddo ! over j={1,rank(i)} loop
 
-! case 4: there is no segments, full configuration
+             ! case 4: there is no segments, full configuration
              case (3)
                  ovlp(i) = tau_end - tau_start
 
          end select STATUS_BLOCK
 
      enddo FLVR_CYCLE ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine cat_ovlp_segment_
