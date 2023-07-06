@@ -1654,79 +1654,82 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! whether the update operation winds around the circle
+     ! whether the update operation winds around the circle
      logical, intent(in)   :: ring
 
-! imaginary time \tau_s for start point (the old one)
+     ! imaginary time \tau_s for start point (the old one)
      real(dp), intent(in)  :: tau_start1
 
-! imaginary time \tau_s for start point (the new one)
+     ! imaginary time \tau_s for start point (the new one)
      real(dp), intent(in)  :: tau_start2
 
-! the desired ztrace ratio
+     ! the desired ztrace ratio
      real(dp), intent(out) :: trace_ratio
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! length for segment or anti-segment
+     ! length for segment or anti-segment
      real(dp) :: dtau
 
-! extra weight factor introduced by dynamic interaction
+     ! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
-! weight factor contributed by old creation operator
+     ! weight factor contributed by old creation operator
      real(dp) :: ts1_scr
 
-! weight factor contributed by new creation operator
+     ! weight factor contributed by new creation operator
      real(dp) :: ts2_scr
 
-! weight factor contributed by the creation operators
+     ! weight factor contributed by the creation operators
      real(dp) :: ts12_scr
 
-! segment overlap between flvr and other else flavors
+     ! segment overlap between flvr and other else flavors
      real(dp) :: ovlp(norbs)
      real(dp) :: ovlp1(norbs)
      real(dp) :: ovlp2(norbs)
 
-! initialize dtau
+!! [body
+
+     ! initialize dtau
      dtau  = zero
 
-! initialize ovlp
+     ! initialize ovlp
      ovlp  = zero
 
      ovlp1 = zero
      ovlp2 = zero
 
-! calculate ovlp and dtau
-! it does not wind around the circle
+     ! calculate ovlp and dtau
+     !
+     ! it does not wind around the circle
      if ( ring .eqv. .false. ) then
-! stretch the segment
+         ! stretch the segment
          if ( tau_start1 > tau_start2 ) then
              dtau = tau_start1 - tau_start2
              call cat_ovlp_segment_(flvr, tau_start2, tau_start1, ovlp)
-! shrink the segment
+         ! shrink the segment
          else
              dtau = tau_start2 - tau_start1
              call cat_ovlp_segment_(flvr, tau_start1, tau_start2, ovlp)
          endif ! back if ( tau_start1 > tau_start2 ) block
-! it does wind around the circle
+     ! it does wind around the circle
      else
-! shrink the segment
+         ! shrink the segment
          if ( tau_start1 > tau_start2 ) then
              dtau = beta - tau_start1 + tau_start2 - zero
              call cat_ovlp_segment_(flvr, zero, tau_start2, ovlp1)
              call cat_ovlp_segment_(flvr, tau_start1, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
-! stretch the segment
+         ! stretch the segment
          else
              dtau = tau_start1 - zero + beta - tau_start2
              call cat_ovlp_segment_(flvr, zero, tau_start1, ovlp1)
@@ -1735,15 +1738,15 @@
          endif ! back if ( tau_start1 > tau_start2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
-! calculate the exponent factor:
-! +\tilde{\tau} \mu - U * \tau_{overlap} for stretch
-! -\tilde{\tau} \mu + U * \tau_{overlap} for shrink
+     ! calculate the exponent factor:
+     ! +\tilde{\tau} \mu - U * \tau_{overlap} for stretch
+     ! -\tilde{\tau} \mu + U * \tau_{overlap} for shrink
      raux = dtau * ( mune - eimp(flvr) )
      do i=1,norbs
          raux = raux - umat(flvr, i) * ovlp(i)
      enddo ! over i={1,norbs} loop
 
-! evaluate the final ztrace ratio
+     ! evaluate the final ztrace ratio
      if ( ring .eqv. .false. ) then
          if ( tau_start1 > tau_start2 ) then
              trace_ratio = exp(+raux)
@@ -1758,23 +1761,29 @@
          endif ! back if ( tau_start1 > tau_start2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
-! quickly return if we don't need to consider the dynamic interaction
+     ! quickly return
+     ! if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
-! calculate the extra weight factor contributed by old creation operator
+     ! calculate the extra weight factor contributed by
+     ! old creation operator
      call cat_weight_factor(tau_start1, ts1_scr)
 
-! calculate the extra weight factor contributed by new creation operator
+     ! calculate the extra weight factor contributed by
+     ! new creation operator
      call cat_weight_factor(tau_start2, ts2_scr)
 
-! calculate the extra weight factor contributed by the creation operators
+     ! calculate the extra weight factor contributed by
+     ! the creation operators
      call cat_weight_kernel(1, dtau,   ts12_scr)
 
-! evaluate total weight factor (screening part)
+     ! evaluate total weight factor (screening part)
      scr = ts2_scr - ts1_scr - ts12_scr
 
-! evaluate the final exponent factor
+     ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(+scr)
+
+!! body]
 
      return
   end subroutine cat_lshift_ztrace
@@ -1797,79 +1806,82 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! whether the update operation winds around the circle
+     ! whether the update operation winds around the circle
      logical, intent(in)   :: ring
 
-! imaginary time \tau_e for end point (the old one)
+     ! imaginary time \tau_e for end point (the old one)
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time \tau_e for end point (the new one)
+     ! imaginary time \tau_e for end point (the new one)
      real(dp), intent(in)  :: tau_end2
 
-! the desired ztrace ratio
+     ! the desired ztrace ratio
      real(dp), intent(out) :: trace_ratio
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! length for segment or anti-segment
+     ! length for segment or anti-segment
      real(dp) :: dtau
 
-! extra weight factor introduced by dynamic interaction
+     ! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
-! weight factor contributed by old annihilation operator
+     ! weight factor contributed by old annihilation operator
      real(dp) :: te1_scr
 
-! weight factor contributed by new annihilation operator
+     ! weight factor contributed by new annihilation operator
      real(dp) :: te2_scr
 
-! weight factor contributed by the annihilation operators
+     ! weight factor contributed by the annihilation operators
      real(dp) :: te12_scr
 
-! segment overlap between flvr and other else flavors
+     ! segment overlap between flvr and other else flavors
      real(dp) :: ovlp(norbs)
      real(dp) :: ovlp1(norbs)
      real(dp) :: ovlp2(norbs)
 
-! initialize dtau
+!! [body
+
+     ! initialize dtau
      dtau  = zero
 
-! initialize ovlp
+     ! initialize ovlp
      ovlp  = zero
 
      ovlp1 = zero
      ovlp2 = zero
 
-! calculate ovlp and dtau
-! it does not wind around the circle
+     ! calculate ovlp and dtau
+     !
+     ! it does not wind around the circle
      if ( ring .eqv. .false. ) then
-! shrink the segment
+         ! shrink the segment
          if ( tau_end1 > tau_end2 ) then
              dtau = tau_end1 - tau_end2
              call cat_ovlp_segment_(flvr, tau_end2, tau_end1, ovlp)
-! stretch the segment
+         ! stretch the segment
          else
              dtau = tau_end2 - tau_end1
              call cat_ovlp_segment_(flvr, tau_end1, tau_end2, ovlp)
          endif ! back if ( tau_end1 > tau_end2 ) block
-! it does wind around the circle
+     ! it does wind around the circle
      else
-! stretch the segment
+         ! stretch the segment
          if ( tau_end1 > tau_end2 ) then
              dtau = beta - tau_end1 + tau_end2 - zero
              call cat_ovlp_segment_(flvr, zero, tau_end2, ovlp1)
              call cat_ovlp_segment_(flvr, tau_end1, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
-! shrink the segment
+         ! shrink the segment
          else
              dtau = tau_end1 - zero + beta - tau_end2
              call cat_ovlp_segment_(flvr, zero, tau_end1, ovlp1)
