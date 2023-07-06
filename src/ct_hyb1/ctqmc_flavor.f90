@@ -1958,35 +1958,38 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! current time at imaginary axis
+     ! current time at imaginary axis
      real(dp), intent(in)  :: curr
 
-! occupation status, if occu = 1.0, occupied, if occu = 0.0, unoccupied
+     ! occupation status
+     ! if occu = 1.0, occupied; if occu = 0.0, unoccupied
      real(dp), intent(out) :: occu
 
-! local variables
-! loop index over segments
+!! local variables
+     ! loop index over segments
      integer  :: i
 
-! imaginary time for start and end points
+     ! imaginary time for start and end points
      real(dp) :: ts
      real(dp) :: te
 
+!! [body
+
      STATUS_BLOCK: select case ( stts(flvr) )
 
-! case 1: there is no segments, null configuration
+         ! case 1: there is no segments, null configuration
          case (0)
              occu = zero
 
-! case 2: there are segments, segment configuration
+         ! case 2: there are segments, segment configuration
          case (1)
              occu = zero
 
-! check whether curr is in an existing segment
+             ! check whether curr is in an existing segment
              do i=1,rank(flvr)
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
                  te = time_e(index_e(i, flvr), flvr) ! get \tau_e at end   point
@@ -1997,11 +2000,11 @@
                  endif ! back if ( curr > ts .and. curr < te ) block
              enddo ! over i={1,rank(flvr)} loop
 
-! case 3: there are segments, anti-segment configuration
+         ! case 3: there are segments, anti-segment configuration
          case (2)
              occu = one
 
-! check whether curr is not in an existing segment
+             ! check whether curr is not in an existing segment
              do i=1,rank(flvr)
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
                  te = time_e(index_e(i, flvr), flvr) ! get \tau_e at end   point
@@ -2012,11 +2015,13 @@
                  endif ! back if ( curr < ts .and. curr > te ) block
              enddo ! over i={1,rank(flvr)} loop
 
-! case 4: there is no segments, full configuration
+         ! case 4: there is no segments, full configuration
          case (3)
              occu = one
 
      end select STATUS_BLOCK
+
+!! body]
 
      return
   end subroutine cat_occupy_status
