@@ -1372,77 +1372,80 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! whether it is an anti-segment
+     ! whether it is an anti-segment
      logical, intent(in)   :: anti
 
-! imaginary time \tau_s for start point
+     ! imaginary time \tau_s for start point
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for end point
+     ! imaginary time \tau_e for end point
      real(dp), intent(in)  :: tau_end
 
-! the desired ztrace ratio
+     ! the desired ztrace ratio
      real(dp), intent(out) :: trace_ratio
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! length for segment or anti-segment
+     ! length for segment or anti-segment
      real(dp) :: dtau
 
-! extra weight factor introduced by dynamic interaction
+     ! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
-! weight factor contributed by new creation operator
+     ! weight factor contributed by new creation operator
      real(dp) :: ts_scr
 
-! weight factor contributed by new annihilation operator
+     ! weight factor contributed by new annihilation operator
      real(dp) :: te_scr
 
-! weight factor contributed by new operators
+     ! weight factor contributed by new operators
      real(dp) :: cd_scr
 
-! segment overlap between flvr and other else flavors
+     ! segment overlap between flvr and other else flavors
      real(dp) :: ovlp(norbs)
      real(dp) :: ovlp1(norbs)
      real(dp) :: ovlp2(norbs)
 
-! initialize dtau
+!! [body
+
+     ! initialize dtau
      dtau  = zero
 
-! initialize ovlp
+     ! initialize ovlp
      ovlp  = zero
 
      ovlp1 = zero
      ovlp2 = zero
 
-! calculate ovlp and dtau
-! for segment case
+     ! calculate ovlp and dtau
+     !
+     ! for segment case
      if ( anti .eqv. .false. ) then
          if ( tau_start < tau_end ) then
              dtau = tau_end - tau_start
              call cat_ovlp_segment_(flvr, tau_start, tau_end, ovlp)
-! the new segment winds around the circle
+         ! the new segment winds around the circle
          else
              dtau = beta - tau_start + tau_end - zero
              call cat_ovlp_segment_(flvr, zero, tau_end, ovlp1)
              call cat_ovlp_segment_(flvr, tau_start, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start < tau_end ) block
-! for anti-segment case
+     ! for anti-segment case
      else
          if ( tau_start > tau_end ) then
              dtau = tau_start - tau_end
              call cat_ovlp_segment_(flvr, tau_end, tau_start, ovlp)
-! the new anti-segment winds around the circle
+         ! the new anti-segment winds around the circle
          else
              dtau = tau_start - zero + beta - tau_end
              call cat_ovlp_segment_(flvr, zero, tau_start, ovlp1)
@@ -1451,38 +1454,44 @@
          endif ! back if ( tau_start > tau_end ) block
      endif ! back if ( anti .eqv. .false. ) block
 
-! calculate the exponent factor:
-! +\tilde{\tau} \mu - U * \tau_{overlap} for segment
-! -\tilde{\tau} \mu + U * \tau_{overlap} for anti-segment
+     ! calculate the exponent factor:
+     ! +\tilde{\tau} \mu - U * \tau_{overlap} for segment
+     ! -\tilde{\tau} \mu + U * \tau_{overlap} for anti-segment
      raux = dtau * ( mune - eimp(flvr) )
      do i=1,norbs
          raux = raux - umat(flvr, i) * ovlp(i)
      enddo ! over i={1,norbs} loop
 
-! evaluate the final ztrace ratio
+     ! evaluate the final ztrace ratio
      if ( anti .eqv. .false. ) then
          trace_ratio = exp(+raux)
      else
          trace_ratio = exp(-raux)
      endif ! back if ( anti .eqv. .false. ) block
 
-! quickly return if we don't need to consider the dynamic interaction
+     ! quickly return
+     ! if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
-! calculate the extra weight factor contributed by new creation operator
+     ! calculate the extra weight factor contributed by
+     ! new creation operator
      call cat_weight_factor(tau_start, ts_scr)
 
-! calculate the extra weight factor contributed by new annihilation operator
+     ! calculate the extra weight factor contributed by
+     ! new annihilation operator
      call cat_weight_factor(tau_end,   te_scr)
 
-! calculate the extra weight factor contributed by new operators
+     ! calculate the extra weight factor contributed by
+     ! new operators
      call cat_weight_kernel(1, dtau,   cd_scr)
 
-! evaluate total weight factor (screening part)
+     ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr - cd_scr
 
-! evaluate the final exponent factor
+     ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(+scr)
+
+!! body]
 
      return
   end subroutine cat_insert_ztrace
