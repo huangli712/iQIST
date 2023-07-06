@@ -114,30 +114,32 @@
          anti = .false. ! insert segment
      endif ! back if ( spring_sfmt_stream() > half ) block
 
-!-------------------------------------------------------------------------
-! stage 1: need to insert a segment
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! stage 1: need to insert a segment
+     !--------------------------------------------------------------------
      if ( anti .eqv. .false. ) then
 
-! case 1: there is no segments, null configuration
-!-------------------------------------------------------------------------
+         ! case 1: there is no segments, null configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 0 ) then
              is = 1
              ie = 1
              tau_max = beta
              tau_end = spring_sfmt_stream() * tau_max + tau_start
 
-! check the position of tau_end and setup cstat
-! zero < tau_start < tau_end < beta, turn to segment configuration
+             ! check the position of tau_end and setup cstat
+             ! zero < tau_start < tau_end < beta,
+             ! turn to segment configuration
              if ( tau_end < beta ) then
                  cstat = 1
-! zero < tau_end < tau_start < beta, turn to anti-segment configuration
+             ! zero < tau_end < tau_start < beta,
+             ! turn to anti-segment configuration
              else
                  cstat = 2
                  tau_end = tau_end - beta
              endif ! back if ( tau_end < beta ) block
          endif ! back if ( stts(flvr) == 0 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! case 2: there are segments, segment configuration
 !-------------------------------------------------------------------------
