@@ -505,7 +505,7 @@
 !!>>> sampling the physical observables 5 (optional)                   <<<
 !!========================================================================
 
-             ! the following physical observables are measured optionally (by isvrt) 
+             ! the following physical observables are measured optionally (by isvrt)
              ! record the two-particle green's function, particle-hole channel, AABB
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_g2ph()

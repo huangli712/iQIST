@@ -623,21 +623,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.8.1 @ 2021.05.09D'
+     character(len=20), public, parameter :: V_FULL = 'v0.8.2 @ 2023.07.06D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.8.1'
+     character(len=06), public, parameter :: V_CURR = 'v0.8.2'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2021.05.09'
+     character(len=11), public, parameter :: V_DATE = '2023.07.06'
 
 !!
 !! @var V_STAT
