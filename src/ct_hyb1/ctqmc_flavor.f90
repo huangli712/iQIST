@@ -1,31 +1,31 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : iqist @ narcissus
 !!! program : try_insert_colour
 !!!           try_remove_colour
 !!!           try_lshift_colour
-!!!           try_rshift_colour <<<---
+!!!           try_rshift_colour
 !!!           cat_insert_colour
 !!!           cat_remove_colour
 !!!           cat_lshift_colour
-!!!           cat_rshift_colour <<<---
+!!!           cat_rshift_colour
 !!!           cat_insert_ztrace
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
-!!!           cat_rshift_ztrace <<<---
+!!!           cat_rshift_ztrace
 !!!           cat_occupy_status
 !!!           cat_occupy_single
-!!!           cat_occupy_double <<<---
+!!!           cat_occupy_double
 !!!           cat_weight_factor
-!!!           cat_weight_kernel <<<---
+!!!           cat_weight_kernel
 !!!           cat_ovlp_service_
-!!!           cat_ovlp_segment_ <<<---
+!!!           cat_ovlp_segment_
 !!!           cat_make_diagrams
-!!!           cat_disp_diagrams <<<---
+!!!           cat_disp_diagrams
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           06/02/2017 by li huang (last modified)
+!!!           07/06/2023 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
