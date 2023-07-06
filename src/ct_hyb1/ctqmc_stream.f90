@@ -614,37 +614,39 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! used to check whether the input file (solver.ktau.in) exists
+     ! used to check whether the input file (solver.ktau.in) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: rtmp
 
-! setup initial ktau
+!! [body
+
+     ! setup initial ktau
      ktau = zero
 
-! setup initial ptau
+     ! setup initial ptau
      ptau = zero
 
-! check isscr, if the interaction is static, return directly
+     ! check isscr, if the interaction is static, return directly
      if ( isscr == 1 ) RETURN
 
-! read in initial screening function and its derivates if available
-!-------------------------------------------------------------------------
+     ! read in initial screening function and its derivates if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'solver.ktau.in', exist = exists)
 
-! find input file: solver.ktau.in, read it
+         ! find input file: solver.ktau.in, read it
          if ( exists .eqv. .true. ) then
 
-! read in screening function and its derivates from solver.ktau.in
+             ! read in screening function and its derivates from solver.ktau.in
              open(mytmp, file='solver.ktau.in', form='formatted', status='unknown')
              read(mytmp,*) ! skip one line
              do i=1,ntime
@@ -658,26 +660,29 @@
              endif ! back if ( isscr == 4 ) block
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! since the screening function and its derivates may be updated in master
 ! node, it is important to broadcast them from root to all children processes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(ktau, master)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(ptau, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
 
-! shift the Coulomb interaction matrix and chemical potential if retarded
-! interaction or the so-called dynamic screening effect is considered
+     ! shift the Coulomb interaction matrix and chemical potential if
+     ! retarded interaction or the so-called dynamic screening effect
+     ! is considered
      call ctqmc_make_lift(umat, one)
+
+!! body]
 
      return
   end subroutine ctqmc_input_ktau_
