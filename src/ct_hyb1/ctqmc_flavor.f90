@@ -452,7 +452,7 @@
              !
              endif ! back if ( tau_end > zero ) block
          endif ! back if ( stts(flvr) == 3 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      endif ! back if ( anti .eqv. .false. ) block
 
@@ -730,6 +730,8 @@
      real(dp) :: tau_end1
      real(dp) :: tau_end2
 
+!! [body
+
      ! initialize ring
      ring = .false.
 
@@ -894,68 +896,72 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to right shift old segment or anti-segment
-! ieo and ien are for old and new indices, respectively
+     ! index address to right shift old segment or anti-segment
+     ! ieo and ien are for old and new indices, respectively
      integer, intent(out)  :: ieo, ien
 
-! whether the update operation winds around the circle
+     ! whether the update operation winds around the circle
      logical, intent(out)  :: ring
 
-! end point of the selected segment (the old one)
+     ! end point of the selected segment (the old one)
      real(dp), intent(out) :: tau_end1
 
-! end point of the selected segment (the new one)
+     ! end point of the selected segment (the new one)
      real(dp), intent(out) :: tau_end2
 
-! local variables
-! dummy variables, start points in imaginary time
+!! local variables
+     ! dummy variables, start points in imaginary time
      real(dp) :: tau_start1
      real(dp) :: tau_start2
 
-! initialize ring
+!! [body
+
+     ! initialize ring
      ring = .false.
 
-! initialize ieo and ien
+     ! initialize ieo and ien
      ieo = 1
      ien = 1
 
-! randomly select end index address, which is used to access the segment
+     ! randomly select end index address, which is used to
+     ! access the segment
      ieo = ceiling( spring_sfmt_stream() * ckink )
 
-! initialize tau_end1 and tau_end2
+     ! initialize tau_end1 and tau_end2
      tau_end1 = zero
      tau_end2 = zero
 
-! case 1: there are segments, segment configuration
-!-------------------------------------------------------------------------
+     ! case 1: there are segments, segment configuration
+     !--------------------------------------------------------------------
      if ( stts(flvr) == 1 ) then
 
-! case 1A: there is only one segment
+         ! case 1A: there is only one segment
          if ( ckink == 1 ) then
              ien = 1
              tau_end1 = time_e(index_e(1, flvr), flvr)
              tau_end2 = time_s(index_s(1, flvr), flvr) + spring_sfmt_stream() * beta
-! zero < tau_start < tau_end2 < beta
-! keep segment configuration
+             ! zero < tau_start < tau_end2 < beta
+             ! keep segment configuration
              if ( tau_end2 < beta ) then
                  cstat = 1
                  ring = .false.
-! zero < tau_end2 < tau_start < beta
-! turn to anti-segment configuration
+             ! zero < tau_end2 < tau_start < beta
+             ! turn to anti-segment configuration
              else
                  cstat = 2
                  ring = .true.
                  tau_end2 = tau_end2 - beta
              endif ! back if ( tau_end2 < beta ) block
 
-! case 1B: there are more than one segments
+         ! case 1B: there are more than one segments
          else
-! not the last segment, tau_start1 < tau_end1 (tau_end2) < tau_start2
-! keep segment configuration
+             ! not the last segment,
+             ! tau_start1 < tau_end1 (tau_end2) < tau_start2
+             ! keep segment configuration
              if ( ieo < ckink ) then
                  ien = ieo
                  cstat = 1
