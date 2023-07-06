@@ -1148,6 +1148,7 @@
              sp_w(1,f1) = sp_w(1,f1) + sgmt(f1)
 
              ! loop over the segments
+             !
              ! here we do not calculate bexp_s and bexp_e directly. we
              ! just utilize the available data in exp_s and exp_e. so
              ! that the required exponent functions are obtained via only
@@ -1165,6 +1166,7 @@
              sp_w(1,f1) = sp_w(1,f1) - sgmt(f2)
 
              ! loop over the segments
+             !
              ! here we do not calculate bexp_s and bexp_e directly. we
              ! just utilize the available data in exp_s and exp_e. so
              ! that the required exponent functions are obtained via only
@@ -1185,6 +1187,7 @@
              sp_w(1,f1) = sp_w(1,f1) - sgmt(f1)
 
              ! loop over the segments
+             !
              ! here we do not calculate bexp_s and bexp_e directly. we
              ! just utilize the available data in exp_s and exp_e. so
              ! that the required exponent functions are obtained via only
@@ -1202,6 +1205,7 @@
              sp_w(1,f1) = sp_w(1,f1) + sgmt(f2)
 
              ! loop over the segments
+             !
              ! here we do not calculate bexp_s and bexp_e directly. we
              ! just utilize the available data in exp_s and exp_e. so
              ! that the required exponent functions are obtained via only
@@ -1389,6 +1393,7 @@
                  ch_w(1,f2,f1) = ch_w(1,f2,f1) + sgmt(f1)
                  !
                  ! loop over the segments
+                 !
                  ! here we do not calculate bexp_s and bexp_e directly.
                  ! we just utilize the available data in exp_s and exp_e.
                  ! so that the required exponent functions are obtained
