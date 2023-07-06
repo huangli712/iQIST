@@ -2207,31 +2207,33 @@
 
      implicit none
 
-! external arguments
-! current imaginary time point
+!! external arguments
+     ! current imaginary time point
      real(dp), intent(in)  :: tau
 
-! exponential factor introduced by dynamic interaction
+     ! exponential factor introduced by dynamic interaction
      real(dp), intent(out) :: scr
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! imaginary time, start point
+     ! imaginary time, start point
      real(dp) :: ts
 
-! imaginary time, end point
+     ! imaginary time, end point
      real(dp) :: te
 
-! dummy real(dp) variables, used to store exponential factor
+     ! dummy real(dp) variables, used to store exponential factor
      real(dp) :: cur
 
-! init scr
+!! [body
+
+     ! init scr
      scr = zero
 
-! loop over creation operator
+     ! loop over creation operator
      do i=1,norbs
          do j=1,rank(i)
              ts = time_s(index_s(j, i), i)
@@ -2246,7 +2248,7 @@
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
 
-! loop over annihilation operator
+     ! loop over annihilation operator
      do i=1,norbs
          do j=1,rank(i)
              te = time_e(index_e(j, i), i)
@@ -2260,6 +2262,8 @@
              scr = scr - cur
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine cat_weight_factor
