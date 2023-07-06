@@ -339,11 +339,12 @@
          endif ! back if ( stts(flvr) == 1 ) block
          !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 3: there are segments, anti-segment configuration
-!-------------------------------------------------------------------------
+         ! case 3: there are segments, anti-segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 2 ) then
 
-! search whether tau_start is in an existing segment or anti-segment
+             ! search whether tau_start is in an existing segment
+             ! or anti-segment
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
                  te = time_e(index_e(i, flvr), flvr) ! get \tau_e at end   point
@@ -354,28 +355,32 @@
                  endif ! back if ( tau_start > te .and. tau_start < ts ) block
              enddo ! over i={1,ckink} loop
 
-! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully
-! case 3A: tau_start is in the first segment [0, tau_e(1)]
+             ! now we know we can insert tau_start, and then tau_end
+             ! and tau_max should be determined carefully
+             !
+             ! case 3A: tau_start is in the first segment [0, tau_e(1)]
              if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) then
                  is = 1
                  ie = 1
                  tau_max = tau_start - zero + beta - time_s(index_s(ckink, flvr), flvr)
                  tau_end = tau_start - spring_sfmt_stream() * tau_max
 
-! check the position of tau_end and setup cstat
-! zero < tau_end < tau_start < ... < beta, keep anti-segment configuration
+                 ! check the position of tau_end and setup cstat
+                 ! zero < tau_end < tau_start < ... < beta,
+                 ! keep anti-segment configuration
                  if ( tau_end > zero ) then
                      cstat = 2
-! zero < tau_start < ... < tau_end < beta, turn to segment configuration
+                 ! zero < tau_start < ... < tau_end < beta,
+                 ! turn to segment configuration
                  else
                      cstat = 1
                      ie = ckink + 1
                      tau_end = tau_end + beta
                  endif ! back if ( tau_end > zero ) block
 
-! case 3B: tau_start is in the last segment [tau_s(ckink), beta]
-! zero < ... < tau_end < tau_start < beta, keep anti-segment configuration
+             ! case 3B: tau_start is in the last segment [tau_s(ckink), beta]
+             ! zero < ... < tau_end < tau_start < beta,
+             ! keep anti-segment configuration
              else if ( tau_start > time_s(index_s(ckink, flvr), flvr) ) then
                  is = ckink + 1
                  ie = ckink + 1
@@ -383,14 +388,16 @@
                  tau_max = tau_start - time_s(index_s(ckink, flvr), flvr)
                  tau_end = tau_start - spring_sfmt_stream() * tau_max
 
-! case 3C: tau_start is in the immediate region, maybe in an existing segment
-! zero < ... < tau_end < tau_start < ... < beta, keep anti-segment configuration
+             ! case 3C: tau_start is in the immediate region,
+             ! maybe in an existing segment
+             ! zero < ... < tau_end < tau_start < ... < beta,
+             ! keep anti-segment configuration
              else
                  do i=1,ckink-1
                      ts = time_s(index_s(i  , flvr), flvr) ! get \tau_s at start point
                      te = time_e(index_e(i+1, flvr), flvr) ! get \tau_e at end   point
 
-! determine the position of tau_end and tau_max
+                     ! determine the position of tau_end and tau_max
                      if ( tau_start > ts .and. tau_start < te ) then
                          is = i + 1
                          ie = i + 1
@@ -404,21 +411,23 @@
              endif ! back if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) block
 
          endif ! back if ( stts(flvr) == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 4: there is no segments, full configuration
-!-------------------------------------------------------------------------
+         ! case 4: there is no segments, full configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 3 ) then
              is = 1
              ie = 1
              tau_max = beta
              tau_end = tau_start - spring_sfmt_stream() * tau_max
 
-! check the position of tau_end and setup cstat
-! zero < tau_end < tau_start < beta, turn to anti-segment configuration
+             ! check the position of tau_end and setup cstat
+             ! zero < tau_end < tau_start < beta,
+             ! turn to anti-segment configuration
              if ( tau_end > zero ) then
                  cstat = 2
-! zero < tau_start < tau_end < beta, turn to segment configuration
+             ! zero < tau_start < tau_end < beta,
+             ! turn to segment configuration
              else
                  cstat = 1
                  tau_end = tau_end + beta
@@ -427,6 +436,8 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      endif ! back if ( anti .eqv. .false. ) block
+
+!! body]
 
      return
   end subroutine try_insert_colour
