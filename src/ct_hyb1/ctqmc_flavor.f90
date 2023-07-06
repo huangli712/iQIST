@@ -163,6 +163,7 @@
              ! tau_max should be determined carefully
              !
              ! case 2A: tau_start is in front of all segments
+             !
              ! zero < tau_start < tau_end < ... < beta,
              ! keep segment configuration
              if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) then
@@ -180,19 +181,23 @@
                  tau_end = spring_sfmt_stream() * tau_max + tau_start
 
                  ! check the position of tau_end and setup cstat
+                 !
                  ! zero < ... < tau_start < tau_end < beta,
                  ! keep segment configuration
                  if ( tau_end < beta ) then
                      cstat = 1
+                 !
                  ! zero < tau_end < ... < tau_start < beta,
                  ! turn to anti-segment configuration
                  else
                      cstat = 2
                      ie = 1
                      tau_end = tau_end - beta
+                 !
                  endif ! back if ( tau_end < beta ) block
 
              ! case 2C: tau_start is in the middle of two segments
+             !
              ! zero < ... < tau_start < tau_end < ... < beta,
              ! keep segment configuration
              else
@@ -250,6 +255,7 @@
 
              ! now we know we can insert tau_start, and then tau_end and
              ! tau_max should be determined carefully
+             !
              ! zero < ... < tau_start < tau_end < ... < beta,
              ! keep anti-segment configuration
              do i=1,ckink
@@ -296,6 +302,7 @@
          if ( stts(flvr) == 1 ) then
 
              ! search whether tau_start is in an unoccupied region
+             !
              ! case 2A: tau_start is in front of all segments
              if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) then
                  ladd = .false.
@@ -322,6 +329,7 @@
 
              ! now we know we can insert tau_start, and then tau_end
              ! and tau_max should be determined carefully
+             !
              ! zero < ... < tau_start < tau_end < ... < beta,
              ! keep segment configuration
              do i=1,ckink
@@ -369,19 +377,23 @@
                  tau_end = tau_start - spring_sfmt_stream() * tau_max
 
                  ! check the position of tau_end and setup cstat
+                 !
                  ! zero < tau_end < tau_start < ... < beta,
                  ! keep anti-segment configuration
                  if ( tau_end > zero ) then
                      cstat = 2
+                 !
                  ! zero < tau_start < ... < tau_end < beta,
                  ! turn to segment configuration
                  else
                      cstat = 1
                      ie = ckink + 1
                      tau_end = tau_end + beta
+                 !
                  endif ! back if ( tau_end > zero ) block
 
              ! case 3B: tau_start is in the last segment [tau_s(ckink), beta]
+             !
              ! zero < ... < tau_end < tau_start < beta,
              ! keep anti-segment configuration
              else if ( tau_start > time_s(index_s(ckink, flvr), flvr) ) then
@@ -393,6 +405,7 @@
 
              ! case 3C: tau_start is in the immediate region,
              ! maybe in an existing segment
+             !
              ! zero < ... < tau_end < tau_start < ... < beta,
              ! keep anti-segment configuration
              else
@@ -425,15 +438,18 @@
              tau_end = tau_start - spring_sfmt_stream() * tau_max
 
              ! check the position of tau_end and setup cstat
+             !
              ! zero < tau_end < tau_start < beta,
              ! turn to anti-segment configuration
              if ( tau_end > zero ) then
                  cstat = 2
+             !
              ! zero < tau_start < tau_end < beta,
              ! turn to segment configuration
              else
                  cstat = 1
                  tau_end = tau_end + beta
+             !
              endif ! back if ( tau_end > zero ) block
          endif ! back if ( stts(flvr) == 3 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
