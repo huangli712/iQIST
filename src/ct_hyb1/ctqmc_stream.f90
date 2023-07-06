@@ -1,20 +1,20 @@
 !!!-----------------------------------------------------------------------
-!!! project : narcissus
+!!! project : iqist @ narcissus
 !!! program : ctqmc_setup_param
-!!!           ctqmc_setup_model <<<---
+!!!           ctqmc_setup_model
 !!!           ctqmc_input_mesh_
 !!!           ctqmc_input_hybf_
 !!!           ctqmc_input_eimp_
 !!!           ctqmc_input_umat_
-!!!           ctqmc_input_ktau_ <<<---
+!!!           ctqmc_input_ktau_
 !!!           ctqmc_alloc_array
 !!!           ctqmc_reset_array
-!!!           ctqmc_final_array <<<---
+!!!           ctqmc_final_array
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/21/2017 by li huang (last modified)
+!!!           07/06/2023 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -46,12 +46,14 @@
 
      implicit none
 
-! local variables
-! used to check whether the input file (solver.ctqmc.in) exists
+!! local variables
+     ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
-! setup general control flags
-!-------------------------------------------------------------------------
+!! [body
+
+     ! setup general control flags
+     !--------------------------------------------------------------------
      isscf  = 1         ! self-consistent scheme
      isscr  = 1         ! dynamic interaction
      isbnd  = 1         ! symmetry (band part)
@@ -61,47 +63,47 @@
      isobs  = 1         ! various physical observables
      issus  = 1         ! charge/spin susceptibility
      isvrt  = 1         ! two-particle green's functions
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! setup common variables for dynamical mean field theory
-!-------------------------------------------------------------------------
+     ! setup common variables for dynamical mean field theory
+     !--------------------------------------------------------------------
      niter  = 20        ! maximum number of self-consistent iterations
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      alpha  = 0.70_dp   ! mixing parameter for self-consistent iterations
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! setup common variables for quantum impurity model
-!-------------------------------------------------------------------------
+     ! setup common variables for quantum impurity model
+     !--------------------------------------------------------------------
      nband  = 1         ! number of correlated bands
      nspin  = 2         ! number of spin projections
      norbs  = 2         ! number of correlated orbitals
      ncfgs  = 4         ! number of atomic eigenstates
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      Uc     = 4.00_dp   ! intra-orbital Coulomb interaction
      Jz     = 0.00_dp   ! Hund's exchange interaction in z axis
      lc     = 1.00_dp   ! screening strength
      wc     = 1.00_dp   ! screening frequency
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      mune   = 2.00_dp   ! chemical potential or fermi level
      beta   = 8.00_dp   ! inversion of temperature
      part   = 0.50_dp   ! hopping parameter t for Hubbard model
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! setup common variables for quantum impurity solver
-!-------------------------------------------------------------------------
+     ! setup common variables for quantum impurity solver
+     !--------------------------------------------------------------------
      lemax  = 32        ! maximum expansion order for legendre polynomial
      legrd  = 20001     ! number of mesh points for legendre polynomial
      svmax  = 32        ! maximum expansion order for svd polynomial
      svgrd  = 2001      ! number of mesh points for svd polynomial
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      mkink  = 1024      ! maximum perturbation expansion order
      mfreq  = 8193      ! maximum number of matsubara frequency points
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      nffrq  = 32        ! number of fermionic frequency
      nbfrq  = 8         ! number of bosonic frequncy
      nfreq  = 128       ! number of sampled matsubara frequency points
      ntime  = 1024      ! number of time slices
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      nflip  = 20000     ! flip period for spin up and spin down states
      ntherm = 200000    ! number of thermalization steps
      nsweep = 20000000  ! number of Monte Carlo sweeping steps
@@ -109,24 +111,24 @@
      nclean = 100000    ! clean update period
      nmonte = 10        ! how often to sample the observables
      ncarlo = 10        ! how often to sample the observables
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! read in input file if possible, only master node can do it
+     ! read in input file if possible, only master node can do it
      if ( myid == master ) then
          exists = .false.
 
-! inquire file status: solver.ctqmc.in
+         ! inquire file status: solver.ctqmc.in
          inquire (file = 'solver.ctqmc.in', exist = exists)
 
-! read in parameters, default setting should be overrided
+         ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-! create the file parser
+             ! create the file parser
              call p_create()
 
-! parse the config file
+             ! parse the config file
              call p_parse('solver.ctqmc.in')
 
-! extract parameters
+             ! extract parameters
              call p_get('isscf' , isscf )
              call p_get('isscr' , isscr )
              call p_get('isbnd' , isbnd )
@@ -176,7 +178,7 @@
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
 
-! destroy the parser
+             ! destroy the parser
              call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
@@ -245,6 +247,8 @@
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_setup_param
