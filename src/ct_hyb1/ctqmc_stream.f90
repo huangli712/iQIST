@@ -701,7 +701,9 @@
 
      implicit none
 
-! allocate memory for context module
+!! [body
+
+     ! allocate memory for context module
      call cat_alloc_clur()
 
      call cat_alloc_mesh()
@@ -712,6 +714,8 @@
      call cat_alloc_gmat()
      call cat_alloc_wmat()
      call cat_alloc_smat()
+
+!! body]
 
      return
   end subroutine ctqmc_alloc_array
@@ -736,50 +740,53 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! system time since 1970, Jan 1, used to generate the random number seed
+     ! system time since 1970, Jan 1, used to generate the random
+     ! number seed
      integer :: system_time
 
-! random number seed for twist generator
+     ! random number seed for twist generator
      integer :: stream_seed
 
-! init random number generator
+!! [body
+
+     ! init random number generator
      call system_clock(system_time)
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
-!>>> ctqmc_core module
-!-------------------------------------------------------------------------
-! init global variables
+     !>>> ctqmc_core module
+     !--------------------------------------------------------------------
+     ! init global variables
      ckink = 0
      cstat = 0
 
-! init statistics variables
+     ! init statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
      rmv_t = zero; rmv_a = zero; rmv_r = zero
      lsh_t = zero; lsh_a = zero; lsh_r = zero
      rsh_t = zero; rsh_a = zero; rsh_r = zero
      rfl_t = zero; rfl_a = zero; rfl_r = zero
 
-!>>> ctqmc_clur module
-!-------------------------------------------------------------------------
-! init index
+     !>>> ctqmc_clur module
+     !--------------------------------------------------------------------
+     ! init index
      index_s = 0
      index_e = 0
 
-! init time
+     ! init time
      time_s  = zero
      time_e  = zero
 
-! init exponent
+     ! init exponent
      exp_s   = czero
      exp_e   = czero
 
-! init stack
+     ! init stack
      do i=1,norbs
          call istack_clean( empty_s(i) )
          call istack_clean( empty_e(i) )
@@ -792,151 +799,157 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
-!>>> ctqmc_mesh module
-!-------------------------------------------------------------------------
-! the variables have been initialized at ctqmc_setup_model()
+     !>>> ctqmc_mesh module
+     !--------------------------------------------------------------------
+     ! the variables have been initialized at ctqmc_setup_model()
 
-!>>> ctqmc_meat module
-!-------------------------------------------------------------------------
+     !>>> ctqmc_meat module
+     !--------------------------------------------------------------------
 
-! init autocorrelation function
+     ! init autocorrelation function
      ac_v = zero
      ac_f = zero
 
-! init histogram
+     ! init histogram
      hist = zero
 
-! init probability for atomic eigenstates
+     ! init probability for atomic eigenstates
      prob = zero
 
-! init auxiliary physical observables
+     ! init auxiliary physical observables
      paux = zero
 
-! init occupation number
+     ! init occupation number
      nimp = zero
      nmat = zero
 
-! init kinetic energy fluctuation
+     ! init kinetic energy fluctuation
      knop = zero
      kmat = zero
 
-! init fidelity susceptibility
+     ! init fidelity susceptibility
      lnop = zero
      rnop = zero
      lrmm = zero
 
-! init powers of local magnetization
+     ! init powers of local magnetization
      szpw = zero
 
-! init spin-spin correlation function
+     ! init spin-spin correlation function
      schi = zero
      sp_t = zero
      sp_w = zero
 
-! init charge-charge correlation function
+     ! init charge-charge correlation function
      cchi = zero
      ch_t = zero
      ch_w = zero
 
-! init two-particle green's function
+     ! init two-particle green's function
      g2ph = czero
      g2pp = czero
 
-! init two-particle vertex function
+     ! init two-particle vertex function
      h2ph = czero
      h2pp = czero
 
-!>>> ctqmc_umat module
-!-------------------------------------------------------------------------
-! some variables have been initialized at ctqmc_setup_model()
+     !>>> ctqmc_umat module
+     !--------------------------------------------------------------------
+     ! some variables have been initialized at ctqmc_setup_model()
 
-! init rank
+     ! init rank
      rank = 0
 
-! init stts
+     ! init stts
      stts = 0
 
-! init prefactor for improved estimator
+     ! init prefactor for improved estimator
      pref = zero
 
-!>>> ctqmc_mmat module
-!-------------------------------------------------------------------------
-! init M-matrix related array
+     !>>> ctqmc_mmat module
+     !--------------------------------------------------------------------
+     ! init M-matrix related array
      mmat   = zero
      lspace = zero
      rspace = zero
 
-! init G-matrix related array
+     ! init G-matrix related array
      gmat   = czero
      lsaves = czero
      rsaves = czero
 
-!>>> ctqmc_gmat module
-!-------------------------------------------------------------------------
-! init imaginary time impurity green's function
+     !>>> ctqmc_gmat module
+     !--------------------------------------------------------------------
+     ! init imaginary time impurity green's function
      gtau = zero
      ftau = zero
 
-! init matsubara impurity green's function
+     ! init matsubara impurity green's function
      grnf = czero
      frnf = czero
 
-!>>> ctqmc_wmat module
-!-------------------------------------------------------------------------
-! some variables have been initialized at ctqmc_setup_model()
+     !>>> ctqmc_wmat module
+     !--------------------------------------------------------------------
+     ! some variables have been initialized at ctqmc_setup_model()
 
-! init imaginary time bath weiss's function
+     ! init imaginary time bath weiss's function
      wtau = zero
 
-! init matsubara bath weiss's function
+     ! init matsubara bath weiss's function
      wssf = czero
 
-!>>> ctqmc_smat module
-!-------------------------------------------------------------------------
-! sig1 should not be reinitialized here, since it is used to keep the
-! persistency of self-energy function
+     !>>> ctqmc_smat module
+     !--------------------------------------------------------------------
+     ! sig1 should not be reinitialized here, since it is used to keep
+     ! the persistency of self-energy function
 
-! init self-energy function
-!<     sig1 = czero
+     ! init self-energy function
+!<   sig1 = czero
      sig2 = czero
 
-!>>> postprocess hybridization function
-!-------------------------------------------------------------------------
-! fourier hybridization function from frequency space to time space
+     !>>> postprocess hybridization function
+     !--------------------------------------------------------------------
+     ! fourier hybridization function from frequency space to time space
      call ctqmc_four_hybf(hybf, htau)
 
-! symmetrize the hybridization function on imaginary time axis if needed
+     ! symmetrize the hybridization function on imaginary time
+     ! axis if needed
      call ctqmc_symm_gtau(symm, htau)
 
-! calculate the 2nd-derivates of htau, which is used in spline subroutines
+     ! calculate the 2nd-derivates of htau, which is used
+     ! in spline subroutines
      call ctqmc_eval_hsed(htau, hsed)
 
-!>>> postprocess dynamic interaction
-!-------------------------------------------------------------------------
-! calculate the 2nd-derivates of ktau, which is used in spline subroutines
+     !>>> postprocess dynamic interaction
+     !--------------------------------------------------------------------
+     ! calculate the 2nd-derivates of ktau, which is used
+     ! in spline subroutines
      call ctqmc_eval_ksed(ktau, ksed)
 
-! calculate the 2nd-derivates of ptau, which is used in spline subroutines
+     ! calculate the 2nd-derivates of ptau, which is used
+     ! in spline subroutines
      call ctqmc_eval_ksed(ptau, psed)
 
-!>>> dump the necessary files
-!-------------------------------------------------------------------------
-! write out the hybridization function
+     !>>> dump the necessary files
+     !--------------------------------------------------------------------
+     ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(hybf)
          call ctqmc_dump_htau(htau)
      endif ! back if ( myid == master ) block
 
-! write out the screening function and its derivates
+     ! write out the screening function and its derivates
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ktau(ktau, ptau, ksed, psed)
      endif ! back if ( myid == master ) block
 
-! write out the seed for random number stream, it is useful to reproduce
-! the calculation process once fatal error occurs.
+     ! write out the seed for random number stream, it is useful to
+     ! reproduce the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reset_array
