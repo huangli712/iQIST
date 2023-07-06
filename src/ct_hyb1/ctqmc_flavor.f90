@@ -2285,21 +2285,23 @@
 
      implicit none
 
-! external arguments
-! control the computational type
-! if typ = 1, to calculate K(\tau), i.e., ktau
-! if typ = 2, to calculate K'(\tau), i.e., ptau
+!! external arguments
+     ! control the computational type
+     ! if typ = 1, to calculate K(\tau), i.e., ktau
+     ! if typ = 2, to calculate K'(\tau), i.e., ptau
      integer, intent(in)   :: typ
 
-! imaginary time
+     ! imaginary time
      real(dp), intent(in)  :: tau
 
-! result value
+     ! result value
      real(dp), intent(out) :: cur
 
-! external functions
-! used to interpolate screening function
+!! external functions
+     ! used to interpolate screening function
      procedure( real(dp) ) :: ctqmc_eval_ktau
+
+!! [body
 
      DYNAMIC_MODEL: select case ( isscr )
 
@@ -2331,6 +2333,8 @@
              cur = ctqmc_eval_ktau(typ, tau)
 
      end select DYNAMIC_MODEL
+
+!! body]
 
      return
   end subroutine cat_weight_kernel
