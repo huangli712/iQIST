@@ -601,9 +601,9 @@
          endif ! back if ( stts(flvr) == 2 ) block
          !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-         !----------------------------------------------------------------
-         ! stage 2: need to remove an anti-segment
-         !----------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! stage 2: need to remove an anti-segment
+     !--------------------------------------------------------------------
      else ! anti .eqv. .true.
 
          ! case 1: there are segments, segment configuration
@@ -970,20 +970,20 @@
                  tau_start2 = time_s(index_s(ieo+1, flvr), flvr)
                  tau_end1 = time_e(index_e(ieo, flvr), flvr)
                  tau_end2 = tau_start1 + spring_sfmt_stream() * ( tau_start2 - tau_start1 )
-! the last segment is chosen
+             ! the last segment is chosen
              else
                  tau_start1 = time_s(index_s(ckink, flvr), flvr)
                  tau_start2 = time_s(index_s(1, flvr), flvr)
                  tau_end1 = time_e(index_e(ckink, flvr), flvr)
                  tau_end2 = tau_start1 + spring_sfmt_stream() * ( beta - tau_start1 + tau_start2 - zero )
-! zero < tau_start2 < ... < tau_start1 < tau_end1 (tau_end2) < beta
-! keep segment configuration
+                 ! zero < tau_start2 < ... < tau_start1 < tau_end1 (tau_end2) < beta
+                 ! keep segment configuration
                  if ( tau_end2 < beta ) then
                      ien = ckink
                      cstat = 1
                      ring = .false.
-! zero < tau_end2 < tau_start2 < ... < tau_start1 < tau_end1 < beta
-! turn to anti-segment configuration
+                 ! zero < tau_end2 < tau_start2 < ... < tau_start1 < tau_end1 < beta
+                 ! turn to anti-segment configuration
                  else
                      ien = 1
                      cstat = 2
@@ -995,34 +995,35 @@
          endif ! back if ( ckink == 1 ) block
 
      endif ! back if ( stts(flvr) == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 2: there are segments, anti-segment configuration
-!-------------------------------------------------------------------------
+     ! case 2: there are segments, anti-segment configuration
+     !--------------------------------------------------------------------
      if ( stts(flvr) == 2 ) then
 
-! case 2A: there is only one anti-segment
+         ! case 2A: there is only one anti-segment
          if ( ckink == 1 ) then
              ien = 1
              tau_end1 = time_e(index_e(1, flvr), flvr)
              tau_end2 = time_s(index_s(1, flvr), flvr) + spring_sfmt_stream() * beta
-! zero < tau_end1 < tau_start < tau_end2 < beta
-! turn to segment configuration
+             ! zero < tau_end1 < tau_start < tau_end2 < beta
+             ! turn to segment configuration
              if ( tau_end2 < beta ) then
                  cstat = 1
                  ring = .true.
-! zero < tau_end1 (tau_end2) < tau_start < beta
-! keep anti-segment configuration
+             ! zero < tau_end1 (tau_end2) < tau_start < beta
+             ! keep anti-segment configuration
              else
                  cstat = 2
                  ring = .false.
                  tau_end2 = tau_end2 - beta
              endif ! back if ( tau_end2 < beta ) block
 
-! case 2B: there are more than one segment or anti-segment
+         ! case 2B: there are more than one segment or anti-segment
          else
-! not the first segment, tau_start1 < tau_end1 (tau_end2) < tau_start2
-! keep anti-segment configuration
+             ! not the first segment,
+             ! tau_start1 < tau_end1 (tau_end2) < tau_start2
+             ! keep anti-segment configuration
              if ( ieo > 1 ) then
                  ien = ieo
                  cstat = 2
@@ -1031,20 +1032,20 @@
                  tau_start2 = time_s(index_s(ieo, flvr), flvr)
                  tau_end1 = time_e(index_e(ieo, flvr), flvr)
                  tau_end2 = tau_start1 + spring_sfmt_stream() * ( tau_start2 - tau_start1 )
-! the first segment is chosen
+             ! the first segment is chosen
              else
                  tau_start1 = time_s(index_s(ckink, flvr), flvr)
                  tau_start2 = time_s(index_s(1, flvr), flvr)
                  tau_end1 = time_e(index_e(1, flvr), flvr)
                  tau_end2 = tau_start1 + spring_sfmt_stream() * ( beta - tau_start1 + tau_start2 - zero )
-! zero < tau_end1 < tau_start2 < ... < tau_start1 < tau_end2 < beta
-! turn to segment configuration
+                 ! zero < tau_end1 < tau_start2 < ... < tau_start1 < tau_end2 < beta
+                 ! turn to segment configuration
                  if ( tau_end2 < beta ) then
                      ien = ckink
                      cstat = 1
                      ring = .true.
-! zero < tau_end1 (tau_end2) < tau_start2 < ... < tau_start1 < beta
-! keep anti-segment configuration
+                 ! zero < tau_end1 (tau_end2) < tau_start2 < ... < tau_start1 < beta
+                 ! keep anti-segment configuration
                  else
                      ien = 1
                      cstat = 2
@@ -1056,7 +1057,9 @@
          endif ! back if ( ckink == 1 ) block
 
      endif ! back if ( stts(flvr) == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!! body]
 
      return
   end subroutine try_rshift_colour
@@ -1087,37 +1090,39 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for inserting new segment or anti-segment
+     ! index address for inserting new segment or anti-segment
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time \tau_s for start point
+     ! imaginary time \tau_s for start point
      real(dp), intent(in) :: tau_start
 
-! imaginary time \tau_e for end point
+     ! imaginary time \tau_e for end point
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over segments and frequencies
+!! local variables
+     ! loop index over segments and frequencies
      integer  :: i
 
-! memory address for new start and end points
+     ! memory address for new start and end points
      integer  :: as
      integer  :: ae
 
-! dummy variables, \tau_s * \omega and \tau_e * \omega
+     ! dummy variables, \tau_s * \omega and \tau_e * \omega
      real(dp) :: xs
      real(dp) :: xe
 
-! get memory address for is and ie
+!! [body
+
+     ! get memory address for is and ie
      call istack_pop( empty_s(flvr), as )
      call istack_pop( empty_e(flvr), ae )
 
-! shift index_s and index_e to create two empty rooms for as and ae
+     ! shift index_s and index_e to create two empty rooms for as and ae
      do i=ckink,is,-1
          index_s(i+1, flvr) = index_s(i, flvr)
      enddo ! over i={ckink,is,-1} loop
@@ -1126,15 +1131,15 @@
          index_e(i+1, flvr) = index_e(i, flvr)
      enddo ! over i={ckink,ie,-1} loop
 
-! update index_s and index_e at is and ie by as and ae, respectively
+     ! update index_s and index_e at is and ie by as and ae, respectively
      index_s(is, flvr) = as
      index_e(ie, flvr) = ae
 
-! update time_s and time_e, record new imaginary time points
+     ! update time_s and time_e, record new imaginary time points
      time_s(as, flvr) = tau_start
      time_e(ae, flvr) = tau_end
 
-! update exp_s and exp_e, record new exponent values
+     ! update exp_s and exp_e, record new exponent values
      do i=1,nfreq
          xs = rmesh(i) * tau_start
          exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
@@ -1142,6 +1147,8 @@
          xe = rmesh(i) * tau_end
          exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
      enddo ! over i={1,nfreq} loop
+
+!! body]
 
      return
   end subroutine cat_insert_colour
