@@ -366,46 +366,48 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
 
-! used to check whether the input file (solver.hyb.in) exists
+     ! used to check whether the input file (solver.hyb.in) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: rtmp
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build initial green's function using the analytical expression at
-! non-interaction limit:
-!     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
-! and then build initial hybridization function using self-consistent
-! condition for bethe lattice:
-!     \Delta = t^2 * G
+!! [body
+
+     ! build initial green's function using the analytical expression at
+     ! non-interaction limit:
+     !     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
+     ! and then build initial hybridization function using self-consistent
+     ! condition for bethe lattice:
+     !     \Delta = t^2 * G
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
          hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
          hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
-! read in initial hybridization function if available
-!-------------------------------------------------------------------------
+     ! read in initial hybridization function if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'solver.hyb.in', exist = exists)
 
-! find input file: solver.hyb.in, read it
+         ! find input file: solver.hyb.in, read it
          if ( exists .eqv. .true. ) then
 
              hybf = czero ! reset it to zero
 
-! read in hybridization function from solver.hyb.in
+             ! read in hybridization function from solver.hyb.in
              open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
              do i=1,norbs
                  do j=1,mfreq
@@ -419,19 +421,21 @@
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(hybf, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_input_hybf_
@@ -455,32 +459,32 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! used to check whether the input file (solver.eimp.in) exists
+     ! used to check whether the input file (solver.eimp.in) exists
      logical  :: exists
 
-! setup initial symm
+     ! setup initial symm
      symm = 1
 
-! setup initial eimp
+     ! setup initial eimp
      eimp = zero
 
-! read in impurity level and orbital symmetry if available
-!-------------------------------------------------------------------------
+     ! read in impurity level and orbital symmetry if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'solver.eimp.in', exist = exists)
 
-! find input file: solver.eimp.in, read it
+         ! find input file: solver.eimp.in, read it
          if ( exists .eqv. .true. ) then
 
-! read in impurity level from solver.eimp.in
+             ! read in impurity level from solver.eimp.in
              open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
              do i=1,norbs
                  read(mytmp,*) j, eimp(i), symm(i)
@@ -489,21 +493,23 @@
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast eimp and symm from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(eimp, master)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(symm, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_input_eimp_
@@ -527,34 +533,36 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
      integer  :: l
 
-! used to check whether the input file (solver.umat.in) exists
+     ! used to check whether the input file (solver.umat.in) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: rtmp
 
-! calculate two-index Coulomb interaction, umat
+!! [body
+
+     ! calculate two-index Coulomb interaction, umat
      call ctqmc_make_umat(umat)
 
-! read in two-index Coulomb interaction if available
-!-------------------------------------------------------------------------
+     ! read in two-index Coulomb interaction if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'solver.umat.in', exist = exists)
 
-! find input file: solver.umat.in, read it
+         ! find input file: solver.umat.in, read it
          if ( exists .eqv. .true. ) then
 
-! read in Coulomb interaction matrix from solver.umat.in
+             ! read in Coulomb interaction matrix from solver.umat.in
              open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
              do i=1,norbs
                  do j=1,norbs
@@ -566,18 +574,20 @@
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast umat from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(umat, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_input_umat_
