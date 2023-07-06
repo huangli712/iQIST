@@ -213,22 +213,25 @@
          endif ! back if ( stts(flvr) == 1 ) block
          !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 3: there are segments, anti-segment configuration
-!-------------------------------------------------------------------------
+         ! case 3: there are segments, anti-segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 2 ) then
 
-! search whether tau_start is in an existing segment or anti-segment
-! case 3A: tau_start is in the first segment [0, tau_e(1)]
+             ! search whether tau_start is in an existing segment
+             ! or anti-segment
+             !
+             ! case 3A: tau_start is in the first segment [0, tau_e(1)]
              if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) then
                  ladd = .false.
                  RETURN ! return to the parent subroutines immediately
 
-! case 3B: tau_start is in the last segment [tau_s(ckink), beta]
+             ! case 3B: tau_start is in the last segment [tau_s(ckink), beta]
              else if ( tau_start > time_s(index_s(ckink, flvr), flvr) ) then
                  ladd = .false.
                  RETURN ! return to the parent subroutines immediately
 
-! case 3C: tau_start is in the immediate region, maybe in an existing segment
+             ! case 3C: tau_start is in the immediate region, maybe in
+             ! an existing segment
              else
                  do i=1,ckink-1
                      ts = time_s(index_s(i  , flvr), flvr) ! get \tau_s at start point
@@ -242,14 +245,15 @@
 
              endif ! back if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) block
 
-! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully
-! zero < ... < tau_start < tau_end < ... < beta, keep anti-segment configuration
+             ! now we know we can insert tau_start, and then tau_end and
+             ! tau_max should be determined carefully
+             ! zero < ... < tau_start < tau_end < ... < beta,
+             ! keep anti-segment configuration
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
                  te = time_e(index_e(i, flvr), flvr) ! get \tau_e at end   point
 
-! determine the position of tau_end and tau_max
+                 ! determine the position of tau_end and tau_max
                  if ( tau_start > te .and. tau_start < ts ) then
                      is = i
                      ie = i + 1
@@ -261,45 +265,45 @@
              enddo ! over i={1,ckink} loop
 
          endif ! back if ( stts(flvr) == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 4: there is no segments, full configuration
-!-------------------------------------------------------------------------
+         ! case 4: there is no segments, full configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 3 ) then
              ladd = .false.
              RETURN ! return to the parent subroutines immediately
          endif ! back if ( stts(flvr) == 3 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! stage 2: need to insert an anti-segment
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! stage 2: need to insert an anti-segment
+     !--------------------------------------------------------------------
      else ! anti .eqv. .true.
 
-! case 1: there is no segments, null configuration
-!-------------------------------------------------------------------------
+         ! case 1: there is no segments, null configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 0 ) then
              ladd = .false.
              RETURN ! return to the parent subroutines immediately
          endif ! if ( stts(flvr) == 0 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 2: there are segments, segment configuration
-!-------------------------------------------------------------------------
+         ! case 2: there are segments, segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 1 ) then
 
-! search whether tau_start is in an unoccupied region
-! case 2A: tau_start is in front of all segments
+             ! search whether tau_start is in an unoccupied region
+             ! case 2A: tau_start is in front of all segments
              if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) then
                  ladd = .false.
                  RETURN ! return to the parent subroutines immediately
 
-! case 2B: tau_start is after all segments
+             ! case 2B: tau_start is after all segments
              else if ( tau_start > time_e(index_e(ckink, flvr), flvr) ) then
                  ladd = .false.
                  RETURN ! return to the parent subroutines immediately
 
-! case 2C: tau_start is in the middle of two segments
+             ! case 2C: tau_start is in the middle of two segments
              else
                  do i=1,ckink-1
                      ts = time_s(index_s(i+1, flvr), flvr) ! get \tau_s at start point
@@ -313,14 +317,15 @@
 
              endif ! back if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) block
 
-! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully
-! zero < ... < tau_start < tau_end < ... < beta, keep segment configuration
+             ! now we know we can insert tau_start, and then tau_end
+             ! and tau_max should be determined carefully
+             ! zero < ... < tau_start < tau_end < ... < beta,
+             ! keep segment configuration
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
                  te = time_e(index_e(i, flvr), flvr) ! get \tau_e at end   point
 
-! determine the position of tau_end and tau_max
+                 ! determine the position of tau_end and tau_max
                  if ( tau_start > ts .and. tau_start < te ) then
                      is = i + 1
                      ie = i
@@ -332,7 +337,7 @@
              enddo ! over i={1,ckink} loop
 
          endif ! back if ( stts(flvr) == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! case 3: there are segments, anti-segment configuration
 !-------------------------------------------------------------------------
