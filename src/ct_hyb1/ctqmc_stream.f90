@@ -309,32 +309,36 @@
 
      implicit none
 
-! build imaginary time mesh: tmesh
+!! [body
+
+     ! build imaginary time mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
-! build matsubara frequency mesh: rmesh
+     ! build matsubara frequency mesh: rmesh
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
-! build mesh for legendre orthogonal polynomial in [-1,1]
+     ! build mesh for legendre orthogonal polynomial in [-1,1]
      if ( isort == 2 ) then
          call s_linspace_d(-one, one, legrd, lmesh)
      endif ! back if ( isort == 2 ) block
 
-! build mesh for svd orthogonal polynomial in [-1,1]
+     ! build mesh for svd orthogonal polynomial in [-1,1]
      if ( isort == 3 ) then
          call s_linspace_d(-one, one, svgrd, smesh)
      endif ! back if ( isort == 3 ) block
 
-! build legendre orthogonal polynomial in [-1,1]
+     ! build legendre orthogonal polynomial in [-1,1]
      if ( isort == 2 ) then
          call s_leg_basis(lemax, legrd, lmesh, rep_l)
      endif ! back if ( isort == 2 ) block
 
-! build svd orthogonal polynomial in [-1,1]
-! .false. means fermionic kernel, and .true. means bosonic kernel
+     ! build svd orthogonal polynomial in [-1,1]
+     ! .false. means fermionic kernel, and .true. means bosonic kernel
      if ( isort == 3 ) then
          call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
      endif ! back if ( isort == 3 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_input_mesh_
