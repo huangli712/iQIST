@@ -1890,15 +1890,15 @@
          endif ! back if ( tau_end1 > tau_end2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
-! calculate the exponent factor:
-! +\tilde{\tau} \mu - U * \tau_{overlap} for stretch
-! -\tilde{\tau} \mu + U * \tau_{overlap} for shrink
+     ! calculate the exponent factor:
+     ! +\tilde{\tau} \mu - U * \tau_{overlap} for stretch
+     ! -\tilde{\tau} \mu + U * \tau_{overlap} for shrink
      raux = dtau * ( mune - eimp(flvr) )
      do i=1,norbs
          raux = raux - umat(flvr, i) * ovlp(i)
      enddo ! over i={1,norbs} loop
 
-! evaluate the final ztrace ratio
+     ! evaluate the final ztrace ratio
      if ( ring .eqv. .false. ) then
          if ( tau_end1 > tau_end2 ) then
              trace_ratio = exp(-raux)
@@ -1913,22 +1913,26 @@
          endif ! back if ( tau_end1 > tau_end2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
-! quickly return if we don't need to consider the dynamic interaction
+     ! quickly return
+     ! if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
-! calculate the extra weight factor contributed by old annihilation operator
+     ! calculate the extra weight factor contributed by
+     ! old annihilation operator
      call cat_weight_factor(tau_end1, te1_scr)
 
-! calculate the extra weight factor contributed by new annihilation operator
+     ! calculate the extra weight factor contributed by
+     ! new annihilation operator
      call cat_weight_factor(tau_end2, te2_scr)
 
-! calculate the extra weight factor contributed by the annihilation operators
+     ! calculate the extra weight factor contributed by
+     ! the annihilation operators
      call cat_weight_kernel(1, dtau, te12_scr)
 
-! evaluate total weight factor (screening part)
+     ! evaluate total weight factor (screening part)
      scr = te1_scr - te2_scr - te12_scr
 
-! evaluate the final exponent factor
+     ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(+scr)
 
      return
