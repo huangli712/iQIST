@@ -1229,31 +1229,33 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for left shifting old segment or anti-segment
+     ! index address for left shifting old segment or anti-segment
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
-! imaginary time \tau_s for start point (the new one)
+     ! imaginary time \tau_s for start point (the new one)
      real(dp), intent(in) :: tau_start
 
-! local variables
-! loop index over segments and frequencies
+!! local variables
+     ! loop index over segments and frequencies
      integer  :: i
 
-! memory address for new start point
+     ! memory address for new start point
      integer  :: as
 
-! dummy variables, \tau_s * \omega
+     ! dummy variables, \tau_s * \omega
      real(dp) :: xs
 
-! get memory address for iso
+!! [body
+
+     ! get memory address for iso
      as = index_s(iso, flvr)
 
-! update index_s
+     ! update index_s
      do i=iso,ckink-1
          index_s(i, flvr) = index_s(i+1, flvr)
      enddo ! over i={iso,ckink-1} loop
@@ -1264,14 +1266,16 @@
      enddo ! over i={ckink-1,isn,-1} loop
      index_s(isn, flvr) = as
 
-! update time_s, record new imaginary time point
+     ! update time_s, record new imaginary time point
      time_s(as, flvr) = tau_start
 
-! update exp_s, record new exponent values
+     ! update exp_s, record new exponent values
      do i=1,nfreq
          xs = rmesh(i) * tau_start
          exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
      enddo ! over i={1,nfreq} loop
+
+!! body]
 
      return
   end subroutine cat_lshift_colour
