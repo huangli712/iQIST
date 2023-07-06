@@ -2121,34 +2121,36 @@
 
      implicit none
 
-! external arguments
-! overlap of segments for two different flavors
+!! external arguments
+     ! overlap of segments for two different flavors
      real(dp), intent(out) :: ovlp(norbs,norbs)
 
-! local variables
-! loop index over segments
+!! local variables
+     ! loop index over segments
      integer  :: i
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: flvr
 
-! imaginary time for start and end points
+     ! imaginary time for start and end points
      real(dp) :: ts
      real(dp) :: te
 
-! overlap between a given segment and segments in a flavor channel
+     ! overlap between a given segment and segments in a flavor channel
      real(dp) :: oaux(norbs)
 
-! loop over flavors
+!! [body
+
+     ! loop over flavors
      FLVR_CYCLE: do flvr=1,norbs
 
          STATUS_BLOCK: select case ( stts(flvr) )
 
-! case 1: there is no segments, null configuration
+             ! case 1: there is no segments, null configuration
              case (0)
                  ovlp(flvr,:) = zero
 
-! case 2: there are segments, segment configuration
+             ! case 2: there are segments, segment configuration
              case (1)
                  ovlp(flvr,:) = zero
                  do i=1,rank(flvr)
@@ -2158,7 +2160,7 @@
                      ovlp(flvr,:) = ovlp(flvr,:) + oaux
                  enddo ! over i={1,rank(flvr)} loop
 
-! case 3: there are segments, anti-segment configuration
+             ! case 3: there are segments, anti-segment configuration
              case (2)
                  call cat_ovlp_segment_(flvr, zero, beta, oaux)
                  ovlp(flvr,:) = oaux
@@ -2169,7 +2171,7 @@
                      ovlp(flvr,:) = ovlp(flvr,:) - oaux
                  enddo ! over i={1,rank(flvr)} loop
 
-! case 4: there is no segments, full configuration
+             ! case 4: there is no segments, full configuration
              case (3)
                  call cat_ovlp_segment_(flvr, zero, beta, oaux)
                  ovlp(flvr,:) = oaux
@@ -2177,6 +2179,8 @@
          end select STATUS_BLOCK
 
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+
+!! body]
 
      return
   end subroutine cat_occupy_double
