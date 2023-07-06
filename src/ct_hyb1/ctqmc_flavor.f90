@@ -1168,31 +1168,33 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address for removing old segment or anti-segment
+     ! index address for removing old segment or anti-segment
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
-! local variables
-! loop index over segments
+!! local variables
+     ! loop index over segments
      integer :: i
 
-! memory address for old start and end points
+     ! memory address for old start and end points
      integer :: as
      integer :: ae
 
-! get memory address for is and ie
+!! [body
+
+     ! get memory address for is and ie
      as = index_s(is, flvr)
      ae = index_e(ie, flvr)
 
-! push the memory address back to the empty_s and empty_e stacks
+     ! push the memory address back to the empty_s and empty_e stacks
      call istack_push( empty_s(flvr), as )
      call istack_push( empty_e(flvr), ae )
 
-! remove the unused index from index_s and index_e
+     ! remove the unused index from index_s and index_e
      do i=is,ckink-1
          index_s(i, flvr) = index_s(i+1, flvr)
      enddo ! over i={is,ckink-1} loop
@@ -1202,6 +1204,8 @@
          index_e(i, flvr) = index_e(i+1, flvr)
      enddo ! over i={ie,ckink-1} loop
      index_e(ckink, flvr) = 0
+
+!! body]
 
      return
   end subroutine cat_remove_colour
