@@ -482,56 +482,59 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old segment or anti-segment
-! is and ie are for start and end points, respectively
+     ! index address to remove old segment or anti-segment
+     ! is and ie are for start and end points, respectively
      integer, intent(out)  :: is, ie
 
-! whether it is an anti-segment
+     ! whether it is an anti-segment
      logical, intent(out)  :: anti
 
-! start point of the selected segment
+     ! start point of the selected segment
      real(dp), intent(out) :: tau_start
 
-! end point of the selected segment
+     ! end point of the selected segment
      real(dp), intent(out) :: tau_end
 
-! possible maximum length of the old segment
+     ! possible maximum length of the old segment
      real(dp), intent(out) :: tau_max
 
-! initialize is and ie
+!! [body
+
+     ! initialize is and ie
      is = 1
      ie = 1
 
-! randomly select start index address, which is used to access the segment
+     ! randomly select start index address, which is used to
+     ! access the segment
      is = ceiling( spring_sfmt_stream() * ckink )
 
-! initialize tau_start, tau_end and tau_max
+     ! initialize tau_start, tau_end and tau_max
      tau_start = zero
      tau_end = zero
      tau_max = zero
 
-! determine anti randomly
+     ! determine anti randomly
      if ( spring_sfmt_stream() > half ) then
          anti = .true.  ! remove anti-segment
      else
          anti = .false. ! remove segment
      endif ! back if ( spring_sfmt_stream() > half ) block
 
-!-------------------------------------------------------------------------
-! stage 1: need to remove a segment
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
+     ! stage 1: need to remove a segment
+     !--------------------------------------------------------------------
      if ( anti .eqv. .false. ) then
 
-! case 1: there are segments, segment configuration
-!-------------------------------------------------------------------------
+         ! case 1: there are segments, segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 1 ) then
 
-! case 1A: there is only one segment
-! turn to null configuration
+             ! case 1A: there is only one segment
+             ! turn to null configuration
              if ( ckink == 1 ) then
                  ie = 1
                  cstat = 0
@@ -539,17 +542,18 @@
                  tau_end = time_e(index_e(1, flvr), flvr)
                  tau_max = beta
 
-! case 1B: there are more than one segments
-! keep segment configuration
+             ! case 1B: there are more than one segments
+             ! keep segment configuration
              else
                  ie = is
                  cstat = 1
                  tau_start = time_s(index_s(is, flvr), flvr)
                  tau_end = time_e(index_e(ie, flvr), flvr)
-! remove a normal segment, not the last segment
+                 ! remove a normal segment, not the last segment
                  if ( is < ckink ) then
                      tau_max = time_s(index_s(is+1, flvr), flvr) - tau_start
-! remove the last segment, pay special attention to tau_max
+                 ! remove the last segment, pay special attention
+                 ! to tau_max
                  else
                      tau_max = beta - tau_start + time_s(index_s(1, flvr), flvr) - zero
                  endif ! back if ( is < ckink ) block
@@ -557,14 +561,14 @@
              endif ! back if ( ckink == 1 ) block
 
          endif ! back if ( stts(flvr) == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 2: there are segments, anti-segment configuration
-!-------------------------------------------------------------------------
+         ! case 2: there are segments, anti-segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 2 ) then
 
-! case 2A: there is only one anti-segment
-! turn to null configuration
+             ! case 2A: there is only one anti-segment
+             ! turn to null configuration
              if ( ckink == 1 ) then
                  ie = 1
                  cstat = 0
@@ -572,18 +576,18 @@
                  tau_end = time_e(index_e(1, flvr), flvr)
                  tau_max = beta
 
-! case 2B: there are more than one segment or anti-segment
+             ! case 2B: there are more than one segment or anti-segment
              else
-! remove a normal segment, not the last segment
-! keep anti-segment configuration
+                 ! remove a normal segment, not the last segment
+                 ! keep anti-segment configuration
                  if ( is < ckink ) then
                      ie = is + 1
                      cstat = 2
                      tau_start = time_s(index_s(is, flvr), flvr)
                      tau_end = time_e(index_e(ie, flvr), flvr)
                      tau_max = time_s(index_s(is+1, flvr), flvr) - tau_start
-! remove the last segment, pay special attention to tau_max
-! turn to segment configuration
+                 ! remove the last segment, pay special attention to tau_max
+                 ! turn to segment configuration
                  else
                      ie = 1
                      cstat = 1
@@ -595,19 +599,19 @@
              endif ! back if ( ckink == 1 ) block
 
          endif ! back if ( stts(flvr) == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! stage 2: need to remove an anti-segment
-!-------------------------------------------------------------------------
+         !----------------------------------------------------------------
+         ! stage 2: need to remove an anti-segment
+         !----------------------------------------------------------------
      else ! anti .eqv. .true.
 
-! case 1: there are segments, segment configuration
-!-------------------------------------------------------------------------
+         ! case 1: there are segments, segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 1 ) then
 
-! case 1A: there is only one segment
-! turn to full configuration
+             ! case 1A: there is only one segment
+             ! turn to full configuration
              if ( ckink == 1 ) then
                  ie = 1
                  cstat = 3
@@ -615,18 +619,20 @@
                  tau_end = time_e(index_e(1, flvr), flvr)
                  tau_max = beta
 
-! case 1B: there are more than one segments
+             ! case 1B: there are more than one segments
              else
-! remove a normal anti-segment, not the first anti-segment
-! keep segment configuration
+                 ! remove a normal anti-segment,
+                 ! not the first anti-segment
+                 ! keep segment configuration
                  if ( is > 1 ) then
                      ie = is - 1
                      cstat = 1
                      tau_start = time_s(index_s(is, flvr), flvr)
                      tau_end = time_e(index_e(ie, flvr), flvr)
                      tau_max = tau_start - time_s(index_s(is-1, flvr), flvr)
-! remove the first anti-segment, pay special attention to tau_max
-! turn to anti-segment configuration
+                 ! remove the first anti-segment,
+                 ! pay special attention to tau_max
+                 ! turn to anti-segment configuration
                  else
                      ie = ckink
                      cstat = 2
@@ -638,14 +644,14 @@
              endif ! back if ( ckink == 1 ) block
 
          endif ! back if ( stts(flvr) == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 2: there are segments, anti-segment configuration
-!-------------------------------------------------------------------------
+         ! case 2: there are segments, anti-segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 2 ) then
 
-! case 2A: there is only one anti-segment
-! turn to full configuration
+             ! case 2A: there is only one anti-segment
+             ! turn to full configuration
              if ( ckink == 1 ) then
                  ie = 1
                  cstat = 3
@@ -653,17 +659,19 @@
                  tau_end = time_e(index_e(1, flvr), flvr)
                  tau_max = beta
 
-! case 2B: there are more than one segment or anti-segment
-! keep anti-segment configuration
+             ! case 2B: there are more than one segment or anti-segment
+             ! keep anti-segment configuration
              else
                  ie = is
                  cstat = 2
                  tau_start = time_s(index_s(is, flvr), flvr)
                  tau_end = time_e(index_e(ie, flvr), flvr)
-! remove a normal anti-segment, not the first anti-segment
+                 ! remove a normal anti-segment,
+                 ! not the first anti-segment
                  if ( is > 1 ) then
                      tau_max = tau_start - time_s(index_s(is-1, flvr), flvr)
-! remove the first anti-segment, pay special attention to tau_max
+                 ! remove the first anti-segment,
+                 ! pay special attention to tau_max
                  else
                      tau_max = tau_start - zero + beta - time_s(index_s(ckink, flvr), flvr)
                  endif ! back if ( is > 1 ) block
@@ -671,9 +679,11 @@
              endif ! back if ( ckink == 1 ) block
 
          endif ! back if ( stts(flvr) == 2 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      endif ! back if ( anti .eqv. .false. ) block
+
+!! body]
 
      return
   end subroutine try_remove_colour
