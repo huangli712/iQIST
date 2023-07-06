@@ -128,15 +128,18 @@
              tau_end = spring_sfmt_stream() * tau_max + tau_start
 
              ! check the position of tau_end and setup cstat
+             !
              ! zero < tau_start < tau_end < beta,
              ! turn to segment configuration
              if ( tau_end < beta ) then
                  cstat = 1
+             !
              ! zero < tau_end < tau_start < beta,
              ! turn to anti-segment configuration
              else
                  cstat = 2
                  tau_end = tau_end - beta
+             !
              endif ! back if ( tau_end < beta ) block
          endif ! back if ( stts(flvr) == 0 ) block
          !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
