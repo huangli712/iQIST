@@ -708,39 +708,40 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to left shift old segment or anti-segment
-! iso and isn are for old and new indices, respectively
+     ! index address to left shift old segment or anti-segment
+     ! iso and isn are for old and new indices, respectively
      integer, intent(out)  :: iso, isn
 
-! whether the update operation winds around the circle
+     ! whether the update operation winds around the circle
      logical, intent(out)  :: ring
 
-! start point of the selected segment (the old one)
+     ! start point of the selected segment (the old one)
      real(dp), intent(out) :: tau_start1
 
-! start point of the selected segment (the new one)
+     ! start point of the selected segment (the new one)
      real(dp), intent(out) :: tau_start2
 
-! local variables
-! dummy variables, end points in imaginary time
+!! local variables
+     ! dummy variables, end points in imaginary time
      real(dp) :: tau_end1
      real(dp) :: tau_end2
 
-! initialize ring
+     ! initialize ring
      ring = .false.
 
-! initialize iso and isn
+     ! initialize iso and isn
      iso = 1
      isn = 1
 
-! randomly select start index address, which is used to access the segment
+     ! randomly select start index address, which is used to
+     ! access the segment
      iso = ceiling( spring_sfmt_stream() * ckink )
 
-! initialize tau_start1 and tau_start2
+     ! initialize tau_start1 and tau_start2
      tau_start1 = zero
      tau_start2 = zero
 
