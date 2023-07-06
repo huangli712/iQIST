@@ -1633,6 +1633,8 @@
      ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(-scr)
 
+!! body]
+
      return
   end subroutine cat_remove_ztrace
 
@@ -1934,6 +1936,8 @@
 
      ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(+scr)
+
+!! body]
 
      return
   end subroutine cat_rshift_ztrace
@@ -2523,35 +2527,37 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! number of segments (operator pair)
+     ! number of segments (operator pair)
      integer, intent(in) :: kink
 
-! whether it is an anti-segment configuration
+     ! whether it is an anti-segment configuration
      logical, intent(in) :: anti
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! data for imaginary time \tau
+     ! data for imaginary time \tau
      real(dp) :: time(2*kink)
 
-! generate 2*kink random numbers range from 0 to 1
+!! [body
+
+     ! generate 2*kink random numbers range from 0 to 1
      do i=1,2*kink
          time(i) = spring_sfmt_stream()
      enddo ! over i={1,2*kink} loop
 
-! scale time from [0,1] to [0, beta]
+     ! scale time from [0,1] to [0, beta]
      time = time * beta
 
-! sort time series
+     ! sort time series
      call s_sorter(2*kink, time)
 
-! build segments or anti-segments
+     ! build segments or anti-segments
      if ( anti .eqv. .false. ) then
          do i=1,kink
              call cat_insert_colour( flvr, i, i, time(2*i-1), time(2*i) )
@@ -2566,8 +2572,10 @@
          stts(flvr) = 2
      endif ! back if ( anti .eqv. .false. ) block
 
-! update the rank
+     ! update the rank
      rank(flvr) = ckink
+
+!! body]
 
      return
   end subroutine cat_make_diagrams
@@ -2588,18 +2596,20 @@
 
      implicit none
 
-! external arguments
-! output style
+!! external arguments
+     ! output style
      integer, intent(in) :: show_type
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer :: i
 
-! loop index over segments or anti-segments
+     ! loop index over segments or anti-segments
      integer :: j
 
-! apply normal display mode
+!! [body
+
+     ! apply normal display mode
      if ( show_type == 1 ) then
          do i=1,norbs
              write(mystd,'(4X,a,i4)') '# flavor:', i
@@ -2619,7 +2629,7 @@
              write(mystd,*)
          enddo ! over i={1,norbs} loop
 
-! apply compat display mode
+     ! apply compat display mode
      else
          do i=1,norbs
              write(mystd,'(4X,a,i4)') '# flavor:', i
@@ -2651,6 +2661,8 @@
          enddo ! over i={1,norbs} loop
 
      endif ! back if ( show_type == 1 ) block
+
+!! body]
 
      return
   end subroutine cat_disp_diagrams
