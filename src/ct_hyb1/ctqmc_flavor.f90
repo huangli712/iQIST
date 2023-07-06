@@ -59,52 +59,55 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to insert new segment or anti-segment
-! is and ie are for start and end points, respectively
+     ! index address to insert new segment or anti-segment
+     ! is and ie are for start and end points, respectively
      integer, intent(out)  :: is, ie
 
-! whether it is an anti-segment
+     ! whether it is an anti-segment
      logical, intent(out)  :: anti
 
-! whether the new segment or anti-segment can be inserted diagrammatically
+     ! whether the new segment or anti-segment can be
+     ! inserted diagrammatically
      logical, intent(out)  :: ladd
 
-! start point of the new segment
+     ! start point of the new segment
      real(dp), intent(out) :: tau_start
 
-! end point of the new segment
+     ! end point of the new segment
      real(dp), intent(out) :: tau_end
 
-! possible maximum length of the new segment
+     ! possible maximum length of the new segment
      real(dp), intent(out) :: tau_max
 
-! local variables
-! loop index over segments
+!! local variables
+     ! loop index over segments
      integer  :: i
 
-! imaginary time for start and end points
+     ! imaginary time for start and end points
      real(dp) :: ts
      real(dp) :: te
 
-! initialize is and ie
+!! [body
+
+     ! initialize is and ie
      is = 1
      ie = 1
 
-! select start point in imaginary time of the new segment randomly
+     ! select start point in imaginary time of the new segment randomly
      tau_start = spring_sfmt_stream() * beta
 
-! initialize tau_end and tau_max
+     ! initialize tau_end and tau_max
      tau_end = zero
      tau_max = zero
 
-! initialize ladd
+     ! initialize ladd
      ladd = .true.
 
-! determine anti randomly
+     ! determine anti randomly
      if ( spring_sfmt_stream() > half ) then
          anti = .true.  ! insert anti-segment
      else
