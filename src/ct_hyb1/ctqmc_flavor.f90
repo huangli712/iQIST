@@ -141,11 +141,11 @@
          endif ! back if ( stts(flvr) == 0 ) block
          !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! case 2: there are segments, segment configuration
-!-------------------------------------------------------------------------
+         ! case 2: there are segments, segment configuration
+         !----------------------------------------------------------------
          if ( stts(flvr) == 1 ) then
 
-! search whether tau_start is in an existing segment
+             ! search whether tau_start is in an existing segment
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
                  te = time_e(index_e(i, flvr), flvr) ! get \tau_e at end   point
@@ -156,10 +156,12 @@
                  endif ! back if ( tau_start > ts .and. tau_start < te ) block
              enddo ! over i={1,ckink} loop
 
-! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully
-! case 2A: tau_start is in front of all segments
-! zero < tau_start < tau_end < ... < beta, keep segment configuration
+             ! now we know we can insert tau_start, and then tau_end and
+             ! tau_max should be determined carefully
+             !
+             ! case 2A: tau_start is in front of all segments
+             ! zero < tau_start < tau_end < ... < beta,
+             ! keep segment configuration
              if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) then
                  is = 1
                  ie = 1
@@ -167,32 +169,35 @@
                  tau_max = time_s(index_s(1, flvr), flvr) - tau_start
                  tau_end = spring_sfmt_stream() * tau_max + tau_start
 
-! case 2B: tau_start is after all segments
+             ! case 2B: tau_start is after all segments
              else if ( tau_start > time_e(index_e(ckink, flvr), flvr) ) then
                  is = ckink + 1
                  ie = ckink + 1
                  tau_max = beta - tau_start + time_s(index_s(1, flvr), flvr) - zero
                  tau_end = spring_sfmt_stream() * tau_max + tau_start
 
-! check the position of tau_end and setup cstat
-! zero < ... < tau_start < tau_end < beta, keep segment configuration
+                 ! check the position of tau_end and setup cstat
+                 ! zero < ... < tau_start < tau_end < beta,
+                 ! keep segment configuration
                  if ( tau_end < beta ) then
                      cstat = 1
-! zero < tau_end < ... < tau_start < beta, turn to anti-segment configuration
+                 ! zero < tau_end < ... < tau_start < beta,
+                 ! turn to anti-segment configuration
                  else
                      cstat = 2
                      ie = 1
                      tau_end = tau_end - beta
                  endif ! back if ( tau_end < beta ) block
 
-! case 2C: tau_start is in the middle of two segments
-! zero < ... < tau_start < tau_end < ... < beta, keep segment configuration
+             ! case 2C: tau_start is in the middle of two segments
+             ! zero < ... < tau_start < tau_end < ... < beta,
+             ! keep segment configuration
              else
                  do i=1,ckink-1
                      ts = time_s(index_s(i+1, flvr), flvr)
                      te = time_e(index_e(i  , flvr), flvr)
 
-! determine the position of tau_end and tau_max
+                     ! determine the position of tau_end and tau_max
                      if ( tau_start > te .and. tau_start < ts ) then
                          is = i + 1
                          ie = i + 1
@@ -206,7 +211,7 @@
              endif ! back if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) block
 
          endif ! back if ( stts(flvr) == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! case 3: there are segments, anti-segment configuration
 !-------------------------------------------------------------------------
