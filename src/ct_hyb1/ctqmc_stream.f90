@@ -262,20 +262,24 @@
   subroutine ctqmc_setup_model()
      implicit none
 
-! build various meshes (tmesh, rmesh, lmesh, and rep_l, etc)
+!! [body
+
+     ! build various meshes (tmesh, rmesh, lmesh, and rep_l, etc)
      call ctqmc_input_mesh_()
 
-! build initial hybridization function (hybf)
+     ! build initial hybridization function (hybf)
      call ctqmc_input_hybf_()
 
-! build symmetry vector and impurity level (symm and eimp)
+     ! build symmetry vector and impurity level (symm and eimp)
      call ctqmc_input_eimp_()
 
-! build Coulomb interaction matrix (umat)
+     ! build Coulomb interaction matrix (umat)
      call ctqmc_input_umat_()
 
-! build dynamic interaction if available (ktau and ptau)
+     ! build dynamic interaction if available (ktau and ptau)
      call ctqmc_input_ktau_()
+
+!! body]
 
      return
   end subroutine ctqmc_setup_model
