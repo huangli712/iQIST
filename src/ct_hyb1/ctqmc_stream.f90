@@ -467,6 +467,8 @@
      ! used to check whether the input file (solver.eimp.in) exists
      logical  :: exists
 
+!! [body
+
      ! setup initial symm
      symm = 1
 
