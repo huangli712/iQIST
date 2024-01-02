@@ -48,24 +48,13 @@ flink: flink_lib flink_mod
 flink_lib:
 	cp $(FLINK)/libflink.a .
 
-csml:
+flink_mod:
 	cp $(FLINK)/constants.mod .
 	cp $(FLINK)/parser.mod .
 	cp $(FLINK)/linkedlist.mod .
-	#cp $(FLINK)/version.mod .
 
-exe: api cssl csml atomic-exe
-atomic-exe: $(exe_obj)
-	$(LINKER) $(exe_obj) -o atomic $(LFLAGS) $(LIBS)
-
-lib: api cssl csml atomic-lib
-atomic-lib: $(lib_obj)
-	$(ARCHIVER) libatomic.a $(lib_obj)
-
-pylib: lib
-	cpp -E -DPYAPI atomic_open.f90 > atomic_open_py.f90
-	$(F2PY) -c --f90exec=$(F2PYC) -m pyjasmine -L. -latomic -lMM $(F2PYL) atomic_open_py.f90
-	rm -fr *.dSYM atomic_open_py.f90
+exe: flink $(objects)
+	$(LINKER) $(objects) -o atomic $(LFLAGS) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -73,15 +62,13 @@ pylib: lib
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f *.so
 	rm -f atomic
-	rm -f libatomic.a
-	rm -f libMM.a
+	rm -f libflink.a
 
 clean-dat:
-	rm -f *.cix
 	rm -f *.dat
 	rm -f *.out
+	rm -f *.cix
 	rm -f solver.umat.in
 
 clean-all: clean clean-dat
