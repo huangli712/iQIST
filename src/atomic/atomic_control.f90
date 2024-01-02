@@ -1,39 +1,70 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
-!!! program : m_cntr     module
+!!! project : iqist @ jasmine
+!!! program : control module
+!!!           version module
 !!! source  : atomic_control.f90
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : define global control parameters for the atomic eigenvalue
 !!!           problem solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  module m_cntr
+!!========================================================================
+!!>>> module control                                                   <<<
+!!========================================================================
+
+!!
+!! @mod control
+!!
+!! define the control parameters and dimensional parameters.
+!!
+  module control
      use constants, only : dp
 
      implicit none
 
 !!========================================================================
+!!>>> character variables                                              <<<
+!!========================================================================
+
+!!
+!! @var cname
+!!
+!! code name of the current atomic eigenvalue solver
+!!
+     character(len = 09), public, save :: cname = 'JASMINE'
+
+!!========================================================================
 !!>>> integer variables                                                <<<
 !!========================================================================
 
-! control flag: where is the source for natural basis (the eigenstate of
-! crystal field + spin-orbital coupling)
-! 1: make natural basis inside of this program
-! 2: make natural basis outside of this program
+!!
+!! @var ibasis
+!!
+!! control flag, where is the source for natural basis (the eigenstate of
+!! crystal field + spin-orbital coupling)
+!!
+!! if ibasis == 1:
+!!     make natural basis inside of this program
+!!
+!! if ibasis == 2:
+!!     make natural basis outside of this program
+!!
      integer, public, save :: ibasis = 1
 
-! control flag: type of atomic Hamiltonian matrix diagonalization
-! 0: direct diagonalization in full Hilbert space (for camellia code)
-! 1: direct diagonalization in full Hilbert space (for begonia and lavender codes)
-! 2: good quantum numbers: N
-! 3: good quantum numbers: N, Sz
-! 4: good quantum numbers: N, Sz, PS
-! 5: good quantum numbers: N, Jz
+!!
+!! control flag: type of atomic Hamiltonian matrix diagonalization
+!! 0: direct diagonalization in full Hilbert space (for camellia code)
+!! 1: direct diagonalization in full Hilbert space (for begonia and lavender codes)
+!! 2: good quantum numbers: N
+!! 3: good quantum numbers: N, Sz
+!! 4: good quantum numbers: N, Sz, PS
+!! 5: good quantum numbers: N, Jz
+!!
      integer, public, save :: ictqmc = 1
 
 ! control flag: type of Coulomb interaction U
@@ -114,4 +145,4 @@
 ! SOC strength
      real(dp), public, save :: lambda= 0.0_dp
 
-  end module m_cntr
+  end module control

@@ -71,7 +71,7 @@
   subroutine atomic_print_summary()
      use constants, only : mystd
 
-     use m_cntr ! ALL
+     use control ! ALL
 
      implicit none
 

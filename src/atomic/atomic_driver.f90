@@ -19,7 +19,7 @@
   subroutine atomic_f_driver()
      use constants, only : dp, eps6, mystd
 
-     use m_cntr, only : ncfgs
+     use control, only : ncfgs
      use m_full, only : hmat, eval, evec
      use m_full, only : alloc_m_full, dealloc_m_full
 

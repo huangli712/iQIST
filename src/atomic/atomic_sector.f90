@@ -20,7 +20,7 @@
   subroutine atomic_make_sfmat()
      use constants, only : zero
 
-     use m_cntr, only : norbs
+     use control, only : norbs
      use m_full, only : dec_basis, ind_basis
      use m_sector, only : nsectors, sectors
      use m_sector, only : alloc_one_fmat
@@ -108,7 +108,7 @@
   subroutine atomic_make_shmat()
      use constants, only : one, epst, czero
 
-     use m_cntr, only : norbs
+     use control, only : norbs
      use m_full, only : bin_basis, dec_basis, ind_basis
      use m_spmat, only : emat, umat
      use m_sector, only : nsectors, sectors
@@ -299,9 +299,9 @@
   subroutine atomic_make_sectors()
      use constants, only : zero
 
-     use m_cntr, only : ictqmc
-     use m_cntr, only : nband, norbs, ncfgs
-     use m_cntr, only : nmini, nmaxi
+     use control, only : ictqmc
+     use control, only : nband, norbs, ncfgs
+     use control, only : nmini, nmaxi
      use m_full, only : dim_sub_n, bin_basis
      use m_sector, only : max_dim_sect, ave_dim_sect
      use m_sector, only : nsectors, sectors

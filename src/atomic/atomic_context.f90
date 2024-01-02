@@ -22,7 +22,7 @@
   module m_full
      use constants, only : dp, zero, czero
 
-     use m_cntr, only : norbs, ncfgs
+     use control, only : norbs, ncfgs
 
      implicit none
 
@@ -447,7 +447,7 @@
   module m_spmat
      use constants, only : dp, czero
 
-     use m_cntr, only : norbs
+     use control, only : norbs
 
      implicit none
 

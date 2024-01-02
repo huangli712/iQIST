@@ -23,7 +23,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients and Coulomb interaction matrices, etc.
@@ -123,7 +123,7 @@
 
 !!>>> atomic_make_gsz: make Sz quantum number for each orbital
   subroutine atomic_make_gsz(good_sz)
-     use m_cntr, only : norbs
+     use control, only : norbs
 
      implicit none
 
@@ -149,7 +149,7 @@
 
 !>>> atomic_make_gjz: make Jz quantum number for each orbital
   subroutine atomic_make_gjz(good_jz)
-     use m_cntr, only : nband, norbs
+     use control, only : nband, norbs
 
      implicit none
 
@@ -355,9 +355,9 @@
   subroutine atomic_make_hund(hund)
      use constants, only : dp, zero
 
-     use m_cntr, only : icu
-     use m_cntr, only : nband
-     use m_cntr, only : Jz, Js, Jp
+     use control, only : icu
+     use control, only : nband
+     use control, only : Jz, Js, Jp
 
 ! external arguments
 ! Hund's rule coupling matrix
@@ -440,8 +440,8 @@
   subroutine atomic_make_umatK()
      use constants, only : dp, zero, two, czero
 
-     use m_cntr, only : nband, norbs
-     use m_cntr, only : Uc
+     use control, only : nband, norbs
+     use control, only : Uc
      use m_spmat, only : umat
 
      implicit none
@@ -538,8 +538,8 @@
   subroutine atomic_make_umatS()
      use constants, only : dp, zero, half
 
-     use m_cntr, only : nband, norbs
-     use m_cntr, only : Ud, Jh
+     use control, only : nband, norbs
+     use control, only : Ud, Jh
      use m_spmat, only : umat
 
      implicit none
@@ -778,7 +778,7 @@
   subroutine atomic_make_tmat_c2r(tmat_c2r)
      use constants, only : dp, czero, cone, czi
 
-     use m_cntr, only : nband, norbs
+     use control, only : nband, norbs
 
      implicit none
 
@@ -886,7 +886,7 @@
   subroutine atomic_make_tmat_r2c(tmat_r2c)
      use constants, only : dp, czero
 
-     use m_cntr, only : norbs
+     use control, only : norbs
 
 ! external arguments
 ! the transformation matrix from real orbitals to complex orbitals
@@ -909,7 +909,7 @@
   subroutine atomic_make_tmat_c2j(tmat_c2j)
      use constants, only : dp, czero
 
-     use m_cntr, only : nband, norbs
+     use control, only : nband, norbs
 
      implicit none
 
@@ -1063,7 +1063,7 @@
   subroutine atomic_tran_umat(amtrx, umat, umat_t)
      use constants, only : dp, czero, epst
 
-     use m_cntr, only : norbs
+     use control, only : norbs
 
      implicit none
 
