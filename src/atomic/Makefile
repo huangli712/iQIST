@@ -35,25 +35,17 @@ lev1 = atomic_full.o atomic_sector.o
 lev2 = atomic_stream.o atomic_util.o
 lev3 = atomic_dump.o atomic_print.o
 main = atomic_main.o
-open = atomic_open.o
+mlib = libflink.a
 
-CAPI = i_ctqmc.o
-CLIB = libflink.a
-
-objects = $(modc) $(core) $(lev1) $(lev2) $(lev3)
-exe_obj = $(objects) $(main) $(CLIB)
-lib_obj = $(objects) $(open) $(CAPI)
+objects = $(modc) $(core) $(lev1) $(lev2) $(lev3) $(main) $(mlib)
 
 default: all
 
 all: exe
 
-api:
-	#cp ../../capi/capi.mod .
-	#cp ../../capi/i_ctqmc.o .
+flink: flink_lib flink_mod
 
-cssl:
-	#cp ../../base/libMM.a .
+flink_lib:
 	cp $(FLINK)/libflink.a .
 
 csml:
