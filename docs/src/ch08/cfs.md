@@ -1,2 +1,0 @@
-### Crystal field splitting
-

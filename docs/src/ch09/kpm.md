@@ -1,2 +1,0 @@
-### Kernel polynomial method
-
