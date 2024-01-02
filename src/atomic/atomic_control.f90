@@ -57,31 +57,57 @@
      integer, public, save :: ibasis = 1
 
 !!
-!! control flag: type of atomic Hamiltonian matrix diagonalization
-!! 0: direct diagonalization in full Hilbert space (for camellia code)
-!! 1: direct diagonalization in full Hilbert space (for begonia and lavender codes)
-!! 2: good quantum numbers: N
-!! 3: good quantum numbers: N, Sz
-!! 4: good quantum numbers: N, Sz, PS
-!! 5: good quantum numbers: N, Jz
+!! @var ictqmc
+!!
+!! control flag, type of atomic Hamiltonian matrix diagonalization
+!!
+!! if ictqmc == 0:
+!!     direct diagonalization in full Hilbert space (for camellia code)
+!!
+!! if ictqmc == 1:
+!!     direct diagonalization in full Hilbert space (for begonia and lavender codes)
+!!
+!! if ictqmc == 2:
+!!     good quantum numbers: N
+!!
+!! if ictqmc == 3:
+!!     good quantum numbers: N, Sz
+!!
+!! if ictqmc == 4:
+!!     good quantum numbers: N, Sz, PS
+!!
+!! if ictqmc == 5:
+!!     good quantum numbers: N, Jz
 !!
      integer, public, save :: ictqmc = 1
 
-! control flag: type of Coulomb interaction U
-! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
-! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
-! 3: Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
+!!
+!! @var icu
+!!
+!! control flag: type of Coulomb interaction U
+!! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
+!! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
+!! 3: Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
+!!
      integer, public, save :: icu    = 1
 
-! control flag: type of crystal field (CF)
-! 0: no crystal field
-! 1: diagonal crystal field
-! 2: non-diagonal crystal field
+!!
+!! @var icf
+!!
+!! control flag: type of crystal field (CF)
+!! 0: no crystal field
+!! 1: diagonal crystal field
+!! 2: non-diagonal crystal field
+!!
      integer, public, save :: icf    = 0
 
-! control flag: type of spin-orbit coupling (SOC)
-! 0: no SOC
-! 1: onsite atomic SOC, H_soc = \lambda * L*S
+!!
+!! @var isoc
+!!
+!! control flag: type of spin-orbit coupling (SOC)
+!! 0: no SOC
+!! 1: onsite atomic SOC, H_soc = \lambda * L*S
+!!
      integer, public, save :: isoc   = 0
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
