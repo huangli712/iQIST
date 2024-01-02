@@ -3,25 +3,25 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/tools/jasmine directory.
+## Makefile for iqist/src/atomic directory.
 ##
 ## Usage
 ## =====
 ##
-## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+## 'make', 'make clean', 'make clean-dat' or 'make clean-all'
 ##
 ## Author
 ## ======
 ##
-## This building system is designed, created, implemented, and maintained by
+## This building system is designed, created, and maintained by
 ##
-## Li Huang // email: lihuang.dmft@gmail.com
+## Li Huang // email: huangli@caep.cn
 ##
 ## History
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 03/29/2017 by li huang (last modified)
+## 01/02/2024 by li huang (last modified)
 ##
 ##
 
