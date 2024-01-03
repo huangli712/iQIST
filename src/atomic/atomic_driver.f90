@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/03/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : kernel drivers for atomic eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
@@ -20,8 +20,8 @@
      use constants, only : dp, eps6, mystd
 
      use control, only : ncfgs
-     use m_full, only : hmat, eval, evec
-     use m_full, only : cat_alloc_fock_eigen, cat_free_fock_eigen
+     use m_fock, only : hmat, eval, evec
+     use m_fock, only : cat_alloc_fock_eigen, cat_free_fock_eigen
 
      implicit none
 

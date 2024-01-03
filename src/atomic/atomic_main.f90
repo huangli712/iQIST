@@ -71,8 +71,8 @@
      use constants, only : mystd
 
      use control, only : ictqmc
-     use m_full, only : cat_alloc_fock_basis
-     use m_full, only : cat_free_fock_basis
+     use m_fock, only : cat_alloc_fock_basis
+     use m_fock, only : cat_free_fock_basis
      use m_spmat, only : alloc_m_spmat
      use m_spmat, only : dealloc_m_spmat
 

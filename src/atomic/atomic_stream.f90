@@ -517,7 +517,7 @@
 !!>>> atomic_make_fock: make Fock basis for the full Hilbert space
   subroutine atomic_make_fock()
      use control, only : norbs, ncfgs
-     use m_full, only : dim_sub_n, bin_basis, dec_basis, ind_basis
+     use m_fock, only : dim_sub_n, bin_basis, dec_basis, ind_basis
 
      implicit none
 

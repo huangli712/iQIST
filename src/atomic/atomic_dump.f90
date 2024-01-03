@@ -26,7 +26,7 @@
      use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_full, only : bin_basis, dec_basis, ind_basis
+     use m_fock, only : bin_basis, dec_basis, ind_basis
 
      implicit none
 
@@ -264,7 +264,7 @@
      use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_full, only : eval
+     use m_fock, only : eval
 
      implicit none
 
@@ -303,7 +303,7 @@
      use constants, only : eps6, mytmp
 
      use control, only : ncfgs
-     use m_full, only : evec, bin_basis
+     use m_fock, only : evec, bin_basis
 
      implicit none
 
@@ -352,7 +352,7 @@
      use control, only : Uc, Uv, Js, Jp, Jz
      use control, only : Ud, Jh
      use control, only : mune, lambda
-     use m_full, only : eval, evec, occu, spin, fmat, hmat
+     use m_fock, only : eval, evec, occu, spin, fmat, hmat
 
      implicit none
 
@@ -524,7 +524,7 @@
   subroutine atomic_dump_seigvec()
      use constants, only : eps6, mytmp
 
-     use m_full, only : bin_basis
+     use m_fock, only : bin_basis
      use m_sector, only : nsectors
      use m_sector, only : sectors
 
@@ -725,7 +725,7 @@
 
      use control, only : ictqmc
      use control, only : ncfgs
-     use m_full, only : bin_basis
+     use m_fock, only : bin_basis
      use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
      use m_sector, only : sectors
 

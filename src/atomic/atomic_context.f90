@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : jasmine
-!!! program : m_full   module
+!!! program : m_fock   module
 !!!           m_sector module
 !!!           m_spmat  module
 !!! source  : atomic_context.f90
@@ -15,15 +15,15 @@
 !!!-----------------------------------------------------------------------
 
 !!========================================================================
-!!>>> module m_full                                                    <<<
+!!>>> module m_fock                                                    <<<
 !!========================================================================
 
 !!
-!! @mod m_full
+!! @mod m_fock
 !!
 !! define Fock basis of full Hilbert space and corresponding eigensystem
 !!
-  module m_full
+  module m_fock
      use constants, only : dp
      use constants, only : zero, czero
 
@@ -249,7 +249,7 @@
      return
   end subroutine cat_free_fock_eigen
 
-  end module m_full
+  end module m_fock
 
 !!========================================================================
 !!>>> module m_sector                                                  <<<
