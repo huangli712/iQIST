@@ -27,6 +27,21 @@
 
 !! [body
 
+     ! make Fock basis for the full many particle Hiblert space
+     write(mystd,'(2X,a)') 'make Fock basis'
+     call atomic_make_fock()
+     write(mystd,*)
+
+     ! make single particle related matrices
+     write(mystd,'(2X,a)') 'make single particle matrices'
+     call atomic_make_spmat()
+     write(mystd,*)
+
+     ! make natural basis
+     write(mystd,'(2X,a)') 'make natural eigenbasis'
+     call atomic_make_natural()
+     write(mystd,*)
+
      select case (ictqmc)
 
          ! diagonalize the atomic Hamiltonian in full Hilbert space
@@ -79,6 +94,8 @@
              call s_print_error('atomic_dispatcher','this task is not supported')
 
      end select
+
+!! body]
 
      return
   end subroutine atomic_dispatcher
