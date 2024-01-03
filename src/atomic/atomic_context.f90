@@ -345,16 +345,32 @@
 
      end type t_sector
 
-! number of sectors
+!!
+!! @var nsectors
+!!
+!! number of sectors
+!!
      integer, public, save  :: nsectors
 
-! maximum dimension of sectors
+!!
+!! @var max_dim_sect
+!!
+!! maximum dimension of sectors
+!!
      integer, public, save  :: max_dim_sect
 
-! average dimension of sectors
+!!
+!! @var ave_dim_sect
+!!
+!! average dimension of sectors
+!!
      real(dp), public, save :: ave_dim_sect
 
-! all the sectors
+!!
+!! @var sectors
+!!
+!! all the sectors
+!!
      type (t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
