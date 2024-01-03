@@ -255,68 +255,83 @@
 !!>>> module m_sector                                                  <<<
 !!========================================================================
 
-!!>>> data structure for good quantum numbers (GQNs) algorithm
+!!
+!! @mod m_sector
+!!
+!! data structure for good quantum numbers (GQNs) algorithm
+!!
   module m_sector
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      implicit none
 
-! data structure for one F-matrix
-!-------------------------------------------------------------------------
+!!
+!! @struct t_fmat
+!!
+!! data structure for one F-matrix
+!!
      private :: t_fmat
      type t_fmat
 
-! the dimension, n x m
+         ! the dimension, n x m
          integer :: n
          integer :: m
 
-! the memory space for the matrix
+         ! the memory space for the matrix
          real(dp), allocatable :: val(:,:)
 
      end type t_fmat
 
-! data structure for one sector
-!-------------------------------------------------------------------------
+!!
+!! @struct t_sector
+!!
+!! data structure for one sector
+!!
      public :: t_sector
      type t_sector
 
-! the dimension of this sector
+         ! the dimension of this sector
          integer :: ndim
  
-! number of fermion operators
+         ! number of fermion operators
          integer :: nops
 
-! the start index of this sector
+         ! the start index of this sector
          integer :: istart
 
-! total number of electrons N
+         ! total number of electrons N
          integer :: nele
 
-! z component of spin: Sz
+         ! z component of spin: Sz
          integer :: sz
  
-! z component of spin-orbit momentum: Jz
+          ! z component of spin-orbit momentum: Jz
          integer :: jz
 
-! PS good quantum number
+         ! PS good quantum number
          integer :: ps
 
-! the Fock basis index of this sector
+         ! the Fock basis index of this sector
          integer, allocatable  :: basis(:)
 
-! the next sector after a fermion operator acts on this sector
-! next(nops,0) for annihilation and next(nops,1) for creation operators
-! -1: outside of the Hilbert space
-! otherwise, it is the index of next sector
+         ! the next sector after a fermion operator acts on this sector
+         !
+         ! next(nops,0) for annihilation
+         ! next(nops,1) for creation operators
+         !
+         ! if it is -1, it means the next sector is null (outside of the
+         ! Hilbert space). otherwise, it is the index of next sector
          integer, allocatable  :: next(:,:)
 
-! the eigenvalues
+         ! the eigenvalues
          real(dp), allocatable :: eval(:)
 
-! the eigenvectors, since Hamiltonian must be real, then it is real as well
+         ! the eigenvectors, since Hamiltonian must be real, then it is
+         ! real as well
          real(dp), allocatable :: evec(:,:)
 
-! the Hamiltonian of this sector
+         ! the Hamiltonian of this sector
          complex(dp), allocatable :: hmat(:,:)
 
 ! the F-matrix between this sector and all other sectors
