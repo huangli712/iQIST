@@ -534,18 +534,24 @@
      return
   end subroutine cat_free_fmat
 
-!!>>> dealloc_one_sector: deallocate memory for one sector
-  subroutine dealloc_one_sector(one_sector)
+!!
+!! @sub cat_free_sector
+!!
+!! deallocate memory for one sector
+!!
+  subroutine cat_free_sector(one_sector)
      implicit none
 
-! external arguments
-! the sector
+!! external arguments
+     ! the sector
      type (t_sector), intent(inout) :: one_sector
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
+
+!! [body
 
      if ( allocated(one_sector%basis) ) deallocate(one_sector%basis)
      if ( allocated(one_sector%next)  ) deallocate(one_sector%next )
@@ -553,18 +559,20 @@
      if ( allocated(one_sector%evec)  ) deallocate(one_sector%evec )
      if ( allocated(one_sector%hmat)  ) deallocate(one_sector%hmat )
 
-! deallocate fmat one by one
+     ! deallocate fmat one by one
      if ( allocated(one_sector%fmat)  ) then
          do i=1,one_sector%nops
              do j=0,1
-                 call dealloc_one_fmat(one_sector%fmat(i,j))
+                 call cat_free_fmat(one_sector%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,one_sector%nops} loop
          deallocate(one_sector%fmat)
      endif ! back if ( allocated(one_sector%fmat)  ) block
 
+!! body]
+
      return
-  end subroutine dealloc_one_sector
+  end subroutine cat_free_sector
 
 !!>>> dealloc_m_sector: deallocate memory of sectors
   subroutine dealloc_m_sector()
