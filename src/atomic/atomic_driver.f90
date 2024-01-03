@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2015 by li huang (last modified)
 !!! purpose : kernel drivers for atomic eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
@@ -21,7 +21,7 @@
 
      use control, only : ncfgs
      use m_full, only : hmat, eval, evec
-     use m_full, only : alloc_m_full, dealloc_m_full
+     use m_full, only : cat_alloc_fock_eigen, cat_free_fock_eigen
 
      implicit none
 
@@ -35,7 +35,7 @@
 ! allocate memory for global variables
      write(mystd,'(2X,a)') 'allocate memory for global variables in full Hilbert space'
      call cpu_time(time_begin) ! record starting time
-     call alloc_m_full()
+     call cat_alloc_fock_eigen()
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
@@ -108,7 +108,7 @@
 ! deallocate memory
      write(mystd,'(2X,a)') 'deallocate memory for global variables in full Hilbert space'
      call cpu_time(time_begin) ! record starting time
-     call dealloc_m_full()
+     call cat_free_fock_eigen()
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)

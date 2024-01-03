@@ -71,8 +71,8 @@
      use constants, only : mystd
 
      use control, only : ictqmc
-     use m_full, only : alloc_m_full_basis
-     use m_full, only : dealloc_m_full_basis
+     use m_full, only : cat_alloc_fock_basis
+     use m_full, only : cat_free_fock_basis
      use m_spmat, only : alloc_m_spmat
      use m_spmat, only : dealloc_m_spmat
 
@@ -91,7 +91,7 @@
      call atomic_print_summary()
 
 ! allocate memory for basis-related matrices
-     call alloc_m_full_basis()
+     call cat_alloc_fock_basis()
 
 ! allocate memory for single particle matrices
      call alloc_m_spmat()
@@ -191,7 +191,7 @@
 
 ! deallocate memory
      call dealloc_m_spmat()
-     call dealloc_m_full_basis()
+     call cat_free_fock_basis()
 
 ! print footer
      call atomic_print_footer()

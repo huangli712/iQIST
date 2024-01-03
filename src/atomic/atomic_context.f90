@@ -206,21 +206,35 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> dealloc_m_full_basis: deallocate memory for these matrices
-  subroutine dealloc_m_full_basis()
+!!
+!! @sub cat_free_fock_basis
+!!
+!! deallocate memory for these matrices
+!!
+  subroutine cat_free_fock_basis()
      implicit none
+
+!! [body
 
      if ( allocated(dim_sub_n) ) deallocate(dim_sub_n)
      if ( allocated(bin_basis) ) deallocate(bin_basis)
      if ( allocated(dec_basis) ) deallocate(dec_basis)
      if ( allocated(ind_basis) ) deallocate(ind_basis)
 
-     return
-  end subroutine dealloc_m_full_basis
+!! body]
 
-!!>>> dealloc_m_full: deallocate memory for these matrices
-  subroutine dealloc_m_full()
+     return
+  end subroutine cat_free_fock_basis
+
+!!
+!! @sub cat_free_fock_eigen
+!!
+!! deallocate memory for these matrices
+!!
+  subroutine cat_free_fock_eigen()
      implicit none
+
+!! [body
 
      if ( allocated(eval) ) deallocate(eval)
      if ( allocated(evec) ) deallocate(evec)
@@ -230,8 +244,10 @@
 
      if ( allocated(hmat) ) deallocate(hmat)
 
+!! body]
+
      return
-  end subroutine dealloc_m_full
+  end subroutine cat_free_fock_eigen
 
   end module m_full
 

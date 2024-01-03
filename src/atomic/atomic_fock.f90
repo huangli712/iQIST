@@ -4,11 +4,11 @@
 !!!           atomic_make_foccu
 !!!           atomic_make_fspin
 !!!           atomic_make_fhmat
-!!! source  : atomic_full.f90
+!!! source  : atomic_fock.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : computational subroutines for the calculations of occupation
 !!!           number, spin moment, F-matrix, and atomic Hamiltonian in the
 !!!           full Fock space.
