@@ -18,11 +18,6 @@
 
      use constants, only : mystd
 
-     use control, only : ictqmc
-
-
-
-
      implicit none
 
 ! print the running header
@@ -83,54 +78,6 @@
      write(mystd,*)
 
 ! call the drivers to perform different tasks
-     select case(ictqmc)
-
-! task 0: diagonalize the atomic Hamiltonian in full Hilbert space
-         case (0)
-             write(mystd,'(2X,a)') 'start full diagonalization'
-             call atomic_f_driver()
-
-! task 1: diagonalize the atomic Hamiltonian in full Hilbert space
-         case (1)
-             write(mystd,'(2X,a)') 'start full diagonalization'
-             call atomic_f_driver()
-
-! task 2: use good quantum numbers
-! total number of electrons: N
-! for the case of crystal field (CF) plus spin-orbital coupling (SOC)
-         case (2)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N)'
-             call atomic_s_driver()
-
-! task 3: use good quantum numbers
-! total number of electrons: N
-! z component of spin: Sz
-! for the case without SOC and Slater parameterized Coulomb interaction
-         case (3)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Sz)'
-             call atomic_s_driver()
-
-! task 4: use good quantum numbers
-! total number of electrons: N
-! z component of spin: Sz
-! PS number
-! for the case without SOC and Kanamori parametrized Coulomb interaction
-         case (4)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Sz, PS)'
-             call atomic_s_driver()
-
-! task 5: use good quantum numbers
-! total number of electrons: N
-! z component of spin-orbit momentum: Jz
-! for the case with SOC, and no CF
-         case (5)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Jz)'
-             call atomic_s_driver()
-
-         case default
-             call s_print_error('atomic_main','this computational mode is not supported')
-
-     end select
 
      call atomic_final_array()
 

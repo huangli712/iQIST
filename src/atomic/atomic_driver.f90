@@ -1,16 +1,87 @@
 !!!-----------------------------------------------------------------------
 !!! project : iqist @ jasmine
-!!! program : atomic_f_driver
+!!! program : atomic_dispatcher
+!!!           atomic_f_driver
 !!!           atomic_s_driver
 !!! source  : atomic_driver.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/03/2024 by li huang (last modified)
+!!!           01/04/2024 by li huang (last modified)
 !!! purpose : kernel drivers for atomic eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!
+!! @sub atomic_dispatcher
+!!
+!! dispatch the computational tashs
+!!
+  subroutine atomic_dispatcher()
+     use constants, only : mystd
+
+     use control, only : ictqmc
+
+     implicit none
+
+!! [body
+
+     select case (ictqmc)
+
+         ! diagonalize the atomic Hamiltonian in full Hilbert space
+         case (0)
+             write(mystd,'(2X,a)') 'start full diagonalization'
+             call atomic_f_driver()
+
+         ! diagonalize the atomic Hamiltonian in full Hilbert space
+         case (1)
+             write(mystd,'(2X,a)') 'start full diagonalization'
+             call atomic_f_driver()
+
+         ! use good quantum numbers
+         !
+         ! total number of electrons: N
+         ! with CF, with SOC
+         case (2)
+             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N)'
+             call atomic_s_driver()
+
+         ! use good quantum numbers
+         !
+         ! total number of electrons: N
+         ! z component of spin: Sz
+         ! without SOC, with Slater parameterized Coulomb interaction
+         case (3)
+             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Sz)'
+             call atomic_s_driver()
+
+         ! use good quantum numbers
+         !
+         ! total number of electrons: N
+         ! z component of spin: Sz
+         ! PS number
+         ! without SOC, with Kanamori parametrized Coulomb interaction
+         case (4)
+             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Sz, PS)'
+             call atomic_s_driver()
+
+         ! use good quantum numbers
+         !
+         ! total number of electrons: N
+         ! z component of spin-orbit momentum: Jz
+         ! with SOC, without CF
+         case (5)
+             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Jz)'
+             call atomic_s_driver()
+
+         case default
+             call s_print_error('atomic_dispatcher','this task is not supported')
+
+     end select
+
+     return
+  end subroutine atomic_dispatcher
 
 !!
 !! @sub atomic_f_driver
