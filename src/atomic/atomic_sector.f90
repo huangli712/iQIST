@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : implement the sector algorithm, calculate the F-matrix and
 !!!           build the atomic Hamiltonian sector-by-sector
 !!! status  : unstable
@@ -23,7 +23,7 @@
      use control, only : norbs
      use m_fock, only : dec_basis, ind_basis
      use m_sector, only : nsectors, sectors
-     use m_sector, only : alloc_one_fmat
+     use m_sector, only : cat_alloc_fmat
 
      implicit none
 
@@ -63,7 +63,7 @@
 ! allocate memory for fmat and then initialize it
                  sectors(isec)%fmat(iorb,ityp)%n = sectors(jsec)%ndim
                  sectors(isec)%fmat(iorb,ityp)%m = sectors(isec)%ndim
-                 call alloc_one_fmat(sectors(isec)%fmat(iorb,ityp))
+                 call cat_alloc_fmat(sectors(isec)%fmat(iorb,ityp))
                  sectors(isec)%fmat(iorb,ityp)%val = zero
 
 ! loop over the basis for the isec-th sector
@@ -305,8 +305,8 @@
      use m_fock, only : dim_sub_n, bin_basis
      use m_sector, only : max_dim_sect, ave_dim_sect
      use m_sector, only : nsectors, sectors
-     use m_sector, only : alloc_one_sector
-     use m_sector, only : alloc_m_sector
+     use m_sector, only : cat_alloc_sector
+     use m_sector, only : cat_alloc_sectors
 
      implicit none
 
@@ -534,7 +534,7 @@
      max_dim_sect = 0
      ave_dim_sect = zero
      nsectors = nsect
-     call alloc_m_sector()
+     call cat_alloc_sectors()
 ! now we will build each sector
      counter = 1
      do i=1,nsect
@@ -547,7 +547,7 @@
          sectors(i)%istart = counter
          counter = counter + ndims(i)
 ! allocate memory for each sector
-         call alloc_one_sector( sectors(i) )
+         call cat_alloc_sector( sectors(i) )
 ! set basis for each sector
          do j=1,ndims(i)
              sectors(i)%basis(j) = sector_basis(j,i)

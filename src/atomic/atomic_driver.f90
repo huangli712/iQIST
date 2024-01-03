@@ -125,7 +125,7 @@
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
-     use m_sector, only : dealloc_m_sector
+     use m_sector, only : cat_free_sectors
 
      implicit none
 
@@ -198,7 +198,7 @@
 ! deallocate memory
      write(mystd,'(2X,a)') 'deallocate memory for global variables in sectors'
      call cpu_time(time_begin) ! record starting time
-     call dealloc_m_sector()
+     call cat_free_sectors()
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
