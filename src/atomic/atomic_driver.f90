@@ -144,12 +144,16 @@
      return
   end subroutine atomic_f_driver
 
-!!>>> atomic_s_driver: solve the atomic eigenvalue problem using good
-!!>>> quantum numbers (GQNs) algorithm and sector-by-sector diagonalization
-!!>>> note: the output files are only compatible with PANSY and MANJUSHAKA
-!!>>> commponents in the iQIST software package
+!!
+!! @sub atomic_s_driver
+!!
+!! solve the atomic eigenvalue problem using good quantum numbers (GQNs)
+!! algorithm and sector-by-sector diagonalization
+!!
   subroutine atomic_s_driver()
-     use constants, only : dp, eps6, mystd
+     use constants, only : dp
+     use constants, only : eps6
+     use constants, only : mystd
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
