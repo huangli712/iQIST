@@ -873,3 +873,29 @@
 
      return
   end subroutine atomic_2natural_case4
+
+  subroutine atomic_alloc_array()
+     use m_fock, only : cat_alloc_fock_basis
+     use m_spmat, only : cat_alloc_spmat
+
+     implicit none
+
+    ! allocate memory for basis-related matrices
+     call cat_alloc_fock_basis()
+
+     ! allocate memory for single particle matrices
+     call cat_alloc_spmat() 
+
+  end subroutine atomic_alloc_array
+
+  subroutine atomic_final_array()
+     use m_fock, only : cat_free_fock_basis
+     use m_spmat, only : cat_free_spmat
+
+     implicit none
+
+! deallocate memory
+     call cat_free_spmat()
+     call cat_free_fock_basis()
+
+  end subroutine atomic_final_array

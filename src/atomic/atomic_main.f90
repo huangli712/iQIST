@@ -12,14 +12,16 @@
 !!!           any question, please contact with huangli@caep.cn          !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
-  program atomic_main
+!!========================================================================
+  PROGRAM ATOMIC_MAIN !                                                <<<
+!!========================================================================
+
      use constants, only : mystd
 
      use control, only : ictqmc
-     use m_fock, only : cat_alloc_fock_basis
-     use m_fock, only : cat_free_fock_basis
-     use m_spmat, only : cat_alloc_spmat
-     use m_spmat, only : cat_free_spmat
+
+
+
 
      implicit none
 
@@ -35,11 +37,7 @@
 ! print the summary of control parameters
      call atomic_print_summary()
 
-! allocate memory for basis-related matrices
-     call cat_alloc_fock_basis()
-
-! allocate memory for single particle matrices
-     call cat_alloc_spmat()
+     call atomic_alloc_array()
 
 ! make Fock basis for the full many particle Hiblert space
      write(mystd,'(2X,a)') 'make Fock basis'
@@ -134,11 +132,13 @@
 
      end select
 
-! deallocate memory
-     call cat_free_spmat()
-     call cat_free_fock_basis()
+     call atomic_final_array()
 
 ! print footer
      call atomic_print_footer()
 
-  end program atomic_main
+!! body]
+
+!!========================================================================
+  END PROGRAM ATOMIC_MAIN !                                            <<<
+!!========================================================================
