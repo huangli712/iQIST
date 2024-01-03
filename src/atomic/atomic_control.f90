@@ -128,63 +128,199 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! number of bands
+!!
+!! @var nband
+!!
+!! number of correlated bands
+!!
      integer, public, save :: nband  = 1
 
-! number of spins, it should not be changed
+!!
+!! @var nspin
+!!
+!! number of spin projections, it should not be changed
+!!
      integer, public, save :: nspin  = 2
 
-! number of orbitals
+!!
+!! @var norbs
+!!
+!! number of correlated orbitals (= nband * nspin)
+!!
      integer, public, save :: norbs  = 2
 
-! number of many-body configurations, the dimension of Hilbert space
+!!
+!! @var ncfgs
+!!
+!! number of many-body configurations, the dimension of Hilbert space
+!!
      integer, public, save :: ncfgs  = 4
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! the minimal total occupancy N will be kept
+!!
+!! @var nmini
+!!
+!! the lower boundary of occupancy N
+!!
      integer, public, save :: nmini = 0
 
-! the maximal total occupancy N will be kept
+!!
+!! @var nmaxi
+!!
+!! the upper boundary of occupancy N
+!!
      integer, public, save :: nmaxi = 2
 
 !!========================================================================
 !!>>> real variables                                                   <<<
 !!========================================================================
 
-! the following parameters are useful when icu = 1 or icu = 3
-! intraorbital Coulomb interaction
+!!
+!! the following parameters are useful when icu = 1 or icu = 3
+!!
+
+!!
+!! @var Uc
+!!
+!! intra-orbital Coulomb interaction
+!!
      real(dp), public, save :: Uc    = 2.0_dp
 
-! interorbital Coulomb interaction
+!!
+!! @var Uv
+!!
+!! inter-orbital Coulomb interaction
+!!
      real(dp), public, save :: Uv    = 2.0_dp
 
-! Hund's exchange interaction
+!!
+!! @var Jz
+!!
+!! Hund's exchange interaction in z axis
+!!
      real(dp), public, save :: Jz    = 0.0_dp
 
-! spin-flip interaction
+!!
+!! @var Js
+!!
+!! spin-flip interaction
+!!
      real(dp), public, save :: Js    = 0.0_dp
 
-! pair-hopping interaction
+!!
+!! @var Jp
+!!
+!! pair-hopping interaction
+!!
      real(dp), public, save :: Jp    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! the following parameters are useful when icu = 2. they are used to
-! calculate the F0, F2, F4, and F6.
-! Coulomb parameter
+!!
+!! the following parameters are useful when icu = 2. they are used to
+!! calculate the F0, F2, F4, and F6.
+!!
+
+!!
+!! @var Ud
+!!
+!! Coulomb interaction parameter
+!!
      real(dp), public, save :: Ud    = 2.0_dp
 
-! Hund's exchange parameter
+!!
+!! @var Jh
+!!
+!! Hund's exchange parameter
+!!
      real(dp), public, save :: Jh    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! chemical potential, used to shift energy level
-! only useful for model calculation
+!!
+!! @var mune
+!!
+!! chemical potential, used to shift energy level. it is only useful for
+!! model calculation
+!!
      real(dp), public, save :: mune  = 0.0_dp
 
-! SOC strength
+!!
+!! @var lambda
+!!
+!! SOC strength
+!!
      real(dp), public, save :: lambda= 0.0_dp
 
   end module control
+
+!!========================================================================
+!!>>> module version                                                   <<<
+!!========================================================================
+
+!!
+!! @mod version
+!!
+!! define the semantic version string.
+!!
+  module version
+     implicit none
+
+!!
+!! @var V_FULL
+!!
+!! version string, version number + date info. + status info.
+!!
+     character(len=20), public, parameter :: V_FULL = 'v0.8.2 @ 2023.07.06D'
+
+!!
+!! @var V_CURR
+!!
+!! version string, only version number
+!!
+     character(len=06), public, parameter :: V_CURR = 'v0.8.2'
+
+!!
+!! @var V_DATE
+!!
+!! version string, only date info.
+!!
+     character(len=11), public, parameter :: V_DATE = '2023.07.06'
+
+!!
+!! @var V_STAT
+!!
+!! version string, only status info., D means devel, T testing, R released.
+!!
+     character(len=01), public, parameter :: V_STAT = 'D'
+
+!!
+!! @var V_AUTH
+!!
+!! version string, author info.
+!!
+     character(len=11), public, parameter :: V_AUTH = 'by li huang'
+
+!!
+!! @var V_INST
+!!
+!! version string, affiliation info.
+!!
+     character(len=36), public, parameter :: V_INST = 'China Academy of Engineering Physics'
+
+!!
+!! @var V_MAIL
+!!
+!! version string, email info.
+!!
+     character(len=22), public, parameter :: V_MAIL = 'huangli@caep.cn'
+
+!!
+!! @var V_GPL3
+!!
+!! version string, license info.
+!!
+     character(len=36), public, parameter :: V_GPL3 = 'GNU General Public License version 3'
+
+  end module version

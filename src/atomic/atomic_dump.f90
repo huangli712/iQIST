@@ -15,7 +15,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : write output files
 !!! status  : unstable
 !!! comment :
@@ -386,7 +386,7 @@
      if ( ictqmc == 0 ) write(mytmp,'(a)') '# Format  : v1.3, designed for CAMELLIA'
      if ( ictqmc == 1 ) write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
+     write(mytmp,'(a)') '# Support : any problem, please contact me: huangli@caep.cn'
      write(mytmp,*)
      write(mytmp,*)
 
@@ -617,7 +617,7 @@
      write(mytmp,'(a)') '# File    : atom.cix'
      write(mytmp,'(a)') '# Format  : v2.3, designed for PANSY and MANJUSHAKA'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
+     write(mytmp,'(a)') '# Support : any problem, please contact me: huangli@caep.cn'
      write(mytmp,*)
      write(mytmp,*)
 
