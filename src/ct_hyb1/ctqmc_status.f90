@@ -4,7 +4,7 @@
 !!!           ctqmc_retrieve_status
 !!! source  : ctqmc_status.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
 !!!           07/01/2023 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation

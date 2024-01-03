@@ -4,7 +4,7 @@
 !!!           ctqmc_impurity_tester
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
 !!!           07/01/2023 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version

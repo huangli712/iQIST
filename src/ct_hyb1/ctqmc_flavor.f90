@@ -23,7 +23,7 @@
 !!!           cat_disp_diagrams
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
 !!!           07/06/2023 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)

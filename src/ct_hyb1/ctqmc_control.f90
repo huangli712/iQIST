@@ -4,7 +4,7 @@
 !!!           version module
 !!! source  : ctqmc_control.f90
 !!! type    : module
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
 !!!           07/02/2023 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
@@ -665,7 +665,7 @@
 !!
 !! version string, email info.
 !!
-     character(len=22), public, parameter :: V_MAIL = 'lihuang.dmft@gmail.com'
+     character(len=22), public, parameter :: V_MAIL = 'huangli@caep.cn'
 
 !!
 !! @var V_GPL3

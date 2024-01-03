@@ -22,7 +22,7 @@
 !!!           ctqmc_make_hub2
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 10/01/2008 by li huang (created)
 !!!           07/05/2023 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization

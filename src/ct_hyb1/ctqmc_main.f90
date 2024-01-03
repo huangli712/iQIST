@@ -8,7 +8,7 @@
 !!! author  : Li Huang (China Academy of Engineering Physics)            !
 !!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
 !!! comment : this impurity solver is based on segment picture formalism !
-!!!           any question, please contact with lihuang.dmft@gmail.com   !
+!!!           any question, please contact with huangli@caep.cn          !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
 !!========================================================================
