@@ -1,13 +1,13 @@
 !!!-----------------------------------------------------------------------
 !!! project : jasmine
-!!! program : m_full     module
-!!!           m_sector   module
-!!!           m_spmat    module
+!!! program : m_full   module
+!!!           m_sector module
+!!!           m_spmat  module
 !!! source  : atomic_context.f90
 !!! type    : modules
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : define global data structures for the atomic eigenvalue
 !!!           problem solver
 !!! status  : unstable
@@ -18,35 +18,64 @@
 !!>>> module m_full                                                    <<<
 !!========================================================================
 
-!!>>> define Fock basis of full Hilbert space and corresponding eigensystem
+!!
+!! @mod m_full
+!!
+!! define Fock basis of full Hilbert space and corresponding eigensystem
+!!
   module m_full
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : norbs, ncfgs
 
      implicit none
 
-! dimension of subspace with total electron N
-! if i is the number of electrons, then dim_sub_n(i) will tell you how
-! many states there are in the subspace with i electrons
+!!
+!! @var dim_sub_n
+!!
+!! dimension of subspace with total electron N.
+!! if i is the number of electrons, then dim_sub_n(i) will tell you how
+!! many states there are in the subspace with i electrons
+!!
      integer, public, save, allocatable  :: dim_sub_n(:)
 
-! binary form of Fock basis
+!!
+!! @var bin_basis
+!!
+!! binary form of Fock basis
+!!
      integer, public, save, allocatable  :: bin_basis(:,:)
 
-! decimal form of Fock basis
-! dec_basis(i) will tell you what the i-th Fock state is (a decimal number)
+!!
+!! @var dec_basis
+!!
+!! decimal form of Fock basis (a decimal number)
+!! dec_basis(i) will tell you what the i-th Fock state is
+!!
      integer, public, save, allocatable  :: dec_basis(:)
 
-! index of Fock basis, given their decimal number
-! ind_basis(i) will tell you for a given decimal number what its
-! corresponding Fock state index is
+!!
+!! @var ind_basis
+!!
+!! index of Fock basis, given their decimal number
+!! ind_basis(i) will tell you for a given decimal number what its
+!! corresponding Fock state index is
+!!
      integer, public, save, allocatable  :: ind_basis(:)
 
-! eigenvalues of hmat
+!!
+!! @var eval
+!!
+!! eigenvalues of atomic hamiltonian (hmat)
+!!
      real(dp), public, save, allocatable :: eval(:)
 
-! eigenvectors of hmat
+!!
+!! @var evec
+!!
+!! eigenvectors of atomic hamiltonian (hmat)
+!!
      real(dp), public, save, allocatable :: evec(:,:)
 
 ! N occupany number for the atomic eigenstates
