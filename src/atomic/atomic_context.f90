@@ -327,16 +327,20 @@
          ! the eigenvalues
          real(dp), allocatable :: eval(:)
 
-         ! the eigenvectors, since Hamiltonian must be real, then it is
-         ! real as well
+         ! the eigenvectors
+         ! since Hamiltonian must be real, then it is real as well
          real(dp), allocatable :: evec(:,:)
 
          ! the Hamiltonian of this sector
          complex(dp), allocatable :: hmat(:,:)
 
-! the F-matrix between this sector and all other sectors
-! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
-! if this sector doesn't point to some other sectors, the pointer is null
+         ! the F-matrix between this sector and all other sectors
+         !
+         ! fmat(nops,0) for annihilation
+         ! fmat(nops,1) for creation operators
+         !
+         ! if this sector doesn't point to some other sectors, then the
+         ! pointer is null
          type (t_fmat), allocatable :: fmat(:,:)
 
      end type t_sector
