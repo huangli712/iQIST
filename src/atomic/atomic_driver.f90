@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_f_driver
 !!!           atomic_s_driver
 !!! source  : atomic_driver.f90
@@ -12,10 +12,11 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_f_driver: solve the atomic eigenvalue problem using full
-!!>>> Hilbert space diagonalization
-!!>>> note: the output files are only compatible with BEGONIA and LAVENDER
-!!>>> commponents in the iQIST software package
+!!
+!! @sub atomic_f_driver
+!!
+!! solve atomic eigenvalue problem using full Hilbert space diagonalization 
+!!
   subroutine atomic_f_driver()
      use constants, only : dp, eps6, mystd
 
