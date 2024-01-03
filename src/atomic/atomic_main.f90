@@ -16,8 +16,6 @@
   PROGRAM ATOMIC_MAIN !                                                <<<
 !!========================================================================
 
-     use constants, only : mystd
-
      implicit none
 
 !! [body
@@ -37,12 +35,13 @@
      ! print the summary of control parameters
      call atomic_print_summary()
 
+     ! call the drivers to perform different tasks
+     call atomic_diapatcher()
 
-! call the drivers to perform different tasks
-
+     ! deallocate memory spaces
      call atomic_final_array()
 
-! print footer
+     ! print footer
      call atomic_print_footer()
 
 !! body]
