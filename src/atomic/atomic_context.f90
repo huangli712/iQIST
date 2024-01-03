@@ -608,28 +608,55 @@
 !!>>> module m_spmat                                                   <<<
 !!========================================================================
 
-!!>>> single particle related matrices, including:
-!!>>> crystal field, spin-orbital coupling, Coulomb interaction U tensor
+!!
+!! @mod m_spmat
+!!
+!! it contains single particle related matrices, including
+!!     crystal field,
+!!     spin-orbital coupling,
+!!     Coulomb interaction U tensor, etc
+!!
   module m_spmat
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : norbs
 
      implicit none
 
-! Coulomb interaction U tensor
+!!
+!! @var umat
+!!
+!! Coulomb interaction U tensor
+!!
      complex(dp), public, allocatable, save :: umat(:,:,:,:)
 
-! crystal field (CF)
+!!
+!! @var cmat
+!!
+!! crystal field (CF)
+!!
      complex(dp), public, allocatable, save :: cmat(:,:)
 
-! spin-orbital coupling (SOC)
+!!
+!! @var smat
+!!
+!! spin-orbital coupling (SOC)
+!!
      complex(dp), public, allocatable, save :: smat(:,:)
 
-! onsite energy (CF + SOC) of impurity
+!!
+!! @var emat
+!!
+!! onsite energy (CF + SOC) of impurity
+!!
      complex(dp), public, allocatable, save :: emat(:,:)
 
-! the transformation matrix from original basis to natural basis
+!!
+!! @var tmat
+!!
+!! transformation matrix from original basis to natural basis
+!!
      complex(dp), public, allocatable, save :: tmat(:,:)
 
 !!========================================================================
