@@ -209,7 +209,7 @@
 !!
 !! @sub cat_free_fock_basis
 !!
-!! deallocate memory for these matrices
+!! deallocate memory for Fock basis matrices
 !!
   subroutine cat_free_fock_basis()
      implicit none
@@ -229,7 +229,7 @@
 !!
 !! @sub cat_free_fock_eigen
 !!
-!! deallocate memory for these matrices
+!! deallocate memory for eigensystem matrices
 !!
   subroutine cat_free_fock_eigen()
      implicit none
