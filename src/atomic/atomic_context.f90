@@ -78,27 +78,45 @@
 !!
      real(dp), public, save, allocatable :: evec(:,:)
 
-! N occupany number for the atomic eigenstates
+!!
+!! @var occu
+!!
+!! occupany number (N) for the atomic eigenstates
+!!
      real(dp), public, save, allocatable :: occu(:,:)
 
-! Sz for the atomic eigenstates
+!!
+!! @var spin
+!!
+!! spin (Sz) for the atomic eigenstates
+!!
      real(dp), public, save, allocatable :: spin(:,:)
 
-! F-matrix for annihilation fermion operators
+!!
+!! @var fmat
+!!
+!! F-matrix for annihilation fermion operators
+!!
      real(dp), public, save, allocatable :: fmat(:,:,:)
 
-! atomic Hamiltonian
+!!
+!! @var hmat
+!!
+!! atomic Hamiltonian
+!!
      complex(dp), public, save, allocatable :: hmat(:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: alloc_m_full_basis
-     public :: dealloc_m_full_basis
+     ! declaration of module procedures: allocate memory
+     public :: cat_alloc_fock_basis
+     public :: cat_alloc_fock_eigen
 
-     public :: alloc_m_full
-     public :: dealloc_m_full
+     ! declaration of module procedures: deallocate memory
+     public :: cat_free_fock_basis
+     public :: cat_free_fock_eigen
 
   contains ! encapsulated functionality
 
@@ -106,32 +124,41 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> alloc_m_full_basis: allocate memory for Fock basis matrices
-  subroutine alloc_m_full_basis()
+!!
+!! @sub cat_alloc_fock_basis
+!!
+!! allocate memory for Fock basis matrices
+!!
+  subroutine cat_alloc_fock_basis()
      implicit none
 
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(dim_sub_n(0:norbs),     stat=istat)
      allocate(bin_basis(norbs,ncfgs), stat=istat)
      allocate(dec_basis(ncfgs),       stat=istat)
      allocate(ind_basis(0:ncfgs-1),   stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_full_basis','can not allocate enough memory')
+         call s_print_error('cat_alloc_fock_basis','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      dim_sub_n = 0
      bin_basis = 0
      dec_basis = 0
      ind_basis = 0
 
+!! body]
+
      return
-  end subroutine alloc_m_full_basis
+  end subroutine cat_alloc_fock_basis
 
 !!>>> alloc_m_full: allocate memory for eigensystem defined in Fock basis
   subroutine alloc_m_full()
