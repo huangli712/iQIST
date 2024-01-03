@@ -1,71 +1,16 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! JASMINE @ iQIST                                                      !
+!!! iQIST @ JASMINE                                                      !
 !!!                                                                      !
 !!! An atomic eigenvalue problem solver which is used to generate input  !
 !!! file (atom.cix) for the hybridization expansion version continuous   !
 !!! time quantum Monte Carlo (CTQMC) quantum impurity solver             !
-!!! author  : Yilin Wang (at IOP/CAS)                                    !
-!!!           Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2016.02.13T                                               !
+!!!                                                                      !
+!!! author  : Yilin Wang (University of Science and Technology of China) !
+!!!           Li Huang (China Academy of Engineering Physics)            !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : the atomic solver is based on Dr. Liang Du's rambutan code !
 !!!           any question, please contact with huangli@caep.cn          !
 !!!=========+=========+=========+=========+=========+=========+=========+!
-
-!!
-!!
-!! WARNING
-!! =======
-!!
-!! If you want to obtain an executable program, please go to iqist/build/,
-!! type 'make jasmine' command in the terminal. On the contrary, if you
-!! want to compile jasmine as a library, please use 'make jasmine-lib'.
-!! If you want to obtain a python module, please use 'make jasmine-pylib'.
-!!
-!! Introduction
-!! ============
-!!
-!! The jasmine code is a key component in the iqist software package. We
-!! usually use it to (1) assemble the atomic Hamiltonian (H_{cf} + H_{soc}
-!! + H_{int}), (2) diagonalize it, (3) and generate suitable input files
-!! (the so-called atom.cix file) for the continuous-time quantum Monte
-!! Carlo impurity solvers. Now it supports two different diagonalization
-!! modes, full diagonalization and sector-by-sector diagonalization. The
-!! former is useful for the begonia and lavender codes, while the latter
-!! is designed for the pansy and manjushaka codes. Enjoy it.
-!!
-!! Usage
-!! =====
-!!
-!! # ./atomic or build/jasmine.x
-!!
-!! Input
-!! =====
-!!
-!! atom.config.in (optional)
-!! atom.cmat.in (optional)
-!! atom.emat.in (optional)
-!! atom.tmat.in (optional)
-!!
-!! Output
-!! ======
-!!
-!! solver.umat.in
-!! atom.fock.dat
-!! atom.tmat.dat
-!! atom.emat.dat
-!! atom.umat.dat
-!! atom.eigval.dat
-!! atom.eigvec.dat
-!! atom.sector.dat
-!! atom.cix
-!!
-!! Documents
-!! =========
-!!
-!! For more details, please see the on line reference manual.
-!!
-!!
 
   program atomic_main
      use constants, only : mystd
