@@ -160,14 +160,21 @@
      return
   end subroutine cat_alloc_fock_basis
 
-!!>>> alloc_m_full: allocate memory for eigensystem defined in Fock basis
-  subroutine alloc_m_full()
+!!
+!! @sub cat_alloc_fock_eigen
+!!
+!! allocate memory for eigensystem defined in Fock basis
+!!
+  subroutine cat_alloc_fock_eigen()
      implicit none
 
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(eval(ncfgs),             stat=istat)
      allocate(evec(ncfgs,ncfgs),       stat=istat)
      allocate(occu(ncfgs,ncfgs),       stat=istat)
@@ -176,12 +183,12 @@
 
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_full','can not allocate enough memory')
+         call s_print_error('cat_alloc_fock_eigen','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      eval = zero
      evec = zero
      occu = zero
@@ -190,8 +197,10 @@
 
      hmat = czero
 
+!! body]
+
      return
-  end subroutine alloc_m_full
+  end subroutine cat_alloc_fock_eigen
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
