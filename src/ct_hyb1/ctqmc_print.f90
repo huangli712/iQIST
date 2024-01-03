@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           07/01/2023 by li huang (last modified)
+!!!           01/24/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -43,10 +43,10 @@
      ! string for current date and time
      character (len = 20) :: date_time_string
 
+!! [body
+
      ! obtain current date and time
      call s_time_builder(date_time_string)
-
-!! [body
 
 # if defined (MPI)
 
