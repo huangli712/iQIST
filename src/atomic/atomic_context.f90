@@ -663,8 +663,11 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: alloc_m_spmat
-     public :: dealloc_m_spmat
+     ! declaration of module procedures: allocate memory
+     public :: cat_alloc_spmat
+
+     ! declaration of module procedures: deallocate memory
+     public :: cat_free_spmat
 
   contains ! encapsulated functionality
 
@@ -672,35 +675,43 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> alloc_m_spmat: allocate memory for these matrices
-  subroutine alloc_m_spmat()
+!!
+!! @sub cat_alloc_spmat
+!!
+!! allocate memory for single particle matrices
+!!
+  subroutine cat_alloc_spmat()
      implicit none
 
-! local variables
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(umat(norbs,norbs,norbs,norbs), stat=istat)
      allocate(cmat(norbs,norbs),             stat=istat)
      allocate(smat(norbs,norbs),             stat=istat)
      allocate(emat(norbs,norbs),             stat=istat)
      allocate(tmat(norbs,norbs),             stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_spmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_spmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      umat = czero
      cmat = czero
      smat = czero
      emat = czero
      tmat = czero
 
+!! body]
+
      return
-  end subroutine alloc_m_spmat
+  end subroutine cat_alloc_spmat
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
