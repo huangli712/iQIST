@@ -306,7 +306,7 @@
          ! z component of spin: Sz
          integer :: sz
  
-          ! z component of spin-orbit momentum: Jz
+         ! z component of spin-orbit momentum: Jz
          integer :: jz
 
          ! PS good quantum number
@@ -377,13 +377,15 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: alloc_one_fmat
-     public :: alloc_one_sector
-     public :: alloc_m_sector
+     ! declaration of module procedures: allocate memory
+     public :: cat_alloc_fmat
+     public :: cat_alloc_sector
+     public :: cat_alloc_sectors
 
-     public :: dealloc_one_fmat
-     public :: dealloc_one_sector
-     public :: dealloc_m_sector
+     ! declaration of module procedures: deallocate memory
+     public :: cat_free_fmat
+     public :: cat_free_sector
+     public :: cat_free_sectors
 
   contains ! encapsulated functionality
 
@@ -391,49 +393,63 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> alloc_one_fmat: allocate one fmat
-  subroutine alloc_one_fmat(one_fmat)
+!!
+!! @sub cat_alloc_fmat
+!!
+!! allocate memory for one fmat
+!!
+  subroutine cat_alloc_fmat(one_fmat)
      implicit none
 
-! external arguments
-! the fmat
+!! external arguments
+     ! the fmat
      type (t_fmat), intent(inout) :: one_fmat
 
-! local variables
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(one_fmat%val(one_fmat%n,one_fmat%m), stat=istat)
 
-! check status
+     ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_fmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_fmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize it
+     ! initialize it
      one_fmat%val = zero
 
-     return
-  end subroutine alloc_one_fmat
+!! body]
 
-!>>> alloc_one_sector: allocate memory for one sector
-  subroutine alloc_one_sector(one_sector)
+     return
+  end subroutine cat_alloc_fmat
+
+!!
+!! @sub cat_alloc_sector
+!!
+!! allocate memory for one sector
+!!
+  subroutine cat_alloc_sector(one_sector)
      implicit none
 
-! external arguments
-! the sector
+!! external arguments
+     ! the sector
      type (t_sector), intent(inout) :: one_sector
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! the status flag
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(one_sector%basis(one_sector%ndim),                stat=istat)
      allocate(one_sector%next(one_sector%nops,0:1),             stat=istat)
      allocate(one_sector%eval(one_sector%ndim),                 stat=istat)
@@ -441,19 +457,19 @@
      allocate(one_sector%hmat(one_sector%ndim,one_sector%ndim), stat=istat)
      allocate(one_sector%fmat(one_sector%nops,0:1),             stat=istat)
 
-! check status
+     ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_sector','can not allocate enough memory')
+         call s_print_error('cat_alloc_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      one_sector%basis = 0
      one_sector%next  = 0
      one_sector%eval  = zero
      one_sector%evec  = zero
      one_sector%hmat  = czero
 
-! initialize fmat one by one
+     ! initialize fmat one by one
      do i=1,one_sector%nops
         do j=0,1
             one_sector%fmat(i,j)%n = 0
@@ -461,44 +477,62 @@
         enddo ! over j={0,1} loop
      enddo ! over i={1,one_sector%nops} loop
 
-     return
-  end subroutine alloc_one_sector
+!! body]
 
-!!>>> alloc_m_sector: allocate memory for sectors
-  subroutine alloc_m_sector()
+     return
+  end subroutine cat_alloc_sector
+
+!!
+!! @sub cat_alloc_sectors
+!!
+!! allocate memory for sectors
+!!
+  subroutine cat_alloc_sectors()
      implicit none
 
-! local variables
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(sectors(nsectors), stat=istat)
 
-! check status
+     ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_sector','can not allocate enough memory')
+         call s_print_error('cat_alloc_sectors','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+!! body]
+
      return
-  end subroutine alloc_m_sector
+  end subroutine cat_alloc_sectors
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!>>> dealloc_one_fmat: deallocate one fmat
-  subroutine dealloc_one_fmat(one_fmat)
+!!
+!! @sub cat_free_fmat
+!!
+!! deallocate memory for one fmat
+!!
+  subroutine cat_free_fmat(one_fmat)
      implicit none
 
-! external arguments
-! the fmat
+!! external arguments
+     ! the fmat
      type (t_fmat), intent(inout) :: one_fmat
+
+!! [body
 
      if ( allocated(one_fmat%val) ) deallocate(one_fmat%val)
 
+!! body]
+
      return
-  end subroutine dealloc_one_fmat
+  end subroutine cat_free_fmat
 
 !!>>> dealloc_one_sector: deallocate memory for one sector
   subroutine dealloc_one_sector(one_sector)
