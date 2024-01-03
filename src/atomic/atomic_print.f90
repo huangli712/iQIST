@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_print_header
 !!!           atomic_print_footer
 !!!           atomic_print_summary
@@ -7,35 +7,53 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/03/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for the atomic eigenvalue
 !!!           problem solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_print_header: print the running header
+!!
+!! @sub atomic_print_header
+!!
+!! print the running header
+!!
   subroutine atomic_print_header()
      use constants, only : mystd
 
-! string for current date and time
+     use version, only : V_FULL
+     use version, only : V_AUTH
+     use version, only : V_INST
+     use version, only : V_MAIL
+     use version, only : V_GPL3
+
+     use control, only : cname
+
+!! local variables
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! obtain current date and time
+!! [body
+
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') 'JASMINE'
-     write(mystd,'(2X,a)') '>>> An Atomic Eigenvalue Problem Solver'
+     write(mystd,'(2X,a)') cname//' (Sequential Edition)'
+     write(mystd,'(2X,a)') '>>> A Modern Atomic Eigenvalue Problem Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: by yilin wang (at IOP/CAS)'
-     write(mystd,'(2X,a)') 'Support: qhwyl2006@126.com'
-     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
+     write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//' '//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: '//V_AUTH//' ('//V_INST//')'
+     write(mystd,'(2X,a)') 'Support: '//V_MAIL
+     write(mystd,'(2X,a)') 'License: '//V_GPL3
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'JASMINE >>> start running at '//date_time_string
+     write(mystd,'(2X,a,i4)') 'currently using cpu cores:', 1
      write(mystd,*)
+
+!! body]
 
      return
   end subroutine atomic_print_header
