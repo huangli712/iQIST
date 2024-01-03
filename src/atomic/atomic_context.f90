@@ -717,9 +717,15 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> dealloc_m_spmat: deallocate memory for these matrices
-  subroutine dealloc_m_spmat()
+!!
+!! @sub cat_free_spmat
+!!
+!! deallocate memory for single particle matrices
+!!
+  subroutine cat_free_spmat()
      implicit none
+
+!! [body
 
      if ( allocated(umat) ) deallocate(umat)
      if ( allocated(cmat) ) deallocate(cmat)
@@ -727,7 +733,9 @@
      if ( allocated(emat) ) deallocate(emat)
      if ( allocated(tmat) ) deallocate(tmat)
 
+!! body]
+
      return
-  end subroutine dealloc_m_spmat
+  end subroutine cat_free_spmat
 
   end module m_spmat
