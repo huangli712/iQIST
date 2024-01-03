@@ -34,9 +34,9 @@
 !!
 !! @var cname
 !!
-!! code name of the current atomic eigenvalue solver
+!! code name of the current atomic eigenvalue problem solver
 !!
-     character(len = 09), public, save :: cname = 'JASMINE'
+     character(len = 07), public, save :: cname = 'JASMINE'
 
 !!========================================================================
 !!>>> integer variables                                                <<<
@@ -84,29 +84,45 @@
 !!
 !! @var icu
 !!
-!! control flag: type of Coulomb interaction U
-!! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
-!! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
-!! 3: Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
+!! control flag, type of Coulomb interaction matrix
+!!
+!! if icu == 1:
+!!     Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
+!!
+!! if icu == 2:
+!!     Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
+!!
+!! if icu == 3:
+!!     Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
 !!
      integer, public, save :: icu    = 1
 
 !!
 !! @var icf
 !!
-!! control flag: type of crystal field (CF)
-!! 0: no crystal field
-!! 1: diagonal crystal field
-!! 2: non-diagonal crystal field
+!! control flag, type of crystal field (CF)
+!!
+!! if icf == 0:
+!!     no crystal field
+!!
+!! if icf == 1:
+!!     diagonal crystal field
+!!
+!! if icf == 2:
+!!     non-diagonal crystal field
 !!
      integer, public, save :: icf    = 0
 
 !!
 !! @var isoc
 !!
-!! control flag: type of spin-orbit coupling (SOC)
-!! 0: no SOC
-!! 1: onsite atomic SOC, H_soc = \lambda * L*S
+!! control flag, type of spin-orbit coupling (SOC)
+!!
+!! if isoc == 0:
+!!     no SOC
+!!
+!! if isoc == 1:
+!!     onsite atomic SOC, H_soc = \lambda * L*S
 !!
      integer, public, save :: isoc   = 0
 
