@@ -36,7 +36,7 @@
      call atomic_print_summary()
 
      ! call the drivers to perform different tasks
-     call atomic_diapatcher()
+     call atomic_dispatcher()
 
      ! deallocate memory spaces
      call atomic_final_array()

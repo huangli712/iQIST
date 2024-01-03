@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_dump_fock
 !!!           atomic_dump_tmat
 !!!           atomic_dump_emat
@@ -15,40 +15,49 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/03/2024 by li huang (last modified)
+!!!           01/04/2024 by li huang (last modified)
 !!! purpose : write output files
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_dump_fock: write Fock basis to file atom.fock.dat
+!!
+!! @sub atomic_dump_fock
+!!
+!! write Fock basis to file atom.fock.dat
+!!
   subroutine atomic_dump_fock()
      use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! open file atom.fock.dat to write
+     ! open file atom.fock.dat to write
      open(mytmp, file='atom.fock.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | decimal | index | binary'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,ncfgs
          write(mytmp,'(i6)',advance='no') i
          write(mytmp,'(i6)',advance='no') dec_basis(i)
@@ -56,8 +65,10 @@
          write(mytmp,'(4X,14i1)') bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_fock
