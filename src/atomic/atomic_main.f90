@@ -73,8 +73,8 @@
      use control, only : ictqmc
      use m_fock, only : cat_alloc_fock_basis
      use m_fock, only : cat_free_fock_basis
-     use m_spmat, only : alloc_m_spmat
-     use m_spmat, only : dealloc_m_spmat
+     use m_spmat, only : cat_alloc_spmat
+     use m_spmat, only : cat_free_spmat
 
      implicit none
 
@@ -94,7 +94,7 @@
      call cat_alloc_fock_basis()
 
 ! allocate memory for single particle matrices
-     call alloc_m_spmat()
+     call cat_alloc_spmat()
 
 ! make Fock basis for the full many particle Hiblert space
      write(mystd,'(2X,a)') 'make Fock basis'
@@ -190,7 +190,7 @@
      end select
 
 ! deallocate memory
-     call dealloc_m_spmat()
+     call cat_free_spmat()
      call cat_free_fock_basis()
 
 ! print footer
