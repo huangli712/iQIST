@@ -574,25 +574,33 @@
      return
   end subroutine cat_free_sector
 
-!!>>> dealloc_m_sector: deallocate memory of sectors
-  subroutine dealloc_m_sector()
+!!
+!! @sub cat_free_sectors
+!!
+!! deallocate memory of sectors
+!!
+  subroutine cat_free_sectors()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! deallocate memory for arrays in T_sector
-! before deallocating sectors to avoid memory leak
+!! [body
+
+     ! deallocate memory for arrays in T_sector
+     ! before deallocating sectors to avoid memory leak
      if ( allocated(sectors) ) then
          do i=1,nsectors
-             call dealloc_one_sector(sectors(i))
+             call cat_free_sector(sectors(i))
          enddo ! over i={1,nsectors} loop
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
 
+!! body]
+
      return
-  end subroutine dealloc_m_sector
+  end subroutine cat_free_sectors
 
   end module m_sector
 
