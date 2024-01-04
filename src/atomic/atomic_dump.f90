@@ -602,19 +602,24 @@
      return
   end subroutine atomic_dump_seigval
 
-!!>>> atomic_dump_seigvec: write eigenvectors of all sectors to the
-!!>>> file atom.eigvec.dat
+!!
+!! @sub atomic_dump_seigvec
+!!
+!! write eigenvectors of all sectors to the file atom.eigvec.dat
+!!
   subroutine atomic_dump_seigvec()
-     use constants, only : eps6, mytmp
+     use constants, only : eps6
+     use constants, only : mytmp
 
      use m_fock, only : bin_basis
+
      use m_sector, only : nsectors
      use m_sector, only : sectors
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
