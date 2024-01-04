@@ -302,16 +302,19 @@
   subroutine atomic_diag_shmat()
      use constants, only : dp
 
-     use m_sector, only : nsectors, sectors
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! dummy array
+     ! dummy array
      real(dp), allocatable :: hmat(:,:)
+
+!! [body
 
      do i=1,nsectors
          allocate(hmat(sectors(i)%ndim,sectors(i)%ndim))
@@ -323,6 +326,8 @@
                         sectors(i)%evec )
          deallocate(hmat)
      enddo ! over i={1,nsectors} loop
+
+!! body]
 
      return
   end subroutine atomic_diag_shmat
