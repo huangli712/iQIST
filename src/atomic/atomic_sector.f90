@@ -345,164 +345,183 @@
      use control, only : ictqmc
      use control, only : nband, norbs, ncfgs
      use control, only : nmini, nmaxi
-     use m_fock, only : dim_sub_n, bin_basis
-     use m_sector, only : max_dim_sect, ave_dim_sect
+
+     use m_fock, only : dim_sub_n
+     use m_fock, only : bin_basis
+
+     use m_sector, only : max_dim_sect
+     use m_sector, only : ave_dim_sect
      use m_sector, only : nsectors, sectors
      use m_sector, only : cat_alloc_sector
      use m_sector, only : cat_alloc_sectors
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
      integer :: l
 
-! total electrons
+     ! total electrons
      integer :: my_ntot
 
-! Sz value
+     ! Sz value
      integer :: my_sz
 
-! Jz value
+     ! Jz value
      integer :: my_jz
 
-! PS value
+     ! PS value
      integer :: my_ps
 
-! a counter
+     ! a counter
      integer :: counter
 
-! index of Fock basis
+     ! index of Fock basis
      integer :: ibasis
 
-! number of sectors
+     ! number of sectors
      integer :: nsect
 
-! which sector point to
+     ! which sector point to
      integer :: which_sect
 
-! can point to next sector
+     ! can point to next sector
      logical :: can
 
-! the Sz and Jz values for each orbital
+     ! the Sz and Jz values for each orbital
      integer :: orb_good_sz(norbs)
      integer :: orb_good_jz(norbs)
 
-! good quantum number N, Sz, Jz, and PS for each Fock state
+     ! good quantum number N, Sz, Jz, and PS for each Fock state
      integer :: fock_good_ntot(ncfgs)
      integer :: fock_good_sz(ncfgs)
      integer :: fock_good_jz(ncfgs)
      integer :: fock_good_ps(ncfgs)
 
-! good quantum number N, Sz, Jz, and PS for each sector
+     ! good quantum number N, Sz, Jz, and PS for each sector
      integer :: sect_good_ntot(ncfgs)
      integer :: sect_good_sz(ncfgs)
      integer :: sect_good_jz(ncfgs)
      integer :: sect_good_ps(ncfgs)
 
-! dimension of each sector
+     ! dimension of each sector
      integer :: ndims(ncfgs)
 
-! a temp binary form of Fock basis
+     ! a temp binary form of Fock basis
      integer :: code(norbs)
 
-! sector basis index
-! the first index: dimension size of the sector
-! the second index: the index of sector
+     ! sector basis index
+     ! the first index: dimension size of the sector
+     ! the second index: the index of sector
      integer, allocatable :: sector_basis(:,:)
 
-! dummy variable
+     ! dummy variable
      integer :: sum_dim
 
-! initialize some variables
+!! [body
+
+     ! initialize some variables
      sect_good_ntot = 0
      sect_good_sz = 0
      sect_good_jz = 0
      sect_good_ps = 0
 
-! allocate memory
+     ! allocate memory
      allocate(sector_basis(ncfgs,ncfgs))
 
-! make orb_good_sz and orb_good_jz
-!-------------------------------------------------------------------------
+     ! make orb_good_sz and orb_good_jz
+     !--------------------------------------------------------------------
      orb_good_sz = 0
      call atomic_make_gsz(orb_good_sz)
 
-! jz only valid for nband==3, 5, 7
+     ! jz only valid for nband==3, 5, 7
      orb_good_jz = 0
      if ( nband == 3 .or. nband == 5 .or. nband == 7 ) then
          call atomic_make_gjz(orb_good_jz)
      endif ! back if ( nband == 3 .or. nband == 5 .or. nband == 7 ) block
 
-! build good quantum numbers for each Fock state
-!-------------------------------------------------------------------------
+     ! build good quantum numbers for each Fock state
+     !--------------------------------------------------------------------
      counter = 0
      fock_good_ntot = 0
      fock_good_sz = 0
      fock_good_jz = 0
      fock_good_ps = 0
-! loop over all number of total electrons
+     !
+     ! loop over all number of total electrons
      do i=0,norbs
-! loop over each state
+         ! loop over each state
          do j=1,dim_sub_n(i)
-! here counter denotes the index of Fock state
+
+             ! here counter denotes the index of Fock state
              counter = counter + 1
-! build N
+
+             ! build N
              fock_good_ntot(counter) = i
-! build Sz
+             !
+             ! build Sz
              my_sz = 0
              do k=1,norbs
                  my_sz = my_sz + orb_good_sz(k) * bin_basis(k,counter)
              enddo ! over k={1,norbs} loop
              fock_good_sz(counter) = my_sz
-! build Jz
-              my_jz = 0
-              do k=1,norbs
-                  my_jz = my_jz + orb_good_jz(k) * bin_basis(k,counter)
-              enddo ! over k={1,norbs} loop
-              fock_good_jz(counter) = my_jz
-! build PS number
+             !
+             ! build Jz
+             my_jz = 0
+             do k=1,norbs
+                 my_jz = my_jz + orb_good_jz(k) * bin_basis(k,counter)
+             enddo ! over k={1,norbs} loop
+             fock_good_jz(counter) = my_jz
+             !
+             ! build PS number
              do k=1,nband
                  fock_good_ps(counter) = &
                  fock_good_ps(counter) + (2**k) * &
                      (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
              enddo ! over k={1,nband} loop
+
          enddo ! over j={1,dim_sub_n(i)} loop
      enddo ! over i={0,norbs} loop
 
-! loop over all the Fock states to determine sectors
-!-------------------------------------------------------------------------
+     ! loop over all the Fock states to determine sectors
+     !--------------------------------------------------------------------
      nsect = 0
      ndims = 0
      sector_basis = 0
+     !
      do i=1,ncfgs
          my_ntot = fock_good_ntot(i)
 
-! truncate the occupancy according to nmini and nmaxi
+         ! truncate the occupancy according to nmini and nmaxi
          if ( my_ntot < nmini  .or. my_ntot > nmaxi ) CYCLE
 
          if ( ictqmc == 3 .or. ictqmc == 4 ) then
              my_sz = fock_good_sz(i)
          endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
+         !
          if ( ictqmc == 4 ) then
              my_ps = fock_good_ps(i)
          endif ! back if ( ictqmc == 4 ) block
+         !
          if ( ictqmc == 5 ) then
              my_jz = fock_good_jz(i)
          endif ! back if ( ictqmc == 5 ) block
 
-! determine the first sector
+         ! determine the first sector
          if ( nsect == 0 ) then
              sect_good_ntot(1) = my_ntot
+
              if ( ictqmc == 3 .or. ictqmc == 4 ) then
                  sect_good_sz(1) = my_sz
              endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
+             !
              if (ictqmc == 4) then
                  sect_good_ps(1) = my_ps
              endif ! back if ( ictqmc == 4 ) block
+             !
              if ( ictqmc == 5 ) then
                  sect_good_jz(1) = my_jz
              endif ! back if ( ictqmc == 5 ) block
@@ -511,10 +530,10 @@
              ndims(1) = ndims(1) + 1
              sector_basis(ndims(1),1) = i
          else
-! loop over the exists sectors
+             ! loop over the exists sectors
              which_sect = -1
              do j=1,nsect
-! compare the current state with existing sectors
+                 ! compare the current state with existing sectors
                  select case (ictqmc)
                      case (2)
                          if ( sect_good_ntot(j) == my_ntot ) then
@@ -547,23 +566,27 @@
                  end select
              enddo ! over j={1,nsect} loop
 
-! we can not assign the current state into any existing sectors, so we
-! have to define a new sector
+             ! we can not assign the current state into any existing
+             ! sectors, so we have to define a new sector
              if ( which_sect == -1 ) then
                  nsect = nsect + 1
                  sect_good_ntot(nsect) = my_ntot
+
                  if ( ictqmc == 3 .or. ictqmc == 4 ) then
                      sect_good_sz(nsect) = my_sz
                  endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
+                 !
                  if ( ictqmc == 4 ) then
                      sect_good_ps(nsect) = my_ps
                  endif ! back if ( ictqmc == 4 ) block
+                 !
                  if ( ictqmc == 5 ) then
                      sect_good_jz(nsect) = my_jz
                  endif ! back if ( ictqmc == 5 ) block
+
                  ndims(nsect) = ndims(nsect) + 1
                  sector_basis(ndims(nsect),nsect) = i
-! we assign the current state to one of the old sectors
+             ! we assign the current state to one of the old sectors
              else
                  ndims(which_sect) = ndims(which_sect) + 1
                  sector_basis(ndims(which_sect),which_sect) = i
