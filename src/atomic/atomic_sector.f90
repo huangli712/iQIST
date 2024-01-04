@@ -132,8 +132,12 @@
      use m_fock, only : bin_basis
      use m_fock, only : dec_basis
      use m_fock, only : ind_basis
-     use m_spmat, only : emat, umat
-     use m_sector, only : nsectors, sectors
+
+     use m_spmat, only : emat
+     use m_spmat, only : umat
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
 
      implicit none
 
