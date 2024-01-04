@@ -116,8 +116,11 @@
      return
   end subroutine atomic_make_foccu
 
-!!>>> atomic_make_fspin: make net Sz for atomic eigenstates in the full
-!!>>> Hilbert space case
+!!
+!! @sub atomic_make_fspin
+!!
+!! make net Sz for atomic eigenstates in the full Hilbert space case
+!!
   subroutine atomic_make_fspin()
      use constants, only: zero, half
 
@@ -125,14 +128,16 @@
      use m_fock, only : bin_basis
      use m_fock, only : spin, evec
 
-! local variables
-! loop index over orbits
+!! local variables
+     ! loop index over orbits
      integer :: iorb
 
-! loop index over configurations
+     ! loop index over configurations
      integer :: ibas
 
-! evaluate spin moment in the Fock basis
+!! [body
+
+     ! evaluate spin moment in the Fock basis
      spin = zero
      do ibas=1,ncfgs
          do iorb=1,norbs
@@ -146,8 +151,10 @@
          enddo ! over iorb={1,norbs} loop
      enddo ! over ibas={1,ncfgs} loop
 
-! transform the net Sz from Fock basis to atomic eigenbasis
+     ! transform the net Sz from Fock basis to atomic eigenbasis
      call atomic_tran_repr_real(ncfgs, spin, evec)
+
+!! body]
 
      return
   end subroutine atomic_make_fspin
