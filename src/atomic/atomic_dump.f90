@@ -661,8 +661,11 @@
      return
   end subroutine atomic_dump_seigvec
 
-!!>>> atomic_dump_scix: write atom.cix file which are only compatible with
-!!>>> the PANSY and MANJUSHAKA components
+!!
+!! @sub atomic_dump_scix
+!!
+!! write atom.cix file
+!!
   subroutine atomic_dump_scix()
      use constants, only : epst, mytmp
 
