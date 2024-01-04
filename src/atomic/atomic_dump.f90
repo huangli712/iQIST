@@ -624,33 +624,39 @@
      integer :: j
      integer :: k
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! open file atom.eigvec.dat to write
+     ! open file atom.eigvec.dat to write
      open(mytmp, file='atom.eigvec.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# sector | i | j | eigenvectors'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%ndim
              do k=1,sectors(i)%ndim
                  if ( abs( sectors(i)%evec(k,j) ) > eps6 ) then
-                     write(mytmp,'(3i6,f16.8,2X,14I1)') i, k, j, sectors(i)%evec(k,j), bin_basis(:,sectors(i)%basis(k))
+                     write(mytmp,'(3i6,f16.8,2X,14I1)') &
+                         i, k, j, sectors(i)%evec(k,j), &
+                         bin_basis(:,sectors(i)%basis(k))
                  endif ! back if ( abs( sectors(i)%evec(j,k) ) > eps6 ) block
              enddo ! over k={1,sectors(i)%ndim} loop
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_seigvec
