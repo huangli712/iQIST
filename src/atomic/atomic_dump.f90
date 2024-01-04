@@ -667,7 +667,8 @@
 !! write atom.cix file
 !!
   subroutine atomic_dump_scix()
-     use constants, only : epst, mytmp
+     use constants, only : epst
+     use constants, only : mytmp
 
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
@@ -675,20 +676,23 @@
      use control, only : Uc, Uv, Jz, Js, Jp
      use control, only : Ud, Jh
      use control, only : mune, lambda
-     use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
+
+     use m_sector, only : nsectors
      use m_sector, only : sectors
+     use m_sector, only : max_dim_sect
+     use m_sector, only : ave_dim_sect
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
      integer :: m
      integer :: n
 
-! counter for the non-zero matrix elements
+     ! counter for the non-zero matrix elements
      integer :: counter
 
 ! auxiliary integer variable used to convert the spin sequence
