@@ -332,10 +332,13 @@
      return
   end subroutine atomic_diag_shmat
 
-!!>>> atomic_make_sectors: determine all the sectors with the good quantum
-!!>>> numbers algorithm
-!!>>> a sector consists of some many-particle Fock states labeled by
-!!>>> good quantum numbers
+!!
+!! @sub atomic_make_sectors
+!!
+!! determine all the sectors with the good quantum numbers algorithm.
+!! a sector consists of some many-particle Fock states labeled by good
+!! quantum numbers
+!!
   subroutine atomic_make_sectors()
      use constants, only : zero
 
