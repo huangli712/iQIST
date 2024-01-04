@@ -670,12 +670,15 @@
      use constants, only : epst
      use constants, only : mytmp
 
+     use control, only : cname
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : nmini, nmaxi
      use control, only : Uc, Uv, Jz, Js, Jp
      use control, only : Ud, Jh
      use control, only : mune, lambda
+
+     use version, only : V_MAIL 
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
@@ -695,34 +698,36 @@
      ! counter for the non-zero matrix elements
      integer :: counter
 
-! auxiliary integer variable used to convert the spin sequence
+     ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! string for current date and time
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
-! open atom.cix to write
+     ! open atom.cix to write
      open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
-! write header
+     ! write header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
      write(mytmp,'(a)') '# Format  : v2.3, designed for PANSY and MANJUSHAKA'
-     write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: huangli@caep.cn'
+     write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
+     write(mytmp,'(a)') '# Support : any problem, please contact me: '//V_MAIL
      write(mytmp,*)
      write(mytmp,*)
 
-! write configurations
+     ! write configurations
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# PARAMETERS:'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -733,14 +738,14 @@
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
 
-! write summary of sectors
+     ! write summary of sectors
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SECTORS:'
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SUMMARY: NSECTORS | MAX_DIM_SECT | AVE_DIM_SECT'
      write(mytmp,'(5X,2(i10,2X),f20.10)') nsectors, max_dim_sect, ave_dim_sect
 
-! write dimension, total electrons, next sector, eigenvalue of each sector
+     ! write dimension, total electrons, next sector, eigenvalue of each sector
      do i=1,nsectors
          write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NE | SZ | JZ | PS'
          write(mytmp,'(12X,8i6)') i, sectors(i)%ndim,   &
@@ -751,10 +756,10 @@
                                      sectors(i)%jz,     &
                                      sectors(i)%ps
 
-! write next sector
+         ! write next sector
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
-! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
+             ! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1
@@ -767,22 +772,22 @@
              write(mytmp,'(2X,3i10)') j, sectors(i)%next(s_order,0), sectors(i)%next(s_order,1)
          enddo ! over j={1,sectors(i)%nops} loop
 
-! write eigeanvalue
+         ! write eigeanvalue
          write(mytmp,'(4X,a)') '# EIGENVALUES'
          do j=1,sectors(i)%ndim
              write(mytmp,'(2X,i10,f20.10)') j, sectors(i)%eval(j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-! write F-matrix of each sector
+     ! write F-matrix of each sector
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F-MATRIX:'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
-! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
+             ! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1
@@ -813,50 +818,59 @@
          enddo ! over j={1,sectors(i)%nops} loop
      enddo  ! over i={1,nsect} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_scix
 
-!!>>> atomic_dump_sector: write out the configuration for each sector
-!!>>> to file atom.sector.dat
+!!
+!! @sub atomic_dump_sector
+!!
+!! write out the configuration for each sector to file atom.sector.dat
   subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
      use constants, only : mytmp
 
      use control, only : ictqmc
      use control, only : ncfgs
+
      use m_fock, only : bin_basis
-     use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
+
+     use m_sector, only : nsectors
      use m_sector, only : sectors
+
+     use m_sector, only : max_dim_sect
+     use m_sector, only : ave_dim_sect
 
      implicit none
 
-! external arguments
-! good quantum number: N
+!! external arguments
+     ! good quantum number: N
      integer, intent(in) :: sect_good_ntot(ncfgs)
 
-! good quantum number: Sz
+     ! good quantum number: Sz
      integer, intent(in) :: sect_good_sz(ncfgs)
 
-! good quantum number: PS
+     ! good quantum number: PS
      integer, intent(in) :: sect_good_ps(ncfgs)
 
-! good quantum number: Jz
+     ! good quantum number: Jz
      integer, intent(in) :: sect_good_jz(ncfgs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! open 'atom.sector.dat' to write
+     ! open 'atom.sector.dat' to write
      open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
 
 ! write header
@@ -931,4 +945,4 @@
      close(mytmp)
 
      return
-   end subroutine atomic_dump_sector
+  end subroutine atomic_dump_sector
