@@ -73,25 +73,32 @@
      return
   end subroutine atomic_make_ffmat
 
-!!>>> atomic_make_foccu: make occupancy for atomic eigenstates in the full
-!!>>> Hilbert space case
+!!
+!! @sub atomic_make_foccu
+!!
+!! make occupancy for atomic eigenstates in the full Hilbert space case
+!!
   subroutine atomic_make_foccu()
      use constants, only : zero, one
 
      use control, only : norbs, ncfgs
+
      use m_fock, only : bin_basis
-     use m_fock, only : occu, evec
+     use m_fock, only : evec
+     use m_fock, only : occu
 
      implicit none
 
-! local variables
-! loop index over orbits
+!! local variables
+     ! loop index over orbits
      integer :: iorb
 
-! loop index over configurations
+     ! loop index over configurations
      integer :: ibas
 
-! evaluate occupancy in the Fock basis
+!! [body
+
+     ! evaluate occupancy in the Fock basis
      occu = zero
      do ibas=1,ncfgs
          do iorb=1,norbs
@@ -101,8 +108,10 @@
          enddo ! over iorb={1,norbs} loop
      enddo ! over ibas={1,ncfgs} loop
 
-! transform the occupancy from Fock basis to atomic eigenbasis
+     ! transform the occupancy from Fock basis to atomic eigenbasis
      call atomic_tran_repr_real(ncfgs, occu, evec)
+
+!! body]
 
      return
   end subroutine atomic_make_foccu
