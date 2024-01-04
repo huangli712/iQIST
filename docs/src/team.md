@@ -2,22 +2,18 @@
 
 Core Developers:
 
-**Li Huang``^\dagger``** and **Yilin Wang``^\dagger``** 
+**Li Huang``^\dagger``** and **Yilin Wang``^\ddagger``** 
 
 Key Contributors:
 
-**Zi Yang Meng``^\dagger``**, **Haiyan Lu``^{\dagger,\ddagger}``**, and **Liang Du``^\rceil``**
+**Liang Du``^\rceil``**
 
 Directors and Supervisors: 
 
-**Philipp Werner``^✶``** and **Xi Dai``^\dagger``**
+**Philipp Werner``^✶``** and **Xi Dai``^\lceil``**
 
-**``^\dagger``** *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou 621900, China*
+**``^\dagger``** *Institute of Materials, China Academy of Engineering Physics, Jiangyou 621900, China*
 
-**``^\ddagger``** *Beijing National Laboratory for Condensed Matter Physics, and Institute of Physics,*
-*Chinese Academy of Sciences, Beijing 100190, China*
-
-**``^\rceil``** *Department of Physics, The University of Texas at Austin, Austin, Texas 78712, USA*
+**``^\ddagger``** *University of Science and Technology of China*
 
 **``^✶``** *Department of Physics, University of Fribourg, 1700 Fribourg, Switzerland*
-

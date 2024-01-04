@@ -294,7 +294,7 @@ makedocs(
         "Home" => "index.md",
         "Team" => "team.md",
         "Copyright" => "copy.md",
-        "Dedication" => "thanks.md",
+        "Thanks" => "thanks.md",
         #"Introduction" => ch01,
         #"Installation" => ch02,
         #"Getting started" => ch03,

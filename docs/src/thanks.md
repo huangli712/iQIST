@@ -1,4 +1,4 @@
-# Dedication
+# Thanks
 
 !!! tip "FUNDINGS"
 
