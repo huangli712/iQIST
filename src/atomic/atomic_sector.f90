@@ -594,14 +594,15 @@
          endif ! back if ( nsect == 0 ) block
      enddo ! over i={1,ncfgs} loop
 
-! after we know how many sectors and the dimension of each sector are there,
-! we can allocate memory for global variables for sectors
-!-------------------------------------------------------------------------
+     ! after we know how many sectors and the dimension of each sector
+     ! are there, we can allocate memory for global variables for sectors
+     !--------------------------------------------------------------------
      max_dim_sect = 0
      ave_dim_sect = zero
      nsectors = nsect
      call cat_alloc_sectors()
-! now we will build each sector
+     !
+     ! now we will build each sector
      counter = 1
      do i=1,nsect
          sectors(i)%ndim = ndims(i)
@@ -612,37 +613,42 @@
          sectors(i)%nops = norbs
          sectors(i)%istart = counter
          counter = counter + ndims(i)
-! allocate memory for each sector
+
+         ! allocate memory for each sector
          call cat_alloc_sector( sectors(i) )
-! set basis for each sector
+
+         ! set basis for each sector
          do j=1,ndims(i)
              sectors(i)%basis(j) = sector_basis(j,i)
          enddo ! over j={1,ndims(i)} loop
      enddo ! over i={1,nsect} loop
 
-! make next sector index
-!-------------------------------------------------------------------------
-! loop over all the sectors
+     ! make next sector index
+     !--------------------------------------------------------------------
+     ! loop over all the sectors
      do i=1,nsectors
-! loop over all the orbtials
+         ! loop over all the orbtials
          do j=1,norbs
-! loop over creation and annihilation fermion operators
+             ! loop over creation and annihilation fermion operators
              do k=0,1
                  which_sect = -1
-! we should check each state in this sector
+                 ! we should check each state in this sector
                  can = .false.
                  do l=1,sectors(i)%ndim
                      ibasis = sectors(i)%basis(l)
-! for creation fermion operator
+
+                     ! for creation fermion operator
                      if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
-! for annihilation fermion operator
+                     !
+                     ! for annihilation fermion operator
                      else if ( k==0 .and. bin_basis(j, ibasis) == 1 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
+                     !
                      endif ! back if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) block
                  enddo ! over l={1,sectors(i)%ndim} loop
 
