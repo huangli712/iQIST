@@ -472,7 +472,7 @@
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
 
-! write eigenvalues
+     ! write eigenvalues
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# EIGENVALUES: INDEX | ENERGY | OCCUPY | SPIN'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -480,8 +480,8 @@
          write(mytmp,'(i10,3f20.10)') i, eval(i), occu(i,i), spin(i,i)
      enddo ! over i={1,ncfgs} loop
 
-! write eigenvectors
-! only for the camellia code
+     ! write eigenvectors
+     ! only for the camellia code
      if ( ictqmc == 0 ) then
          write(mytmp,'(75a1)') dash ! dashed line
          write(mytmp,'(a)') '# EIGENVECTORS: ALPHA | BETA | EVEC'
@@ -495,8 +495,8 @@
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ictqmc == 0 ) block
 
-! write local hamiltonian
-! only for the camellia code
+     ! write local hamiltonian
+     ! only for the camellia code
      if ( ictqmc == 0 ) then
          write(mytmp,'(75a1)') dash ! dashed line
          write(mytmp,'(a)') '# HAMILTONIAN: ALPHA | BETA | HMAT'
@@ -510,10 +510,13 @@
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ictqmc == 0 ) block
 
-! write F-matrix
-! for non-soc case, the spin order of CTQMC is like up, up, up, dn, dn, dn
-! but the spin order of this program is up, dn, up, dn, up, dn. So we have
-! to adjust it here. However for soc case, it doesn't matter
+     ! write F-matrix
+     !
+     ! for non-soc case, the spin order of ctqmc is like
+     !     up, up, up, dn, dn, dn
+     ! but the spin order of this program is
+     !     up, dn, up, dn, up, dn
+     ! so we have to adjust it here. however for soc case, it doesn't matter
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -537,8 +540,10 @@
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_fcix
