@@ -561,29 +561,31 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! the counter
+     ! the counter
      integer :: counter
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! open file atom.eigval.dat to write
+     ! open file atom.eigval.dat to write
      open(mytmp, file='atom.eigval.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | sector | j | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      counter = 0
      do i=1,nsectors
          do j=1,sectors(i)%ndim
@@ -592,8 +594,10 @@
          enddo ! over i={1,nsectors} loop
      enddo ! over j={1,sectors(i)%ndim} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_seigval
