@@ -159,14 +159,24 @@
      return
   end subroutine atomic_make_fspin
 
-!!>>> atomic_make_fhmat: make atomic Hamiltonian in the full Hilbert space
+!!
+!! @sub atomic_make_fhmat
+!!
+!! make atomic Hamiltonian in the full Hilbert space
+!!
   subroutine atomic_make_fhmat()
-     use constants, only : one, czero, epst
+     use constants, only : one, czero
+     use constants, only : epst
 
      use control, only : norbs, ncfgs
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
      use m_fock, only : hmat
-     use m_spmat, only : emat, umat
+
+     use m_spmat, only : emat
+     use m_spmat, only : umat
 
      implicit none
 
