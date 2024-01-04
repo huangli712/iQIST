@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_make_ffmat
 !!!           atomic_make_foccu
 !!!           atomic_make_fspin
@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/03/2024 by li huang (last modified)
+!!!           01/04/2024 by li huang (last modified)
 !!! purpose : computational subroutines for the calculations of occupation
 !!!           number, spin moment, F-matrix, and atomic Hamiltonian in the
 !!!           full Fock space.
@@ -16,32 +16,40 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_make_ffmat: make F-matrix for annihilation operators in
-!!>>> full Hilbert space case
+!!
+!! @sub atomic_make_ffmat
+!!
+!! make F-matrix for annihilation operators in full Hilbert space case
+!!
   subroutine atomic_make_ffmat()
      use control, only : ictqmc
      use control, only : norbs, ncfgs
-     use m_fock, only : dec_basis, ind_basis
-     use m_fock, only : fmat, evec
+
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
+     use m_fock, only : evec
+     use m_fock, only : fmat
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
 
-! left Fock state
+     ! left Fock state
      integer :: left
 
-! right Fock state
+     ! right Fock state
      integer :: right
 
-! the sign change
+     ! the sign change
      integer :: isgn
 
-! evaluate F-matrix in the Fock basis
+!! [body
+
+     ! evaluate F-matrix in the Fock basis
      do i=1,norbs
          do j=1,ncfgs
              right = dec_basis(j)
@@ -53,12 +61,14 @@
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
 
-! rotate fmat from Fock basis to the atomic eigenvector basis
+     ! rotate fmat from Fock basis to the atomic eigenvector basis
      if ( ictqmc == 1 ) then
          do i=1,norbs
              call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
          enddo ! over i={1,norbs} loop
      endif ! back if ( ictqmc == 1 ) block
+
+!! body]
 
      return
   end subroutine atomic_make_ffmat
