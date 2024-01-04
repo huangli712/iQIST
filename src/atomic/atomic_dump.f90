@@ -374,15 +374,15 @@
      ! setup dash
      dash = '-'
 
-! open file atom.eigvec.dat to write
+     ! open file atom.eigvec.dat to write
      open(mytmp, file='atom.eigvec.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | j | eigenvectors | fockbasis'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs( evec(j,i) ) > eps6 ) then
@@ -391,8 +391,10 @@
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,ncfgs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_feigvec
