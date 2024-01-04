@@ -1,13 +1,13 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_setup_param
 !!!           atomic_check_param
-!!!           atomic_read_cmat
-!!!           atomic_read_emat
-!!!           atomic_read_tmat
-!!!           atomic_make_spmat
-!!!           atomic_make_fock
-!!!           atomic_make_natural
+!!!           atomic_input_cmat
+!!!           atomic_input_emat
+!!!           atomic_input_tmat
+!!!           atomic_build_spmat
+!!!           atomic_build_fock
+!!!           atomic_build_natural
 !!!           atomic_2natural_case1
 !!!           atomic_2natural_case2
 !!!           atomic_2natural_case3
@@ -16,7 +16,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/04/2024 by li huang (last modified)
+!!!           01/05/2024 by li huang (last modified)
 !!! purpose : read input data from the external files, make the Fock basis
 !!!           and natural basis, etc.
 !!! status  : unstable
