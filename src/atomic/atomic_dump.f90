@@ -298,41 +298,49 @@
      return
   end subroutine atomic_dump_umat
 
-!!>>> atomic_dump_feigval: write eigenvalue for full Hilbert space to
-!!>>> file atom.eigval.dat
+!!
+!! @sub atomic_dump_feigval
+!!
+!! write eigenvalue for full Hilbert space to file atom.eigval.dat
+!!
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
 
      use control, only : ncfgs
+
      use m_fock, only : eval
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! open file atom.eigval.dat to write
+     ! open file atom.eigval.dat to write
      open(mytmp, file='atom.eigval.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,ncfgs
          write(mytmp,'(i6,f16.8)') i, eval(i)
      enddo ! over i={1,ncfgs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_feigval
