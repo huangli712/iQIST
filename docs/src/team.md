@@ -16,4 +16,6 @@ Directors and Supervisors:
 
 **``^\ddagger``** *University of Science and Technology of China*
 
+**``^\rceil``** *College of Physics and Technology, Guangxi Normal University, Guilin 541004, China*
+
 **``^✶``** *Department of Physics, University of Fribourg, 1700 Fribourg, Switzerland*
