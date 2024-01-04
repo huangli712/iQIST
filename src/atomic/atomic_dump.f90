@@ -131,6 +131,7 @@
 
      use control, only : isoc
      use control, only : nband, norbs
+
      use m_spmat, only : emat
 
      implicit none
@@ -180,42 +181,52 @@
      return
   end subroutine atomic_dump_emat
 
-!!>>> atomic_dump_umat: write onsite Coulomb interaction matrix
+!!
+!! @sub atomic_dump_umat
+!!
+!! write onsite Coulomb interaction matrix
+!!
   subroutine atomic_dump_umat()
-     use constants, only : dp, zero, two, epst, mytmp
+     use constants, only : dp
+     use constants, only : zero, two
+     use constants, only : epst
+     use constants, only : mytmp
 
      use control, only : icu
      use control, only : nband, norbs
+
      use m_spmat, only : umat
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
      integer  :: l
 
-! two index umat
+     ! two index umat
      real(dp) :: umat_t(norbs,norbs)
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! open file atom.umat.dat to write
+     ! open file atom.umat.dat to write
      open(mytmp, file='atom.umat.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | j | k | l | umat_real | umat_imag'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data, only the non-zero elements are outputed
-! note: we do not change the spin sequence here
+     ! write the data, only the non-zero elements are outputed
+     ! note: we do not change the spin sequence here
      do i=1,norbs
          do j=1,norbs
              do k=1,norbs
@@ -228,21 +239,21 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
-! get two index umat
+     ! get two index umat
      umat_t = zero
 
-! Kanamori type
+     ! Kanamori type
      if ( icu == 1 .or. icu == 3 ) then
          do i=1,norbs
              do j=i+1,norbs
-                 umat_t(i,j) = real(umat(i,j,j,i))
+                 umat_t(i,j) = real( umat(i,j,j,i) )
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
-! Slater type
+     ! Slater type
      elseif ( icu == 2 ) then
          do i=1,norbs
              do j=i+1,norbs
@@ -256,11 +267,11 @@
          enddo ! over i={1,norbs} loop
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
-! open file atom.umat.dat to write
+     ! open file atom.umat.dat to write
      open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
 
-! write the data, all of the elements are outputed
-! note: we have to change the spin sequence here
+     ! write the data, all of the elements are outputed
+     ! note: we have to change the spin sequence here
      do i=1,norbs
          if ( i <= nband ) then
              k = 2*i-1
@@ -279,8 +290,10 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_umat
