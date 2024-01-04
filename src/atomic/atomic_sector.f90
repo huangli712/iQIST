@@ -294,7 +294,11 @@
      return
   end subroutine atomic_make_shmat
 
-!!>>> atomic_diag_shmat: diagonalize the Hamiltonian for each sector
+!!
+!! @sub atomic_diag_shmat
+!!
+!! diagonalize the Hamiltonian for each sector
+!!
   subroutine atomic_diag_shmat()
      use constants, only : dp
 
