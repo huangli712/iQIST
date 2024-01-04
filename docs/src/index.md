@@ -1,4 +1,4 @@
-![header image](figure/logo.png)
+![header image](figures/logo.png)
 
 ```@raw html
 <h1>
