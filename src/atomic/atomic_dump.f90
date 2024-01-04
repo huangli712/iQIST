@@ -408,12 +408,15 @@
      use constants, only : epst
      use constants, only : mytmp
 
+     use control, only : cname
      use control, only : ictqmc, icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : nmini, nmaxi
      use control, only : Uc, Uv, Js, Jp, Jz
      use control, only : Ud, Jh
      use control, only : mune, lambda
+
+     use version, only : V_MAIL 
 
      use m_fock, only : eval, evec
      use m_fock, only : occu, spin
@@ -422,41 +425,43 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
 
-! auxiliary integer variable used to convert the spin sequence
+     ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! string for current date and time
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
-! open file atom.cix to write
+     ! open file atom.cix to write
      open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
      if ( ictqmc == 0 ) write(mytmp,'(a)') '# Format  : v1.3, designed for CAMELLIA'
      if ( ictqmc == 1 ) write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
-     write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: huangli@caep.cn'
+     write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
+     write(mytmp,'(a)') '# Support : any problem, please contact me: '//V_MAIL
      write(mytmp,*)
      write(mytmp,*)
 
-! write configurations
+     ! write configurations
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# PARAMETERS:'
      write(mytmp,'(75a1)') dash ! dashed line
