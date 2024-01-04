@@ -118,12 +118,20 @@
      return
   end subroutine atomic_make_sfmat
 
-!!>>> atomic_make_shmat: make Hamiltonian for each sector one by one
+!!
+!! @sub atomic_make_shmat
+!!
+!! make Hamiltonian for each sector one by one
+!!
   subroutine atomic_make_shmat()
-     use constants, only : one, epst, czero
+     use constants, only : one, czero
+     use constants, only : epst
 
      use control, only : norbs
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
      use m_spmat, only : emat, umat
      use m_sector, only : nsectors, sectors
 
