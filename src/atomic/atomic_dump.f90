@@ -548,8 +548,11 @@
      return
   end subroutine atomic_dump_fcix
 
-!!>>> atomic_dump_seigval: write eigenvalues of all sectors to the
-!!>>> file atom.eigval.dat
+!!
+!! @sub atomic_dump_seigval
+!!
+!! write eigenvalues of all sectors to the file atom.eigval.dat
+!!
   subroutine atomic_dump_seigval()
      use constants, only : mytmp
 
