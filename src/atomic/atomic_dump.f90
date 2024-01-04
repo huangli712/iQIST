@@ -345,25 +345,33 @@
      return
   end subroutine atomic_dump_feigval
 
-!!>>> atomic_dump_feigvec: write eigenvector for full Hilbert space to
-!!>>> file atom.eigvec.dat
+!!
+!! @sub atomic_dump_feigvec
+!!
+!! write eigenvector for full Hilbert space to file atom.eigvec.dat
+!!
   subroutine atomic_dump_feigvec()
-     use constants, only : eps6, mytmp
+     use constants, only : eps6
+     use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_fock, only : evec, bin_basis
+
+     use m_fock, only : bin_basis
+     use m_fock, only : evec
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
 ! open file atom.eigvec.dat to write
