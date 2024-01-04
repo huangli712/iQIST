@@ -660,7 +660,9 @@
                              else
                                  my_ntot = sect_good_ntot(i) - 1
                              endif ! back if ( k == 1 ) block
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all sectors to see which sector
+                             ! it will point to
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
                                      which_sect = l; EXIT
@@ -675,7 +677,9 @@
                                  my_ntot = sect_good_ntot(i) - 1
                                  my_sz = sect_good_sz(i) - orb_good_sz(j)
                              endif ! back if ( k == 1 ) block
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all sectors to see which sector
+                             ! it will point to
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
                                      if ( sect_good_sz(l) == my_sz ) then
@@ -694,12 +698,15 @@
                                  my_sz   = sect_good_sz(i) - orb_good_sz(j)
                                  code(j) = 0
                              endif ! back if ( k == 1 ) block
-! calculate new PS number
+                             !
+                             ! calculate new PS number
                              my_ps = 0
                              do l=1,nband
                                  my_ps = my_ps + (2**l) * ( code(2*l-1) - code(2*l) )**2
                              enddo ! over l={1,nband} loop
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all sectors to see which sector
+                             ! it will point to
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
                                      if ( sect_good_sz(l) == my_sz ) then
@@ -718,7 +725,9 @@
                                  my_ntot = sect_good_ntot(i) - 1
                                  my_jz = sect_good_jz(i) - orb_good_jz(j)
                              endif ! back if ( k == 1 ) block
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all sectors to see which sector
+                             ! it will point to
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
                                      if ( sect_good_jz(l) == my_jz ) then
@@ -734,8 +743,8 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsectors} loop
 
-! calculate the maximum and average dimensions of sectors
-!-------------------------------------------------------------------------
+     ! calculate the maximum and average dimensions of sectors
+     !--------------------------------------------------------------------
      max_dim_sect = maxval(ndims)
      sum_dim = 0
      do i=1,nsectors
@@ -743,12 +752,14 @@
      enddo
      ave_dim_sect = real(sum_dim) / real(nsectors)
 
-! dump sector information for reference
-!-------------------------------------------------------------------------
+     ! dump sector information for reference
+     !--------------------------------------------------------------------
      call atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
 
-! deallocate memory
+     ! deallocate memory
      deallocate(sector_basis)
+
+!! body]
 
      return
   end subroutine atomic_make_sectors
