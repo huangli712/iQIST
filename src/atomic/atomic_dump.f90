@@ -867,19 +867,21 @@
      ! used to draw a dashed line
      character (len=1) :: dash(75)
 
+!! [body
+
      ! setup dash
      dash = '-'
 
      ! open 'atom.sector.dat' to write
      open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
 
-! write header
+     ! write header
      write(mytmp,'(a,i10)')   '# number_sectors : ', nsectors
      write(mytmp,'(a,i10)')   '# max_dim_sectors: ', max_dim_sect
      write(mytmp,'(a,f10.5)') '# ave_dim_sectors: ', ave_dim_sect
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      select case (ictqmc)
          case (1)
              call s_print_error('atomic_dump_sector','this case is not implemented')
@@ -941,8 +943,10 @@
               enddo ! over i={1,nsectors} loop
      end select ! back select case (ictqmc) block
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_sector
