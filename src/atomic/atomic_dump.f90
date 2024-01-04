@@ -399,10 +399,14 @@
      return
   end subroutine atomic_dump_feigvec
 
-!!>>> atomic_dump_fcix: write atom.cix file which are only compatible with
-!!>>> the CAMELLIA, BEGONIA and LAVENDER components
+!!
+!! @sub atomic_dump_fcix
+!!
+!! write atom.cix file
+!!
   subroutine atomic_dump_fcix()
-     use constants, only : epst, mytmp
+     use constants, only : epst
+     use constants, only : mytmp
 
      use control, only : ictqmc, icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
@@ -410,7 +414,11 @@
      use control, only : Uc, Uv, Js, Jp, Jz
      use control, only : Ud, Jh
      use control, only : mune, lambda
-     use m_fock, only : eval, evec, occu, spin, fmat, hmat
+
+     use m_fock, only : eval, evec
+     use m_fock, only : occu, spin
+     use m_fock, only : fmat
+     use m_fock, only : hmat
 
      implicit none
 
