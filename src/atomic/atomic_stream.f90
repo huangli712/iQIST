@@ -394,49 +394,60 @@
      return
   end subroutine atomic_input_cmat
 
-!!>>> atomic_read_emat: read onsite impurity level from file atomic.emat.in
-  subroutine atomic_read_emat()
-     use constants, only : dp, zero, mytmp
+!!
+!! @sub atomic_input_emat
+!!
+!! read onsite impurity level from file atomic.emat.in
+!!
+  subroutine atomic_input_emat()
+     use constants, only : dp, zero
+     use constants, only : mytmp
 
      use control, only : norbs
+
      use m_spmat, only : emat
 
      implicit none
 
-! local variables
-! file status
+!! local variables
+     ! file status
      logical  :: exists
 
-! loop index
+     ! loop index
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      integer  :: i1
      integer  :: i2
      real(dp) :: raux
 
-! we shall read onsite impurity level (emat) from file atomic.emat.in
-! inquire file at first
+!! [body
+
+     ! we shall read onsite impurity level (emat) from file atomic.emat.in
+     !
+     ! inquire file at first
      inquire( file = 'atom.emat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_read_emat','file atomic.emat.in does not exist!')
+         call s_print_error('atomic_input_emat','file atomic.emat.in does not exist!')
      endif ! back if ( exists .eqv. .false. ) block
 
-! open file atom.emat.in
+     ! open file atom.emat.in
      open(mytmp, file='atom.emat.in', form='formatted', status='unknown')
 
-! read the data file
+     ! read the data file
      do i=1,norbs
          read(mytmp,*) i1, i2, raux
-! emat is actually real in natural basis
+         ! emat is actually real in natural basis
          emat(i,i) = dcmplx(raux, zero)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
+!! body]
+
      return
-  end subroutine atomic_read_emat
+  end subroutine atomic_input_emat
 
 !!>>> atomic_read_tmat: read the transformation matrix tmat from
 !!>>> file atomic.tmat.in
