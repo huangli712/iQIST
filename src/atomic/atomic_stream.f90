@@ -23,61 +23,80 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_config: read config parameters from file atom.config.in
+!!========================================================================
+!!>>> config atomic eigenvalue problem solver                          <<<
+!!========================================================================
+
+!!
+!! @sub atomic_config
+!!
+!! read config parameters from file atom.config.in
+!!
   subroutine atomic_setup_param()
      use constants, only : dp
-     use parser, only : p_create, p_destroy, p_parse, p_get
+
+     use parser, only : p_create
+     use parser, only : p_parse
+     use parser, only : p_get
+     use parser, only : p_destroy
 
      use control ! ALL
 
      implicit none
 
-! local variables
-! file status, if the atom.config.in file exists
+!! local variables
+     ! file status, if the atom.config.in file exists
      logical :: exists
 
-! setup default values
+!! [body
+
+     ! setup general control flags
+     !--------------------------------------------------------------------
      ibasis = 1           ! source of the natural basis
      ictqmc = 1           ! type of atomic Hamiltonian matrix diagonalization
      icu    = 1           ! type of Coulomb interaction
      icf    = 0           ! type of crystal field (CF)
      isoc   = 0           ! type of spin-orbital coupling (SOC)
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+     ! setup common variables for atomic eigenvalue problem
+     !--------------------------------------------------------------------
      nband  = 1           ! number of bands
      nspin  = 2           ! number of spins
      norbs  = nband*nspin ! number of orbits
      ncfgs  = 2**norbs    ! number of many-body configurations
      nmini  = 0           ! minimal of total occupancy N to be kept
      nmaxi  = norbs       ! maximal of total occupancy N to be kept
-
+     !--------------------------------------------------------------------
      Uc     = 2.00_dp     ! intraorbital Coulomb interaction
      Uv     = 2.00_dp     ! interorbital Coulomb interaction
      Jz     = 0.00_dp     ! Hund's exchange interaction
      Js     = 0.00_dp     ! spin-flip interaction
      Jp     = 0.00_dp     ! pair-hopping interaction
-
+     !--------------------------------------------------------------------
      Ud     = 2.00_dp     ! Coulomb interaction parameter
      Jh     = 0.00_dp     ! Hund's exchange parameter
-
+     !--------------------------------------------------------------------
      mune   = 0.00_dp     ! chemical potential
      lambda = 0.00_dp     ! spin-orbit coupling strength
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! read in input file if possible
-! reset file status
+     ! read in input file if possible
+     ! reset file status
      exists = .false.
 
-! inquire the input file status: atomic.config.in
+     ! inquire the input file status: atomic.config.in
      inquire( file = "atom.config.in", exist = exists )
 
-! read parameters from atom.config.in
+     ! read parameters from atom.config.in
      if ( exists .eqv. .true. ) then
-! create the file parser
+         ! create the file parser
          call p_create()
 
-! parse the config file
+         ! parse the config file
          call p_parse('atom.config.in')
 
-! extract parameters
+         ! extract parameters
          call p_get('ibasis', ibasis)
          call p_get('ictqmc', ictqmc)
          call p_get('icu'   ,    icu)
@@ -89,15 +108,15 @@
          call p_get('norbs' ,  norbs) ! not useful
          call p_get('ncfgs' ,  ncfgs) ! not useful
 
-! calculate the norbs and ncfgs
+         ! calculate the norbs and ncfgs
          norbs = nband * nspin
          ncfgs = 2 ** norbs
 
-! setup nmini and nmaxi
+         ! setup nmini and nmaxi
          nmini = 0
          nmaxi = norbs
 
-! continue to extract parameters
+         ! continue to extract parameters
          call p_get('nmini' ,  nmini)
          call p_get('nmaxi' ,  nmaxi)
 
@@ -113,11 +132,13 @@
          call p_get('mune'  ,   mune)
          call p_get('lambda', lambda)
 
-! destroy the parser
+         ! destroy the parser
          call p_destroy()
      else
-         call s_print_exception('atomic_config','file atom.config.in does not exist!')
+         call s_print_exception('atomic_setup_param','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine atomic_setup_param
