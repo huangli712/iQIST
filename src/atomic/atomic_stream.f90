@@ -351,42 +351,48 @@
 
      implicit none
 
-! local variables
-! file status
+!! local variables
+     ! file status
      logical  :: exists
 
-! iostat
+     ! iostat
      integer  :: ierr
 
-! dummy variables
+     ! dummy variables
      integer  :: i1
      integer  :: i2
      real(dp) :: raux
 
-! we shall read crystal field (cmat) from file atom.cmat.in
-! inquire file at first
+!! [body
+
+     ! we shall read crystal field (cmat) from file atom.cmat.in
+     !
+     ! inquire file at first
      inquire( file = 'atom.cmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_read_cmat','file atomic.cmat.in does not exist!')
+         call s_print_error('atomic_input_cmat','file atomic.cmat.in does not exist!')
      endif ! back if ( exists .eqv. .false. ) block
 
-! open file atom.cmat.in
+     ! open file atom.cmat.in
      open(mytmp, file='atom.cmat.in', form='formatted', status='unknown')
 
-! read the data until EOF
+     ! read the data until EOF
      do
          read(mytmp,*,iostat = ierr) i1, i2, raux
          if ( ierr == iostat_end ) EXIT
-! crystal field is actually real
+         !
+         ! crystal field is actually real
          call s_assert( i1 <= norbs .and. i2 <= norbs )
          cmat(i1,i2) = dcmplx(raux, zero)
      enddo ! over do while loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
+!! body]
+
      return
-  end subroutine atomic_read_cmat
+  end subroutine atomic_input_cmat
 
 !!>>> atomic_read_emat: read onsite impurity level from file atomic.emat.in
   subroutine atomic_read_emat()
@@ -533,7 +539,7 @@
 ! support real crystal field, so, the elements in this file provided by
 ! users must be real
          if ( icf > 0 ) then
-             call atomic_read_cmat()
+             call atomic_input_cmat()
          else
              cmat = czero
          endif ! back if ( icf > 0 ) block
