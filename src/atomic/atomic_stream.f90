@@ -5,8 +5,8 @@
 !!!           atomic_input_cmat
 !!!           atomic_input_emat
 !!!           atomic_input_tmat
-!!!           atomic_build_spmat
 !!!           atomic_build_fock
+!!!           atomic_build_spmat
 !!!           atomic_build_natural
 !!!           atomic_2natural_case1
 !!!           atomic_2natural_case2
@@ -334,12 +334,19 @@
 !!>>> config atomic eigenvalue problem                                 <<<
 !!========================================================================
 
-!!>>> atomic_read_cmat: read crystal field from file atomic.cmat.in
-  subroutine atomic_read_cmat()
+!!
+!! @sub atomic_input_cmat
+!!
+!! read crystal field from file atomic.cmat.in
+!!
+  subroutine atomic_input_cmat()
      use, intrinsic :: iso_fortran_env, only : iostat_end
-     use constants, only : dp, zero, mytmp
+
+     use constants, only : dp, zero
+     use constants, only : mytmp
 
      use control, only : norbs
+
      use m_spmat, only : cmat
 
      implicit none
