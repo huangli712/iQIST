@@ -585,7 +585,7 @@
      else
 ! read the emat (CF + SOC) matrices on natural basis, this matrix should be
 ! a diagonal matrix, and the elements must be real
-         call atomic_read_emat()
+         call atomic_input_emat()
      endif ! back if ( ibasis == 1 ) block
 
 ! make Coulomb interaction U
