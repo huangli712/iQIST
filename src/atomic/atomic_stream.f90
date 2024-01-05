@@ -449,53 +449,62 @@
      return
   end subroutine atomic_input_emat
 
-!!>>> atomic_read_tmat: read the transformation matrix tmat from
-!!>>> file atomic.tmat.in
-  subroutine atomic_read_tmat()
-     use constants, only : dp, zero, mytmp
+!!
+!! @sub atomic_input_tmat
+!!
+!! read the transformation matrix tmat from file atomic.tmat.in
+!!
+  subroutine atomic_input_tmat()
+     use constants, only : dp, zero
+     use constants, only : mytmp
 
      use control, only : norbs
      use m_spmat, only : tmat
 
      implicit none
 
-! local variables
-! file status
+!! local variables
+     ! file status
      logical :: exists
 
-! loop index
+     ! loop index
      integer :: i
      integer :: j
 
-! dummy variables
+     ! dummy variables
      integer :: i1
      integer :: i2
      real(dp) :: raux
 
-! we shall read transformation matrix tmat from file atomic.tmat.in
-! inquire file at first
+!! [body
+
+     ! we shall read transformation matrix tmat from file atomic.tmat.in
+     !
+     ! inquire file at first
      inquire( file = 'atom.tmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_read_tmat','file atomic.tmat.in does not exist')
+         call s_print_error('atomic_input_tmat','file atomic.tmat.in does not exist')
      endif ! back if ( exists .eqv. .false. ) block
 
-! open file atom.tmat.in
+     ! open file atom.tmat.in
      open(mytmp, file='atom.tmat.in', form='formatted', status='unknown')
 
-! read the data file
+     ! read the data file
      do i=1,norbs
          do j=1,norbs
              read(mytmp,*) i1, i2, raux
-! tmat is actually real
+             ! tmat is actually real
              tmat(j,i) = dcmplx(raux, zero)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
+!! body]
+
      return
-  end subroutine atomic_read_tmat
+  end subroutine atomic_input_tmat
 
 ! make single particle related matrices, including crystal field (CF),
 ! spin-orbit coupling (SOC), and Coulomb interaction U.
@@ -719,7 +728,7 @@
 ! B: read the transformation matrices used to transfer emat from original
 ! basis to natural basis.
      else
-         call atomic_read_tmat()
+         call atomic_input_tmat()
      endif ! back if ( ibasis == 1 ) block
 
 ! dump emat for reference
