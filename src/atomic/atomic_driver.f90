@@ -29,7 +29,7 @@
 
      ! make Fock basis for the full many particle Hiblert space
      write(mystd,'(2X,a)') 'make Fock basis'
-     call atomic_make_fock()
+     call atomic_build_fock()
      write(mystd,*)
 
      ! make single particle related matrices

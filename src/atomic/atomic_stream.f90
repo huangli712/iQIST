@@ -506,6 +506,81 @@
      return
   end subroutine atomic_input_tmat
 
+!!========================================================================
+!!>>> build basis for atomic eigenvalue problem                        <<<
+!!========================================================================
+
+!!
+!! @sub atomic_build_fock
+!!
+!! make Fock basis for the full Hilbert space
+!!
+  subroutine atomic_build_fock()
+     use control, only : norbs, ncfgs
+
+     use m_fock, only : dim_sub_n
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
+
+     implicit none
+
+!! local variables
+     ! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+     ! basis counter
+     integer :: basis_count
+
+     ! number of electrons for Fock state
+     integer :: nelec
+
+!! [body
+
+     ! initialize them
+     dim_sub_n = 0
+     bin_basis = 0
+     dec_basis = 0
+     ind_basis = 0
+
+     ! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
+     do i=0,norbs
+         call s_combination(i, norbs, dim_sub_n(i))
+     enddo ! over i={0,norbs} loop
+
+     ! construct decimal form and index of Fock basis
+     basis_count = 0
+     do i=0,norbs
+         do j=0,2**norbs-1
+             nelec = 0
+             do k=1,norbs
+                 if ( btest(j, k-1) ) nelec = nelec + 1
+             enddo ! over k={1,norbs} loop
+             if ( nelec == i ) then
+                 basis_count = basis_count + 1
+                 dec_basis(basis_count) = j
+                 ind_basis(j) = basis_count
+             endif ! back if ( nelec == i ) block
+         enddo ! over j={0,2**norbs-1} loop
+     enddo ! over i={0,norbs} loop
+
+     ! construct binary form of Fock basis
+     do i=1,ncfgs
+         do j=1,norbs
+             if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,ncfgs} loop
+
+     ! dump Fock basis to file atom.fock.dat for reference
+     call atomic_dump_fock()
+
+!! body]
+
+     return
+  end subroutine atomic_build_fock
+
 ! make single particle related matrices, including crystal field (CF),
 ! spin-orbit coupling (SOC), and Coulomb interaction U.
 ! when writing these matrices, we should define a single particle basis,
@@ -610,65 +685,6 @@
 
      return
   end subroutine atomic_make_spmat
-
-!!>>> atomic_make_fock: make Fock basis for the full Hilbert space
-  subroutine atomic_make_fock()
-     use control, only : norbs, ncfgs
-     use m_fock, only : dim_sub_n, bin_basis, dec_basis, ind_basis
-
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-     integer :: k
-
-! basis counter
-     integer :: basis_count
-
-! number of electrons for Fock state
-     integer :: nelec
-
-! initialize them
-     dim_sub_n = 0
-     bin_basis = 0
-     dec_basis = 0
-     ind_basis = 0
-
-! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
-     do i=0,norbs
-         call s_combination(i, norbs, dim_sub_n(i))
-     enddo ! over i={0,norbs} loop
-
-! construct decimal form and index of Fock basis
-     basis_count = 0
-     do i=0,norbs
-         do j=0,2**norbs-1
-             nelec = 0
-             do k=1,norbs
-                 if ( btest(j, k-1) ) nelec = nelec + 1
-             enddo ! over k={1,norbs} loop
-             if ( nelec == i ) then
-                 basis_count = basis_count + 1
-                 dec_basis(basis_count) = j
-                 ind_basis(j) = basis_count
-             endif ! back if ( nelec == i ) block
-         enddo ! over j={0,2**norbs-1} loop
-     enddo ! over i={0,norbs} loop
-
-! construct binary form of Fock basis
-     do i=1,ncfgs
-         do j=1,norbs
-             if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,ncfgs} loop
-
-! dump Fock basis to file atom.fock.dat for reference
-     call atomic_dump_fock()
-
-     return
-  end subroutine atomic_make_fock
 
 !!>>> atomic_make_natural: make natural basis, on which the impurity
 !!>>> energy matrix is diagonal
