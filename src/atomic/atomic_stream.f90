@@ -330,6 +330,10 @@
      return
   end subroutine atomic_check_param
 
+!!========================================================================
+!!>>> config atomic eigenvalue problem                                 <<<
+!!========================================================================
+
 !!>>> atomic_read_cmat: read crystal field from file atomic.cmat.in
   subroutine atomic_read_cmat()
      use, intrinsic :: iso_fortran_env, only : iostat_end
