@@ -143,27 +143,34 @@
      return
   end subroutine atomic_setup_param
 
-!!>>> atomic_check_config: check the validity of input config parameters
+!!
+!! @sub atomic_check_config
+!!
+!! check the validity of input config parameters
+!!
   subroutine atomic_check_param()
-     use constants, only : zero, mystd
+     use constants, only : zero
+     use constants, only : mystd
 
      use control ! ALL
 
-! local variables
-! status flag for whether all of the parameters are OK
+!! local variables
+     ! status flag for whether all of the parameters are OK
      logical :: lpass
 
-! initialize lpass
+!! [body
+
+     ! initialize lpass
      lpass = .true.
 
-! check ibasis
+     ! check ibasis
      if ( ibasis < 1 .or. ibasis > 2 ) then
          write(mystd,'(2X,a)') 'ERROR: ibasis must be 1 or 2!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ibasis < 1 .or. ibasis > 2 ) block
 
-! check ictqmc
+     ! check ictqmc
      if ( ictqmc < 0 .or. ictqmc > 5 ) then
          write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 0, 1, 2, 3, 4, 5!'
          write(mystd,*)
@@ -200,7 +207,7 @@
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
 
-! check icu
+     ! check icu
      if ( icu < 1 .or. icu > 3 ) then
          write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2 or 3!'
          write(mystd,*)
@@ -220,14 +227,14 @@
          lpass = .false.
      endif ! back if ( icu == 3 .and. nband /= 5 ) block
 
-! check icf
+     ! check icf
      if ( icf < 0 .or. icf > 2 ) then
          write(mystd,'(2X,a)') 'ERROR: icf must be one of 0, 1, 2!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icf < 0 .or. icf > 2 ) block
 
-! check isoc
+     ! check isoc
      if ( isoc < 0 .or. isoc > 1 ) then
          write(mystd,'(2X,a)') 'ERROR: isoc must be 0 or 1!'
          write(mystd,*)
@@ -240,7 +247,7 @@
          lpass = .false.
      endif ! back if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
 
-! check nband
+     ! check nband
      if ( nband <= 0 ) then
          write(mystd,'(2X,a)') 'ERROR: number of bands must be larger than zero!'
          write(mystd,*)
@@ -253,28 +260,28 @@
          lpass = .false.
      endif ! back if ( nband >= 5 .and. ictqmc <= 1 ) block
 
-! check nspin
+     ! check nspin
      if ( nspin /= 2 ) then
          write(mystd,'(2X,a)') 'ERROR: number of spin projections must be 2!'
          write(mystd,*)
          lpass = .false.
      endif
 
-! check norbs
+     ! check norbs
      if ( norbs /= nspin * nband ) then
          write(mystd,'(2X,a)') 'ERROR: number of bands is not compatible with number of orbitals!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( norbs /= nspin * nband ) block
 
-! check ncfgs
+     ! check ncfgs
      if ( ncfgs /= 2 ** norbs ) then
          write(mystd,'(2X,a)') 'ERROR: number of orbitals is not compatible with number of configurations!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ncfgs /= 2 ** norbs ) block
 
-! check nmini and nmaxi
+     ! check nmini and nmaxi
      if ( nmini < 0 ) then
          nmini = 0
          write(mystd,'(2X,a)') 'WARNING: nmini < 0, enforce to be zero!'
@@ -286,7 +293,7 @@
          write(mystd,*)
      endif ! back if ( nmaix > norbs ) block
 
-! check Uc, Uv, Jz, Js, Jp
+     ! check Uc, Uv, Jz, Js, Jp
      if ( Uc < zero .or. Uv < zero ) then
          write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than or equal to zero!'
          write(mystd,*)
@@ -299,24 +306,26 @@
          lpass = .false.
      endif ! back if ( Jz < zero .or. Js < zero .or. Jp < zero ) block
 
-! check Ud and Jh
+     ! check Ud and Jh
      if ( Ud < zero .or. Jh < zero ) then
          write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Ud < zero .or. Jh < zero ) block
 
-! check lambda
+     ! check lambda
      if ( lambda < zero ) then
          write(mystd,'(2X,a)') 'ERROR: lambda must be larger than or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( lambda < zero ) block
 
-! final assert
+     ! final assert
      if ( lpass .eqv. .false. ) then
-         call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
+         call s_print_error('atomic_check_param','invalid parameters found in atom.config.in file!')
      endif ! back if ( lpass .eqv. .false. ) block
+
+!! body]
 
      return
   end subroutine atomic_check_param
