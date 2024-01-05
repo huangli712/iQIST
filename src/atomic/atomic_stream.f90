@@ -987,18 +987,27 @@
      return
   end subroutine atomic_2natural_case4
 
+!!========================================================================
+!!>>> manage memory for atomic eigenvalue problem solver               <<<
+!!========================================================================
+
   subroutine atomic_alloc_array()
      use m_fock, only : cat_alloc_fock_basis
      use m_spmat, only : cat_alloc_spmat
 
      implicit none
 
-    ! allocate memory for basis-related matrices
+!! [body
+
+     ! allocate memory for basis-related matrices
      call cat_alloc_fock_basis()
 
      ! allocate memory for single particle matrices
      call cat_alloc_spmat() 
 
+!! body]
+
+     return
   end subroutine atomic_alloc_array
 
   subroutine atomic_final_array()
@@ -1007,8 +1016,15 @@
 
      implicit none
 
-! deallocate memory
+!! [body
+
+     ! deallocate memory for single particle matrices
      call cat_free_spmat()
+
+     ! deallocate memory for basis-related matrices
      call cat_free_fock_basis()
 
+!! body]
+
+     return
   end subroutine atomic_final_array
