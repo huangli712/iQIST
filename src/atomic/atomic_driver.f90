@@ -39,7 +39,7 @@
 
      ! make natural basis
      write(mystd,'(2X,a)') 'make natural eigenbasis'
-     call atomic_make_natural()
+     call atomic_build_natural()
      write(mystd,*)
 
      select case (ictqmc)

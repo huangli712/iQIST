@@ -714,95 +714,120 @@
      return
   end subroutine atomic_build_spmat
 
-!!>>> atomic_make_natural: make natural basis, on which the impurity
-!!>>> energy matrix is diagonal
-  subroutine atomic_make_natural()
-     use constants, only : dp, czero
+!!
+!! @sub atomic_build_natural
+!!
+!! make natural basis, on which the impurity energy matrix is diagonal
+!!
+  subroutine atomic_build_natural()
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : norbs
-     use m_spmat, only : umat, tmat
+
+     use m_spmat, only : umat
+     use m_spmat, only : tmat
 
      implicit none
 
-! local variables
-! transformation matrix from real orbital basis to complex orbital basis
+!! local variables
+     ! transformation matrix from real orbital basis to complex orbital basis
      complex(dp) :: tmat_r2c(norbs,norbs)
 
-! transformation matrix from complex orbital basis to real orbital basis
+     ! transformation matrix from complex orbital basis to real orbital basis
      complex(dp) :: tmat_c2r(norbs,norbs)
 
-! dummy Coulomb interaction matrix
+     ! dummy Coulomb interaction matrix
      complex(dp) :: umat_tmp(norbs,norbs,norbs,norbs)
 
-! initialize them
+!! [body
+
+     ! initialize them
      umat_tmp = czero
      tmat_r2c = czero
      tmat_c2r = czero
 
-! make transformation matrix from origional basis to natural basis: tmat
-! A: make tmat internally for different cases
+     ! make transformation matrix from origional basis to
+     ! natural basis: tmat
+     !
+     ! A: make tmat internally for different cases
      if ( ibasis == 1 ) then
+
+         ! no spin-orbital coupling, no crystal field or the crystal
+         ! field is diagonal
+         !
+         ! the original basis is the real orbital basis
+         ! the natural basis is the real orbital basis
          if      ( isoc == 0 .and. icf <  2 ) then
-! no spin-orbital coupling, no crystal field or crystal field is diagonal
-! the original basis is the real orbital basis
-! the natural basis is the real orbital basis
              call atomic_2natural_case1()
 
-! no spin-orbital coupling, non-diagonal crystal field
-! the original basis is the real orbital basis
-! the natural basis is linear combination of real orbitals
+         ! no spin-orbital coupling, non-diagonal crystal field
+         !
+         ! the original basis is the real orbital basis
+         ! the natural basis is linear combination of real orbitals
          else if ( isoc == 0 .and. icf == 2 ) then
              call atomic_2natural_case2()
 
-! with spin-orbital coupling, no crystal field
-! the original basis is the complex orbital basis
-! the natural basis is |j2,jz>
+         ! with spin-orbital coupling, no crystal field
+         !
+         ! the original basis is the complex orbital basis
+         ! the natural basis is |j2,jz>
          else if ( isoc == 1 .and. icf == 0 ) then
              call atomic_2natural_case3()
 
-! with spin-orbital coupling and crystal field
-! the original basis is the complex orbital basis
-! the natural basis is linear combination of complex orbitals
+         ! with spin-orbital coupling and crystal field
+         !
+         ! the original basis is the complex orbital basis
+         ! the natural basis is linear combination of complex orbitals
          else if ( isoc == 1 .and. icf >  0 ) then
              call atomic_2natural_case4()
 
          endif ! back if      ( isoc == 0 .and. icf <  2 ) block
-! B: read the transformation matrices used to transfer emat from original
-! basis to natural basis.
+
+     ! B: read the transformation matrices used to transfer emat from
+     ! original basis to natural basis.
      else
          call atomic_input_tmat()
      endif ! back if ( ibasis == 1 ) block
 
-! dump emat for reference
+     ! dump emat for reference
      call atomic_dump_emat()
 
-! dump tmat for reference
+     ! dump tmat for reference
      call atomic_dump_tmat()
 
-! we need transform Coulomb interaction U
-! for non-soc case, the transformation matrix is defined as from real
-! orbital basis to natural basis
+     ! we need transform Coulomb interaction U
+     !
+     ! for non-soc case, the transformation matrix is defined as from
+     ! real orbital basis to natural basis
      if ( isoc == 0 ) then
-! for Slater-Cordon parameters Coulomb interaction U, since it is defined
-! at complex orbital basis, we first need to transfrom umat from complex
-! orbital basis to real orbital basis
-! for Kanamori parameters Coulomb interaction U, since it is defined at
-! real orbital basis, we do not need to transform it now
+
+         ! for Slater-Cordon parameters Coulomb interaction U, since it
+         ! is defined at complex orbital basis, we first need to
+         ! transfrom umat from complex orbital basis to real orbital basis
+         !
+         ! for Kanamori parameters Coulomb interaction U, since it is
+         ! defined at real orbital basis, we do not need to transform
+         ! it now
          if ( icu == 2 ) then
              call atomic_make_tmat_c2r(tmat_c2r)
              call atomic_tran_umat(tmat_c2r, umat, umat_tmp)
              umat = umat_tmp
          endif ! back if ( icu == 2 ) block
-! for soc case, the transformation matrix is defined as from complex
-! orbital basis to natural basis
+
+     ! for soc case, the transformation matrix is defined as from complex
+     ! orbital basis to natural basis
      else
-! for Slater-Cordon parameters Coulomb interaction U, since it is defined
-! at complex orbital basis, we do not need to transform it now
-! for Kanamori parameters Coulomb interaction U, since it is defined at
-! real orbital basis, we first need to transfrom umat from real orbital
-! basis to complex orbital basis
+
+         ! for Slater-Cordon parameters Coulomb interaction U, since it
+         ! is defined at complex orbital basis, we do not need to
+         ! transform it now
+         !
+         ! for Kanamori parameters Coulomb interaction U, since it is
+         ! defined at real orbital basis, we first need to transfrom
+         ! umat from real orbital basis to complex orbital basis
          if ( icu == 1 .or. icu == 3 ) then
              call atomic_make_tmat_r2c(tmat_r2c)
              call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
@@ -810,15 +835,17 @@
          endif ! back if ( icu == 1 .or. icu == 3 ) block
      endif ! back if ( isoc == 0 ) block
 
-! finally, transform umat from original basis to natural basis
+     ! finally, transform umat from original basis to natural basis
      call atomic_tran_umat(tmat, umat, umat_tmp)
      umat = umat_tmp
 
-! write the U matrix as reference
+     ! write the U matrix as reference
      call atomic_dump_umat()
 
+!! body]
+
      return
-  end subroutine atomic_make_natural
+  end subroutine atomic_build_natural
 
 !!========================================================================
 !!>>> manage memory for atomic eigenvalue problem solver               <<<
