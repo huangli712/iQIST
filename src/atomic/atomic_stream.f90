@@ -851,6 +851,11 @@
 !!>>> manage memory for atomic eigenvalue problem solver               <<<
 !!========================================================================
 
+!!
+!! @sub atomic_alloc_array
+!!
+!! allocate memory for global variables and then initialize them
+!!
   subroutine atomic_alloc_array()
      use m_fock, only : cat_alloc_fock_basis
      use m_spmat, only : cat_alloc_spmat
@@ -870,6 +875,11 @@
      return
   end subroutine atomic_alloc_array
 
+!!
+!! @sub atomic_final_array
+!!
+!! garbage collection for this code, please refer to atomic_alloc_array
+!!
   subroutine atomic_final_array()
      use m_fock, only : cat_free_fock_basis
      use m_spmat, only : cat_free_spmat
