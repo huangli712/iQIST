@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/05/2024 by li huang (last modified)
+!!!           01/08/2024 by li huang (last modified)
 !!! purpose : read input data from the external files, make the Fock basis
 !!!           and natural basis, etc.
 !!! status  : unstable
@@ -582,6 +582,7 @@
 !!
 !! make single particle related matrices, including crystal field (CF),
 !! spin-orbit coupling (SOC), and Coulomb interaction U.
+!!
 !! when writing these matrices, we should define a single particle basis,
 !! there are four basis we will use (take 5-orbitals system for example)
 !!
@@ -609,7 +610,7 @@
 !! (4) the so-called natural basis, on which the onsite energy of impurity
 !!     is diagonal. we have to diagonalize CF + SOC to obtain natural basis
 !!
-!! Note that the CF is always defined in real orbital basis, SOC is always
+!! note that the CF is always defined in real orbital basis, SOC is always
 !! defined in complex orbital basis, and Coulomb interaction U is defined
 !! in real orbital basis or complex orbital basis which depends on the form
 !! of Coulomb interaction, so we often need to transform them between two
@@ -617,45 +618,53 @@
 !!
 
 !!
-!! @sub atomic_make_spmat
+!! @sub atomic_build_spmat
 !!
 !! make single particle related matrices, including crystal field (CF),
 !! spin-orbit coupling (SOC), and Coulomb interaction U tensor
 !!
-  subroutine atomic_make_spmat()
+  subroutine atomic_build_spmat()
      use constants, only : two, czero
 
      use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : nband
      use control, only : lambda
-     use m_spmat, only : cmat, smat
+
+     use m_spmat, only : cmat
+     use m_spmat, only : smat
 
      implicit none
 
-! make crystal field and spin-orbital coupling
-! method 1: make them inside
+!! [body
+
+     ! make crystal field and spin-orbital coupling
+     !
+     ! method 1: make them inside
      if ( ibasis == 1 ) then
-! 1A: make crysal field
-! we read the non-zero elements of crystal field from file atom.cmat.in.
-! the crystal field is defined on real orbital basis. at present, we only
-! support real crystal field, so, the elements in this file provided by
-! users must be real
+
+         ! 1A: make crysal field
+         !
+         ! we read the non-zero elements of crystal field from file
+         ! atom.cmat.in. the crystal field is defined on real orbital
+         ! basis. at present, we only support real crystal field, so,
+         ! the elements in this file provided by users must be real
          if ( icf > 0 ) then
              call atomic_input_cmat()
          else
              cmat = czero
          endif ! back if ( icf > 0 ) block
 
-! 1B: make spin-orbit coupling
-! make an atomic on-site SOC, $\lambda * L * S$
-! it is defined on the complex orbital basis
+         ! 1B: make spin-orbit coupling
+         !
+         ! make an atomic on-site SOC, $\lambda * L * S$
+         ! it is defined on the complex orbital basis
          if ( isoc > 0 ) then
              select case (nband)
 
                  case (3) ! 3-band system
                      call atomic_make_smat3(smat)
-! for 3 bands system, there is a minus sign
+                     ! for 3 bands system, there is a minus sign
                      smat = -smat * lambda / two
 
                  case (5) ! 5-band system
@@ -667,32 +676,43 @@
                      smat = smat * lambda / two
 
                  case default
-                     call s_print_error('atomic_make_spmat','not implemented!')
+                     call s_print_error('atomic_build_spmat','not implemented!')
 
              end select
          else
              smat = czero
          endif ! back if ( isoc > 0 ) block
-! method 2: make them outside
+
+     ! method 2: make them outside
      else
-! read the emat (CF + SOC) matrices on natural basis, this matrix should be
-! a diagonal matrix, and the elements must be real
+
+         ! read the emat (CF + SOC) matrices on natural basis, this
+         ! matrix should be a diagonal matrix, and the elements must
+         ! be real
          call atomic_input_emat()
+
      endif ! back if ( ibasis == 1 ) block
 
-! make Coulomb interaction U
+     ! make Coulomb interaction U
+     !
+     ! Kanamori parameters type
+     ! it is defined on real orbital basis
      if ( icu == 1 .or. icu == 3 ) then
-! Kanamori parameters type
-! it is defined on real orbital basis
+     !
          call atomic_make_umatK()
+     !
+     ! Slater-Cordon parameters type
+     ! it is defined on complex orbital basis
      else
-! Slater-Cordon parameters type
-! it is defined on complex orbital basis
+     !
          call atomic_make_umatS()
+     !
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
+!! body]
+
      return
-  end subroutine atomic_make_spmat
+  end subroutine atomic_build_spmat
 
 !!>>> atomic_make_natural: make natural basis, on which the impurity
 !!>>> energy matrix is diagonal

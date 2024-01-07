@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/04/2024 by li huang (last modified)
+!!!           01/08/2024 by li huang (last modified)
 !!! purpose : kernel drivers for atomic eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
@@ -34,7 +34,7 @@
 
      ! make single particle related matrices
      write(mystd,'(2X,a)') 'make single particle matrices'
-     call atomic_make_spmat()
+     call atomic_build_spmat()
      write(mystd,*)
 
      ! make natural basis
