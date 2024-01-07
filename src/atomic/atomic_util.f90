@@ -247,7 +247,8 @@
 !! build gaunt coefficients for 5 band case
 !!
   subroutine atomic_make_gaunt5(gaunt)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
 !! external arguments
      ! gaunt coefficients
@@ -298,15 +299,22 @@
      return
   end subroutine atomic_make_gaunt5
 
-!!>>> atomic_make_gaunt7: build gaunt coefficients for 7 band case
+!!
+!! @sub atomic_make_gaunt7
+!!
+!! build gaunt coefficients for 7 band case
+!!
   subroutine atomic_make_gaunt7(gaunt)
-     use constants, only: dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      implicit none
 
-! external arguments
-! gaunt coefficients
+!! external arguments
+     ! gaunt coefficients
      real(dp), intent(out) :: gaunt(-3:3,-3:3,0:6)
+
+!! [body
 
      gaunt = zero
 
@@ -389,6 +397,8 @@
      gaunt( 3,  1, 6) = -sqrt(  700.0_dp/184041_dp); gaunt( 1,  3, 6) = gaunt( 3,  1, 6) * (-1.0)**( 3-1)
      gaunt( 3,  2, 6) =  sqrt(  175.0_dp/184041_dp); gaunt( 2,  3, 6) = gaunt( 3,  2, 6) * (-1.0)**( 3-2)
      gaunt( 3,  3, 6) = -sqrt(   25.0_dp/184041_dp)
+
+!! body]
 
      return
   end subroutine atomic_make_gaunt7
