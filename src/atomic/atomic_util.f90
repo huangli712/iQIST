@@ -139,21 +139,27 @@
 !!>>> determine good quantum numbers                                   <<<
 !!========================================================================
 
-!!>>> atomic_make_gsz: make Sz quantum number for each orbital
+!!
+!! @sub atomic_make_gsz
+!!
+!! make Sz quantum number for each orbital
+!!
   subroutine atomic_make_gsz(good_sz)
      use control, only : norbs
 
      implicit none
 
-! external arguments
-! good quantum numbers: Sz
+!! external arguments
+     ! good quantum numbers: Sz
      integer, intent(out) :: good_sz(norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! note: the spin arrangement likes up dn up dn up dn ...
+!! [body
+
+     ! note: the spin arrangement likes up dn up dn up dn ...
      do i=1,norbs
          if ( mod(i,2) /= 0 ) then
              good_sz(i) = +1
@@ -161,6 +167,8 @@
              good_sz(i) = -1
          endif ! back if ( mod(i,2) /= 0 ) block
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine atomic_make_gsz
