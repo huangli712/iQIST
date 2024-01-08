@@ -1311,7 +1311,7 @@
 
      ! initialize umat_t to be zero
      umat_t = czero
-
+     !
      sigma1loop: do sigma1=1,norbs
          sigma2loop: do sigma2=1,norbs
              sigma3loop: do sigma3=1,norbs
@@ -1342,26 +1342,33 @@
      return
   end subroutine atomic_tran_umat
 
-!!>>> atomic_tran_repr_cmpl: transformation from one representation
-!!>>> to another representation, complex version
+!!
+!! @sub atomic_tran_repr_cmpl
+!!
+!! transformation from one representation to another representation,
+!! complex version
+!!
   subroutine atomic_tran_repr_cmpl(ndim, amat, tmat)
-     use constants, only : dp, cone, czero
+     use constants, only : dp
+     use constants, only : cone, czero
 
      implicit none
 
-! external arguments
-! size of the matrix
+!! external arguments
+     ! size of the matrix
      integer, intent(in) :: ndim
 
-! transformation matrix
+     ! transformation matrix
      complex(dp), intent(in) :: tmat(ndim,ndim)
 
-! physical quantities
+     ! physical quantities
      complex(dp), intent(inout) :: amat(ndim,ndim)
 
-! local variables
-! dummy matrix
+!! local variables
+     ! dummy matrix
      complex(dp) :: tmp_mat(ndim,ndim)
+
+!! [body
 
      call zgemm('N', 'N', ndim, ndim, ndim, &
                           cone, amat, ndim, &
@@ -1372,6 +1379,8 @@
                           cone, tmat, ndim, &
                              tmp_mat, ndim, &
                          czero, amat, ndim  )
+
+!! body]
 
      return
   end subroutine atomic_tran_repr_cmpl
