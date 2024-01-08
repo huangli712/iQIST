@@ -726,6 +726,7 @@
 
          enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
+     !
      umat = half * umat
 
      ! deallocate memory
@@ -769,7 +770,7 @@
      !     | 1, up >, |  1, dn >
      !
      smat = czero
-
+     !
      smat( 1, 1) = -1.0_dp
      smat( 4, 1) =  sqrt2
      smat( 2, 2) = +1.0_dp
@@ -814,7 +815,7 @@
      !     | 2, up >, | 2, dn >
      !
      smat = czero
-
+     !
      smat( 1, 1) = -2.0_dp
      smat( 4, 1) = +2.0_dp
      smat( 2, 2) = +2.0_dp
@@ -843,30 +844,35 @@
 !! make spin-orbit coupling matrix for 7-band case
 !!
   subroutine atomic_make_smat7(smat)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
-! external arguments
-! SOC matrix
+!! external arguments
+     ! SOC matrix
      complex(dp), intent(out) :: smat(14,14)
 
-! local parameters
-! \sqrt{6}, \sqrt{10}, and \sqrt{12}
+!! local parameters
+     ! \sqrt{6}, \sqrt{10}, and \sqrt{12}
      real(dp), parameter :: sqrt6  = sqrt( 6.0_dp)
      real(dp), parameter :: sqrt10 = sqrt(10.0_dp)
      real(dp), parameter :: sqrt12 = sqrt(12.0_dp)
 
-! make SOC on complex orbital basis, the orbital order is:
-! |-3,up>, |-3,dn>,
-! |-2,up>, |-2,dn>,
-! |-1,up>, |-1,dn>,
-! | 0,up>, | 0,dn>,
-! | 1,up>, | 1,dn>,
-! | 2,up>, | 2,dn>
-! | 3,up>, | 3,dn>
-     smat = czero
+!! [body
 
+     ! make SOC on complex orbital basis, the orbital order is:
+     !
+     ! |-3, up >, |-3, dn >,
+     ! |-2, up >, |-2, dn >,
+     ! |-1, up >, |-1, dn >,
+     ! | 0, up >, | 0, dn >,
+     ! | 1, up >, | 1, dn >,
+     ! | 2, up >, | 2, dn >
+     ! | 3, up >, | 3, dn >
+     !
+     smat = czero
+     !
      smat( 1, 1) = -3.0_dp
      smat( 4, 1) =  sqrt6
      smat( 2, 2) = +3.0_dp
@@ -891,6 +897,8 @@
      smat(13,13) = +3.0_dp
      smat(11,14) =  sqrt6
      smat(14,14) = -3.0_dp
+
+!! body]
 
      return
   end subroutine atomic_make_smat7
