@@ -623,44 +623,52 @@
      return
   end subroutine atomic_make_umatK
 
-!!>>> atomic_make_umatS: make Coulomb interation U, according to
-!!>>> Slater-Cordon parameterized Hamiltonian
+!!
+!! @sub atomic_make_umatS
+!!
+!! make Coulomb interation U, according to Slater-Cordon
+!! parameterized Hamiltonian
+!!
   subroutine atomic_make_umatS()
-     use constants, only : dp, zero, half
+     use constants, only : dp
+     use constants, only : zero, half
 
      use control, only : nband, norbs
      use control, only : Ud, Jh
+
      use m_spmat, only : umat
 
      implicit none
 
-! local variables
-! orbital momentum quantum number
+!! local variables
+     ! orbital momentum quantum number
      integer  :: l
 
-! loop index
+     ! loop index
      integer  :: i
 
-! orbital index
+     ! orbital index
      integer  :: alpha, betta
      integer  :: delta, gamma
 
-! band index and spin index
+     ! band index and spin index
      integer  :: aband, aspin
      integer  :: bband, bspin
      integer  :: dband, dspin
      integer  :: gband, gspin
 
-! dummy variables
+     ! dummy variables
      real(dp) :: res
 
-! gaunt coefficients
+     ! gaunt coefficients
      real(dp), allocatable :: gaunt(:,:,:)
 
-! Slater-Cordon parameters: F0, F2, F4, and F6
+     ! Slater-Cordon parameters: F0, F2, F4, and F6
      real(dp), allocatable :: slater_cordon(:)
 
-! allocate memory for slater_cordon and gaunt and then build them
+!! [body
+
+     ! allocate memory for slater_cordon and gaunt and then build them
      select case (nband)
 
          case (5)
@@ -690,7 +698,7 @@
 
      end select
 
-! make Coulomb interaction U matrix
+     ! make Coulomb interaction U matrix
      do alpha=1,norbs
          do betta=1,norbs
              aband = ( alpha - 1 ) / 2 - l
@@ -720,9 +728,11 @@
      enddo ! over alpha={1,norbs} loop
      umat = half * umat
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(gaunt) )         deallocate(gaunt)
      if ( allocated(slater_cordon) ) deallocate(slater_cordon)
+
+!! body]
 
      return
   end subroutine atomic_make_umatS
@@ -731,7 +741,11 @@
 !!>>> determine spin-orbital coupling matrix                           <<<
 !!========================================================================
 
-!>>> atomic_make_smat3: make spin-orbit coupling matrix for 3-band case
+!!
+!! @sub atomic_make_smat3
+!!
+!! make spin-orbit coupling matrix for 3-band case
+!!
   subroutine atomic_make_smat3(smat)
      use constants, only : dp, czero
 
