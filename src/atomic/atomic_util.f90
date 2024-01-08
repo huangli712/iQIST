@@ -784,26 +784,35 @@
      return
   end subroutine atomic_make_smat3
 
-!!>>> atomic_make_smat5: make spin-orbit coupling matrix for 5-band case
+!!
+!! @sub atomic_make_smat5
+!!
+!! make spin-orbit coupling matrix for 5-band case
+!!
   subroutine atomic_make_smat5(smat)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
-! external arguments
-! SOC matrix
+!! external arguments
+     ! SOC matrix
      complex(dp), intent(out) :: smat(10,10)
 
-! local parameters
-! \sqrt{6}
+!! local parameters
+     ! \sqrt{6}
      real(dp), parameter :: sqrt6 = sqrt(6.0_dp)
 
-! make SOC on complex orbital basis, the orbital order is:
-! |-2,up>, |-2,dn>,
-! |-1,up>, |-1,dn>,
-! | 0,up>, | 0,dn>,
-! | 1,up>, | 1,dn>,
-! | 2,up>, | 2,dn>
+!! [body
+
+     ! make SOC on complex orbital basis, the orbital order is:
+     !
+     !     |-2, up >, |-2, dn >,
+     !     |-1, up >, |-1, dn >,
+     !     | 0, up >, | 0, dn >,
+     !     | 1, up >, | 1, dn >,
+     !     | 2, up >, | 2, dn >
+     !
      smat = czero
 
      smat( 1, 1) = -2.0_dp
@@ -823,10 +832,16 @@
      smat( 7,10) = +2.0_dp
      smat(10,10) = -2.0_dp
 
+!! body]
+
      return
   end subroutine atomic_make_smat5
 
-!!>>> atomic_make_smat7: make spin-orbit coupling matrix for 7-band case
+!!
+!! @sub atomic_make_smat7
+!!
+!! make spin-orbit coupling matrix for 7-band case
+!!
   subroutine atomic_make_smat7(smat)
      use constants, only : dp, czero
 
