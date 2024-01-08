@@ -1545,43 +1545,52 @@
      return
   end subroutine atomic_natural_basis2
 
-!!>>> atomic_2natural_case3: make natural basis for the case without
-!!>>> crystal field and with spin-orbital coupling
-!!>>> for this special case, the natural basis is |j2,jz>
+!!
+!! @sub atomic_natural_basis3
+!!
+!! make natural basis for the case without crystal field and with
+!! spin-orbital coupling, for this special case, the natural basis
+!! is |j2,jz>
+!!
   subroutine atomic_2natural_case3()
      use constants, only : dp
 
      use control, only : norbs
      use control, only : mune
+
      use m_spmat, only : emat, smat, tmat
 
      implicit none
 
-! local variables
-! loop inex
+!! local variables
+     ! loop inex
      integer :: i
 
-! transformation matrix from complex orbital basis to |j2,jz> basis
+     ! transformation matrix from complex orbital basis to |j2,jz> basis
      complex(dp) :: tmat_c2j(norbs,norbs)
 
-! set emat
-! since cmat is zero, so emat is equal to smat
+!! [body
+
+     ! set emat
+     ! since cmat is zero, so emat is equal to smat
      emat = smat
 
-! evaluate transformation matrix tmat_c2j
+     ! evaluate transformation matrix tmat_c2j
      call atomic_make_tmat_c2j(tmat_c2j)
 
-! for this case, the transformation matrix is from complex orbital basis
-! to natural basis (|j2,jz> basis)
+     ! for this case, the transformation matrix is from complex orbital
+     ! basis to natural basis (|j2,jz> basis)
      tmat = tmat_c2j
 
-! transform emat to natural basis
+     ! transform emat to natural basis
      call atomic_tran_repr_cmpl(norbs, emat, tmat)
 
-! add chemical potential to emat
+     ! add chemical potential to emat
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine atomic_2natural_case3
