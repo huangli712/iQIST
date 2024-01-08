@@ -765,9 +765,9 @@
 
      ! make SOC on complex orbital basis, the orbital order is:
      !
-     !     |-1, up >, | -1, dn >,
-     !     | 0, up >, |  0, dn >,
-     !     | 1, up >, |  1, dn >
+     !     | -1, up >, | -1, dn >,
+     !     |  0, up >, |  0, dn >,
+     !     |  1, up >, |  1, dn >
      !
      smat = czero
      !
@@ -808,11 +808,11 @@
 
      ! make SOC on complex orbital basis, the orbital order is:
      !
-     !     |-2, up >, |-2, dn >,
-     !     |-1, up >, |-1, dn >,
-     !     | 0, up >, | 0, dn >,
-     !     | 1, up >, | 1, dn >,
-     !     | 2, up >, | 2, dn >
+     !     | -2, up >, | -2, dn >,
+     !     | -1, up >, | -1, dn >,
+     !     |  0, up >, |  0, dn >,
+     !     |  1, up >, |  1, dn >,
+     !     |  2, up >, |  2, dn >
      !
      smat = czero
      !
@@ -863,13 +863,13 @@
 
      ! make SOC on complex orbital basis, the orbital order is:
      !
-     ! |-3, up >, |-3, dn >,
-     ! |-2, up >, |-2, dn >,
-     ! |-1, up >, |-1, dn >,
-     ! | 0, up >, | 0, dn >,
-     ! | 1, up >, | 1, dn >,
-     ! | 2, up >, | 2, dn >
-     ! | 3, up >, | 3, dn >
+     ! | -3, up >, | -3, dn >,
+     ! | -2, up >, | -2, dn >,
+     ! | -1, up >, | -1, dn >,
+     ! |  0, up >, |  0, dn >,
+     ! |  1, up >, |  1, dn >,
+     ! |  2, up >, |  2, dn >
+     ! |  3, up >, |  3, dn >
      !
      smat = czero
      !
@@ -946,9 +946,9 @@
          !     pzup, pzdn
          !
          ! the complex orbital |lz,sz> order is
-         !     |-1, up >, |-1, dn >,
-         !     | 0, up >, | 0, dn >,
-         !     | 1, up >, | 1, dn >
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >
          case (3)
              tmat_c2r( 1, 1) =  czi/sqrt2
              tmat_c2r( 5, 1) =  czi/sqrt2
@@ -969,11 +969,11 @@
          !     dxyup, dxydn
          !
          ! the complex orbital |lz,sz> order is:
-         !     |-2, up >, |-2, dn >,
-         !     |-1, up >, |-1, dn >,
-         !     | 0, up >, | 0, dn >,
-         !     | 1, up >, | 1, dn >,
-         !     | 2, up >, | 2, dn >
+         !     | -2, up >, | -2, dn >,
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >,
+         !     |  2, up >, |  2, dn >
          case (5)
              tmat_c2r( 5, 1) =  cone
              tmat_c2r( 6, 2) =  cone
@@ -1004,13 +1004,13 @@
          !     fy(3x2-y2)up, fy(3x2-y2)dn
          !
          ! the complex orbital |lz,sz> order is:
-         !     |-3, up >, |-3, dn >,
-         !     |-2, up >, |-2, dn >,
-         !     |-1, up >, |-1, dn >,
-         !     | 0, up >, | 0, dn >,
-         !     | 1, up >, | 1, dn >,
-         !     | 2, up >, | 2, dn >,
-         !     | 3, up >, | 3, dn >
+         !     | -3, up >, | -3, dn >,
+         !     | -2, up >, | -2, dn >,
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >,
+         !     |  2, up >, |  2, dn >,
+         !     |  3, up >, |  3, dn >
          case (7)
              tmat_c2r( 7, 1) =  cone
              tmat_c2r( 8, 2) =  cone
@@ -1049,51 +1049,70 @@
      return
   end subroutine atomic_make_tmat_c2r
 
-!!>>> atomic_make_tmat_r2c: make transformation matrix from real orbital
-!!>>> basis to complex orbital basis
+!!
+!! @sub atomic_make_tmat_r2c
+!!
+!! make transformation matrix from real orbital basis to
+!! complex orbital basis
+!!
   subroutine atomic_make_tmat_r2c(tmat_r2c)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : norbs
 
-! external arguments
-! the transformation matrix from real orbitals to complex orbitals
+!! external arguments
+     ! the transformation matrix from real orbitals to complex orbitals
      complex(dp), intent(out) :: tmat_r2c(norbs,norbs)
 
-! local variables
-! dummy array, transpose of tmat_r2c
+!! local variables
+     ! dummy array, transpose of tmat_r2c
      complex(dp) :: tmat_c2r(norbs,norbs)
+
+!! [body
 
      tmat_c2r = czero
      call atomic_make_tmat_c2r(tmat_c2r)
      tmat_r2c = transpose( dconjg(tmat_c2r) )
 
+!! body]
+
      return
   end subroutine atomic_make_tmat_r2c
 
-!!>>> atomic_make_tmat_c2j: make transformation matrix from complex
-!!>>> orbital basis (|lz,sz>) to j2-jz orbital basis (|j2,jz>), i.e.,
-!!>>> the Cordon-Gaunt (CG) coefficients
+!!
+!! @sub atomic_make_tmat_c2j
+!!
+!! make transformation matrix from complex orbital basis (|lz,sz>) to
+!! j2-jz orbital basis (|j2,jz>), i.e., the Cordon-Gaunt (CG) coefficients
+!!
   subroutine atomic_make_tmat_c2j(tmat_c2j)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : nband, norbs
 
      implicit none
 
-! external arguments
-! the transformation matrix from complex orbitals |lz,sz> to |j2,jz>
+!! external arguments
+     ! the transformation matrix from complex orbitals |lz,sz> to |j2,jz>
      complex(dp), intent(out) :: tmat_c2j(norbs,norbs)
 
+!! [body
+
      tmat_c2j = czero
+     !
      select case (nband)
 
-! the |lz,sz> order is:
-! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
-!
-! the |j2,jz> order is:
-! |1/2,-1/2>, |1/2,1/2>,
-! |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2>, |3/2,3/2>
+         ! the |lz,sz> order is:
+         ! | -1, up >, | -1, dn >,
+         ! |  0, up >, |  0, dn >,
+         ! |  1, up >, |  1, dn >
+         !
+         ! the |j2,jz> order is:
+         ! | 1/2, -1/2 >, | 1/2,  1/2 >,
+         ! | 3/2, -3/2 >, | 3/2, -1/2 >,
+         ! | 3/2,  1/2 >, | 3/2,  3/2 >
          case (3)
              tmat_c2j( 1, 1) = -sqrt(2.0_dp/3.0_dp)
              tmat_c2j( 4, 1) =  sqrt(1.0_dp/3.0_dp)
