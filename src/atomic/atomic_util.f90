@@ -747,22 +747,27 @@
 !! make spin-orbit coupling matrix for 3-band case
 !!
   subroutine atomic_make_smat3(smat)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
-! external arguments
-! SOC matrix
+!! external arguments
+     ! SOC matrix
      complex(dp), intent(out) :: smat(6,6)
 
-! local parameters
-! \sqrt{2}
+!! local parameters
+     ! \sqrt{2}
      real(dp), parameter :: sqrt2 = sqrt(2.0_dp)
 
-! make SOC on complex orbital basis, the orbital order is:
-! |-1,up>, |-1,dn>,
-! | 0,up>, | 0,dn>,
-! | 1,up>, | 1,dn>
+!! [body
+
+     ! make SOC on complex orbital basis, the orbital order is:
+     !
+     !     |-1, up >, | -1, dn >,
+     !     | 0, up >, |  0, dn >,
+     !     | 1, up >, |  1, dn >
+     !
      smat = czero
 
      smat( 1, 1) = -1.0_dp
@@ -773,6 +778,8 @@
      smat( 5, 5) = +1.0_dp
      smat( 3, 6) =  sqrt2
      smat( 6, 6) = -1.0_dp
+
+!! body]
 
      return
   end subroutine atomic_make_smat3
