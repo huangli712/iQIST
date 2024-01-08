@@ -1217,34 +1217,40 @@
 !!>>> perform representation transformation                            <<<
 !!========================================================================
 
-!!>>> atomic_tran_fmat: rotate F-matrix (fmat) from Fock basis to eigen-
-!!>>> states basis
+!!
+!! @sub atomic_tran_fmat
+!!
+!! rotate F-matrix (fmat) from Fock basis to eigenstates basis
+!!
   subroutine atomic_tran_fmat(ndimx, ndimy, amat, bmat, cmat)
-     use constants, only: dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      implicit none
 
-! external arguments
-! x dimension of matrix
+!! external arguments
+     ! x dimension of matrix
      integer, intent(in)  :: ndimx
 
-! y dimension of matrix
+     ! y dimension of matrix
      integer, intent(in)  :: ndimy
 
-! left transformation matrix
+     ! left transformation matrix
      real(dp), intent(in) :: amat(ndimx,ndimx)
 
-! right transformation matrix
+     ! right transformation matrix
      real(dp), intent(in) :: cmat(ndimy,ndimy)
 
-! F-matrix
+     ! F-matrix
      real(dp), intent(inout) :: bmat(ndimx,ndimy)
 
-! local variables
-! dummy array
+!! local variables
+     ! dummy array
      real(dp), allocatable :: tmp_mat(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(tmp_mat(ndimx,ndimy))
 
      tmp_mat = zero
@@ -1258,8 +1264,10 @@
                                tmp_mat, ndimx, &
                             zero, bmat, ndimx  )
 
-! deallocate memory
+     ! deallocate memory
      deallocate(tmp_mat)
+
+!! body]
 
      return
   end subroutine atomic_tran_fmat
