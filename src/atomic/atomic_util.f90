@@ -1441,6 +1441,7 @@
   subroutine atomic_natural_basis1()
      use control, only : norbs
      use control, only : mune
+
      use m_spmat, only : cmat, emat, tmat
 
      implicit none
@@ -1469,55 +1470,62 @@
      return
   end subroutine atomic_natural_basis1
 
-!!>>> atomic_2natural_case2: make natural basis for non-diagonal
-!!>>> crystal field without spin-orbital coupling
-  subroutine atomic_2natural_case2()
+!!
+!! @sub atomic_natural_basis2
+!!
+!! make natural basis for non-diagonal crystal field,
+!! without spin-orbital coupling
+!!
+  subroutine atomic_natural_basis2()
      use constants, only : dp
 
      use control, only : nband, norbs
      use control, only : mune
+
      use m_spmat, only : cmat, emat, tmat
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! eigenvalue
+     ! eigenvalue
      real(dp) :: eigval(nband)
 
-! eigen vector
+     ! eigenvector
      real(dp) :: eigvec(nband,nband)
 
-! emat matrix for no spin freedom
+     ! emat matrix for no spin freedom
      complex(dp) :: emat_nospin(nband,nband)
 
-! tmat for no spin freedom
+     ! tmat for no spin freedom
      complex(dp) :: tmat_nospin(nband,nband)
 
-! set emat to crystal field
-! since smat is zero, so emat is equal to cmat
+!! [body
+
+     ! set emat to crystal field
+     ! since smat is zero, so emat is equal to cmat
      emat = cmat
 
-! get emat for no spin freedom
+     ! get emat for no spin freedom
      do i=1,nband
          do j=1,nband
              emat_nospin(j,i) = emat(2*j-1,2*i-1)
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband}
 
-! diagonalize emat_nospin to get natural basis
+     ! diagonalize emat_nospin to get natural basis
      call s_eig_sy(nband, nband, real(emat_nospin), eigval, eigvec)
 
-! get diagonal emat for no spin freedom
+     ! get diagonal emat for no spin freedom
      call s_diag_z(nband, dcmplx(eigval), emat_nospin)
 
-! get tmat for no spin freedom
+     ! get tmat for no spin freedom
      tmat_nospin = dcmplx(eigvec)
 
-! build emat and tmat with spin freedom
+     ! build emat and tmat with spin freedom
      do i=1,nband
          do j=1,nband
              emat(2*j-1,2*i-1) = emat_nospin(j,i)
@@ -1527,13 +1535,15 @@
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband} loop
 
-! add chemical potential to emat
+     ! add chemical potential to emat
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
 
+!! body]
+
      return
-  end subroutine atomic_2natural_case2
+  end subroutine atomic_natural_basis2
 
 !!>>> atomic_2natural_case3: make natural basis for the case without
 !!>>> crystal field and with spin-orbital coupling
