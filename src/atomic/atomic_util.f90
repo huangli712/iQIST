@@ -1272,36 +1272,44 @@
      return
   end subroutine atomic_tran_fmat
 
-!!>>> atomic_tran_umat: transform Coulomb interaction U tensor from one
-!!>>> representation to another representation
+!!
+!! @sub atomic_tran_umat
+!!
+!! transform Coulomb interaction U tensor from one representation
+!! to another representation
+!!
   subroutine atomic_tran_umat(amtrx, umat, umat_t)
-     use constants, only : dp, czero, epst
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : epst
 
      use control, only : norbs
 
      implicit none
 
-! external arguments
-! transformation matrix from orginal basis to natural basis
+!! external arguments
+     ! transformation matrix from orginal basis to natural basis
      complex(dp), intent(in)  :: amtrx(norbs,norbs)
 
-! coefficents matrix for general interaction U in orginal basis
+     ! coefficents matrix for general interaction U in orginal basis
      complex(dp), intent(in)  :: umat(norbs,norbs,norbs,norbs)
 
-! coefficents matrix for general interaction U in natural basis
+     ! coefficents matrix for general interaction U in natural basis
      complex(dp), intent(out) :: umat_t(norbs,norbs,norbs,norbs)
 
-! local variables
-! loop index over orbitals in orginal single particle basis
+!! local variables
+     ! loop index over orbitals in orginal single particle basis
      integer :: alpha1, alpha2
      integer :: alpha3, alpha4
      integer :: sigma1, sigma2
      integer :: sigma3, sigma4
 
-! auxiliary complex(dp) variables
+     ! auxiliary complex(dp) variables
      complex(dp) :: ctmp
 
-! initialize umat_t to be zero
+!! [body
+
+     ! initialize umat_t to be zero
      umat_t = czero
 
      sigma1loop: do sigma1=1,norbs
@@ -1328,6 +1336,8 @@
              enddo sigma3loop ! over sigma3={1,norbs} loop
          enddo sigma2loop ! over sigma2={1,norbs} loop
      enddo sigma1loop ! over sigma1={1,norbs} loop
+
+!! body]
 
      return
   end subroutine atomic_tran_umat
