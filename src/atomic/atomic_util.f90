@@ -1151,13 +1151,13 @@
              tmat_c2j(10, 9) =  sqrt(1.0_dp/5.0_dp)
              tmat_c2j( 9,10) =  1.0_dp
 
-! the |lz,sz> order is:
-! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>,
-! | 0,dn>, | 1,up>, | 1,dn>, | 2,up>, | 2,dn>, | 3,up>, |3,dn>
-!
-! the |j2,jz> order is:
-! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
-! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, |7/2,5/2>, |7/2,7/2>
+         ! the |lz,sz> order is:
+         ! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>,
+         ! | 0,dn>, | 1,up>, | 1,dn>, | 2,up>, | 2,dn>, | 3,up>, |3,dn>
+         !
+         ! the |j2,jz> order is:
+         ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
+         ! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, |7/2,5/2>, |7/2,7/2>
          case (7)
              tmat_c2j( 1, 1) = -sqrt(6.0_dp/7.0_dp)
              tmat_c2j( 4, 1) =  sqrt(1.0_dp/7.0_dp)
@@ -1190,6 +1190,8 @@
              call s_print_error('atomic_make_tmat_c2j','not implemented for this nband!')
 
      end select
+
+!! body]
 
      return
   end subroutine atomic_make_tmat_c2j
