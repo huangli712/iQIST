@@ -1552,7 +1552,7 @@
 !! spin-orbital coupling, for this special case, the natural basis
 !! is |j2,jz>
 !!
-  subroutine atomic_2natural_case3()
+  subroutine atomic_natural_basis3()
      use constants, only : dp
 
      use control, only : norbs
@@ -1593,7 +1593,7 @@
 !! body]
 
      return
-  end subroutine atomic_2natural_case3
+  end subroutine atomic_natural_basis3
 
 !!>>> atomic_2natural_case4: make natural basis for the case with
 !!>>> crystal field and with spin-orbital coupling
