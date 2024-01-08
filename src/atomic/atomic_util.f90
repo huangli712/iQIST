@@ -907,34 +907,48 @@
 !!>>> determine representation transformation matrix                   <<<
 !!========================================================================
 
-!!>>> atomic_make_tmat_c2r: make transformation matrix from complex
-!!>>> orbital basis to real orbital basis
+!!
+!! @sub atomic_make_tmat_c2r
+!!
+!! make transformation matrix from complex orbital basis to
+!! real orbital basis
+!!
   subroutine atomic_make_tmat_c2r(tmat_c2r)
-     use constants, only : dp, czero, cone, czi
+     use constants, only : dp
+     use constants, only : czero, cone, czi
 
      use control, only : nband, norbs
 
      implicit none
 
-! external arguments
-! the transformation matrix from complex orbitals to real orbitals
+!! external arguments
+     ! the transformation matrix from complex orbitals to real orbitals
      complex(dp), intent(out) :: tmat_c2r(norbs,norbs)
 
-! local parameters
-! \sqrt{2}
+!! local parameters
+     ! \sqrt{2}
      real(dp), parameter :: sqrt2 = sqrt(2.0_dp)
 
+!! [body
+
      tmat_c2r = czero
+     !
      select case (nband)
 
-! the real orbital order (t2g) is:
-! dxzup, dxzdn, dyzup, dyzdn, dxyup, dxydn
-!
-! the corresponding p orbital order is:
-! pyup, pydn, pxup, pxdn, pzup, pzdn
-!
-! the complex orbital |lz,sz> order is
-! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
+         ! the real orbital order (t2g) is:
+         !     dxzup, dxzdn,
+         !     dyzup, dyzdn,
+         !     dxyup, dxydn
+         !
+         ! the corresponding p orbital order is:
+         !     pyup, pydn,
+         !     pxup, pxdn,
+         !     pzup, pzdn
+         !
+         ! the complex orbital |lz,sz> order is
+         !     |-1, up >, |-1, dn >,
+         !     | 0, up >, | 0, dn >,
+         !     | 1, up >, | 1, dn >
          case (3)
              tmat_c2r( 1, 1) =  czi/sqrt2
              tmat_c2r( 5, 1) =  czi/sqrt2
@@ -947,11 +961,19 @@
              tmat_c2r( 3, 5) =  cone
              tmat_c2r( 4, 6) =  cone
 
-! the real orbital order is:
-! dz2up, dz2dn, dxzup, dxzdn, dyzup, dyzdn, dx2-y2up, dx2-y2dn, dxyup, dxydn
-!
-! the complex orbital |lz,sz> order is:
-! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>
+         ! the real orbital order is:
+         !     dz2up, dz2dn,
+         !     dxzup, dxzdn,
+         !     dyzup, dyzdn,
+         !     dx2-y2up, dx2-y2dn,
+         !     dxyup, dxydn
+         !
+         ! the complex orbital |lz,sz> order is:
+         !     |-2, up >, |-2, dn >,
+         !     |-1, up >, |-1, dn >,
+         !     | 0, up >, | 0, dn >,
+         !     | 1, up >, | 1, dn >,
+         !     | 2, up >, | 2, dn >
          case (5)
              tmat_c2r( 5, 1) =  cone
              tmat_c2r( 6, 2) =  cone
@@ -972,13 +994,23 @@
              tmat_c2r( 2,10) =  czi/sqrt2
              tmat_c2r(10,10) = -czi/sqrt2
 
-! the real orbital order is:
-! fz3up, fz3dn, fxz2up, fxz2dn, fyz2up, fyz2dn, fz(x2-y2)up, fz(x2-y2)dn, fxyzup, fxyzdn,
-! fx(x2-3y2)up, fx(x2-3y2)dn, fy(3x2-y2)up, fy(3x2-y2)dn
-!
-! the complex orbital |lz,sz> order is:
-! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>,
-! | 0,dn>, | 1,up>, | 1,dn>, | 2,up>, | 2,dn>, | 3,up>, |3,dn>
+         ! the real orbital order is:
+         !     fz3up, fz3dn,
+         !     fxz2up, fxz2dn,
+         !     fyz2up, fyz2dn,
+         !     fz(x2-y2)up, fz(x2-y2)dn,
+         !     fxyzup, fxyzdn,
+         !     fx(x2-3y2)up, fx(x2-3y2)dn,
+         !     fy(3x2-y2)up, fy(3x2-y2)dn
+         !
+         ! the complex orbital |lz,sz> order is:
+         !     |-3, up >, |-3, dn >,
+         !     |-2, up >, |-2, dn >,
+         !     |-1, up >, |-1, dn >,
+         !     | 0, up >, | 0, dn >,
+         !     | 1, up >, | 1, dn >,
+         !     | 2, up >, | 2, dn >,
+         !     | 3, up >, | 3, dn >
          case (7)
              tmat_c2r( 7, 1) =  cone
              tmat_c2r( 8, 2) =  cone
@@ -1011,6 +1043,8 @@
              call s_print_error('atomic_make_tmat_c2r','not implemented for this nband!')
 
      end select
+
+!! body]
 
      return
   end subroutine atomic_make_tmat_c2r
