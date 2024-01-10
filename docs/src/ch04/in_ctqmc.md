@@ -1,8 +1,8 @@
-### solver.ctqmc.in
+# solver.ctqmc.in
 
 **Introduction**
 
-The *solver.ctqmc.in* file is the only configuration file for the continuous-time quantum Monte Carlo impurity solver. You can setup the parameters for the quantum impurity solvers in it. Besides the Fortran API, this is the only way to setup the parameters for the quantum impurity solvers. But we have to emphasize that this file is optional. In other words, the CT-QMC impurity solvers can run without it. 
+The *solver.ctqmc.in* file is the only configuration file for the continuous-time quantum Monte Carlo impurity solver. You can setup the parameters for the quantum impurity solvers in it. Besides the Fortran API, this is the only way to setup the parameters for the quantum impurity solvers. But we have to emphasize that this file is optional. In other words, the CT-QMC impurity solvers can run without it.
 
 There are many input parameters for the CT-QMC impurity solvers. But all of parameters have default values. If the *solver.ctqmc.in* file is absent, the quantum impurity solvers will use the default values. If the *solver.ctqmc.in* file is present, the quantum impurity solvers will read it, parse it, and apply the settings in it to initialize the quantum impurity solvers. The default values for the parameters are designed for a single-band Hubbard model. Thus in most cases, you need a *solver.ctqmc.in* file to override the default settings.
 
