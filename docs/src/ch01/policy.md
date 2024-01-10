@@ -36,15 +36,15 @@ We **DO NOT** need any donations now.
 
 It is really appreciated if you can cite the following paper when you would like to publish your great works by using the iQIST software package. It is really important for us. But, of course, it is also not obligated.
  
-> iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit
+> *iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit*
 >
-> Li Huang, Yilin Wang, Zi Yang Meng, Liang Du, Philipp Werner and Xi Dai
+> *Li Huang, Yilin Wang, Zi Yang Meng, Liang Du, Philipp Werner and Xi Dai*
 >
-> Computer Physics Communications 195, 140 (2015)
+> *Computer Physics Communications 195, 140 (2015)*
 
 
-> iQIST v0.7: An open source continuous-time quantum Monte Carlo impurity solver toolkit
+> *iQIST v0.7: An open source continuous-time quantum Monte Carlo impurity solver toolkit*
 >
-> Li Huang
+> *Li Huang*
 >
-> Computer Physics Communications 221, 423 (2017)
+> *Computer Physics Communications 221, 423 (2017)*
