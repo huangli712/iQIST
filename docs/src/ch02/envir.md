@@ -39,7 +39,7 @@ Check the following websites for more details:
 
 ### Linear algebra library
 
-The iQIST software package depends on the BLAS and LAPACK libraries heavily. Then you have to ensure that a compatible math library is installed in your system. We recommend to use the Intel Math Kernel Library (Intel MKL). If you are using the Mac OS X system, the Accelerate Framework may be an alternate choice. Keep in mind that the running efficiency of iQIST is always benefited from the highly optimized linear algebra library.
+The iQIST software package depends on the BLAS and LAPACK libraries heavily. Then you have to ensure that a compatible math library is installed in your system. We recommend to use the Intel Math Kernel Library (Intel MKL). If you are using the MacOS system, the Accelerate Framework may be an alternate choice. Keep in mind that the running efficiency of iQIST is always benefited from the highly optimized linear algebra library.
 
 Check the following websites for more details:
 
@@ -51,7 +51,7 @@ Check the following websites for more details:
 
 ### Python environment
 
-There are a few python scripts in the iQIST software package. In order to run them, you need a Python interpreter. We recommend to install Python 2.6+, and the numpy, scipy, f2py, matplotlib packages must be installed as well.
+There are a few python scripts in the iQIST software package. In order to run them, you need a Python interpreter. We recommend to install Python 3.8+, and the numpy, scipy, f2py, matplotlib packages must be installed as well.
 
 Check the following websites for more details:
 
