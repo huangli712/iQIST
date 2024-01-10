@@ -6,8 +6,6 @@
 *.dat
 *.log
 *.out
-*.pyf
-*.pyc
 *.swp
 *.data
 *.optrpt
