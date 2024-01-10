@@ -4,11 +4,11 @@
 
 Dynamical mean-field theory (DMFT) and its extensions play a very important role in contemporary studies of correlated electron systems. The broad applications of this technique range from the study of Mott transitions, unconventional superconductivity in Cu- and Fe-based superconductors, and non-Fermi liquid behaviors, to the investigation of anomalous transport properties of transition metal oxides. For many of these applications, DMFT is the currently most powerful and reliable (sometimes the only) technique available and has in many cases produced new physical insights. Furthermore, the combination of *ab initio* calculation method (such as density functional theory) with DMFT allows to compute the subtle electronic properties of realistic correlated materials, including partially filled *3d*- and *4d*-electron transition metal oxides, where lattice, spin and orbital degrees of freedom all coupled.
 
-![dmft image](../figure/dmft.png)
+![dmft image](../figures/dmft.png)
 
 **Figure** | The hierarchical structure of DMFT and its extensions. The iQIST software package can be used as a computational engine of them.
 
-![dft_dmft_type image](../figure/dft_dmft_type.png)
+![dft_dmft_type image](../figures/dft_dmft_type.png)
 
 **Figure** | The hierarchical structure of DFT + DMFT and its extensions. The iQIST software package can be used as a computational engine of them.
 
@@ -16,11 +16,11 @@ Dynamical mean-field theory (DMFT) and its extensions play a very important role
 
 The key idea of DMFT is to map the original correlated lattice model into a quantum impurity model whose mean-field bath is determined self-consistently. Thus, the central task of a DMFT simulation becomes the numerical solution of the quantum impurity problem. During the past several decades, many methods have been tested as impurity solvers, including the exact diagonalization (ED), equation of motion (EOM), Hubbard-I approximation (HIA), iterative perturbation theory (IPT), non-crossing approximation (NCA), fluctuation-exchange approximation (FLEX), and quantum Monte Carlo (QMC). Among the methods listed above, the QMC method has several very important advantages, which makes it so far the most flexible and widely used impurity solver. First, it is based on the imaginary time action, in which the infinite bath has been integrated out. Second, it can treat arbitrary couplings, and can thus be applied to all kinds of phases including the metallic phase, insulating state, and phases with spontaneous symmetry breaking. Third, the QMC method is numerically exact with a *controllable* numerical error. In other words, by increasing the computational effort the numerical error of the QMC simulation can be systematically reduced. For these reasons, the QMC algorithm is considered as the method of choice for many applications.
 
-![lattice image](../figure/lattice.png)
+![lattice image](../figures/lattice.png)
 
 **Figure** | A schematic diagram of the key idea of DMFT.
 
-![scf_dmft image](../figure/scf_dmft.png)
+![scf_dmft image](../figures/scf_dmft.png)
 
 **Figure** | A schematic diagram of the self-consistent iteration of DMFT. Actually, the role played by the iQIST software package is the quantum impurity solver.
 
