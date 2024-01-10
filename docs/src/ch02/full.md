@@ -8,7 +8,7 @@ $ editor make.inc
 $ make all
 ```
 
-!!! note 
+!!! note
 
     Here **editor** means any ascii text editor you prefer. The *vim* is our favorite.
 
