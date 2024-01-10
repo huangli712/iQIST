@@ -1,6 +1,6 @@
 # Compiling system
 
-In this section, we will illustrate the compiling system of the iQIST software package. In fact, it is completely based on the well-known GNU GCC tool-chain. 
+In this section, we will illustrate the compiling system of the iQIST software package. In fact, it is completely based on the well-known GNU GCC tool-chain.
 
 The compiling system is in the *iqist/build* directory which includes the following files/folders:
 
@@ -25,15 +25,15 @@ $ make help-more
 
 for more details.
 
-!!! warning 
+!!! warning
 
     **DO NOT** touch this file by yourself even you are very familiar with the iQIST software package.
 
 **make.sys**
 
-We design this file to configure the compiling system. In this file, we have to specify the Fortran compiler, the parallel environment, the linear algebra library, and the target hardware architecture, etc. 
+We design this file to configure the compiling system. In this file, we have to specify the Fortran compiler, the parallel environment, the linear algebra library, and the target hardware architecture, etc.
 
-!!! warning 
+!!! warning
 
     The *make.sys* file is system-dependent, i.e., you have to modify it to fit your systems. Or else, the compiling will fail definitely.
 
