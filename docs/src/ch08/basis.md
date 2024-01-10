@@ -2,6 +2,8 @@
 
 In this section, we define some single particle basis used in the **JASMINE** component to write down the atomic Hamiltonian ``\hat{H}_{\text{atom}}``. We set ``\hbar=1`` in this note.
 
+---
+
 **Complex spherical harmonics basis**
 
 The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` is the eigenstate of ``l^{2},l_{z}``,
@@ -16,6 +18,8 @@ l^{2}Y_{l}^{m}=l(l+1)Y_{l}^{m},
 l_{z}Y_{l}^{m}=mY_{l}^{m},\ m=-l,-l+1,\cdots,l.
 \end{equation}
 ```
+
+---
 
 **Real spherical harmonics basis**
 
@@ -73,6 +77,8 @@ f_{y(3x^{2}-y^{2})} & = & Y_{3,-3}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-3}+Y_{3}^{3}\
 \end{align}
 ```
 
+---
+
 **Cubic spherical harmonics basis**
 
 The cubic spherical harmonics is defined as the basis of the irreducible representation of cubic point group ``O_{h}``.
@@ -119,6 +125,8 @@ f_{xyz} & = & f_{xyz}.
     \end{gather}
     ```
 
+---
+
 **``j^{2},j_{z}`` diagonal basis**
 
 Define ``\phi_{ljm_{j}}`` as the eigenstate of ``j^{2},j_{z}``,
@@ -148,6 +156,8 @@ For ``j=l-\frac{1}{2},m_{j}=m+\frac{1}{2}``,
 \phi_{ljm_{j}}=-\sqrt{\frac{l-m}{2l+1}}Y_{l}^{m}\uparrow+\sqrt{\frac{l+m+1}{2l+1}}Y_{l}^{m+1}\downarrow.
 \end{equation}
 ```
+
+---
 
 **Natural basis**
 
