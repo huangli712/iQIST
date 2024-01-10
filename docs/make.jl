@@ -29,7 +29,7 @@ ch02 = Any[
 
 ch03 = Any[
         #    "README" => "ch03/README.md",
-        #    "Configure your system" => "ch03/config.md",
+            "Configure your system" => "ch03/config.md",
         #    "iQIST recipes" => "ch03/recipes.md",
         #    "Prepare input files" => "ch03/create.md",
         #    "Execute the codes" => "ch03/execute.md",
@@ -40,7 +40,7 @@ ch03 = Any[
 ch04 = Any[
         #    "README" => "ch04/README.md",
         #    "How to choose suitable quantum impurity solvers?" => "ch04/choose.md",
-        #    "Standard input files" => Any[
+            "Standard input files" => Any[
         #        "README" => "ch04/input.md",
                 "solver.ctqmc.in" => "ch04/in_ctqmc.md",
         #        "solver.umat.in" => "ch04/in_umat.md",
@@ -48,7 +48,7 @@ ch04 = Any[
         #        "solver.anydos.in" => "ch04/in_anydos.md",
         #        "solver.ktau.in" => "ch04/in_ktau.md",
         #        "atom.cix" => "ch04/in_atom.md",
-        #    ],
+            ],
         #    "Standard output files" => Any[
         #        "README" => "ch04/output.md",
         #        "Terminal output" => "ch04/out_term.md",
@@ -140,13 +140,13 @@ ch04 = Any[
 
 ch05 = Any[
         #    "README" => "ch05/README.md",
-        #    "Standard input files" => Any[
+            "Standard input files" => Any[
         #        "README" => "ch05/input.md",
-        #        "atom.config.in" => "ch05/in_atom.md",
+                "atom.config.in" => "ch05/in_atom.md",
         #        "atom.cmat.in" => "ch05/in_cmat.md",
         #        "atom.emat.in" => "ch05/in_emat.md",
         #        "atom.tmat.in" => "ch05/in_tmat.md",
-        #    ],
+            ],
         #    "Standard output files" => Any[
         #        "README" => "ch05/output.md",
         #        "Terminal output" => "ch05/out_term.md",
@@ -198,14 +198,14 @@ ch06 = Any[
         #        "toolbox/maketau" => "ch06/tau.md",
         #        "toolbox/makeups" => "ch06/ups.md",
         #    ],
-        #    "Scripts" => Any[
+            "Scripts" => Any[
         #        "README" => "ch06/script.md",
         #        "script/u_movie.py" => "ch06/movie.md",
-        #        "script/u_atomic.py" => "ch06/atomic.md",
+                "u_atomic.py" => "ch06/atomic.md",
         #        "script/u_ctqmc.py" => "ch06/ctqmc.md",
         #        "script/u_reader.py" => "ch06/reader.md",
         #        "script/u_writer.py" => "ch06/writer.md",
-        #    ],
+            ],
        ]
 
 ch07 = Any[
@@ -304,6 +304,6 @@ makedocs(
         "iQIST in action" => ch07,
         "Inside iQIST" => ch08,
         #"Appendix" => "appendix/README.md",
-        #"Glossary" => "glossary.md",
+        "Glossary" => "glossary.md",
     ],
 )

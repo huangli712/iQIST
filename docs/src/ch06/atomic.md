@@ -1,4 +1,4 @@
-### script/u_atomic.py
+# u_atomic.py
 
 **Introduction**
 
