@@ -2,7 +2,7 @@
 
 Now we already have an impurity model Hamiltonian ``H_{\text{imp}}``, the question is how to solve it using the Monte Carlo algorithm?
 
-We first split the impurity Hamiltonian ``H_{\text{imp}}`` into two separate parts, 
+We first split the impurity Hamiltonian ``H_{\text{imp}}`` into two separate parts,
 
 ```math
 \begin{equation}
@@ -22,7 +22,7 @@ with
 \omega(\mathcal{C}_n)=d\tau_1 \cdots d\tau_n \text{Tr}\left\{ e^{-\beta H_1}[-H_2(\tau_n)]\cdots [-H_2(\tau_1)]\right\},
 \end{equation}
 ```
-where ``H_2(\tau)`` is defined in the interaction picture with 
+where ``H_2(\tau)`` is defined in the interaction picture with
 
 ```math
 \begin{equation}

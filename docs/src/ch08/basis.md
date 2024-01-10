@@ -1,4 +1,4 @@
-# Definition of single particle basis
+# Single particle basis
 
 In this section, we define some single particle basis used in the **JASMINE** component to write down the atomic Hamiltonian ``\hat{H}_{\text{atom}}``. We set ``\hbar=1`` in this note.
 
@@ -51,7 +51,7 @@ d_{xy} & = & Y_{2,-2}=\frac{i}{\sqrt{2}}\left(Y_{2}^{-2}-Y_{2}^{2}\right).
 \end{align}
 ```
 
-For ``t_{2g}`` system ``(l\approx-1)``, we have a ``T-P`` equivalence, 
+For ``t_{2g}`` system ``(l\approx-1)``, we have a ``T-P`` equivalence,
 ```math
 \begin{align}
 d_{zx} & \rightarrow & p_{y}=\frac{i}{\sqrt{2}}\left(Y_{1}^{-1}+Y_{1}^{1}\right), \\
@@ -60,7 +60,7 @@ d_{xy} & \rightarrow & p_{z}=Y_{1}^{0}.
 \end{align}
 ```
 
-For ``f`` system, 
+For ``f`` system,
 ```math
 \begin{align}
 f_{z^{3}} & = & Y_{30}=Y_{3}^{0}, \\
