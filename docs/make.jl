@@ -2,12 +2,12 @@ using Documenter
 
 ch01 = Any[
         #    "README" => "ch01/README.md",
-        #    "What's iQIST?" => "ch01/what.md",
-        #    "Motivation" => "ch01/motivation.md",
+            "What's iQIST?" => "ch01/what.md",
+            "Motivation" => "ch01/motivation.md",
         #    "Components" => "ch01/components.md",
         #    "Features" => "ch01/feature.md",
         #    "Software architecture" => "ch01/architecture.md",
-        #    "Policy" => "ch01/policy.md",
+            "Policy" => "ch01/policy.md",
        ]
 
 ch02 = Any[
