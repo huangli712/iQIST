@@ -65,7 +65,7 @@ Collection of preprocessor directives. Do not modify it unless you are an expert
 > * \$\(MPI\)
 > * \$\(OMP\)
 
-Please make sure that the '$(FPP)' option is always present.
+Please make sure that the '\$\(FPP\)' option is always present.
 
 ### CHECK
 
