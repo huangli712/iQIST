@@ -4,12 +4,11 @@ The first rule of thumb is to get the newest version of iQIST. Unfortunately, th
 
 **Method 1**:
 
-Download it directly from the online repository. Now we *ONLY* maintain two repositories:
+Download it directly from the online repository. Now we *ONLY* maintain one repository:
 
-* [Bitbucket](https://bitbucket.org/huangli712/iqist/) (preferred)
-* [Github](https://github.com/iqist/iqist) (mirror)
+* [Github](https://github.com/huangli712/iQIST)
 
-The newest release of iQIST software package is **v0.6.7 @ 2016.02.13T (testing)**.
+The newest release of iQIST software package is **v0.8.2-devel.230706**.
 
 !!! note 
 
@@ -17,7 +16,7 @@ The newest release of iQIST software package is **v0.6.7 @ 2016.02.13T (testing)
 
 **Method 2**:
 
-Write a letter to one of the core members of the **iQIST Developer Team (iDT)**, i.e., 
+Write a letter to one of the core members of the **iQIST Developer Team (iQDT)**, i.e., 
 
 * **Dr. Li HUANG** 
 
