@@ -5,7 +5,9 @@ Now we already have an impurity model Hamiltonian ``H_{\text{imp}}``, the questi
 We first split the impurity Hamiltonian ``H_{\text{imp}}`` into two separate parts, 
 
 ```math
+\begin{equation}
 H_{\text{imp}} = H_1 + H_2,
+\end{equation}
 ```
 
 then treat ``H_2`` as a perturbation term, and expand the partition function ``\mathcal{Z}`` in powers of ``H_2``,
@@ -23,7 +25,9 @@ with
 where ``H_2(\tau)`` is defined in the interaction picture with 
 
 ```math
+\begin{equation}
 H_2(\tau) = e^{\tau H_1} H_2 e^{-\tau H_1}.
+\end{equation}
 ```
 
 Each term in the right side of the second equation can be regarded as a diagram or configuration (labeled by ``\mathcal{C}``), and ``\omega(\mathcal{C}_n)`` is the diagrammatic weight of a specific order-``n`` configuration. Next we use a stochastic Monte Carlo algorithm to sample the terms of this series. This is the core spirit of the continuous-time quantum Monte Carlo impurity solver. The idea is very simple, but the realization is not.

@@ -3,7 +3,9 @@
 The main goal of the iQIST software package is to provide a comprehensive tool for solving the quantum impurity models, especially the Anderson impurity model. Generally speaking, the multi-orbital Anderson impurity model (AIM) can be written as 
 
 ```math
+\begin{equation}
 H_{\text{imp}} = H_{\text{loc}} + H_{\text{bath}} + H_{\text{hyb}},
+\end{equation}
 ```
 
 where
