@@ -1,20 +1,20 @@
-## Uncompress
+# Uncompress
 
 Usually, the iQIST software package is released as a compressed file. Please use the following commands to uncompress the iQIST software package:
 
-### tar.gz style
+**tar.gz style**
 
 ```
 $ tar xvfz iqist.tar.gz
 ```
 
-### zip style
+**zip style**
 
 ```
 $ unzip iqist.tar.gz
 ```
 
-### tar.bz2 style
+**tar.bz2 style**
 
 ```
 $ tar xvfz iqist.tar.bz2
