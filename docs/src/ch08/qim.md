@@ -11,12 +11,22 @@ H_{\text{imp}} = H_{\text{loc}} + H_{\text{bath}} + H_{\text{hyb}},
 where
 
 ```math
-\begin{align}
-& H_{\text{loc}} = \sum_{\alpha\beta} E_{\alpha\beta} d_{\alpha}^{\dagger} d_{\beta}+\sum_{\alpha\beta\gamma\delta} U_{\alpha\beta\gamma\delta} 
-    d^{\dagger}_{\alpha}d^{\dagger}_{\beta} d_{\gamma} d_{\delta}, \\
-& H_{\text{hyb} } = \sum_{\textbf{k}\alpha\beta} V^{\alpha\beta}_{\textbf{k}} c_{\textbf{k}\alpha}^{\dagger} d_{\beta} + h.c., \\
-& H_{\text{bath}} = \sum_{\textbf{k}\alpha} \epsilon_{\textbf{k}\alpha} c_{\textbf{k}\alpha}^{\dagger} c_{\textbf{k}\alpha}.
-\end{align}
+\begin{equation}
+H_{\text{loc}} = \sum_{\alpha\beta} E_{\alpha\beta} d_{\alpha}^{\dagger} d_{\beta}+\sum_{\alpha\beta\gamma\delta} U_{\alpha\beta\gamma\delta} 
+    d^{\dagger}_{\alpha}d^{\dagger}_{\beta} d_{\gamma} d_{\delta}
+\end{equation}
+```
+
+```math
+\begin{equation}
+H_{\text{hyb}} = \sum_{\textbf{k}\alpha\beta} V^{\alpha\beta}_{\textbf{k}} c_{\textbf{k}\alpha}^{\dagger} d_{\beta} + h.c.,
+\end{equation}
+```
+
+```math
+\begin{equation}
+H_{\text{bath}} = \sum_{\textbf{k}\alpha} \epsilon_{\textbf{k}\alpha} c_{\textbf{k}\alpha}^{\dagger} c_{\textbf{k}\alpha}.
+\end{equation}
 ```
 
 In these equations, Greek letters in the subscripts denote a combined spin-orbital index, the fermion operator ``d_\alpha^{\dagger}`` (``d_\alpha``) is creating (annihilating) an electron with index ``\alpha`` on the impurity site, while ``c_{\textbf{k}\alpha}^{\dagger}`` (``c_{\textbf{k}\alpha}``) is the creation (annihilation) operator for conduction band (bath) electron with spin-orbital index ``\alpha`` and momentum ``\textbf{k}``. 
