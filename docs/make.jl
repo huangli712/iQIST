@@ -203,8 +203,8 @@ ch06 = Any[
         #        "script/u_movie.py" => "ch06/movie.md",
                 "u_atomic.py" => "ch06/atomic.md",
                 "u_ctqmc.py" => "ch06/ctqmc.md",
-        #        "script/u_reader.py" => "ch06/reader.md",
-        #        "script/u_writer.py" => "ch06/writer.md",
+                "u_reader.py" => "ch06/reader.md",
+                "u_writer.py" => "ch06/writer.md",
             ],
        ]
 
@@ -240,7 +240,7 @@ ch07 = Any[
         #        "Orbital-selective Mott transition in two-band Hubbard model" => "ch07/osmt.md",
         #    ],
         #    "Code validation" => "ch07/valid.md",
-        #    "Successful stories" => "ch07/story.md",
+            "Successful stories" => "ch07/story.md",
        ]
 
 ch08 = Any[

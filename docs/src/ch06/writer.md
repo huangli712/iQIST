@@ -1,4 +1,4 @@
-# script/u_writer.py
+# u_writer.py
 
 **Introduction**
 

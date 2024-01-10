@@ -1,4 +1,4 @@
-# script/u_reader.py
+# u_reader.py
 
 **Introduction**
 
