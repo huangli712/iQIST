@@ -1,39 +1,6 @@
-# iQIST (Interacting Quantum Impurity Solver Toolkit)
-
-## Introduction
+# Explanation of make.inc
 
 The make.inc file is the key component of the building system. You have to modify it to fulfill your requirements. If it is not configured correctly, the building system won't work correctly as well. So in the following we would like to provide a detailed explanations for it.
-
-## Prerequisites
-
-### Operation system
-* Linux
-* macOS
-
-### Fortran compiler
-* Intel Fortran Compiler
-
-### Linear algebra library
-* Apple Accelerate framework
-* Reference implementations for BLAS and LAPACK at Netlib
-* Intel Math Kernel Library
-
-### Utility library
-* FLINK
-
-### MPI environment
-* MPICH
-* Openmpi
-
-### OpenMP environment
-* (Optional)
-
-### Python environment
-* (Optional) numpy, scipy, matplotlib
-
-Though it is not mandatory, we still strongly recommend to update the above software components on your systems to the latest versions. The OpenMP and Python environments are optional.
-
-## Explanations
 
 ### F90
 
