@@ -202,7 +202,7 @@ ch06 = Any[
         #        "README" => "ch06/script.md",
         #        "script/u_movie.py" => "ch06/movie.md",
                 "u_atomic.py" => "ch06/atomic.md",
-        #        "script/u_ctqmc.py" => "ch06/ctqmc.md",
+                "u_ctqmc.py" => "ch06/ctqmc.md",
         #        "script/u_reader.py" => "ch06/reader.md",
         #        "script/u_writer.py" => "ch06/writer.md",
             ],
