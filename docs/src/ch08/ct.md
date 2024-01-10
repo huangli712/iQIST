@@ -1,4 +1,4 @@
-### Principles of continuous-time quantum Monte Carlo algorithm
+# Principles of continuous-time quantum Monte Carlo algorithm
 
 Now we already have an impurity model Hamiltonian ``H_{\text{imp}}``, the question is how to solve it using the Monte Carlo algorithm?
 

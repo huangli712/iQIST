@@ -1,4 +1,4 @@
-## Outline
+# Outline
 
 In this section, you will learn the basic principles of continuous-time quantum Monte Carlo impurity solver. Especially, the powerful hybridization expansion version is emphasized.
 

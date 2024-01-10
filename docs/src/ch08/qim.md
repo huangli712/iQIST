@@ -1,4 +1,4 @@
-### Quantum impurity model
+# Quantum impurity model
 
 The main goal of the iQIST software package is to provide a comprehensive tool for solving the quantum impurity models, especially the Anderson impurity model. Generally speaking, the multi-orbital Anderson impurity model (AIM) can be written as 
 

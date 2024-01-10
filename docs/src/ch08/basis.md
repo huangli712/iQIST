@@ -1,4 +1,4 @@
-### Definition of single particle basis
+# Definition of single particle basis
 
 In this section, we define some single particle basis used in the **JASMINE** component to write down the atomic Hamiltonian ``\hat{H}_{\text{atom}}``. We set ``\hbar=1`` in this note.
 

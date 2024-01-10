@@ -1,4 +1,4 @@
-### Hybridization expansion
+# Hybridization expansion
 
 In the hybridization expansion algorithm (CT-HYB), due to the fact that ``H_1`` does not mix the impurity and bath states, the trace in ``\omega(\mathcal{C}_n)`` can be written as 
 
