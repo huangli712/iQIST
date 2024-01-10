@@ -1,7 +1,7 @@
 # Glossary
 
 | Teerminology | Explanation |
-| ------------ | ----------- |
+| :----------- | :---------- |
 | QMC    | Quantum Monte Carlo |
 | SOC    | Spin-orbit coupling |
 | BLAS   | Basic Linear Algebra Subprograms |
