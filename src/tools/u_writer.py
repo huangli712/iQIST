@@ -19,13 +19,13 @@
 ##
 ## This python script is designed, created, and maintained by
 ##
-## Li Huang // email: lihuang.dmft@gmail.com
+## Li Huang // email: huangli@caep.cn
 ##
 ## History
 ## =======
 ##
 ## 02/05/2015 by li huang (created)
-## 06/06/2017 by li huang (last modified)
+## 01/10/2024 by li huang (last modified)
 ##
 ##
 
