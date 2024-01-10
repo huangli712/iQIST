@@ -244,13 +244,13 @@ ch07 = Any[
        ]
 
 ch08 = Any[
-        #    "README" => "ch08/README.md",
-        #    "Basic theory and methods" => Any[
-        #        "README" => "ch08/basic.md",
-        #        "Quantum impurity model" => "ch08/qim.md",
-        #        "Principles of continuous-time quantum Monte Carlo algorithm" => "ch08/ct.md",
-        #        "Hybridization expansion" => "ch08/hyb.md",
-        #    ],
+            #"README" => "ch08/README.md",
+            "Basic theory and methods" => Any[
+                "Outline" => "ch08/basic.md",
+                "Quantum impurity model" => "ch08/qim.md",
+                "Principles of continuous-time quantum Monte Carlo algorithm" => "ch08/ct.md",
+                "Hybridization expansion" => "ch08/hyb.md",
+            ],
         #    "Algorithms" => Any[
         #        "README" => "ch08/algo.md",
         #        "Transition probability" => "ch08/tran.md",
@@ -298,7 +298,7 @@ makedocs(
         "Introduction" => ch01,
         "Installation" => ch02,
         "Getting started" => ch03,
-        "Quantum Monte Carlo impurity solvers" => ch04,
+        "Quantum impurity solvers" => ch04,
         "Atomic eigenvalue problem solver" => ch05,
         "Auxiliary tools" => ch06,
         "iQIST in action" => ch07,
