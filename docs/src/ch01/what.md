@@ -1,4 +1,4 @@
-## What's iQIST?
+# What's iQIST?
 
 The **I**nteracting **Q**uantum **I**mpurity **S**olver **T**oolkit (dubbed iQIST) is an open source software package aiming to provide a full, reliable, flexible, and powerful tool chain for various quantum impurity models. The major objective of iQIST is to be the core (computational) engine of the dynamical mean-field theory and its extensions.
 

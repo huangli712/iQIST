@@ -1,30 +1,30 @@
-## Policy
+# Policy
 
-### License
+## License
 
 The iQIST software package is released under the General Public Licence 3.0 (GPL) or later version.
 
-### Registration
+## Registration
 
 Registration is not obligated of course. But if you can send your email address to us, we can inform you on time once the new iQIST is released.
 
-### Technical support
+## Technical support
 
 We are sorry. We **DO NOT** provide any technical supports now. If you meet some problems when you are using the iQIST. You can write a letter to us. But we can not guarantee that we will reply you on time.
 
-### Feedback
+## Feedback
 
 If you have any suggestions, comments, successful stories, or criticisms, welcome! Please write a letter to us.
 
-### Contribution
+## Contribution
 
 If you find a bug, want to patch it, or want to contribute your codes to the iQIST, great! Please write a letter to us as soon as possible.
 
-### Donation
+## Donation
 
 We **DO NOT** need any donations now.
 
-### Contact
+## Contact
 
 **Dr. Li Huang**
 
@@ -32,7 +32,7 @@ We **DO NOT** need any donations now.
 
 **Email**: *huangli at caep.cn*
 
-### Citation
+## Citation
 
 It is really appreciated if you can cite the following paper when you would like to publish your great works by using the iQIST software package. It is really important for us. But, of course, it is also not obligated.
 
