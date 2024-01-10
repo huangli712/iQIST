@@ -30,15 +30,7 @@ We **DO NOT** need any donations now.
 
 **Affiliation**: *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou, PRC*
 
-**Email**: *lihuang.dmft at gmail.com*
-
-or
-
-**Dr. Yilin Wang**
-
-**Affiliation**: *Institute of Physics, Chinese Academy of Sciences, Beijing, PRC*
-
-**Email**: *qhwyl2006 at 126.com*
+**Email**: *huangli at caep.cn*
 
 ### Citation
 
@@ -47,5 +39,11 @@ It is really appreciated if you can cite the following paper when you would like
 ```
 iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit
 Li Huang, Yilin Wang, Zi Yang Meng, Liang Du, Philipp Werner and Xi Dai
-Computer Physics Communications 195, 140 (2015) or arXiv:1409.7573 (2014)
+Computer Physics Communications 195, 140 (2015)
+```
+
+```
+iQIST v0.7: An open source continuous-time quantum Monte Carlo impurity solver toolkit
+Li Huang
+Computer Physics Communications 221, 423 (2017)
 ```
