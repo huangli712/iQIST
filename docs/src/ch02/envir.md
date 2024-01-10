@@ -51,12 +51,11 @@ Check the following websites for more details:
 
 **Python environment**
 
-There are a few python scripts in the iQIST software package. In order to run them, you need a Python interpreter. We recommend to install Python 3.8+, and the numpy, scipy, f2py, matplotlib packages must be installed as well.
+There are a few python scripts in the iQIST software package. In order to run them, you need a Python interpreter. We recommend to install Python 3.8+, and the numpy, scipy, matplotlib packages must be installed as well.
 
 Check the following websites for more details:
 
 * [Python](https://www.python.org)
 * [numpy](http://www.numpy.org)
 * [scipy](http://www.scipy.org)
-* [f2py](http://www.f2py.com)
 * [matplotlib](http://matplotlib.org)

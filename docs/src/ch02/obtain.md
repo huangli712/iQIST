@@ -2,6 +2,8 @@
 
 The first rule of thumb is to get the newest version of iQIST. Unfortunately, the release period for the iQIST software package is not fixed. In other words, it is very difficult to predict that when the new generation of iQIST will be released. There are two ways to get the newest release of iQIST software package.
 
+---
+
 **Method 1**:
 
 Download it directly from the online repository. Now we *ONLY* maintain one repository:
@@ -13,6 +15,8 @@ The newest release of iQIST software package is **v0.8.2-devel.230706**.
 !!! note
 
     Sometimes the latest commit will not be compiled correctly. So, please download the released version of iQIST which has an **unique version tag**.
+
+---
 
 **Method 2**:
 
