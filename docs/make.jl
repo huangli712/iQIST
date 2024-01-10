@@ -15,8 +15,8 @@ ch02 = Any[
             "Obtain" => "ch02/obtain.md",
             "Uncompress" => "ch02/uncompress.md",
         #    "Directory structures" => "ch02/directory.md",
-        #    "Compiling environment" => "ch02/envir.md",
-        #    "Compiling system" => "ch02/system.md",
+            "Compiling environment" => "ch02/envir.md",
+            "Compiling system" => "ch02/system.md",
         #    "Build iQIST at one step" => "ch02/full.md",
         #    "Build iQIST at multiple steps" => Any[
         #        "README" => "ch02/multi.md",
@@ -32,9 +32,9 @@ ch03 = Any[
             "Configure your system" => "ch03/config.md",
         #    "iQIST recipes" => "ch03/recipes.md",
         #    "Prepare input files" => "ch03/create.md",
-        #    "Execute the codes" => "ch03/execute.md",
+            "Execute the codes" => "ch03/execute.md",
         #    "Monitor the codes" => "ch03/monitor.md",
-        #    "Profile the codes" => "ch03/profile.md",
+            "Profile the codes" => "ch03/profile.md",
        ]
 
 ch04 = Any[
@@ -200,7 +200,7 @@ ch06 = Any[
         #    ],
             "Scripts" => Any[
         #        "README" => "ch06/script.md",
-        #        "script/u_movie.py" => "ch06/movie.md",
+                "u_movie.py" => "ch06/movie.md",
                 "u_atomic.py" => "ch06/atomic.md",
                 "u_ctqmc.py" => "ch06/ctqmc.md",
                 "u_reader.py" => "ch06/reader.md",
