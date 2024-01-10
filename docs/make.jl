@@ -83,9 +83,9 @@ ch04 = Any[
         #        "solver.kernel.dat" => "ch04/out_kern.md",
         #        "solver.status.dat" => "ch04/out_stat.md",
         #    ],
-        #    "Parameters" => Any[
+            "Parameters" => Any[
         #        "README" => "ch04/parameters.md",
-        #        "isscf" => "ch04/p_isscf.md",
+                "isscf" => "ch04/p_isscf.md",
         #        "issun" => "ch04/p_issun.md",
         #        "isspn" => "ch04/p_isspn.md",
         #        "isbin" => "ch04/p_isbin.md",
@@ -134,8 +134,8 @@ ch04 = Any[
         #        "mune" => "ch04/p_mune.md",
         #        "beta" => "ch04/p_beta.md",
         #        "part" => "ch04/p_part.md",
-        #        "alpha" => "ch04/p_alpha.md",
-        #    ],
+                "alpha" => "ch04/p_alpha.md",
+            ],
        ]
 
 ch05 = Any[
