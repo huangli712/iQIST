@@ -181,14 +181,24 @@ f_{x(x^{2}-3y^{2})} = Y_{33}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-3}-Y_{3}^{3}\right)
 \end{equation}
 ```
 
-For ``t_{2g}`` system ``(l\approx-1)``, we have a ``T-P`` equivalence,
+For ``t_{2g}`` system, we have a ``T-P`` equivalence,
 
 ```math
-\begin{align}
-d_{zx} & \rightarrow & p_{y}=\frac{i}{\sqrt{2}}\left(Y_{1}^{-1}+Y_{1}^{1}\right), \\
-d_{zy} & \rightarrow & p_{x}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right),\\
-d_{xy} & \rightarrow & p_{z}=Y_{1}^{0}.
-\end{align}
+\begin{equation}
+d_{xz} \rightarrow p_{y}=\frac{i}{\sqrt{2}}\left(Y_{1}^{-1}+Y_{1}^{1}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+d_{xy} \rightarrow p_{z}=Y_{1}^{0},
+\end{equation}
+```
+
+```math
+\begin{equation}
+d_{yz} \rightarrow p_{x}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right).
+\end{equation}
 ```
 
 ---
