@@ -52,12 +52,16 @@ For ``p`` system, the orbital order is[^1]
 
 ```math
 \begin{equation}
+\begin{split}
+&
 |p_y, \uparrow \rangle,~
-|p_y, \downarrow \rangle,~
 |p_z, \uparrow \rangle,~
+|p_x, \uparrow \rangle,~\\
+&
+|p_y, \downarrow \rangle,~
 |p_z, \downarrow \rangle,~
-|p_x, \uparrow \rangle,~
 |p_x, \downarrow \rangle.
+\end{split}
 \end{equation}
 ```
 
@@ -83,16 +87,20 @@ For ``d`` system, the orbital order is[^1]
 
 ```math
 \begin{equation}
+\begin{split}
+&
 |d_{xy}, \uparrow \rangle,~
-|d_{xy}, \downarrow \rangle,~
 |d_{yz}, \uparrow \rangle,~
-|d_{yz}, \downarrow \rangle,~
 |d_{z^2}, \uparrow \rangle,~
-|d_{z^2}, \downarrow \rangle,~
 |d_{xz}, \uparrow \rangle,~
+|d_{x^2-y^2}, \uparrow \rangle,~\\
+&
+|d_{xy}, \downarrow \rangle,~
+|d_{yz}, \downarrow \rangle,~
+|d_{z^2}, \downarrow \rangle,~
 |d_{xz}, \downarrow \rangle,~
-|d_{x^2-y^2}, \uparrow \rangle,~
 |d_{x^2-y^2}, \downarrow \rangle.
+\end{split}
 \end{equation}
 ```
 
@@ -133,19 +141,19 @@ For ``f`` system, the orbital order is[^1]
 \begin{split}
 &
 |f_{y(3x^2-y^2)}, \uparrow \rangle,~
-|f_{y(3x^2-y^2)}, \downarrow \rangle,~
 |f_{xyz}, \uparrow \rangle,~
-|f_{xyz}, \downarrow \rangle,~
 |f_{yz^2}, \uparrow \rangle,~
-|f_{yz^2}, \downarrow \rangle,~
 |f_{z^3}, \uparrow \rangle,~
-|f_{z^3}, \downarrow \rangle,\\
-&
 |f_{xz^2}, \uparrow \rangle,~
-|f_{xz^2}, \downarrow \rangle,~
 |f_{z(x^2-y^2)}, \uparrow \rangle,~
+|f_{x(x^2-3y^2)}, \uparrow \rangle,\\
+&
+|f_{y(3x^2-y^2)}, \downarrow \rangle,~
+|f_{xyz}, \downarrow \rangle,~
+|f_{yz^2}, \downarrow \rangle,~
+|f_{z^3}, \downarrow \rangle,~
+|f_{xz^2}, \downarrow \rangle,~
 |f_{z(x^2-y^2)}, \downarrow \rangle,~
-|f_{x(x^2-3y^2)}, \uparrow \rangle,~
 |f_{x(x^2-3y^2)}, \downarrow \rangle.
 \end{split}
 \end{equation}
@@ -304,7 +312,6 @@ The natural basis is defined as the diagonal basis of on-site term ``E_{\alpha\b
 ---
 
 **Transformation matrix from complex orbital basis to real orbital basis**
-
 
 
 
