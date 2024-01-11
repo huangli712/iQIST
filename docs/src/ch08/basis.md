@@ -291,4 +291,4 @@ The natural basis is defined as the diagonal basis of on-site term ``E_{\alpha\b
 
 **Reference**
 
-[^1]: The orbital orders are consistent with the definition of local basis used by VASP (see https://handwiki.org/wiki/Table_of_spherical_harmonics), and the definition in HandWiki (see https://handwiki.org/wiki/Table_of_spherical_harmonics).
+[^1]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
