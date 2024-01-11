@@ -345,8 +345,9 @@ T = \left[
 \end{equation}
 ```
 
+For *d* system, the transformation matrix reads
 
-
+For *f* system, the transformation matrix reads
 
 ---
 
