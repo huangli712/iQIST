@@ -1,4 +1,4 @@
-# Build quantum impurity solvers: integrally
+### Build quantum impurity solvers: integrally
 
 ehh...
 
@@ -20,7 +20,7 @@ $ make solver
 
 Finally, you will see a lot of executable programs, such as *ctqmc*, etc., in the *iqist/src* directory. They are the CT-HYB quantum impurity solvers. You can execute them in the terminal directly.
 
-# Build quantum impurity solvers: individually
+### Build quantum impurity solvers: individually
 
 Sometimes you only need to use some of the quantum impurity solver components of iQIST and you don't want to compile the whole iQIST software package. Are there any tricks to do? Yes! You will not be disappointed with iQIST.
 
