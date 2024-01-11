@@ -14,7 +14,7 @@ $ editor make.inc
 $ make solver
 ```
 
-!!! note 
+!!! note
 
     Here **editor** means any ascii text editor you prefer.
 
@@ -34,7 +34,7 @@ $ editor make.inc
 $ make ct-hyb1
 ```
 
-!!! note 
+!!! note
 
     1. Here **editor** means any ascii text editor you prefer.
     2. If the user want to compile the **MANJUSHAKA** component, please execute
@@ -56,6 +56,6 @@ $ make
 
 Here, we assume that the compiling system was correctly configured.
 
-!!! note 
+!!! note
 
     Now the executable programs will not be copied into the *iqist/build* directory automatically.

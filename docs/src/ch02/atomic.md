@@ -1,4 +1,4 @@
-### Build atomic eigenvalue problem solver
+# Build atomic eigenvalue problem solver
 
 The **JASMINE** component is the built-in atomic eigenvalues solver. If you want to use the **BEGONIA**, **LAVENDER**, **PANSY**, **MANJUSHAKA**, **CAMELLIA** components, the **JASMINE** component is the necessary pre-processing tool. You can employ the following commands to compile it.
 
