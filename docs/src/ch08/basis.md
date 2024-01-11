@@ -25,9 +25,9 @@ where ``m=-l,~-l+1,~\cdots,~l``. The real spherical harmonics ``Y_{lm}`` is defi
 ```math
 \begin{gather}
 Y_{lm}=\begin{cases}
-\frac{i}{\sqrt{2}}\left(Y_{l}^{-|m|}-(-1)^{m}Y_{l}^{|m|}\right) & \text{if}\ m<0,\\
-Y_{l}^{0} & \text{if}\ m=0,\\
-\frac{1}{\sqrt{2}}\left(Y_{l}^{-|m|}+(-1)^{m}Y_{l}^{|m|}\right) & \text{if}\ m>0.
+  \frac{i}{\sqrt{2}}\left(Y_{l}^{-|m|}-(-1)^{m}Y_{l}^{|m|}\right) & \text{if}\ m<0,\\
+  Y_{l}^{0} & \text{if}\ m=0,\\
+  \frac{1}{\sqrt{2}}\left(Y_{l}^{-|m|}+(-1)^{m}Y_{l}^{|m|}\right) & \text{if}\ m>0.
 \end{cases}
 \end{gather}
 ```
@@ -36,36 +36,108 @@ Y_{l}^{0} & \text{if}\ m=0,\\
 
 **Real orbital basis**
 
-For ``p`` system,
+For ``p`` system, the orbital order is
+
 ```math
-\begin{align}
-p_{x} & = & Y_{11}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right), \\
-p_{y} & = & Y_{1,-1}=\frac{i}{\sqrt{2}}\left(Y_{1}^{-1}+Y_{1}^{1}\right),\\
-p_{z} & = & Y_{10}=Y_{1}^{0}.
-\end{align}
+\begin{equation}
+|p_y, \uparrow \rangle,~
+|p_y, \downarrow \rangle,~
+|p_z, \uparrow \rangle,~
+|p_z, \downarrow \rangle,~
+|p_x, \uparrow \rangle,~
+|p_x, \downarrow \rangle.
+\end{equation}
 ```
 
-For ``d`` system,
 ```math
-\begin{align}
-d_{z^{2}} & = & Y_{20}=Y_{2}^{0}, \\
-d_{zx} & = & Y_{21}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-1}-Y_{2}^{1}\right), \\
-d_{zy} & = & Y_{2,-1}=\frac{i}{\sqrt{2}}\left(Y_{2}^{-1}+Y_{2}^{1}\right),\\
-d_{x^{2}-y^{2}} & = & Y_{22}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-2}+Y_{2}^{2}\right), \\
-d_{xy} & = & Y_{2,-2}=\frac{i}{\sqrt{2}}\left(Y_{2}^{-2}-Y_{2}^{2}\right).
-\end{align}
+\begin{equation}
+|p_{y}\rangle = Y_{1,-1}=\frac{i}{\sqrt{2}}\left(Y_{1}^{-1}+Y_{1}^{1}\right),
+\end{equation}
 ```
 
-For ``t_{2g}`` system ``(l\approx-1)``, we have a ``T-P`` equivalence,
 ```math
-\begin{align}
-d_{zx} & \rightarrow & p_{y}=\frac{i}{\sqrt{2}}\left(Y_{1}^{-1}+Y_{1}^{1}\right), \\
-d_{zy} & \rightarrow & p_{x}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right),\\
-d_{xy} & \rightarrow & p_{z}=Y_{1}^{0}.
-\end{align}
+\begin{equation}
+|p_{z}\rangle =  Y_{10}=Y_{1}^{0},
+\end{equation}
 ```
 
-For ``f`` system,
+```math
+\begin{equation}
+|p_{x}\rangle  =  Y_{11}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right).
+\end{equation}
+```
+
+For ``d`` system, the orbital order is
+
+```math
+\begin{equation}
+|d_{xy}, \uparrow \rangle,~
+|d_{xy}, \downarrow \rangle,~
+|d_{yz}, \uparrow \rangle,~
+|d_{yz}, \downarrow \rangle,~
+|d_{z^2}, \uparrow \rangle,~
+|d_{z^2}, \downarrow \rangle,~
+|d_{xz}, \uparrow \rangle,~
+|d_{xz}, \downarrow \rangle,~
+|d_{x^2-y^2}, \uparrow \rangle,~
+|d_{x^2-y^2}, \downarrow \rangle.
+\end{equation}
+```
+
+```math
+\begin{equation}
+d_{xy} = Y_{2,-2}=\frac{i}{\sqrt{2}}\left(Y_{2}^{-2}-Y_{2}^{2}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+d_{yz} = Y_{2,-1}=\frac{i}{\sqrt{2}}\left(Y_{2}^{-1}+Y_{2}^{1}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+d_{z^{2}} = Y_{20}=Y_{2}^{0},
+\end{equation}
+```
+
+```math
+\begin{equation}
+d_{xz} = Y_{21}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-1}-Y_{2}^{1}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+d_{x^{2}-y^{2}} = Y_{22}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-2}+Y_{2}^{2}\right).
+\end{equation}
+```
+
+For ``f`` system, the orbital order is
+
+```math
+\begin{equation}
+\begin{split}
+&|f_{y(3x^2-y^2)}, \uparrow \rangle,~
+|f_{y(3x^2-y^2)}, \downarrow \rangle,~
+|f_{xyz}, \uparrow \rangle,~
+|f_{xyz}, \downarrow \rangle,~
+|f_{yz^2}, \uparrow \rangle,~
+|f_{yz^2}, \downarrow \rangle,~
+|f_{z^3}, \uparrow \rangle,~
+|f_{z^3}, \downarrow \rangle,\\
+&|f_{xz^2}, \uparrow \rangle,~
+|f_{xz^2}, \downarrow \rangle,~
+|f_{z(x^2-y^2)}, \uparrow \rangle,~
+|f_{z(x^2-y^2)}, \downarrow \rangle,~
+|f_{x(x^2-3y^2)}, \uparrow \rangle,~
+|f_{x(x^2-3y^2)}, \downarrow \rangle.
+\end{split}
+\end{equation}
+```
+
+
 ```math
 \begin{align}
 f_{z^{3}} & = & Y_{30}=Y_{3}^{0}, \\
@@ -75,6 +147,16 @@ f_{z(x^{2}-y^{2})} & = & Y_{32}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-2}+Y_{3}^{2}\rig
 f_{xyz} & = & Y_{3,-2}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-2}-Y_{3}^{2}\right),\\
 f_{x(x^{2}-3y^{2})} & = & Y_{33}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-3}-Y_{3}^{3}\right),\\
 f_{y(3x^{2}-y^{2})} & = & Y_{3,-3}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-3}+Y_{3}^{3}\right).
+\end{align}
+```
+
+For ``t_{2g}`` system ``(l\approx-1)``, we have a ``T-P`` equivalence,
+
+```math
+\begin{align}
+d_{zx} & \rightarrow & p_{y}=\frac{i}{\sqrt{2}}\left(Y_{1}^{-1}+Y_{1}^{1}\right), \\
+d_{zy} & \rightarrow & p_{x}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right),\\
+d_{xy} & \rightarrow & p_{z}=Y_{1}^{0}.
 \end{align}
 ```
 
