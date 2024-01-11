@@ -4,7 +4,7 @@ In this section, we define some single particle basis used in the **JASMINE** co
 
 ---
 
-**Complex spherical harmonics basis**
+**Spherical harmonics**
 
 The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` is the eigenstate of ``l^{2},l_{z}``,
 
@@ -13,17 +13,14 @@ The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` is the eigenstate of 
 l^{2}Y_{l}^{m}=l(l+1)Y_{l}^{m},
 \end{equation}
 ```
+
 ```math
 \begin{equation}
-l_{z}Y_{l}^{m}=mY_{l}^{m},\ m=-l,-l+1,\cdots,l.
+l_{z}Y_{l}^{m}=mY_{l}^{m},
 \end{equation}
 ```
 
----
-
-**Real spherical harmonics basis**
-
-The real spherical harmonics ``Y_{lm}`` is defined as
+where ``m=-l,~-l+1,~\cdots,~l``. The real spherical harmonics ``Y_{lm}`` is defined as
 
 ```math
 \begin{gather}
@@ -34,6 +31,10 @@ Y_{l}^{0} & \text{if}\ m=0,\\
 \end{cases}
 \end{gather}
 ```
+
+---
+
+**Real orbital basis**
 
 For ``p`` system,
 ```math
