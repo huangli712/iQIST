@@ -280,6 +280,7 @@ j_{z}\phi_{ljm_{j}}=m_{j}\phi_{ljm_{j}}.
 ```
 
 For ``j=l+\frac{1}{2},m_{j}=m+\frac{1}{2}``,
+
 ```math
 \begin{equation}
 \phi_{ljm_{j}}=\sqrt{\frac{l+m+1}{2l+1}}Y_{l}^{m}\uparrow+\sqrt{\frac{l-m}{2l+1}}Y_{l}^{m+1}\downarrow.
@@ -287,6 +288,7 @@ For ``j=l+\frac{1}{2},m_{j}=m+\frac{1}{2}``,
 ```
 
 For ``j=l-\frac{1}{2},m_{j}=m+\frac{1}{2}``,
+
 ```math
 \begin{equation}
 \phi_{ljm_{j}}=-\sqrt{\frac{l-m}{2l+1}}Y_{l}^{m}\uparrow+\sqrt{\frac{l+m+1}{2l+1}}Y_{l}^{m+1}\downarrow.
@@ -300,6 +302,15 @@ For ``j=l-\frac{1}{2},m_{j}=m+\frac{1}{2}``,
 The natural basis is defined as the diagonal basis of on-site term ``E_{\alpha\beta}``.
 
 ---
+
+**Transformation matrix from complex orbital basis to real orbital basis**
+
+
+
+
+
+
+
 
 ---
 
