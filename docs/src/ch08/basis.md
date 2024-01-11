@@ -333,10 +333,11 @@ For *p* system, the transformation matrix reads
 ```math
 \begin{equation}
 T = \left[
-\begin{array}{cccccc}
+\begin{array}{ccc|ccc}
 \frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} & 0 & 0 & 0 \\
 0 & 1 & 0 & 0 & 0 & 0 \\
 \frac{i}{\sqrt{2}} & 0 & -\frac{1}{\sqrt{2}} & 0 & 0 & 0 \\
+\hline
 0 & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} \\
 0 & 0 & 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & -\frac{1}{\sqrt{2}} \\
@@ -349,12 +350,13 @@ For *d* system, the transformation matrix reads
 
 ```math
 T = \left[
-\begin{array}{cccccccccc}
+\begin{array}{ccccc|ccccc}
 \frac{i}{\sqrt{2}} & 0 & 0 & 0 & \frac{1}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 \\
 0 & \frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & 0 \\
 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 0 & \frac{i}{\sqrt{2}} & 0 & -\frac{1}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & 0 \\
 -\frac{i}{\sqrt{2}} & 0 & 0 & 0 & \frac{1}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 \\
+\hline
 0 & 0 & 0 & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & 0 & 0 & \frac{1}{\sqrt{2}} \\
 0 & 0 & 0 & 0 & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} & 0 \\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
