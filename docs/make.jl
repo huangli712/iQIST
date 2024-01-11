@@ -273,13 +273,13 @@ ch08 = Any[
                 "Spin-orbit coupling" => "ch08/soc.md",
                 "Coulomb interaction matrix" => "ch08/coulomb.md",
             ],
-        #    "Codes" => Any[
+            "Codes" => Any[
         #        "README" => "ch08/code.md",
-        #        "Development platform" => "ch08/platform.md",
+                "Development platform" => "ch08/platform.md",
         #        "A guide to the source codes of the CT-HYB components" => "ch08/struct.md",
         #        "How to add new parameter?" => "ch08/new_param.md",
         #        "How to add new observable?" => "ch08/new_obs.md",
-        #   ],
+           ],
        ]
 
 makedocs(
