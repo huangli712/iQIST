@@ -232,9 +232,12 @@ For ``p`` system (``l = 1,~m = \pm 1,~0``), the orbital order is
 ```math
 \begin{equation}
 \begin{split}
-&| 1,   -1, \uparrow \rangle,~| 1,   -1, \downarrow \rangle, \\
-&| 1, ~~~0, \uparrow \rangle,~| 1, ~~~0, \downarrow \rangle, \\
-&| 1, ~~~1, \uparrow \rangle,~| 1, ~~~1, \downarrow \rangle. \\
+&| 1,   -1, \uparrow \rangle, \\
+&| 1, ~~~0, \uparrow \rangle, \\
+&| 1, ~~~1, \uparrow \rangle, \\
+&| 1,   -1, \downarrow \rangle, \\
+&| 1, ~~~0, \downarrow \rangle, \\
+&| 1, ~~~1, \downarrow \rangle.
 \end{split}
 \end{equation}
 ```
@@ -244,11 +247,16 @@ For ``d`` system (``l = 2,~m = \pm 2,~\pm 1,~0``), the orbital order is
 ```math
 \begin{equation}
 \begin{split}
-&| 2,   -2, \uparrow \rangle,~| 2,   -2, \downarrow \rangle, \\
-&| 2,   -1, \uparrow \rangle,~| 2,   -1, \downarrow \rangle, \\
-&| 2, ~~~0, \uparrow \rangle,~| 2, ~~~0, \downarrow \rangle, \\
-&| 2, ~~~1, \uparrow \rangle,~| 2, ~~~1, \downarrow \rangle, \\
-&| 2, ~~~2, \uparrow \rangle,~| 2, ~~~2, \downarrow \rangle. \\
+&| 2,   -2, \uparrow \rangle, \\
+&| 2,   -1, \uparrow \rangle, \\
+&| 2, ~~~0, \uparrow \rangle, \\
+&| 2, ~~~1, \uparrow \rangle, \\
+&| 2, ~~~2, \uparrow \rangle, \\
+&| 2,   -2, \downarrow \rangle, \\
+&| 2,   -1, \downarrow \rangle, \\
+&| 2, ~~~0, \downarrow \rangle, \\
+&| 2, ~~~1, \downarrow \rangle, \\
+&| 2, ~~~2, \downarrow \rangle.
 \end{split}
 \end{equation}
 ```
@@ -258,13 +266,20 @@ For ``f`` system (``l = 3,~m = \pm 3,~\pm 2,~\pm 1,~0``), the orbital order is
 ```math
 \begin{equation}
 \begin{split}
-&| 3,   -3, \uparrow \rangle,~| 3,   -3, \downarrow \rangle, \\
-&| 3,   -2, \uparrow \rangle,~| 3,   -2, \downarrow \rangle, \\
-&| 3,   -1, \uparrow \rangle,~| 3,   -1, \downarrow \rangle, \\
-&| 3, ~~~0, \uparrow \rangle,~| 3, ~~~0, \downarrow \rangle, \\
-&| 3, ~~~1, \uparrow \rangle,~| 3, ~~~1, \downarrow \rangle, \\
-&| 3, ~~~2, \uparrow \rangle,~| 3, ~~~2, \downarrow \rangle, \\
-&| 3, ~~~3, \uparrow \rangle,~| 3, ~~~3, \downarrow \rangle. \\
+&| 3,   -3, \uparrow \rangle, \\
+&| 3,   -2, \uparrow \rangle, \\
+&| 3,   -1, \uparrow \rangle, \\
+&| 3, ~~~0, \uparrow \rangle, \\
+&| 3, ~~~1, \uparrow \rangle, \\
+&| 3, ~~~2, \uparrow \rangle, \\
+&| 3, ~~~3, \uparrow \rangle, \\
+&| 3,   -3, \downarrow \rangle, \\
+&| 3,   -2, \downarrow \rangle, \\
+&| 3,   -1, \downarrow \rangle, \\
+&| 3, ~~~0, \downarrow \rangle, \\
+&| 3, ~~~1, \downarrow \rangle, \\
+&| 3, ~~~2, \downarrow \rangle, \\
+&| 3, ~~~3, \downarrow \rangle.
 \end{split}
 \end{equation}
 ```
@@ -313,8 +328,22 @@ The natural basis is defined as the diagonal basis of on-site term ``E_{\alpha\b
 
 **Transformation matrix from complex orbital basis to real orbital basis**
 
+For *p* system, the transformation matrix reads
 
-
+```math
+\begin{equation}
+T = \left[
+\begin{array}{cccccc}
+\frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 \\
+\frac{i}{\sqrt{2}} & 0 & -\frac{1}{\sqrt{2}} & 0 & 0 & 0 \\
+0 & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} \\
+0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & -\frac{1}{\sqrt{2}} \\
+\end{array}
+\right]
+\end{equation}
+```
 
 
 
