@@ -32,6 +32,16 @@ Y_{lm}=\begin{cases}
 \end{gather}
 ```
 
+The spherical harmonics are orthonormal 
+
+```math
+\begin{equation}
+\int^{\pi}_{\theta = 0} \int^{2\pi}_{\phi = 0}
+Y^m_l Y^{m'*}_{l'} d\Omega = \delta_{ll'} \delta_{mm'},
+\end{equation}
+```
+where ``\delta_{ij}`` is the Kronecker delta and ``d\Omega = \sin(\theta) d\phi d\theta``.
+
 ---
 
 **Real orbital basis**
@@ -288,6 +298,10 @@ For ``j=l-\frac{1}{2},m_{j}=m+\frac{1}{2}``,
 **Natural basis**
 
 The natural basis is defined as the diagonal basis of on-site term ``E_{\alpha\beta}``.
+
+---
+
+---
 
 **Reference**
 
