@@ -38,7 +38,7 @@ Y_{lm}=\begin{cases}
 
 The basis functions are the real spherical harmonics ``Y_{lm}``.
 
-For ``p`` system, the orbital order is
+For ``p`` system, the orbital order is[^1]
 
 ```math
 \begin{equation}
@@ -69,7 +69,7 @@ For ``p`` system, the orbital order is
 \end{equation}
 ```
 
-For ``d`` system, the orbital order is
+For ``d`` system, the orbital order is[^1]
 
 ```math
 \begin{equation}
@@ -116,7 +116,7 @@ d_{x^{2}-y^{2}} = Y_{22}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-2}+Y_{2}^{2}\right).
 \end{equation}
 ```
 
-For ``f`` system, the orbital order is
+For ``f`` system, the orbital order is[^1]
 
 ```math
 \begin{equation}
@@ -288,3 +288,7 @@ For ``j=l-\frac{1}{2},m_{j}=m+\frac{1}{2}``,
 **Natural basis**
 
 The natural basis is defined as the diagonal basis of on-site term ``E_{\alpha\beta}``.
+
+**Reference**
+
+[^1]: The orbital orders are consistent with the definition of local basis used by VASP (see https://handwiki.org/wiki/Table_of_spherical_harmonics), and the definition in HandWiki (see https://handwiki.org/wiki/Table_of_spherical_harmonics).
