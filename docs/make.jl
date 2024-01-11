@@ -19,13 +19,13 @@ ch02 = Any[
             "Compiling system" => "ch02/system.md",
             "Explanation of make.inc" => "ch02/inc.md",
             "Build iQIST at one step" => "ch02/full.md",
-        #    "Build iQIST at multiple steps" => Any[
+            "Build iQIST at multiple steps" => Any[
         #        "README" => "ch02/multi.md",
-        #        "Build quantum impurity solvers" => "ch02/solvers.md",
-        #        "Build atomic eigenvalue problem solver" => "ch02/atomic.md",
+                "Build quantum impurity solvers" => "ch02/solvers.md",
+                "Build atomic eigenvalue problem solver" => "ch02/atomic.md",
         #        "Build auxiliary tools" => "ch02/tools.md",
         #        "Build documentations" => "ch02/docs.md",
-        #    ],
+            ],
        ]
 
 ch03 = Any[
