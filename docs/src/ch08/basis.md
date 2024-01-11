@@ -36,6 +36,8 @@ Y_{lm}=\begin{cases}
 
 **Real orbital basis**
 
+The basis functions are the real spherical harmonics ``Y_{lm}``.
+
 For ``p`` system, the orbital order is
 
 ```math
@@ -203,51 +205,45 @@ d_{yz} \rightarrow p_{x}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right).
 
 ---
 
-**Cubic spherical harmonics basis**
+**Complex orbital basis**
 
-The cubic spherical harmonics is defined as the basis of the irreducible representation of cubic point group ``O_{h}``.
+It is also called the ``|l^2,l_z\rangle`` basis. The basis functions are the complex spherical harmonics ``Y^{m}_l(\theta,\phi)``.
 
-For ``p`` orbitals,
+For ``p`` system (``l = 1,~m = \pm 1,~0``), the orbital order is
+
 ```math
 \begin{equation}
-T_{1u}:p_{x},p_{y},p_{z}.
+\begin{split}
+&| 1,   -1, \uparrow \rangle,~| 1,   -1, \downarrow \rangle, \\
+&| 1, ~~~0, \uparrow \rangle,~| 1, ~~~0, \downarrow \rangle, \\
+&| 1, ~~~1, \uparrow \rangle,~| 1, ~~~1, \downarrow \rangle. \\
+\end{split}
 \end{equation}
 ```
 
-For ``d`` orbitals,
+For ``d`` system (``l = 2,~m = \pm 2,~\pm 1,~0``), the orbital order is
+
 ```math
-\begin{gather}
-\begin{cases}
-E_{g}: & d_{z^{2}},d_{x^{2}-y^{2}},\\
-T_{2g}: & d_{zx},d_{zy},d_{xy}.
-\end{cases}
-\end{gather}
+\begin{equation}
+\begin{split}
+&| 1,   -1, \uparrow \rangle,~| 1,   -1, \downarrow \rangle, \\
+&| 1, ~~~0, \uparrow \rangle,~| 1, ~~~0, \downarrow \rangle, \\
+&| 1, ~~~1, \uparrow \rangle,~| 1, ~~~1, \downarrow \rangle. \\
+\end{split}
+\end{equation}
 ```
 
-For ``f`` orbitals,
+For ``f`` system (``l = 3,~m = \pm 3,~\pm 2,~\pm 1,~0``), the orbital order is
+
 ```math
-\begin{align}
-f_{x^{3}} & = & -\frac{\sqrt{6}}{4}f_{xz^{2}}+\frac{\sqrt{10}}{4}f_{x(x^{2}-3y^{2})},\\
-f_{y^{3}} & = & -\frac{\sqrt{6}}{4}f_{yz^{2}}-\frac{\sqrt{10}}{4}f_{y(3x^{2}-y^{2})}, \\
-f_{z^{3}} & = & f_{z^{3}}, \\
-f_{x(y^{2}-z^{2})} & = & -\frac{\sqrt{10}}{4}f_{xz^{2}}-\frac{\sqrt{6}}{4}f_{x(x^{2}-3y^{2})}, \\
-f_{y(z^{2}-x^{2})} & = & \frac{\sqrt{10}}{4}f_{yz^{2}}-\frac{\sqrt{6}}{4}f_{y(3x^{2}-y^{2})}, \\
-f_{z(x^{2}-y^{2})} & = & f_{z(x^{2}-y^{2})},\\
-f_{xyz} & = & f_{xyz}.
-\end{align}
+\begin{equation}
+\begin{split}
+&| 1,   -1, \uparrow \rangle,~| 1,   -1, \downarrow \rangle, \\
+&| 1, ~~~0, \uparrow \rangle,~| 1, ~~~0, \downarrow \rangle, \\
+&| 1, ~~~1, \uparrow \rangle,~| 1, ~~~1, \downarrow \rangle. \\
+\end{split}
+\end{equation}
 ```
-
-!!! note
-
-    ```math
-    \begin{gather}
-    \begin{cases}
-    T_{1u}: & f_{x^{3}},f_{y^{3}},f_{z^{3}}\\
-    T_{2u}: & f_{x(y^{2}-z^{2})},f_{y(z^{2}-x^{2})},f_{z(x^{2}-y^{2})}\\
-    A_{2u}: & f_{xyz}
-    \end{cases}
-    \end{gather}
-    ```
 
 ---
 
