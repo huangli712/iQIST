@@ -240,9 +240,13 @@ For ``f`` system (``l = 3,~m = \pm 3,~\pm 2,~\pm 1,~0``), the orbital order is
 ```math
 \begin{equation}
 \begin{split}
-&| 1,   -1, \uparrow \rangle,~| 1,   -1, \downarrow \rangle, \\
-&| 1, ~~~0, \uparrow \rangle,~| 1, ~~~0, \downarrow \rangle, \\
-&| 1, ~~~1, \uparrow \rangle,~| 1, ~~~1, \downarrow \rangle. \\
+&| 3,   -3, \uparrow \rangle,~| 3,   -3, \downarrow \rangle, \\
+&| 3,   -2, \uparrow \rangle,~| 3,   -2, \downarrow \rangle, \\
+&| 3,   -1, \uparrow \rangle,~| 3,   -1, \downarrow \rangle, \\
+&| 3, ~~~0, \uparrow \rangle,~| 3, ~~~0, \downarrow \rangle, \\
+&| 3, ~~~1, \uparrow \rangle,~| 3, ~~~1, \downarrow \rangle, \\
+&| 3, ~~~2, \uparrow \rangle,~| 3, ~~~2, \downarrow \rangle, \\
+&| 3, ~~~3, \uparrow \rangle,~| 3, ~~~3, \downarrow \rangle. \\
 \end{split}
 \end{equation}
 ```
