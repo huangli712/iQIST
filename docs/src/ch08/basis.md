@@ -119,7 +119,8 @@ For ``f`` system, the orbital order is
 ```math
 \begin{equation}
 \begin{split}
-&|f_{y(3x^2-y^2)}, \uparrow \rangle,~
+&
+|f_{y(3x^2-y^2)}, \uparrow \rangle,~
 |f_{y(3x^2-y^2)}, \downarrow \rangle,~
 |f_{xyz}, \uparrow \rangle,~
 |f_{xyz}, \downarrow \rangle,~
@@ -127,7 +128,8 @@ For ``f`` system, the orbital order is
 |f_{yz^2}, \downarrow \rangle,~
 |f_{z^3}, \uparrow \rangle,~
 |f_{z^3}, \downarrow \rangle,\\
-&|f_{xz^2}, \uparrow \rangle,~
+&
+|f_{xz^2}, \uparrow \rangle,~
 |f_{xz^2}, \downarrow \rangle,~
 |f_{z(x^2-y^2)}, \uparrow \rangle,~
 |f_{z(x^2-y^2)}, \downarrow \rangle,~
@@ -137,17 +139,46 @@ For ``f`` system, the orbital order is
 \end{equation}
 ```
 
+```math
+\begin{equation}
+f_{y(3x^{2}-y^{2})} = Y_{3,-3}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-3}+Y_{3}^{3}\right),
+\end{equation}
+```
 
 ```math
-\begin{align}
-f_{z^{3}} & = & Y_{30}=Y_{3}^{0}, \\
-f_{xz^{2}} & = & Y_{31}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-1}-Y_{3}^{1}\right),\\
-f_{yz^{2}} & = & Y_{3,-1}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-1}+Y_{3}^{1}\right), \\
-f_{z(x^{2}-y^{2})} & = & Y_{32}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-2}+Y_{3}^{2}\right),\\
-f_{xyz} & = & Y_{3,-2}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-2}-Y_{3}^{2}\right),\\
-f_{x(x^{2}-3y^{2})} & = & Y_{33}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-3}-Y_{3}^{3}\right),\\
-f_{y(3x^{2}-y^{2})} & = & Y_{3,-3}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-3}+Y_{3}^{3}\right).
-\end{align}
+\begin{equation}
+f_{xyz} = Y_{3,-2}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-2}-Y_{3}^{2}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+f_{yz^{2}} = Y_{3,-1}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-1}+Y_{3}^{1}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+f_{z^{3}} = Y_{30}=Y_{3}^{0},
+\end{equation}
+```
+
+```math
+\begin{equation}
+f_{xz^{2}} = Y_{31}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-1}-Y_{3}^{1}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+f_{z(x^{2}-y^{2})} = Y_{32}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-2}+Y_{3}^{2}\right),
+\end{equation}
+```
+
+```math
+\begin{equation}
+f_{x(x^{2}-3y^{2})} = Y_{33}=\frac{1}{\sqrt{2}}\left(Y_{3}^{-3}-Y_{3}^{3}\right).
+\end{equation}
 ```
 
 For ``t_{2g}`` system ``(l\approx-1)``, we have a ``T-P`` equivalence,
