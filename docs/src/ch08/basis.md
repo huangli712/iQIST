@@ -368,6 +368,28 @@ T = \left[
 
 For *f* system, the transformation matrix reads
 
+```math
+T= \left[
+\begin{array}{ccccccc|ccccccc}
+\frac{i}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & \frac{1}{\sqrt{2}}     & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & \frac{i}{\sqrt{2}} & 0 & 0 & 0 & \frac{1}{\sqrt{2}} & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & \frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & \frac{i}{\sqrt{2}} & 0 & -\frac{1}{\sqrt{2}} & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & -\frac{i}{\sqrt{2}} & 0 & 0 & 0 & \frac{1}{\sqrt{2}} & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\frac{i}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\sqrt{2}}     & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & 0     & \frac{i}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & \frac{1}{\sqrt{2}} \\
+0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & \frac{i}{\sqrt{2}} & 0 & 0 & 0 & \frac{1}{\sqrt{2}} & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & \frac{1}{\sqrt{2}} & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & \frac{i}{\sqrt{2}} & 0 & -\frac{1}{\sqrt{2}} & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & -\frac{i}{\sqrt{2}} & 0 & 0 & 0 & \frac{1}{\sqrt{2}} & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0     & \frac{i}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\sqrt{2}} \\
+\end{array}
+\right]
+```
+
 ---
 
 **Reference**
