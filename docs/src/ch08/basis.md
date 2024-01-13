@@ -98,7 +98,7 @@ For ``j = l - \frac{1}{2} (l \neq 0)``, ``m_j = m + \frac{1}{2}``,
 
 The basis functions are the real spherical harmonics ``Y_{lm}``.
 
-For ``p`` system, the orbital order is[^3]
+For ``p`` system, the basis order is[^3]
 
 ```math
 \begin{equation}
@@ -133,7 +133,7 @@ For ``p`` system, the orbital order is[^3]
 \end{equation}
 ```
 
-For ``d`` system, the orbital order is[^3]
+For ``d`` system, the basis order is[^3]
 
 ```math
 \begin{equation}
@@ -184,7 +184,7 @@ d_{x^{2}-y^{2}} = Y_{22}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-2}+Y_{2}^{2}\right).
 \end{equation}
 ```
 
-For ``f`` system, the orbital order is[^3]
+For ``f`` system, the basis order is[^3]
 
 ```math
 \begin{equation}
@@ -277,7 +277,7 @@ d_{yz} \rightarrow p_{x}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right).
 
 It is also called the ``|l^2,l_z\rangle`` basis. The basis functions are the complex spherical harmonics ``Y^{m}_l(\theta,\phi)``.
 
-For ``p`` system (``l = 1,~m = \pm 1,~0``), the orbital order is
+For ``p`` system (``l = 1,~m = \pm 1,~0``), the basis order is
 
 ```math
 \begin{equation}
@@ -292,7 +292,7 @@ For ``p`` system (``l = 1,~m = \pm 1,~0``), the orbital order is
 \end{equation}
 ```
 
-For ``d`` system (``l = 2,~m = \pm 2,~\pm 1,~0``), the orbital order is
+For ``d`` system (``l = 2,~m = \pm 2,~\pm 1,~0``), the basis order is
 
 ```math
 \begin{equation}
@@ -311,7 +311,7 @@ For ``d`` system (``l = 2,~m = \pm 2,~\pm 1,~0``), the orbital order is
 \end{equation}
 ```
 
-For ``f`` system (``l = 3,~m = \pm 3,~\pm 2,~\pm 1,~0``), the orbital order is
+For ``f`` system (``l = 3,~m = \pm 3,~\pm 2,~\pm 1,~0``), the basis order is
 
 ```math
 \begin{equation}
@@ -336,35 +336,64 @@ For ``f`` system (``l = 3,~m = \pm 3,~\pm 2,~\pm 1,~0``), the orbital order is
 
 ---
 
-**``j^{2},j_{z}`` diagonal basis**
+**``\hat{j}^{2}-\hat{j}_{z}-\hat{l}^2-\hat{s}^2`` diagonal basis**
 
-Define ``\phi_{ljm_{j}}`` as the eigenstate of ``j^{2},j_{z}``,
+We just use ``j`` and ``m_j`` to label the eigenfunctions ``|j, m_j\rangle``.
+
+For ``p`` system, ``l = 1``, ``j = \frac{1}{2}`` or ``\frac{3}{2}``, the basis order is
 
 ```math
 \begin{equation}
-j^{2}\phi_{ljm_{j}}=j(j+1)\phi_{ljm_{j}},
+\begin{split}
+&\left|\frac{1}{2}, -\frac{1}{2}\right\rangle, \\
+&\left|\frac{1}{2}, ~~~\frac{1}{2}\right\rangle, \\
+&\left|\frac{3}{2}, -\frac{3}{2}\right\rangle, \\
+&\left|\frac{3}{2}, -\frac{1}{2}\right\rangle, \\
+&\left|\frac{3}{2}, ~~~\frac{1}{2}\right\rangle, \\
+&\left|\frac{3}{2}, ~~~\frac{3}{2}\right\rangle.
+\end{split}
 \end{equation}
 ```
 
+For ``d`` system, ``l = 2``, ``j = \frac{3}{2}`` or ``\frac{5}{2}``, the basis order is
+
 ```math
 \begin{equation}
-j_{z}\phi_{ljm_{j}}=m_{j}\phi_{ljm_{j}}.
+\begin{split}
+&\left|\frac{3}{2}, -\frac{3}{2}\right\rangle, \\
+&\left|\frac{3}{2}, -\frac{1}{2}\right\rangle, \\
+&\left|\frac{3}{2}, ~~~\frac{1}{2}\right\rangle, \\
+&\left|\frac{3}{2}, ~~~\frac{3}{2}\right\rangle, \\
+&\left|\frac{5}{2}, -\frac{5}{2}\right\rangle, \\
+&\left|\frac{5}{2}, -\frac{3}{2}\right\rangle, \\
+&\left|\frac{5}{2}, -\frac{1}{2}\right\rangle, \\
+&\left|\frac{5}{2}, ~~~\frac{1}{2}\right\rangle, \\
+&\left|\frac{5}{2}, ~~~\frac{3}{2}\right\rangle, \\
+&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle.
+\end{split}
 \end{equation}
 ```
 
-For ``j=l+\frac{1}{2},m_{j}=m+\frac{1}{2}``,
+For ``f`` system, ``l = 3``, ``j = \frac{5}{2}`` or ``\frac{7}{2}``, the basis order is
 
 ```math
 \begin{equation}
-\phi_{ljm_{j}}=\sqrt{\frac{l+m+1}{2l+1}}Y_{l}^{m}\uparrow+\sqrt{\frac{l-m}{2l+1}}Y_{l}^{m+1}\downarrow.
-\end{equation}
-```
-
-For ``j=l-\frac{1}{2},m_{j}=m+\frac{1}{2}``,
-
-```math
-\begin{equation}
-\phi_{ljm_{j}}=-\sqrt{\frac{l-m}{2l+1}}Y_{l}^{m}\uparrow+\sqrt{\frac{l+m+1}{2l+1}}Y_{l}^{m+1}\downarrow.
+\begin{split}
+&\left|\frac{5}{2}, -\frac{5}{2}\right\rangle, \\
+&\left|\frac{5}{2}, -\frac{3}{2}\right\rangle, \\
+&\left|\frac{5}{2}, -\frac{1}{2}\right\rangle, \\
+&\left|\frac{5}{2}, ~~~\frac{1}{2}\right\rangle, \\
+&\left|\frac{5}{2}, ~~~\frac{3}{2}\right\rangle, \\
+&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle, \\
+&\left|\frac{7}{2}, -\frac{7}{2}\right\rangle, \\
+&\left|\frac{7}{2}, -\frac{5}{2}\right\rangle, \\
+&\left|\frac{7}{2}, -\frac{3}{2}\right\rangle, \\
+&\left|\frac{7}{2}, -\frac{1}{2}\right\rangle, \\
+&\left|\frac{7}{2}, ~~~\frac{1}{2}\right\rangle, \\
+&\left|\frac{7}{2}, ~~~\frac{3}{2}\right\rangle, \\
+&\left|\frac{7}{2}, ~~~\frac{5}{2}\right\rangle, \\
+&\left|\frac{7}{2}, ~~~\frac{7}{2}\right\rangle, \\
+\end{split}
 \end{equation}
 ```
 
@@ -444,7 +473,7 @@ T= \left[
 
 **Reference**
 
-[^1]: 曾谨言, 量子力学（卷1）， 科学出版社， 第四版， 2007。
+[^1]: 曾谨言, 量子力学（卷1, 第四版）， 科学出版社， 2007。
 
 [^2]: D. A. Varshalovich, A. N. Moskalev, and V. K. Khersonskii, Quantum Theory of Angular Momentum, World Scientific, 1988.
 
