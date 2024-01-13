@@ -6,21 +6,21 @@ In this section, we define some single particle basis used in the **JASMINE** co
 
 **Spherical harmonics**
 
-The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` is the eigenstate of ``l^{2},l_{z}``,
+The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` is the eigenstate of operators ``\hat{l}^{2}`` and ``\hat{l}_{z}``,
 
 ```math
 \begin{equation}
-l^{2}Y_{l}^{m}=l(l+1)Y_{l}^{m},
+\hat{l}^{2}Y_{l}^{m}=l(l+1)Y_{l}^{m},
 \end{equation}
 ```
 
 ```math
 \begin{equation}
-l_{z}Y_{l}^{m}=mY_{l}^{m},
+\hat{l}_{z}Y_{l}^{m}=mY_{l}^{m},
 \end{equation}
 ```
 
-where ``m=-l,~-l+1,~\cdots,~l``. The real spherical harmonics ``Y_{lm}`` is defined as
+where ``m=-l,~-l+1,~\cdots,~l``[^1][^2]. The real spherical harmonics ``Y_{lm}`` is defined as
 
 ```math
 \begin{gather}
@@ -394,4 +394,8 @@ T= \left[
 
 **Reference**
 
-[^1]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
+[^1]: 曾谨言, 量子力学（卷1）， 科学出版社， 第四版， 2007。
+
+[^2]: D. A. Varshalovich, A. N. Moskalev, and V. K. Khersonskii, Quantum Theory of Angular Momentum, World Scientific, 1988.
+
+[^4]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
