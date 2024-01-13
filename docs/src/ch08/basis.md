@@ -44,11 +44,61 @@ where ``\delta_{ij}`` is the Kronecker delta and ``d\Omega = \sin(\theta) d\phi 
 
 ---
 
+**Spinor spherical harmonics**
+
+The spinor spherical harmonics ``\Omega^l_{jm_j}(\theta,\phi)`` is eigenstate of the operators ``\hat{j}^2``, ``\hat{j}_z``, ``\hat{l}^2``, and ``\hat{s}^2``,
+
+```math
+\begin{equation}
+\hat{j}^2 \Omega^l_{jm_j} = j (j + 1) \Omega^l_{jm_j},
+\end{equation}
+```
+
+```math
+\begin{equation}
+\hat{j}_z \Omega^l_{jm_j} = m_j \Omega^l_{jm_j},
+\end{equation}
+```
+
+```math
+\begin{equation}
+\hat{l}^2 \Omega^l_{jm_j} = l (l + 1) \Omega^l_{jm_j},
+\end{equation}
+```
+
+```math
+\begin{equation}
+\hat{s}^2 \Omega^l_{jm_j} = \frac{3}{4} \Omega^l_{jm_j}.
+\end{equation}
+```
+
+For given ``j`` only two values of ``l`` are possible, ``l = j \pm \frac{1}{2}``, while ``m_j`` assumes ``2j + 1`` values: ``m_j = -j,~-j + 1,~\cdots,~j - 1,~j``[^1][^2].
+
+For ``j = l + \frac{1}{2}``, ``m_j = m + \frac{1}{2}``,
+
+```math
+\begin{equation}
+\Omega^l_{jm_j} = \sqrt{\frac{l+m+1}{2l+1}} Y^m_l \chi_{\uparrow}
+                + \sqrt{\frac{l-m}{2l+1}} Y^{m+1}_l \chi_{\downarrow}.
+\end{equation}
+```
+
+For ``j = l - \frac{1}{2} (l \neq 0)``, ``m_j = m + \frac{1}{2}``,
+
+```math
+\begin{equation}
+\Omega^l_{jm_j} = -\sqrt{\frac{l-m}{2l+1}} Y^m_l \chi_{\uparrow}
+                + \sqrt{\frac{l+m+1}{2l+1}} Y^{m+1}_l \chi_{\downarrow}.
+\end{equation}
+```
+
+---
+
 **Real orbital basis**
 
 The basis functions are the real spherical harmonics ``Y_{lm}``.
 
-For ``p`` system, the orbital order is[^1]
+For ``p`` system, the orbital order is[^3]
 
 ```math
 \begin{equation}
@@ -83,7 +133,7 @@ For ``p`` system, the orbital order is[^1]
 \end{equation}
 ```
 
-For ``d`` system, the orbital order is[^1]
+For ``d`` system, the orbital order is[^3]
 
 ```math
 \begin{equation}
@@ -134,7 +184,7 @@ d_{x^{2}-y^{2}} = Y_{22}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-2}+Y_{2}^{2}\right).
 \end{equation}
 ```
 
-For ``f`` system, the orbital order is[^1]
+For ``f`` system, the orbital order is[^3]
 
 ```math
 \begin{equation}
@@ -398,4 +448,4 @@ T= \left[
 
 [^2]: D. A. Varshalovich, A. N. Moskalev, and V. K. Khersonskii, Quantum Theory of Angular Momentum, World Scientific, 1988.
 
-[^4]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
+[^3]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
