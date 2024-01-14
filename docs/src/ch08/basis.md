@@ -275,7 +275,7 @@ d_{yz} \rightarrow p_{x}=\frac{1}{\sqrt{2}}\left(Y_{1}^{-1}-Y_{1}^{1}\right).
 
 **Complex orbital basis**
 
-It is also called the ``|l^2,l_z\rangle`` basis. The basis functions are the complex spherical harmonics ``Y^{m}_l(\theta,\phi)``.
+It is also called the ``|l^2,l_z\rangle`` basis. The basis functions are the complex spherical harmonics ``Y^{m}_l(\theta,\phi)``. We just ``l`` and ``m`` to label the basis functions ``|l,m\rangle``.
 
 For ``p`` system (``l = 1,~m = \pm 1,~0``), the basis order is
 
@@ -345,7 +345,7 @@ For ``p`` system, ``l = 1``, ``j = \frac{1}{2}`` or ``\frac{3}{2}``, the basis o
 ```math
 \begin{equation}
 \begin{split}
-&\left|\frac{1}{2}, -\frac{1}{2}\right\rangle, \\
+&\left|\frac{1}{2}, -\frac{1}{2}\right\rangle = -\sqrt{\frac{2}{3}}Y^{-1}_{1}\chi_{\uparrow} + \sqrt{\frac{1}{3}}Y^{0}_{1}\chi_{\downarrow}, \\
 &\left|\frac{1}{2}, ~~~\frac{1}{2}\right\rangle, \\
 &\left|\frac{3}{2}, -\frac{3}{2}\right\rangle, \\
 &\left|\frac{3}{2}, -\frac{1}{2}\right\rangle, \\
