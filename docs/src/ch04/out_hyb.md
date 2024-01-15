@@ -36,25 +36,23 @@ The corresponding Fortran code block for the writing of *solver.hyb.dat* file is
 
 ```fortran
 ! open data file: solver.hyb.dat
-     open(mytmp, file='solver.hyb.dat', form='formatted', status='unknown')
+open(mytmp, file='solver.hyb.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,norbs
-         do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-              real(hybf(j,i,i)), aimag(hybf(j,i,i)), &
-                                         zero, zero
-         enddo ! over j={1,mfreq} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,norbs} loop
+do i=1,norbs
+    do j=1,mfreq
+        write(mytmp,'(i6,5f16.8)') i, rmesh(j), hybf(j,i,i), czero
+    enddo ! over j={1,mfreq} loop
+    write(mytmp,*) ! write empty lines
+    write(mytmp,*)
+enddo ! over i={1,norbs} loop
 
 ! close data file
-     close(mytmp)
+close(mytmp)
 ```
 
 !!! note
 
     The columns for the error bar are always zero in this file.
 
-In the **HIBISCUS** component, we provide a Python module to read the output files of quantum impurity solvers. You can use it to read the *solver.hyb.dat* file. See [script/u_reader.py](../ch07/reader.md) for more details.
+In the iQIST software package, we provide a Python module to read the output files of quantum impurity solvers. You can use it to read the *solver.hyb.dat* file. See [src/tools/u_reader.py] for more details.
