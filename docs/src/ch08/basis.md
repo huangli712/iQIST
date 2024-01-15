@@ -369,7 +369,7 @@ For ``d`` system, ``l = 2``, ``j = \frac{3}{2}`` or ``\frac{5}{2}``, the basis o
 &\left|\frac{5}{2}, -\frac{1}{2}\right\rangle = \sqrt{\frac{2}{5}}Y^{-1}_{2}\chi_{\uparrow} + \sqrt{\frac{3}{5}}Y^{0}_{2}\chi_{\downarrow}, \\
 &\left|\frac{5}{2}, ~~~\frac{1}{2}\right\rangle = \sqrt{\frac{3}{5}}Y^{0}_{2}\chi_{\uparrow} + \sqrt{\frac{2}{5}}Y^{1}_{2}\chi_{\downarrow}, \\
 &\left|\frac{5}{2}, ~~~\frac{3}{2}\right\rangle = \sqrt{\frac{4}{5}}Y^{1}_{2}\chi_{\uparrow} + \sqrt{\frac{1}{5}}Y^{2}_{2}\chi_{\downarrow}, \\
-&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle = Y^{2}_{2}\chi^{\uparrow}.
+&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle = Y^{2}_{2}\chi_{\uparrow}.
 \end{split}
 \end{equation}
 ```
