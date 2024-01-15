@@ -6,7 +6,7 @@ In this section, we define some single particle basis used in the **JASMINE** co
 
 **Spherical harmonics**
 
-The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` is the eigenstate of operators ``\hat{l}^{2}`` and ``\hat{l}_{z}``,
+The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` are the eigenstates of operators ``\hat{l}^{2}`` and ``\hat{l}_{z}``,
 
 ```math
 \begin{equation}
@@ -20,7 +20,7 @@ The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` is the eigenstate of 
 \end{equation}
 ```
 
-where ``m=-l,~-l+1,~\cdots,~l``[^1][^2]. The real spherical harmonics ``Y_{lm}`` is defined as
+where ``m=-l,~-l+1,~\cdots,~l``[^1][^2]. The real spherical harmonics ``Y_{lm}`` are defined as
 
 ```math
 \begin{gather}
@@ -46,7 +46,7 @@ where ``\delta_{ij}`` is the Kronecker delta and ``d\Omega = \sin(\theta) d\phi 
 
 **Spinor spherical harmonics**
 
-The spinor spherical harmonics ``\Omega^l_{jm_j}(\theta,\phi)`` is eigenstate of the operators ``\hat{j}^2``, ``\hat{j}_z``, ``\hat{l}^2``, and ``\hat{s}^2``,
+The spinor spherical harmonics ``\Omega^l_{jm_j}(\theta,\phi)`` are eigenstates of the operators ``\hat{j}^2``, ``\hat{j}_z``, ``\hat{l}^2``, and ``\hat{s}^2``,
 
 ```math
 \begin{equation}
