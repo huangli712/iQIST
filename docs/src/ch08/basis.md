@@ -345,12 +345,12 @@ For ``p`` system, ``l = 1``, ``j = \frac{1}{2}`` or ``\frac{3}{2}``, the basis o
 ```math
 \begin{equation}
 \begin{split}
-&\left|\frac{1}{2}, -\frac{1}{2}\right\rangle = -\sqrt{\frac{2}{3}}Y^{-1}_{1}\chi_{\uparrow} + \sqrt{\frac{1}{3}}Y^{0}_{1}\chi_{\downarrow}, \\
-&\left|\frac{1}{2}, ~~~\frac{1}{2}\right\rangle = -\sqrt{\frac{1}{3}}Y^{0}_{1}\chi_{\uparrow} + \sqrt{\frac{2}{3}}Y^{1}_{1}\chi_{\downarrow}, \\
-&\left|\frac{3}{2}, -\frac{3}{2}\right\rangle = Y^{-1}_{1} \chi_{\downarrow}, \\
-&\left|\frac{3}{2}, -\frac{1}{2}\right\rangle = \sqrt{\frac{1}{3}} Y^{-1}_{1}\chi_{\uparrow} + \sqrt{\frac{2}{3}}Y^{0}_{1}\chi_{\downarrow}, \\
-&\left|\frac{3}{2}, ~~~\frac{1}{2}\right\rangle = \sqrt{\frac{2}{3}} Y^{0}_{1}\chi_{\uparrow} + \sqrt{\frac{1}{3}}Y^{1}_{1}\chi_{\downarrow}, \\
-&\left|\frac{3}{2}, ~~~\frac{3}{2}\right\rangle = Y^{1}_{1}\chi_{\uparrow}.
+&\left|\frac{1}{2}, -\frac{1}{2}\right\rangle   = -\sqrt{\frac{2}{3}}Y^{-1}_{1}\chi_{\uparrow} + \sqrt{\frac{1}{3}}Y^{ 0}_{1}\chi_{\downarrow}, \\
+&\left|\frac{1}{2}, ~~~\frac{1}{2}\right\rangle = -\sqrt{\frac{1}{3}}Y^{ 0}_{1}\chi_{\uparrow} + \sqrt{\frac{2}{3}}Y^{ 1}_{1}\chi_{\downarrow}, \\
+&\left|\frac{3}{2}, -\frac{3}{2}\right\rangle   =  \sqrt{\frac{0}{3}}Y^{-2}_{1}\chi_{\uparrow} + \sqrt{\frac{3}{3}}Y^{-1}_{1}\chi_{\downarrow} = Y^{-1}_{1} \chi_{\downarrow}, \\
+&\left|\frac{3}{2}, -\frac{1}{2}\right\rangle   =  \sqrt{\frac{1}{3}}Y^{-1}_{1}\chi_{\uparrow} + \sqrt{\frac{2}{3}}Y^{ 0}_{1}\chi_{\downarrow}, \\
+&\left|\frac{3}{2}, ~~~\frac{1}{2}\right\rangle =  \sqrt{\frac{2}{3}}Y^{ 0}_{1}\chi_{\uparrow} + \sqrt{\frac{1}{3}}Y^{ 1}_{1}\chi_{\downarrow}, \\
+&\left|\frac{3}{2}, ~~~\frac{3}{2}\right\rangle =  \sqrt{\frac{3}{3}}Y^{ 1}_{1}\chi_{\uparrow} + \sqrt{\frac{0}{3}}Y^{ 2}_{1}\chi_{\downarrow} = Y^{1}_{1}\chi_{\uparrow}.
 \end{split}
 \end{equation}
 ```
@@ -360,16 +360,16 @@ For ``d`` system, ``l = 2``, ``j = \frac{3}{2}`` or ``\frac{5}{2}``, the basis o
 ```math
 \begin{equation}
 \begin{split}
-&\left|\frac{3}{2}, -\frac{3}{2}\right\rangle = -\sqrt{\frac{4}{5}} Y^{-2}_{2}\chi_{\uparrow} + \sqrt{\frac{1}{5}}Y^{-1}_{2}\chi_{\downarrow}, \\
-&\left|\frac{3}{2}, -\frac{1}{2}\right\rangle = -\sqrt{\frac{3}{5}} Y^{-1}_{2}\chi_{\uparrow} + \sqrt{\frac{2}{5}}Y^{0}_{2}\chi_{\downarrow},\\
-&\left|\frac{3}{2}, ~~~\frac{1}{2}\right\rangle = -\sqrt{\frac{2}{5}} Y^{0}_{2}\chi_{\uparrow} + \sqrt{\frac{3}{5}}Y^{1}_{2}\chi_{\downarrow}, \\
-&\left|\frac{3}{2}, ~~~\frac{3}{2}\right\rangle = -\sqrt{\frac{1}{5}} Y^{1}_{2}\chi_{\uparrow} + \sqrt{\frac{4}{5}}Y^{2}_{2}\chi_{\downarrow}, \\
-&\left|\frac{5}{2}, -\frac{5}{2}\right\rangle = Y^{-2}_{2}\chi_{\downarrow}, \\
-&\left|\frac{5}{2}, -\frac{3}{2}\right\rangle = \sqrt{\frac{1}{5}}Y^{-2}_{2}\chi_{\uparrow} + \sqrt{\frac{4}{5}}Y^{-1}_{2}\chi_{\downarrow}, \\
-&\left|\frac{5}{2}, -\frac{1}{2}\right\rangle = \sqrt{\frac{2}{5}}Y^{-1}_{2}\chi_{\uparrow} + \sqrt{\frac{3}{5}}Y^{0}_{2}\chi_{\downarrow}, \\
-&\left|\frac{5}{2}, ~~~\frac{1}{2}\right\rangle = \sqrt{\frac{3}{5}}Y^{0}_{2}\chi_{\uparrow} + \sqrt{\frac{2}{5}}Y^{1}_{2}\chi_{\downarrow}, \\
-&\left|\frac{5}{2}, ~~~\frac{3}{2}\right\rangle = \sqrt{\frac{4}{5}}Y^{1}_{2}\chi_{\uparrow} + \sqrt{\frac{1}{5}}Y^{2}_{2}\chi_{\downarrow}, \\
-&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle = Y^{2}_{2}\chi_{\uparrow}.
+&\left|\frac{3}{2}, -\frac{3}{2}\right\rangle   = -\sqrt{\frac{4}{5}}Y^{-2}_{2}\chi_{\uparrow} + \sqrt{\frac{1}{5}}Y^{-1}_{2}\chi_{\downarrow}, \\
+&\left|\frac{3}{2}, -\frac{1}{2}\right\rangle   = -\sqrt{\frac{3}{5}}Y^{-1}_{2}\chi_{\uparrow} + \sqrt{\frac{2}{5}}Y^{ 0}_{2}\chi_{\downarrow}, \\
+&\left|\frac{3}{2}, ~~~\frac{1}{2}\right\rangle = -\sqrt{\frac{2}{5}}Y^{ 0}_{2}\chi_{\uparrow} + \sqrt{\frac{3}{5}}Y^{ 1}_{2}\chi_{\downarrow}, \\
+&\left|\frac{3}{2}, ~~~\frac{3}{2}\right\rangle = -\sqrt{\frac{1}{5}}Y^{ 1}_{2}\chi_{\uparrow} + \sqrt{\frac{4}{5}}Y^{ 2}_{2}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, -\frac{5}{2}\right\rangle   = -\sqrt{\frac{0}{5}}Y^{-3}_{2}\chi_{\uparrow} + \sqrt{\frac{4}{5}}Y^{-2}_{2}\chi_{\downarrow} = Y^{-2}_{2}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, -\frac{3}{2}\right\rangle   =  \sqrt{\frac{1}{5}}Y^{-2}_{2}\chi_{\uparrow} + \sqrt{\frac{4}{5}}Y^{-1}_{2}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, -\frac{1}{2}\right\rangle   =  \sqrt{\frac{2}{5}}Y^{-1}_{2}\chi_{\uparrow} + \sqrt{\frac{3}{5}}Y^{ 0}_{2}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, ~~~\frac{1}{2}\right\rangle =  \sqrt{\frac{3}{5}}Y^{ 0}_{2}\chi_{\uparrow} + \sqrt{\frac{2}{5}}Y^{ 1}_{2}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, ~~~\frac{3}{2}\right\rangle =  \sqrt{\frac{4}{5}}Y^{ 1}_{2}\chi_{\uparrow} + \sqrt{\frac{1}{5}}Y^{ 2}_{2}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle =  \sqrt{\frac{5}{5}}Y^{ 2}_{2}\chi_{\uparrow} + \sqrt{\frac{0}{5}}Y^{ 3}_{2}\chi_{\downarrow} = Y^{2}_{2}\chi_{\uparrow}.
 \end{split}
 \end{equation}
 ```
@@ -379,20 +379,20 @@ For ``f`` system, ``l = 3``, ``j = \frac{5}{2}`` or ``\frac{7}{2}``, the basis o
 ```math
 \begin{equation}
 \begin{split}
-&\left|\frac{5}{2}, -\frac{5}{2}\right\rangle, \\
-&\left|\frac{5}{2}, -\frac{3}{2}\right\rangle, \\
-&\left|\frac{5}{2}, -\frac{1}{2}\right\rangle, \\
-&\left|\frac{5}{2}, ~~~\frac{1}{2}\right\rangle, \\
-&\left|\frac{5}{2}, ~~~\frac{3}{2}\right\rangle, \\
-&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle, \\
-&\left|\frac{7}{2}, -\frac{7}{2}\right\rangle, \\
-&\left|\frac{7}{2}, -\frac{5}{2}\right\rangle, \\
-&\left|\frac{7}{2}, -\frac{3}{2}\right\rangle, \\
-&\left|\frac{7}{2}, -\frac{1}{2}\right\rangle, \\
-&\left|\frac{7}{2}, ~~~\frac{1}{2}\right\rangle, \\
-&\left|\frac{7}{2}, ~~~\frac{3}{2}\right\rangle, \\
-&\left|\frac{7}{2}, ~~~\frac{5}{2}\right\rangle, \\
-&\left|\frac{7}{2}, ~~~\frac{7}{2}\right\rangle, \\
+&\left|\frac{5}{2}, -\frac{5}{2}\right\rangle   = -\sqrt{\frac{6}{7}}Y^{-3}_{3}\chi_{\uparrow} + \sqrt{\frac{1}{7}}Y^{-2}_{3}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, -\frac{3}{2}\right\rangle   = -\sqrt{\frac{5}{7}}Y^{-2}_{3}\chi_{\uparrow} + \sqrt{\frac{2}{7}}Y^{-1}_{3}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, -\frac{1}{2}\right\rangle   = -\sqrt{\frac{4}{7}}Y^{-1}_{3}\chi_{\uparrow} + \sqrt{\frac{3}{7}}Y^{ 0}_{3}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, ~~~\frac{1}{2}\right\rangle = -\sqrt{\frac{3}{7}}Y^{ 0}_{3}\chi_{\uparrow} + \sqrt{\frac{4}{7}}Y^{ 1}_{3}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, ~~~\frac{3}{2}\right\rangle = -\sqrt{\frac{2}{7}}Y^{ 1}_{3}\chi_{\uparrow} + \sqrt{\frac{5}{7}}Y^{ 2}_{3}\chi_{\downarrow}, \\
+&\left|\frac{5}{2}, ~~~\frac{5}{2}\right\rangle = -\sqrt{\frac{1}{7}}Y^{ 2}_{3}\chi_{\uparrow} + \sqrt{\frac{6}{7}}Y^{ 3}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, -\frac{7}{2}\right\rangle   =  \sqrt{\frac{0}{7}}Y^{-4}_{3}\chi_{\uparrow} + \sqrt{\frac{7}{7}}Y^{-3}_{3}\chi_{\downarrow} = Y^{-3}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, -\frac{5}{2}\right\rangle   =  \sqrt{\frac{1}{7}}Y^{-3}_{3}\chi_{\uparrow} + \sqrt{\frac{6}{7}}Y^{-2}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, -\frac{3}{2}\right\rangle   =  \sqrt{\frac{2}{7}}Y^{-2}_{3}\chi_{\uparrow} + \sqrt{\frac{5}{7}}Y^{-1}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, -\frac{1}{2}\right\rangle   =  \sqrt{\frac{3}{7}}Y^{-1}_{3}\chi_{\uparrow} + \sqrt{\frac{4}{7}}Y^{ 0}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, ~~~\frac{1}{2}\right\rangle =  \sqrt{\frac{4}{7}}Y^{ 0}_{3}\chi_{\uparrow} + \sqrt{\frac{3}{7}}Y^{ 1}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, ~~~\frac{3}{2}\right\rangle =  \sqrt{\frac{5}{7}}Y^{ 1}_{3}\chi_{\uparrow} + \sqrt{\frac{2}{7}}Y^{ 2}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, ~~~\frac{5}{2}\right\rangle =  \sqrt{\frac{6}{7}}Y^{ 2}_{3}\chi_{\uparrow} + \sqrt{\frac{1}{7}}Y^{ 3}_{3}\chi_{\downarrow}, \\
+&\left|\frac{7}{2}, ~~~\frac{7}{2}\right\rangle =  \sqrt{\frac{7}{7}}Y^{ 3}_{3}\chi_{\uparrow} + \sqrt{\frac{0}{7}}Y^{ 4}_{3}\chi_{\downarrow} = Y^{3}_{3}\chi_{\uparrow}. \\
 \end{split}
 \end{equation}
 ```
