@@ -47,9 +47,13 @@ iqist/docs
 
 !!! warning
 
-    The official reference manual is released on the following website:
+    The documentations for the iQIST software package are written by using the *Markdown* language and the *Julia's Documenter.jl* package. You can type the following command in the terminal to build the documentations:
+    ```shell
+    $ julia make.jl
     ```
-    https://www.gitbook.com/book/huangli712/iqist/details
+    or you can read the official reference manual in the following website:
+    ```
+    https://huangli712.github.io/projects/acflow/index.html
     ```
 
 ### Where are the tutorials?
