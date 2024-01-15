@@ -479,13 +479,13 @@ For *p* system, the transformation matrix reads
 \begin{equation}
 T = \left[
 \begin{array}{ccc|ccc}
-0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 \\
+-\sqrt{\frac{2}{3}} & 0 & 0 & \sqrt{\frac{1}{3}} & 0 & 0 \\
+0 & -\sqrt{\frac{1}{3}} & 0 & 0 & \sqrt{\frac{2}{3}} & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 \\
 \hline
-0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 \\
+\sqrt{\frac{1}{3}} & 0 & 0 & \sqrt{\frac{2}{3}} & 0 & 0 \\
+0 & \sqrt{\frac{2}{3}} & 0 & 0 & \sqrt{\frac{1}{3}} & 0 \\
 \end{array}
 \right]
 \end{equation}
@@ -529,6 +529,73 @@ T = \left[
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 \end{array}
 \right]
+```
+
+```julia
+# To calculate the transformation matrix from the complex orbital basis
+# to the j²-jz basis
+function calc_matrix(l::Int64)
+    println("Construct complex orbital basis for 𝑙 = $l")
+    COB = [] # To save the complex orbital basis
+    # m = -l, -l+1, ..., l-1, l
+    mlist = collect(-l:1:l)
+    for s in ("up", "down")
+        for m in mlist
+            push!(COB, [m, s])
+        end
+    end
+    #
+    for i in eachindex(COB)
+        m = COB[i][1]
+        s = COB[i][2] == "up" ? "↑" : "↓"
+        println("$i -> | $l, $m, $s ⟩")
+    end
+
+    println("Construct j²-jz basis for 𝑙 = $l")
+    JJ = []  # To save the j²-jz basis
+    JJB = [] # To save the detailed expressions for the j²-jz basis
+    jlist = [l-1//2, l+1//2]
+    for j in jlist
+        # mⱼ = -j, -j+1, ..., j-1, j
+        mⱼlist = collect(-j:2//2:j)
+        for mⱼ in mⱼlist
+            push!(JJ, [j, mⱼ])
+            m = mⱼ-1//2
+            if j == l-1//2 # For j = l-1/2
+                jj = ["-", (l-m)/(2*l+1), Int(m), (l+m+1)/(2*l+1), Int(m+1)]
+            else           # For j = l+1/2
+                jj = ["" , (l+m+1)/(2*l+1), Int(m), (l-m)/(2*l+1), Int(m+1)]
+            end
+            push!(JJB, jj)
+        end
+    end
+    #
+    for i in eachindex(JJ)
+        j = JJ[i][1]
+        mⱼ = JJ[i][2]
+        print("$i -> | $j, $mⱼ ⟩ = ")
+
+        jj = JJB[i]
+        print(jj[1])
+        print("sqrt(", jj[2], ")Y^{", jj[3],"}_{$l}χ↑ + ")
+        print("sqrt(", jj[4], ")Y^{", jj[5],"}_{$l}χ↓\n")
+    end
+
+    println("Evaluate transformation matrix for 𝑙 = $l")
+    for m in eachindex(COB)
+        for n in eachindex(JJ)
+            if COB[m][2] == "up"
+                if COB[m][1] == JJB[n][3]
+                    println("T($m,$n) -> ", JJB[n][1], "sqrt(", JJB[n][2],")")
+                end
+            else
+                if COB[m][1] == JJB[n][5]
+                    println("T($m,$n) -> ", "sqrt(", JJB[n][4],")")
+                end
+            end
+        end
+    end
+end
 ```
 
 ---
