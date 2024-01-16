@@ -8,7 +8,7 @@ The spin-orbit coupling (SOC) is implemented at atomic level,
 \end{equation}
 ```
 
-where, ``\vec{\mathbf{l}}`` is orbital angular momentum, and ``\vec{\mathbf{s}}`` is spin angular momentum. In second quantization form,
+where ``\vec{\mathbf{l}}`` is orbital angular momentum, and ``\vec{\mathbf{s}}`` is spin angular momentum. In second quantization form,
 
 ```math
 \begin{equation}
@@ -56,37 +56,48 @@ i & 0 \\
 \end{equation}
 ```
 
-Now the question is how to write down the matrix elements for ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}``
-
-```math
-\begin{align*}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}} & = & \hat{l}_{x}\hat{\sigma}_{x}+\hat{l}_{y}\hat{\sigma}_{y}+\hat{l}_{z}\hat{\sigma}_{z}\\
- & = & \left[\begin{array}{cc}
-0 & \hat{l}_{x}\\
-\hat{l}_{x} & 0
-\end{array}\right]+\left[\begin{array}{cc}
-0 & -i\hat{l}_{y}\\
-i\hat{l}_{y} & 0
-\end{array}\right]+\left[\begin{array}{cc}
-\hat{l}_{z} & 0\\
-0 & -\hat{l}_{z}
-\end{array}\right]\\
- & = & \left[\begin{array}{cc}
-\hat{l}_{z} & \hat{l}_{x}-i\hat{l}_{y}\\
-\hat{l}_{x}+i\hat{l}_{y} & -\hat{l}_{z}
-\end{array}\right]\\
- & = & \left[\begin{array}{cc}
-\hat{l}_{z} & \hat{l}_{-}\\
-\hat{l}_{+} & -\hat{l}_{z}
-\end{array}\right]
-\end{align*}
-```
-
-where, ``\hat{l}_{\pm}=\hat{l}_{x}\pm\hat{l}_{y}``, and
+Now the question is how to write down the matrix elements for ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}``.
 
 ```math
 \begin{equation}
-\hat{l}_{\pm}Y_{l}^{m}=\sqrt{(l\mp m)(l\pm m+1)}Y_{l}^{m\pm1}.
+\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}} =
+\hat{l}_{x}\hat{\sigma}_{x}+
+\hat{l}_{y}\hat{\sigma}_{y}+
+\hat{l}_{z}\hat{\sigma}_{z}
+= \left[\begin{array}{cc}
+\hat{l}_{z} & \hat{l}_{-}\\
+\hat{l}_{+} & -\hat{l}_{z}
+\end{array}\right],
+\end{equation}
+```
+
+where ``\hat{l}_{\pm}=\hat{l}_{x}\pm\hat{l}_{y}``. It is easy to prove that Eq.(6) can be rewritten as
+
+```math
+\begin{equation}
+\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}} =
+\hat{l}_{+}\hat{\sigma}_{-}+
+\hat{l}_{-}\hat{\sigma}_{+}+
+\hat{l}_{z}\hat{\sigma}_{z},
+\end{equation}
+```
+
+where
+
+```math
+\begin{equation}
+\hat{\sigma}_+ = \left[
+\begin{array}{cc}
+0 & 1 \\
+0 & 0 \\
+\end{array}
+\right],~
+\hat{\sigma}_- = \left[
+\begin{array}{cc}
+0 & 0 \\
+1 & 0 \\
+\end{array}
+\right].
 \end{equation}
 ```
 
@@ -94,6 +105,12 @@ We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex
 ```math
 \begin{equation}
 Y_{l}^{-l}\uparrow,Y_{l}^{-l}\downarrow,Y_{l}^{-l+1}\uparrow,Y_{l}^{-l+1}\downarrow,\cdots,Y_{l}^{l}\uparrow,Y_{l}^{l}\downarrow.
+\end{equation}
+```
+
+```math
+\begin{equation}
+\hat{l}_{\pm}Y_{l}^{m}=\sqrt{(l\mp m)(l\pm m+1)}Y_{l}^{m\pm1}.
 \end{equation}
 ```
 
