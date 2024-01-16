@@ -101,12 +101,7 @@ where
 \end{equation}
 ```
 
-We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex shperical harmonics basis, the orbital order is:
-```math
-\begin{equation}
-Y_{l}^{-l}\uparrow,Y_{l}^{-l}\downarrow,Y_{l}^{-l+1}\uparrow,Y_{l}^{-l+1}\downarrow,\cdots,Y_{l}^{l}\uparrow,Y_{l}^{l}\downarrow.
-\end{equation}
-```
+We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex shperical harmonics basis. The following relations are used to derive the matrix elements of the spin-orbital interaction:
 
 ```math
 \begin{equation}
@@ -114,24 +109,20 @@ Y_{l}^{-l}\uparrow,Y_{l}^{-l}\downarrow,Y_{l}^{-l+1}\uparrow,Y_{l}^{-l+1}\downar
 \end{equation}
 ```
 
+```math
+\begin{equation}
+\hat{\sigma}_+ |\uparrow\rangle = 0,~
+\hat{\sigma}_+ |\downarrow\rangle = |\uparrow\rangle,~
+\hat{\sigma}_- |\uparrow\rangle = |\downarrow\rangle,~
+\hat{\sigma}_- |\downarrow\rangle = 0.
+\end{equation}
+```
+
+
 For ``p`` system,
 ```math
 \begin{equation}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{cccccc}
--1 & 0 & 0 & \sqrt{2} & 0 & 0\\
-0 & 1 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & \sqrt{2}\\
-\sqrt{2} & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 1 & 0\\
-0 & 0 & \sqrt{2} & 0 & 0 & -1
-\end{array}\right]
-\end{equation}
-```
-
-For ``t_{2g}`` system,
-```math
-\begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=-\left[\begin{array}{cccccc}
 -1 & 0 & 0 & \sqrt{2} & 0 & 0\\
 0 & 1 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & \sqrt{2}\\
