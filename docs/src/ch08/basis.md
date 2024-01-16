@@ -535,6 +535,12 @@ T = \left[
 \right]
 ```
 
+---
+
+**Julia script for generating transformation basis**
+
+The following Julia script is used to construct the complex orbital basis and the ``j^2-j_z`` basis, and the transformation matrix between them.
+
 ```julia
 # To calculate the transformation matrix from the complex orbital basis
 # to the j²-jz basis
