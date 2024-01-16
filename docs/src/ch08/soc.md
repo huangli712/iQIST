@@ -16,15 +16,45 @@ where, ``\vec{\mathbf{l}}`` is orbital angular momentum, and ``\vec{\mathbf{s}}`
 \end{equation}
 ```
 
-where, ``\alpha`` is orbital index and ``\sigma`` is spin index, and
+where ``\alpha`` is orbital index and ``\sigma`` is spin index. We note that
 
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{s}} =  \frac{1}{2}\vec{\mathbf{l}}\cdot\vec{\mathbf{\mathbf{\sigma},}}
+\vec{\mathbf{l}}\cdot\vec{\mathbf{s}} = 
+\frac{1}{2} \vec{\mathbf{l}} \cdot \vec{\mathbf{\sigma}}.
 \end{equation}
 ```
 
-where, ``\vec{\mathbf{\sigma}}`` is Pauli operator.
+where ``\vec{\mathbf{\sigma}}`` is the Pauli operator:
+
+```math
+\begin{equation}
+\vec{\mathbf{\sigma}} = \hat{\sigma}_x \hat{x} + \hat{\sigma}_y \hat{y} + {\sigma}_z \hat{z}.
+\end{equation}
+```
+
+```math
+\begin{equation}
+\hat{\sigma}_x = \left[
+\begin{array}{cc}
+0 & 1 \\
+1 & 0 \\
+\end{array}
+\right],~
+\hat{\sigma}_y = \left[
+\begin{array}{cc}
+0 & -i \\
+i & 0 \\
+\end{array}
+\right],~
+\hat{\sigma}_z = \left[
+\begin{array}{cc}
+1 & 0 \\
+0 & -1 \\
+\end{array}
+\right].
+\end{equation}
+```
 
 Now the question is how to write down the matrix elements for ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}``
 
