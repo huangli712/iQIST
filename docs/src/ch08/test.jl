@@ -5,9 +5,8 @@ function calc_matrix(l::Int64)
     COB = [] # To save the complex orbital basis
     # m = -l, -l+1, ..., l-1, l
     mlist = collect(-l:1:l)
-    for m in mlist
     for s in ("up", "down")
-        
+        for m in mlist
             push!(COB, [m, s])
         end
     end
