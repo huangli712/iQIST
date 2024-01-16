@@ -20,7 +20,7 @@ The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` are the eigenstates o
 \end{equation}
 ```
 
-where ``m=-l,~-l+1,~\cdots,~l``[^1][^2]. The real spherical harmonics ``Y_{lm}`` are defined as
+where ``l`` is the azimuthal quantum number (``l = 0,~1,~2,~\cdots,~n-1``), and ``m`` is the magnetic quantum number (``m=-l,~-l+1,~\cdots,~l``)[^1][^2]. The real spherical harmonics ``Y_{lm}`` are defined as
 
 ```math
 \begin{gather}
@@ -72,7 +72,7 @@ The spinor spherical harmonics ``\Omega^l_{jm_j}(\theta,\phi)`` are eigenstates 
 \end{equation}
 ```
 
-For given ``j`` only two values of ``l`` are possible, ``l = j \pm \frac{1}{2}``, while ``m_j`` assumes ``2j + 1`` values: ``m_j = -j,~-j + 1,~\cdots,~j - 1,~j``[^1][^2].
+For given ``j`` only two values of ``l`` are possible, ``l = j \pm \frac{1}{2}``, while ``m_j`` assumes ``2j + 1`` values (``m_j = -j,~-j + 1,~\cdots,~j - 1,~j``) [^1][^2].
 
 For ``j = l + \frac{1}{2}``, ``m_j = m + \frac{1}{2}``,
 
@@ -338,7 +338,7 @@ For ``f`` system (``l = 3,~m = \pm 3,~\pm 2,~\pm 1,~0``), the basis order is
 
 **``\hat{j}^{2}-\hat{j}_{z}-\hat{l}^2-\hat{s}^2`` diagonal basis**
 
-We just use ``j`` and ``m_j`` to label the eigenfunctions ``|j, m_j\rangle``.
+We just use ``j`` and ``m_j`` to label the eigenfunctions ``|j, m_j\rangle``, which are just the spinor spherical harmonics ``\Omega^l_{jm_j}(\theta,\phi)``.
 
 For ``p`` system, ``l = 1``, ``j = \frac{1}{2}`` or ``\frac{3}{2}``, the basis order is
 
