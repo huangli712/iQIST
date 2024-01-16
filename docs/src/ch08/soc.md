@@ -137,7 +137,9 @@ We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex
 For ``p`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{ccc|ccc}
+\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=
+\left[
+\begin{array}{ccc|ccc}
 -1 & 0 & 0 & 0 & \sqrt{2} & 0\\
 0 & 0 & 0 & 0 & 0 & \sqrt{2}\\
 0 & 0 & 1 & 0 & 0 & 0\\
@@ -145,26 +147,30 @@ For ``p`` system,
 0 & 0 & 0 & 1 & 0 & 0\\
 \sqrt{2} & 0 & 0 & 0 & 0 & 0\\
 0 & \sqrt{2} & 0 & 0 & 0 & -1\\
-\end{array}\right]
+\end{array}
+\right]
 \end{equation}
 ```
 
 For ``d`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{ccccc|ccccc}
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=
+\left[
+\begin{array}{ccccc|ccccc}
+-2 & 0 & 0 & 0 & 0 & 0 & \sqrt{4} & 0 & 0 & 0\\
+0 & -1 & 0 & 0 & 0 & 0 & 0 & \sqrt{6} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \sqrt{6} & 0\\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & \sqrt{4}\\
+0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0\\
 \hline
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-\end{array}\right]
+0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0\\
+\sqrt{4} & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+0 & \sqrt{6} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & \sqrt{6} & 0 & 0 & 0 & 0 & 0 & -1 & 0\\
+0 & 0 & 0 & \sqrt{4} & 0 & 0 & 0 & 0 & 0 & -2\\
+\end{array}
+\right]
 \end{equation}
 ```
 
