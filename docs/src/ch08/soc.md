@@ -125,10 +125,11 @@ We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex
 For ``p`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{cccccc}
+\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{ccc|ccc}
 -1 & 0 & 0 & \sqrt{2} & 0 & 0\\
 0 & 1 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & \sqrt{2}\\
+\hline
 \sqrt{2} & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 1 & 0\\
 0 & 0 & \sqrt{2} & 0 & 0 & -1
@@ -139,12 +140,13 @@ For ``p`` system,
 For ``d`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{cccccccccc}
+\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{ccccc|ccccc}
 -2 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & -1 & 0 & 0 & \sqrt{6} & 0 & 0 & 0 & 0\\
 2 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & \sqrt{6} & 0 & 0\\
+\hline
 0 & 0 & \sqrt{6} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 2\\
 0 & 0 & 0 & 0 & \sqrt{6} & 0 & 0 & -1 & 0 & 0\\
@@ -157,7 +159,7 @@ For ``d`` system,
 For ``f`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{cccccccccccccc}
+\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{ccccccc|ccccccc}
 -3 & 0 & 0 & \sqrt{6} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & -2 & 0 & 0 & \sqrt{10} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -165,6 +167,7 @@ For ``f`` system,
 0 & 0 & 0 & 0 & -1 & 0 & 0 & \sqrt{12} & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & \sqrt{10} & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \sqrt{12} & 0 & 0 & 0 & 0\\
+\hline
 0 & 0 & 0 & 0 & \sqrt{12} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & \sqrt{10} & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & \sqrt{12} & 0 & 0 & -1 & 0 & 0 & 0 & 0\\
