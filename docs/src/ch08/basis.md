@@ -543,7 +543,7 @@ The following Julia script is used to construct the complex orbital basis and th
 
 ```julia
 # To calculate the transformation matrix from the complex orbital basis
-# to the j²-jz basis
+# to the j²-jz basis.
 function calc_matrix(l::Int64)
     println("Construct complex orbital basis for 𝑙 = $l")
     COB = [] # To save the complex orbital basis
