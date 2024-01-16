@@ -1,5 +1,7 @@
 # Spin-orbit coupling
 
+**Spin-orbit interaction Hamiltonian**
+
 The spin-orbit coupling (SOC) is implemented at atomic level,
 
 ```math
@@ -101,7 +103,9 @@ where
 \end{equation}
 ```
 
-We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex shperical harmonics basis. The following relations are used to derive the matrix elements of the spin-orbital interaction:
+**Spin-orbit interaction in the complex orbital basis**
+
+We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex spherical harmonics basis. The following relations are used to derive the matrix elements of the spin-orbit interaction [^1]:
 
 ```math
 \begin{equation}
@@ -117,7 +121,6 @@ We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex
 \hat{\sigma}_- |\downarrow\rangle = 0.
 \end{equation}
 ```
-
 
 For ``p`` system,
 ```math
@@ -172,3 +175,5 @@ For ``f`` system,
 \end{array}\right]
 \end{equation}
 ```
+
+[^1]: See https://physics.stackexchange.com/questions/250199/spin-orbital-coupling-matrix-in-p-orbital-basis.
