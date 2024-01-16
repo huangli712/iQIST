@@ -138,13 +138,13 @@ For ``p`` system,
 ```math
 \begin{equation}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{ccc|ccc}
-0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0\\
+-1 & 0 & 0 & 0 & \sqrt{2} & 0\\
+0 & 0 & 0 & 0 & 0 & \sqrt{2}\\
+0 & 0 & 1 & 0 & 0 & 0\\
 \hline
-0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0\\
+\sqrt{2} & 0 & 0 & 0 & 0 & 0\\
+0 & \sqrt{2} & 0 & 0 & 0 & -1\\
 \end{array}\right]
 \end{equation}
 ```
