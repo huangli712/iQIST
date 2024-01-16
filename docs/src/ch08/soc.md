@@ -105,7 +105,7 @@ where
 
 **Spin-orbit interaction in the complex orbital basis**
 
-We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex spherical harmonics basis. The following relations are used to derive the matrix elements of the spin-orbit interaction [^1]:
+We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex spherical harmonics basis. The following relations are used to derive the matrix elements of the spin-orbit interaction:
 
 ```math
 \begin{equation}
@@ -116,9 +116,21 @@ We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex
 ```math
 \begin{equation}
 \hat{\sigma}_+ |\uparrow\rangle = 0,~
-\hat{\sigma}_+ |\downarrow\rangle = |\uparrow\rangle,~
+\hat{\sigma}_+ |\downarrow\rangle = |\uparrow\rangle.
+\end{equation}
+```
+
+```math
+\begin{equation}
 \hat{\sigma}_- |\uparrow\rangle = |\downarrow\rangle,~
 \hat{\sigma}_- |\downarrow\rangle = 0.
+\end{equation}
+```
+
+```math
+\begin{equation}
+\hat{\sigma}_z |\uparrow\rangle = 1,~
+\hat{\sigma}_z |\downarrow\rangle = -1.
 \end{equation}
 ```
 
@@ -178,5 +190,3 @@ For ``f`` system,
 \end{array}\right]
 \end{equation}
 ```
-
-[^1]: See https://physics.stackexchange.com/questions/250199/spin-orbital-coupling-matrix-in-p-orbital-basis.
