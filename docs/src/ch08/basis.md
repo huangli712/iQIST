@@ -32,7 +32,7 @@ Y_{lm}=\begin{cases}
 \end{gather}
 ```
 
-The spherical harmonics are orthonormal 
+The spherical harmonics are orthonormal
 
 ```math
 \begin{equation}
