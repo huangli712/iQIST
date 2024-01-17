@@ -38,13 +38,16 @@ Expand ``\frac{1}{r_{12}}`` in terms of complex spherical harmonics ``Y_{l}^{m}`
 
 ```math
 \begin{equation}
-\frac{1}{r_{12}}=\sum_{k}\frac{r_{<}^{k}}{r_{>}^{k+1}}\sum_{m}(-1)^{m}C_{m}^{k}(\theta_{1}\phi_{1})C_{-m}^{k}(\theta_{2}\phi_{2})
+\frac{1}{r_{12}}=\sum_{k}\frac{r_{<}^{k}}{r_{>}^{k+1}}
+\sum_{m}(-1)^{m}
+C_{m}^{k}(\theta_{1},\phi_{1}) C_{-m}^{k}(\theta_{2},\phi_{2}),
 \end{equation}
 ```
-where,
+
+where
 
 ```math
-C_{m}^{k}(\theta\phi)=\sqrt{\frac{4\pi}{2k+1}}Y_{l}^{m}(\theta\phi).
+C_{m}^{k}(\theta, \phi)=\sqrt{\frac{4\pi}{2k+1}}Y_{l}^{m}(\theta,\phi).
 ```
 
 Set ``\phi(\vec{r})=R_{nl}(r)Y_{l}^{m}(\theta\phi)``, then for fixed ``n,l``, we obtain,
