@@ -163,7 +163,7 @@ For ``p`` system,
 For ``d`` system,
 ```math
 \begin{equation}
-\hat{\l}\cdot\hat{\sigma}=
+\hat{l}\cdot\hat{\sigma}=
 \left[
 \begin{array}{ccccc|ccccc}
 -2 & 0 & 0 & 0 & 0 & 0 & \sqrt{4} & 0 & 0 & 0\\
