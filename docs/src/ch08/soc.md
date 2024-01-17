@@ -364,3 +364,5 @@ For ``f`` system,
 \right]
 \end{equation}
 ```
+
+Next, it is easy to transform the above matrices from the ``\hat{j}^{2}-\hat{j}_{z}-\hat{l}^2-\hat{s}^2`` diagonal basis to complex orbital basis. See [Single particle basis](basis.md) for the transformation matrix.
