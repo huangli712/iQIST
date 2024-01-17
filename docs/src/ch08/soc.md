@@ -22,7 +22,7 @@ where ``\alpha`` is orbital index and ``\sigma`` is spin index. We note that
 
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{s}} = 
+\vec{\mathbf{l}}\cdot\vec{\mathbf{s}} =
 \frac{1}{2} \vec{\mathbf{l}} \cdot \vec{\mathbf{\sigma}}.
 \end{equation}
 ```
@@ -259,7 +259,7 @@ function calc_matrix(l::Int64)
             if m2ⱼ == mᵢ && sᵢ == s2ⱼ
                 println("SOC($i, $j) = sqrt(", T₂, ")")
             end
-            
+
             # For lzσz term
             T₃ = mⱼ * (sⱼ == "up" ? 1 : -1)
             if mⱼ == mᵢ && sᵢ == sⱼ
