@@ -6,15 +6,21 @@ The spin-orbit coupling (SOC) is implemented at atomic level,
 
 ```math
 \begin{equation}
-\hat{H}_{\text{SOC}}=\lambda\sum_{i}\vec{\mathbf{l}}_{i}\cdot\vec{\mathbf{s}}_{i},
+\hat{H}_{\text{SOC}}=
+\lambda\sum_{i}\hat{l}_{i} \cdot \hat{s}_{i},
 \end{equation}
 ```
 
-where ``\vec{\mathbf{l}}`` is orbital angular momentum, and ``\vec{\mathbf{s}}`` is spin angular momentum. In second quantization form,
+where ``\hat{l}`` is orbital angular momentum, and ``\hat{s}`` is spin angular momentum. In second quantization form,
 
 ```math
 \begin{equation}
-\hat{H}_{\text{SOC}}=\lambda\sum_{\alpha\sigma,\beta\sigma^{\prime}}\left\langle\alpha\sigma\left|\vec{\mathbf{l}}\cdot\vec{\mathbf{s}}\right|\beta\sigma^{\prime}\right\rangle\hat{f}_{\alpha\sigma}^{\dagger}\hat{f}_{\beta\sigma^{\prime}},
+\hat{H}_{\text{SOC}}=
+\lambda\sum_{\alpha\sigma,\beta\sigma^{\prime}}
+\left\langle
+\alpha\sigma\left| \hat{l} \cdot \hat{s} \right|\beta\sigma^{\prime}
+\right\rangle
+\hat{f}_{\alpha\sigma}^{\dagger}\hat{f}_{\beta\sigma^{\prime}},
 \end{equation}
 ```
 
@@ -22,16 +28,18 @@ where ``\alpha`` is orbital index and ``\sigma`` is spin index. We note that
 
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{s}} =
-\frac{1}{2} \vec{\mathbf{l}} \cdot \vec{\mathbf{\sigma}}.
+\hat{l} \cdot \hat{s} =
+\frac{1}{2} \hat{l} \cdot \hat{\sigma}.
 \end{equation}
 ```
 
-where ``\vec{\mathbf{\sigma}}`` is the Pauli operator:
+where ``\hat{\sigma}`` is the Pauli operator:
 
 ```math
 \begin{equation}
-\vec{\mathbf{\sigma}} = \hat{\sigma}_x \hat{x} + \hat{\sigma}_y \hat{y} + {\sigma}_z \hat{z}.
+\hat{\sigma} = \hat{\sigma}_x \hat{x} +
+               \hat{\sigma}_y \hat{y} +
+               {\sigma}_z \hat{z}.
 \end{equation}
 ```
 
@@ -58,11 +66,11 @@ i & 0 \\
 \end{equation}
 ```
 
-Now the question is how to write down the matrix elements for ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}``.
+Now the question is how to write down the matrix elements for ``\hat{l} \cdot \hat{\sigma}``.
 
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}} =
+\hat{l} \cdot \hat{\sigma} =
 \hat{l}_{x}\hat{\sigma}_{x}+
 \hat{l}_{y}\hat{\sigma}_{y}+
 \hat{l}_{z}\hat{\sigma}_{z}
@@ -77,7 +85,7 @@ where ``\hat{l}_{\pm}=\hat{l}_{x}\pm\hat{l}_{y}``. It is easy to prove that Eq.(
 
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}} =
+\hat{l} \cdot \hat{\sigma} =
 \hat{l}_{+}\hat{\sigma}_{-}+
 \hat{l}_{-}\hat{\sigma}_{+}+
 \hat{l}_{z}\hat{\sigma}_{z},
@@ -105,7 +113,7 @@ where
 
 **Spin-orbit interaction in the complex orbital basis**
 
-We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex spherical harmonics basis. The following relations are used to derive the matrix elements of the spin-orbit interaction:
+We just write down ``\hat{l}\cdot\hat{\sigma}`` in the complex spherical harmonics basis. The following relations are used to derive the matrix elements of the spin-orbit interaction:
 
 ```math
 \begin{equation}
@@ -137,7 +145,7 @@ We just write down ``\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}`` in the complex
 For ``p`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=
+\hat{l}\cdot\hat{\sigma}=
 \left[
 \begin{array}{ccc|ccc}
 -1 & 0 & 0 & 0 & \sqrt{2} & 0\\
@@ -155,7 +163,7 @@ For ``p`` system,
 For ``d`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=
+\hat{\l}\cdot\hat{\sigma}=
 \left[
 \begin{array}{ccccc|ccccc}
 -2 & 0 & 0 & 0 & 0 & 0 & \sqrt{4} & 0 & 0 & 0\\
@@ -177,7 +185,7 @@ For ``d`` system,
 For ``f`` system,
 ```math
 \begin{equation}
-\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=
+\hat{l}\cdot\hat{\sigma}=
 \left[
 \begin{array}{ccccccc|ccccccc}
 -3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \sqrt{6} & 0 & 0 & 0 & 0 & 0\\
@@ -268,4 +276,91 @@ function calc_matrix(l::Int64)
         end
     end
 end
+```
+
+**Spin-orbit interaction in the ``\hat{j}^{2}-\hat{j}_{z}-\hat{l}^2-\hat{s}^2`` diagonal basis**
+
+Since
+
+```math
+\begin{equation}
+\hat{j} = \hat{l} + \hat{s},
+\end{equation}
+```
+
+```math
+\hat{j}^2 = \hat{l}^2 + \hat{s}^2 + 2\hat{l} \cdot \hat{s},
+```
+
+```math
+\hat{l} \cdot \hat{\sigma} = 2 \hat{l} \cdot \hat{s} 
+                           = \hat{j}^2 - \hat{l}^2 - \hat{s}^2,
+```
+
+thus, in the ``\hat{j}^{2}-\hat{j}_{z}-\hat{l}^2-\hat{s}^2`` diagonal basis, the matrix of ``\hat{l} \cdot \hat{\sigma}`` is diagonal. The diagonal element reads ``j(j+1) - l(l+1) - s(s+1)``. Note that in this basis, ``j = l \pm \frac{1}{2}`` and ``s = \frac{1}{2}``.
+
+For ``p`` system,
+```math
+\begin{equation}
+\hat{l}\cdot\hat{\sigma}=
+\left[
+\begin{array}{ccc|ccc}
+-2 & 0 & 0 & 0 & 0 & 0\\
+0 & -2 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0\\
+\hline
+0 & 0 & 0 & 1 & 0 & 0\\
+0 & 0 & 0 & 0 & 1 & 0\\
+0 & 0 & 0 & 0 & 0 & 1\\
+\end{array}
+\right]
+\end{equation}
+```
+
+For ``d`` system,
+```math
+\begin{equation}
+\hat{l}\cdot\hat{\sigma}=
+\left[
+\begin{array}{ccccc|ccccc}
+-3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & -3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & -3 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & -3 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0\\
+\hline
+0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2\\
+\end{array}
+\right]
+\end{equation}
+```
+
+For ``f`` system,
+```math
+\begin{equation}
+\hat{l}\cdot\hat{\sigma}=
+\left[
+\begin{array}{ccccccc|ccccccc}
+-4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & -4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & -4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & -4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & -4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & -4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 3\\
+\end{array}
+\right]
+\end{equation}
 ```
