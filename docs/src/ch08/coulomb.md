@@ -1,23 +1,36 @@
 # Coulomb interaction
 
 The standard form of Coulomb interaction in second quantization form is:
+
 ```math
 \begin{equation}
-\hat{H}_{U}=\frac{1}{2}\sum_{\sigma,\sigma^{\prime}}\sum_{a,b,c,d}
-\left\langle a\sigma,b\sigma^{\prime}\left|\frac{1}{r_{12}}\right|c\sigma,d\sigma^{\prime}\right\rangle
-\hat{f}_{a\sigma}^{\dagger}\hat{f}_{b\sigma^{\prime}}^{\dagger}\hat{f}_{d\sigma^{\prime}}\hat{f}_{c\sigma}
+\hat{H}_{\text{Coulomb}}=
+\frac{1}{2}\sum_{\sigma\sigma^{\prime}}\sum_{abcd}
+\left\langle a\sigma,b\sigma^{\prime}\left|
+\frac{1}{r_{12}}
+\right|c\sigma,d\sigma^{\prime}\right\rangle
+\hat{f}_{a\sigma}^{\dagger}
+\hat{f}_{b\sigma^{\prime}}^{\dagger}
+\hat{f}_{d\sigma^{\prime}}
+\hat{f}_{c\sigma},
 \end{equation}
 ```
 
 ```math
 \begin{equation}
-\left\langle a\sigma,b\sigma^{\prime}\left|\frac{1}{r_{12}}\right|c\sigma,d\sigma^{\prime}\right\rangle=
-\int d\vec{r}_{1}d\vec{r}_{2}\phi_{\alpha\sigma}^{*}(\vec{r}_{1})\phi_{b\sigma^{\prime}}^{*}(\vec{r}_{2})\frac{1}{r_{12}}\phi_{c\sigma}
-(\vec{r}_{1})\phi_{d\sigma^{\prime}}(\vec{r}_{2})
+\left\langle a\sigma,b\sigma^{\prime}\left|
+\frac{1}{r_{12}}
+\right|c\sigma,d\sigma^{\prime}\right\rangle=
+\int d\vec{r}_{1}d\vec{r}_{2}
+\phi_{\alpha\sigma}^{*}(\vec{r}_{1})
+\phi_{b\sigma^{\prime}}^{*}(\vec{r}_{2})
+\frac{1}{r_{12}}
+\phi_{c\sigma}(\vec{r}_{1})
+\phi_{d\sigma^{\prime}}(\vec{r}_{2}),
 \end{equation}
 ```
 
-where, ``\frac{1}{r_{12}}`` is the Coulomb interaction, ``r_{12}=|\vec{r}_{1}-\vec{r}_{2}|``, ``a,b,c,d`` is orbital index and ``\sigma,\sigma^{\prime}=\uparrow,\downarrow`` is spin index. In the **JASMINE** component, we use a array *UMAT* to store the ``U`` tensor. **BE VERY CAREFUL WITH THE ORBITAL ORDER.** The indices order of *UMAT* is the same with that of the fermion operators, it is **NOT** the same with that of the ``U`` tensor.
+where, ``\frac{1}{r_{12}}`` is the Coulomb interaction, ``r_{12}=|\vec{r}_{1}-\vec{r}_{2}|``, ``a,b,c,d`` is orbital index and ``\sigma,\sigma^{\prime}=\uparrow,\downarrow`` is spin index.
 
 **Slater Type**
 
