@@ -22,7 +22,7 @@
 
 **Comment**
 
-> See also [nband](p_nband.md), [norbs](p_norbs.md), and [ncfgs](p_ncfgs.md) parameters.
+> See also [nband](p_nband.md), [norbs](p_norbs.md), and [ncfgs](p_ncfgs.md) parameters for more details.
 
 !!! warning
 

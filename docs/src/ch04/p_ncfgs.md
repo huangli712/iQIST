@@ -34,4 +34,4 @@
 >
 > You have to ensure the value of *norbs* is compatible with *nband*, *nspin* and *ncfgs*. The quantum impurity solvers will not check and correct them automatically. So you have to setup them in the *solver.ctqmc.in* file explicitly.
 >
-> See also [nspin](p_nspin.md), [nband](p_nband.md), and [norbs](p_norbs.md) parameters.
+> See also [nspin](p_nspin.md), [nband](p_nband.md), and [norbs](p_norbs.md) parameters for more details.

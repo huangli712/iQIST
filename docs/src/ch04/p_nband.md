@@ -26,4 +26,4 @@
 >
 > When you try to setup the *nband* parameter in the *solver.ctqmc.in* file, the corresponding *norbs* and *ncfgs* parameters must be set as well.
 >
-> See [nspin](p_nspin.md), [norbs](p_norbs.md), and [ncfgs](p_ncfgs.md) parameters.
+> See [nspin](p_nspin.md), [norbs](p_norbs.md), and [ncfgs](p_ncfgs.md) parameters for more details.
