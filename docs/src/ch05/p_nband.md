@@ -14,7 +14,7 @@
 
 **Component**
 
-Only for the **JASMINE** component.
+> Only for the **JASMINE** component.
 
 **Behavior**
 

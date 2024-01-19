@@ -1,4 +1,4 @@
-### Parameter: nspin
+# Parameter: nspin
 
 !!! warning
 
@@ -6,24 +6,24 @@
 
 **Definition**:
 
-Number of spin projection.
+> Number of spin projection.
 
 **Type**
 
-Integer
+> Integer
 
 **Default value**
 
-2
+> 2
 
 **Component**
 
-Only for the **JASMINE** component.
+> Only for the **JASMINE** component.
 
 **Behavior**
 
-Determine the size of involved arrays.
+> Determine the size of involved arrays.
 
 **Comment**
 
-See [nband](p_nband.md), [norbs](p_norbs.md), and [ncfgs](p_ncfgs.md) parameters.
+> See [nband](p_nband.md), [norbs](p_norbs.md), and [ncfgs](p_ncfgs.md) parameters for more details.
