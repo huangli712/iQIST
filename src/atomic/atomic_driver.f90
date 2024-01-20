@@ -7,8 +7,9 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/08/2024 by li huang (last modified)
-!!! purpose : kernel drivers for atomic eigenvalue problem solver
+!!!           01/21/2024 by li huang (last modified)
+!!! purpose : try to drive various computational tasks for the atomic
+!!!           eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -16,7 +17,7 @@
 !!
 !! @sub atomic_dispatcher
 !!
-!! dispatch the computational tashs
+!! dispatch various computational tasks
 !!
   subroutine atomic_dispatcher()
      use constants, only : mystd
@@ -44,50 +45,45 @@
 
      select case (ictqmc)
 
-         ! diagonalize the atomic Hamiltonian in full Hilbert space
-         case (0)
-             write(mystd,'(2X,a)') 'start full diagonalization'
-             call atomic_f_driver()
-
-         ! diagonalize the atomic Hamiltonian in full Hilbert space
+         ! diagonalize the atomic Hamiltonian directly
          case (1)
-             write(mystd,'(2X,a)') 'start full diagonalization'
+             write(mystd,'(2X,a)') 'start exact diagonalization'
              call atomic_f_driver()
 
-         ! use good quantum numbers
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers: N
          !
-         ! total number of electrons: N
-         ! with CF, with SOC
+         ! crystal field splitting: yes
+         ! spin-orbit coupling: yes
          case (2)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N)'
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N)'
              call atomic_s_driver()
 
-         ! use good quantum numbers
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers: N, Sz
          !
-         ! total number of electrons: N
-         ! z component of spin: Sz
-         ! without SOC, with Slater parameterized Coulomb interaction
+         ! spin-orbit coupling: no
+         ! Coulomb interaction: parameterized by Slater integrals
          case (3)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Sz)'
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N, Sz)'
              call atomic_s_driver()
 
-         ! use good quantum numbers
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers: N, Sz, PS
          !
-         ! total number of electrons: N
-         ! z component of spin: Sz
-         ! PS number
-         ! without SOC, with Kanamori parametrized Coulomb interaction
+         ! spin-orbit coupling: no
+         ! Coulomb interaction: parameterized by Kanamori form
          case (4)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Sz, PS)'
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N, Sz, PS)'
              call atomic_s_driver()
 
-         ! use good quantum numbers
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers: N, Jz
          !
-         ! total number of electrons: N
-         ! z component of spin-orbit momentum: Jz
-         ! with SOC, without CF
+         ! crystal field splitting: no
+         ! spin-orbit coupling: yes
          case (5)
-             write(mystd,'(2X,a)') 'start sector-by-sector diagonalization (N, Jz)'
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N, Jz)'
              call atomic_s_driver()
 
          case default
