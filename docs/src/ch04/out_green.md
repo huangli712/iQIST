@@ -2,7 +2,7 @@
 
 **Introduction**
 
-This file is used to store the imaginary-time Green's function ``G(\tau)``. It will be output by the quantum impurity solvers finally.
+This file is used to store the imaginary-time Green's function ``G(\tau)``. It will be output by the quantum impurity solvers when they are **shut down**.
 
 **Format**
 
