@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/03/2024 by li huang (last modified)
+!!!           01/21/2024 by li huang (last modified)
 !!! purpose : define global control parameters for the atomic eigenvalue
 !!!           problem solver
 !!! status  : unstable
@@ -34,7 +34,7 @@
 !!
 !! @var cname
 !!
-!! code name of the current atomic eigenvalue problem solver
+!! code name of the atomic eigenvalue problem solver
 !!
      character(len = 07), public, save :: cname = 'JASMINE'
 
@@ -45,8 +45,8 @@
 !!
 !! @var ibasis
 !!
-!! control flag, where is the source for natural basis (the eigenstate of
-!! crystal field + spin-orbital coupling)
+!! control flag, how to build the natural basis (eigenstates of crystal
+!! field + spin-orbital coupling)
 !!
 !! if ibasis == 1:
 !!     make natural basis inside of this program
@@ -59,25 +59,22 @@
 !!
 !! @var ictqmc
 !!
-!! control flag, type of atomic Hamiltonian matrix diagonalization
-!!
-!! if ictqmc == 0:
-!!     direct diagonalization in full Hilbert space (for camellia code)
+!! control flag, how to diagonalize the atomic Hamiltonian matrix
 !!
 !! if ictqmc == 1:
-!!     direct diagonalization in full Hilbert space (for begonia and lavender codes)
+!!     direct diagonalization in full Hilbert space
 !!
 !! if ictqmc == 2:
-!!     good quantum numbers: N
+!!     subspace diagonalization using good quantum numbers (N)
 !!
 !! if ictqmc == 3:
-!!     good quantum numbers: N, Sz
+!!     subspace diagonalization using good quantum numbers (N and Sz)
 !!
 !! if ictqmc == 4:
-!!     good quantum numbers: N, Sz, PS
+!!     subspace diagonalization using good quantum numbers (N, Sz, and PS)
 !!
 !! if ictqmc == 5:
-!!     good quantum numbers: N, Jz
+!!     subspace diagonalization using good quantum numbers (N and Jz)
 !!
      integer, public, save :: ictqmc = 1
 
@@ -103,7 +100,7 @@
 !! control flag, type of crystal field (CF)
 !!
 !! if icf == 0:
-!!     no crystal field
+!!     without crystal field
 !!
 !! if icf == 1:
 !!     diagonal crystal field
@@ -119,10 +116,10 @@
 !! control flag, type of spin-orbit coupling (SOC)
 !!
 !! if isoc == 0:
-!!     no SOC
+!!     without SOC
 !!
 !! if isoc == 1:
-!!     onsite atomic SOC, H_soc = \lambda * L*S
+!!     onsite atomic SOC, H_{soc} = \lambda * L \cdot S
 !!
      integer, public, save :: isoc   = 0
 
@@ -219,7 +216,7 @@
 
 !!
 !! the following parameters are useful when icu = 2. they are used to
-!! calculate the F0, F2, F4, and F6.
+!! calculate the F0, F2, F4, and F6 parameters.
 !!
 
 !!
@@ -249,7 +246,7 @@
 !!
 !! @var lambda
 !!
-!! SOC strength
+!! strength of spin-orbit coupling
 !!
      real(dp), public, save :: lambda= 0.0_dp
 
@@ -272,21 +269,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.8.2 @ 2023.07.06D'
+     character(len=20), public, parameter :: V_FULL = 'v0.8.3 @ 2024.01.21D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.8.2'
+     character(len=06), public, parameter :: V_CURR = 'v0.8.3'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2023.07.06'
+     character(len=11), public, parameter :: V_DATE = '2024.01.21'
 
 !!
 !! @var V_STAT
