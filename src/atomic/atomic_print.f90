@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/04/2024 by li huang (last modified)
+!!!           01/20/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for the atomic eigenvalue
 !!!           problem solver
 !!! status  : unstable
@@ -17,7 +17,7 @@
 !!
 !! @sub atomic_print_header
 !!
-!! print the running header
+!! print the runtime information (start)
 !!
   subroutine atomic_print_header()
      use constants, only : mystd
@@ -60,7 +60,7 @@
 !!
 !! @sub atomic_print_footer
 !!
-!! print running footer
+!! print the runtime information (end)
 !!
   subroutine atomic_print_footer()
      use constants, only : dp
@@ -99,7 +99,7 @@
 !!
 !! @sub atomic_print_summary
 !!
-!! print summary of parameters list
+!! print the control parameters to the terminal
 !!
   subroutine atomic_print_summary()
      use constants, only : mystd
@@ -118,7 +118,7 @@
      write(mystd,'(4X,a16,i10,  2X,a8)') 'icf    / value :', icf    , 'type : i'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'isoc   / value :', isoc   , 'type : i'
 
-     write(mystd,'(2X,a)') '[configuration parameters] -> atomic model'
+     write(mystd,'(2X,a)') '[configuration parameters] -> atomic hamiltonian'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'nband  / value :', nband  , 'type : i'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'nspin  / value :', nspin  , 'type : i'

@@ -20,28 +20,28 @@
 
 !! [body
 
-     ! print the running header
+     ! print the runtime information (start)
      call atomic_print_header()
 
-     ! setup the parameters
+     ! setup the control parameters
      call atomic_setup_param()
 
-     ! check validity of control parameters
+     ! verify the control parameters
      call atomic_check_param()
 
-     ! allocate memory spaces
+     ! allocate memories for global arrays
      call atomic_alloc_array()
 
-     ! print the summary of control parameters
+     ! print the control parameters to terminal
      call atomic_print_summary()
 
-     ! call the drivers to perform different tasks
+     ! call the dispatcher to drive different tasks
      call atomic_dispatcher()
 
-     ! deallocate memory spaces
+     ! deallocate memories for global arrays
      call atomic_final_array()
 
-     ! print footer
+     ! print the runtime information (end)
      call atomic_print_footer()
 
 !! body]
