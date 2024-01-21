@@ -17,7 +17,8 @@
 !!
 !! @sub atomic_dispatcher
 !!
-!! dispatch various computational tasks
+!! dispatch various computational tasks. it is the core engine of the
+!! atomic eigenvalue problem solver
 !!
   subroutine atomic_dispatcher()
      use constants, only : mystd
@@ -33,8 +34,8 @@
      call atomic_build_fock()
      write(mystd,*)
 
-     ! make single particle related matrices
-     write(mystd,'(2X,a)') 'make single particle matrices'
+     ! make single particle matrix, such as spin-orbit coupling 
+     write(mystd,'(2X,a)') 'make single particle matrix'
      call atomic_build_spmat()
      write(mystd,*)
 
@@ -43,6 +44,7 @@
      call atomic_build_natural()
      write(mystd,*)
 
+     ! choose the computational kernel
      select case (ictqmc)
 
          ! diagonalize the atomic Hamiltonian directly
@@ -51,7 +53,7 @@
              call atomic_f_driver()
 
          ! subspace diagonalization by using good quantum numbers
-         ! good quantum numbers: N
+         ! good quantum numbers -> N
          !
          ! crystal field splitting: yes
          ! spin-orbit coupling: yes
@@ -60,7 +62,7 @@
              call atomic_s_driver()
 
          ! subspace diagonalization by using good quantum numbers
-         ! good quantum numbers: N, Sz
+         ! good quantum numbers -> N, Sz
          !
          ! spin-orbit coupling: no
          ! Coulomb interaction: parameterized by Slater integrals
@@ -69,7 +71,7 @@
              call atomic_s_driver()
 
          ! subspace diagonalization by using good quantum numbers
-         ! good quantum numbers: N, Sz, PS
+         ! good quantum numbers -> N, Sz, PS
          !
          ! spin-orbit coupling: no
          ! Coulomb interaction: parameterized by Kanamori form
@@ -78,7 +80,7 @@
              call atomic_s_driver()
 
          ! subspace diagonalization by using good quantum numbers
-         ! good quantum numbers: N, Jz
+         ! good quantum numbers -> N, Jz
          !
          ! crystal field splitting: no
          ! spin-orbit coupling: yes
@@ -99,7 +101,8 @@
 !!
 !! @sub atomic_f_driver
 !!
-!! solve atomic eigenvalue problem using full Hilbert space diagonalization 
+!! solve atomic eigenvalue problem by direct diagonalization in the full
+!! Hilbert space 
 !!
   subroutine atomic_f_driver()
      use constants, only : dp
@@ -125,8 +128,8 @@
 
 !! [body
 
-     ! allocate memory for global variables
-     write(mystd,'(2X,a)') 'allocate memory for global variables in full Hilbert space'
+     ! allocate memory for atomic eigenstates
+     write(mystd,'(2X,a)') 'allocate memory for atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call cat_alloc_fock_eigen()
@@ -135,8 +138,8 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! build atomic many particle Hamiltonian matrix
-     write(mystd,'(2X,a)') 'assemble atomic many particle Hamiltonian'
+     ! build atomic Hamiltonian matrix
+     write(mystd,'(2X,a)') 'assemble atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_fhmat()
@@ -145,12 +148,12 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! check whether the many particle Hamiltonian is real
-     write(mystd,"(2X,a)") 'check whether the atomic Hamiltonian is real or not'
+     ! check whether the atomic Hamiltonian is real
+     write(mystd,"(2X,a)") 'check atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
      if ( any( abs( aimag(hmat) ) > eps6 ) ) then
-         call s_print_error('atomic_f_driver','hmat is not real!')
+         call s_print_error('atomic_f_driver','atomic Hamiltonian is not real!')
      endif ! back if ( any( abs( aimag(hmat) ) > eps6 ) ) block
      call cpu_time(time_end)   ! record ending   time
      !
@@ -158,7 +161,7 @@
      write(mystd,*)
 
      ! diagonalize hmat
-     write(mystd,'(2X,a)') 'diagonalize the atomic Hamiltonian'
+     write(mystd,'(2X,a)') 'diagonalize atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
      call s_eig_sy(ncfgs, ncfgs, real(hmat), eval, evec)
@@ -167,10 +170,11 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! build F-matrix
-     ! first, build fmat of annihilation operators in Fock basis
-     ! then, transform them to the eigen basis
-     write(mystd,'(2X,a)') 'build F-matrix for annihilation fermion operators'
+     ! build annihilation operator matrix
+     !
+     ! at first, build annihilation operator matrix in the Fock basis
+     ! and then, transform it to the natural eigenbasis
+     write(mystd,'(2X,a)') 'compute annihilation operator in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_ffmat()
@@ -179,8 +183,8 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! calculate occupancy number
-     write(mystd,'(2X,a)') 'compute occupancy number of atomic eigenstates'
+     ! calculate occupancy matrix in atomic eigenstates
+     write(mystd,'(2X,a)') 'compute occupancy in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_foccu()
@@ -189,8 +193,8 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! calculate Sz
-     write(mystd,'(2X,a)') 'compute magnetic moment of atomic eigenstates'
+     ! calculate Sz in atomic eigenstates
+     write(mystd,'(2X,a)') 'compute magnetic moment in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_fspin()
@@ -199,10 +203,14 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
+     ! write essential data to external files 
+     !
      ! write eigenvalues of hmat to file 'atom.eigval.dat'
      ! write eigenvectors of hmat to file 'atom.eigvec.dat'
      ! write fmat of annihilation fermion operators to file 'atom.cix'
-     write(mystd,'(2X,a)') 'write eigenvalue, eigenvector, and F-matrix to files'
+     write(mystd,'(2X,a)') 'write eigenvalues'
+     write(mystd,'(2X,a)') 'write eigenvectors'
+     write(mystd,'(2X,a)') 'write annihilation operator matrix'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_dump_feigval()
@@ -214,7 +222,7 @@
      write(mystd,*)
 
      ! deallocate memory
-     write(mystd,'(2X,a)') 'deallocate memory for global variables in full Hilbert space'
+     write(mystd,'(2X,a)') 'deallocate memory for atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call cat_free_fock_eigen()
