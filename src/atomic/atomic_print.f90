@@ -118,7 +118,7 @@
      write(mystd,'(4X,a16,i10,  2X,a8)') 'icf    / value :', icf    , 'type : i'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'isoc   / value :', isoc   , 'type : i'
 
-     write(mystd,'(2X,a)') '[configuration parameters] -> atomic hamiltonian'
+     write(mystd,'(2X,a)') '[configuration parameters] -> atomic Hamiltonian'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'nband  / value :', nband  , 'type : i'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'nspin  / value :', nspin  , 'type : i'

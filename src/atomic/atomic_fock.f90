@@ -8,10 +8,9 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/04/2024 by li huang (last modified)
-!!! purpose : computational subroutines for the calculations of occupation
-!!!           number, spin moment, F-matrix, and atomic Hamiltonian in the
-!!!           full Fock space.
+!!!           01/22/2024 by li huang (last modified)
+!!! purpose : core subroutines for solving atomic eigenvalue problem in
+!!!           the Fock space.  
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -19,10 +18,12 @@
 !!
 !! @sub atomic_make_ffmat
 !!
-!! make F-matrix for annihilation operators in full Hilbert space case
+!! construct annihilation operator matrix in the Fock space, and then
+!! rotate it to the atomic eigenbasis
 !!
   subroutine atomic_make_ffmat()
-     use control, only : ictqmc
+     use constants, only : mystd
+     
      use control, only : norbs, ncfgs
 
      use m_fock, only : dec_basis
@@ -38,10 +39,10 @@
      integer :: j
      integer :: k
 
-     ! left Fock state
+     ! left Fock state, < bra |
      integer :: left
 
-     ! right Fock state
+     ! right Fock state, | ket >
      integer :: right
 
      ! the sign change
@@ -49,24 +50,28 @@
 
 !! [body
 
-     ! evaluate F-matrix in the Fock basis
+     ! evaluate annihilation operator matrix in the Fock basis
      do i=1,norbs
+         write(mystd,'(4X,a,i2,a)') 'build c(alpha =', i, ') in Fock basis'
          do j=1,ncfgs
              right = dec_basis(j)
              if ( btest(right,i-1) .eqv. .true. ) then
                 call atomic_make_c(i, right, left, isgn)
-                k = ind_basis(left)
+                k = ind_basis(left) 
                 fmat(k,j,i) = dble(isgn)
+                write(mystd,'(4X,a,i5)', advance = 'no') '< bra | = ', k
+                write(mystd,'(4X,a,i5)', advance = 'no') '| bra > = ', j
+                write(mystd,'(4X,a,i2)') 'val = ', isgn
              endif ! back if ( btest(right,i-1) .eqv. .true. ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
 
-     ! rotate fmat from Fock basis to the atomic eigenvector basis
-     if ( ictqmc == 1 ) then
-         do i=1,norbs
-             call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
-         enddo ! over i={1,norbs} loop
-     endif ! back if ( ictqmc == 1 ) block
+     ! rotate annihilation operator matrix from the Fock basis to
+     ! the atomic eigenbasis
+     do i=1,norbs
+         write(mystd,'(4X,a,i2,a)') 'rotate c(alpha =', i, ') to atomic eigenbasis'
+         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
+     enddo ! over i={1,norbs} loop
 
 !! body]
 
@@ -76,9 +81,11 @@
 !!
 !! @sub atomic_make_foccu
 !!
-!! make occupancy for atomic eigenstates in the full Hilbert space case
+!! construct density matrix (occupancy matrix) in the Fock space, and
+!! then rotate it to the atomic eigenbasis
 !!
   subroutine atomic_make_foccu()
+     use constants, only : mystd
      use constants, only : zero, one
 
      use control, only : norbs, ncfgs
@@ -93,22 +100,26 @@
      ! loop index over orbits
      integer :: iorb
 
-     ! loop index over configurations
+     ! loop index over Fock states
      integer :: ibas
 
 !! [body
 
-     ! evaluate occupancy in the Fock basis
+     ! evaluate density matrix in the Fock basis
      occu = zero
-     do ibas=1,ncfgs
-         do iorb=1,norbs
+     !
+     do iorb=1,norbs
+         write(mystd,'(4X,a,i2,a)') 'treat orbital -> ', iorb, ' in Fock basis'
+         do ibas=1,ncfgs
              if ( bin_basis(iorb,ibas) == 1 ) then
                  occu(ibas,ibas) = occu(ibas,ibas) + one
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
-         enddo ! over iorb={1,norbs} loop
-     enddo ! over ibas={1,ncfgs} loop
+         enddo ! over ibas={1,ncfgs} loop
+     enddo ! over iorb={1,norbs} loop
 
-     ! transform the occupancy from Fock basis to atomic eigenbasis
+     ! try to transform the density matrix from the Fock basis
+     ! to the atomic eigenbasis
+     write(mystd,'(4X,a)') 'rotate density matrix to atomic eigenbasis'
      call atomic_tran_repr_real(ncfgs, occu, evec)
 
 !! body]
@@ -119,28 +130,34 @@
 !!
 !! @sub atomic_make_fspin
 !!
-!! make net Sz for atomic eigenstates in the full Hilbert space case
+!! construct magnetic moment (Sz) in the Fock space, and
+!! then rotate it to the atomic eigenbasis
 !!
   subroutine atomic_make_fspin()
+     use constants, only : mystd
      use constants, only: zero, half
 
      use control, only : norbs, ncfgs
+
      use m_fock, only : bin_basis
-     use m_fock, only : spin, evec
+     use m_fock, only : evec
+     use m_fock, only : spin
 
 !! local variables
      ! loop index over orbits
      integer :: iorb
 
-     ! loop index over configurations
+     ! loop index over Fock states
      integer :: ibas
 
 !! [body
 
-     ! evaluate spin moment in the Fock basis
+     ! evaluate magnetic moment in the Fock basis
      spin = zero
-     do ibas=1,ncfgs
-         do iorb=1,norbs
+     !
+     do iorb=1,norbs
+         write(mystd,'(4X,a,i2,a)') 'treat orbital -> ', iorb, ' in Fock basis'
+         do ibas=1,ncfgs
              if ( bin_basis(iorb,ibas) == 1 ) then
                  if ( mod(iorb,2) /= 0 ) then ! spin up
                      spin(ibas,ibas) = spin(ibas,ibas) + half
@@ -148,10 +165,12 @@
                      spin(ibas,ibas) = spin(ibas,ibas) - half
                  endif ! back if ( mod(iorb,2) /= 0 ) block
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
-         enddo ! over iorb={1,norbs} loop
-     enddo ! over ibas={1,ncfgs} loop
+         enddo ! over ibas={1,ncfgs} loop
+     enddo ! over iorb={1,norbs} loop
 
-     ! transform the net Sz from Fock basis to atomic eigenbasis
+     ! try to transform the magnetic moment from the Fock basis
+     ! to the atomic eigenbasis
+     write(mystd,'(4X,a)') 'rotate magnetic moment to atomic eigenbasis'
      call atomic_tran_repr_real(ncfgs, spin, evec)
 
 !! body]
