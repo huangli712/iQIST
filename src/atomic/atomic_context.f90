@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : m_fock   module
 !!!           m_sector module
 !!!           m_spmat  module
@@ -7,9 +7,9 @@
 !!! type    : modules
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/03/2024 by li huang (last modified)
-!!! purpose : define global data structures for the atomic eigenvalue
-!!!           problem solver
+!!!           01/23/2024 by li huang (last modified)
+!!! purpose : define global data structures, arrays, and variables for
+!!!           the atomic eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -21,7 +21,8 @@
 !!
 !! @mod m_fock
 !!
-!! define Fock basis of full Hilbert space and corresponding eigensystem
+!! define the Fock basis, density matrix, spin matrix, atomic Hamiltonian
+!! and the corresponding eigensystem
 !!
   module m_fock
      use constants, only : dp
@@ -34,75 +35,77 @@
 !!
 !! @var dim_sub_n
 !!
-!! dimension of subspace with total electron N.
-!! if i is the number of electrons, then dim_sub_n(i) will tell you how
-!! many states there are in the subspace with i electrons
+!! dimension of subspace with total electron N
+!! if i is the number of electrons, then dim_sub_n(i) will tell you
+!! how many Fock states there are in the subspace with i electrons
 !!
      integer, public, save, allocatable  :: dim_sub_n(:)
 
 !!
 !! @var bin_basis
 !!
-!! binary form of Fock basis
+!! binary form of Fock state (something like |110110>)
+!! bin_basis(:,i) denotes the binary form of the i-th Fock state
 !!
      integer, public, save, allocatable  :: bin_basis(:,:)
 
 !!
 !! @var dec_basis
 !!
-!! decimal form of Fock basis (a decimal number)
-!! dec_basis(i) will tell you what the i-th Fock state is
+!! decimal form of Fock state (a decimal number)
+!! dec_basis(i) denotes the decimal form of the i-th Fock state
 !!
      integer, public, save, allocatable  :: dec_basis(:)
 
 !!
 !! @var ind_basis
 !!
-!! index of Fock basis, given their decimal number
-!! ind_basis(i) will tell you for a given decimal number what its
-!! corresponding Fock state index is
+!! index of Fock state, given their decimal number
+!! for a given decimal number, ind_basis(i) will tell you what
+!! the corresponding Fock state index is
 !!
      integer, public, save, allocatable  :: ind_basis(:)
 
 !!
 !! @var eval
 !!
-!! eigenvalues of atomic hamiltonian (hmat)
+!! eigenvalues of atomic Hamiltonian
 !!
      real(dp), public, save, allocatable :: eval(:)
 
 !!
 !! @var evec
 !!
-!! eigenvectors of atomic hamiltonian (hmat)
+!! eigenvectors of atomic Hamiltonian
 !!
      real(dp), public, save, allocatable :: evec(:,:)
 
 !!
 !! @var occu
 !!
-!! occupany number (N) for the atomic eigenstates
+!! density matrix (occupancy) for the atomic eigenstates
 !!
      real(dp), public, save, allocatable :: occu(:,:)
 
 !!
 !! @var spin
 !!
-!! spin (Sz) for the atomic eigenstates
+!! magnetic moment (Sz) for the atomic eigenstates
 !!
      real(dp), public, save, allocatable :: spin(:,:)
 
 !!
 !! @var fmat
 !!
-!! F-matrix for annihilation fermion operators
+!! annihilation operator matrix, < alpha | f | beta >
+!! where | alpha > and | beta > are the atomic eigenstates 
 !!
      real(dp), public, save, allocatable :: fmat(:,:,:)
 
 !!
 !! @var hmat
 !!
-!! atomic Hamiltonian
+!! atomic Hamiltonian in the Fock basis
 !!
      complex(dp), public, save, allocatable :: hmat(:,:)
 
@@ -127,7 +130,7 @@
 !!
 !! @sub cat_alloc_fock_basis
 !!
-!! allocate memory for Fock basis matrices
+!! allocate memory for the Fock basis
 !!
   subroutine cat_alloc_fock_basis()
      implicit none
@@ -163,7 +166,8 @@
 !!
 !! @sub cat_alloc_fock_eigen
 !!
-!! allocate memory for eigensystem defined in Fock basis
+!! allocate memory for atomic eigensystem that
+!! is initialized in the Fock basis
 !!
   subroutine cat_alloc_fock_eigen()
      implicit none
@@ -180,7 +184,7 @@
      allocate(occu(ncfgs,ncfgs),       stat=istat)
      allocate(spin(ncfgs,ncfgs),       stat=istat)
      allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
-
+     !
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
      ! check the status
@@ -209,7 +213,7 @@
 !!
 !! @sub cat_free_fock_basis
 !!
-!! deallocate memory for Fock basis matrices
+!! deallocate memory for the Fock basis
 !!
   subroutine cat_free_fock_basis()
      implicit none
@@ -229,7 +233,8 @@
 !!
 !! @sub cat_free_fock_eigen
 !!
-!! deallocate memory for eigensystem matrices
+!! deallocate memory for atomic eigensystem that
+!! is initialized in the Fock basis
 !!
   subroutine cat_free_fock_eigen()
      implicit none
