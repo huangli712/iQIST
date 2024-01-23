@@ -15,8 +15,8 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/04/2024 by li huang (last modified)
-!!! purpose : write output files
+!!!           01/23/2024 by li huang (last modified)
+!!! purpose : write some essential arrays and data structures to files
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -38,7 +38,7 @@
      implicit none
 
 !! local variables
-     ! loop index
+     ! loop index over Fock states
      integer :: i
 
      ! used to draw a dashed line
@@ -59,10 +59,10 @@
 
      ! write the data
      do i=1,ncfgs
-         write(mytmp,'(i6)',advance='no') i
-         write(mytmp,'(i6)',advance='no') dec_basis(i)
-         write(mytmp,'(i6)',advance='no') ind_basis(dec_basis(i))
-         write(mytmp,'(4X,14i1)') bin_basis(:,i)
+         write(mytmp,'(i6)', advance='no') i
+         write(mytmp,'(i6)', advance='no') dec_basis(i)
+         write(mytmp,'(i6)', advance='no') ind_basis(dec_basis(i))
+         write(mytmp,'(4X,*(i1))') bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
      ! close data file
@@ -76,7 +76,8 @@
 !!
 !! @sub atomic_dump_tmat
 !!
-!! write the transformation matrix from the original basis to natural basis
+!! write the transformation matrix from the original basis to the
+!! natural basis (eigenstates of H_{CFS} + H_{SOC})
 !!
   subroutine atomic_dump_tmat()
      use constants, only : mytmp
@@ -125,6 +126,7 @@
 !! @sub atomic_dump_emat
 !!
 !! write onsite impurity energy on natural basis
+!! it should be a diagonal matrix
 !!
   subroutine atomic_dump_emat()
      use constants, only : mytmp
@@ -184,7 +186,7 @@
 !!
 !! @sub atomic_dump_umat
 !!
-!! write onsite Coulomb interaction matrix
+!! write onsite Coulomb interaction tensor
 !!
   subroutine atomic_dump_umat()
      use constants, only : dp
@@ -206,7 +208,7 @@
      integer  :: k
      integer  :: l
 
-     ! two index umat
+     ! rank-2 Coulomb interaction tensor
      real(dp) :: umat_t(norbs,norbs)
 
      ! used to draw a dashed line
@@ -242,7 +244,7 @@
      ! close data file
      close(mytmp)
 
-     ! get two index umat
+     ! initialize rank-2 Coulomb interaction tensor
      umat_t = zero
 
      ! Kanamori type
@@ -267,10 +269,11 @@
          enddo ! over i={1,norbs} loop
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
-     ! open file atom.umat.dat to write
+     ! open file solver.umat.in to write
+     ! this file is used as input for the the other ctqmc code
      open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
 
-     ! write the data, all of the elements are outputed
+     ! write the data, all of the elements are written
      ! note: we have to change the spin sequence here
      do i=1,norbs
          if ( i <= nband ) then
@@ -301,7 +304,7 @@
 !!
 !! @sub atomic_dump_feigval
 !!
-!! write eigenvalue for full Hilbert space to file atom.eigval.dat
+!! write eigenvalues in full Hilbert space to file atom.eigval.dat
 !!
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
@@ -348,7 +351,7 @@
 !!
 !! @sub atomic_dump_feigvec
 !!
-!! write eigenvector for full Hilbert space to file atom.eigvec.dat
+!! write eigenvectors in full Hilbert space to file atom.eigvec.dat
 !!
   subroutine atomic_dump_feigvec()
      use constants, only : eps6
@@ -356,7 +359,6 @@
 
      use control, only : ncfgs
 
-     use m_fock, only : bin_basis
      use m_fock, only : evec
 
      implicit none
@@ -379,15 +381,15 @@
 
      ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(a)') '# i | j | eigenvectors | fockbasis'
+     write(mytmp,'(a)') '# i | j | eigenvectors'
      write(mytmp,'(75a1)') dash ! dashed line
 
      ! write the data
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs( evec(j,i) ) > eps6 ) then
-                 write(mytmp,'(2i6,f16.8,2X,14I1)') j, i, evec(j,i), bin_basis(:,j)
-             endif ! back if ( abs( evec(i,j) ) > eps6 ) block
+                 write(mytmp,'(2i6,f16.8)') j, i, evec(j,i)
+             endif ! back if ( abs( evec(j,i) ) > eps6 ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,ncfgs} loop
 
