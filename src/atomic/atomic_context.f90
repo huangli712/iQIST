@@ -263,7 +263,8 @@
 !!
 !! @mod m_sector
 !!
-!! data structure for good quantum numbers (GQNs) algorithm
+!! define data structures, arrays, and variables for the subspace
+!! diagonalization algorithm
 !!
   module m_sector
      use constants, only : dp
@@ -272,21 +273,23 @@
      implicit none
 
 !!
-!! @struct t_fmat
+!! @struct Tf
 !!
-!! data structure for one F-matrix
+!! data structure for annihilation operator matrix, < alpha | f | beta >
+!! where | alpha > and | beta > are the atomic eigenstates in the
+!! given subspace labelled by good quantum numbers
 !!
-     private :: t_fmat
-     type t_fmat
+     private :: Tf
+     type Tf
 
-         ! the dimension, n x m
+         ! dimension of annihilation operator matrix, n x m
          integer :: n
          integer :: m
 
-         ! the memory space for the matrix
+         ! memory space for annihilation operator matrix
          real(dp), allocatable :: val(:,:)
 
-     end type t_fmat
+     end type Tf
 
 !!
 !! @struct t_sector
@@ -346,7 +349,7 @@
          !
          ! if this sector doesn't point to some other sectors, then the
          ! pointer is null
-         type (t_fmat), allocatable :: fmat(:,:)
+         type (Tf), allocatable :: fmat(:,:)
 
      end type t_sector
 
@@ -408,7 +411,7 @@
 
 !! external arguments
      ! the fmat
-     type (t_fmat), intent(inout) :: one_fmat
+     type (Tf), intent(inout) :: one_fmat
 
 !! local variables
      ! the status flag
@@ -528,7 +531,7 @@
 
 !! external arguments
      ! the fmat
-     type (t_fmat), intent(inout) :: one_fmat
+     type (Tf), intent(inout) :: one_fmat
 
 !! [body
 
