@@ -387,9 +387,9 @@
      ! write the data
      do i=1,ncfgs
          do j=1,ncfgs
-             if ( abs( evec(j,i) ) > eps6 ) then
-                 write(mytmp,'(2i6,f16.8)') j, i, evec(j,i)
-             endif ! back if ( abs( evec(j,i) ) > eps6 ) block
+             if ( abs( evec(i,j) ) > eps6 ) then
+                 write(mytmp,'(2i6,f16.8)') i, j, evec(i,j)
+             endif ! back if ( abs( evec(i,j) ) > eps6 ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -816,7 +816,7 @@
 !!
 !! @sub atomic_dump_sector
 !!
-!! write out the configuration for each sector to file atom.sector.dat
+!! write the configurations of sectors to the file atom.sector.dat
   subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
      use constants, only : mytmp
 
@@ -878,10 +878,10 @@
              write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%nele
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%nele
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
@@ -891,11 +891,11 @@
              write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_sz(i)
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sect_good_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_good_sz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
@@ -905,12 +905,12 @@
              write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_sz(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ps(i)
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sect_good_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_good_sz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_good_ps(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
@@ -920,11 +920,11 @@
               write(mytmp,'(75a1)') dash ! dashed line
               do i=1,nsectors
                   do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_jz(i)
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sect_good_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_good_jz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                   enddo ! over j={1,sectors(i)%ndim} loop
               enddo ! over i={1,nsectors} loop
