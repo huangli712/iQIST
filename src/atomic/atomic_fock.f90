@@ -8,9 +8,9 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/22/2024 by li huang (last modified)
+!!!           01/23/2024 by li huang (last modified)
 !!! purpose : core subroutines for solving atomic eigenvalue problem in
-!!!           the Fock space.  
+!!!           the Fock space.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -23,9 +23,10 @@
 !!
   subroutine atomic_make_ffmat()
      use constants, only : mystd
-     
+
      use control, only : norbs, ncfgs
 
+     use m_fock, only : bin_basis
      use m_fock, only : dec_basis
      use m_fock, only : ind_basis
      use m_fock, only : evec
@@ -54,14 +55,22 @@
      do i=1,norbs
          write(mystd,'(4X,a,i2,a)') 'build c(alpha =', i, ') in Fock basis'
          do j=1,ncfgs
+             ! get | ket >
              right = dec_basis(j)
              if ( btest(right,i-1) .eqv. .true. ) then
+                ! get < bra |
                 call atomic_make_c(i, right, left, isgn)
-                k = ind_basis(left) 
+                k = ind_basis(left)
+                !
+                ! evaluate < bra | c | ket >
                 fmat(k,j,i) = dble(isgn)
-                write(mystd,'(4X,a,i5)', advance = 'no') '< bra | = ', k
-                write(mystd,'(4X,a,i5)', advance = 'no') '| bra > = ', j
-                write(mystd,'(4X,a,i2)') 'val = ', isgn
+                !
+                ! write the Fock states and the matrix elements
+                write(mystd,'(4X,a)', advance = 'no') '< bra | = '
+                write(mystd,'(*(i1))', advance = 'no') bin_basis(:,k)
+                write(mystd,'(2X,a)', advance = 'no') '| ket > = '
+                write(mystd,'(*(i1))', advance ='no') bin_basis(:,j)
+                write(mystd,'(2X,a,i2)') 'value = ', isgn
              endif ! back if ( btest(right,i-1) .eqv. .true. ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
@@ -108,14 +117,16 @@
      ! evaluate density matrix in the Fock basis
      occu = zero
      !
-     do iorb=1,norbs
-         write(mystd,'(4X,a,i2,a)') 'treat orbital -> ', iorb, ' in Fock basis'
-         do ibas=1,ncfgs
+     do ibas=1,ncfgs
+         do iorb=1,norbs
              if ( bin_basis(iorb,ibas) == 1 ) then
                  occu(ibas,ibas) = occu(ibas,ibas) + one
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
-         enddo ! over ibas={1,ncfgs} loop
-     enddo ! over iorb={1,norbs} loop
+         enddo ! over iorb={1,norbs} loop
+         write(mystd,'(4X,a)', advance = 'no') '| ket > = '
+         write(mystd,'(*(i1))', advance = 'no') bin_basis(:,ibas)
+         write(mystd,'(2X,a,f5.2)') 'N = ', occu(ibas,ibas)
+     enddo ! over ibas={1,ncfgs} loop
 
      ! try to transform the density matrix from the Fock basis
      ! to the atomic eigenbasis
