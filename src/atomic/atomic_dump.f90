@@ -304,7 +304,7 @@
 !!
 !! @sub atomic_dump_feigval
 !!
-!! write eigenvalues in full Hilbert space to file atom.eigval.dat
+!! write eigenvalues in full Hilbert space to the file atom.eigval.dat
 !!
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
@@ -351,7 +351,7 @@
 !!
 !! @sub atomic_dump_feigvec
 !!
-!! write eigenvectors in full Hilbert space to file atom.eigvec.dat
+!! write eigenvectors in full Hilbert space to the file atom.eigvec.dat
 !!
   subroutine atomic_dump_feigvec()
      use constants, only : eps6
@@ -404,7 +404,9 @@
 !!
 !! @sub atomic_dump_fcix
 !!
-!! write atom.cix file
+!! write atom.cix file for the ctqmc solver. the file format is designed
+!! for the begonia and lavender codes. however, the two codes are already
+!! deprecated. we retain this subroutine only for reference. 
 !!
   subroutine atomic_dump_fcix()
      use constants, only : epst
@@ -423,7 +425,6 @@
      use m_fock, only : eval, evec
      use m_fock, only : occu, spin
      use m_fock, only : fmat
-     use m_fock, only : hmat
 
      implicit none
 
@@ -456,8 +457,7 @@
      ! write the header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     if ( ictqmc == 0 ) write(mytmp,'(a)') '# Format  : v1.3, designed for CAMELLIA'
-     if ( ictqmc == 1 ) write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
+     write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
      write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: '//V_MAIL
      write(mytmp,*)
@@ -497,28 +497,16 @@
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ictqmc == 0 ) block
 
-     ! write local Hamiltonian
-     ! only for the camellia code
-     if ( ictqmc == 0 ) then
-         write(mytmp,'(75a1)') dash ! dashed line
-         write(mytmp,'(a)') '# HAMILTONIAN: ALPHA | BETA | HMAT'
-         write(mytmp,'(75a1)') dash ! dashed line
-         do i=1,ncfgs
-             do j=1,ncfgs
-                 if ( abs( hmat(i,j) ) > epst ) then
-                     write(mytmp,'(2i10,f20.10)') i, j, real( hmat(i,j) )
-                 endif ! back if ( abs( hmat(i,j) ) > epst ) block
-             enddo ! over j={1,ncfgs} loop
-         enddo ! over i={1,ncfgs} loop
-     endif ! back if ( ictqmc == 0 ) block
-
-     ! write F-matrix
+     ! write annihilation operator matrix in atomic eigenbasis
      !
      ! for non-soc case, the spin order of ctqmc is like
      !     up, up, up, dn, dn, dn
+     !
      ! but the spin order of this program is
      !     up, dn, up, dn, up, dn
-     ! so we have to adjust it here. however for soc case, it doesn't matter
+     !
+     ! so we have to adjust it here. however if the spin-orbit coupling
+     ! is enabled, the spin order doesn't matter.
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -532,7 +520,7 @@
          else
              s_order = i
          endif ! back if ( isoc == 0 ) block
-
+         !
          do j=1,ncfgs
              do k=1,ncfgs
                  if ( abs( fmat(k,j,s_order) ) > epst ) then
@@ -553,7 +541,7 @@
 !!
 !! @sub atomic_dump_seigval
 !!
-!! write eigenvalues of all sectors to the file atom.eigval.dat
+!! write eigenvalues in all sectors to the file atom.eigval.dat
 !!
   subroutine atomic_dump_seigval()
      use constants, only : mytmp
@@ -607,13 +595,11 @@
 !!
 !! @sub atomic_dump_seigvec
 !!
-!! write eigenvectors of all sectors to the file atom.eigvec.dat
+!! write eigenvectors in all sectors to the file atom.eigvec.dat
 !!
   subroutine atomic_dump_seigvec()
      use constants, only : eps6
      use constants, only : mytmp
-
-     use m_fock, only : bin_basis
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
@@ -647,9 +633,7 @@
          do j=1,sectors(i)%ndim
              do k=1,sectors(i)%ndim
                  if ( abs( sectors(i)%evec(k,j) ) > eps6 ) then
-                     write(mytmp,'(3i6,f16.8,2X,14I1)') &
-                         i, k, j, sectors(i)%evec(k,j), &
-                         bin_basis(:,sectors(i)%basis(k))
+                     write(mytmp,'(3i6,f16.8)') i, k, j, sectors(i)%evec(k,j)
                  endif ! back if ( abs( sectors(i)%evec(j,k) ) > eps6 ) block
              enddo ! over k={1,sectors(i)%ndim} loop
          enddo ! over j={1,sectors(i)%ndim} loop
@@ -666,7 +650,8 @@
 !!
 !! @sub atomic_dump_scix
 !!
-!! write atom.cix file
+!! write atom.cix file for the ctqmc solver. the file format is designed
+!! for the manjushaka code.
 !!
   subroutine atomic_dump_scix()
      use constants, only : epst
@@ -723,7 +708,7 @@
      ! write header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v2.3, designed for PANSY and MANJUSHAKA'
+     write(mytmp,'(a)') '# Format  : v2.3, designed for MANJUSHAKA'
      write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: '//V_MAIL
      write(mytmp,*)
@@ -761,7 +746,7 @@
          ! write next sector
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
-             ! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
+             ! adjust the orbital order for ctqmc, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1
@@ -789,7 +774,7 @@
      ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
-             ! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
+             ! adjust the orbital order for ctqmc, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1
