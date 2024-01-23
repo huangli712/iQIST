@@ -523,9 +523,9 @@
          !
          do j=1,ncfgs
              do k=1,ncfgs
-                 if ( abs( fmat(k,j,s_order) ) > epst ) then
-                     write(mytmp,'(3i10,f20.10)') k, j, i, fmat(k,j,s_order)
-                 endif ! back if ( abs( fmat(k,j,s_order) ) > epst ) block
+                 if ( abs( fmat(j,k,s_order) ) > epst ) then
+                     write(mytmp,'(3i10,f20.10)') j, k, i, fmat(j,k,s_order)
+                 endif ! back if ( abs( fmat(j,k,s_order) ) > epst ) block
              enddo ! back k={1,ncfgs} loop
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
@@ -632,8 +632,8 @@
      do i=1,nsectors
          do j=1,sectors(i)%ndim
              do k=1,sectors(i)%ndim
-                 if ( abs( sectors(i)%evec(k,j) ) > eps6 ) then
-                     write(mytmp,'(3i6,f16.8)') i, k, j, sectors(i)%evec(k,j)
+                 if ( abs( sectors(i)%evec(j,k) ) > eps6 ) then
+                     write(mytmp,'(3i6,f16.8)') i, j, k, sectors(i)%evec(j,k)
                  endif ! back if ( abs( sectors(i)%evec(j,k) ) > eps6 ) block
              enddo ! over k={1,sectors(i)%ndim} loop
          enddo ! over j={1,sectors(i)%ndim} loop
@@ -766,7 +766,7 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-     ! write F-matrix of each sector
+     ! write annihilation operator matrix (F-matrix) for each sector
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F-MATRIX:'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -817,7 +817,7 @@
 !! @sub atomic_dump_sector
 !!
 !! write the configurations of sectors to the file atom.sector.dat
-  subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
+  subroutine atomic_dump_sector(sect_ntot, sect_sz, sect_ps, sect_jz)
      use constants, only : mytmp
 
      use control, only : ictqmc
@@ -835,16 +835,16 @@
 
 !! external arguments
      ! good quantum number: N
-     integer, intent(in) :: sect_good_ntot(ncfgs)
+     integer, intent(in) :: sect_ntot(ncfgs)
 
      ! good quantum number: Sz
-     integer, intent(in) :: sect_good_sz(ncfgs)
+     integer, intent(in) :: sect_sz(ncfgs)
 
      ! good quantum number: PS
-     integer, intent(in) :: sect_good_ps(ncfgs)
+     integer, intent(in) :: sect_ps(ncfgs)
 
      ! good quantum number: Jz
-     integer, intent(in) :: sect_good_jz(ncfgs)
+     integer, intent(in) :: sect_jz(ncfgs)
 
 !! local variables
      ! loop index
@@ -892,8 +892,8 @@
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') i
-                     write(mytmp,'(i4,2X)', advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_good_sz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_sz(i)
                      write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
@@ -906,9 +906,9 @@
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') i
-                     write(mytmp,'(i4,2X)', advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_good_sz(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_good_ps(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_sz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_ps(i)
                      write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
@@ -921,8 +921,8 @@
               do i=1,nsectors
                   do j=1,sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') i
-                     write(mytmp,'(i4,2X)', advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_good_jz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_jz(i)
                      write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
