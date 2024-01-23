@@ -246,6 +246,7 @@
      ! compute two fermion operators term
      ! it is f^{\dagger}_{\alpha} f_{\beta}
      write(mystd,'(4X,a)') 'compute two fermion operators term'
+     !
      do jbas=1,ncfgs
          alploop: do alpha=1,norbs ! loop over creation operators
          betloop: do betta=1,norbs ! loop over annihilation operators
@@ -288,7 +289,7 @@
                  ! setup the two fermion operators term
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
                  !
-                 ! write the Fock states and the matrix elements
+                 ! write the Fock states and the operators
                  write(mystd,'(4X,a)', advance = 'no') '| ket > = '
                  write(mystd,'(*(i1))', advance = 'no') bin_basis(:,jbas)
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
@@ -303,6 +304,7 @@
      ! compute four fermion operators term (coulomb interaction)
      ! it is f^{\dagger}_{\alpha} f^{\dagger}_{\beta} f_{\delta} f_{\gamma}
      write(mystd,'(4X,a)') 'compute four fermion operators term'
+     !
      do jbas=1,ncfgs
          alphaloop : do alpha=1,norbs ! loop over creation operators
          bettaloop : do betta=1,norbs ! loop over creation operators
@@ -363,7 +365,7 @@
                  ! setup the four fermion operators term
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
                  !
-                 ! write the Fock states and the matrix elements
+                 ! write the Fock states and the operators
                  write(mystd,'(4X,a)', advance = 'no') '| ket > = '
                  write(mystd,'(*(i1))', advance = 'no') bin_basis(:,jbas)
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
