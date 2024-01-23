@@ -247,8 +247,8 @@
      ! it is f^{\dagger}_{\alpha} f_{\beta}
      write(mystd,'(4X,a)') 'compute two fermion operators term'
      do jbas=1,ncfgs
-         alploop: do alpha=1,norbs
-         betloop: do betta=1,norbs
+         alploop: do alpha=1,norbs ! loop over creation operators
+         betloop: do betta=1,norbs ! loop over annihilation operators
 
          ! retrieve the Fock state |jbas>
          sgn = 0
@@ -300,56 +300,78 @@
          enddo alploop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
 
-     ! second, four fermion operator terms (coulomb interaction)
+     ! compute four fermion operators term (coulomb interaction)
+     ! it is f^{\dagger}_{\alpha} f^{\dagger}_{\beta} f_{\delta} f_{\gamma}
+     write(mystd,'(4X,a)') 'compute four fermion operators term'
      do jbas=1,ncfgs
-         alphaloop : do alpha=1,norbs
-         bettaloop : do betta=1,norbs
-         gammaloop : do gamma=1,norbs
-         deltaloop : do delta=1,norbs
-             sgn  = 0
-             knew = dec_basis(jbas)
-             code(1:norbs) = bin_basis(1:norbs,jbas)
+         alphaloop : do alpha=1,norbs ! loop over creation operators
+         bettaloop : do betta=1,norbs ! loop over creation operators
+         gammaloop : do gamma=1,norbs ! loop over annihilation operators
+         deltaloop : do delta=1,norbs ! loop over annihilation operators
 
-             ! applying Pauli principle
-             if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
+         ! retrieve the Fock state |jbas>
+         sgn  = 0
+         knew = dec_basis(jbas)
+         code = bin_basis(:,jbas)
 
-             ! U-matrix element is too small
-             if ( abs( umat(alpha,betta,delta,gamma) ) < epst ) CYCLE
+         ! applying Pauli principle
+         if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
 
-             ! simulate two annihilation operators
-             if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
-                 do i=1,gamma-1
+         ! U-matrix element is too small
+         if ( abs( umat(alpha,betta,delta,gamma) ) < epst ) CYCLE
+
+         ! simulate two annihilation operators
+         ! they are f_{\delta} f_{\gamma}
+         if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
+             do i=1,gamma-1
+                 if ( code(i) == 1 ) sgn = sgn + 1
+             enddo ! over i={1,gamma-1} loop
+             code(gamma) = 0
+             !
+             do i=1,delta-1
+                 if ( code(i) == 1 ) sgn = sgn + 1
+             enddo ! over i={1,delta-1} loop
+             code(delta) = 0
+
+             ! simulate two creation operators
+             ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
+             if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
+                 do i=1,betta-1
                      if ( code(i) == 1 ) sgn = sgn + 1
-                 enddo ! over i={1,gamma-1} loop
-                 code(gamma) = 0
-                 do i=1,delta-1
+                 enddo ! over i={1,betta-1} loop
+                 code(betta) = 1
+                 !
+                 do i=1,alpha-1
                      if ( code(i) == 1 ) sgn = sgn + 1
-                 enddo ! over i={1,delta-1} loop
-                 code(delta) = 0
+                 enddo ! over i={1,alpha-1} loop
+                 code(alpha) = 1
 
-                 ! simulate two creation operator
-                 if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
-                     do i=1,betta-1
-                         if ( code(i) == 1 ) sgn = sgn + 1
-                     enddo ! over i={1,betta-1} loop
-                     code(betta) = 1
-                     do i=1,alpha-1
-                         if ( code(i) == 1 ) sgn = sgn + 1
-                     enddo ! over i={1,alpha-1} loop
-                     code(alpha) = 1
-
-                     ! determine the row number and hamiltonian matrix elememt
-                     knew = knew - 2**(gamma-1) - 2**(delta-1)
-                     knew = knew + 2**(betta-1) + 2**(alpha-1)
-                     sgn  = mod(sgn,2)
-                     ! now ibas means the index for the new state
-                     ibas = ind_basis(knew)
-                     if ( ibas == 0 ) then
-                         call s_print_error('atomic_make_fhmat','error while determining new state')
-                     endif ! back if ( ibas == 0 ) block
-                     hmat(ibas,jbas) = hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**sgn
-                 endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
-             endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
+                 ! determine the new Fock state, <ibas|
+                 ! now ibas means the index for the new Fock state
+                 knew = knew - 2**(gamma-1) - 2**(delta-1)
+                 knew = knew + 2**(betta-1) + 2**(alpha-1)
+                 ibas = ind_basis(knew)
+                 if ( ibas == 0 ) then
+                     call s_print_error('atomic_make_fhmat','error while determining new state')
+                 endif ! back if ( ibas == 0 ) block
+                 !
+                 ! determine the matrix element between the two Fock
+                 ! states, i.e., <ibas| and |jbas>                 
+                 sgn = mod(sgn,2)
+                 val = umat(alpha,betta,delta,gamma) * (-one)**sgn
+                 !
+                 ! setup the four fermion operators term
+                 hmat(ibas,jbas) = hmat(ibas,jbas) + val
+                 !
+                 ! write the Fock states and the matrix elements
+                 write(mystd,'(4X,a)', advance = 'no') '| ket > = '
+                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,jbas)
+                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', beta, ')'
+                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
+                 write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
+             endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
+         endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
 
          enddo deltaloop ! over delta={1,norbs} loop
          enddo gammaloop ! over gamma={1,norbs} loop
