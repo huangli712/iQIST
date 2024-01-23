@@ -292,21 +292,22 @@
      end type Tf
 
 !!
-!! @struct t_sector
+!! @struct Ts
 !!
-!! data structure for one sector
+!! data structure for subspace diagonalization algorithm
+!! sometimes we call subspace as sector
 !!
-     public :: t_sector
-     type t_sector
+     public :: Ts
+     type Ts
 
-         ! the dimension of this sector
+         ! start index of this sector
+         integer :: istart
+
+         ! dimension of this sector
          integer :: ndim
- 
+
          ! number of fermion operators
          integer :: nops
-
-         ! the start index of this sector
-         integer :: istart
 
          ! total number of electrons N
          integer :: nele
@@ -320,38 +321,41 @@
          ! PS good quantum number
          integer :: ps
 
-         ! the Fock basis index of this sector
+         ! collection of indices of Fock states for this sector
          integer, allocatable  :: basis(:)
 
-         ! the next sector after a fermion operator acts on this sector
+         ! pointer to (or index of) the next sector after a fermion
+         ! operator acts on this sector
          !
-         ! next(nops,0) for annihilation
-         ! next(nops,1) for creation operators
+         !     next(nops,0) for annihilation
+         !     next(nops,1) for creation operators
          !
          ! if it is -1, it means the next sector is null (outside of the
          ! Hilbert space). otherwise, it is the index of next sector
          integer, allocatable  :: next(:,:)
 
-         ! the eigenvalues
+         ! eigenvalues of atomic Hamiltonian in this sector
          real(dp), allocatable :: eval(:)
 
-         ! the eigenvectors
+         ! eigenvectors of atomic Hamiltonian in this sector
          ! since Hamiltonian must be real, then it is real as well
          real(dp), allocatable :: evec(:,:)
 
-         ! the Hamiltonian of this sector
+         ! atomic Hamiltonian in this sector
          complex(dp), allocatable :: hmat(:,:)
 
-         ! the F-matrix between this sector and all other sectors
+         ! annihilation operator matrix < alpha | f | beta > between this
+         ! sector and all other sectors, where | alpha > and | beta > are
+         ! the atomic eigenstates
          !
-         ! fmat(nops,0) for annihilation
-         ! fmat(nops,1) for creation operators
+         !     fmat(nops,0) for annihilation
+         !     fmat(nops,1) for creation operators
          !
          ! if this sector doesn't point to some other sectors, then the
-         ! pointer is null
-         type (Tf), allocatable :: fmat(:,:)
+         ! matrix is invalid
+         type(Tf), allocatable :: fmat(:,:)
 
-     end type t_sector
+     end type Ts
 
 !!
 !! @var nsectors
@@ -377,9 +381,9 @@
 !!
 !! @var sectors
 !!
-!! all the sectors
+!! An array of pointers that points to all the sectors
 !!
-     type (t_sector), public, save, allocatable :: sectors(:)
+     type(Ts), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -445,7 +449,7 @@
 
 !! external arguments
      ! the sector
-     type (t_sector), intent(inout) :: one_sector
+     type (Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index
@@ -552,7 +556,7 @@
 
 !! external arguments
      ! the sector
-     type (t_sector), intent(inout) :: one_sector
+     type (Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index

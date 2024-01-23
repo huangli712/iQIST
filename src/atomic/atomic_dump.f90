@@ -495,7 +495,7 @@
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ictqmc == 0 ) block
 
-     ! write local hamiltonian
+     ! write local Hamiltonian
      ! only for the camellia code
      if ( ictqmc == 0 ) then
          write(mytmp,'(75a1)') dash ! dashed line

@@ -198,7 +198,7 @@
                      enddo ! over i={1,alpha-1} loop
                      code(alpha) = 1
 
-                     ! determine the row number and hamiltonian matrix elememt
+                     ! determine the row number and Hamiltonian matrix elememt
                      knew = knew - 2**(betta-1)
                      knew = knew + 2**(alpha-1)
                      isgn = mod(isgn,2)
@@ -262,7 +262,7 @@
                      enddo ! over i={1,alpha-1} loop
                      code(alpha) = 1
 
-                     ! determine the row number and hamiltonian matrix elememt
+                     ! determine the row number and Hamiltonian matrix elememt
                      knew = knew - 2**(gamma-1) - 2**(delta-1)
                      knew = knew + 2**(betta-1) + 2**(alpha-1)
                      isgn = mod(isgn,2)
