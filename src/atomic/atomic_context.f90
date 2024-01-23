@@ -632,8 +632,8 @@
 !!
 !! @mod m_spmat
 !!
-!! it contains single particle related matrices, including
-!!     crystal field,
+!! it defines some single particle matrices, including
+!!     crystal field splitting,
 !!     spin-orbital coupling,
 !!     Coulomb interaction U tensor, etc
 !!
@@ -648,14 +648,14 @@
 !!
 !! @var umat
 !!
-!! Coulomb interaction U tensor
+!! Coulomb interaction U, a rank-4 tensor
 !!
      complex(dp), public, allocatable, save :: umat(:,:,:,:)
 
 !!
 !! @var cmat
 !!
-!! crystal field (CF)
+!! crystal field splitting (CFS)
 !!
      complex(dp), public, allocatable, save :: cmat(:,:)
 
@@ -669,7 +669,7 @@
 !!
 !! @var emat
 !!
-!! onsite energy (CF + SOC) of impurity
+!! onsite energy (CFS + SOC) of impurity
 !!
      complex(dp), public, allocatable, save :: emat(:,:)
 
