@@ -367,7 +367,7 @@
                  write(mystd,'(4X,a)', advance = 'no') '| ket > = '
                  write(mystd,'(*(i1))', advance = 'no') bin_basis(:,jbas)
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
-                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', beta, ')'
+                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
                  write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
