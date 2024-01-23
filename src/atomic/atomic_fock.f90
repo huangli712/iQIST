@@ -53,24 +53,24 @@
 
      ! evaluate annihilation operator matrix in the Fock basis
      do i=1,norbs
-         write(mystd,'(4X,a,i2,a)') 'build c(alpha =', i, ') in Fock basis'
+         write(mystd,'(4X,a,i2,a)') 'build f(alpha =', i, ') in Fock basis'
          do j=1,ncfgs
              ! get | ket >
              right = dec_basis(j)
              if ( btest(right,i-1) .eqv. .true. ) then
-                ! get < bra |
-                call atomic_make_c(i, right, left, isgn)
-                k = ind_basis(left)
-                !
-                ! evaluate < bra | c | ket >
-                fmat(k,j,i) = dble(isgn)
-                !
-                ! write the Fock states and the matrix elements
-                write(mystd,'(4X,a)', advance = 'no') '< bra | = '
-                write(mystd,'(*(i1))', advance = 'no') bin_basis(:,k)
-                write(mystd,'(2X,a)', advance = 'no') '| ket > = '
-                write(mystd,'(*(i1))', advance ='no') bin_basis(:,j)
-                write(mystd,'(2X,a,i2)') 'value = ', isgn
+                 ! get < bra |
+                 call atomic_make_c(i, right, left, isgn)
+                 k = ind_basis(left)
+                 !
+                 ! evaluate < bra | c | ket >
+                 fmat(k,j,i) = dble(isgn)
+                 !
+                 ! write the Fock states and the matrix elements
+                 write(mystd,'(4X,a)', advance = 'no') '< bra | = '
+                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,k)
+                 write(mystd,'(2X,a)', advance = 'no') '| ket > = '
+                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,j)
+                 write(mystd,'(2X,a,i2)') 'value = ', isgn
              endif ! back if ( btest(right,i-1) .eqv. .true. ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
@@ -194,9 +194,11 @@
 !!
 !! @sub atomic_make_fhmat
 !!
-!! make atomic Hamiltonian in the full Hilbert space
+!! assemble atomic Hamiltonian in the Fock space
 !!
   subroutine atomic_make_fhmat()
+     use constants, only : dp
+     use constants, only : mystd
      use constants, only : one, czero
      use constants, only : epst
 
@@ -232,50 +234,67 @@
      ! binary code form of an atomic state
      integer :: code(norbs)
 
+     ! matrix element of the atomic Hamiltonian
+     real(dp) :: val
+
 !! [body
 
      ! start to make Hamiltonian
      ! initialize hmat
      hmat = czero
 
-     ! first, two fermion operator terms
+     ! compute two fermion operators term
+     ! it is f^{\dagger}_{\alpha} f_{\beta}
+     write(mystd,'(4X,a)') 'compute two fermion operators term'
      do jbas=1,ncfgs
          alploop: do alpha=1,norbs
          betloop: do betta=1,norbs
 
-             sgn = 0
-             knew = dec_basis(jbas)
-             code(1:norbs) = bin_basis(1:norbs,jbas)
+         ! retrieve the Fock state |jbas>
+         sgn = 0
+         knew = dec_basis(jbas)
+         code = bin_basis(:,jbas)
 
-             ! impurity level is too small
-             if ( abs( emat(alpha,betta) ) < epst ) CYCLE
+         ! impurity level is too small
+         if ( abs( emat(alpha,betta) ) < epst ) CYCLE
 
-             ! simulate one annihilation operator
-             if ( code(betta) == 1 ) then
-                 do i=1,betta-1
+         ! simulate one annihilation operator, f_{\beta}
+         if ( code(betta) == 1 ) then
+             do i=1,betta-1
+                 if ( code(i) == 1 ) sgn = sgn + 1
+             enddo ! over i={1,betta-1} loop
+             code(betta) = 0
+
+             ! simulate one creation operator, f^{\dagger}_{\alpha}
+             if ( code(alpha) == 0 ) then
+                 do i=1,alpha-1
                      if ( code(i) == 1 ) sgn = sgn + 1
-                 enddo ! over i={1,betta-1} loop
-                 code(betta) = 0
+                 enddo ! over i={1,alpha-1} loop
+                 code(alpha) = 1
 
-                 ! simulate one creation operator
-                 if ( code(alpha) == 0 ) then
-                     do i=1,alpha-1
-                         if ( code(i) == 1 ) sgn = sgn + 1
-                     enddo ! over i={1,alpha-1} loop
-                     code(alpha) = 1
-
-                     ! determine the row number and hamiltonian matrix elememt
-                     knew = knew - 2**(betta-1)
-                     knew = knew + 2**(alpha-1)
-                     sgn  = mod(sgn,2)
-                     ! now ibas means the index for the new state
-                     ibas = ind_basis(knew)
-                     if ( ibas == 0 ) then
-                         call s_print_error('atomic_make_fhmat','error while determining new state!')
-                     endif ! back if ( ibas == 0 ) block
-                     hmat(ibas,jbas) = hmat(ibas,jbas) + emat(alpha,betta) * (-one)**sgn
-                 endif ! back if (code(alpha) == 0) block
-             endif ! back if (code(betta) == 1) block
+                 ! determine the new Fock state, <ibas|
+                 ! now ibas means the index for the new Fock state
+                 knew = knew - 2**(betta-1) + 2**(alpha-1)
+                 ibas = ind_basis(knew)
+                 if ( ibas == 0 ) then
+                     call s_print_error('atomic_make_fhmat','error while determining new state!')
+                 endif ! back if ( ibas == 0 ) block
+                 !
+                 ! determine the matrix element between the two Fock
+                 ! states, i.e., <ibas| and |jbas>
+                 sgn = mod(sgn,2)
+                 val = emat(alpha,betta) * (-one)**sgn
+                 !
+                 ! setup the two fermion operators term
+                 hmat(ibas,jbas) = hmat(ibas,jbas) + val
+                 !
+                 ! write the Fock states and the matrix elements
+                 write(mystd,'(4X,a)', advance = 'no') '| ket > = '
+                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,jbas)
+                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                 write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
+             endif ! back if (code(alpha) == 0) block
+         endif ! back if (code(betta) == 1) block
 
          enddo betloop ! over betta={1,norbs} loop
          enddo alploop ! over alpha={1,norbs} loop
