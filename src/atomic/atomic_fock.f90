@@ -166,9 +166,8 @@
      ! evaluate magnetic moment in the Fock basis
      spin = zero
      !
-     do iorb=1,norbs
-         write(mystd,'(4X,a,i2,a)') 'treat orbital -> ', iorb, ' in Fock basis'
-         do ibas=1,ncfgs
+     do ibas=1,ncfgs
+         do iorb=1,norbs
              if ( bin_basis(iorb,ibas) == 1 ) then
                  if ( mod(iorb,2) /= 0 ) then ! spin up
                      spin(ibas,ibas) = spin(ibas,ibas) + half
@@ -176,8 +175,11 @@
                      spin(ibas,ibas) = spin(ibas,ibas) - half
                  endif ! back if ( mod(iorb,2) /= 0 ) block
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
-         enddo ! over ibas={1,ncfgs} loop
-     enddo ! over iorb={1,norbs} loop
+         enddo ! over iorb={1,norbs} loop
+         write(mystd,'(4X,a)', advance = 'no') '| ket > = '
+         write(mystd,'(*(i1))', advance = 'no') bin_basis(:,ibas)
+         write(mystd,'(2X,a,f5.2)') 'Sz = ', spin(ibas,ibas)
+     enddo ! over ibas={1,ncfgs} loop
 
      ! try to transform the magnetic moment from the Fock basis
      ! to the atomic eigenbasis
