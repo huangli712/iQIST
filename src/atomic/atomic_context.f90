@@ -381,7 +381,7 @@
 !!
 !! @var sectors
 !!
-!! An array of pointers that points to all the sectors
+!! An array of structs that stores all the sectors
 !!
      type(Ts), public, save, allocatable :: sectors(:)
 
@@ -408,14 +408,15 @@
 !!
 !! @sub cat_alloc_fmat
 !!
-!! allocate memory for one fmat
+!! allocate memory for annihilation operator matrix
 !!
   subroutine cat_alloc_fmat(one_fmat)
      implicit none
 
 !! external arguments
-     ! the fmat
-     type (Tf), intent(inout) :: one_fmat
+     ! struct for annihilation operator matrix
+     ! we have to make sure one_fmat%n and one_fmat%m are valid
+     type(Tf), intent(inout) :: one_fmat
 
 !! local variables
      ! the status flag
@@ -448,8 +449,8 @@
      implicit none
 
 !! external arguments
-     ! the sector
-     type (Ts), intent(inout) :: one_sector
+     ! this sector
+     type(Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index
@@ -482,6 +483,7 @@
      one_sector%hmat  = czero
 
      ! initialize fmat one by one
+     ! memory of one_sector%fmat%val should be allocated elsewhere
      do i=1,one_sector%nops
         do j=0,1
             one_sector%fmat(i,j)%n = 0
@@ -516,6 +518,8 @@
          call s_print_error('cat_alloc_sectors','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! initialization of sectors should be done elsewhere
+
 !! body]
 
      return
@@ -528,18 +532,21 @@
 !!
 !! @sub cat_free_fmat
 !!
-!! deallocate memory for one fmat
+!! deallocate memory for annihilation operator matrix
 !!
   subroutine cat_free_fmat(one_fmat)
      implicit none
 
 !! external arguments
-     ! the fmat
-     type (Tf), intent(inout) :: one_fmat
+     ! annihilation operator matrix
+     type(Tf), intent(inout) :: one_fmat
 
 !! [body
 
      if ( allocated(one_fmat%val) ) deallocate(one_fmat%val)
+     !
+     one_fmat%n = 0
+     one_fmat%m = 0
 
 !! body]
 
@@ -555,8 +562,8 @@
      implicit none
 
 !! external arguments
-     ! the sector
-     type (Ts), intent(inout) :: one_sector
+     ! this sector
+     type(Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index
@@ -578,6 +585,7 @@
                  call cat_free_fmat(one_sector%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,one_sector%nops} loop
+         !
          deallocate(one_sector%fmat)
      endif ! back if ( allocated(one_sector%fmat)  ) block
 
@@ -589,7 +597,7 @@
 !!
 !! @sub cat_free_sectors
 !!
-!! deallocate memory of sectors
+!! deallocate memory for sectors
 !!
   subroutine cat_free_sectors()
      implicit none
@@ -600,12 +608,13 @@
 
 !! [body
 
-     ! deallocate memory for arrays in T_sector
+     ! deallocate memory for an array of Ts
      ! before deallocating sectors to avoid memory leak
      if ( allocated(sectors) ) then
          do i=1,nsectors
-             call cat_free_sector(sectors(i))
+             call cat_free_sector( sectors(i) )
          enddo ! over i={1,nsectors} loop
+         !
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
 
