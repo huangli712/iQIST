@@ -251,6 +251,10 @@
                              sectors(isec)%hmat(ibas,jbas) + val
                          endif ! back if block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
+                     !
+                     ! write the Fock states and the operators
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                     write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
                  endif ! back if ( code(alpha) == 0 ) block
              endif ! back if ( code(betta_ == 1 ) block
 
