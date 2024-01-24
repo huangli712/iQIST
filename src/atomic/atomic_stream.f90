@@ -133,7 +133,8 @@
          ! destroy the parser
          call p_destroy()
      else
-         call s_print_exception('atomic_setup_param','file atom.config.in does not exist!')
+         call s_print_exception('atomic_setup_param', &
+             & 'file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
 !! body]
@@ -394,7 +395,8 @@
      ! inquire file's status at first
      inquire( file = 'atom.cmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_input_cmat','file atomic.cmat.in does not exist!')
+         call s_print_error('atomic_input_cmat', &
+             & 'file atomic.cmat.in does not exist!')
      endif ! back if ( exists .eqv. .false. ) block
 
      ! open file atom.cmat.in
@@ -454,7 +456,8 @@
      ! inquire file's status at first
      inquire( file = 'atom.emat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_input_emat','file atomic.emat.in does not exist!')
+         call s_print_error('atomic_input_emat', &
+             & 'file atomic.emat.in does not exist!')
      endif ! back if ( exists .eqv. .false. ) block
 
      ! open file atom.emat.in
@@ -463,7 +466,7 @@
      ! read the data file
      do i=1,norbs
          read(mytmp,*) i1, i2, raux
-         ! emat is actually real in natural basis
+         ! emat is actually real and diagonal in natural basis
          emat(i,i) = dcmplx(raux, zero)
      enddo ! over i={1,norbs} loop
 
@@ -510,7 +513,8 @@
      ! inquire file's status at first
      inquire( file = 'atom.tmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_input_tmat','file atomic.tmat.in does not exist')
+         call s_print_error('atomic_input_tmat', &
+             & 'file atomic.tmat.in does not exist')
      endif ! back if ( exists .eqv. .false. ) block
 
      ! open file atom.tmat.in
@@ -604,7 +608,7 @@
          do j=1,norbs
              if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
          enddo ! over j={1,norbs} loop
-         write(mystd,'(4X,a,i6)', advance = 'no') 'Fock state index: ', i
+         write(mystd,'(4X,a,i6)', advance = 'no') 'Fock state: ', i
          write(mystd,'(2X,a,i4)', advance = 'no') 'decimal: ', dec_basis(i)
          write(mystd,'(2X,a,*(i1))') 'binary: ', bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
@@ -629,7 +633,7 @@
 !! (1) real orbital basis (the real spherical harmonics)
 !!     |dxy,up>,   |dyz,up>,   |dz2,up>,   |dxz,up>,   |dx2-y2,up>
 !!     |dxy,down>, |dyz,down>, |dz2,down>, |dxz,down>, |dx2-y2,down>
-!!     
+!!
 !! (2) complex orbital basis (the complex spherical functions)
 !!     it is eigenstate of operators l^2 and l_z, |l,m,spin>
 !!     for d electron system, l = 2, m = \pm 2, \pm 1, 0
@@ -661,7 +665,9 @@
 !! interaction tensor (U)
 !!
   subroutine atomic_build_spmat()
-     use constants, only : two, czero
+     use constants, only : two
+     use constants, only : czero
+     use constants, only : mystd
 
      use control, only : ibasis
      use control, only : icu, icf, isoc
@@ -675,17 +681,19 @@
 
 !! [body
 
-     ! make crystal field and spin-orbital coupling
+     ! make crystal field splitting and spin-orbital coupling
      !
      ! method 1: make them inside
      if ( ibasis == 1 ) then
 
-         ! 1A: make crysal field
+         ! 1A: make crysal field splitting
+         write(mystd,'(4X,a)') 'make crystal field splitting term'
          !
-         ! we read the non-zero elements of crystal field from file
-         ! atom.cmat.in. the crystal field is defined on real orbital
-         ! basis. at present, we only support real crystal field, so,
-         ! the elements in this file provided by users must be real
+         ! we read the non-zero elements of crystal field splitting
+         ! from file atom.cmat.in. the crystal field splitting must
+         ! be defined on real orbital basis. so far, we only support
+         ! real crystal field splitting. thus, the elements in this
+         ! file provided by users must be real
          if ( icf > 0 ) then
              call atomic_input_cmat()
          else
@@ -693,15 +701,16 @@
          endif ! back if ( icf > 0 ) block
 
          ! 1B: make spin-orbit coupling
+         write(mystd,'(4X,a)') 'make spin-orbit coupling term'
          !
-         ! make an atomic on-site SOC, $\lambda * L * S$
+         ! make an atomic spin-orbit coupling, $\lambda * L * S$
          ! it is defined on the complex orbital basis
          if ( isoc > 0 ) then
              select case (nband)
 
                  case (3) ! 3-band system
                      call atomic_make_smat3(smat)
-                     ! for 3 bands system, there is a minus sign
+                     ! for 3 band system, there is a minus sign
                      smat = -smat * lambda / two
 
                  case (5) ! 5-band system
@@ -713,7 +722,8 @@
                      smat = smat * lambda / two
 
                  case default
-                     call s_print_error('atomic_build_spmat','not implemented!')
+                     call s_print_error('atomic_build_spmat', &
+                         & 'not implemented!')
 
              end select
          else
@@ -723,14 +733,18 @@
      ! method 2: make them outside
      else
 
-         ! read the emat (CF + SOC) matrices on natural basis, this
-         ! matrix should be a diagonal matrix, and the elements must
+         ! read the matrix emat (CFS + SOC) on natural basis, this
+         ! matrix must be a diagonal matrix, and the elements must
          ! be real
+         write(mystd,'(4X,a)') 'make crystal field splitting + &
+             & spin-orbiit coupling terms'
+         !
          call atomic_input_emat()
 
      endif ! back if ( ibasis == 1 ) block
 
      ! make Coulomb interaction U
+     write(mystd,'(4X,a)') 'make Coulomb interaction term'
      !
      ! Kanamori parameters type
      ! it is defined on real orbital basis
@@ -754,11 +768,13 @@
 !!
 !! @sub atomic_build_natural
 !!
-!! make natural basis, on which the impurity energy matrix is diagonal
+!! make natural eigenbasis, on which the impurity energy matrix
+!! should is diagonal
 !!
   subroutine atomic_build_natural()
      use constants, only : dp
      use constants, only : czero
+     use constants, only : mystd
 
      use control, only : ibasis
      use control, only : icu, icf, isoc
@@ -770,10 +786,12 @@
      implicit none
 
 !! local variables
-     ! transformation matrix from real orbital basis to complex orbital basis
+     ! transformation matrix from real orbital basis to
+     ! complex orbital basis
      complex(dp) :: tmat_r2c(norbs,norbs)
 
-     ! transformation matrix from complex orbital basis to real orbital basis
+     ! transformation matrix from complex orbital basis
+     ! to real orbital basis
      complex(dp) :: tmat_c2r(norbs,norbs)
 
      ! dummy Coulomb interaction matrix
@@ -786,35 +804,41 @@
      tmat_r2c = czero
      tmat_c2r = czero
 
-     ! make transformation matrix from origional basis to
-     ! natural basis: tmat
+     ! make transformation matrix (tmat). it is used to transfer matrix
+     ! emat from original basis to natural basis. the onsite energy of
+     ! impurity (emat) should be updated as well
      !
      ! A: make tmat internally for different cases
      if ( ibasis == 1 ) then
 
-         ! no spin-orbital coupling, no crystal field or the crystal
-         ! field is diagonal
+         write(mystd,'(4X,a)') 'make transformation matrix internally'
+
+         ! no spin-orbital coupling
+         ! no crystal field splitting or it is diagonal
          !
          ! the original basis is the real orbital basis
          ! the natural basis is the real orbital basis
          if      ( isoc == 0 .and. icf <  2 ) then
              call atomic_natural_basis1()
 
-         ! no spin-orbital coupling, non-diagonal crystal field
+         ! no spin-orbital coupling
+         ! non-diagonal crystal field splitting
          !
          ! the original basis is the real orbital basis
          ! the natural basis is linear combination of real orbitals
          else if ( isoc == 0 .and. icf == 2 ) then
              call atomic_natural_basis2()
 
-         ! with spin-orbital coupling, no crystal field
+         ! with spin-orbital coupling
+         ! no crystal field splitting
          !
          ! the original basis is the complex orbital basis
-         ! the natural basis is |j2,jz>
+         ! the natural basis is the j^2 - j_z diagonal basis
          else if ( isoc == 1 .and. icf == 0 ) then
              call atomic_natural_basis3()
 
-         ! with spin-orbital coupling and crystal field
+         ! with spin-orbital coupling
+         ! with crystal field splitting
          !
          ! the original basis is the complex orbital basis
          ! the natural basis is linear combination of complex orbitals
@@ -823,10 +847,15 @@
 
          endif ! back if      ( isoc == 0 .and. icf <  2 ) block
 
-     ! B: read the transformation matrices used to transfer emat from
-     ! original basis to natural basis.
+     ! B: read the transformation matrix (tmat)
      else
+
+         write(mystd,'(4X,a)') 'read transformation matrix'
+
+         ! note that emat is already built in atomic_build_spmat(),
+         ! here we just read tmat
          call atomic_input_tmat()
+
      endif ! back if ( ibasis == 1 ) block
 
      ! dump emat for reference
@@ -837,42 +866,56 @@
 
      ! we need transform Coulomb interaction U
      !
-     ! for non-soc case, the transformation matrix is defined as from
-     ! real orbital basis to natural basis
+     ! for non-SOC case, the transformation matrix is defined as from
+     ! real orbital basis to natural basis. so we have to make sure
+     ! the Coulomb interaction U is at real orbital basis
      if ( isoc == 0 ) then
 
-         ! for Slater-Cordon parameters Coulomb interaction U, since it
-         ! is defined at complex orbital basis, we first need to
-         ! transfrom umat from complex orbital basis to real orbital basis
+         write(mystd,'(4X,a)') 'transform Coulomb interaction to &
+             &real orbital basis'
+
+         ! for Slater-Cordon parameterized Coulomb interaction U,
+         ! since it is defined at complex orbital basis, we first
+         ! need to transfrom umat from complex orbital basis to real
+         ! orbital basis
          !
-         ! for Kanamori parameters Coulomb interaction U, since it is
-         ! defined at real orbital basis, we do not need to transform
-         ! it now
+         ! for Kanamori parameterized Coulomb interaction U, since
+         ! it is already defined at real orbital basis, we do not
+         ! need to transform it now
          if ( icu == 2 ) then
              call atomic_make_tmat_c2r(tmat_c2r)
              call atomic_tran_umat(tmat_c2r, umat, umat_tmp)
              umat = umat_tmp
          endif ! back if ( icu == 2 ) block
 
-     ! for soc case, the transformation matrix is defined as from complex
-     ! orbital basis to natural basis
+     ! for SOC case, the transformation matrix is defined as from complex
+     ! orbital basis to natural basis. so we have to make sure the Coulomb
+     ! interaction U is at complex orbital basis
      else
 
-         ! for Slater-Cordon parameters Coulomb interaction U, since it
-         ! is defined at complex orbital basis, we do not need to
-         ! transform it now
+         write(mystd,'(4X,a)') 'transform Coulomb interaction to &
+             &complex orbital basis'
+
+         ! for Slater-Cordon parameterized Coulomb interaction U,
+         ! since it is already defined at complex orbital basis, we
+         ! do not need to transform it now
          !
-         ! for Kanamori parameters Coulomb interaction U, since it is
-         ! defined at real orbital basis, we first need to transfrom
+         ! for Kanamori parameterized Coulomb interaction U, since
+         ! it is defined at real orbital basis, so we have to transfrom
          ! umat from real orbital basis to complex orbital basis
          if ( icu == 1 .or. icu == 3 ) then
              call atomic_make_tmat_r2c(tmat_r2c)
              call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
              umat = umat_tmp
          endif ! back if ( icu == 1 .or. icu == 3 ) block
+
      endif ! back if ( isoc == 0 ) block
 
-     ! finally, transform umat from original basis to natural basis
+     ! finally, transform umat from original basis to natural basis.
+     ! the transformation matrix is just tmat
+     write(mystd,'(4X,a)') 'transform Coulomb interaction to &
+             &natural eigenbasis'
+     !
      call atomic_tran_umat(tmat, umat, umat_tmp)
      umat = umat_tmp
 
@@ -901,7 +944,7 @@
 
 !! [body
 
-     ! allocate memory for basis-related matrices
+     ! allocate memory for Fock basis
      call cat_alloc_fock_basis()
 
      ! allocate memory for single particle matrices
@@ -928,7 +971,7 @@
      ! deallocate memory for single particle matrices
      call cat_free_spmat()
 
-     ! deallocate memory for basis-related matrices
+     ! deallocate memory for Fock basis
      call cat_free_fock_basis()
 
 !! body]

@@ -46,7 +46,7 @@
 !! @var ibasis
 !!
 !! control flag, how to build the natural basis (eigenstates of crystal
-!! field + spin-orbital coupling)
+!! field splitting + spin-orbital coupling)
 !!
 !! if ibasis == 1:
 !!     make natural basis inside of this program

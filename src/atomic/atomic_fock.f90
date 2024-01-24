@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/23/2024 by li huang (last modified)
+!!!           01/24/2024 by li huang (last modified)
 !!! purpose : core subroutines for solving atomic eigenvalue problem in
 !!!           the Fock space.
 !!! status  : unstable
@@ -94,8 +94,8 @@
 !! then rotate it to the atomic eigenbasis
 !!
   subroutine atomic_make_foccu()
-     use constants, only : mystd
      use constants, only : zero, one
+     use constants, only : mystd
 
      use control, only : norbs, ncfgs
 
@@ -145,8 +145,8 @@
 !! then rotate it to the atomic eigenbasis
 !!
   subroutine atomic_make_fspin()
-     use constants, only : mystd
      use constants, only: zero, half
+     use constants, only : mystd
 
      use control, only : norbs, ncfgs
 
@@ -198,9 +198,9 @@
 !!
   subroutine atomic_make_fhmat()
      use constants, only : dp
-     use constants, only : mystd
      use constants, only : one, czero
      use constants, only : epst
+     use constants, only : mystd
 
      use control, only : norbs, ncfgs
 
