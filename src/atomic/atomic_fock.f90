@@ -278,7 +278,8 @@
                  knew = knew - 2**(betta-1) + 2**(alpha-1)
                  ibas = ind_basis(knew)
                  if ( ibas == 0 ) then
-                     call s_print_error('atomic_make_fhmat','error while determining new state!')
+                     call s_print_error('atomic_make_fhmat', &
+                         & 'error while determining new state!')
                  endif ! back if ( ibas == 0 ) block
                  !
                  ! determine the matrix element between the two Fock
@@ -290,9 +291,7 @@
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
                  !
                  ! write the Fock states and the operators
-                 write(mystd,'(4X,a)', advance = 'no') '| ket > = '
-                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,jbas)
-                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                 write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
                  write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
              endif ! back if (code(alpha) == 0) block
          endif ! back if (code(betta) == 1) block
@@ -354,7 +353,8 @@
                  knew = knew + 2**(betta-1) + 2**(alpha-1)
                  ibas = ind_basis(knew)
                  if ( ibas == 0 ) then
-                     call s_print_error('atomic_make_fhmat','error while determining new state')
+                     call s_print_error('atomic_make_fhmat', &
+                         & 'error while determining new state')
                  endif ! back if ( ibas == 0 ) block
                  !
                  ! determine the matrix element between the two Fock
@@ -366,9 +366,7 @@
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
                  !
                  ! write the Fock states and the operators
-                 write(mystd,'(4X,a)', advance = 'no') '| ket > = '
-                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,jbas)
-                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                 write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
                  write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
