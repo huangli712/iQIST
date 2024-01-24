@@ -195,6 +195,8 @@
      ! loop over all subspaces
      do isec=1,nsectors
 
+         write(mystd,'(4X,a,i4)') 'subspace: ', isec
+
          ! start to make atomic Hamiltonian
          ! initialize hmat
          sectors(isec)%hmat = czero
@@ -332,6 +334,12 @@
                              sectors(isec)%hmat(ibas,jbas) + val
                          endif ! back if block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
+                     !
+                     ! write the Fock states and the operators
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
+                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
+                     write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
                  endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 

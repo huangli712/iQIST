@@ -370,8 +370,8 @@
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
                  write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
-             endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
-         endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
+             endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
+         endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 
          enddo deltaloop ! over delta={1,norbs} loop
          enddo gammaloop ! over gamma={1,norbs} loop
