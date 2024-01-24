@@ -144,8 +144,8 @@
 !! make atomic Hamiltonian subspace by subspace
 !!
   subroutine atomic_make_shmat()
-     use constants, only : one
-     use constants, only : czero
+     use constants, only : dp
+     use constants, only : one, czero
      use constants, only : epst
      use constants, only : mystd
 
@@ -186,6 +186,9 @@
 
      ! binary form of a Fock state
      integer :: code(norbs)
+
+     ! matrix element of the atomic Hamiltonian
+     real(dp) :: val
 
 !! [body
 
