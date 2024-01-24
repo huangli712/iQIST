@@ -153,7 +153,7 @@
      use control ! ALL
 
 !! local variables
-     ! status flag for whether all of the parameters are OK
+     ! whether all of the control parameters are valid
      logical :: lpass
 
 !! [body
@@ -170,7 +170,8 @@
 
      ! check ictqmc
      if ( ictqmc < 1 .or. ictqmc > 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, 2, 3, 4, 5!'
+         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, &
+             & 2, 3, 4, 5!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
@@ -261,7 +262,7 @@
      ! check nband
      if ( nband <= 0 ) then
          write(mystd,'(2X,a)') 'ERROR: number of bands should be a &
-             & positive integer!'
+             & positive integer (1 <= nband <= 7)!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( nband <= 0 ) block
@@ -340,7 +341,7 @@
          lpass = .false.
      endif ! back if ( lambda < zero ) block
 
-     ! final assert
+     ! final assertion
      if ( lpass .eqv. .false. ) then
          call s_print_error('atomic_check_param','invalid parameters &
              & found in atom.config.in file!')
