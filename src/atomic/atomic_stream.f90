@@ -14,9 +14,9 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/08/2024 by li huang (last modified)
-!!! purpose : read input data from the external files, make the Fock basis
-!!!           and natural basis, etc.
+!!!           01/24/2024 by li huang (last modified)
+!!! purpose : read input data from the external files, construct the Fock
+!!!           basis, single particle matrices, an and natural basis, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -26,9 +26,9 @@
 !!========================================================================
 
 !!
-!! @sub atomic_config
+!! @sub atomic_setup_param
 !!
-!! read config parameters from file atom.config.in
+!! read control parameters from file atom.config.in
 !!
   subroutine atomic_setup_param()
      use constants, only : dp
@@ -43,7 +43,7 @@
      implicit none
 
 !! local variables
-     ! file status, if the atom.config.in file exists
+     ! file status, if the file atom.config.in exists
      logical :: exists
 
 !! [body
@@ -51,17 +51,17 @@
      ! setup general control flags
      !--------------------------------------------------------------------
      ibasis = 1           ! source of the natural basis
-     ictqmc = 1           ! type of atomic Hamiltonian matrix diagonalization
+     ictqmc = 1           ! how to diagonalize atomic Hamiltonian matrix
      icu    = 1           ! type of Coulomb interaction
-     icf    = 0           ! type of crystal field (CF)
-     isoc   = 0           ! type of spin-orbital coupling (SOC)
+     icf    = 0           ! type of crystal field splitting (CFS)
+     isoc   = 0           ! type of spin-orbit coupling (SOC)
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      ! setup common variables for atomic eigenvalue problem
      !--------------------------------------------------------------------
      nband  = 1           ! number of bands
      nspin  = 2           ! number of spins
-     norbs  = nband*nspin ! number of orbits
+     norbs  = nband*nspin ! number of orbitals
      ncfgs  = 2**norbs    ! number of many-body configurations
      nmini  = 0           ! minimal of total occupancy N to be kept
      nmaxi  = norbs       ! maximal of total occupancy N to be kept
@@ -79,14 +79,14 @@
      lambda = 0.00_dp     ! spin-orbit coupling strength
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     ! read in input file if possible
+     ! read the input file if available
      ! reset file status
      exists = .false.
 
-     ! inquire the input file status: atomic.config.in
+     ! inquire the status of input file: atomic.config.in
      inquire( file = "atom.config.in", exist = exists )
 
-     ! read parameters from atom.config.in
+     ! read control parameters from atom.config.in
      if ( exists .eqv. .true. ) then
          ! create the file parser
          call p_create()
@@ -144,7 +144,7 @@
 !!
 !! @sub atomic_check_config
 !!
-!! check the validity of input config parameters
+!! check validity and consistency of the control parameters
 !!
   subroutine atomic_check_param()
      use constants, only : zero
@@ -169,38 +169,48 @@
      endif ! back if ( ibasis < 1 .or. ibasis > 2 ) block
 
      ! check ictqmc
-     if ( ictqmc < 0 .or. ictqmc > 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 0, 1, 2, 3, 4, 5!'
+     if ( ictqmc < 1 .or. ictqmc > 5 ) then
+         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, 2, 3, 4, 5!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
-
+     !
      if ( ictqmc == 3 .and. isoc == 1 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz) algorithm is NOT supported for SOC case!'
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Sz) is NOT supported for &
+             & SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 3 .and. isoc == 1 ) block
-
+     !
      if ( ictqmc == 4 .and. isoc == 1 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for SOC case!'
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Sz,Ps) is NOT supported  &
+             & for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. isoc == 1 ) block
-
+     !
      if ( ictqmc == 4 .and. icu == 2 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for Slater-Cordon type interaction U!'
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Sz,Ps) is NOT supported  &
+             & for Slater-Cordon type interaction U!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. icu == 2 ) block
-
+     !
      if ( ictqmc == 5 .and. isoc == 0 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is ONLY supported for SOC case!'
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Jz) is ONLY supported    &
+             & for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 0 ) block
-
+     !
      if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is NOT supported for SOC + CF case!'
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Jz) is NOT supported for &
+             & SOC + CFS case!'
          write(mystd, *)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
@@ -211,16 +221,18 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu < 1 .or. icu > 3 ) block
-
+     !
      if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for 5- or 7-band system!'
+         write(mystd,'(2X,a)') 'ERROR: Slater-Cordon type Coulomb &
+             & interaction is only suitable for 5- or 7-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
-
+     !
      if ( icu == 3 .and. nband /= 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support anisotropic Hunds &
-             & rule exchange in Kanamori type Coulomb interaction for 5-band system!'
+         write(mystd,'(2X,a)') 'ERROR: anisotropic Hunds rule exchange &
+             & in Kanamori type Coulomb interaction is only suitable   &
+             & for 5-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 3 .and. nband /= 5 ) block
@@ -238,22 +250,26 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( isoc < 0 .or. isoc > 1 ) block
-
+     !
      if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support SOC for 3-, 5-, or 7-band system!'
+         write(mystd,'(2X,a)') 'ERROR: the SOC setup is only possible &
+             & for 3-, 5-, or 7-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
 
      ! check nband
      if ( nband <= 0 ) then
-         write(mystd,'(2X,a)') 'ERROR: number of bands must be larger than zero!'
+         write(mystd,'(2X,a)') 'ERROR: number of bands should be a &
+             & positive integer!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( nband <= 0 ) block
-
-     if ( nband >= 5 .and. ictqmc <= 1 ) then
-         write(mystd,'(2X,a)') 'ERROR: when number of bands is larger than 4, direct diagonalization is NOT supported!'
+     !
+     if ( nband >= 5 .and. ictqmc == 1 ) then
+         write(mystd,'(2X,a)') 'ERROR: when number of bands is larger &
+             & than 4, the direct diagonalization algorithm is NOT    &
+             & supported any more!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( nband >= 5 .and. ictqmc <= 1 ) block
@@ -267,14 +283,16 @@
 
      ! check norbs
      if ( norbs /= nspin * nband ) then
-         write(mystd,'(2X,a)') 'ERROR: number of bands is not compatible with number of orbitals!'
+         write(mystd,'(2X,a)') 'ERROR: number of bands is not compatible &
+             & with number of orbitals!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( norbs /= nspin * nband ) block
 
      ! check ncfgs
      if ( ncfgs /= 2 ** norbs ) then
-         write(mystd,'(2X,a)') 'ERROR: number of orbitals is not compatible with number of configurations!'
+         write(mystd,'(2X,a)') 'ERROR: number of many body states is not &
+             & compatible with number of orbitals!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ncfgs /= 2 ** norbs ) block
@@ -284,7 +302,7 @@
          nmini = 0
          write(mystd,'(2X,a)') 'WARNING: nmini < 0, enforce to be zero!'
      endif ! back if ( nmini < 0 ) block
-
+     !
      if ( nmaxi > norbs ) then
          nmaxi = norbs
          write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
@@ -293,34 +311,39 @@
 
      ! check Uc, Uv, Jz, Js, Jp
      if ( Uc < zero .or. Uv < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than &
+             & or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Uc < zero .or. Uv < zero ) block
-
+     !
      if ( Jz < zero .or. Js < zero .or. Jp < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger &
+             & than or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Jz < zero .or. Js < zero .or. Jp < zero ) block
 
      ! check Ud and Jh
      if ( Ud < zero .or. Jh < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than &
+             & or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Ud < zero .or. Jh < zero ) block
 
      ! check lambda
      if ( lambda < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: lambda must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: lambda must be larger than or &
+             & equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( lambda < zero ) block
 
      ! final assert
      if ( lpass .eqv. .false. ) then
-         call s_print_error('atomic_check_param','invalid parameters found in atom.config.in file!')
+         call s_print_error('atomic_check_param','invalid parameters &
+             & found in atom.config.in file!')
      endif ! back if ( lpass .eqv. .false. ) block
 
 !! body]
