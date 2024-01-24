@@ -231,7 +231,7 @@
      ! new atomic state after fermion operators act
      integer :: knew
 
-     ! binary code form of an atomic state
+     ! binary code form of a Fock state
      integer :: code(norbs)
 
      ! matrix element of the atomic Hamiltonian
