@@ -361,10 +361,11 @@
 !!
 !! @sub atomic_diag_shmat
 !!
-!! diagonalize the Hamiltonian for each sector
+!! diagonalize the atomic Hamiltonian subspace by subspace
 !!
   subroutine atomic_diag_shmat()
      use constants, only : dp
+     use constants, only : mystd
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
@@ -381,14 +382,24 @@
 !! [body
 
      do i=1,nsectors
+
+         write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'done'
+
+         ! we will not destroy the raw Hamiltonian data in sectors,
+         ! so we make a copy of it
          allocate(hmat(sectors(i)%ndim,sectors(i)%ndim))
          hmat = real( sectors(i)%hmat )
+
+         ! diagonalize it, eval and evec will be updated
          call s_eig_sy( sectors(i)%ndim, &
                         sectors(i)%ndim, &
                         hmat,            &
                         sectors(i)%eval, &
                         sectors(i)%evec )
+
+         ! deallocate memory
          deallocate(hmat)
+
      enddo ! over i={1,nsectors} loop
 
 !! body]
@@ -405,6 +416,7 @@
 !!
   subroutine atomic_make_sectors()
      use constants, only : zero
+     use constants, only : mystd
 
      use control, only : ictqmc
      use control, only : nband, norbs, ncfgs
