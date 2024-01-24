@@ -226,7 +226,7 @@
      integer :: delta, gamma
 
      ! sign change due to fermion anti-commute relation
-     integer :: sgn
+     integer :: isgn
 
      ! new atomic state after fermion operators act
      integer :: knew
@@ -252,7 +252,7 @@
          betloop: do betta=1,norbs ! loop over annihilation operators
 
          ! retrieve the Fock state |jbas>
-         sgn = 0
+         isgn = 0
          knew = dec_basis(jbas)
          code = bin_basis(:,jbas)
 
@@ -262,14 +262,14 @@
          ! simulate one annihilation operator, f_{\beta}
          if ( code(betta) == 1 ) then
              do i=1,betta-1
-                 if ( code(i) == 1 ) sgn = sgn + 1
+                 if ( code(i) == 1 ) isgn = isgn + 1
              enddo ! over i={1,betta-1} loop
              code(betta) = 0
 
              ! simulate one creation operator, f^{\dagger}_{\alpha}
              if ( code(alpha) == 0 ) then
                  do i=1,alpha-1
-                     if ( code(i) == 1 ) sgn = sgn + 1
+                     if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,alpha-1} loop
                  code(alpha) = 1
 
@@ -284,8 +284,8 @@
                  !
                  ! determine the matrix element between the two Fock
                  ! states, i.e., <ibas| and |jbas>
-                 sgn = mod(sgn,2)
-                 val = emat(alpha,betta) * (-one)**sgn
+                 isgn = mod(isgn,2)
+                 val = emat(alpha,betta) * (-one)**isgn
                  !
                  ! setup the two fermion operators term
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
@@ -311,7 +311,7 @@
          deltaloop : do delta=1,norbs ! loop over annihilation operators
 
          ! retrieve the Fock state |jbas>
-         sgn  = 0
+         isgn  = 0
          knew = dec_basis(jbas)
          code = bin_basis(:,jbas)
 
@@ -325,12 +325,12 @@
          ! they are f_{\delta} f_{\gamma}
          if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
              do i=1,gamma-1
-                 if ( code(i) == 1 ) sgn = sgn + 1
+                 if ( code(i) == 1 ) isgn = isgn + 1
              enddo ! over i={1,gamma-1} loop
              code(gamma) = 0
              !
              do i=1,delta-1
-                 if ( code(i) == 1 ) sgn = sgn + 1
+                 if ( code(i) == 1 ) isgn = isgn + 1
              enddo ! over i={1,delta-1} loop
              code(delta) = 0
 
@@ -338,12 +338,12 @@
              ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
              if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
                  do i=1,betta-1
-                     if ( code(i) == 1 ) sgn = sgn + 1
+                     if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,betta-1} loop
                  code(betta) = 1
                  !
                  do i=1,alpha-1
-                     if ( code(i) == 1 ) sgn = sgn + 1
+                     if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,alpha-1} loop
                  code(alpha) = 1
 
@@ -359,8 +359,8 @@
                  !
                  ! determine the matrix element between the two Fock
                  ! states, i.e., <ibas| and |jbas>
-                 sgn = mod(sgn,2)
-                 val = umat(alpha,betta,delta,gamma) * (-one)**sgn
+                 isgn = mod(isgn,2)
+                 val = umat(alpha,betta,delta,gamma) * (-one)**isgn
                  !
                  ! setup the four fermion operators term
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
