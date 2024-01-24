@@ -237,7 +237,7 @@
                      if ( ibas == 0 ) then
                          call s_print_error('atomic_make_shmat', &
                              & 'error while determining new state!')
-                     endif ! back if ( ind_basis(knew) == 0 ) block
+                     endif ! back if ( ibas == 0 ) block
                      !
                      ! determine the matrix element between the two Fock
                      ! states, i.e., <ibas| and |jbas>
@@ -264,22 +264,24 @@
          write(mystd,'(4X,a)') 'compute four fermion operators term'
          !
          do jbas=1,sectors(isec)%ndim
-             alphaloop: do alpha=1,norbs
-                 bettaloop: do betta=1,norbs
-                     gammaloop: do gamma=1,norbs
-                         deltaloop: do delta=1,norbs
+             alphaloop: do alpha=1,norbs ! loop over creation operators
+             bettaloop: do betta=1,norbs ! loop over creation operators
+             gammaloop: do gamma=1,norbs ! loop over annihilation operators
+             deltaloop: do delta=1,norbs ! loop over annihilation operators
 
+             ! retrieve the Fock state |jbas>
              isgn = 0
              knew = dec_basis(sectors(isec)%basis(jbas))
-             code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
+             code = bin_basis(:,sectors(isec)%basis(jbas))
 
              ! applying Pauli principle
              if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
 
-             ! U-matrix element is too small
+             ! U matrix element is too small
              if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
 
              ! simulate two annihilation operators
+             ! they are f_{\delta} f_{\gamma}
              if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
                  do i=1,gamma-1
                      if ( code(i) == 1 ) isgn = isgn + 1
@@ -292,38 +294,46 @@
                  code(delta) = 0
 
                  ! simulate two creation operators
+                 ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
                  if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
                      do i=1,betta-1
                          if ( code(i) == 1 ) isgn = isgn + 1
                      enddo ! over i={1,betta-1} loop
                      code(betta) = 1
+                     !
                      do i=1,alpha-1
                          if ( code(i) == 1 ) isgn = isgn + 1
                      enddo ! over i={1,alpha-1} loop
                      code(alpha) = 1
 
-                     ! determine the row number and Hamiltonian matrix elememt
+                     ! determine the new Fock state, <ibas|
+                     ! now ibas means the index for the new Fock state
                      knew = knew - 2**(gamma-1) - 2**(delta-1)
                      knew = knew + 2**(betta-1) + 2**(alpha-1)
+                     ibas = ind_basis(knew)
+                     if ( ibas == 0 ) then
+                         call s_print_error('atomic_make_shmat', &
+                             & 'error while determining new state!')
+                     endif ! back if ( ibas == 0 ) block
+                     !
+                     ! determine the matrix element between the two Fock
+                     ! states, i.e., <ibas| and |jbas>
                      isgn = mod(isgn,2)
-
-                     ! now ind_basis(knew) means the index of new Fock state
-                     if ( ind_basis(knew) == 0 ) then
-                         call s_print_error('atomic_make_shmat','error while determining new state!')
-                     endif ! back if ( ind_basis(knew) == 0 ) block
+                     val = umat(alpha,betta,delta,gamma) * (-one)**isgn
+                     !
+                     ! setup the four fermion operators term
                      do ibas=1,sectors(isec)%ndim
                          if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
                              sectors(isec)%hmat(ibas,jbas) = &
-                             sectors(isec)%hmat(ibas,jbas) + &
-                             umat(alpha,betta,delta,gamma) * (-one)**isgn
-                         endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
+                             sectors(isec)%hmat(ibas,jbas) + val
+                         endif ! back if block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
                  endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 
-                         enddo deltaloop ! over delta={1,norbs} loop
-                     enddo gammaloop ! over gamma={1,norbs} loop
-                 enddo bettaloop ! over betta={1,norbs} loop
+             enddo deltaloop ! over delta={1,norbs} loop
+             enddo gammaloop ! over gamma={1,norbs} loop
+             enddo bettaloop ! over betta={1,norbs} loop
              enddo alphaloop ! over alpha={1,norbs} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
