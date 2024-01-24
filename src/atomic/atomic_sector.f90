@@ -202,6 +202,8 @@
          ! compute two fermion operators term
          ! it is f^{\dagger}_{\alpha} f_{\beta}
          !----------------------------------------------------------------
+         write(mystd,'(4X,a)') 'compute two fermion operators term'
+         !
          do jbas=1,sectors(isec)%ndim
              alploop: do alpha=1,norbs ! loop over creation operators
              betloop: do betta=1,norbs ! loop over annihilation operators
@@ -256,8 +258,11 @@
              enddo alploop ! over alpha={1,norbs} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
-         ! four fermions term
+         ! compute four fermion operators term (coulomb interaction)
+         ! it is f^{\dagger}_{\alpha} f^{\dagger}_{\beta} f_{\delta} f_{\gamma}
          !----------------------------------------------------------------
+         write(mystd,'(4X,a)') 'compute four fermion operators term'
+         !
          do jbas=1,sectors(isec)%ndim
              alphaloop: do alpha=1,norbs
                  bettaloop: do betta=1,norbs
