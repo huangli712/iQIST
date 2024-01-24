@@ -358,7 +358,7 @@
                  endif ! back if ( ibas == 0 ) block
                  !
                  ! determine the matrix element between the two Fock
-                 ! states, i.e., <ibas| and |jbas>                 
+                 ! states, i.e., <ibas| and |jbas>
                  sgn = mod(sgn,2)
                  val = umat(alpha,betta,delta,gamma) * (-one)**sgn
                  !

@@ -34,7 +34,7 @@
      call atomic_build_fock()
      write(mystd,*)
 
-     ! make single particle matrix, such as spin-orbit coupling 
+     ! make single particle matrix, such as spin-orbit coupling
      write(mystd,'(2X,a)') 'make single particle matrix'
      call atomic_build_spmat()
      write(mystd,*)
@@ -102,7 +102,7 @@
 !! @sub atomic_f_driver
 !!
 !! solve the atomic eigenvalue problem by direct diagonalization in the
-!! full Hilbert space 
+!! full Hilbert space
 !!
   subroutine atomic_f_driver()
      use constants, only : dp
@@ -204,7 +204,7 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! write essential data to external files 
+     ! write essential data to external files
      !
      ! write eigenvalues of hmat to file 'atom.eigval.dat'
      ! write eigenvectors of hmat to file 'atom.eigvec.dat'
@@ -320,7 +320,7 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! write essential data to external files 
+     ! write essential data to external files
      !
      ! write eigenvalues of hmat to file 'atom.eigval.dat'
      ! write eigenvectors of hmat to file 'atom.eigvec.dat'

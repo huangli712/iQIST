@@ -406,7 +406,7 @@
 !!
 !! write atom.cix file for the ctqmc solver. the file format is designed
 !! for the begonia and lavender codes. however, the two codes are already
-!! deprecated. we retain this subroutine only for reference. 
+!! deprecated. we retain this subroutine only for reference.
 !!
   subroutine atomic_dump_fcix()
      use constants, only : epst
@@ -420,7 +420,7 @@
      use control, only : Ud, Jh
      use control, only : mune, lambda
 
-     use version, only : V_MAIL 
+     use version, only : V_MAIL
 
      use m_fock, only : eval, evec
      use m_fock, only : occu, spin
@@ -665,7 +665,7 @@
      use control, only : Ud, Jh
      use control, only : mune, lambda
 
-     use version, only : V_MAIL 
+     use version, only : V_MAIL
 
      use m_sector, only : nsectors
      use m_sector, only : sectors

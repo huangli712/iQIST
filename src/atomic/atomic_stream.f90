@@ -353,18 +353,19 @@
   end subroutine atomic_check_param
 
 !!========================================================================
-!!>>> config atomic eigenvalue problem                                 <<<
+!!>>> setup atomic Hamiltonian                                         <<<
 !!========================================================================
 
 !!
 !! @sub atomic_input_cmat
 !!
-!! read crystal field from file atomic.cmat.in
+!! read crystal field splitting from file atomic.cmat.in
 !!
   subroutine atomic_input_cmat()
      use, intrinsic :: iso_fortran_env, only : iostat_end
 
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
      use constants, only : mytmp
 
      use control, only : norbs
@@ -387,9 +388,10 @@
 
 !! [body
 
-     ! we shall read crystal field (cmat) from file atom.cmat.in
+     ! we shall read crystal field splitting into matrix cmat from
+     ! file atom.cmat.in
      !
-     ! inquire file at first
+     ! inquire file's status at first
      inquire( file = 'atom.cmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
          call s_print_error('atomic_input_cmat','file atomic.cmat.in does not exist!')
@@ -422,7 +424,8 @@
 !! read onsite impurity level from file atomic.emat.in
 !!
   subroutine atomic_input_emat()
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
      use constants, only : mytmp
 
      use control, only : norbs
@@ -445,9 +448,10 @@
 
 !! [body
 
-     ! we shall read onsite impurity level (emat) from file atomic.emat.in
+     ! we shall read onsite impurity level into matrix emat from
+     ! file atomic.emat.in
      !
-     ! inquire file at first
+     ! inquire file's status at first
      inquire( file = 'atom.emat.in', exist = exists )
      if ( exists .eqv. .false. ) then
          call s_print_error('atomic_input_emat','file atomic.emat.in does not exist!')
@@ -477,7 +481,8 @@
 !! read the transformation matrix tmat from file atomic.tmat.in
 !!
   subroutine atomic_input_tmat()
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
      use constants, only : mytmp
 
      use control, only : norbs
@@ -502,7 +507,7 @@
 
      ! we shall read transformation matrix tmat from file atomic.tmat.in
      !
-     ! inquire file at first
+     ! inquire file's status at first
      inquire( file = 'atom.tmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
          call s_print_error('atomic_input_tmat','file atomic.tmat.in does not exist')
@@ -516,7 +521,7 @@
          do j=1,norbs
              read(mytmp,*) i1, i2, raux
              ! tmat is actually real
-             tmat(j,i) = dcmplx(raux, zero)
+             tmat(i,j) = dcmplx(raux, zero)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -529,15 +534,17 @@
   end subroutine atomic_input_tmat
 
 !!========================================================================
-!!>>> build basis for atomic eigenvalue problem                        <<<
+!!>>> build basis for atomic Hamiltonian                               <<<
 !!========================================================================
 
 !!
 !! @sub atomic_build_fock
 !!
-!! make Fock basis for the full Hilbert space
+!! make Fock basis in the full Hilbert space
 !!
   subroutine atomic_build_fock()
+     use constants, only : mystd
+
      use control, only : norbs, ncfgs
 
      use m_fock, only : dim_sub_n
@@ -553,10 +560,10 @@
      integer :: j
      integer :: k
 
-     ! basis counter
-     integer :: basis_count
+     ! counter for Fock states
+     integer :: state_count
 
-     ! number of electrons for Fock state
+     ! number of electrons for the current Fock state
      integer :: nelec
 
 !! [body
@@ -567,13 +574,17 @@
      dec_basis = 0
      ind_basis = 0
 
-     ! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
+     ! evaluate dim_sub_n
+     ! it is a number of combination C_{norbs}^{i}
      do i=0,norbs
          call s_combination(i, norbs, dim_sub_n(i))
+         write(mystd,'(4X,a)', advance = 'no') 'number of Fock states: '
+         write(mystd,'(2X,i4)', advance = 'no') dim_sub_n(i)
+         write(mystd,'(1X,a,i2,a)') '( N = ', i, ' )'
      enddo ! over i={0,norbs} loop
 
      ! construct decimal form and index of Fock basis
-     basis_count = 0
+     state_count = 0
      do i=0,norbs
          do j=0,2**norbs-1
              nelec = 0
@@ -581,9 +592,9 @@
                  if ( btest(j, k-1) ) nelec = nelec + 1
              enddo ! over k={1,norbs} loop
              if ( nelec == i ) then
-                 basis_count = basis_count + 1
-                 dec_basis(basis_count) = j
-                 ind_basis(j) = basis_count
+                 state_count = state_count + 1
+                 dec_basis(state_count) = j
+                 ind_basis(j) = state_count
              endif ! back if ( nelec == i ) block
          enddo ! over j={0,2**norbs-1} loop
      enddo ! over i={0,norbs} loop
@@ -593,6 +604,9 @@
          do j=1,norbs
              if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
          enddo ! over j={1,norbs} loop
+         write(mystd,'(4X,a,i6)', advance = 'no') 'Fock state index: ', i
+         write(mystd,'(2X,a,i4)', advance = 'no') 'decimal: ', dec_basis(i)
+         write(mystd,'(2X,a,*(i1))') 'binary: ', bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
      ! dump Fock basis to file atom.fock.dat for reference
@@ -604,35 +618,33 @@
   end subroutine atomic_build_fock
 
 !!
-!! make single particle related matrices, including crystal field (CF),
-!! spin-orbit coupling (SOC), and Coulomb interaction U.
+!! make single particle matrices, including the crystal field splitting
+!! (CFS), spin-orbit coupling (SOC), and Coulomb interaction U etc.
 !!
-!! when writing these matrices, we should define a single particle basis,
-!! there are four basis we will use (take 5-orbitals system for example)
+!! when constructing these matrices, we should define a single particle
+!! basis at first. there are four basis sets that we adopt in the jasmine
+!! code. now let us take a 5-orbitals system as an example to illustrate
+!! the four basis sets.
 !!
-!! (1) real orbital basis
-!!     for example, |dz2,up>, |dz2,dn>,
-!!                  |dxz,up>, |dxz,dn>,
-!!                  |dyz,up>, |dyz,dn>,
-!!                  |dx2-y2,up>, |dx2-y2,dn>,
-!!                  |dxy,up>, |dxy,dn>
+!! (1) real orbital basis (the real spherical harmonics)
+!!     |dxy,up>,   |dyz,up>,   |dz2,up>,   |dxz,up>,   |dx2-y2,up>
+!!     |dxy,down>, |dyz,down>, |dz2,down>, |dxz,down>, |dx2-y2,down>
+!!     
+!! (2) complex orbital basis (the complex spherical functions)
+!!     it is eigenstate of operators l^2 and l_z, |l,m,spin>
+!!     for d electron system, l = 2, m = \pm 2, \pm 1, 0
+!!     |2,-2,up>,   |2,-1,up>,   |2,0,up>,   |2,1,up>,   |2,2,up>
+!!     |2,-2,down>, |2,-1,down>, |2,0,down>, |2,1,down>, |2,2,down>
 !!
-!! (2) |lz,sz> complex orbital basis (the complex spherical functions)
-!!     for example, |2,-2,up>, |2,-2,dn>,
-!!                  |2,-1,up>, |2,-1,dn>,
-!!                  |2, 0,up>, |2, 0,dn>,
-!!                  |2, 1,up>, |2, 1,dn>,
-!!                  |2, 2,up>, |2, 2,dn>
+!! (3) j^2 - j_z diagonal basis
+!!     it is eigenstate of operators j^2 and j_z, |j,m_j>
+!!     for d electron system, j = 3/2 or 5/2, m_j = -j, -j+1, ..., j-1, j
+!!     |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2> |3/2,3/2>
+!!     |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2> |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
 !!
-!! (3) |j2,jz> orbital basis (eigenstates of j2, jz)
-!!     for example, |3/2,-3/2>, |3/2,3/2>,
-!!                  |3/2,-1/2>, |3/2,1/2>,
-!!                  |5/2,-5/2>, |5/2,5/2>,
-!!                  |5/2,-3/2>, |5/2,3/2>,
-!!                  |5/2,-1/2>, |5/2,1/2>,
-!!
-!! (4) the so-called natural basis, on which the onsite energy of impurity
-!!     is diagonal. we have to diagonalize CF + SOC to obtain natural basis
+!! (4) the natural basis, on which the onsite energy of impurity is
+!!     diagonal. we have to diagonalize H_{CFS} + H_{SOC} to obtain
+!!     the natural basis
 !!
 !! note that the CF is always defined in real orbital basis, SOC is always
 !! defined in complex orbital basis, and Coulomb interaction U is defined
@@ -892,7 +904,7 @@
      call cat_alloc_fock_basis()
 
      ! allocate memory for single particle matrices
-     call cat_alloc_spmat() 
+     call cat_alloc_spmat()
 
 !! body]
 

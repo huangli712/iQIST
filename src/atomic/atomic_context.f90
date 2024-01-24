@@ -98,7 +98,7 @@
 !! @var fmat
 !!
 !! annihilation operator matrix, < alpha | f | beta >
-!! where | alpha > and | beta > are the atomic eigenstates 
+!! where | alpha > and | beta > are the atomic eigenstates
 !!
      real(dp), public, save, allocatable :: fmat(:,:,:)
 
@@ -314,7 +314,7 @@
 
          ! z component of spin: Sz
          integer :: sz
- 
+
          ! z component of spin-orbit momentum: Jz
          integer :: jz
 
