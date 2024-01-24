@@ -318,7 +318,7 @@
          ! applying Pauli principle
          if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
 
-         ! U-matrix element is too small
+         ! U matrix element is too small
          if ( abs( umat(alpha,betta,delta,gamma) ) < epst ) CYCLE
 
          ! simulate two annihilation operators
