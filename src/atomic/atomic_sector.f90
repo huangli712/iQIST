@@ -251,6 +251,7 @@
                          if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
                              sectors(isec)%hmat(ibas,jbas) = &
                              sectors(isec)%hmat(ibas,jbas) + val
+                             EXIT
                          endif ! back if block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
                      !
@@ -332,6 +333,7 @@
                          if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
                              sectors(isec)%hmat(ibas,jbas) = &
                              sectors(isec)%hmat(ibas,jbas) + val
+                             EXIT
                          endif ! back if block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
                      !
