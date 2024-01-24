@@ -8,9 +8,11 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/05/2024 by li huang (last modified)
-!!! purpose : implement the sector algorithm, calculate the F-matrix and
-!!!           build the atomic Hamiltonian sector-by-sector
+!!!           01/24/2024 by li huang (last modified)
+!!! purpose : try to implement the subspace diagonalization algorithm.
+!!!           it contains some subroutines to construct the atomic
+!!!           Hamiltonian subspace by subspace, diagonalize it, and then
+!!!           calculate the annihilation operator matrix.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -18,7 +20,9 @@
 !!
 !! @sub atomic_make_sfmat
 !!
-!! build F-matrix (fmat) for good quantum numbers (GQNs) algorithm
+!! build annihilation operator matrix in the subspace, and then rotate
+!! it to the atomic eigenbasis. actually, the creation operator matrix
+!! is calculated as well
 !!
   subroutine atomic_make_sfmat()
      use constants, only : zero
