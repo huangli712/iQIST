@@ -218,7 +218,7 @@
      ! loop index
      integer :: i
 
-     ! loop index for basis
+     ! loop index for Fock state
      integer :: ibas, jbas
 
      ! loop index for orbital
@@ -231,7 +231,7 @@
      ! new atomic state after fermion operators act
      integer :: knew
 
-     ! binary code form of a Fock state
+     ! binary form of a Fock state
      integer :: code(norbs)
 
      ! matrix element of the atomic Hamiltonian
@@ -239,7 +239,7 @@
 
 !! [body
 
-     ! start to make Hamiltonian
+     ! start to make atomic Hamiltonian
      ! initialize hmat
      hmat = czero
 

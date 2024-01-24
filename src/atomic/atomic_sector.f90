@@ -189,57 +189,67 @@
 
 !! [body
 
-     ! loop over all sectors
+     ! loop over all subspaces
      do isec=1,nsectors
+
+         ! start to make atomic Hamiltonian
+         ! initialize hmat
          sectors(isec)%hmat = czero
 
-         ! two fermions term
+         ! compute two fermion operators term
+         ! it is f^{\dagger}_{\alpha} f_{\beta}
          !----------------------------------------------------------------
          do jbas=1,sectors(isec)%ndim
-             alploop: do alpha=1,norbs
-                 betloop: do betta=1,norbs
+             alploop: do alpha=1,norbs ! loop over creation operators
+             betloop: do betta=1,norbs ! loop over annihilation operators
 
+             ! retrieve the Fock state |jbas>
              isgn = 0
              knew = dec_basis(sectors(isec)%basis(jbas))
-             code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
+             code = bin_basis(:,sectors(isec)%basis(jbas))
 
              ! impurity level is too small
              if ( abs(emat(alpha,betta)) < epst ) CYCLE
 
-             ! simulate one annihilation operator
+             ! simulate one annihilation operator, f_{\beta}
              if ( code(betta) == 1 ) then
                  do i=1,betta-1
                      if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,betta-1} loop
                  code(betta) = 0
 
-                 ! simulate one creation operator
+                 ! simulate one creation operator, f^{\dagger}_{\alpha}
                  if ( code(alpha) == 0 ) then
                      do i=1,alpha-1
                          if ( code(i) == 1 ) isgn = isgn + 1
                      enddo ! over i={1,alpha-1} loop
                      code(alpha) = 1
 
-                     ! determine the row number and Hamiltonian matrix elememt
-                     knew = knew - 2**(betta-1)
-                     knew = knew + 2**(alpha-1)
-                     isgn = mod(isgn,2)
-
-                     ! now ind_basis(knew) means the index of new Fock state
-                     if ( ind_basis(knew) == 0 ) then
-                         call s_print_error('atomic_make_shmat','error while determining new state!')
+                     ! determine the new Fock state, <ibas|
+                     ! now ibas means the index for the new Fock state
+                     knew = knew - 2**(betta-1) + 2**(alpha-1)
+                     ibas = ind_basis(knew)
+                     if ( ibas == 0 ) then
+                         call s_print_error('atomic_make_shmat', &
+                             & 'error while determining new state!')
                      endif ! back if ( ind_basis(knew) == 0 ) block
+                     !
+                     ! determine the matrix element between the two Fock
+                     ! states, i.e., <ibas| and |jbas>
+                     isgn = mod(isgn,2)
+                     val = emat(alpha,betta) * (-one)**isgn
+                     !
+                     ! setup the two fermion operators term
                      do ibas=1,sectors(isec)%ndim
                          if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
                              sectors(isec)%hmat(ibas,jbas) = &
-                             sectors(isec)%hmat(ibas,jbas) + &
-                             emat(alpha,betta) * (-one)**isgn
-                         endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
+                             sectors(isec)%hmat(ibas,jbas) + val
+                         endif ! back if block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
                  endif ! back if ( code(alpha) == 0 ) block
              endif ! back if ( code(betta_ == 1 ) block
 
-                 enddo betloop ! over betta={1,norbs} loop
+             enddo betloop ! over betta={1,norbs} loop
              enddo alploop ! over alpha={1,norbs} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
