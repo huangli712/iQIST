@@ -646,18 +646,19 @@
 !!     diagonal. we have to diagonalize H_{CFS} + H_{SOC} to obtain
 !!     the natural basis
 !!
-!! note that the CF is always defined in real orbital basis, SOC is always
-!! defined in complex orbital basis, and Coulomb interaction U is defined
-!! in real orbital basis or complex orbital basis which depends on the form
-!! of Coulomb interaction, so we often need to transform them between two
-!! different basis sets
+!! note that the CFS is always defined in real orbital basis, SOC is
+!! always defined in complex orbital basis. the Coulomb interaction U
+!! should be defined in real orbital basis or complex orbital basis,
+!! which depends on the form of Coulomb interaction. thus, we often
+!! need to transform them between two different basis sets
 !!
 
 !!
 !! @sub atomic_build_spmat
 !!
-!! make single particle related matrices, including crystal field (CF),
-!! spin-orbit coupling (SOC), and Coulomb interaction U tensor
+!! try to make various single particle matrices, including the crystal
+!! field splitting (CFS), the spin-orbit coupling (SOC), and the Coulomb
+!! interaction tensor (U)
 !!
   subroutine atomic_build_spmat()
      use constants, only : two, czero
