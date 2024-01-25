@@ -148,7 +148,7 @@
 !!
 !! @sub atomic_make_gsz
 !!
-!! make Sz quantum number for each orbital
+!! calculate Sz quantum number for each orbital
 !!
   subroutine atomic_make_gsz(good_sz)
      use control, only : norbs
@@ -156,7 +156,7 @@
      implicit none
 
 !! external arguments
-     ! good quantum numbers: Sz
+     ! good quantum number: Sz
      integer, intent(out) :: good_sz(norbs)
 
 !! local variables
@@ -182,7 +182,7 @@
 !!
 !! @sub atomic_make_gjz
 !!
-!! make Jz quantum number for each orbital
+!! calculate Jz quantum number for each orbital
 !!
   subroutine atomic_make_gjz(good_jz)
      use control, only : nband, norbs
@@ -190,7 +190,7 @@
      implicit none
 
 !! external arguments
-     ! good quantum numbers: Jz
+     ! good quantum number: Jz
      integer, intent(out) :: good_jz(norbs)
 
 !! [body
@@ -244,11 +244,19 @@
      return
   end subroutine atomic_make_gjz
 
+!!
+!! @sub atomic_make_gps
+!!
+!! calculate PS quantum number for each band. note that only the pure
+!! band-dependent part is calculated in this function
+!!
   subroutine atomic_make_gps(good_ps)
      use control, only : nband
 
      implicit none
 
+!! external arguments
+     ! good quantum number: PS
      integer, intent(out) :: good_ps(nband)
 
 !! local variables
@@ -259,7 +267,7 @@
 
      do i=1,nband
          good_ps(i) = 2**i
-     enddo
+     enddo ! over i={1,nband} loop
 
 !! body]
 
