@@ -3,7 +3,7 @@
 !!!                                                                      !
 !!! An atomic eigenvalue problem solver which is used to generate input  !
 !!! file (atom.cix) for the hybridization expansion version continuous   !
-!!! time quantum Monte Carlo (CTQMC) quantum impurity solver             !
+!!! time quantum Monte Carlo (CT-HYB) quantum impurity solver            !
 !!!                                                                      !
 !!! author  : Yilin Wang (University of Science and Technology of China) !
 !!!           Li Huang (China Academy of Engineering Physics)            !
@@ -35,7 +35,7 @@
      ! print the control parameters to terminal
      call atomic_print_summary()
 
-     ! call the dispatcher to drive different tasks
+     ! call the dispatcher to launch different tasks
      call atomic_dispatcher()
 
      ! deallocate memories for global arrays
