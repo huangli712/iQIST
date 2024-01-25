@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/24/2024 by li huang (last modified)
+!!!           01/25/2024 by li huang (last modified)
 !!! purpose : try to implement the subspace diagonalization algorithm.
 !!!           it contains some subroutines to construct the atomic
 !!!           Hamiltonian subspace by subspace, diagonalize it, and then
@@ -410,8 +410,8 @@
 !!
 !! @sub atomic_make_sectors
 !!
-!! determine all the sectors with the good quantum numbers algorithm.
-!! a sector consists of some many-particle Fock states labeled by good
+!! determine all the subspaces with the good quantum numbers algorithm.
+!! a subspace consists of some many-particle Fock states labeled by good
 !! quantum numbers
 !!
   subroutine atomic_make_sectors()
@@ -452,217 +452,247 @@
      ! PS value
      integer :: my_ps
 
-     ! a counter
-     integer :: counter
-
-     ! index of Fock basis
+     ! index of Fock state
      integer :: ibasis
 
-     ! number of sectors
+     ! number of subspaces (sectors)
      integer :: nsect
 
-     ! which sector point to
+     ! which subspace (sector) point to
      integer :: which_sect
 
-     ! can point to next sector
+     ! dummy variable
+     integer :: val
+
+     ! can point to next subspace (sector)
      logical :: can
 
-     ! the Sz and Jz values for each orbital
-     integer :: orb_good_sz(norbs)
-     integer :: orb_good_jz(norbs)
+     ! Sz, Jz, and PS for all orbitals
+     integer :: orb_sz(norbs)
+     integer :: orb_jz(norbs)
+     integer :: orb_ps(nband)
 
-     ! good quantum number N, Sz, Jz, and PS for each Fock state
-     integer :: fock_good_ntot(ncfgs)
-     integer :: fock_good_sz(ncfgs)
-     integer :: fock_good_jz(ncfgs)
-     integer :: fock_good_ps(ncfgs)
+     ! N, Sz, Jz, and PS for all Fock states
+     integer :: fock_ntot(ncfgs)
+     integer :: fock_sz(ncfgs)
+     integer :: fock_jz(ncfgs)
+     integer :: fock_ps(ncfgs)
 
-     ! good quantum number N, Sz, Jz, and PS for each sector
-     integer :: sect_good_ntot(ncfgs)
-     integer :: sect_good_sz(ncfgs)
-     integer :: sect_good_jz(ncfgs)
-     integer :: sect_good_ps(ncfgs)
+     ! N, Sz, Jz, and PS for all subspaces
+     integer :: sect_ntot(ncfgs)
+     integer :: sect_sz(ncfgs)
+     integer :: sect_jz(ncfgs)
+     integer :: sect_ps(ncfgs)
 
-     ! dimension of each sector
+     ! dimension for subspaces
      integer :: ndims(ncfgs)
 
-     ! a temp binary form of Fock basis
+     ! binary form of Fock state
      integer :: code(norbs)
 
-     ! sector basis index
-     ! the first index: dimension size of the sector
-     ! the second index: the index of sector
+     ! subspace basis index
+     !
+     ! the first index: local index of Fock state in the given subspace
+     ! the second index: index of subspace
+     !
+     ! for example, sector_basis(j,i) gives the global index of Fock
+     ! state for the j-th basis function in the i-th subspace
      integer, allocatable :: sector_basis(:,:)
-
-     ! dummy variable
-     integer :: sum_dim
 
 !! [body
 
      ! initialize some variables
-     sect_good_ntot = 0
-     sect_good_sz = 0
-     sect_good_jz = 0
-     sect_good_ps = 0
+     sect_ntot = 0
+     sect_sz = 0
+     sect_jz = 0
+     sect_ps = 0
 
      ! allocate memory
      allocate(sector_basis(ncfgs,ncfgs))
 
-     ! make orb_good_sz and orb_good_jz
+     ! make orb_sz, orb_jz, and orb_ps
      !--------------------------------------------------------------------
-     orb_good_sz = 0
-     call atomic_make_gsz(orb_good_sz)
-
-     ! jz only valid for nband==3, 5, 7
-     orb_good_jz = 0
+     ! calculate orb_sz
+     orb_sz = 0
+     call atomic_make_gsz(orb_sz)
+     write(mystd,'(4X,a)') 'compute [Sz] for orbitals'
+     !
+     ! calculate orb_jz
+     orb_jz = 0
      if ( nband == 3 .or. nband == 5 .or. nband == 7 ) then
-         call atomic_make_gjz(orb_good_jz)
+         ! jz only valid for nband==3, 5, 7
+         call atomic_make_gjz(orb_jz)
      endif ! back if ( nband == 3 .or. nband == 5 .or. nband == 7 ) block
+     write(mystd,'(4X,a)') 'compute [Jz] for orbitals'
+     !
+     ! calculate orb_ps
+     orb_ps = 0
+     call atomic_make_gps(orb_ps)
+     write(mystd,'(4X,a)') 'compute [PS] for orbitals'
 
      ! build good quantum numbers for each Fock state
      !--------------------------------------------------------------------
-     counter = 0
-     fock_good_ntot = 0
-     fock_good_sz = 0
-     fock_good_jz = 0
-     fock_good_ps = 0
+     ibasis = 0
+     fock_ntot = 0
+     fock_sz = 0
+     fock_jz = 0
+     fock_ps = 0
      !
-     ! loop over all number of total electrons
+     ! loop over all number of total electrons (N)
      do i=0,norbs
-         ! loop over each state
+         ! loop over each Fock state
          do j=1,dim_sub_n(i)
 
-             ! here counter denotes the index of Fock state
-             counter = counter + 1
+             ! here ibasis denotes the index of Fock state
+             ibasis = ibasis + 1
 
              ! build N
-             fock_good_ntot(counter) = i
+             fock_ntot(ibasis) = i
              !
              ! build Sz
              my_sz = 0
              do k=1,norbs
-                 my_sz = my_sz + orb_good_sz(k) * bin_basis(k,counter)
+                 my_sz = my_sz + orb_sz(k) * bin_basis(k,ibasis)
              enddo ! over k={1,norbs} loop
-             fock_good_sz(counter) = my_sz
+             fock_sz(ibasis) = my_sz
              !
              ! build Jz
              my_jz = 0
              do k=1,norbs
-                 my_jz = my_jz + orb_good_jz(k) * bin_basis(k,counter)
+                 my_jz = my_jz + orb_jz(k) * bin_basis(k,ibasis)
              enddo ! over k={1,norbs} loop
-             fock_good_jz(counter) = my_jz
+             fock_jz(ibasis) = my_jz
              !
-             ! build PS number
+             ! build PS
+             my_ps = 0
              do k=1,nband
-                 fock_good_ps(counter) = &
-                 fock_good_ps(counter) + (2**k) * &
-                     (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
+                 val = bin_basis(2*k-1,ibasis) - bin_basis(2*k,ibasis)
+                 my_ps = my_ps + orb_ps(k) * val**2
              enddo ! over k={1,nband} loop
+             fock_ps(ibasis) = my_ps
 
          enddo ! over j={1,dim_sub_n(i)} loop
      enddo ! over i={0,norbs} loop
+     !
+     write(mystd,'(4X,a)') 'compute [N Sz Jz PS] for Fock states'
 
-     ! loop over all the Fock states to determine sectors
+     ! loop over all the Fock states to determine subspaces
      !--------------------------------------------------------------------
+     write(mystd,'(4X,a)') 'create subspaces automatically'
+     !
      nsect = 0
      ndims = 0
      sector_basis = 0
      !
      do i=1,ncfgs
-         my_ntot = fock_good_ntot(i)
+         my_ntot = fock_ntot(i)
 
          ! truncate the occupancy according to nmini and nmaxi
          if ( my_ntot < nmini  .or. my_ntot > nmaxi ) CYCLE
 
          if ( ictqmc == 3 .or. ictqmc == 4 ) then
-             my_sz = fock_good_sz(i)
+             my_sz = fock_sz(i)
          endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
          !
          if ( ictqmc == 4 ) then
-             my_ps = fock_good_ps(i)
+             my_ps = fock_ps(i)
          endif ! back if ( ictqmc == 4 ) block
          !
          if ( ictqmc == 5 ) then
-             my_jz = fock_good_jz(i)
+             my_jz = fock_jz(i)
          endif ! back if ( ictqmc == 5 ) block
 
-         ! determine the first sector
+         ! create the first subspace
          if ( nsect == 0 ) then
-             sect_good_ntot(1) = my_ntot
-
+             sect_ntot(1) = my_ntot
+             !
              if ( ictqmc == 3 .or. ictqmc == 4 ) then
-                 sect_good_sz(1) = my_sz
+                 sect_sz(1) = my_sz
              endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
              !
              if (ictqmc == 4) then
-                 sect_good_ps(1) = my_ps
+                 sect_ps(1) = my_ps
              endif ! back if ( ictqmc == 4 ) block
              !
              if ( ictqmc == 5 ) then
-                 sect_good_jz(1) = my_jz
+                 sect_jz(1) = my_jz
              endif ! back if ( ictqmc == 5 ) block
 
              nsect = nsect + 1
              ndims(1) = ndims(1) + 1
              sector_basis(ndims(1),1) = i
+
+             write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', nsect
+             write(mystd,'(2X,a,i2)', advance = 'no') 'N  = ', my_ntot
+             write(mystd,'(2X,a,i2)', advance = 'no') 'Sz = ', my_sz
+             write(mystd,'(2X,a,i2)', advance = 'no') 'PS = ', my_ps
+             write(mystd,'(2X,a,i2)') 'Jz = ', my_jz
          else
-             ! loop over the exists sectors
+             ! loop over the exists subspaces
              which_sect = -1
              do j=1,nsect
-                 ! compare the current state with existing sectors
+                 ! compare the current Fock state with existing subspaces
                  select case (ictqmc)
                      case (2)
-                         if ( sect_good_ntot(j) == my_ntot ) then
+                         if ( sect_ntot(j) == my_ntot ) then
                              which_sect = j; EXIT
-                         endif ! back if ( sect_good_ntot(j) == my_ntot ) block
+                         endif ! back if ( sect_ntot(j) == my_ntot ) block
 
                      case (3)
-                         if ( sect_good_ntot(j) == my_ntot ) then
-                             if ( sect_good_sz(j) == my_sz ) then
+                         if ( sect_ntot(j) == my_ntot ) then
+                             if ( sect_sz(j) == my_sz ) then
                                  which_sect = j; EXIT
-                             endif ! back if ( sect_good_sz(j) == my_sz ) block
-                         endif ! back if ( sect_good_ntot(j) == my_ntot ) block
+                             endif ! back if ( sect_sz(j) == my_sz ) block
+                         endif ! back if ( sect_ntot(j) == my_ntot ) block
 
                      case (4)
-                         if ( sect_good_ntot(j) == my_ntot ) then
-                             if ( sect_good_sz(j) == my_sz ) then
-                                 if ( sect_good_ps(j) == my_ps) then
+                         if ( sect_ntot(j) == my_ntot ) then
+                             if ( sect_sz(j) == my_sz ) then
+                                 if ( sect_ps(j) == my_ps) then
                                      which_sect = j; EXIT
-                                 endif ! back if ( sect_good_ps(j) == my_ps) block
-                             endif ! back if ( sect_good_sz(j) == my_sz ) block
-                         endif ! back if ( sect_good_ntot(j) == my_ntot ) block
+                                 endif ! back if ( sect_ps(j) == my_ps) block
+                             endif ! back if ( sect_sz(j) == my_sz ) block
+                         endif ! back if ( sect_ntot(j) == my_ntot ) block
 
                      case (5)
-                         if ( sect_good_ntot(j) == my_ntot ) then
-                             if ( sect_good_jz(j) == my_jz ) then
+                         if ( sect_ntot(j) == my_ntot ) then
+                             if ( sect_jz(j) == my_jz ) then
                                  which_sect = j; EXIT
-                             endif ! back if ( sect_good_jz(j) == my_jz ) block
-                         endif ! back if ( sect_good_ntot(j) == my_ntot ) block
+                             endif ! back if ( sect_jz(j) == my_jz ) block
+                         endif ! back if ( sect_ntot(j) == my_ntot ) block
 
                  end select
              enddo ! over j={1,nsect} loop
 
              ! we can not assign the current state into any existing
-             ! sectors, so we have to define a new sector
+             ! subspaces, so we have to define a new one
              if ( which_sect == -1 ) then
                  nsect = nsect + 1
-                 sect_good_ntot(nsect) = my_ntot
 
+                 sect_ntot(nsect) = my_ntot
+                 !
                  if ( ictqmc == 3 .or. ictqmc == 4 ) then
-                     sect_good_sz(nsect) = my_sz
+                     sect_sz(nsect) = my_sz
                  endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
                  !
                  if ( ictqmc == 4 ) then
-                     sect_good_ps(nsect) = my_ps
+                     sect_ps(nsect) = my_ps
                  endif ! back if ( ictqmc == 4 ) block
                  !
                  if ( ictqmc == 5 ) then
-                     sect_good_jz(nsect) = my_jz
+                     sect_jz(nsect) = my_jz
                  endif ! back if ( ictqmc == 5 ) block
 
                  ndims(nsect) = ndims(nsect) + 1
                  sector_basis(ndims(nsect),nsect) = i
-             ! we assign the current state to one of the old sectors
+
+                 write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', nsect
+                 write(mystd,'(2X,a,i2)', advance = 'no') 'N  = ', my_ntot
+                 write(mystd,'(2X,a,i2)', advance = 'no') 'Sz = ', my_sz
+                 write(mystd,'(2X,a,i2)', advance = 'no') 'PS = ', my_ps
+                 write(mystd,'(2X,a,i2)') 'Jz = ', my_jz
+             ! we assign the current Fock state to one of the old subspace
+             ! that totally matched
              else
                  ndims(which_sect) = ndims(which_sect) + 1
                  sector_basis(ndims(which_sect),which_sect) = i
@@ -670,45 +700,54 @@
          endif ! back if ( nsect == 0 ) block
      enddo ! over i={1,ncfgs} loop
 
-     ! after we know how many sectors and the dimension of each sector
-     ! are there, we can allocate memory for global variables for sectors
+     ! after we know the number of subspaces, and and the dimension (size)
+     ! of each subspace, we can allocate memory for the variables that
+     ! related to the subspaces
      !--------------------------------------------------------------------
+     write(mystd,'(4X,a)') 'allocate memory for subspaces' 
+     !
      max_dim_sect = 0
      ave_dim_sect = zero
      nsectors = nsect
      call cat_alloc_sectors()
      !
-     ! now we will build each sector
-     counter = 1
+     ! now we will build every subspace one by one
+     ibasis = 1
      do i=1,nsect
+         sectors(i)%istart = ibasis
          sectors(i)%ndim = ndims(i)
-         sectors(i)%nele = sect_good_ntot(i)
-         sectors(i)%sz   = sect_good_sz(i)
-         sectors(i)%jz   = sect_good_jz(i)
-         sectors(i)%ps   = sect_good_ps(i)
          sectors(i)%nops = norbs
-         sectors(i)%istart = counter
-         counter = counter + ndims(i)
+         !
+         sectors(i)%nele = sect_ntot(i)
+         sectors(i)%sz   = sect_sz(i)
+         sectors(i)%jz   = sect_jz(i)
+         sectors(i)%ps   = sect_ps(i)
+         !
+         ibasis = ibasis + ndims(i)
 
-         ! allocate memory for each sector
+         ! allocate memory for the subspace
          call cat_alloc_sector( sectors(i) )
 
-         ! set basis for each sector
+         ! set basis for the subspace
          do j=1,ndims(i)
              sectors(i)%basis(j) = sector_basis(j,i)
          enddo ! over j={1,ndims(i)} loop
+
+         write(mystd,'(4X,a,i4)', advance = 'no') 'subspace:', i
+         write(mystd,'(2X,a,i4)', advance = 'no') 'size:', ndims(i)
+         write(mystd,'(2X,a,i4)') 'start:', sectors(i)%istart
      enddo ! over i={1,nsect} loop
 
-     ! make next sector index
+     ! make index for next subspace
      !--------------------------------------------------------------------
-     ! loop over all the sectors
-     do i=1,nsectors
-         ! loop over all the orbtials
-         do j=1,norbs
-             ! loop over creation and annihilation fermion operators
-             do k=0,1
+     write(mystd,'(4X,a)') 'simulate fermion operator act on subspaces'
+     do i=1,nsectors  ! loop over all the subspaces
+         do j=1,norbs ! loop over all the orbtials
+             do k=0,1 ! loop over creation and annihilation fermion operators
+
                  which_sect = -1
-                 ! we should check each state in this sector
+
+                 ! we should check each Fock state in this subspace
                  can = .false.
                  do l=1,sectors(i)%ndim
                      ibasis = sectors(i)%basis(l)
@@ -732,105 +771,117 @@
                      select case (ictqmc)
                          case (2)
                              if ( k == 1 ) then
-                                 my_ntot = sect_good_ntot(i) + 1
+                                 my_ntot = sect_ntot(i) + 1
                              else
-                                 my_ntot = sect_good_ntot(i) - 1
+                                 my_ntot = sect_ntot(i) - 1
                              endif ! back if ( k == 1 ) block
                              !
-                             ! loop over all sectors to see which sector
-                             ! it will point to
+                             ! loop over all subspaces to see which
+                             ! subspace it will point to
                              do l=1,nsectors
-                                 if ( sect_good_ntot(l) == my_ntot ) then
+                                 if ( sect_ntot(l) == my_ntot ) then
                                      which_sect = l; EXIT
-                                 endif ! back if ( sect_good_ntot(l) == my_ntot ) block
+                                 endif ! back if ( sect_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
 
                          case (3)
                              if ( k == 1 ) then
-                                 my_ntot = sect_good_ntot(i) + 1
-                                 my_sz = sect_good_sz(i) + orb_good_sz(j)
+                                 my_ntot = sect_ntot(i) + 1
+                                 my_sz = sect_sz(i) + orb_sz(j)
                              else
-                                 my_ntot = sect_good_ntot(i) - 1
-                                 my_sz = sect_good_sz(i) - orb_good_sz(j)
+                                 my_ntot = sect_ntot(i) - 1
+                                 my_sz = sect_sz(i) - orb_sz(j)
                              endif ! back if ( k == 1 ) block
                              !
-                             ! loop over all sectors to see which sector
-                             ! it will point to
+                             ! loop over all subspaces to see which
+                             ! subspace it will point to
                              do l=1,nsectors
-                                 if ( sect_good_ntot(l) == my_ntot ) then
-                                     if ( sect_good_sz(l) == my_sz ) then
+                                 if ( sect_ntot(l) == my_ntot ) then
+                                     if ( sect_sz(l) == my_sz ) then
                                          which_sect = l; EXIT
-                                     endif ! back if ( sect_good_sz(l) == my_sz ) block
-                                 endif ! back if ( sect_good_ntot(l) == my_ntot ) block
+                                     endif ! back if ( sect_sz(l) == my_sz ) block
+                                 endif ! back if ( sect_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
 
                          case (4)
                              if ( k == 1 ) then
-                                 my_ntot = sect_good_ntot(i) + 1
-                                 my_sz = sect_good_sz(i) + orb_good_sz(j)
+                                 my_ntot = sect_ntot(i) + 1
+                                 my_sz = sect_sz(i) + orb_sz(j)
                                  code(j) = 1
                              else
-                                 my_ntot = sect_good_ntot(i) - 1
-                                 my_sz   = sect_good_sz(i) - orb_good_sz(j)
+                                 my_ntot = sect_ntot(i) - 1
+                                 my_sz   = sect_sz(i) - orb_sz(j)
                                  code(j) = 0
                              endif ! back if ( k == 1 ) block
                              !
-                             ! calculate new PS number
+                             ! calculate new PS
                              my_ps = 0
                              do l=1,nband
-                                 my_ps = my_ps + (2**l) * ( code(2*l-1) - code(2*l) )**2
+                                 val = code(2*l-1) - code(2*l)
+                                 my_ps = my_ps + orb_ps(l) * val**2
                              enddo ! over l={1,nband} loop
                              !
-                             ! loop over all sectors to see which sector
-                             ! it will point to
+                             ! loop over all subspaces to see which
+                             ! subspace it will point to
                              do l=1,nsectors
-                                 if ( sect_good_ntot(l) == my_ntot ) then
-                                     if ( sect_good_sz(l) == my_sz ) then
-                                         if ( sect_good_ps(l) == my_ps) then
+                                 if ( sect_ntot(l) == my_ntot ) then
+                                     if ( sect_sz(l) == my_sz ) then
+                                         if ( sect_ps(l) == my_ps) then
                                              which_sect = l; EXIT
-                                         endif ! back if ( sect_good_ps(l) == my_ps) block
-                                     endif ! back if ( sect_good_sz(l) == my_sz ) block
-                                 endif ! back if ( sect_good_ntot(l) == my_ntot ) block
+                                         endif ! back if ( sect_ps(l) == my_ps) block
+                                     endif ! back if ( sect_sz(l) == my_sz ) block
+                                 endif ! back if ( sect_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
 
                          case (5)
                              if ( k == 1 ) then
-                                 my_ntot = sect_good_ntot(i) + 1
-                                 my_jz = sect_good_jz(i) + orb_good_jz(j)
+                                 my_ntot = sect_ntot(i) + 1
+                                 my_jz = sect_jz(i) + orb_jz(j)
                              else
-                                 my_ntot = sect_good_ntot(i) - 1
-                                 my_jz = sect_good_jz(i) - orb_good_jz(j)
+                                 my_ntot = sect_ntot(i) - 1
+                                 my_jz = sect_jz(i) - orb_jz(j)
                              endif ! back if ( k == 1 ) block
                              !
-                             ! loop over all sectors to see which sector
-                             ! it will point to
+                             ! loop over all subspaces to see which
+                             ! subspace it will point to
                              do l=1,nsectors
-                                 if ( sect_good_ntot(l) == my_ntot ) then
-                                     if ( sect_good_jz(l) == my_jz ) then
+                                 if ( sect_ntot(l) == my_ntot ) then
+                                     if ( sect_jz(l) == my_jz ) then
                                          which_sect = l; EXIT
-                                     endif ! back if ( sect_good_jz(l) == my_jz ) block
-                                 endif ! back if ( sect_good_ntot(l) == my_ntot ) block
+                                     endif ! back if ( sect_jz(l) == my_jz ) block
+                                 endif ! back if ( sect_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
 
                      end select ! back select case (ictqmc) block
                  endif  ! back if ( can == .true. ) block
+
+                 ! setup the next array 
                  sectors(i)%next(j,k) = which_sect
+
+                 if (k == 1) then
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
+                     write(mystd,'(2X,a,i4)', advance = 'no') 'initial subspace:', i
+                     write(mystd,'(2X,a,i4)') 'final subspace:', which_sect
+                 else
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f  (alpha =', j, ')'
+                     write(mystd,'(2X,a,i4)', advance = 'no') 'initial subspace:', i
+                     write(mystd,'(2X,a,i4)') 'final subspace:', which_sect
+                 endif ! back if (k == 1) block
+
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsectors} loop
 
-     ! calculate the maximum and average dimensions of sectors
+     ! calculate the maximum and average dimensions of subspaces
      !--------------------------------------------------------------------
      max_dim_sect = maxval(ndims)
-     sum_dim = 0
-     do i=1,nsectors
-         sum_dim = sum_dim + sectors(i)%ndim
-     enddo
-     ave_dim_sect = real(sum_dim) / real(nsectors)
+     ave_dim_sect = real(ncfgs) / real(nsectors)
+     write(mystd,'(4X,a,i4)') 'maximum dimension of subspaces:', max_dim_sect
+     write(mystd,'(4X,a,f6.2)') 'averaged dimension of subspaces:', ave_dim_sect
 
-     ! dump sector information for reference
+     ! dump subspace information for reference
      !--------------------------------------------------------------------
-     call atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
+     call atomic_dump_sector(sect_ntot, sect_sz, sect_ps, sect_jz)
 
      ! deallocate memory
      deallocate(sector_basis)

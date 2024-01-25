@@ -4,6 +4,7 @@
 !!!           atomic_make_c
 !!!           atomic_make_gsz
 !!!           atomic_make_gjz
+!!!           atomic_make_gps
 !!!           atomic_make_gaunt5
 !!!           atomic_make_gaunt7
 !!!           atomic_make_hund
@@ -236,6 +237,28 @@
 
      return
   end subroutine atomic_make_gjz
+
+  subroutine atomic_make_gps(good_ps)
+     use control, only : nband
+
+     implicit none
+
+     integer, intent(out) :: good_ps(nband)
+
+!! local variables
+     ! loop index
+     integer :: i
+
+!! [body
+
+     do i=1,nband
+         good_ps(i) = 2**i
+     enddo
+
+!! body]
+
+     return
+  end subroutine atomic_make_gps
 
 !!========================================================================
 !!>>> determine gaunt coefficients                                     <<<

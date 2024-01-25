@@ -15,7 +15,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/23/2024 by li huang (last modified)
+!!!           01/25/2024 by li huang (last modified)
 !!! purpose : write some essential arrays and data structures to files
 !!! status  : unstable
 !!! comment :
@@ -541,7 +541,7 @@
 !!
 !! @sub atomic_dump_seigval
 !!
-!! write eigenvalues in all sectors to the file atom.eigval.dat
+!! write eigenvalues in subspaces (sectors) to the file atom.eigval.dat
 !!
   subroutine atomic_dump_seigval()
      use constants, only : mytmp
@@ -595,7 +595,7 @@
 !!
 !! @sub atomic_dump_seigvec
 !!
-!! write eigenvectors in all sectors to the file atom.eigvec.dat
+!! write eigenvectors in subspaces (sectors) to the file atom.eigvec.dat
 !!
   subroutine atomic_dump_seigvec()
      use constants, only : eps6
@@ -725,14 +725,15 @@
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
 
-     ! write summary of sectors
+     ! write summary of subspaces (sectors)
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SECTORS:'
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SUMMARY: NSECTORS | MAX_DIM_SECT | AVE_DIM_SECT'
      write(mytmp,'(5X,2(i10,2X),f20.10)') nsectors, max_dim_sect, ave_dim_sect
 
-     ! write dimension, total electrons, next sector, eigenvalue of each sector
+     ! write dimension, total electrons, next subspace (sector), and
+     ! eigenvalue of each subspace (sector)
      do i=1,nsectors
          write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NE | SZ | JZ | PS'
          write(mytmp,'(12X,8i6)') i, sectors(i)%ndim,   &
@@ -743,7 +744,7 @@
                                      sectors(i)%jz,     &
                                      sectors(i)%ps
 
-         ! write next sector
+         ! write next subspace (sector)
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
              ! adjust the orbital order for ctqmc, up, up, up, dn, dn, dn
@@ -766,7 +767,7 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-     ! write annihilation operator matrix (F-matrix) for each sector
+     ! write annihilation operator matrix for each subspace (sector)
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F-MATRIX:'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -816,7 +817,8 @@
 !!
 !! @sub atomic_dump_sector
 !!
-!! write the configurations of sectors to the file atom.sector.dat
+!! write configurations of subspaces (sectors) to the file atom.sector.dat
+!!
   subroutine atomic_dump_sector(sect_ntot, sect_sz, sect_ps, sect_jz)
      use constants, only : mytmp
 
