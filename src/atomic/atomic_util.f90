@@ -793,7 +793,7 @@
      implicit none
 
 !! external arguments
-     ! SOC matrix
+     ! spin-orbit coupling matrix
      complex(dp), intent(out) :: smat(6,6)
 
 !! local parameters
@@ -836,7 +836,7 @@
      implicit none
 
 !! external arguments
-     ! SOC matrix
+     ! spin-orbit coupling matrix
      complex(dp), intent(out) :: smat(10,10)
 
 !! local parameters
@@ -889,7 +889,7 @@
      implicit none
 
 !! external arguments
-     ! SOC matrix
+     ! spin-orbit coupling matrix
      complex(dp), intent(out) :: smat(14,14)
 
 !! local parameters
@@ -961,7 +961,7 @@
      implicit none
 
 !! external arguments
-     ! the transformation matrix from complex orbitals to real orbitals
+     ! transformation matrix from complex orbitals to real orbitals
      complex(dp), intent(out) :: tmat_c2r(norbs,norbs)
 
 !! local parameters
@@ -1079,7 +1079,8 @@
              tmat_c2r(14,14) =  czi/sqrt2
 
          case default
-             call s_print_error('atomic_make_tmat_c2r','not implemented for this nband!')
+             call s_print_error('atomic_make_tmat_c2r', &
+                 & 'not implemented for this nband!')
 
      end select
 
@@ -1101,7 +1102,7 @@
      use control, only : norbs
 
 !! external arguments
-     ! the transformation matrix from real orbitals to complex orbitals
+     ! transformation matrix from real orbitals to complex orbitals
      complex(dp), intent(out) :: tmat_r2c(norbs,norbs)
 
 !! local variables
@@ -1123,7 +1124,7 @@
 !! @sub atomic_make_tmat_c2j
 !!
 !! make transformation matrix from complex orbital basis (|lz,sz>) to
-!! j2-jz orbital basis (|j2,jz>), i.e., the Cordon-Gaunt (CG) coefficients
+!! j2-jz orbital basis (|j2,jz>)
 !!
   subroutine atomic_make_tmat_c2j(tmat_c2j)
      use constants, only : dp
@@ -1134,7 +1135,7 @@
      implicit none
 
 !! external arguments
-     ! the transformation matrix from complex orbitals |lz,sz> to |j2,jz>
+     ! transformation matrix from complex orbitals |lz,sz> to |j2,jz>
      complex(dp), intent(out) :: tmat_c2j(norbs,norbs)
 
 !! [body
@@ -1259,7 +1260,8 @@
 !!
 !! @sub atomic_tran_fmat
 !!
-!! rotate F-matrix (fmat) from Fock basis to eigenstates basis
+!! rotate annihilation or creation operator matrix (fmat) from Fock basis
+!! to atomic eigenbasis
 !!
   subroutine atomic_tran_fmat(ndimx, ndimy, amat, bmat, cmat)
      use constants, only : dp
