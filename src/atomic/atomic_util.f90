@@ -138,7 +138,7 @@
 
 !! body]
 
-      return
+     return
   end subroutine atomic_make_c
 
 !!========================================================================
@@ -234,7 +234,8 @@
              good_jz(14) =  7
 
          case default
-             call s_print_error('atomic_make_gjz','not implemented for this norbs value!')
+             call s_print_error('atomic_make_gjz', &
+                 & 'not implemented for this norbs value!')
 
      end select
 
