@@ -778,7 +778,7 @@
   end subroutine atomic_make_umatS
 
 !!========================================================================
-!!>>> determine spin-orbital coupling matrix                           <<<
+!!>>> determine spin-orbit coupling matrix                             <<<
 !!========================================================================
 
 !!
@@ -1485,8 +1485,14 @@
 !!
 !! @sub atomic_natural_basis1
 !!
-!! make natural basis for no crystal field or diagonal crystal field,
-!! without spin-orbital coupling
+!! make natural basis, the onsite energy of impurity (emat) and the
+!! transformation matrix from original basis to natural basis are
+!! determined as well.
+!!
+!! case 1
+!!
+!! no crystal field splitting or it is diagonal
+!! no spin-orbit coupling
 !!
   subroutine atomic_natural_basis1()
      use control, only : norbs
@@ -1502,7 +1508,7 @@
 
 !! [body
 
-     ! set emat
+     ! setup emat to crystal field splitting
      ! since smat is zero, so emat is equal to cmat
      emat = cmat
 
@@ -1523,8 +1529,14 @@
 !!
 !! @sub atomic_natural_basis2
 !!
-!! make natural basis for non-diagonal crystal field,
-!! without spin-orbital coupling
+!! make natural basis, the onsite energy of impurity (emat) and the
+!! transformation matrix from original basis to natural basis are
+!! determined as well.
+!!
+!! case 2
+!!
+!! non-diagonal crystal field splitting
+!! no spin-orbit coupling
 !!
   subroutine atomic_natural_basis2()
      use constants, only : dp
@@ -1541,10 +1553,10 @@
      integer  :: i
      integer  :: j
 
-     ! eigenvalue
+     ! eigenvalues
      real(dp) :: eigval(nband)
 
-     ! eigenvector
+     ! eigenvectors
      real(dp) :: eigvec(nband,nband)
 
      ! emat matrix for no spin freedom
@@ -1555,7 +1567,7 @@
 
 !! [body
 
-     ! set emat to crystal field
+     ! setup emat to crystal field splitting
      ! since smat is zero, so emat is equal to cmat
      emat = cmat
 
@@ -1598,9 +1610,16 @@
 !!
 !! @sub atomic_natural_basis3
 !!
-!! make natural basis for the case without crystal field and with
-!! spin-orbital coupling, for this special case, the natural basis
-!! is |j2,jz>
+!! make natural basis, the onsite energy of impurity (emat) and the
+!! transformation matrix from original basis to natural basis are
+!! determined as well.
+!!
+!! case 3
+!!
+!! no crystal field splitting
+!! spin-orbit coupling
+!!
+!! for this special case, the natural basis is |j2,jz>
 !!
   subroutine atomic_natural_basis3()
      use constants, only : dp
@@ -1621,14 +1640,14 @@
 
 !! [body
 
-     ! set emat
+     ! setup emat to spin-orbit coupling
      ! since cmat is zero, so emat is equal to smat
      emat = smat
 
      ! evaluate transformation matrix tmat_c2j
      call atomic_make_tmat_c2j(tmat_c2j)
 
-     ! for this case, the transformation matrix is from complex orbital
+     ! the transformation matrix is from complex orbital
      ! basis to natural basis (|j2,jz> basis)
      tmat = tmat_c2j
 
@@ -1648,8 +1667,14 @@
 !!
 !! @sub atomic_natural_basis4
 !!
-!! make natural basis for the case with crystal field and with
-!! spin-orbital coupling
+!! make natural basis, the onsite energy of impurity (emat) and the
+!! transformation matrix from original basis to natural basis are
+!! determined as well.
+!!
+!! case 4
+!!
+!! crystal field splitting
+!! spin-orbit coupling
 !!
   subroutine atomic_natural_basis4()
      use constants, only : dp
@@ -1666,16 +1691,18 @@
      ! loop index
      integer  :: i
 
-     ! eigenvalue
+     ! eigenvalues
      real(dp) :: eigval(norbs)
 
-     ! eigenvector
+     ! eigenvectors
      real(dp) :: eigvec(norbs,norbs)
 
-     ! transformation matrix from real orbital basis to complex orbital basis
+     ! transformation matrix from real orbital basis
+     ! to complex orbital basis
      complex(dp) :: tmat_r2c(norbs,norbs)
 
-     ! transformation matrix from complex orbital basis to natural basis
+     ! transformation matrix from complex orbital basis
+     ! to natural basis
      complex(dp) :: tmat_c2n(norbs,norbs)
 
 !! [body
@@ -1683,21 +1710,23 @@
      ! build tmat_r2c
      call atomic_make_tmat_r2c(tmat_r2c)
 
-     ! transfrom crystal field (cmat) to complex orbital basis
+     ! transfrom crystal field splitting (cmat) to complex orbital basis
      call atomic_tran_repr_cmpl(norbs, cmat, tmat_r2c)
 
      ! check whether cmat is real, if not, we cann't make natural basis
      if ( any( abs( aimag(cmat) ) > eps6 ) ) then
-         call s_print_error('atomic_natural_basis4','crystal field on complex orbital basis should be real!')
+         call s_print_error('atomic_natural_basis4', &
+             'crystal field on complex orbital basis should be real!')
      endif ! back if ( any( abs( aimag(cmat) ) > eps6 ) ) block
 
-     ! set emat: CF + SOC
+     ! setup emat: crystal field splitting + spin-orbit coupling
      emat = smat + cmat
 
      ! diagonalize real(emat)
      call s_eig_sy(norbs, norbs, real(emat), eigval, eigvec)
 
-     ! get the transformation matrix from complex orbital basis to natural basis
+     ! build transformation matrix from complex orbital basis
+     ! to natural basis
      tmat_c2n = eigvec
      tmat = tmat_c2n
 
