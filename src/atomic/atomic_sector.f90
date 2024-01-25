@@ -704,7 +704,7 @@
      ! of each subspace, we can allocate memory for the variables that
      ! related to the subspaces
      !--------------------------------------------------------------------
-     write(mystd,'(4X,a)') 'allocate memory for subspaces' 
+     write(mystd,'(4X,a)') 'allocate memory for subspaces'
      !
      max_dim_sect = 0
      ave_dim_sect = zero
@@ -855,7 +855,7 @@
                      end select ! back select case (ictqmc) block
                  endif  ! back if ( can == .true. ) block
 
-                 ! setup the next array 
+                 ! setup the next array
                  sectors(i)%next(j,k) = which_sect
 
                  if (k == 1) then

@@ -28,10 +28,11 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/08/2024 by li huang (last modified)
+!!!           01/25/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
-!!!           gaunt coefficients and Coulomb interaction matrices, etc.
+!!!           gaunt coefficients, spin-orbit coupling matrices, Coulomb
+!!!           interaction matrices, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -43,7 +44,8 @@
 !!
 !! @sub atomic_make_cdagger
 !!
-!! create one electron on ipos of |jold> to obtain new Fock state |jnew>
+!! simulate a creation operator. create one electron on ipos of |jold>
+!! to obtain new Fock state |jnew>
 !!
   subroutine atomic_make_cdagger(ipos, jold, jnew, isgn)
      implicit none
@@ -68,6 +70,7 @@
 !! [body
 
      ! it is occupied at ipos
+     ! we can not violate the Pauli principle
      if ( btest(jold, ipos-1) .eqv. .true. ) then
          call s_print_error('atomic_make_cdagger','severe error happened')
      endif ! back if ( btest(jold, ipos-1) .eqv. .true. ) block
@@ -91,45 +94,47 @@
 !!
 !! @sub atomic_make_c
 !!
-!! destroy one electron on ipos of |jold> to obtain new Fock state |jnew>
+!! simulate an annihilation operator. destroy one electron on ipos of
+!! |jold> to obtain new Fock state |jnew>
 !!
   subroutine atomic_make_c(ipos, jold, jnew, isgn)
-      implicit none
+     implicit none
 
 !! external arguments
-      ! position number (serial number of orbital)
-      integer, intent(in)  :: ipos
+     ! position number (serial number of orbital)
+     integer, intent(in)  :: ipos
 
-      ! old Fock state
-      integer, intent(in ) :: jold
+     ! old Fock state
+     integer, intent(in ) :: jold
 
-      ! new Fock state
-      integer, intent(out) :: jnew
+     ! new Fock state
+     integer, intent(out) :: jnew
 
-      ! sign due to anti-commute relation between fermions
-      integer, intent(out) :: isgn
+     ! sign due to anti-commute relation between fermions
+     integer, intent(out) :: isgn
 
 !! local variables
-      ! loop index
-      integer :: iorb
+     ! loop index
+     integer :: iorb
 
-      ! it is unoccupied at ipos
-      if ( btest(jold, ipos-1) .eqv. .false. ) then
-          call s_print_error('atomic_make_c','severe error happened')
-      endif ! back if ( btest(jold, ipos-1) .eqv. .false. ) block
+     ! it is unoccupied at ipos
+     ! we can not violate the Pauli principle
+     if ( btest(jold, ipos-1) .eqv. .false. ) then
+         call s_print_error('atomic_make_c','severe error happened')
+     endif ! back if ( btest(jold, ipos-1) .eqv. .false. ) block
 
-      ! evaluate the sign
-      isgn = 0
-      !
-      do iorb=1,ipos-1
-          if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
-      enddo ! back iorb={1,ipos-1} loop
-      !
-      isgn = mod(isgn,2)
-      isgn = (-1)**isgn
+     ! evaluate the sign
+     isgn = 0
+     !
+     do iorb=1,ipos-1
+         if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
+     enddo ! back iorb={1,ipos-1} loop
+     !
+     isgn = mod(isgn,2)
+     isgn = (-1)**isgn
 
-      ! get the final Fock state
-      jnew = jold - 2**(ipos-1)
+     ! get the final Fock state
+     jnew = jold - 2**(ipos-1)
 
 !! body]
 
@@ -137,7 +142,7 @@
   end subroutine atomic_make_c
 
 !!========================================================================
-!!>>> determine good quantum numbers                                   <<<
+!!>>> calculate good quantum numbers                                   <<<
 !!========================================================================
 
 !!
