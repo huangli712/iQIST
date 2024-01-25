@@ -7,7 +7,7 @@
 !!! type    : modules
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/23/2024 by li huang (last modified)
+!!!           01/26/2024 by li huang (last modified)
 !!! purpose : define global data structures, arrays, and variables for
 !!!           the atomic eigenvalue problem solver
 !!! status  : unstable
@@ -149,7 +149,8 @@
 
      ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_fock_basis','can not allocate enough memory')
+         call s_print_error('cat_alloc_fock_basis', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
@@ -189,7 +190,8 @@
 
      ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_fock_eigen','can not allocate enough memory')
+         call s_print_error('cat_alloc_fock_eigen', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
@@ -279,6 +281,8 @@
 !! where | alpha > and | beta > are the atomic eigenstates in the
 !! given subspace labelled by good quantum numbers
 !!
+!! this data structure can be used to save creation operator matrix
+!!
      private :: Tf
      type Tf
 
@@ -294,20 +298,24 @@
 !!
 !! @struct Ts
 !!
-!! data structure for subspace diagonalization algorithm
-!! sometimes we call subspace as sector
+!! data structure for subspace diagonalization algorithm. it is used to
+!! represent a subspace. sometimes we call subspace as sector
 !!
      public :: Ts
      type Ts
 
-         ! start index of this sector
+         ! global index of the first Fock state in this subspace
          integer :: istart
 
-         ! dimension of this sector
+         ! dimension of this subspace. how many Fock states are there
+         ! in this subspace
          integer :: ndim
 
-         ! number of fermion operators
+         ! number of fermion operators. it is actually equal to norbs
          integer :: nops
+
+         ! we just use N, Sz, Jz, and PS to label the subspaces. they
+         ! are good quantum numbers
 
          ! total number of electrons N
          integer :: nele
@@ -321,38 +329,38 @@
          ! PS good quantum number
          integer :: ps
 
-         ! collection of indices of Fock states for this sector
+         ! collection of global indices of Fock states for this subspace
          integer, allocatable  :: basis(:)
 
-         ! pointer to (or index of) the next sector after a fermion
-         ! operator acts on this sector
+         ! pointer to (or index of) the next subspace after a fermion
+         ! operator acts on this subspace
          !
          !     next(nops,0) for annihilation
          !     next(nops,1) for creation operators
          !
-         ! if it is -1, it means the next sector is null (outside of the
-         ! Hilbert space). otherwise, it is the index of next sector
+         ! if it is -1, it means the next subspace is null (outside of
+         ! the Hilbert space). otherwise, it is the index of next subspace
          integer, allocatable  :: next(:,:)
 
-         ! eigenvalues of atomic Hamiltonian in this sector
+         ! eigenvalues of atomic Hamiltonian in this subspace
          real(dp), allocatable :: eval(:)
 
-         ! eigenvectors of atomic Hamiltonian in this sector
+         ! eigenvectors of atomic Hamiltonian in this subspace
          ! since Hamiltonian must be real, then it is real as well
          real(dp), allocatable :: evec(:,:)
 
-         ! atomic Hamiltonian in this sector
+         ! atomic Hamiltonian in this subspace
          complex(dp), allocatable :: hmat(:,:)
 
          ! annihilation operator matrix < alpha | f | beta > between this
-         ! sector and all other sectors, where | alpha > and | beta > are
-         ! the atomic eigenstates
+         ! subspace and all other subspaces, where | alpha > and | beta >
+         ! are the atomic eigenstates
          !
          !     fmat(nops,0) for annihilation
          !     fmat(nops,1) for creation operators
          !
-         ! if this sector doesn't point to some other sectors, then the
-         ! matrix is invalid
+         ! if this subspace doesn't point to some other subspaces, then
+         ! the matrix is invalid
          type(Tf), allocatable :: fmat(:,:)
 
      end type Ts
@@ -360,28 +368,28 @@
 !!
 !! @var nsectors
 !!
-!! number of sectors
+!! number of subspaces
 !!
      integer, public, save  :: nsectors
 
 !!
 !! @var max_dim_sect
 !!
-!! maximum dimension of sectors
+!! maximum dimension of subspaces
 !!
      integer, public, save  :: max_dim_sect
 
 !!
 !! @var ave_dim_sect
 !!
-!! average dimension of sectors
+!! average dimension of subspaces
 !!
      real(dp), public, save :: ave_dim_sect
 
 !!
 !! @var sectors
 !!
-!! An array of structs that stores all the sectors
+!! an array of structs that stores all the subspaces
 !!
      type(Ts), public, save, allocatable :: sectors(:)
 
@@ -429,7 +437,8 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_fmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_fmat', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize it
@@ -443,7 +452,7 @@
 !!
 !! @sub cat_alloc_sector
 !!
-!! allocate memory for one sector
+!! allocate memory for one subspace
 !!
   subroutine cat_alloc_sector(one_sector)
      implicit none
@@ -472,7 +481,8 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_sector','can not allocate enough memory')
+         call s_print_error('cat_alloc_sector', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
@@ -499,7 +509,7 @@
 !!
 !! @sub cat_alloc_sectors
 !!
-!! allocate memory for sectors
+!! allocate memory for subspaces
 !!
   subroutine cat_alloc_sectors()
      implicit none
@@ -515,10 +525,11 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_sectors','can not allocate enough memory')
+         call s_print_error('cat_alloc_sectors', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     ! initialization of sectors should be done elsewhere
+     ! initialization of subspaces should be done elsewhere
 
 !! body]
 
@@ -556,13 +567,13 @@
 !!
 !! @sub cat_free_sector
 !!
-!! deallocate memory for one sector
+!! deallocate memory for one subspace
 !!
   subroutine cat_free_sector(one_sector)
      implicit none
 
 !! external arguments
-     ! this sector
+     ! this subspace
      type(Ts), intent(inout) :: one_sector
 
 !! local variables
@@ -597,7 +608,7 @@
 !!
 !! @sub cat_free_sectors
 !!
-!! deallocate memory for sectors
+!! deallocate memory for subspaces
 !!
   subroutine cat_free_sectors()
      implicit none
@@ -609,7 +620,7 @@
 !! [body
 
      ! deallocate memory for an array of Ts
-     ! before deallocating sectors to avoid memory leak
+     ! before deallocating subspaces to avoid memory leak
      if ( allocated(sectors) ) then
          do i=1,nsectors
              call cat_free_sector( sectors(i) )
@@ -632,7 +643,8 @@
 !!
 !! @mod m_spmat
 !!
-!! it defines some single particle matrices, including
+!! it contains some physical quantities that defined in single particle
+!! basis, including
 !!     crystal field splitting,
 !!     spin-orbit coupling,
 !!     Coulomb interaction U tensor, etc
@@ -719,7 +731,8 @@
 
      ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_spmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_spmat', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
