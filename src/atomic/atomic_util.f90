@@ -535,13 +535,13 @@
              hund(3,5,:) = jj1;   hund(5,3,:) = jj1
              hund(2,4,:) = jj1;   hund(4,2,:) = jj1
              hund(3,4,:) = jj1;   hund(4,3,:) = jj1
-
+             !
              hund(1,4,:) = jj2;   hund(4,1,:) = jj2
              hund(1,5,:) = jj2;   hund(5,1,:) = jj2
-
+             !
              hund(1,2,:) = jj3;   hund(2,1,:) = jj3
              hund(1,3,:) = jj3;   hund(3,1,:) = jj3
-
+             !
              hund(4,5,:) = jj4;   hund(5,4,:) = jj4
          else
              call s_print_error('atomic_make_hund','not implemented!')
@@ -556,7 +556,8 @@
 !!
 !! @sub atomic_make_umatK
 !!
-!! make Coulomb interaction U according to Kanamori parameterized Hamiltonian
+!! make Coulomb interaction U rank-4 tensor according to Kanamori
+!! parameterized Hamiltonian
 !!
   subroutine atomic_make_umatK()
      use constants, only : dp
@@ -663,7 +664,7 @@
 !!
 !! @sub atomic_make_umatS
 !!
-!! make Coulomb interation U, according to Slater-Cordon
+!! make Coulomb interation U rank-4 tensor, according to Slater-Cordon
 !! parameterized Hamiltonian
 !!
   subroutine atomic_make_umatS()
@@ -731,37 +732,38 @@
              call atomic_make_gaunt7(gaunt)
 
          case default
-             call s_print_error('atomic_make_umatS','not implemented for this nband!')
+             call s_print_error('atomic_make_umatS', &
+                 & 'not implemented for this nband!')
 
      end select
 
      ! make Coulomb interaction U matrix
      do alpha=1,norbs
-         do betta=1,norbs
-             aband = ( alpha - 1 ) / 2 - l
-             bband = ( betta - 1 ) / 2 - l
-             aspin = mod(alpha,2)
-             bspin = mod(betta,2)
+     do betta=1,norbs
+         aband = ( alpha - 1 ) / 2 - l
+         bband = ( betta - 1 ) / 2 - l
+         aspin = mod(alpha,2)
+         bspin = mod(betta,2)
 
-             do gamma=1,norbs
-                 do delta=1,norbs
-                     dband = ( delta - 1 ) / 2 - l
-                     gband = ( gamma - 1 ) / 2 - l
-                     dspin = mod(delta,2)
-                     gspin = mod(gamma,2)
+         do gamma=1,norbs
+         do delta=1,norbs
+             dband = ( delta - 1 ) / 2 - l
+             gband = ( gamma - 1 ) / 2 - l
+             dspin = mod(delta,2)
+             gspin = mod(gamma,2)
 
-                     if ( ( aband + bband ) /= ( dband + gband ) ) CYCLE
-                     if ( ( aspin /= gspin ) .or. ( bspin /= dspin ) ) CYCLE
+             if ( ( aband + bband ) /= ( dband + gband ) ) CYCLE
+             if ( ( aspin /= gspin ) .or. ( bspin /= dspin ) ) CYCLE
 
-                     res = zero
-                     do i=0,2*l,2
-                         res = res + gaunt(aband,gband,i) * gaunt(dband,bband,i) * slater_cordon(i)
-                     enddo ! over i={0,2*l} loop
-                     umat(alpha,betta,delta,gamma) = res
-                 enddo ! over gamma={1,norbs} loop
-             enddo ! over delta={1,norbs} loop
+             res = zero
+             do i=0,2*l,2
+                 res = res + gaunt(aband,gband,i) * gaunt(dband,bband,i) * slater_cordon(i)
+             enddo ! over i={0,2*l} loop
+             umat(alpha,betta,delta,gamma) = res
+         enddo ! over delta={1,norbs} loop
+         enddo ! over gamma={1,norbs} loop
 
-         enddo ! over betta={1,norbs} loop
+     enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
      !
      umat = half * umat
