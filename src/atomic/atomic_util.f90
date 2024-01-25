@@ -1263,7 +1263,7 @@
 !! rotate annihilation or creation operator matrix (fmat) from Fock basis
 !! to atomic eigenbasis
 !!
-  subroutine atomic_tran_fmat(ndimx, ndimy, amat, bmat, cmat)
+  subroutine atomic_tran_fmat(ndimx, ndimy, amat, fmat, cmat)
      use constants, only : dp
      use constants, only : zero, one
 
@@ -1282,8 +1282,8 @@
      ! right transformation matrix
      real(dp), intent(in) :: cmat(ndimy,ndimy)
 
-     ! F-matrix
-     real(dp), intent(inout) :: bmat(ndimx,ndimy)
+     ! annihilation or creation operator matrix
+     real(dp), intent(inout) :: fmat(ndimx,ndimy)
 
 !! local variables
      ! dummy array
@@ -1296,14 +1296,14 @@
 
      tmp_mat = zero
      call dgemm('N', 'N', ndimx, ndimy, ndimy, &
-                             one, bmat, ndimx, &
+                             one, fmat, ndimx, &
                                   cmat, ndimy, &
                          zero, tmp_mat, ndimx  )
 
      call dgemm('T', 'N', ndimx, ndimy, ndimx, &
                              one, amat, ndimx, &
                                tmp_mat, ndimx, &
-                            zero, bmat, ndimx  )
+                            zero, fmat, ndimx  )
 
      ! deallocate memory
      deallocate(tmp_mat)
@@ -1330,6 +1330,10 @@
 
 !! external arguments
      ! transformation matrix from orginal basis to natural basis
+     !
+     ! the original basis could be real orbial basis or complex
+     ! orbital basis. it depends on how to determine the Coulomb
+     ! interaction matrix
      complex(dp), intent(in)  :: amtrx(norbs,norbs)
 
      ! coefficents matrix for general interaction U in orginal basis
@@ -1354,28 +1358,33 @@
      umat_t = czero
      !
      sigma1loop: do sigma1=1,norbs
-         sigma2loop: do sigma2=1,norbs
-             sigma3loop: do sigma3=1,norbs
-                 sigma4loop: do sigma4=1,norbs
-                     ctmp = czero
+     sigma2loop: do sigma2=1,norbs
+     sigma3loop: do sigma3=1,norbs
+     sigma4loop: do sigma4=1,norbs
+         !
+         ctmp = czero
+         !
+         alpha1loop: do alpha1=1,norbs
+         alpha2loop: do alpha2=1,norbs
+         alpha3loop: do alpha3=1,norbs
+         alpha4loop: do alpha4=1,norbs
 
-                     alpha1loop: do alpha1=1,norbs
-                         alpha2loop: do alpha2=1,norbs
-                             alpha3loop: do alpha3=1,norbs
-                                 alpha4loop: do alpha4=1,norbs
-                                     if ( abs( umat(alpha1,alpha2,alpha3,alpha4) ) < epst ) CYCLE
-                                     ctmp = ctmp + umat(alpha1,alpha2,alpha3,alpha4)                   &
-                                                 * conjg(amtrx(alpha1,sigma1)) * amtrx(alpha3,sigma3)  &
-                                                 * conjg(amtrx(alpha2,sigma2)) * amtrx(alpha4,sigma4)
-                                 enddo alpha4loop ! over alpha4={1,norbs} loop
-                             enddo alpha3loop ! over alpha3={1,norbs} loop
-                         enddo alpha2loop ! over alpha2={1,norbs} loop
-                     enddo alpha1loop ! over alpha1={1,norbs} loop
+             if ( abs( umat(alpha1,alpha2,alpha3,alpha4) ) < epst ) CYCLE
 
-                     umat_t(sigma1,sigma2,sigma3,sigma4) = ctmp
-                 enddo sigma4loop ! over sigma4={1,norbs} loop
-             enddo sigma3loop ! over sigma3={1,norbs} loop
-         enddo sigma2loop ! over sigma2={1,norbs} loop
+             ctmp = ctmp + umat(alpha1,alpha2,alpha3,alpha4)                   &
+                         * conjg(amtrx(alpha1,sigma1)) * amtrx(alpha3,sigma3)  &
+                         * conjg(amtrx(alpha2,sigma2)) * amtrx(alpha4,sigma4)
+
+         enddo alpha4loop ! over alpha4={1,norbs} loop
+         enddo alpha3loop ! over alpha3={1,norbs} loop
+         enddo alpha2loop ! over alpha2={1,norbs} loop
+         enddo alpha1loop ! over alpha1={1,norbs} loop
+         !
+         umat_t(sigma1,sigma2,sigma3,sigma4) = ctmp
+         !
+     enddo sigma4loop ! over sigma4={1,norbs} loop
+     enddo sigma3loop ! over sigma3={1,norbs} loop
+     enddo sigma2loop ! over sigma2={1,norbs} loop
      enddo sigma1loop ! over sigma1={1,norbs} loop
 
 !! body]
