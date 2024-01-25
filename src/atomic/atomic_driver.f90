@@ -7,8 +7,8 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/22/2024 by li huang (last modified)
-!!! purpose : try to drive various computational tasks for the atomic
+!!!           01/26/2024 by li huang (last modified)
+!!! purpose : try to launch various computational tasks for the atomic
 !!!           eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
@@ -27,7 +27,18 @@
 
      implicit none
 
+!! local variables
+     ! used to draw a dashed line
+     character (len=1) :: dash(54)
+
 !! [body
+
+     ! setup dash
+     dash = '-'
+
+     write(mystd,'(2X,a)') 'start initialization'
+     write(mystd,'(2X,54a1)') dash ! dashed line
+     write(mystd,*)
 
      ! make Fock basis for the full many particle Hiblert space
      write(mystd,'(2X,a)') 'make Fock basis'
@@ -44,12 +55,13 @@
      call atomic_build_natural()
      write(mystd,*)
 
-     ! choose the computational kernel
+     ! launch the computational kernel
      select case (ictqmc)
 
          ! diagonalize the atomic Hamiltonian directly
          case (1)
              write(mystd,'(2X,a)') 'start exact diagonalization'
+             write(mystd,'(2X,54a1)') dash ! dashed line
              call atomic_f_driver()
 
          ! subspace diagonalization by using good quantum numbers
@@ -59,6 +71,7 @@
          ! spin-orbit coupling: yes
          case (2)
              write(mystd,'(2X,a)') 'start subspace diagonalization (N)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
              call atomic_s_driver()
 
          ! subspace diagonalization by using good quantum numbers
@@ -68,6 +81,7 @@
          ! Coulomb interaction: parameterized by Slater integrals
          case (3)
              write(mystd,'(2X,a)') 'start subspace diagonalization (N, Sz)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
              call atomic_s_driver()
 
          ! subspace diagonalization by using good quantum numbers
@@ -77,6 +91,7 @@
          ! Coulomb interaction: parameterized by Kanamori form
          case (4)
              write(mystd,'(2X,a)') 'start subspace diagonalization (N, Sz, PS)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
              call atomic_s_driver()
 
          ! subspace diagonalization by using good quantum numbers
@@ -86,6 +101,7 @@
          ! spin-orbit coupling: yes
          case (5)
              write(mystd,'(2X,a)') 'start subspace diagonalization (N, Jz)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
              call atomic_s_driver()
 
          case default

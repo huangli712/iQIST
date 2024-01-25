@@ -681,7 +681,7 @@
 
 !! [body
 
-     ! make crystal field splitting and spin-orbital coupling
+     ! make crystal field splitting and spin-orbit coupling
      !
      ! method 1: make them inside
      if ( ibasis == 1 ) then
@@ -813,7 +813,7 @@
 
          write(mystd,'(4X,a)') 'make transformation matrix internally'
 
-         ! no spin-orbital coupling
+         ! no spin-orbit coupling
          ! no crystal field splitting or it is diagonal
          !
          ! the original basis is the real orbital basis
@@ -821,7 +821,7 @@
          if      ( isoc == 0 .and. icf <  2 ) then
              call atomic_natural_basis1()
 
-         ! no spin-orbital coupling
+         ! no spin-orbit coupling
          ! non-diagonal crystal field splitting
          !
          ! the original basis is the real orbital basis
@@ -829,7 +829,7 @@
          else if ( isoc == 0 .and. icf == 2 ) then
              call atomic_natural_basis2()
 
-         ! with spin-orbital coupling
+         ! with spin-orbit coupling
          ! no crystal field splitting
          !
          ! the original basis is the complex orbital basis
@@ -837,7 +837,7 @@
          else if ( isoc == 1 .and. icf == 0 ) then
              call atomic_natural_basis3()
 
-         ! with spin-orbital coupling
+         ! with spin-orbit coupling
          ! with crystal field splitting
          !
          ! the original basis is the complex orbital basis

@@ -634,7 +634,7 @@
 !!
 !! it defines some single particle matrices, including
 !!     crystal field splitting,
-!!     spin-orbital coupling,
+!!     spin-orbit coupling,
 !!     Coulomb interaction U tensor, etc
 !!
   module m_spmat
@@ -662,7 +662,7 @@
 !!
 !! @var smat
 !!
-!! spin-orbital coupling (SOC)
+!! spin-orbit coupling (SOC)
 !!
      complex(dp), public, allocatable, save :: smat(:,:)
 
