@@ -7,9 +7,10 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/20/2024 by li huang (last modified)
+!!!           01/25/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for the atomic eigenvalue
-!!!           problem solver
+!!!           problem solver. the subroutines will print some runtime
+!!!           information about the solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
