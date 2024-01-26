@@ -587,6 +587,9 @@
      ! Hund's rule matrix
      real(dp) :: hund(nband,nband,3)
 
+     integer  :: i, j, k, l
+     complex(dp) :: utmp(norbs,norbs,norbs,norbs)
+
 !! [body
 
      ! initialize hund to zero
@@ -607,42 +610,42 @@
                  deltaloop: do delta=gamma+1,norbs
 
                      ! get the band and spin indices
-                     !aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
-                     !bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
-                     !gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
-                     !dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
+                     aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
+                     bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
+                     gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
+                     dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
 
-                     if (alpha > nband) then
-                         aband = alpha - nband
-                         aspin = 0
-                     else
-                         aband = alpha
-                         aspin = 1
-                     endif
+                     !if (alpha > nband) then
+                     !    aband = alpha - nband
+                     !    aspin = 0
+                     !else
+                     !    aband = alpha
+                     !    aspin = 1
+                     !endif
 
-                     if (betta > nband) then
-                         bband = betta - nband
-                         bspin = 0
-                     else
-                         bband = betta
-                         bspin = 1
-                     endif
+                     !if (betta > nband) then
+                     !    bband = betta - nband
+                     !    bspin = 0
+                     !else
+                     !    bband = betta
+                     !    bspin = 1
+                     !endif
 
-                     if (gamma > nband) then
-                         gband = gamma - nband
-                         gspin = 0
-                     else
-                         gband = gamma
-                         gspin = 1
-                     endif
+                     !if (gamma > nband) then
+                     !    gband = gamma - nband
+                     !    gspin = 0
+                     !else
+                     !    gband = gamma
+                     !    gspin = 1
+                     !endif
 
-                     if (delta > nband) then
-                         dband = delta - nband
-                         dspin = 0
-                     else
-                         dband = delta
-                         dspin = 1
-                     endif
+                     !if (delta > nband) then
+                     !    dband = delta - nband
+                     !    dspin = 0
+                     !else
+                     !    dband = delta
+                     !    dspin = 1
+                     !endif
 
                      dtmp = zero
 
@@ -688,6 +691,42 @@
          enddo bettaloop ! over betta={alpha+1,norbs} loop
      enddo alphaloop ! over alpha={1,norbs-1} loop
 
+     utmp = czero
+     do alpha=1,norbs
+         if ( alpha <= nband ) then
+             i = 2*alpha-1
+         else
+             i = 2*(alpha-nband)
+         endif ! back if ( alpha <= nband ) block
+
+         do betta=1,norbs
+             if ( betta <= nband ) then
+                 j = 2*betta-1
+             else
+                 j = 2*(betta-nband)
+             endif ! back if ( betta <= nband ) block
+
+             do gamma=1,norbs
+                 if ( gamma <= nband ) then
+                     k = 2*gamma-1
+                 else
+                     k = 2*(gamma-nband)
+                 endif ! back if ( gamma <= nband ) block
+
+                 do delta=1,norbs
+                     if ( delta <= nband ) then
+                         l = 2*delta-1
+                     else
+                         l = 2*(delta-nband)
+                     endif ! back if ( delta <= nband ) block
+
+                     utmp(i,j,k,l) = umat(alpha,betta,gamma,delta)
+                 enddo
+             enddo
+         enddo
+     enddo
+     umat = utmp
+  
 !! body]
 
      return
