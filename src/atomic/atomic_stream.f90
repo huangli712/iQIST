@@ -924,6 +924,7 @@
 
 !! body]
 
+     STOP
      return
   end subroutine atomic_build_natural
 

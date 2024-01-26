@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/25/2024 by li huang (last modified)
+!!!           01/26/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients, spin-orbit coupling matrices, Coulomb
@@ -556,7 +556,7 @@
 !!
 !! @sub atomic_make_umatK
 !!
-!! make Coulomb interaction U rank-4 tensor according to Kanamori
+!! make Coulomb interaction U (a rank-4 tensor) according to Kanamori
 !! parameterized Hamiltonian
 !!
   subroutine atomic_make_umatK()
@@ -607,10 +607,42 @@
                  deltaloop: do delta=gamma+1,norbs
 
                      ! get the band and spin indices
-                     aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
-                     bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
-                     gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
-                     dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
+                     !aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
+                     !bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
+                     !gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
+                     !dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
+
+                     if (alpha > nband) then
+                         aband = alpha - nband
+                         aspin = 0
+                     else
+                         aband = alpha
+                         aspin = 1
+                     endif
+
+                     if (betta > nband) then
+                         bband = betta - nband
+                         bspin = 0
+                     else
+                         bband = betta
+                         bspin = 1
+                     endif
+
+                     if (gamma > nband) then
+                         gband = gamma - nband
+                         gspin = 0
+                     else
+                         gband = gamma
+                         gspin = 1
+                     endif
+
+                     if (delta > nband) then
+                         dband = delta - nband
+                         dspin = 0
+                     else
+                         dband = delta
+                         dspin = 1
+                     endif
 
                      dtmp = zero
 
