@@ -6,9 +6,9 @@
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/26/2024 by li huang (last modified)
-!!! purpose : define global control parameters for the atomic eigenvalue.
-!!!           problem solver
+!!!           01/30/2024 by li huang (last modified)
+!!! purpose : define global control parameters for the atomic eigenvalue
+!!!           problem solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -45,7 +45,7 @@
 !!
 !! @var ibasis
 !!
-!! control flag, how to build the natural basis (eigenstates of crystal
+!! control flag. how to build the natural basis (eigenstates of crystal
 !! field splitting + spin-orbit coupling)
 !!
 !! if ibasis == 1:
@@ -59,7 +59,7 @@
 !!
 !! @var ictqmc
 !!
-!! control flag, how to diagonalize the atomic Hamiltonian matrix
+!! control flag. how to diagonalize the atomic Hamiltonian matrix
 !!
 !! if ictqmc == 1:
 !!     direct diagonalization in full Hilbert space
@@ -76,37 +76,55 @@
 !! if ictqmc == 5:
 !!     subspace diagonalization using good quantum numbers (N and Jz)
 !!
+!! we note that the format of the atom.cix file exactly depends on the
+!! ictqmc parameter. if ictqmc == 1, the generated atom.cix file is
+!! only suitable for the lavender code. if ictqmc > 1, the generated
+!! atom.cix file is only suitable for the manjushaka code. the two
+!! atom.cix files are not compatible with each other. the lavender code
+!! has already been deprecated, so we retain the option (ictqmc == 1)
+!! only for internal reference
+!!
      integer, public, save :: ictqmc = 1
 
 !!
 !! @var icu
 !!
-!! control flag, type of Coulomb interaction matrix
+!! control flag. type of Coulomb interaction matrix
 !!
 !! if icu == 1:
-!!     Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
+!!     Kanamori type interaction. the Hund's rule coupling is isotropic.
+!!     it needs the Uc, Uv, Jz, Js, Jp parameters to build the Coulomb
+!!     interaction matrix
 !!
 !! if icu == 2:
-!!     Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
+!!     Slater-Cordon type interaction. it needs the Ud, Jh parameters to
+!!     evaluate the Slater integrals (F0, F2, F4, F6). and they are used
+!!     build the Coulomb interaction matrix
 !!
 !! if icu == 3:
-!!     Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
+!!     Kanamori type interaction. the Hund's rule coupling is anisotropic.
+!!     it needs the Uc, Uv, Jz, Js, Jp parameters to build the Coulomb
+!!     interaction matrix
+!!
+!! we note that if icu == 3, perhaps users need to modify the
+!!     atomic_util.f90/atomic_make_hund()
+!! subroutine to customize the Hund's rule coupling matrix
 !!
      integer, public, save :: icu    = 1
 
 !!
 !! @var icf
 !!
-!! control flag, type of crystal field (CF)
+!! control flag. type of crystal field splitting (CFS)
 !!
 !! if icf == 0:
-!!     without crystal field
+!!     without crystal field splitting
 !!
 !! if icf == 1:
-!!     diagonal crystal field
+!!     diagonal crystal field splitting
 !!
 !! if icf == 2:
-!!     non-diagonal crystal field
+!!     non-diagonal crystal field splitting
 !!
      integer, public, save :: icf    = 0
 
@@ -116,10 +134,10 @@
 !! control flag, type of spin-orbit coupling (SOC)
 !!
 !! if isoc == 0:
-!!     without SOC
+!!     without spin-orbit coupling
 !!
 !! if isoc == 1:
-!!     onsite atomic SOC, H_{soc} = \lambda * L \cdot S
+!!     onsite atomic spin-orbit coupling, H_{soc} = \lambda * L \cdot S
 !!
      integer, public, save :: isoc   = 0
 
@@ -149,7 +167,7 @@
 !!
 !! @var ncfgs
 !!
-!! number of many-body configurations, the dimension of Hilbert space
+!! number of many-body configurations, the dimension of full Hilbert space
 !!
      integer, public, save :: ncfgs  = 4
 
@@ -158,14 +176,14 @@
 !!
 !! @var nmini
 !!
-!! the lower boundary of occupancy N
+!! the lower boundary of occupancy N for Fock states
 !!
      integer, public, save :: nmini = 0
 
 !!
 !! @var nmaxi
 !!
-!! the upper boundary of occupancy N
+!! the upper boundary of occupancy N for Fock states
 !!
      integer, public, save :: nmaxi = 2
 
@@ -216,7 +234,7 @@
 
 !!
 !! the following parameters are useful when icu = 2. they are used to
-!! calculate the F0, F2, F4, and F6 parameters.
+!! calculate the Slater integrals (F0, F2, F4, and F6).
 !!
 
 !!
@@ -238,8 +256,8 @@
 !!
 !! @var mune
 !!
-!! chemical potential, used to shift energy level. it is only useful for
-!! model calculation
+!! chemical potential or fermi level. it is used to shift energy level.
+!! it is only useful for model calculation
 !!
      real(dp), public, save :: mune  = 0.0_dp
 
@@ -259,7 +277,7 @@
 !!
 !! @mod version
 !!
-!! define the semantic version string.
+!! define the semantic version string for the jasmine code.
 !!
   module version
      implicit none
@@ -269,21 +287,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.8.4 @ 2024.01.26D'
+     character(len=20), public, parameter :: V_FULL = 'v0.8.5 @ 2024.01.30D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.8.4'
+     character(len=06), public, parameter :: V_CURR = 'v0.8.5'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2024.01.26'
+     character(len=11), public, parameter :: V_DATE = '2024.01.30'
 
 !!
 !! @var V_STAT
