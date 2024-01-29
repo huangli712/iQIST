@@ -9,8 +9,8 @@
 !!! history : 07/09/2014 by yilin wang (created)
 !!!           01/25/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for the atomic eigenvalue
-!!!           problem solver. the subroutines will print some runtime
-!!!           information about the solver
+!!!           problem solver. the subroutines will print many runtime
+!!!           information about the solver to the terminal.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -18,7 +18,7 @@
 !!
 !! @sub atomic_print_header
 !!
-!! print the runtime information (start)
+!! print the runtime information (start) to the terminal
 !!
   subroutine atomic_print_header()
      use constants, only : mystd
@@ -61,7 +61,7 @@
 !!
 !! @sub atomic_print_footer
 !!
-!! print the runtime information (end)
+!! print the runtime information (end) to the terminal
 !!
   subroutine atomic_print_footer()
      use constants, only : dp

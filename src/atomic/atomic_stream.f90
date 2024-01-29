@@ -407,7 +407,7 @@
          read(mytmp,*,iostat = ierr) i1, i2, raux
          if ( ierr == iostat_end ) EXIT
          !
-         ! crystal field is actually real
+         ! crystal field splitting is actually real
          call s_assert( i1 <= norbs .and. i2 <= norbs )
          cmat(i1,i2) = dcmplx(raux, zero)
      enddo ! over do while loop
