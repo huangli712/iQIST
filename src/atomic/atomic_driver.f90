@@ -123,7 +123,6 @@
 !!
   subroutine atomic_f_driver()
      use constants, only : dp
-     use constants, only : eps6
      use constants, only : mystd
 
      use control, only : ncfgs
@@ -170,11 +169,7 @@
      write(mystd,"(2X,a)") 'check atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
-     if ( any( abs( aimag(hmat) ) > eps6 ) ) then
-         call s_print_error('atomic_f_driver','atomic Hamiltonian is not real!')
-     else
-         write(mystd,'(4X,a)') 'atomic Hamiltonian is valid'
-     endif ! back if ( any( abs( aimag(hmat) ) > eps6 ) ) block
+     call atomic_check_fhmat()
      call cpu_time(time_end)   ! record ending   time
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'

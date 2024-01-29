@@ -386,3 +386,20 @@
 
      return
   end subroutine atomic_make_fhmat
+
+  subroutine atomic_check_fhmat()
+     use constants, only : eps6
+     use constants, only : mystd
+
+     use m_fock, only : hmat
+
+     implicit none
+
+     if ( any( abs( aimag(hmat) ) > eps6 ) ) then
+         call s_print_error('atomic_f_driver','atomic Hamiltonian is not real!')
+     else
+         write(mystd,'(4X,a)') 'atomic Hamiltonian is valid'
+     endif ! back if ( any( abs( aimag(hmat) ) > eps6 ) ) block
+
+     return
+  end subroutine atomic_check_fhmat
