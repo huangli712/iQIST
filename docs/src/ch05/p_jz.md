@@ -3,7 +3,7 @@
 **Definition**
 
 > Strength of Hund's exchange interaction in z-axis.
- 
+
 **Type**
 
 > Float, double precision
