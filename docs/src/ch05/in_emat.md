@@ -19,7 +19,7 @@ The format of the *atom.emat.in* file is as follows:
 
 *column 2*: orbital index ``\beta``, integer
 
-*column 3*: On-site impurity energy level ``E_{\alpha,\beta}``, double precision
+*column 3*: on-site impurity energy level ``E_{\alpha,\beta}``, double precision
 
 ---
 
