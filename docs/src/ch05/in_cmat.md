@@ -14,7 +14,7 @@ The format of the *atom.cmat.in* file is as follows:
 
 *column 2*: orbital index ``\beta``, integer
 
-*column 3*: crystal field splitting matrix element ``\Delta_{\alpha,\beta}``, double precision
+*column 3*: crystal field splitting matrix element ``\Delta_{\alpha\beta}``, double precision
 
 ---
 

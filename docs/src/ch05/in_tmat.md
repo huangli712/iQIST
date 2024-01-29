@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The purpose of the *atom.tmat.in* file is to supply the transformation matrix ``\mathcal{T}_{\alpha,\beta}``, which transforms an operator from its original basis to the natural basis. Only when *ibasis* = 2, the *atom.tmat.in* file is used. See [ibasis](p_ibasis.md) for more details.
+The purpose of the *atom.tmat.in* file is to supply the transformation matrix ``\mathcal{T}_{\alpha\beta}``, which transforms an operator from its original basis to the natural basis. Only when *ibasis* = 2, the *atom.tmat.in* file is used. See [ibasis](p_ibasis.md) for more details.
 
 **Format**
 
@@ -14,7 +14,7 @@ The format of the *atom.tmat.in* file is as follows:
 
 *column 2*: orbital index ``\beta``, integer
 
-*column 3*: elements of the transformation matrix ``\mathcal{T}_{\alpha,\beta}``, double precision
+*column 3*: elements of the transformation matrix ``\mathcal{T}_{\alpha\beta}``, double precision
 
 ---
 

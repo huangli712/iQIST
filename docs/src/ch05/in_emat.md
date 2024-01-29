@@ -2,12 +2,12 @@
 
 **Introduction**
 
-The purpose of the *atom.emat.in* file is to supply the on-site impurity energy level ``E_{\alpha,\beta}``, which is in fact the *CFS* + *SOC*. It is a diagonal matrix in the natural basis. Only when *ibasis* = 2, the *atom.emat.in* file is used. See [ibasis](p_ibasis.md) for more details.
+The purpose of the *atom.emat.in* file is to supply the on-site impurity energy level ``E_{\alpha\beta}``, which is in fact the *CFS* + *SOC*. It is a diagonal matrix in the natural basis. Only when *ibasis* = 2, the *atom.emat.in* file is used. See [ibasis](p_ibasis.md) for more details.
 
 !!! note
 
     1. The so-called natural basis is the eigenstates of *CFS* + *SOC* matrix.
-    2. Only the diagonal elements of ``E_{\alpha,\beta}`` are included in the *atom.emat.in* file.
+    2. Only the diagonal elements of ``E_{\alpha\beta}`` are included in the *atom.emat.in* file.
 
 **Format**
 
