@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/26/2024 by li huang (last modified)
+!!!           01/30/2024 by li huang (last modified)
 !!! purpose : try to launch various computational tasks for the atomic
 !!!           eigenvalue problem solver.
 !!! status  : unstable
@@ -17,7 +17,7 @@
 !!
 !! @sub atomic_dispatcher
 !!
-!! dispatch various computational tasks. it is the core engine of the
+!! launch various computational tasks. it is the core engine of the
 !! atomic eigenvalue problem solver
 !!
   subroutine atomic_dispatcher()
@@ -50,7 +50,7 @@
      call atomic_build_spmat()
      write(mystd,*)
 
-     ! make natural basis
+     ! make natural eigenbasis
      write(mystd,'(2X,a)') 'make natural eigenbasis'
      call atomic_build_natural()
      write(mystd,*)
@@ -59,6 +59,7 @@
      select case (ictqmc)
 
          ! diagonalize the atomic Hamiltonian directly
+         ! good quantum numbers -> N/A
          case (1)
              write(mystd,'(2X,a)') 'start exact diagonalization'
              write(mystd,'(2X,54a1)') dash ! dashed line
@@ -171,6 +172,8 @@
      call cpu_time(time_begin) ! record starting time
      if ( any( abs( aimag(hmat) ) > eps6 ) ) then
          call s_print_error('atomic_f_driver','atomic Hamiltonian is not real!')
+     else
+         write(mystd,'(4X,a)') 'atomic Hamiltonian is valid'
      endif ! back if ( any( abs( aimag(hmat) ) > eps6 ) ) block
      call cpu_time(time_end)   ! record ending   time
      !
