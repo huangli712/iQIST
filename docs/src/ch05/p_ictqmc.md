@@ -20,7 +20,7 @@
 
 > There are five possible values for the *ictqmc* parameter:
 >
-> * *ictqmc* = 1, direct diagonalization in full Hilbert space. The generated *atom.cix* file is only suitable for the **LAVENDER** code.
+> * *ictqmc* = 1, direct diagonalization in full Hilbert space. The generated *atom.cix* file is only suitable for the **LAVENDER** code. actually, the **LAVENDER** code has been deprecated, so we keep this opinion only for reference.
 >
 > * *ictqmc* = 2, subspace diagonalization using good quantum number ``N``. The generated *atom.cix* file is only suitable for the **MANJUSHAKA** code.
 >
