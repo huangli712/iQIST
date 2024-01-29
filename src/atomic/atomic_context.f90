@@ -688,7 +688,7 @@
 !!
 !! @var tmat
 !!
-!! transformation matrix from original basis to natural basis
+!! transformation matrix from original basis to natural eigenbasis
 !!
      complex(dp), public, allocatable, save :: tmat(:,:)
 

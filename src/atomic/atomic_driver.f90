@@ -193,7 +193,7 @@
      ! calculate annihilation operator matrix
      !
      ! at first, build annihilation operator matrix in the Fock basis
-     ! and then, transform it to the natural eigenbasis
+     ! and then, it should be transformed to the natural eigenbasis
      write(mystd,'(2X,a)') 'compute annihilation operator in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
@@ -204,6 +204,9 @@
      write(mystd,*)
 
      ! calculate occupancy matrix in atomic eigenstates
+     !
+     ! the occupancy matrix is made in the Fock basis, and then is
+     ! rotated to the natural eigenbasis
      write(mystd,'(2X,a)') 'compute density matrix in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time

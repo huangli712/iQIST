@@ -77,7 +77,7 @@
 !! @sub atomic_dump_tmat
 !!
 !! write the transformation matrix from the original basis to the
-!! natural basis (eigenstates of H_{CFS} + H_{SOC})
+!! natural eigenbasis (eigenstates of H_{CFS} + H_{SOC})
 !!
   subroutine atomic_dump_tmat()
      use constants, only : mytmp
@@ -125,7 +125,7 @@
 !!
 !! @sub atomic_dump_emat
 !!
-!! write onsite impurity energy on natural basis
+!! write onsite impurity energy on natural eigenbasis
 !! it should be a diagonal matrix
 !!
   subroutine atomic_dump_emat()

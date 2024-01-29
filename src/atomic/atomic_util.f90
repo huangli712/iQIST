@@ -1400,7 +1400,7 @@
      implicit none
 
 !! external arguments
-     ! transformation matrix from orginal basis to natural basis
+     ! transformation matrix from orginal basis to natural eigenbasis
      !
      ! the original basis could be real orbial basis or complex
      ! orbital basis. it depends on how to determine the Coulomb
@@ -1410,7 +1410,7 @@
      ! coefficents matrix for general interaction U in orginal basis
      complex(dp), intent(in)  :: umat(norbs,norbs,norbs,norbs)
 
-     ! coefficents matrix for general interaction U in natural basis
+     ! coefficents matrix for general interaction U in natural eigenbasis
      complex(dp), intent(out) :: umat_t(norbs,norbs,norbs,norbs)
 
 !! local variables
@@ -1550,15 +1550,15 @@
   end subroutine atomic_tran_repr_real
 
 !!========================================================================
-!!>>> generate natural basis                                           <<<
+!!>>> generate natural eigenbasis                                      <<<
 !!========================================================================
 
 !!
 !! @sub atomic_natural_basis1
 !!
-!! make natural basis, the onsite energy of impurity (emat) and the
-!! transformation matrix from original basis to natural basis are
-!! determined as well.
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
 !!
 !! case 1
 !!
@@ -1588,7 +1588,7 @@
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
 
-     ! for this case, the natural basis is the real orbital basis
+     ! for this case, the natural eigenbasis is the real orbital basis
      ! so, the tmat is a unity matrix
      call s_identity_z(norbs, tmat)
 
@@ -1600,9 +1600,9 @@
 !!
 !! @sub atomic_natural_basis2
 !!
-!! make natural basis, the onsite energy of impurity (emat) and the
-!! transformation matrix from original basis to natural basis are
-!! determined as well.
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
 !!
 !! case 2
 !!
@@ -1649,7 +1649,7 @@
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband}
 
-     ! diagonalize emat_nospin to get natural basis
+     ! diagonalize emat_nospin to get natural eigenbasis
      call s_eig_sy(nband, nband, real(emat_nospin), eigval, eigvec)
 
      ! get diagonal emat for no spin freedom
@@ -1681,16 +1681,16 @@
 !!
 !! @sub atomic_natural_basis3
 !!
-!! make natural basis, the onsite energy of impurity (emat) and the
-!! transformation matrix from original basis to natural basis are
-!! determined as well.
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
 !!
 !! case 3
 !!
 !! no crystal field splitting
 !! spin-orbit coupling
 !!
-!! for this special case, the natural basis is |j2,jz>
+!! for this special case, the natural eigenbasis is |j2,jz>
 !!
   subroutine atomic_natural_basis3()
      use constants, only : dp
@@ -1719,10 +1719,10 @@
      call atomic_make_tmat_c2j(tmat_c2j)
 
      ! the transformation matrix is from complex orbital
-     ! basis to natural basis (|j2,jz> basis)
+     ! basis to natural eigenbasis (|j2,jz> basis)
      tmat = tmat_c2j
 
-     ! transform emat to natural basis
+     ! transform emat to natural eigenbasis
      call atomic_tran_repr_cmpl(norbs, emat, tmat)
 
      ! add chemical potential to emat
@@ -1738,9 +1738,9 @@
 !!
 !! @sub atomic_natural_basis4
 !!
-!! make natural basis, the onsite energy of impurity (emat) and the
-!! transformation matrix from original basis to natural basis are
-!! determined as well.
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
 !!
 !! case 4
 !!
@@ -1773,7 +1773,7 @@
      complex(dp) :: tmat_r2c(norbs,norbs)
 
      ! transformation matrix from complex orbital basis
-     ! to natural basis
+     ! to natural eigenbasis
      complex(dp) :: tmat_c2n(norbs,norbs)
 
 !! [body
@@ -1784,7 +1784,7 @@
      ! transfrom crystal field splitting (cmat) to complex orbital basis
      call atomic_tran_repr_cmpl(norbs, cmat, tmat_r2c)
 
-     ! check whether cmat is real, if not, we cann't make natural basis
+     ! check whether cmat is real, if not, we cann't make natural eigenbasis
      if ( any( abs( aimag(cmat) ) > eps6 ) ) then
          call s_print_error('atomic_natural_basis4', &
              'crystal field on complex orbital basis should be real!')
@@ -1797,11 +1797,11 @@
      call s_eig_sy(norbs, norbs, real(emat), eigval, eigvec)
 
      ! build transformation matrix from complex orbital basis
-     ! to natural basis
+     ! to natural eigenbasis
      tmat_c2n = eigvec
      tmat = tmat_c2n
 
-     ! transform emat from complex orbital basis to natural basis
+     ! transform emat from complex orbital basis to natural eigenbasis
      call atomic_tran_repr_cmpl(norbs, emat, tmat_c2n)
 
      ! add chemical poential to emat

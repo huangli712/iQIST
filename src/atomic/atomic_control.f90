@@ -45,14 +45,14 @@
 !!
 !! @var ibasis
 !!
-!! control flag. how to build the natural basis (eigenstates of crystal
-!! field splitting + spin-orbit coupling)
+!! control flag. how to build the natural eigenbasis (eigenstates of
+!! crystal field splitting + spin-orbit coupling)
 !!
 !! if ibasis == 1:
-!!     make natural basis inside of this program
+!!     make natural eigenbasis inside of this program
 !!
 !! if ibasis == 2:
-!!     make natural basis outside of this program
+!!     make natural eigenbasis outside of this program
 !!
      integer, public, save :: ibasis = 1
 

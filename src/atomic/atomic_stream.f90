@@ -14,9 +14,10 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/24/2024 by li huang (last modified)
-!!! purpose : read input data from the external files, construct the Fock
-!!!           basis, single particle matrices, an and natural basis, etc.
+!!!           01/30/2024 by li huang (last modified)
+!!! purpose : read essential input data from the external files, build
+!!!           the Fock basis, construct single particle matrices and
+!!!           natural eigenbasis, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -50,7 +51,7 @@
 
      ! setup general control flags
      !--------------------------------------------------------------------
-     ibasis = 1           ! source of the natural basis
+     ibasis = 1           ! source of the natural eigenbasis
      ictqmc = 1           ! how to diagonalize atomic Hamiltonian matrix
      icu    = 1           ! type of Coulomb interaction
      icf    = 0           ! type of crystal field splitting (CFS)
@@ -466,7 +467,7 @@
      ! read the data file
      do i=1,norbs
          read(mytmp,*) i1, i2, raux
-         ! emat is actually real and diagonal in natural basis
+         ! emat is actually real and diagonal in natural eigenbasis
          emat(i,i) = dcmplx(raux, zero)
      enddo ! over i={1,norbs} loop
 
@@ -646,9 +647,9 @@
 !!     |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2> |3/2,3/2>
 !!     |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2> |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
 !!
-!! (4) the natural basis, on which the onsite energy of impurity is
+!! (4) the natural eigenbasis, on which the onsite energy of impurity is
 !!     diagonal. we have to diagonalize H_{CFS} + H_{SOC} to obtain
-!!     the natural basis
+!!     the natural eigenbasis
 !!
 !! note that the CFS is always defined in real orbital basis, SOC is
 !! always defined in complex orbital basis. the Coulomb interaction U
@@ -733,9 +734,9 @@
      ! method 2: make them outside
      else
 
-         ! read the matrix emat (CFS + SOC) on natural basis, this
-         ! matrix must be a diagonal matrix, and the elements must
-         ! be real
+         ! read the matrix emat (CFS + SOC) on natural eigenbasis,
+         ! this matrix must be a diagonal matrix, and the elements
+         ! must be real
          write(mystd,'(4X,a)') 'make crystal field splitting + &
              & spin-orbiit coupling terms'
          !
@@ -805,8 +806,8 @@
      tmat_c2r = czero
 
      ! make transformation matrix (tmat). it is used to transfer matrix
-     ! emat from original basis to natural basis. the onsite energy of
-     ! impurity (emat) should be updated as well
+     ! emat from original basis to natural eigenbasis. the onsite energy
+     ! of impurity (emat) should be updated as well
      !
      ! A: make tmat internally for different cases
      if ( ibasis == 1 ) then
@@ -817,7 +818,7 @@
          ! no crystal field splitting or it is diagonal
          !
          ! the original basis is the real orbital basis
-         ! the natural basis is the real orbital basis
+         ! the natural eigenbasis is the real orbital basis
          if      ( isoc == 0 .and. icf <  2 ) then
              call atomic_natural_basis1()
 
@@ -825,7 +826,7 @@
          ! non-diagonal crystal field splitting
          !
          ! the original basis is the real orbital basis
-         ! the natural basis is linear combination of real orbitals
+         ! the natural eigenbasis is linear combination of real orbitals
          else if ( isoc == 0 .and. icf == 2 ) then
              call atomic_natural_basis2()
 
@@ -833,7 +834,7 @@
          ! no crystal field splitting
          !
          ! the original basis is the complex orbital basis
-         ! the natural basis is the j^2 - j_z diagonal basis
+         ! the natural eigenbasis is the j^2 - j_z diagonal basis
          else if ( isoc == 1 .and. icf == 0 ) then
              call atomic_natural_basis3()
 
@@ -841,7 +842,7 @@
          ! with crystal field splitting
          !
          ! the original basis is the complex orbital basis
-         ! the natural basis is linear combination of complex orbitals
+         ! the natural eigenbasis is linear combination of complex orbitals
          else if ( isoc == 1 .and. icf >  0 ) then
              call atomic_natural_basis4()
 
@@ -867,7 +868,7 @@
      ! we need transform Coulomb interaction U
      !
      ! for non-SOC case, the transformation matrix is defined as from
-     ! real orbital basis to natural basis. so we have to make sure
+     ! real orbital basis to natural eigenbasis. so we have to make sure
      ! the Coulomb interaction U is at real orbital basis
      if ( isoc == 0 ) then
 
@@ -889,8 +890,8 @@
          endif ! back if ( icu == 2 ) block
 
      ! for SOC case, the transformation matrix is defined as from complex
-     ! orbital basis to natural basis. so we have to make sure the Coulomb
-     ! interaction U is at complex orbital basis
+     ! orbital basis to natural eigenbasis. so we have to make sure the
+     ! Coulomb interaction U is at complex orbital basis
      else
 
          write(mystd,'(4X,a)') 'transform Coulomb interaction to &
@@ -911,7 +912,7 @@
 
      endif ! back if ( isoc == 0 ) block
 
-     ! finally, transform umat from original basis to natural basis.
+     ! finally, transform umat from original basis to natural eigenbasis.
      ! the transformation matrix is just tmat
      write(mystd,'(4X,a)') 'transform Coulomb interaction to &
              &natural eigenbasis'
