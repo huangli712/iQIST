@@ -4,11 +4,12 @@
 !!!           atomic_make_shmat
 !!!           atomic_diag_shmat
 !!!           atomic_make_sectors
+!!!           atomic_check_shmat
 !!! source  : atomic_sector.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/25/2024 by li huang (last modified)
+!!!           01/30/2024 by li huang (last modified)
 !!! purpose : try to implement the subspace diagonalization algorithm.
 !!!           it contains some subroutines to construct the atomic
 !!!           Hamiltonian subspace by subspace, diagonalize it, and then
@@ -890,3 +891,26 @@
 
      return
   end subroutine atomic_make_sectors
+
+  subroutine atomic_check_shmat()
+     use constants, only : eps6
+     use constants, only : mystd
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
+
+     implicit none
+
+     ! loop index
+     integer :: i
+
+     do i=1,nsectors
+         if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
+             call s_print_error('atomic_s_driver','atomic Hamiltonian is not real!')
+         else
+             write(mystd,'(4X,a,i4)') 'subspace: ', i, ' is valid'
+         endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
+     enddo ! over i={1,nsectors} loop
+
+     return
+  end subroutine atomic_check_shmat

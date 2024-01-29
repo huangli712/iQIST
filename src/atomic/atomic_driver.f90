@@ -119,7 +119,7 @@
 !! @sub atomic_f_driver
 !!
 !! solve the atomic eigenvalue problem by direct diagonalization in the
-!! full Hilbert space
+!! full Hilbert space. this subroutine is called when ictqmc == 1
 !!
   subroutine atomic_f_driver()
      use constants, only : dp
@@ -193,7 +193,7 @@
      ! calculate annihilation operator matrix
      !
      ! at first, build annihilation operator matrix in the Fock basis
-     ! and then, it should be transformed to the natural eigenbasis
+     ! and then, it should be transformed to the atomic eigenstates
      write(mystd,'(2X,a)') 'compute annihilation operator in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
@@ -206,7 +206,7 @@
      ! calculate occupancy matrix in atomic eigenstates
      !
      ! the occupancy matrix is made in the Fock basis, and then is
-     ! rotated to the natural eigenbasis
+     ! rotated to the atomic eigenstates
      write(mystd,'(2X,a)') 'compute density matrix in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
@@ -217,6 +217,9 @@
      write(mystd,*)
 
      ! calculate Sz in atomic eigenstates
+     !
+     ! the Sz matrix is made in the Fock basis, and then is rotated to
+     ! the atomic eigenstates
      write(mystd,'(2X,a)') 'compute magnetic moment in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
@@ -226,7 +229,7 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! write essential data to external files
+     ! write essential data to external files for reference
      !
      ! write eigenvalues of hmat to file 'atom.eigval.dat'
      ! write eigenvectors of hmat to file 'atom.eigvec.dat'
@@ -261,24 +264,18 @@
 !! @sub atomic_s_driver
 !!
 !! solve the atomic eigenvalue problem using good quantum numbers (GQNs)
-!! algorithm and subspace diagonalization
+!! algorithm and subspace diagonalization. this subroutine is called
+!! when 2 <= ictqmc <= 5
 !!
   subroutine atomic_s_driver()
      use constants, only : dp
-     use constants, only : eps6
      use constants, only : mystd
-
-     use m_sector, only : nsectors
-     use m_sector, only : sectors
 
      use m_sector, only : cat_free_sectors
 
      implicit none
 
 !! local variables
-     ! loop index
-     integer :: i
-
      ! starting time
      real(dp) :: time_begin
 
@@ -287,7 +284,8 @@
 
 !! [body
 
-     ! make the subspaces (sectors), the memory will be allocated
+     ! make the subspaces (sectors)
+     ! the memory will be allocated automatically
      write(mystd,*)
      write(mystd,'(2X,a)') 'construct subspaces for atomic eigenstates'
      !
@@ -312,11 +310,7 @@
      write(mystd,'(2X,a)') 'check atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
-     do i=1,nsectors
-         if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
-             call s_print_error('atomic_s_driver','atomic Hamiltonian is not real!')
-         endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
-     enddo ! over i={1,nsectors} loop
+     call atomic_check_shmat()
      call cpu_time(time_end)   ! record ending   time
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
@@ -333,7 +327,7 @@
      write(mystd,*)
 
      ! calculate both creation and annihilation operators matrices
-     write(mystd,'(2X,a)') 'compute creation/annihilation operator in atomic eigenstates'
+     write(mystd,'(2X,a)') 'compute f^+ and f operators in atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_sfmat()

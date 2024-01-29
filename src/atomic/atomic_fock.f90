@@ -4,11 +4,12 @@
 !!!           atomic_make_foccu
 !!!           atomic_make_fspin
 !!!           atomic_make_fhmat
+!!!           atomic_check_fhmat
 !!! source  : atomic_fock.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/24/2024 by li huang (last modified)
+!!!           01/30/2024 by li huang (last modified)
 !!! purpose : core subroutines for solving atomic eigenvalue problem in
 !!!           the Fock space.
 !!! status  : unstable
