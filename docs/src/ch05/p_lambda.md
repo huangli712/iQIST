@@ -2,7 +2,7 @@
 
 **Definition**
 
-> Strength of the spin-orbital coupling ``\lambda``.
+> Strength of the spin-orbit coupling ``\lambda``.
 
 **Type**
 
@@ -18,7 +18,7 @@
 
 **Behavior**
 
-> This parameter is used to build the spin-orbital coupling term of the local interaction Hamiltonian. It is valid only when *isoc* = 1.
+> This parameter is used to build the spin-orbit coupling term of the local interaction Hamiltonian. It is valid only when *isoc* = 1.
 >
 > ```math
 > \hat{H}_{\text{SOC}} = \lambda \hat{\textbf{l}} \cdot \hat{\textbf{s}}.
