@@ -876,7 +876,7 @@
      ! calculate the maximum and average dimensions of subspaces
      !--------------------------------------------------------------------
      max_dim_sect = maxval(ndims)
-     ave_dim_sect = real(ncfgs) / real(nsectors)
+     ave_dim_sect = sum(ndims) / real(nsectors)
      write(mystd,'(4X,a,i4)') 'maximum dimension of subspaces:', max_dim_sect
      write(mystd,'(4X,a,f6.2)') 'averaged dimension of subspaces:', ave_dim_sect
 
