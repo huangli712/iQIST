@@ -1,9 +1,9 @@
 !!!-----------------------------------------------------------------------
 !!! project : iqist @ jasmine
-!!! program : atomic_make_sfmat
+!!! program : atomic_make_sectors
+!!!           atomic_make_sfmat
 !!!           atomic_make_shmat
 !!!           atomic_diag_shmat
-!!!           atomic_make_sectors
 !!!           atomic_check_shmat
 !!! source  : atomic_sector.f90
 !!! type    : subroutines
@@ -17,396 +17,6 @@
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
-
-!!
-!! @sub atomic_make_sfmat
-!!
-!! build annihilation operator matrix in the subspace, and then rotate
-!! it to the atomic eigenbasis. actually, the creation operator matrix
-!! is calculated as well
-!!
-  subroutine atomic_make_sfmat()
-     use constants, only : zero
-     use constants, only : mystd
-
-     use control, only : norbs
-
-     use m_fock, only : dec_basis
-     use m_fock, only : ind_basis
-
-     use m_sector, only : nsectors
-     use m_sector, only : sectors
-     use m_sector, only : cat_alloc_fmat
-
-     implicit none
-
-!! local variables
-     ! loop index for orbital
-     integer :: iorb
-
-     ! loop index for annihilation and creation operators
-     integer :: ityp
-
-     ! loop index for subspace (sector)
-     integer :: isec
-     integer :: jsec
-
-     ! loop index for Fock state
-     integer :: ibas
-     integer :: jbas
-
-     ! sign change due to commute relation
-     integer :: isgn
-
-     ! auxiliary integer variables
-     integer :: jold
-     integer :: jnew
-
-!! [body
-
-     do isec=1,nsectors  ! loop over all the subspaces
-         !
-         write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', isec
-         write(mystd,'(2X,a,i2)', advance = 'no') 'orbital: ', norbs
-         write(mystd,'(2X,a)') 'operator: f^+ and f'
-         !
-         do iorb=1,norbs ! loop over all the orbitals
-             do ityp=0,1 ! loop over the f^+ and f operators
-
-         ! (A) retrieve the next subspace: jsec
-         jsec = sectors(isec)%next(iorb,ityp)
-         if ( jsec == -1 ) CYCLE
-
-         ! (B) allocate memory for fmat and then initialize it
-         !
-         ! determine the size of fmat
-         sectors(isec)%fmat(iorb,ityp)%n = sectors(jsec)%ndim
-         sectors(isec)%fmat(iorb,ityp)%m = sectors(isec)%ndim
-         !
-         ! allocate memory for fmat
-         call cat_alloc_fmat(sectors(isec)%fmat(iorb,ityp))
-         !
-         ! initialize fmat
-         sectors(isec)%fmat(iorb,ityp)%val = zero
-
-         ! (C) evaluate fmat in the Fock basis
-         !
-         ! loop over the Fock states in the isec-th subspace
-         do jbas=1,sectors(isec)%ndim
-             ! get Fock state |jold>
-             jold = dec_basis( sectors(isec)%basis(jbas) )
-
-             ! simulate f^+ |jold> = isgn |jnew> and
-             !          f   |jold> = isgn |jnew>
-             ! notice that the new state is |jnew>
-             !
-             ! apply creation fermion operator
-             if ( ityp == 1 .and. ( btest(jold, iorb-1) .eqv. .false. ) ) then
-                 call atomic_make_cdagger(iorb, jold, jnew, isgn)
-             !
-             ! apply annihilation fermion operator
-             else if ( ityp == 0 .and. ( btest(jold, iorb-1) .eqv. .true. ) ) then
-                 call atomic_make_c(iorb, jold, jnew, isgn)
-             !
-             else
-                 CYCLE
-             !
-             endif ! back if block
-
-             ! loop over the Fock states in the jsec-th subspace
-             do ibas=1,sectors(jsec)%ndim
-                 ! well, the matrix element exists
-                 if ( sectors(jsec)%basis(ibas) == ind_basis(jnew) ) then
-                     sectors(isec)%fmat(iorb,ityp)%val(ibas,jbas) = dble(isgn)
-                     EXIT
-                 endif ! back if block
-             enddo ! over ibas={1,sectors(jsec)%ndim} loop
-         enddo ! over jbas={1,sectors(isec)%ndim} loop
-
-         ! (D) rotate fmat from Fock basis to atomic eigenbasis
-         call atomic_tran_fmat(sectors(jsec)%ndim, &
-                               sectors(isec)%ndim, &
-                               sectors(jsec)%evec, &
-                               sectors(isec)%fmat(iorb,ityp)%val, &
-                               sectors(isec)%evec)
-
-             enddo ! over ityp={0,1} loop
-         enddo ! over iorb={1,norbs} loop
-     enddo ! over isec={1,nsectors} loop
-
-!! body]
-
-     return
-  end subroutine atomic_make_sfmat
-
-!!
-!! @sub atomic_make_shmat
-!!
-!! make atomic Hamiltonian subspace by subspace
-!!
-  subroutine atomic_make_shmat()
-     use constants, only : dp
-     use constants, only : one, czero
-     use constants, only : epst
-     use constants, only : mystd
-
-     use control, only : norbs
-
-     use m_fock, only : bin_basis
-     use m_fock, only : dec_basis
-     use m_fock, only : ind_basis
-
-     use m_spmat, only : emat
-     use m_spmat, only : umat
-
-     use m_sector, only : nsectors
-     use m_sector, only : sectors
-
-     implicit none
-
-!! local variables
-     ! loop index
-     integer :: i
-
-     ! loop index for subspace (sector)
-     integer :: isec
-
-     ! loop index for Fock state
-     integer :: ibas
-     integer :: jbas
-
-     ! loop index for orbital
-     integer :: alpha, betta
-     integer :: delta, gamma
-
-     ! sign change due to fermion anti-commute relation
-     integer :: isgn
-
-     ! new Fock state after four fermions operation
-     integer :: knew
-
-     ! binary form of a Fock state
-     integer :: code(norbs)
-
-     ! matrix element of the atomic Hamiltonian
-     real(dp) :: val
-
-!! [body
-
-     ! loop over all subspaces
-     do isec=1,nsectors
-
-         write(mystd,'(4X,a,i4)') 'subspace: ', isec
-
-         ! start to make atomic Hamiltonian
-         ! initialize hmat
-         sectors(isec)%hmat = czero
-
-         ! compute two fermion operators term
-         ! it is f^{\dagger}_{\alpha} f_{\beta}
-         !----------------------------------------------------------------
-         write(mystd,'(4X,a)') 'compute two fermion operators term'
-         !
-         do jbas=1,sectors(isec)%ndim
-             alploop: do alpha=1,norbs ! loop over creation operators
-             betloop: do betta=1,norbs ! loop over annihilation operators
-
-             ! retrieve the Fock state |jbas>
-             isgn = 0
-             knew = dec_basis(sectors(isec)%basis(jbas))
-             code = bin_basis(:,sectors(isec)%basis(jbas))
-
-             ! impurity level is too small
-             if ( abs(emat(alpha,betta)) < epst ) CYCLE
-
-             ! simulate one annihilation operator, f_{\beta}
-             if ( code(betta) == 1 ) then
-                 do i=1,betta-1
-                     if ( code(i) == 1 ) isgn = isgn + 1
-                 enddo ! over i={1,betta-1} loop
-                 code(betta) = 0
-
-                 ! simulate one creation operator, f^{\dagger}_{\alpha}
-                 if ( code(alpha) == 0 ) then
-                     do i=1,alpha-1
-                         if ( code(i) == 1 ) isgn = isgn + 1
-                     enddo ! over i={1,alpha-1} loop
-                     code(alpha) = 1
-
-                     ! determine the new Fock state, <ibas|
-                     ! now ibas means the index for the new Fock state
-                     knew = knew - 2**(betta-1) + 2**(alpha-1)
-                     ibas = ind_basis(knew)
-                     if ( ibas == 0 ) then
-                         call s_print_error('atomic_make_shmat', &
-                             & 'error while determining new state!')
-                     endif ! back if ( ibas == 0 ) block
-                     !
-                     ! determine the matrix element between the two Fock
-                     ! states, i.e., <ibas| and |jbas>
-                     isgn = mod(isgn,2)
-                     val = emat(alpha,betta) * (-one)**isgn
-                     !
-                     ! setup the two fermion operators term
-                     do ibas=1,sectors(isec)%ndim
-                         if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
-                             sectors(isec)%hmat(ibas,jbas) = &
-                             sectors(isec)%hmat(ibas,jbas) + val
-                             EXIT
-                         endif ! back if block
-                     enddo ! over ibas={1,sectors(isec)%ndim} loop
-                     !
-                     ! write the Fock states and the operators
-                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
-                     write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
-                 endif ! back if ( code(alpha) == 0 ) block
-             endif ! back if ( code(betta_ == 1 ) block
-
-             enddo betloop ! over betta={1,norbs} loop
-             enddo alploop ! over alpha={1,norbs} loop
-         enddo ! over jbas={1,sectors(isect)%ndim} loop
-
-         ! compute four fermion operators term (coulomb interaction)
-         ! it is f^{\dagger}_{\alpha} f^{\dagger}_{\beta} f_{\delta} f_{\gamma}
-         !----------------------------------------------------------------
-         write(mystd,'(4X,a)') 'compute four fermion operators term'
-         !
-         do jbas=1,sectors(isec)%ndim
-             alphaloop: do alpha=1,norbs ! loop over creation operators
-             bettaloop: do betta=1,norbs ! loop over creation operators
-             gammaloop: do gamma=1,norbs ! loop over annihilation operators
-             deltaloop: do delta=1,norbs ! loop over annihilation operators
-
-             ! retrieve the Fock state |jbas>
-             isgn = 0
-             knew = dec_basis(sectors(isec)%basis(jbas))
-             code = bin_basis(:,sectors(isec)%basis(jbas))
-
-             ! applying Pauli principle
-             if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
-
-             ! U matrix element is too small
-             if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
-
-             ! simulate two annihilation operators
-             ! they are f_{\delta} f_{\gamma}
-             if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
-                 do i=1,gamma-1
-                     if ( code(i) == 1 ) isgn = isgn + 1
-                 enddo ! over i={1,gamma-1} loop
-                 code(gamma) = 0
-                 !
-                 do i=1,delta-1
-                     if ( code(i) == 1 ) isgn = isgn + 1
-                 enddo ! over i={1,delta-1} loop
-                 code(delta) = 0
-
-                 ! simulate two creation operators
-                 ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
-                 if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
-                     do i=1,betta-1
-                         if ( code(i) == 1 ) isgn = isgn + 1
-                     enddo ! over i={1,betta-1} loop
-                     code(betta) = 1
-                     !
-                     do i=1,alpha-1
-                         if ( code(i) == 1 ) isgn = isgn + 1
-                     enddo ! over i={1,alpha-1} loop
-                     code(alpha) = 1
-
-                     ! determine the new Fock state, <ibas|
-                     ! now ibas means the index for the new Fock state
-                     knew = knew - 2**(gamma-1) - 2**(delta-1)
-                     knew = knew + 2**(betta-1) + 2**(alpha-1)
-                     ibas = ind_basis(knew)
-                     if ( ibas == 0 ) then
-                         call s_print_error('atomic_make_shmat', &
-                             & 'error while determining new state!')
-                     endif ! back if ( ibas == 0 ) block
-                     !
-                     ! determine the matrix element between the two Fock
-                     ! states, i.e., <ibas| and |jbas>
-                     isgn = mod(isgn,2)
-                     val = umat(alpha,betta,delta,gamma) * (-one)**isgn
-                     !
-                     ! setup the four fermion operators term
-                     do ibas=1,sectors(isec)%ndim
-                         if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
-                             sectors(isec)%hmat(ibas,jbas) = &
-                             sectors(isec)%hmat(ibas,jbas) + val
-                             EXIT
-                         endif ! back if block
-                     enddo ! over ibas={1,sectors(isec)%ndim} loop
-                     !
-                     ! write the Fock states and the operators
-                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
-                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
-                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
-                     write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
-                 endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
-             endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
-
-             enddo deltaloop ! over delta={1,norbs} loop
-             enddo gammaloop ! over gamma={1,norbs} loop
-             enddo bettaloop ! over betta={1,norbs} loop
-             enddo alphaloop ! over alpha={1,norbs} loop
-         enddo ! over jbas={1,sectors(isect)%ndim} loop
-
-     enddo ! over isec={1,nsectors} loop
-
-!! body]
-
-     return
-  end subroutine atomic_make_shmat
-
-!!
-!! @sub atomic_diag_shmat
-!!
-!! diagonalize the atomic Hamiltonian subspace by subspace
-!!
-  subroutine atomic_diag_shmat()
-     use constants, only : dp
-     use constants, only : mystd
-
-     use m_sector, only : nsectors
-     use m_sector, only : sectors
-
-     implicit none
-
-!! local variables
-     ! loop index
-     integer :: i
-
-     ! dummy array
-     real(dp), allocatable :: hmat(:,:)
-
-!! [body
-
-     do i=1,nsectors
-
-         write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'done'
-
-         ! we will not destroy the raw Hamiltonian data in sectors,
-         ! so we make a copy of it
-         allocate(hmat(sectors(i)%ndim,sectors(i)%ndim))
-         hmat = real( sectors(i)%hmat )
-
-         ! diagonalize it, eval and evec will be updated
-         call s_eig_sy( sectors(i)%ndim, &
-                        sectors(i)%ndim, &
-                        hmat,            &
-                        sectors(i)%eval, &
-                        sectors(i)%evec )
-
-         ! deallocate memory
-         deallocate(hmat)
-
-     enddo ! over i={1,nsectors} loop
-
-!! body]
-
-     return
-  end subroutine atomic_diag_shmat
 
 !!
 !! @sub atomic_make_sectors
@@ -892,6 +502,401 @@
      return
   end subroutine atomic_make_sectors
 
+!!
+!! @sub atomic_make_sfmat
+!!
+!! build annihilation operator matrix in the subspace, and then rotate
+!! it to the atomic eigenbasis. actually, the creation operator matrix
+!! is calculated as well
+!!
+  subroutine atomic_make_sfmat()
+     use constants, only : zero
+     use constants, only : mystd
+
+     use control, only : norbs
+
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
+     use m_sector, only : cat_alloc_fmat
+
+     implicit none
+
+!! local variables
+     ! loop index for orbital
+     integer :: iorb
+
+     ! loop index for annihilation and creation operators
+     integer :: ityp
+
+     ! loop index for subspace (sector)
+     integer :: isec
+     integer :: jsec
+
+     ! loop index for Fock state
+     integer :: ibas
+     integer :: jbas
+
+     ! sign change due to commute relation
+     integer :: isgn
+
+     ! auxiliary integer variables
+     integer :: jold
+     integer :: jnew
+
+!! [body
+
+     do isec=1,nsectors  ! loop over all the subspaces
+         !
+         write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', isec
+         write(mystd,'(2X,a,i2)', advance = 'no') 'orbital: ', norbs
+         write(mystd,'(2X,a)') 'operator: f^+ and f'
+         !
+         do iorb=1,norbs ! loop over all the orbitals
+             do ityp=0,1 ! loop over the f^+ and f operators
+
+         ! (A) retrieve the next subspace: jsec
+         jsec = sectors(isec)%next(iorb,ityp)
+         if ( jsec == -1 ) CYCLE
+
+         ! (B) allocate memory for fmat and then initialize it
+         !
+         ! determine the size of fmat
+         sectors(isec)%fmat(iorb,ityp)%n = sectors(jsec)%ndim
+         sectors(isec)%fmat(iorb,ityp)%m = sectors(isec)%ndim
+         !
+         ! allocate memory for fmat
+         call cat_alloc_fmat(sectors(isec)%fmat(iorb,ityp))
+         !
+         ! initialize fmat
+         sectors(isec)%fmat(iorb,ityp)%val = zero
+
+         ! (C) evaluate fmat in the Fock basis
+         !
+         ! loop over the Fock states in the isec-th subspace
+         do jbas=1,sectors(isec)%ndim
+             ! get Fock state |jold>
+             jold = dec_basis( sectors(isec)%basis(jbas) )
+
+             ! simulate f^+ |jold> = isgn |jnew> and
+             !          f   |jold> = isgn |jnew>
+             ! notice that the new state is |jnew>
+             !
+             ! apply creation fermion operator
+             if ( ityp == 1 .and. ( btest(jold, iorb-1) .eqv. .false. ) ) then
+                 call atomic_make_cdagger(iorb, jold, jnew, isgn)
+             !
+             ! apply annihilation fermion operator
+             else if ( ityp == 0 .and. ( btest(jold, iorb-1) .eqv. .true. ) ) then
+                 call atomic_make_c(iorb, jold, jnew, isgn)
+             !
+             else
+                 CYCLE
+             !
+             endif ! back if block
+
+             ! loop over the Fock states in the jsec-th subspace
+             do ibas=1,sectors(jsec)%ndim
+                 ! well, the matrix element exists
+                 if ( sectors(jsec)%basis(ibas) == ind_basis(jnew) ) then
+                     sectors(isec)%fmat(iorb,ityp)%val(ibas,jbas) = dble(isgn)
+                     EXIT
+                 endif ! back if block
+             enddo ! over ibas={1,sectors(jsec)%ndim} loop
+         enddo ! over jbas={1,sectors(isec)%ndim} loop
+
+         ! (D) rotate fmat from Fock basis to atomic eigenbasis
+         call atomic_tran_fmat(sectors(jsec)%ndim, &
+                               sectors(isec)%ndim, &
+                               sectors(jsec)%evec, &
+                               sectors(isec)%fmat(iorb,ityp)%val, &
+                               sectors(isec)%evec)
+
+             enddo ! over ityp={0,1} loop
+         enddo ! over iorb={1,norbs} loop
+     enddo ! over isec={1,nsectors} loop
+
+!! body]
+
+     return
+  end subroutine atomic_make_sfmat
+
+!!
+!! @sub atomic_make_shmat
+!!
+!! make atomic Hamiltonian subspace by subspace
+!!
+  subroutine atomic_make_shmat()
+     use constants, only : dp
+     use constants, only : one, czero
+     use constants, only : epst
+     use constants, only : mystd
+
+     use control, only : norbs
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
+
+     use m_spmat, only : emat
+     use m_spmat, only : umat
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
+
+     implicit none
+
+!! local variables
+     ! loop index
+     integer :: i
+
+     ! loop index for subspace (sector)
+     integer :: isec
+
+     ! loop index for Fock state
+     integer :: ibas
+     integer :: jbas
+
+     ! loop index for orbital
+     integer :: alpha, betta
+     integer :: delta, gamma
+
+     ! sign change due to fermion anti-commute relation
+     integer :: isgn
+
+     ! new Fock state after four fermions operation
+     integer :: knew
+
+     ! binary form of a Fock state
+     integer :: code(norbs)
+
+     ! matrix element of the atomic Hamiltonian
+     real(dp) :: val
+
+!! [body
+
+     ! loop over all subspaces
+     do isec=1,nsectors
+
+         write(mystd,'(4X,a,i4)') 'subspace: ', isec
+
+         ! start to make atomic Hamiltonian
+         ! initialize hmat
+         sectors(isec)%hmat = czero
+
+         ! compute two fermion operators term
+         ! it is f^{\dagger}_{\alpha} f_{\beta}
+         !----------------------------------------------------------------
+         write(mystd,'(4X,a)') 'compute two fermion operators term'
+         !
+         do jbas=1,sectors(isec)%ndim
+             alploop: do alpha=1,norbs ! loop over creation operators
+             betloop: do betta=1,norbs ! loop over annihilation operators
+
+             ! retrieve the Fock state |jbas>
+             isgn = 0
+             knew = dec_basis(sectors(isec)%basis(jbas))
+             code = bin_basis(:,sectors(isec)%basis(jbas))
+
+             ! impurity level is too small
+             if ( abs(emat(alpha,betta)) < epst ) CYCLE
+
+             ! simulate one annihilation operator, f_{\beta}
+             if ( code(betta) == 1 ) then
+                 do i=1,betta-1
+                     if ( code(i) == 1 ) isgn = isgn + 1
+                 enddo ! over i={1,betta-1} loop
+                 code(betta) = 0
+
+                 ! simulate one creation operator, f^{\dagger}_{\alpha}
+                 if ( code(alpha) == 0 ) then
+                     do i=1,alpha-1
+                         if ( code(i) == 1 ) isgn = isgn + 1
+                     enddo ! over i={1,alpha-1} loop
+                     code(alpha) = 1
+
+                     ! determine the new Fock state, <ibas|
+                     ! now ibas means the index for the new Fock state
+                     knew = knew - 2**(betta-1) + 2**(alpha-1)
+                     ibas = ind_basis(knew)
+                     if ( ibas == 0 ) then
+                         call s_print_error('atomic_make_shmat', &
+                             & 'error while determining new state!')
+                     endif ! back if ( ibas == 0 ) block
+                     !
+                     ! determine the matrix element between the two Fock
+                     ! states, i.e., <ibas| and |jbas>
+                     isgn = mod(isgn,2)
+                     val = emat(alpha,betta) * (-one)**isgn
+                     !
+                     ! setup the two fermion operators term
+                     do ibas=1,sectors(isec)%ndim
+                         if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
+                             sectors(isec)%hmat(ibas,jbas) = &
+                             sectors(isec)%hmat(ibas,jbas) + val
+                             EXIT
+                         endif ! back if block
+                     enddo ! over ibas={1,sectors(isec)%ndim} loop
+                     !
+                     ! write the Fock states and the operators
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                     write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
+                 endif ! back if ( code(alpha) == 0 ) block
+             endif ! back if ( code(betta_ == 1 ) block
+
+             enddo betloop ! over betta={1,norbs} loop
+             enddo alploop ! over alpha={1,norbs} loop
+         enddo ! over jbas={1,sectors(isect)%ndim} loop
+
+         ! compute four fermion operators term (coulomb interaction)
+         ! it is f^{\dagger}_{\alpha} f^{\dagger}_{\beta} f_{\delta} f_{\gamma}
+         !----------------------------------------------------------------
+         write(mystd,'(4X,a)') 'compute four fermion operators term'
+         !
+         do jbas=1,sectors(isec)%ndim
+             alphaloop: do alpha=1,norbs ! loop over creation operators
+             bettaloop: do betta=1,norbs ! loop over creation operators
+             gammaloop: do gamma=1,norbs ! loop over annihilation operators
+             deltaloop: do delta=1,norbs ! loop over annihilation operators
+
+             ! retrieve the Fock state |jbas>
+             isgn = 0
+             knew = dec_basis(sectors(isec)%basis(jbas))
+             code = bin_basis(:,sectors(isec)%basis(jbas))
+
+             ! applying Pauli principle
+             if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
+
+             ! U matrix element is too small
+             if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
+
+             ! simulate two annihilation operators
+             ! they are f_{\delta} f_{\gamma}
+             if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
+                 do i=1,gamma-1
+                     if ( code(i) == 1 ) isgn = isgn + 1
+                 enddo ! over i={1,gamma-1} loop
+                 code(gamma) = 0
+                 !
+                 do i=1,delta-1
+                     if ( code(i) == 1 ) isgn = isgn + 1
+                 enddo ! over i={1,delta-1} loop
+                 code(delta) = 0
+
+                 ! simulate two creation operators
+                 ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
+                 if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
+                     do i=1,betta-1
+                         if ( code(i) == 1 ) isgn = isgn + 1
+                     enddo ! over i={1,betta-1} loop
+                     code(betta) = 1
+                     !
+                     do i=1,alpha-1
+                         if ( code(i) == 1 ) isgn = isgn + 1
+                     enddo ! over i={1,alpha-1} loop
+                     code(alpha) = 1
+
+                     ! determine the new Fock state, <ibas|
+                     ! now ibas means the index for the new Fock state
+                     knew = knew - 2**(gamma-1) - 2**(delta-1)
+                     knew = knew + 2**(betta-1) + 2**(alpha-1)
+                     ibas = ind_basis(knew)
+                     if ( ibas == 0 ) then
+                         call s_print_error('atomic_make_shmat', &
+                             & 'error while determining new state!')
+                     endif ! back if ( ibas == 0 ) block
+                     !
+                     ! determine the matrix element between the two Fock
+                     ! states, i.e., <ibas| and |jbas>
+                     isgn = mod(isgn,2)
+                     val = umat(alpha,betta,delta,gamma) * (-one)**isgn
+                     !
+                     ! setup the four fermion operators term
+                     do ibas=1,sectors(isec)%ndim
+                         if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
+                             sectors(isec)%hmat(ibas,jbas) = &
+                             sectors(isec)%hmat(ibas,jbas) + val
+                             EXIT
+                         endif ! back if block
+                     enddo ! over ibas={1,sectors(isec)%ndim} loop
+                     !
+                     ! write the Fock states and the operators
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
+                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
+                     write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
+                 endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
+             endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
+
+             enddo deltaloop ! over delta={1,norbs} loop
+             enddo gammaloop ! over gamma={1,norbs} loop
+             enddo bettaloop ! over betta={1,norbs} loop
+             enddo alphaloop ! over alpha={1,norbs} loop
+         enddo ! over jbas={1,sectors(isect)%ndim} loop
+
+     enddo ! over isec={1,nsectors} loop
+
+!! body]
+
+     return
+  end subroutine atomic_make_shmat
+
+!!
+!! @sub atomic_diag_shmat
+!!
+!! diagonalize the atomic Hamiltonian subspace by subspace
+!!
+  subroutine atomic_diag_shmat()
+     use constants, only : dp
+     use constants, only : mystd
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
+
+     implicit none
+
+!! local variables
+     ! loop index
+     integer :: i
+
+     ! dummy array
+     real(dp), allocatable :: hmat(:,:)
+
+!! [body
+
+     do i=1,nsectors
+
+         write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'done'
+
+         ! we will not destroy the raw Hamiltonian data in sectors,
+         ! so we make a copy of it
+         allocate(hmat(sectors(i)%ndim,sectors(i)%ndim))
+         hmat = real( sectors(i)%hmat )
+
+         ! diagonalize it, eval and evec will be updated
+         call s_eig_sy( sectors(i)%ndim, &
+                        sectors(i)%ndim, &
+                        hmat,            &
+                        sectors(i)%eval, &
+                        sectors(i)%evec )
+
+         ! deallocate memory
+         deallocate(hmat)
+
+     enddo ! over i={1,nsectors} loop
+
+!! body]
+
+     return
+  end subroutine atomic_diag_shmat
+
+!!
+!! @sub atomic_check_shmat
+!!
+!! verify whether the atomic Hamiltonian is real
+!!
   subroutine atomic_check_shmat()
      use constants, only : eps6
      use constants, only : mystd
@@ -901,16 +906,23 @@
 
      implicit none
 
+!! local variables
      ! loop index
      integer :: i
 
+!! [body
+
+     ! we should go through every subspace
      do i=1,nsectors
          if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
-             call s_print_error('atomic_s_driver','atomic Hamiltonian is not real!')
+             call s_print_error('atomic_check_shmat', &
+                 & 'atomic Hamiltonian is not real!')
          else
-             write(mystd,'(4X,a,i4)') 'subspace: ', i, ' is valid'
+             write(mystd,'(4X,a,i4,a)') 'subspace: ', i, ' is valid'
          endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
      enddo ! over i={1,nsectors} loop
+
+!! body]
 
      return
   end subroutine atomic_check_shmat
