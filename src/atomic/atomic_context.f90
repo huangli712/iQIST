@@ -7,7 +7,7 @@
 !!! type    : modules
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/26/2024 by li huang (last modified)
+!!!           01/30/2024 by li huang (last modified)
 !!! purpose : define global data structures, arrays, and variables for
 !!!           the atomic eigenvalue problem solver.
 !!! status  : unstable
@@ -83,14 +83,14 @@
 !!
 !! @var occu
 !!
-!! density matrix (occupancy) for the atomic eigenstates
+!! density matrix (occupancy) in the atomic eigenbasis
 !!
      real(dp), public, save, allocatable :: occu(:,:)
 
 !!
 !! @var spin
 !!
-!! magnetic moment (Sz) for the atomic eigenstates
+!! magnetic moment (Sz) in the atomic eigenbasis
 !!
      real(dp), public, save, allocatable :: spin(:,:)
 
@@ -167,8 +167,7 @@
 !!
 !! @sub cat_alloc_fock_eigen
 !!
-!! allocate memory for atomic eigensystem that
-!! is initialized in the Fock basis
+!! allocate memory for atomic eigensystem
 !!
   subroutine cat_alloc_fock_eigen()
      implicit none
@@ -235,8 +234,7 @@
 !!
 !! @sub cat_free_fock_eigen
 !!
-!! deallocate memory for atomic eigensystem that
-!! is initialized in the Fock basis
+!! deallocate memory for atomic eigensystem
 !!
   subroutine cat_free_fock_eigen()
      implicit none
@@ -265,8 +263,7 @@
 !!
 !! @mod m_sector
 !!
-!! define data structures, arrays, and variables for the subspace
-!! diagonalization algorithm
+!! define global structures and arrays for subspace of atomic Hamiltonian
 !!
   module m_sector
      use constants, only : dp
@@ -277,20 +274,21 @@
 !!
 !! @struct Tf
 !!
-!! data structure for annihilation operator matrix, < alpha | f | beta >
+!! data structure for annihilation operator f or creation operator f^+,
+!!
+!!     < alpha | f | beta > or < alpha | f^+ | beta >
+!!
 !! where | alpha > and | beta > are the atomic eigenstates in the
 !! given subspace labelled by good quantum numbers
-!!
-!! this data structure can be used to save creation operator matrix
 !!
      private :: Tf
      type Tf
 
-         ! dimension of annihilation operator matrix, n x m
+         ! dimension of operator matrix, n x m
          integer :: n
          integer :: m
 
-         ! memory space for annihilation operator matrix
+         ! memory space for operator matrix
          real(dp), allocatable :: val(:,:)
 
      end type Tf
@@ -298,8 +296,8 @@
 !!
 !! @struct Ts
 !!
-!! data structure for subspace diagonalization algorithm. it is used to
-!! represent a subspace. sometimes we call subspace as sector
+!! data structure for subspace of atomic Hamiltonian. sometimes we
+!! call subspace as sector
 !!
      public :: Ts
      type Ts
@@ -307,17 +305,18 @@
          ! global index of the first Fock state in this subspace
          integer :: istart
 
-         ! dimension of this subspace. how many Fock states are there
-         ! in this subspace
+         ! dimension of this subspace
+         ! how many Fock states are there in this subspace
          integer :: ndim
 
-         ! number of fermion operators. it is actually equal to norbs
+         ! number of fermion operators
+         ! it is actually equal to norbs
          integer :: nops
 
-         ! we just use N, Sz, Jz, and PS to label the subspaces. they
-         ! are good quantum numbers
+         ! we just use N, Sz, Jz, and PS to label the subspaces
+         ! they are the so-called good quantum numbers
 
-         ! total number of electrons N
+         ! total number of electrons: N
          integer :: nele
 
          ! z component of spin: Sz
@@ -326,7 +325,7 @@
          ! z component of spin-orbit momentum: Jz
          integer :: jz
 
-         ! PS good quantum number
+         ! SU(2) good quantum number: PS
          integer :: ps
 
          ! collection of global indices of Fock states for this subspace
@@ -352,15 +351,17 @@
          ! atomic Hamiltonian in this subspace
          complex(dp), allocatable :: hmat(:,:)
 
-         ! annihilation operator matrix < alpha | f | beta > between this
-         ! subspace and all other subspaces, where | alpha > and | beta >
-         ! are the atomic eigenstates
+         ! annihilation operator f or creation operator f^+ matrix
+         !
+         !     < alpha | f | beta > or < alpha | f^+ | beta >
+         !
+         ! where | alpha > and | beta > are the atomic eigenstates.
          !
          !     fmat(nops,0) for annihilation
          !     fmat(nops,1) for creation operators
          !
-         ! if this subspace doesn't point to some other subspaces, then
-         ! the matrix is invalid
+         ! if the corresponding matrix element of next(:,:) is -1, then
+         ! the Tf is invalid (not allocated)
          type(Tf), allocatable :: fmat(:,:)
 
      end type Ts
@@ -368,21 +369,21 @@
 !!
 !! @var nsectors
 !!
-!! number of subspaces
+!! number of subspaces (sectors)
 !!
      integer, public, save  :: nsectors
 
 !!
 !! @var max_dim_sect
 !!
-!! maximum dimension of subspaces
+!! maximum dimension of subspaces (sectors)
 !!
      integer, public, save  :: max_dim_sect
 
 !!
 !! @var ave_dim_sect
 !!
-!! average dimension of subspaces
+!! average dimension of subspaces (sectors)
 !!
      real(dp), public, save :: ave_dim_sect
 
@@ -416,13 +417,13 @@
 !!
 !! @sub cat_alloc_fmat
 !!
-!! allocate memory for annihilation operator matrix
+!! allocate memory for annihilation operator f or creation operator f^+
 !!
   subroutine cat_alloc_fmat(one_fmat)
      implicit none
 
 !! external arguments
-     ! struct for annihilation operator matrix
+     ! struct for annihilation operator f or creation operator f^+
      ! we have to make sure one_fmat%n and one_fmat%m are valid
      type(Tf), intent(inout) :: one_fmat
 
@@ -452,13 +453,13 @@
 !!
 !! @sub cat_alloc_sector
 !!
-!! allocate memory for one subspace
+!! allocate memory for a subspace
 !!
   subroutine cat_alloc_sector(one_sector)
      implicit none
 
 !! external arguments
-     ! this sector
+     ! this subspace
      type(Ts), intent(inout) :: one_sector
 
 !! local variables
@@ -529,7 +530,7 @@
              & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     ! initialization of subspaces should be done elsewhere
+     ! initialization of each subspaces should be done elsewhere
 
 !! body]
 
@@ -543,13 +544,13 @@
 !!
 !! @sub cat_free_fmat
 !!
-!! deallocate memory for annihilation operator matrix
+!! deallocate memory for annihilation operator f or creation operator f^+
 !!
   subroutine cat_free_fmat(one_fmat)
      implicit none
 
 !! external arguments
-     ! annihilation operator matrix
+     ! annihilation operator f or creation operator f^+
      type(Tf), intent(inout) :: one_fmat
 
 !! [body
@@ -567,7 +568,7 @@
 !!
 !! @sub cat_free_sector
 !!
-!! deallocate memory for one subspace
+!! deallocate memory for a subspace
 !!
   subroutine cat_free_sector(one_sector)
      implicit none
@@ -620,7 +621,6 @@
 !! [body
 
      ! deallocate memory for an array of Ts
-     ! before deallocating subspaces to avoid memory leak
      if ( allocated(sectors) ) then
          do i=1,nsectors
              call cat_free_sector( sectors(i) )
