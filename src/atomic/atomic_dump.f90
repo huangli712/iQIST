@@ -276,21 +276,21 @@
      ! write the data, all of the elements are written
      ! note: we have to change the spin sequence here
      do i=1,norbs
-         !if ( i <= nband ) then
-         !    k = 2*i-1
-         !else
-         !    k = 2*(i-nband)
-         !endif ! back if ( i <= nband ) block
+         if ( i <= nband ) then
+             k = 2*i-1
+         else
+             k = 2*(i-nband)
+         endif ! back if ( i <= nband ) block
 
          do j=1,norbs
-             !if ( j <= nband ) then
-             !    l = 2*j-1
-             !else
-             !    l = 2*(j-nband)
-             !endif ! back if ( j <= nband ) block
+             if ( j <= nband ) then
+                 l = 2*j-1
+             else
+                 l = 2*(j-nband)
+             endif ! back if ( j <= nband ) block
 
-             !write(mytmp,'(2i6,f16.8)') i, j, umat_t(k,l)
-             write(mytmp,'(2i6,f16.8)') i, j, umat_t(i,j)
+             write(mytmp,'(2i6,f16.8)') i, j, umat_t(k,l)
+             !write(mytmp,'(2i6,f16.8)') i, j, umat_t(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 

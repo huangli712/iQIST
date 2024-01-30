@@ -4,6 +4,7 @@
 !!!           atomic_make_foccu
 !!!           atomic_make_fspin
 !!!           atomic_make_fhmat
+!!!           atomic_diag_fhmat
 !!!           atomic_check_fhmat
 !!! source  : atomic_fock.f90
 !!! type    : subroutines
@@ -171,8 +172,8 @@
      do ibas=1,ncfgs
          do iorb=1,norbs
              if ( bin_basis(iorb,ibas) == 1 ) then
-                 if ( iorb <= nband ) then
-                 !if ( mod(iorb,2) /= 0 ) then ! spin up
+                 !if ( iorb <= nband ) then
+                 if ( mod(iorb,2) /= 0 ) then ! spin up
                      spin(ibas,ibas) = spin(ibas,ibas) + half
                  else                         ! spin down
                      spin(ibas,ibas) = spin(ibas,ibas) - half
@@ -386,6 +387,19 @@
 
      return
   end subroutine atomic_make_fhmat
+
+  subroutine atomic_diag_fhmat()
+     use control, only : ncfgs
+
+     use m_fock, only : hmat
+     use m_fock, only : eval, evec
+
+     implicit none
+
+     call s_eig_sy(ncfgs, ncfgs, real(hmat), eval, evec)
+
+     return
+  end subroutine atomic_diag_fhmat
 
   subroutine atomic_check_fhmat()
      use constants, only : eps6

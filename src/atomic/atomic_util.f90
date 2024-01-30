@@ -725,7 +725,7 @@
              enddo
          enddo
      enddo
-     umat = utmp
+     !umat = utmp
   
 !! body]
 
