@@ -54,17 +54,20 @@
 !! [body
 
      ! evaluate annihilation operator matrix in the Fock basis
+     ! actually, we want to get < bra | f | ket >
      do i=1,norbs
          write(mystd,'(4X,a,i2,a)') 'build f(alpha =', i, ') in Fock basis'
          do j=1,ncfgs
              ! get | ket >
              right = dec_basis(j)
+             !
+             ! simulate an annihilation operator 
              if ( btest(right,i-1) .eqv. .true. ) then
                  ! get < bra |
                  call atomic_make_c(i, right, left, isgn)
                  k = ind_basis(left)
                  !
-                 ! evaluate < bra | c | ket >
+                 ! evaluate < bra | f | ket >
                  fmat(k,j,i) = dble(isgn)
                  !
                  ! write the Fock states and the matrix elements
@@ -78,9 +81,9 @@
      enddo ! over i={1,norbs} loop
 
      ! rotate annihilation operator matrix from the Fock basis to
-     ! the atomic eigenbasis
+     ! the atomic eigenbasis. here evec are eigenvectors of hmat
      do i=1,norbs
-         write(mystd,'(4X,a,i2,a)') 'rotate c(alpha =', i, ') to atomic eigenbasis'
+         write(mystd,'(4X,a,i2,a)') 'rotate f(alpha =', i, ') to atomic eigenbasis'
          call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
      enddo ! over i={1,norbs} loop
 
@@ -117,6 +120,7 @@
 !! [body
 
      ! evaluate density matrix in the Fock basis
+     ! note that it is diagonal
      occu = zero
      !
      do ibas=1,ncfgs
@@ -125,6 +129,7 @@
                  occu(ibas,ibas) = occu(ibas,ibas) + one
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
          enddo ! over iorb={1,norbs} loop
+         !
          write(mystd,'(4X,a)', advance = 'no') '| ket > = '
          write(mystd,'(*(i1))', advance = 'no') bin_basis(:,ibas)
          write(mystd,'(2X,a,f5.2)') 'N = ', occu(ibas,ibas)
@@ -150,8 +155,7 @@
      use constants, only: zero, half
      use constants, only : mystd
 
-     use control, only : norbs, ncfgs
-     use control, only : nband
+     use control, only : nband, norbs, ncfgs
 
      use m_fock, only : bin_basis
      use m_fock, only : evec
@@ -167,19 +171,21 @@
 !! [body
 
      ! evaluate magnetic moment in the Fock basis
+     ! note that it is diagonal
      spin = zero
      !
      do ibas=1,ncfgs
          do iorb=1,norbs
              if ( bin_basis(iorb,ibas) == 1 ) then
-                 !if ( iorb <= nband ) then
-                 if ( mod(iorb,2) /= 0 ) then ! spin up
+                 ! the spin order is always: up up up down down down
+                 if ( iorb <= nband ) then
                      spin(ibas,ibas) = spin(ibas,ibas) + half
                  else                         ! spin down
                      spin(ibas,ibas) = spin(ibas,ibas) - half
-                 endif ! back if ( mod(iorb,2) /= 0 ) block
+                 endif ! back if ( iorb <= nband ) block
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
          enddo ! over iorb={1,norbs} loop
+         !
          write(mystd,'(4X,a)', advance = 'no') '| ket > = '
          write(mystd,'(*(i1))', advance = 'no') bin_basis(:,ibas)
          write(mystd,'(2X,a,f5.2)') 'Sz = ', spin(ibas,ibas)
@@ -202,7 +208,8 @@
 !!
   subroutine atomic_make_fhmat()
      use constants, only : dp
-     use constants, only : one, czero
+     use constants, only : one
+     use constants, only : czero
      use constants, only : epst
      use constants, only : mystd
 
@@ -232,7 +239,7 @@
      ! sign change due to fermion anti-commute relation
      integer :: isgn
 
-     ! new atomic state after fermion operators act
+     ! new Fock state after a fermion operator acts
      integer :: knew
 
      ! binary form of a Fock state
@@ -283,7 +290,7 @@
                  ibas = ind_basis(knew)
                  if ( ibas == 0 ) then
                      call s_print_error('atomic_make_fhmat', &
-                         & 'error while determining new state!')
+                         & 'error while determining new Fock state!')
                  endif ! back if ( ibas == 0 ) block
                  !
                  ! determine the matrix element between the two Fock
@@ -294,7 +301,7 @@
                  ! setup the two fermion operators term
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
                  !
-                 ! write the Fock states and the operators
+                 ! write the combination of operators
                  write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
                  write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
              endif ! back if (code(alpha) == 0) block
@@ -358,7 +365,7 @@
                  ibas = ind_basis(knew)
                  if ( ibas == 0 ) then
                      call s_print_error('atomic_make_fhmat', &
-                         & 'error while determining new state')
+                         & 'error while determining new Fock state')
                  endif ! back if ( ibas == 0 ) block
                  !
                  ! determine the matrix element between the two Fock
@@ -369,7 +376,7 @@
                  ! setup the four fermion operators term
                  hmat(ibas,jbas) = hmat(ibas,jbas) + val
                  !
-                 ! write the Fock states and the operators
+                 ! write the combination of the operators
                  write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
                  write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
@@ -388,7 +395,14 @@
      return
   end subroutine atomic_make_fhmat
 
+!!
+!! @sub atomic_diag_fhmat
+!!
+!! diagonalize atomic Hamiltonian directly by a lapack call
+!!
   subroutine atomic_diag_fhmat()
+     use constants, only : mystd
+
      use control, only : ncfgs
 
      use m_fock, only : hmat
@@ -396,11 +410,21 @@
 
      implicit none
 
+!! [body
+
      call s_eig_sy(ncfgs, ncfgs, real(hmat), eval, evec)
+     write(mystd,'(4X,a)') 'eigenvalues and eigenvectors are built'
+
+!! body]
 
      return
   end subroutine atomic_diag_fhmat
 
+!!
+!! @sub atomic_check_fhmat
+!!
+!! verify whether the atomic Hamiltonian is real
+!!
   subroutine atomic_check_fhmat()
      use constants, only : eps6
      use constants, only : mystd
@@ -409,11 +433,16 @@
 
      implicit none
 
+!! [body
+
      if ( any( abs( aimag(hmat) ) > eps6 ) ) then
-         call s_print_error('atomic_f_driver','atomic Hamiltonian is not real!')
+         call s_print_error('atomic_check_fhmat', &
+             & 'atomic Hamiltonian is not real!')
      else
          write(mystd,'(4X,a)') 'atomic Hamiltonian is valid'
      endif ! back if ( any( abs( aimag(hmat) ) > eps6 ) ) block
+
+!! body]
 
      return
   end subroutine atomic_check_fhmat
