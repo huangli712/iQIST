@@ -60,16 +60,16 @@
      ! new Fock state
      integer, intent(out):: jnew
 
-     ! sign due to anti-commute relation between fermions
+     ! sign due to anti-commutation relation between fermions
      integer, intent(out):: isgn
 
 !! local variables
-     ! loop index over orbital
+     ! loop index over orbitals
      integer :: iorb
 
 !! [body
 
-     ! it is occupied at ipos
+     ! it is already occupied at ipos
      ! we can not violate the Pauli principle
      if ( btest(jold, ipos-1) .eqv. .true. ) then
          call s_print_error('atomic_make_cdagger','severe error happened')
@@ -110,14 +110,14 @@
      ! new Fock state
      integer, intent(out) :: jnew
 
-     ! sign due to anti-commute relation between fermions
+     ! sign due to anti-commutation relation between fermions
      integer, intent(out) :: isgn
 
 !! local variables
      ! loop index
      integer :: iorb
 
-     ! it is unoccupied at ipos
+     ! it is already unoccupied at ipos
      ! we can not violate the Pauli principle
      if ( btest(jold, ipos-1) .eqv. .false. ) then
          call s_print_error('atomic_make_c','severe error happened')

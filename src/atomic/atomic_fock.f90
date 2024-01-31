@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/30/2024 by li huang (last modified)
+!!!           01/31/2024 by li huang (last modified)
 !!! purpose : core subroutines for solving atomic eigenvalue problem in
 !!!           the Fock space.
 !!! status  : unstable
@@ -236,7 +236,7 @@
      integer :: alpha, betta
      integer :: delta, gamma
 
-     ! sign change due to fermion anti-commute relation
+     ! sign change due to fermion anti-commutation relation
      integer :: isgn
 
      ! new Fock state after a fermion operator acts
