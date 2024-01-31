@@ -22,8 +22,8 @@
 !! @sub atomic_make_sectors
 !!
 !! determine all the subspaces with the good quantum numbers algorithm.
-!! a subspace consists of some many-particle Fock states labeled by good
-!! quantum numbers
+!! the subspace should consist of some many-particle Fock states labeled
+!! by good quantum numbers
 !!
   subroutine atomic_make_sectors()
      use constants, only : zero
@@ -44,6 +44,10 @@
 
      implicit none
 
+!! local parameters
+     ! maximum number of subspaces 
+     integer, parameter :: max_num_sect = 400 
+
 !! local variables
      ! loop index
      integer :: i
@@ -51,16 +55,16 @@
      integer :: k
      integer :: l
 
-     ! total electrons
+     ! good quantum number: total electrons N
      integer :: my_ntot
 
-     ! Sz value
+     ! good quantum number: Sz
      integer :: my_sz
 
-     ! Jz value
+     ! good quantum number: Jz
      integer :: my_jz
 
-     ! PS value
+     ! good quantum number: PS
      integer :: my_ps
 
      ! index of Fock state
@@ -69,7 +73,7 @@
      ! number of subspaces (sectors)
      integer :: nsect
 
-     ! which subspace (sector) point to
+     ! index of selected subspace
      integer :: which_sect
 
      ! dummy variable
@@ -101,7 +105,7 @@
      ! binary form of Fock state
      integer :: code(norbs)
 
-     ! subspace basis index
+     ! global indices of Fock states of subspaces
      !
      ! the first index: local index of Fock state in the given subspace
      ! the second index: index of subspace
@@ -112,16 +116,17 @@
 
 !! [body
 
-     ! initialize some variables
-     sect_ntot = 0
-     sect_sz = 0
-     sect_jz = 0
-     sect_ps = 0
-
      ! allocate memory
-     allocate(sector_basis(ncfgs,ncfgs))
+     if (ncfgs > max_num_sect) then
+         nsect = max_num_sect
+     else
+         nsect = ncfgs
+     endif ! back if (ncfgs > max_num_sect) block
+     !
+     write(mystd,'(4X,a,i4)') 'maximum number of subspaces is', nsect
+     allocate(sector_basis(ncfgs,nsect))
 
-     ! make orb_sz, orb_jz, and orb_ps
+     ! build good quantum numbers for each orbital
      !--------------------------------------------------------------------
      ! calculate orb_sz
      orb_sz = 0
@@ -131,7 +136,7 @@
      ! calculate orb_jz
      orb_jz = 0
      if ( nband == 3 .or. nband == 5 .or. nband == 7 ) then
-         ! jz only valid for nband==3, 5, 7
+         ! jz only valid for nband == 3, 5, 7
          call atomic_make_gjz(orb_jz)
      endif ! back if ( nband == 3 .or. nband == 5 .or. nband == 7 ) block
      write(mystd,'(4X,a)') 'compute [Jz] for orbitals'
@@ -151,7 +156,7 @@
      !
      ! loop over all number of total electrons (N)
      do i=0,norbs
-         ! loop over each Fock state
+         ! loop over each Fock state for given N
          do j=1,dim_sub_n(i)
 
              ! here ibasis denotes the index of Fock state
@@ -185,15 +190,21 @@
          enddo ! over j={1,dim_sub_n(i)} loop
      enddo ! over i={0,norbs} loop
      !
+     call s_assert( ibasis == ncfgs )
+     !
      write(mystd,'(4X,a)') 'compute [N Sz Jz PS] for Fock states'
 
      ! loop over all the Fock states to determine subspaces
      !--------------------------------------------------------------------
      write(mystd,'(4X,a)') 'create subspaces automatically'
      !
-     nsect = 0
-     ndims = 0
-     sector_basis = 0
+     nsect = 0        ! number of subspaces, a counter
+     ndims = 0        ! dimension of subspaces
+     sect_ntot = 0    ! good quantum numbers
+     sect_sz = 0      ! good quantum numbers
+     sect_jz = 0      ! good quantum numbers
+     sect_ps = 0      ! good quantum numbers
+     sector_basis = 0 ! Fock states in subspaces
      !
      do i=1,ncfgs
          my_ntot = fock_ntot(i)
@@ -214,6 +225,7 @@
          endif ! back if ( ictqmc == 5 ) block
 
          ! create the first subspace
+         ! the first Fock state should belong to the first subspace
          if ( nsect == 0 ) then
              sect_ntot(1) = my_ntot
              !
@@ -238,8 +250,10 @@
              write(mystd,'(2X,a,i2)', advance = 'no') 'Sz = ', my_sz
              write(mystd,'(2X,a,i2)', advance = 'no') 'PS = ', my_ps
              write(mystd,'(2X,a,i2)') 'Jz = ', my_jz
-         else
+         else ! nsect > 0
              ! loop over the exists subspaces
+             ! if which_sect > 0, it means that the Fock state can
+             ! be classified into an existing subspace
              which_sect = -1
              do j=1,nsect
                  ! compare the current Fock state with existing subspaces
@@ -275,8 +289,8 @@
                  end select
              enddo ! over j={1,nsect} loop
 
-             ! we can not assign the current state into any existing
-             ! subspaces, so we have to define a new one
+             ! we can not assign the current Fock state into any existing
+             ! subspaces, so we have to create a new one
              if ( which_sect == -1 ) then
                  nsect = nsect + 1
 
@@ -319,10 +333,11 @@
      !
      max_dim_sect = 0
      ave_dim_sect = zero
-     nsectors = nsect
+     nsectors = nsect ! do not forget to setup nsectors
+     !
      call cat_alloc_sectors()
      !
-     ! now we will build every subspace one by one
+     ! next we will build every subspace one by one
      ibasis = 1
      do i=1,nsect
          sectors(i)%istart = ibasis
@@ -339,7 +354,7 @@
          ! allocate memory for the subspace
          call cat_alloc_sector( sectors(i) )
 
-         ! set basis for the subspace
+         ! setup basis for the subspace
          do j=1,ndims(i)
              sectors(i)%basis(j) = sector_basis(j,i)
          enddo ! over j={1,ndims(i)} loop
@@ -351,7 +366,7 @@
 
      ! make index for next subspace
      !--------------------------------------------------------------------
-     write(mystd,'(4X,a)') 'simulate fermion operator act on subspaces'
+     write(mystd,'(4X,a)') 'simulate fermion operator acts on subspaces'
      do i=1,nsectors  ! loop over all the subspaces
          do j=1,norbs ! loop over all the orbtials
              do k=0,1 ! loop over creation and annihilation fermion operators
@@ -363,13 +378,13 @@
                  do l=1,sectors(i)%ndim
                      ibasis = sectors(i)%basis(l)
 
-                     ! for creation fermion operator
+                     ! test creation fermion operator
                      if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
                      !
-                     ! for annihilation fermion operator
+                     ! test annihilation fermion operator
                      else if ( k==0 .and. bin_basis(j, ibasis) == 1 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
@@ -378,17 +393,20 @@
                      endif ! back if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) block
                  enddo ! over l={1,sectors(i)%ndim} loop
 
+                 ! if can == .true., it means that the fermion operator
+                 ! can act on the given subspace. next, we would like to
+                 ! figure out the resulting subspace.
                  if ( can .eqv. .true. ) then
                      select case (ictqmc)
                          case (2)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                             else
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
                              endif ! back if ( k == 1 ) block
                              !
                              ! loop over all subspaces to see which
-                             ! subspace it will point to
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      which_sect = l; EXIT
@@ -396,16 +414,16 @@
                              enddo ! over l={1,nsectors} loop
 
                          case (3)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
                                  my_sz = sect_sz(i) + orb_sz(j)
-                             else
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
                                  my_sz = sect_sz(i) - orb_sz(j)
                              endif ! back if ( k == 1 ) block
                              !
                              ! loop over all subspaces to see which
-                             ! subspace it will point to
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      if ( sect_sz(l) == my_sz ) then
@@ -415,11 +433,11 @@
                              enddo ! over l={1,nsectors} loop
 
                          case (4)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
                                  my_sz = sect_sz(i) + orb_sz(j)
                                  code(j) = 1
-                             else
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
                                  my_sz   = sect_sz(i) - orb_sz(j)
                                  code(j) = 0
@@ -433,7 +451,7 @@
                              enddo ! over l={1,nband} loop
                              !
                              ! loop over all subspaces to see which
-                             ! subspace it will point to
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      if ( sect_sz(l) == my_sz ) then
@@ -445,16 +463,16 @@
                              enddo ! over l={1,nsectors} loop
 
                          case (5)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
                                  my_jz = sect_jz(i) + orb_jz(j)
-                             else
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
                                  my_jz = sect_jz(i) - orb_jz(j)
                              endif ! back if ( k == 1 ) block
                              !
                              ! loop over all subspaces to see which
-                             ! subspace it will point to
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      if ( sect_jz(l) == my_jz ) then
@@ -471,12 +489,12 @@
 
                  if (k == 1) then
                      write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
-                     write(mystd,'(2X,a,i4)', advance = 'no') 'initial subspace:', i
-                     write(mystd,'(2X,a,i4)') 'final subspace:', which_sect
+                     write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
+                     write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
                  else
                      write(mystd,'(4X,a,i2,a)', advance = 'no') 'f  (alpha =', j, ')'
-                     write(mystd,'(2X,a,i4)', advance = 'no') 'initial subspace:', i
-                     write(mystd,'(2X,a,i4)') 'final subspace:', which_sect
+                     write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
+                     write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
                  endif ! back if (k == 1) block
 
              enddo ! over k={0,1} loop
@@ -487,6 +505,7 @@
      !--------------------------------------------------------------------
      max_dim_sect = maxval(ndims)
      ave_dim_sect = sum(ndims) / real(nsectors)
+     !
      write(mystd,'(4X,a,i4)') 'maximum dimension of subspaces:', max_dim_sect
      write(mystd,'(4X,a,f6.2)') 'averaged dimension of subspaces:', ave_dim_sect
 
@@ -548,7 +567,7 @@
 
 !! [body
 
-     do isec=1,nsectors  ! loop over all the subspaces
+     do isec=1,nsectors ! loop over all the subspaces
          !
          write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', isec
          write(mystd,'(2X,a,i2)', advance = 'no') 'orbital: ', norbs
@@ -868,7 +887,7 @@
 
      do i=1,nsectors
 
-         write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'done'
+         write(mystd,'(4X,a,i4,a)') 'subspace: ', i, ' done'
 
          ! we will not destroy the raw Hamiltonian data in sectors,
          ! so we make a copy of it

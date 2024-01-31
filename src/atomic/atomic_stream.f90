@@ -610,7 +610,7 @@
              if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
          enddo ! over j={1,norbs} loop
          write(mystd,'(4X,a,i6)', advance = 'no') 'Fock state: ', i
-         write(mystd,'(2X,a,i4)', advance = 'no') 'decimal: ', dec_basis(i)
+         write(mystd,'(2X,a,i6)', advance = 'no') 'decimal: ', dec_basis(i)
          write(mystd,'(2X,a,*(i1))') 'binary: ', bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 

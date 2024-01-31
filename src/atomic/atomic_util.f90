@@ -1362,6 +1362,8 @@
 
 !! [body
 
+     print *, ndimx, ndimy
+
      ! allocate memory
      allocate(tmp_mat(ndimx,ndimy))
 
