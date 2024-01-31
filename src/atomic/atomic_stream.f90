@@ -810,9 +810,9 @@
 !! [body
 
      ! initialize them
-     umat_tmp = czero
      tmat_r2c = czero
      tmat_c2r = czero
+     umat_tmp = czero
 
      ! make transformation matrix (tmat). it is used to transfer matrix
      ! emat from original basis to natural eigenbasis. the onsite energy
@@ -855,15 +855,15 @@
          else if ( isoc == 1 .and. icf >  0 ) then
              call atomic_natural_basis4()
 
-         endif ! back if      ( isoc == 0 .and. icf <  2 ) block
+         endif ! back if block
 
-     ! B: read the transformation matrix (tmat)
+     ! B: read transformation matrix (tmat) from external file
      else
 
          write(mystd,'(4X,a)') 'read transformation matrix'
 
          ! note that emat is already built in atomic_build_spmat(),
-         ! here we just read tmat
+         ! here we just read tmat. tmat must be compatible with emat
          call atomic_input_tmat()
 
      endif ! back if ( ibasis == 1 ) block
@@ -878,7 +878,7 @@
      !
      ! for non-SOC case, the transformation matrix is defined as from
      ! real orbital basis to natural eigenbasis. so we have to make sure
-     ! the Coulomb interaction U is at real orbital basis
+     ! the Coulomb interaction U is built at real orbital basis
      if ( isoc == 0 ) then
 
          write(mystd,'(4X,a)') 'transform Coulomb interaction to &
@@ -900,7 +900,7 @@
 
      ! for SOC case, the transformation matrix is defined as from complex
      ! orbital basis to natural eigenbasis. so we have to make sure the
-     ! Coulomb interaction U is at complex orbital basis
+     ! Coulomb interaction U is built at complex orbital basis
      else
 
          write(mystd,'(4X,a)') 'transform Coulomb interaction to &
@@ -929,12 +929,10 @@
      call atomic_tran_umat(tmat, umat, umat_tmp)
      umat = umat_tmp
 
-     ! write the U matrix as reference
+     ! write the Coulomb interaction matrix as reference
      call atomic_dump_umat()
 
 !! body]
-
-     !STOP
 
      return
   end subroutine atomic_build_natural
@@ -946,7 +944,7 @@
 !!
 !! @sub atomic_alloc_array
 !!
-!! allocate memory for global variables and then initialize them
+!! allocate memory for global arrays and then initialize them
 !!
   subroutine atomic_alloc_array()
      use m_fock, only : cat_alloc_fock_basis
@@ -970,7 +968,7 @@
 !!
 !! @sub atomic_final_array
 !!
-!! garbage collection for this code, please refer to atomic_alloc_array
+!! garbage collection for this code, please refer to atomic_alloc_array()
 !!
   subroutine atomic_final_array()
      use m_fock, only : cat_free_fock_basis

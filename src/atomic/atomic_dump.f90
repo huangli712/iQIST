@@ -15,7 +15,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/26/2024 by li huang (last modified)
+!!!           01/31/2024 by li huang (last modified)
 !!! purpose : write some essential arrays and data structures to files.
 !!! status  : unstable
 !!! comment :
@@ -131,8 +131,7 @@
   subroutine atomic_dump_emat()
      use constants, only : mytmp
 
-     use control, only : isoc
-     use control, only : nband, norbs
+     use control, only : norbs
 
      use m_spmat, only : emat
 
@@ -141,9 +140,6 @@
 !! local variables
      ! loop index
      integer :: i
-
-     ! auxiliary integer variable used to convert the spin sequence
-     integer :: s_order
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
@@ -163,16 +159,7 @@
 
      ! write the data
      do i=1,norbs
-         if ( isoc == 0 ) then
-             if ( i <= nband ) then
-                 s_order = 2*i-1
-             else
-                 s_order = 2*(i-nband)
-             endif ! back if ( i <= nband ) block
-         else
-             s_order = i
-         endif ! back if ( isoc == 0 ) block
-         write(mytmp,'(i6,2f16.8)') i, emat(s_order,s_order)
+         write(mytmp,'(i6,2f16.8)') i, emat(i,i)
      enddo ! over i={1,norbs} loop
 
      ! close data file
@@ -186,7 +173,7 @@
 !!
 !! @sub atomic_dump_umat
 !!
-!! write onsite Coulomb interaction tensor
+!! write onsite Coulomb interaction U, a rank-4 tensor
 !!
   subroutine atomic_dump_umat()
      use constants, only : dp
@@ -228,7 +215,6 @@
      write(mytmp,'(75a1)') dash ! dashed line
 
      ! write the data, only the non-zero elements are outputed
-     ! note: we do not change the spin sequence here
      do i=1,norbs
          do j=1,norbs
              do k=1,norbs
@@ -249,24 +235,29 @@
 
      ! Kanamori type
      if ( icu == 1 .or. icu == 3 ) then
+         !
          do i=1,norbs
              do j=i+1,norbs
                  umat_t(i,j) = real( umat(i,j,j,i) )
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
+         !
      ! Slater type
      elseif ( icu == 2 ) then
+         !
          do i=1,norbs
              do j=i+1,norbs
-                 if ( mod(i,2) == mod(j,2) ) then
+                 if ( (i <= nband .and. j <= nband) .or. &
+                      (i >  nband .and. j >  nband) ) then
                      umat_t(i,j) = two * real(umat(i,j,j,i) - umat(i,j,i,j))
                  else
                      umat_t(i,j) = two * real(umat(i,j,j,i))
-                 endif  ! back if ( mod(i,2) == mod(j,2) ) block
+                 endif  ! back if block
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
+         !
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
      ! open file solver.umat.in to write
@@ -274,23 +265,9 @@
      open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
 
      ! write the data, all of the elements are written
-     ! note: we have to change the spin sequence here
      do i=1,norbs
-         if ( i <= nband ) then
-             k = 2*i-1
-         else
-             k = 2*(i-nband)
-         endif ! back if ( i <= nband ) block
-
          do j=1,norbs
-             if ( j <= nband ) then
-                 l = 2*j-1
-             else
-                 l = 2*(j-nband)
-             endif ! back if ( j <= nband ) block
-
-             write(mytmp,'(2i6,f16.8)') i, j, umat_t(k,l)
-             !write(mytmp,'(2i6,f16.8)') i, j, umat_t(i,j)
+             write(mytmp,'(2i6,f16.8)') i, j, umat_t(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -405,8 +382,8 @@
 !!
 !! @sub atomic_dump_fcix
 !!
-!! write atom.cix file for the ctqmc solver. the file format is designed
-!! for the begonia and lavender codes. however, the two codes are already
+!! write atom.cix file for the ctqmc solver. the file format is
+!! designed for the lavender code. however, the code is already 
 !! deprecated. we retain this subroutine only for reference.
 !!
   subroutine atomic_dump_fcix()
@@ -434,9 +411,6 @@
      integer :: i
      integer :: j
      integer :: k
-
-     ! auxiliary integer variable used to convert the spin sequence
-     integer :: s_order
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
@@ -499,34 +473,15 @@
      endif ! back if ( ictqmc == 0 ) block
 
      ! write annihilation operator matrix in atomic eigenbasis
-     !
-     ! for non-soc case, the spin order of ctqmc is like
-     !     up, up, up, dn, dn, dn
-     !
-     ! but the spin order of this program is
-     !     up, dn, up, dn, up, dn
-     !
-     ! so we have to adjust it here. however if the spin-orbit coupling
-     ! is enabled, the spin order doesn't matter.
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT'
      write(mytmp,'(75a1)') dash ! dashed line
      do i=1,norbs
-         if ( isoc == 0 ) then
-             if ( i <= nband ) then
-                 s_order = 2*i-1
-             else
-                 s_order = 2*(i-nband)
-             endif ! back if ( i <= nband ) block
-         else
-             s_order = i
-         endif ! back if ( isoc == 0 ) block
-         !
          do j=1,ncfgs
              do k=1,ncfgs
-                 if ( abs( fmat(j,k,s_order) ) > epst ) then
-                     write(mytmp,'(3i10,f20.10)') j, k, i, fmat(j,k,s_order)
-                 endif ! back if ( abs( fmat(j,k,s_order) ) > epst ) block
+                 if ( abs( fmat(j,k,i) ) > epst ) then
+                     write(mytmp,'(3i10,f20.10)') j, k, i, fmat(j,k,i)
+                 endif ! back if ( abs( fmat(j,k,i) ) > epst ) block
              enddo ! back k={1,ncfgs} loop
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
