@@ -255,6 +255,7 @@
              ! if which_sect > 0, it means that the Fock state can
              ! be classified into an existing subspace
              which_sect = -1
+             !
              do j=1,nsect
                  ! compare the current Fock state with existing subspaces
                  select case (ictqmc)
@@ -293,6 +294,7 @@
              ! subspaces, so we have to create a new one
              if ( which_sect == -1 ) then
                  nsect = nsect + 1
+                 call s_assert( nsect <= max_num_sect )
 
                  sect_ntot(nsect) = my_ntot
                  !
@@ -385,7 +387,7 @@
                          EXIT
                      !
                      ! test annihilation fermion operator
-                     else if ( k==0 .and. bin_basis(j, ibasis) == 1 ) then
+                     else if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
@@ -416,10 +418,10 @@
                          case (3)
                              if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                                 my_sz = sect_sz(i) + orb_sz(j)
+                                 my_sz   = sect_sz(i) + orb_sz(j)
                              else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
-                                 my_sz = sect_sz(i) - orb_sz(j)
+                                 my_sz   = sect_sz(i) - orb_sz(j)
                              endif ! back if ( k == 1 ) block
                              !
                              ! loop over all subspaces to see which
@@ -435,7 +437,7 @@
                          case (4)
                              if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                                 my_sz = sect_sz(i) + orb_sz(j)
+                                 my_sz   = sect_sz(i) + orb_sz(j)
                                  code(j) = 1
                              else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
@@ -465,10 +467,10 @@
                          case (5)
                              if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                                 my_jz = sect_jz(i) + orb_jz(j)
+                                 my_jz   = sect_jz(i) + orb_jz(j)
                              else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
-                                 my_jz = sect_jz(i) - orb_jz(j)
+                                 my_jz   = sect_jz(i) - orb_jz(j)
                              endif ! back if ( k == 1 ) block
                              !
                              ! loop over all subspaces to see which
