@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/30/2024 by li huang (last modified)
+!!!           01/31/2024 by li huang (last modified)
 !!! purpose : read essential input data from the external files, build
 !!!           the Fock basis, construct single particle matrices and
 !!!           natural eigenbasis, etc.
@@ -52,20 +52,20 @@
      ! setup general control flags
      !--------------------------------------------------------------------
      ibasis = 1           ! source of the natural eigenbasis
-     ictqmc = 1           ! how to diagonalize atomic Hamiltonian matrix
+     ictqmc = 1           ! how to diagonalize atomic Hamiltonian
      icu    = 1           ! type of Coulomb interaction
      icf    = 0           ! type of crystal field splitting (CFS)
      isoc   = 0           ! type of spin-orbit coupling (SOC)
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     ! setup common variables for atomic eigenvalue problem
+     ! setup common variables for atomic Hamiltonian
      !--------------------------------------------------------------------
      nband  = 1           ! number of bands
      nspin  = 2           ! number of spins
      norbs  = nband*nspin ! number of orbitals
      ncfgs  = 2**norbs    ! number of many-body configurations
-     nmini  = 0           ! minimal of total occupancy N to be kept
-     nmaxi  = norbs       ! maximal of total occupancy N to be kept
+     nmini  = 0           ! minimal total occupancy N to be kept
+     nmaxi  = norbs       ! maximal total occupancy N to be kept
      !--------------------------------------------------------------------
      Uc     = 2.00_dp     ! intraorbital Coulomb interaction
      Uv     = 2.00_dp     ! interorbital Coulomb interaction
@@ -107,7 +107,7 @@
          call p_get('norbs' ,  norbs) ! not useful
          call p_get('ncfgs' ,  ncfgs) ! not useful
 
-         ! calculate the norbs and ncfgs
+         ! calculate norbs and ncfgs
          norbs = nband * nspin
          ncfgs = 2 ** norbs
 
@@ -155,7 +155,7 @@
      use control ! ALL
 
 !! local variables
-     ! whether all of the control parameters are valid
+     ! whether all the control parameters are valid
      logical :: lpass
 
 !! [body
@@ -262,12 +262,12 @@
      endif ! back if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
 
      ! check nband
-     if ( nband <= 0 ) then
+     if ( nband <= 0 .or. nband >= 8 ) then
          write(mystd,'(2X,a)') 'ERROR: number of bands should be a &
              & positive integer (1 <= nband <= 7)!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( nband <= 0 ) block
+     endif ! back if ( nband <= 0 .or. nband >= 8 ) block
      !
      if ( nband >= 5 .and. ictqmc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: when number of bands is larger &
@@ -391,7 +391,8 @@
 !! [body
 
      ! we shall read crystal field splitting into matrix cmat from
-     ! file atom.cmat.in
+     ! file atom.cmat.in. note that crystal field splitting could
+     ! be non-diagonal
      !
      ! inquire file's status at first
      inquire( file = 'atom.cmat.in', exist = exists )
@@ -452,7 +453,8 @@
 !! [body
 
      ! we shall read onsite impurity level into matrix emat from
-     ! file atomic.emat.in
+     ! file atomic.emat.in. note that emat is actually real and
+     ! diagonal in natural eigenbasis
      !
      ! inquire file's status at first
      inquire( file = 'atom.emat.in', exist = exists )
@@ -467,7 +469,6 @@
      ! read the data file
      do i=1,norbs
          read(mytmp,*) i1, i2, raux
-         ! emat is actually real and diagonal in natural eigenbasis
          emat(i,i) = dcmplx(raux, zero)
      enddo ! over i={1,norbs} loop
 
@@ -509,7 +510,9 @@
 
 !! [body
 
-     ! we shall read transformation matrix tmat from file atomic.tmat.in
+     ! we shall read transformation matrix tmat from file atomic.tmat.in.
+     ! it is used to transform the single particle matrices from original
+     ! basis to natural eigenbasis 
      !
      ! inquire file's status at first
      inquire( file = 'atom.tmat.in', exist = exists )
@@ -583,6 +586,7 @@
      ! it is a number of combination C_{norbs}^{i}
      do i=0,norbs
          call s_combination(i, norbs, dim_sub_n(i))
+         !
          write(mystd,'(4X,a)', advance = 'no') 'number of Fock states: '
          write(mystd,'(2X,i4)', advance = 'no') dim_sub_n(i)
          write(mystd,'(1X,a,i2,a)') '( N = ', i, ' )'
@@ -590,8 +594,9 @@
 
      ! construct decimal form and index of Fock basis
      state_count = 0
+     !
      do i=0,norbs
-         do j=0,2**norbs-1
+         do j=0,2**norbs-1 ! actually go through every Fock state
              nelec = 0
              do k=1,norbs
                  if ( btest(j, k-1) ) nelec = nelec + 1
@@ -603,12 +608,15 @@
              endif ! back if ( nelec == i ) block
          enddo ! over j={0,2**norbs-1} loop
      enddo ! over i={0,norbs} loop
+     !
+     call s_assert( state_count == ncfgs )
 
      ! construct binary form of Fock basis
      do i=1,ncfgs
          do j=1,norbs
              if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
          enddo ! over j={1,norbs} loop
+         !
          write(mystd,'(4X,a,i6)', advance = 'no') 'Fock state: ', i
          write(mystd,'(2X,a,i6)', advance = 'no') 'decimal: ', dec_basis(i)
          write(mystd,'(2X,a,*(i1))') 'binary: ', bin_basis(:,i)

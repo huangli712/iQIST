@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/30/2024 by li huang (last modified)
+!!!           01/31/2024 by li huang (last modified)
 !!! purpose : try to implement the subspace diagonalization algorithm.
 !!!           it contains some subroutines to construct the atomic
 !!!           Hamiltonian subspace by subspace, diagonalize it, and then
