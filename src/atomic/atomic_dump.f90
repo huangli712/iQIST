@@ -528,13 +528,13 @@
 
      ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(a)') '# i | sector | j | eigenvalues'
+     write(mytmp,'(a)') '# i | sector | dim | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
      ! write the data
      counter = 0
-     do i=1,nsectors
-         do j=1,sectors(i)%ndim
+     do i=1,nsectors ! loop over subspaces
+         do j=1,sectors(i)%ndim ! loop over eigenstates in the subspace
              counter = counter + 1
              write(mytmp,'(3i6,f16.8)') counter, i, j, sectors(i)%eval(j)
          enddo ! over i={1,nsectors} loop
@@ -607,7 +607,7 @@
 !! @sub atomic_dump_scix
 !!
 !! write atom.cix file for the ctqmc solver. the file format is designed
-!! for the manjushaka code.
+!! for the manjushaka code only.
 !!
   subroutine atomic_dump_scix()
      use constants, only : epst
@@ -641,9 +641,6 @@
      ! counter for the non-zero matrix elements
      integer :: counter
 
-     ! auxiliary integer variable used to convert the spin sequence
-     integer :: s_order
-
      ! used to draw a dashed line
      character (len=1) :: dash(75)
 
@@ -658,7 +655,7 @@
      ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     ! open atom.cix to write
+     ! open file atom.cix to write
      open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
      ! write header
@@ -703,17 +700,7 @@
          ! write next subspace (sector)
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
-             ! adjust the orbital order for ctqmc, up, up, up, dn, dn, dn
-             if ( isoc == 0 ) then
-                 if (j <= sectors(i)%nops / 2) then
-                     s_order = 2*j-1
-                 else
-                     s_order = 2*(j - sectors(i)%nops / 2)
-                 endif ! back if (j <= sectors(i)%nops / 2) block
-             else
-                 s_order = j
-             endif ! back if ( isoc == 0 ) block
-             write(mytmp,'(2X,3i10)') j, sectors(i)%next(s_order,0), sectors(i)%next(s_order,1)
+             write(mytmp,'(2X,3i10)') j, sectors(i)%next(j,0), sectors(i)%next(j,1)
          enddo ! over j={1,sectors(i)%nops} loop
 
          ! write eigeanvalue
@@ -723,41 +710,34 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-     ! write annihilation operator matrix for each subspace (sector)
+     ! write f and f^+ operator for each subspace (sector)
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F-MATRIX:'
      write(mytmp,'(75a1)') dash ! dashed line
-
+     !
      ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
-             ! adjust the orbital order for ctqmc, up, up, up, dn, dn, dn
-             if ( isoc == 0 ) then
-                 if (j <= sectors(i)%nops / 2) then
-                     s_order = 2*j-1
-                 else
-                     s_order = 2*(j-sectors(i)%nops / 2)
-                 endif ! back if (j <= sectors(i)%nops / 2) block
-             else
-                 s_order = j
-             endif ! back if ( isoc == 0 ) block
              do k=0,1
-                 if ( sectors(i)%next(s_order,k) == -1 ) CYCLE
+                 if ( sectors(i)%next(j,k) == -1 ) CYCLE
+                 !
                  write(mytmp,'(a)') '# SECTOR | FLAVOR | DAGGER |      N |      M | SPARSE'
                  write(mytmp,'(2X,6(i6,3X))') i, j, k, &
-                                              sectors(i)%fmat(s_order,k)%n, &
-                                              sectors(i)%fmat(s_order,k)%m, &
-                                              count( abs(sectors(i)%fmat(s_order,k)%val) > epst )
+                                              sectors(i)%fmat(j,k)%n, &
+                                              sectors(i)%fmat(j,k)%m, &
+                                              count( abs(sectors(i)%fmat(j,k)%val) > epst )
+                 !
                  counter = 0
-                 do n=1,sectors(i)%fmat(s_order,k)%n
-                     do m=1,sectors(i)%fmat(s_order,k)%m
-                         if ( abs( sectors(i)%fmat(s_order,k)%val(n,m) ) > epst ) then
+                 do n=1,sectors(i)%fmat(j,k)%n
+                     do m=1,sectors(i)%fmat(j,k)%m
+                         if ( abs( sectors(i)%fmat(j,k)%val(n,m) ) > epst ) then
                              counter = counter + 1
-                             write(mytmp,'(2i6,f20.10)') n, m, sectors(i)%fmat(s_order,k)%val(n,m)
-                         endif ! back if ( abs( sectors(i)%fmat(s_order,k)%val(n,m) ) > epst ) block
-                     enddo ! over m={1,sectors(i)%fmat(s_order,k)%m} loop
-                 enddo ! over n={1,sectors(i)%fmat(s_order,k)%n} loop
-                 call s_assert( counter == count( abs(sectors(i)%fmat(s_order,k)%val) > epst ) )
+                             write(mytmp,'(2i6,f20.10)') n, m, sectors(i)%fmat(j,k)%val(n,m)
+                         endif ! back if ( abs( sectors(i)%fmat(j,k)%val(n,m) ) > epst ) block
+                     enddo ! over m={1,sectors(i)%fmat(j,k)%m} loop
+                 enddo ! over n={1,sectors(i)%fmat(j,k)%n} loop
+                 !
+                 call s_assert( counter == count( abs(sectors(i)%fmat(j,k)%val) > epst ) )
              enddo  ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo  ! over i={1,nsect} loop
@@ -817,7 +797,7 @@
      ! setup dash
      dash = '-'
 
-     ! open 'atom.sector.dat' to write
+     ! open file atom.sector.dat to write
      open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
 
      ! write header
@@ -829,7 +809,8 @@
      ! write the data
      select case (ictqmc)
          case (1)
-             call s_print_error('atomic_dump_sector','this case is not implemented')
+             call s_print_error('atomic_dump_sector', &
+                 & 'this case is not implemented')
 
          case (2)
              write(mytmp,'(a)') '# i | Ntot | Ndim | j | Fock'
