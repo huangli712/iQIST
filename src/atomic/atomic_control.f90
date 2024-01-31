@@ -49,10 +49,12 @@
 !! crystal field splitting + spin-orbit coupling)
 !!
 !! if ibasis == 1:
-!!     make natural eigenbasis inside of this program
+!!     make natural eigenbasis inside of this program. the crystal field
+!!     splitting and spin-orbit coupling are built separately
 !!
 !! if ibasis == 2:
-!!     make natural eigenbasis outside of this program
+!!     make natural eigenbasis outside of this program. the crystal field
+!!     splitting and spin-orbit coupling are built as a whole
 !!
      integer, public, save :: ibasis = 1
 

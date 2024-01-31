@@ -645,18 +645,19 @@
 !!
 !! (2) complex orbital basis (the complex spherical functions)
 !!     it is eigenstate of operators l^2 and l_z, |l,m,spin>
-!!     for d electron system, l = 2, m = \pm 2, \pm 1, 0
+!!     for d electron system, l = 2, m = \pm 2, \pm 1, and 0
 !!     |2,-2,up>,   |2,-1,up>,   |2,0,up>,   |2,1,up>,   |2,2,up>
 !!     |2,-2,down>, |2,-1,down>, |2,0,down>, |2,1,down>, |2,2,down>
 !!
 !! (3) j^2 - j_z diagonal basis
 !!     it is eigenstate of operators j^2 and j_z, |j,m_j>
-!!     for d electron system, j = 3/2 or 5/2, m_j = -j, -j+1, ..., j-1, j
+!!     for d electron system, j = l \pm 1/2 = 3/2 or 5/2,
+!!     m_j = -j, -j+1, ..., j-1, j
 !!     |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2> |3/2,3/2>
 !!     |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2> |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
 !!
-!! (4) the natural eigenbasis, on which the onsite energy of impurity is
-!!     diagonal. we have to diagonalize H_{CFS} + H_{SOC} to obtain
+!! (4) the natural eigenbasis, on which the onsite energy of impurity
+!!     is diagonal. we have to diagonalize H_{CFS} + H_{SOC} to obtain
 !!     the natural eigenbasis
 !!
 !! note that the CFS is always defined in real orbital basis, SOC is
@@ -669,7 +670,7 @@
 !!
 !! @sub atomic_build_spmat
 !!
-!! try to make various single particle matrices, including the crystal
+!! try to build various single particle matrices, including the crystal
 !! field splitting (CFS), the spin-orbit coupling (SOC), and the Coulomb
 !! interaction tensor (U)
 !!
@@ -683,8 +684,8 @@
      use control, only : nband
      use control, only : lambda
 
-     use m_spmat, only : cmat
-     use m_spmat, only : smat
+     use m_spmat, only : cmat ! crystal field splitting
+     use m_spmat, only : smat ! spin-orbit coupling
 
      implicit none
 
@@ -692,7 +693,7 @@
 
      ! make crystal field splitting and spin-orbit coupling
      !
-     ! method 1: make them inside
+     ! method 1: make them separately
      if ( ibasis == 1 ) then
 
          ! 1A: make crysal field splitting
@@ -739,7 +740,7 @@
              smat = czero
          endif ! back if ( isoc > 0 ) block
 
-     ! method 2: make them outside
+     ! method 2: make them as a whole
      else
 
          ! read the matrix emat (CFS + SOC) on natural eigenbasis,
@@ -755,13 +756,13 @@
      ! make Coulomb interaction U
      write(mystd,'(4X,a)') 'make Coulomb interaction term'
      !
-     ! Kanamori parameters type
+     ! Kanamori parameterized form
      ! it is defined on real orbital basis
      if ( icu == 1 .or. icu == 3 ) then
      !
          call atomic_make_umatK()
      !
-     ! Slater-Cordon parameters type
+     ! Slater-Cordon parameterized form
      ! it is defined on complex orbital basis
      else
      !
