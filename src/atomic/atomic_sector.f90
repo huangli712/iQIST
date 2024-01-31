@@ -560,7 +560,7 @@
      integer :: ibas
      integer :: jbas
 
-     ! sign change due to commute relation
+     ! sign change due to commutation relation
      integer :: isgn
 
      ! auxiliary integer variables
@@ -571,16 +571,14 @@
 
      do isec=1,nsectors ! loop over all the subspaces
          !
-         write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', isec
-         write(mystd,'(2X,a,i2)', advance = 'no') 'orbital: ', norbs
-         write(mystd,'(2X,a)') 'operator: f^+ and f'
+         write(mystd,'(4X,a,i4)') 'subspace: ', isec
          !
          do iorb=1,norbs ! loop over all the orbitals
              do ityp=0,1 ! loop over the f^+ and f operators
 
          ! (A) retrieve the next subspace: jsec
          jsec = sectors(isec)%next(iorb,ityp)
-         if ( jsec == -1 ) CYCLE
+         if ( jsec == -1 ) CYCLE ! the next subspace is invalid
 
          ! (B) allocate memory for fmat and then initialize it
          !
@@ -635,6 +633,17 @@
                                sectors(isec)%fmat(iorb,ityp)%val, &
                                sectors(isec)%evec)
 
+         !
+         if (ityp == 1) then
+             write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', iorb, ')'
+             write(mystd,'(2X,a)', advance = 'no') 'size: '
+             write(mystd,'(i4,a,i4)') sectors(jsec)%ndim, ' X ', sectors(isec)%ndim
+         else
+             write(mystd,'(4X,a,i2,a)', advance = 'no') 'f  (alpha = ', iorb, ')'
+             write(mystd,'(2X,a)', advance = 'no') 'size: '
+             write(mystd,'(i4,a,i4)') sectors(jsec)%ndim, ' X ', sectors(isec)%ndim
+         endif
+
              enddo ! over ityp={0,1} loop
          enddo ! over iorb={1,norbs} loop
      enddo ! over isec={1,nsectors} loop
@@ -651,7 +660,8 @@
 !!
   subroutine atomic_make_shmat()
      use constants, only : dp
-     use constants, only : one, czero
+     use constants, only : one
+     use constants, only : czero
      use constants, only : epst
      use constants, only : mystd
 
@@ -684,10 +694,10 @@
      integer :: alpha, betta
      integer :: delta, gamma
 
-     ! sign change due to fermion anti-commute relation
+     ! sign change due to fermion anti-commutation relation
      integer :: isgn
 
-     ! new Fock state after four fermions operation
+     ! new Fock state after four fermion operators act
      integer :: knew
 
      ! binary form of a Fock state
@@ -704,10 +714,10 @@
          write(mystd,'(4X,a,i4)') 'subspace: ', isec
 
          ! start to make atomic Hamiltonian
-         ! initialize hmat
+         ! we should initialize hmat at first
          sectors(isec)%hmat = czero
 
-         ! compute two fermion operators term
+         ! compute two fermion operators term (onsite impurity energy)
          ! it is f^{\dagger}_{\alpha} f_{\beta}
          !----------------------------------------------------------------
          write(mystd,'(4X,a)') 'compute two fermion operators term'
@@ -744,7 +754,7 @@
                      ibas = ind_basis(knew)
                      if ( ibas == 0 ) then
                          call s_print_error('atomic_make_shmat', &
-                             & 'error while determining new state!')
+                             & 'error while determining new Fock state!')
                      endif ! back if ( ibas == 0 ) block
                      !
                      ! determine the matrix element between the two Fock
@@ -771,7 +781,7 @@
              enddo alploop ! over alpha={1,norbs} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
-         ! compute four fermion operators term (coulomb interaction)
+         ! compute four fermion operators term (Coulomb interaction)
          ! it is f^{\dagger}_{\alpha} f^{\dagger}_{\beta} f_{\delta} f_{\gamma}
          !----------------------------------------------------------------
          write(mystd,'(4X,a)') 'compute four fermion operators term'
@@ -826,7 +836,7 @@
                      ibas = ind_basis(knew)
                      if ( ibas == 0 ) then
                          call s_print_error('atomic_make_shmat', &
-                             & 'error while determining new state!')
+                             & 'error while determining new Fock state!')
                      endif ! back if ( ibas == 0 ) block
                      !
                      ! determine the matrix element between the two Fock
@@ -889,10 +899,8 @@
 
      do i=1,nsectors
 
-         write(mystd,'(4X,a,i4,a)') 'subspace: ', i, ' done'
-
-         ! we will not destroy the raw Hamiltonian data in sectors,
-         ! so we make a copy of it
+         ! we will not destroy the raw Hamiltonian data,
+         ! so we usually make a copy of it
          allocate(hmat(sectors(i)%ndim,sectors(i)%ndim))
          hmat = real( sectors(i)%hmat )
 
@@ -905,6 +913,8 @@
 
          ! deallocate memory
          deallocate(hmat)
+
+         write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'done'
 
      enddo ! over i={1,nsectors} loop
 
@@ -939,7 +949,7 @@
              call s_print_error('atomic_check_shmat', &
                  & 'atomic Hamiltonian is not real!')
          else
-             write(mystd,'(4X,a,i4,a)') 'subspace: ', i, ' is valid'
+             write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'is valid'
          endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
      enddo ! over i={1,nsectors} loop
 
