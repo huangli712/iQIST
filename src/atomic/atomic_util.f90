@@ -151,7 +151,7 @@
 !! calculate Sz quantum number for each orbital
 !!
   subroutine atomic_make_gsz(good_sz)
-     use control, only : norbs
+     use control, only : nband, norbs
 
      implicit none
 
@@ -160,18 +160,17 @@
      integer, intent(out) :: good_sz(norbs)
 
 !! local variables
-     ! loop index
+     ! loop index over orbitals
      integer :: i
 
 !! [body
 
-     ! note: the spin arrangement likes up dn up dn up dn ...
      do i=1,norbs
-         if ( mod(i,2) /= 0 ) then
+         if ( i <= nband ) then
              good_sz(i) = +1
          else
              good_sz(i) = -1
-         endif ! back if ( mod(i,2) /= 0 ) block
+         endif ! back if ( i <= nband ) block
      enddo ! over i={1,norbs} loop
 
 !! body]
@@ -248,7 +247,7 @@
 !! @sub atomic_make_gps
 !!
 !! calculate PS quantum number for each band. note that only the pure
-!! band-dependent part is calculated in this function
+!! band-dependent part is calculated in this subroutine
 !!
   subroutine atomic_make_gps(good_ps)
      use control, only : nband
@@ -615,38 +614,6 @@
                      gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
                      dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
 
-                     !if (alpha > nband) then
-                     !    aband = alpha - nband
-                     !    aspin = 0
-                     !else
-                     !    aband = alpha
-                     !    aspin = 1
-                     !endif
-
-                     !if (betta > nband) then
-                     !    bband = betta - nband
-                     !    bspin = 0
-                     !else
-                     !    bband = betta
-                     !    bspin = 1
-                     !endif
-
-                     !if (gamma > nband) then
-                     !    gband = gamma - nband
-                     !    gspin = 0
-                     !else
-                     !    gband = gamma
-                     !    gspin = 1
-                     !endif
-
-                     !if (delta > nband) then
-                     !    dband = delta - nband
-                     !    dspin = 0
-                     !else
-                     !    dband = delta
-                     !    dspin = 1
-                     !endif
-
                      dtmp = zero
 
                      ! intraorbital Coulomb interaction
@@ -720,12 +687,12 @@
                          l = 2*(delta-nband)
                      endif ! back if ( delta <= nband ) block
 
-                     utmp(i,j,k,l) = umat(alpha,betta,gamma,delta)
+                     utmp(alpha,betta,gamma,delta) = umat(i,j,k,l)
                  enddo
              enddo
          enddo
      enddo
-     !umat = utmp
+     umat = utmp
 
 !! body]
 
@@ -740,7 +707,7 @@
 !!
   subroutine atomic_make_umatS()
      use constants, only : dp
-     use constants, only : zero, half
+     use constants, only : zero, half, czero
 
      use control, only : nband, norbs
      use control, only : Ud, Jh
@@ -774,6 +741,9 @@
 
      ! Slater-Cordon parameters: F0, F2, F4, and F6
      real(dp), allocatable :: slater_cordon(:)
+
+     integer  :: j, k
+     complex(dp) :: utmp(norbs,norbs,norbs,norbs)
 
 !! [body
 
@@ -838,6 +808,42 @@
      enddo ! over alpha={1,norbs} loop
      !
      umat = half * umat
+
+     utmp = czero
+     do alpha=1,norbs
+         if ( alpha <= nband ) then
+             i = 2*alpha-1
+         else
+             i = 2*(alpha-nband)
+         endif ! back if ( alpha <= nband ) block
+
+         do betta=1,norbs
+             if ( betta <= nband ) then
+                 j = 2*betta-1
+             else
+                 j = 2*(betta-nband)
+             endif ! back if ( betta <= nband ) block
+
+             do gamma=1,norbs
+                 if ( gamma <= nband ) then
+                     k = 2*gamma-1
+                 else
+                     k = 2*(gamma-nband)
+                 endif ! back if ( gamma <= nband ) block
+
+                 do delta=1,norbs
+                     if ( delta <= nband ) then
+                         l = 2*delta-1
+                     else
+                         l = 2*(delta-nband)
+                     endif ! back if ( delta <= nband ) block
+
+                     utmp(i,j,k,l) = umat(alpha,betta,gamma,delta)
+                 enddo
+             enddo
+         enddo
+     enddo
+     umat = utmp
 
      ! deallocate memory
      if ( allocated(gaunt) )         deallocate(gaunt)
@@ -1645,7 +1651,7 @@
      ! get emat for no spin freedom
      do i=1,nband
          do j=1,nband
-             emat_nospin(j,i) = emat(2*j-1,2*i-1)
+             emat_nospin(i,j) = emat(i,j)
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband}
 
@@ -1661,10 +1667,10 @@
      ! build emat and tmat with spin freedom
      do i=1,nband
          do j=1,nband
-             emat(2*j-1,2*i-1) = emat_nospin(j,i)
-             emat(2*j,2*i)     = emat_nospin(j,i)
-             tmat(2*j-1,2*i-1) = tmat_nospin(j,i)
-             tmat(2*j,2*i)     = tmat_nospin(j,i)
+             emat(i,j) = emat_nospin(i,j)
+             emat(i+nband,j+nband) = emat_nospin(i,j)
+             tmat(i,j) = tmat_nospin(i,j)
+             tmat(i+nband,j+nband) = tmat_nospin(i,j)
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband} loop
 

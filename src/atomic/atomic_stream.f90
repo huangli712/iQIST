@@ -932,6 +932,8 @@
      ! write the Coulomb interaction matrix as reference
      call atomic_dump_umat()
 
+     !STOP
+
 !! body]
 
      return
