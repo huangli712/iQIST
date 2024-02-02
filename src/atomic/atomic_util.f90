@@ -941,21 +941,38 @@
      !
      smat = czero
      !
-     smat( 1, 1) = -2.0_dp
-     smat( 4, 1) = +2.0_dp
-     smat( 2, 2) = +2.0_dp
-     smat( 3, 3) = -1.0_dp
-     smat( 6, 3) =  sqrt6
-     smat( 1, 4) = +2.0_dp
-     smat( 4, 4) = +1.0_dp
-     smat( 8, 5) =  sqrt6
-     smat( 3, 6) =  sqrt6
-     smat( 7, 7) = +1.0_dp
-     smat(10, 7) = +2.0_dp
-     smat( 5, 8) =  sqrt6
-     smat( 8, 8) = -1.0_dp
-     smat( 9, 9) = +2.0_dp
-     smat( 7,10) = +2.0_dp
+     !smat( 1, 1) = -2.0_dp
+     !smat( 4, 1) = +2.0_dp
+     !smat( 2, 2) = +2.0_dp
+     !smat( 3, 3) = -1.0_dp
+     !smat( 6, 3) =  sqrt6
+     !smat( 1, 4) = +2.0_dp
+     !smat( 4, 4) = +1.0_dp
+     !smat( 8, 5) =  sqrt6
+     !smat( 3, 6) =  sqrt6
+     !smat( 7, 7) = +1.0_dp
+     !smat(10, 7) = +2.0_dp
+     !smat( 5, 8) =  sqrt6
+     !smat( 8, 8) = -1.0_dp
+     !smat( 9, 9) = +2.0_dp
+     !smat( 7,10) = +2.0_dp
+     !smat(10,10) = -2.0_dp
+
+     smat(1,1) = -2.0_dp
+     smat(1,7) = 2.0_dp
+     smat(2,2) = -1.0_dp
+     smat(2,8) = sqrt6
+     smat(3,9) = sqrt6
+     smat(4,4) = 1.0_dp
+     smat(4,10) = 2.0_dp
+     smat(5,5) = 2.0_dp
+     smat(6,6) = 2.0_dp
+     smat(7,1) = 2.0_dp
+     smat(7,7) = 1.0_dp
+     smat(8,2) = sqrt6
+     smat(9,3) = sqrt6
+     smat(9,9) = -1.0_dp
+     smat(10,4) = 2.0_dp
      smat(10,10) = -2.0_dp
 
 !! body]
@@ -1111,24 +1128,44 @@
          !     |  1, up >, |  1, dn >,
          !     |  2, up >, |  2, dn >
          case (5)
-             tmat_c2r( 5, 1) =  cone
-             tmat_c2r( 6, 2) =  cone
-             tmat_c2r( 3, 3) =  cone/sqrt2
-             tmat_c2r( 7, 3) = -cone/sqrt2
-             tmat_c2r( 4, 4) =  cone/sqrt2
-             tmat_c2r( 8, 4) = -cone/sqrt2
-             tmat_c2r( 3, 5) =  czi/sqrt2
-             tmat_c2r( 7, 5) =  czi/sqrt2
-             tmat_c2r( 4, 6) =  czi/sqrt2
-             tmat_c2r( 8, 6) =  czi/sqrt2
-             tmat_c2r( 1, 7) =  cone/sqrt2
-             tmat_c2r( 9, 7) =  cone/sqrt2
-             tmat_c2r( 2, 8) =  cone/sqrt2
-             tmat_c2r(10, 8) =  cone/sqrt2
-             tmat_c2r( 1, 9) =  czi/sqrt2
-             tmat_c2r( 9, 9) = -czi/sqrt2
-             tmat_c2r( 2,10) =  czi/sqrt2
-             tmat_c2r(10,10) = -czi/sqrt2
+             !tmat_c2r( 5, 1) =  cone
+             !tmat_c2r( 6, 2) =  cone
+             !tmat_c2r( 3, 3) =  cone/sqrt2
+             !tmat_c2r( 7, 3) = -cone/sqrt2
+             !tmat_c2r( 4, 4) =  cone/sqrt2
+             !tmat_c2r( 8, 4) = -cone/sqrt2
+             !tmat_c2r( 3, 5) =  czi/sqrt2
+             !tmat_c2r( 7, 5) =  czi/sqrt2
+             !tmat_c2r( 4, 6) =  czi/sqrt2
+             !tmat_c2r( 8, 6) =  czi/sqrt2
+             !tmat_c2r( 1, 7) =  cone/sqrt2
+             !tmat_c2r( 9, 7) =  cone/sqrt2
+             !tmat_c2r( 2, 8) =  cone/sqrt2
+             !tmat_c2r(10, 8) =  cone/sqrt2
+             !tmat_c2r( 1, 9) =  czi/sqrt2
+             !tmat_c2r( 9, 9) = -czi/sqrt2
+             !tmat_c2r( 2,10) =  czi/sqrt2
+             !tmat_c2r(10,10) = -czi/sqrt2
+
+             tmat_c2r(1,1) = czi / sqrt2
+             tmat_c2r(1,5) = cone / sqrt2
+             tmat_c2r(2,2) = czi / sqrt2
+             tmat_c2r(2,4) = cone / sqrt2
+             tmat_c2r(3,3) = cone
+             tmat_c2r(4,2) = czi / sqrt2
+             tmat_c2r(4,4) = -cone / sqrt2
+             tmat_c2r(5,1) = -czi /sqrt2
+             tmat_c2r(5,5) = cone / sqrt2
+
+             tmat_c2r(6,6) = czi / sqrt2
+             tmat_c2r(6,10) = cone / sqrt2
+             tmat_c2r(7,7) = czi / sqrt2
+             tmat_c2r(7,9) = cone / sqrt2
+             tmat_c2r(8,8) = cone
+             tmat_c2r(9,7) = czi / sqrt2
+             tmat_c2r(9,9) = -cone / sqrt2
+             tmat_c2r(10,6) = -czi / sqrt2
+             tmat_c2r(10,10) = cone / sqrt2
 
          ! the real orbital order is:
          !     fz3up, fz3dn,
@@ -1261,6 +1298,7 @@
              !tmat_c2j( 3, 5) =  sqrt(2.0_dp/3.0_dp)
              !tmat_c2j( 6, 5) =  sqrt(1.0_dp/3.0_dp)
              !tmat_c2j( 5, 6) =  1.0_dp
+
              tmat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
              tmat_c2j(1,4) = sqrt(1.0_dp/3.0_dp)
              tmat_c2j(2,2) = -sqrt(1.0_dp/3.0_dp)
@@ -1286,24 +1324,43 @@
          !     | 5/2, -1/2 >, | 5/2,  1/2 >,
          !     | 5/2,  3/2 >, | 5/2,  5/2 >
          case (5)
-             tmat_c2j( 1, 1) = -sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 4, 1) =  sqrt(1.0_dp/5.0_dp)
-             tmat_c2j( 3, 2) = -sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 6, 2) =  sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 5, 3) = -sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 8, 3) =  sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 7, 4) = -sqrt(1.0_dp/5.0_dp)
-             tmat_c2j(10, 4) =  sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 2, 5) =  1.0_dp
-             tmat_c2j( 1, 6) =  sqrt(1.0_dp/5.0_dp)
-             tmat_c2j( 4, 6) =  sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 3, 7) =  sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 6, 7) =  sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 5, 8) =  sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 8, 8) =  sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 7, 9) =  sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(10, 9) =  sqrt(1.0_dp/5.0_dp)
-             tmat_c2j( 9,10) =  1.0_dp
+             !tmat_c2j( 1, 1) = -sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j( 3, 2) = -sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 5, 3) = -sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 8, 3) =  sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 7, 4) = -sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j(10, 4) =  sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j( 2, 5) =  1.0_dp
+             !tmat_c2j( 1, 6) =  sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j( 4, 6) =  sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j( 3, 7) =  sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 6, 7) =  sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 5, 8) =  sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 8, 8) =  sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 7, 9) =  sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j(10, 9) =  sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j( 9,10) =  1.0_dp
+
+             tmat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(1,6) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(2,2) = -sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(2,7) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(3,3) = -sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(3,8) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(4,4) = -sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(4,9) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(5,10) = 1.0_dp
+             tmat_c2j(6,5) = 1.0_dp
+             tmat_c2j(7,1) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(7,6) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(8,2) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(8,7) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(9,3) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(9,8) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(10,4) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(10,9) = sqrt(1.0_dp/5.0_dp)
 
          ! the |lz,sz> order is:
          ! | -3, up >, | -3, dn >,
