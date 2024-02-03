@@ -838,7 +838,8 @@
                          l = 2*(delta-nband)
                      endif ! back if ( delta <= nband ) block
 
-                     utmp(i,j,k,l) = umat(alpha,betta,gamma,delta)
+                     !utmp(i,j,k,l) = umat(alpha,betta,gamma,delta)
+                     utmp(alpha,betta,gamma,delta) = umat(i,j,k,l)
                  enddo
              enddo
          enddo
@@ -1015,30 +1016,55 @@
      !
      smat = czero
      !
-     smat( 1, 1) = -3.0_dp
-     smat( 4, 1) =  sqrt6
-     smat( 2, 2) = +3.0_dp
-     smat( 3, 3) = -2.0_dp
-     smat( 6, 3) =  sqrt10
-     smat( 1, 4) =  sqrt6
-     smat( 4, 4) = +2.0_dp
-     smat( 5, 5) = -1.0_dp
-     smat( 8, 5) =  sqrt12
-     smat( 3, 6) =  sqrt10
-     smat( 6, 6) = +1.0_dp
-     smat(10, 7) =  sqrt12
-     smat( 5, 8) =  sqrt12
-     smat( 9, 9) = +1.0_dp
-     smat(12, 9) =  sqrt10
-     smat( 7,10) =  sqrt12
-     smat(10,10) = -1.0_dp
-     smat(11,11) = +2.0_dp
-     smat(14,11) =  sqrt6
-     smat( 9,12) =  sqrt10
-     smat(12,12) = -2.0_dp
-     smat(13,13) = +3.0_dp
-     smat(11,14) =  sqrt6
-     smat(14,14) = -3.0_dp
+     !smat( 1, 1) = -3.0_dp
+     !smat( 4, 1) =  sqrt6
+     !smat( 2, 2) = +3.0_dp
+     !smat( 3, 3) = -2.0_dp
+     !smat( 6, 3) =  sqrt10
+     !smat( 1, 4) =  sqrt6
+     !smat( 4, 4) = +2.0_dp
+     !smat( 5, 5) = -1.0_dp
+     !smat( 8, 5) =  sqrt12
+     !smat( 3, 6) =  sqrt10
+     !smat( 6, 6) = +1.0_dp
+     !smat(10, 7) =  sqrt12
+     !smat( 5, 8) =  sqrt12
+     !smat( 9, 9) = +1.0_dp
+     !smat(12, 9) =  sqrt10
+     !smat( 7,10) =  sqrt12
+     !smat(10,10) = -1.0_dp
+     !smat(11,11) = +2.0_dp
+     !smat(14,11) =  sqrt6
+     !smat( 9,12) =  sqrt10
+     !smat(12,12) = -2.0_dp
+     !smat(13,13) = +3.0_dp
+     !smat(11,14) =  sqrt6
+     !smat(14,14) = -3.0_dp
+
+     smat(1,1) = -3.0_dp 
+     smat(1,9) = sqrt6 
+     smat(2,2) = -2.0_dp 
+     smat(2,10) = sqrt10 
+     smat(3,3) = -1.0_dp
+     smat(3,11) = sqrt12
+     smat(4,12) = sqrt12
+     smat(5,5) = 1.0_dp 
+     smat(5,13) = sqrt10 
+     smat(6,6) = 2.0_dp 
+     smat(6,14) = sqrt6 
+     smat(7,7) = 3.0_dp 
+     smat(8,8) = 3.0_dp
+     smat(9,1) = sqrt6 
+     smat(9,9) = 2.0_dp
+     smat(10,2) = sqrt10 
+     smat(10,10) = 1.0_dp 
+     smat(11,3) = sqrt12
+     smat(12,4) = sqrt12
+     smat(12,12) = -1.0_dp 
+     smat(13,5) = sqrt10 
+     smat(13,13) = -2.0_dp 
+     smat(14,6) = sqrt6
+     smat(14,14) = -3.0_dp 
 
 !! body]
 
@@ -1185,32 +1211,60 @@
          !     |  2, up >, |  2, dn >,
          !     |  3, up >, |  3, dn >
          case (7)
-             tmat_c2r( 7, 1) =  cone
-             tmat_c2r( 8, 2) =  cone
-             tmat_c2r( 5, 3) =  cone/sqrt2
-             tmat_c2r( 9, 3) = -cone/sqrt2
-             tmat_c2r( 6, 4) =  cone/sqrt2
-             tmat_c2r(10, 4) = -cone/sqrt2
-             tmat_c2r( 5, 5) =  czi/sqrt2
-             tmat_c2r( 9, 5) =  czi/sqrt2
-             tmat_c2r( 6, 6) =  czi/sqrt2
-             tmat_c2r(10, 6) =  czi/sqrt2
-             tmat_c2r( 3, 7) =  cone/sqrt2
-             tmat_c2r(11, 7) =  cone/sqrt2
-             tmat_c2r( 4, 8) =  cone/sqrt2
-             tmat_c2r(12, 8) =  cone/sqrt2
-             tmat_c2r( 3, 9) =  czi/sqrt2
-             tmat_c2r(11, 9) = -czi/sqrt2
-             tmat_c2r( 4,10) =  czi/sqrt2
-             tmat_c2r(12,10) = -czi/sqrt2
-             tmat_c2r( 1,11) =  cone/sqrt2
-             tmat_c2r(13,11) = -cone/sqrt2
-             tmat_c2r( 2,12) =  cone/sqrt2
-             tmat_c2r(14,12) = -cone/sqrt2
-             tmat_c2r( 1,13) =  czi/sqrt2
-             tmat_c2r(13,13) =  czi/sqrt2
-             tmat_c2r( 2,14) =  czi/sqrt2
-             tmat_c2r(14,14) =  czi/sqrt2
+             !tmat_c2r( 7, 1) =  cone
+             !tmat_c2r( 8, 2) =  cone
+             !tmat_c2r( 5, 3) =  cone/sqrt2
+             !tmat_c2r( 9, 3) = -cone/sqrt2
+             !tmat_c2r( 6, 4) =  cone/sqrt2
+             !tmat_c2r(10, 4) = -cone/sqrt2
+             !tmat_c2r( 5, 5) =  czi/sqrt2
+             !tmat_c2r( 9, 5) =  czi/sqrt2
+             !tmat_c2r( 6, 6) =  czi/sqrt2
+             !tmat_c2r(10, 6) =  czi/sqrt2
+             !tmat_c2r( 3, 7) =  cone/sqrt2
+             !tmat_c2r(11, 7) =  cone/sqrt2
+             !tmat_c2r( 4, 8) =  cone/sqrt2
+             !tmat_c2r(12, 8) =  cone/sqrt2
+             !tmat_c2r( 3, 9) =  czi/sqrt2
+             !tmat_c2r(11, 9) = -czi/sqrt2
+             !tmat_c2r( 4,10) =  czi/sqrt2
+             !tmat_c2r(12,10) = -czi/sqrt2
+             !tmat_c2r( 1,11) =  cone/sqrt2
+             !tmat_c2r(13,11) = -cone/sqrt2
+             !tmat_c2r( 2,12) =  cone/sqrt2
+             !tmat_c2r(14,12) = -cone/sqrt2
+             !tmat_c2r( 1,13) =  czi/sqrt2
+             !tmat_c2r(13,13) =  czi/sqrt2
+             !tmat_c2r( 2,14) =  czi/sqrt2
+             !tmat_c2r(14,14) =  czi/sqrt2
+
+             tmat_c2r(1,1) = czi/sqrt2
+             tmat_c2r(1,7) = cone/sqrt2
+             tmat_c2r(2,2) = czi/sqrt2
+             tmat_c2r(2,6) = cone/sqrt2
+             tmat_c2r(3,3) = czi/sqrt2
+             tmat_c2r(3,5) = cone/sqrt2
+             tmat_c2r(4,4) = cone
+             tmat_c2r(5,3) = czi/sqrt2
+             tmat_c2r(5,5) = -cone/sqrt2
+             tmat_c2r(6,2) = -czi/sqrt2
+             tmat_c2r(6,6) = cone/sqrt2
+             tmat_c2r(7,1) = czi/sqrt2
+             tmat_c2r(7,7) = -cone/sqrt2
+
+             tmat_c2r(8,8) = czi/sqrt2
+             tmat_c2r(8,14) = cone/sqrt2
+             tmat_c2r(9,9) = czi/sqrt2
+             tmat_c2r(9,13) = cone/sqrt2
+             tmat_c2r(10,10) = czi/sqrt2
+             tmat_c2r(10,12) = cone/sqrt2
+             tmat_c2r(11,11) = cone
+             tmat_c2r(12,10) = czi/sqrt2
+             tmat_c2r(12,12) = -cone/sqrt2
+             tmat_c2r(13,9) = -czi/sqrt2
+             tmat_c2r(13,13) = cone/sqrt2
+             tmat_c2r(14,8) = czi/sqrt2
+             tmat_c2r(14,14) = -cone/sqrt2
 
          case default
              call s_print_error('atomic_make_tmat_c2r', &
@@ -1380,32 +1434,60 @@
          ! | 7/2,  1/2 >, | 7/2,  3/2 >,
          ! | 7/2,  5/2 >, | 7/2,  7/2 >
          case (7)
-             tmat_c2j( 1, 1) = -sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 4, 1) =  sqrt(1.0_dp/7.0_dp)
-             tmat_c2j( 3, 2) = -sqrt(5.0_dp/7.0_dp)
-             tmat_c2j( 6, 2) =  sqrt(2.0_dp/7.0_dp)
-             tmat_c2j( 5, 3) = -sqrt(4.0_dp/7.0_dp)
-             tmat_c2j( 8, 3) =  sqrt(3.0_dp/7.0_dp)
-             tmat_c2j( 7, 4) = -sqrt(3.0_dp/7.0_dp)
-             tmat_c2j(10, 4) =  sqrt(4.0_dp/7.0_dp)
-             tmat_c2j( 9, 5) = -sqrt(2.0_dp/7.0_dp)
-             tmat_c2j(12, 5) =  sqrt(5.0_dp/7.0_dp)
-             tmat_c2j(11, 6) = -sqrt(1.0_dp/7.0_dp)
-             tmat_c2j(14, 6) =  sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 2, 7) =  1.0_dp
-             tmat_c2j( 1, 8) =  sqrt(1.0_dp/7.0_dp)
-             tmat_c2j( 4, 8) =  sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 3, 9) =  sqrt(2.0_dp/7.0_dp)
-             tmat_c2j( 6, 9) =  sqrt(5.0_dp/7.0_dp)
-             tmat_c2j( 5,10) =  sqrt(3.0_dp/7.0_dp)
-             tmat_c2j( 8,10) =  sqrt(4.0_dp/7.0_dp)
-             tmat_c2j( 7,11) =  sqrt(4.0_dp/7.0_dp)
-             tmat_c2j(10,11) =  sqrt(3.0_dp/7.0_dp)
-             tmat_c2j( 9,12) =  sqrt(5.0_dp/7.0_dp)
-             tmat_c2j(12,12) =  sqrt(2.0_dp/7.0_dp)
-             tmat_c2j(11,13) =  sqrt(6.0_dp/7.0_dp)
-             tmat_c2j(14,13) =  sqrt(1.0_dp/7.0_dp)
-             tmat_c2j(13,14) =  1.0_dp
+             !tmat_c2j( 1, 1) = -sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j( 3, 2) = -sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j( 5, 3) = -sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j( 8, 3) =  sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j( 7, 4) = -sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j(10, 4) =  sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j( 9, 5) = -sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j(12, 5) =  sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j(11, 6) = -sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j(14, 6) =  sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j( 2, 7) =  1.0_dp
+             !tmat_c2j( 1, 8) =  sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j( 4, 8) =  sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j( 3, 9) =  sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j( 6, 9) =  sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j( 5,10) =  sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j( 8,10) =  sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j( 7,11) =  sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j(10,11) =  sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j( 9,12) =  sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j(12,12) =  sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j(11,13) =  sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j(14,13) =  sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j(13,14) =  1.0_dp
+
+             tmat_c2j(1,1) = -sqrt(6.0_dp/7.0_dp) 
+             tmat_c2j(1,8) = sqrt(1.0_dp/7.0_dp) 
+             tmat_c2j(2,2) = -sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(2,9) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(3,3) = -sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(3,10) = sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(4,4) = -sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(4,11) = sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(5,5) = -sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(5,12) = sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(6,6) = -sqrt(1.0_dp/7.0_dp)
+             tmat_c2j(6,13) = sqrt(6.0_dp/7.0_dp)
+             tmat_c2j(7,14) = 1.0_dp
+ 
+             tmat_c2j(8,7) = 1.0_dp 
+             tmat_c2j(9,1) = sqrt(1.0_dp/7.0_dp)
+             tmat_c2j(9,8) = sqrt(6.0_dp/7.0_dp)
+             tmat_c2j(10,2) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(10,9) = sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(11,3) = sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(11,10) = sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(12,4) = sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(12,11) = sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(13,5) = sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(13,12) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(14,6) = sqrt(6.0_dp/7.0_dp)
+             tmat_c2j(14,13) = sqrt(1.0_dp/7.0_dp)
 
          case default
              call s_print_error('atomic_make_tmat_c2j','not implemented for this nband!')
