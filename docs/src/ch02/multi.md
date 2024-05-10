@@ -6,6 +6,6 @@ Anyway, the compiling procedure can be split into three successive steps:
 
 * [Build quantum impurity solvers](solvers.md)
 * [Build atomic eigenvalues solver](atomic.md)
-* [Build auxiliary tools](tools.md)
+* [Build documentations](docs.md)
 
 These steps are optional. You can do the above jobs in sequence or in a random manner.
