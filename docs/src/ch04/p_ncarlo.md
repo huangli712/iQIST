@@ -26,10 +26,10 @@
 >
 > The measuring period for the other physical observables are controlled by the *nmonte* parameter. See also [nmonte](p_nmonte.md) parameter for more details.
 >
-> !!! note
->
->    The histogram for the perturbation expansion series is measured in each Monte Carlo sampling step.
->
+
+!!! note
+
+    The histogram for the perturbation expansion series is measured in each Monte Carlo sampling step.
 
 **Comment**
 
