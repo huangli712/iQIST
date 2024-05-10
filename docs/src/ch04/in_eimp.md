@@ -4,7 +4,7 @@
 
 The *solver.eimp.in* file is used to define impurity level matrix ``E_{\alpha\beta}`` and symmetry matrix *symm(``\alpha``,``\beta``)*. Unfortunately, now only the diagonal elements of the two matrices are supported.
 
-If the orbitals are degenerated, the impurity levels should be a constant and can be absorbed into the chemical potential ``\mu``. If the *issun* parameter is set to 2, the orbital-resolved observables are then symmetrized according the symmetry matrix. See [issun](p_issun.md) for more details.
+If the orbitals are degenerated, the impurity levels should be a constant and can be absorbed into the chemical potential ``\mu``. If the *isbnd* parameter is set to 2, the orbital-resolved observables are then symmetrized according the symmetry matrix. See [isbnd](p_isbnd.md) for more details.
 
 **Format**
 
