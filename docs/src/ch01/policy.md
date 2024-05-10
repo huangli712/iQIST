@@ -27,7 +27,7 @@ We **DO NOT** need any donations now.
 **Contact**
 
 > **Dr. Li Huang**
-> 
+>
 > **Affiliation**: *Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou, PRC*
 >
 > **Email**: *huangli at caep.cn*
@@ -35,7 +35,7 @@ We **DO NOT** need any donations now.
 **Citation**
 
 It is really appreciated if you can cite the following paper when you would like to publish your great works by using the iQIST software package. It is really important for us. But, of course, it is also not obligated.
- 
+
 > *iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit*
 >
 > *Li Huang, Yilin Wang, Zi Yang Meng, Liang Du, Philipp Werner and Xi Dai*
