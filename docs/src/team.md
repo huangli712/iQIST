@@ -1,5 +1,9 @@
 # The iQIST Developer Team
 
+Current Maintainer:
+
+**Li Huang``^\dagger``**
+
 Core Developers:
 
 **Li Huang``^\dagger``** and **Yilin Wang``^\ddagger``**
