@@ -1,20 +1,20 @@
-### Parameter: ncarlo
+# Parameter: ncarlo
 
 **Definition**
 
-How often to measure the physical observables.
+> How often to measure the physical observables.
 
 **Type**
 
-Integer
+> Integer
 
 **Default value**
 
-10
+> 10
 
 **Component**
 
-All
+> All
 
 **Behavior**
 
