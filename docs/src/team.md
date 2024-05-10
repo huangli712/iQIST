@@ -2,13 +2,13 @@
 
 Core Developers:
 
-**Li Huang``^\dagger``** and **Yilin Wang``^\ddagger``** 
+**Li Huang``^\dagger``** and **Yilin Wang``^\ddagger``**
 
 Key Contributors:
 
 **Liang Du``^\rceil``**
 
-Directors and Supervisors: 
+Directors and Supervisors:
 
 **Philipp Werner``^✶``** and **Xi Dai``^\lceil``**
 

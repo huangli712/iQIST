@@ -6,14 +6,14 @@ Reference Manual <font face = 'times'><i>for</i></font> <br/> <font color = 'pur
 </h1>
 ```
 
-Draft Version January 19, 2024 (in progress)
+Draft Version May 10, 2024 (in progress)
 
 Written by:
 
 **Li Huang**
 
 ```text
-Obi-Wan Kenobi: 
+Obi-Wan Kenobi:
 
     1. Use the Manual, Luke! (To Luke Skywalker)
 
