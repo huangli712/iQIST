@@ -13,7 +13,7 @@ Python script
 First, please edit the configuration parameters (such as inverse temperature ``\beta``, number of orbitals *norbs*, number of frames *nsweep/nwrite*, etc) in the script carefully, and then execute it in the terminal:
 
 ```
-$ ./u_animator.py movie.mp4
+$ ./u_movie.py movie.mp4
 ```
 
 Here *movie.mp4* is the output file. We can use the VLC to play it. If you don't supply any valid filename, the default output should be *diag.mp4*.
