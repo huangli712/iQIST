@@ -67,4 +67,4 @@ The corresponding Fortran code block for the writing of *solver.diag.dat* file i
      close(mytmp)
 ```
 
-You can use the *movie.py* script to visualize the diagram configurations in the *solver.diag.dat* file. See also [script/movie.py](../ch06/movie.md) for more details.
+You can use the *u_movie.py* script to visualize the diagram configurations in the *solver.diag.dat* file. See also [script/u_movie.py](../ch06/movie.md) for more details.
