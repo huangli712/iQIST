@@ -1,12 +1,8 @@
-### solver.diag.dat
+# solver.diag.dat
 
 **Introduction**
 
 The *solver.diag.dat* file is used to store the diagram configurations of the perturbation expansion series. Owing to the limitation of disk capacity and computational efficiency, it is impossible to save all of the visited diagram configurations. Consequently we only save the current diagram configurations every *nwrite* Monte Carlo step. Namely, the frequency for writing diagram configurations is controlled by the *nwrite* parameter. See also [nwrite](p_nwrite.md) for more details.
-
-!!! note
-
-    Besides the **DAISY** component, the other CT-HYB impurity solvers can output the *solver.diag.dat* file.
 
 **Format**
 
@@ -71,4 +67,4 @@ The corresponding Fortran code block for the writing of *solver.diag.dat* file i
      close(mytmp)
 ```
 
-You can use the *u_animator.py* to visualize the diagram configurations in the *solver.diag.dat* file. See also [script/u_animator.py](../ch07/animator.md) for more details.
+You can use the *movie.py* script to visualize the diagram configurations in the *solver.diag.dat* file. See also [script/movie.py](../ch06/movie.md) for more details.
