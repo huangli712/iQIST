@@ -26,7 +26,7 @@ In this code, nowadays the following flip schemes are supported:
 
 * ```cflip``` = 2, flip intra-orbital spins globally.
 
-Here ```cflip``` is an internal variable, instead of an input parameters, you can not setup it in the *solver.ctqmc.in* file. 
+Here ```cflip``` is an internal variable, instead of an input parameters, you can not setup it in the *solver.ctqmc.in* file.
 
 So the question is: how to control ```cflip``` via the *nflip* parameter?
 
