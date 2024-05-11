@@ -1,4 +1,4 @@
-### solver.hist.dat
+# solver.hist.dat
 
 **Introduction**
 
@@ -38,4 +38,4 @@ The corresponding Fortran code block for the writing of *solver.hist.dat* file i
      close(mytmp)
 ```
 
-In the **HIBISCUS** component, we provide a Python module to read the output files of quantum impurity solvers. You can use it to read the *solver.hist.dat* file. See [script/u_reader.py](../ch07/reader.md) for more details.
+Now we provide a Python module to read the output files of quantum impurity solvers. You can use it to read the *solver.hist.dat* file. See [script/u_reader.py](../ch06/reader.md) for more details.
