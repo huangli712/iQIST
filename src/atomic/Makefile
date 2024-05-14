@@ -31,7 +31,7 @@ include ../../build/make.inc
 
 modc = atomic_control.o atomic_context.o
 core = atomic_driver.o
-lev1 = atomic_full.o atomic_sector.o
+lev1 = atomic_fock.o atomic_sector.o
 lev2 = atomic_stream.o atomic_util.o
 lev3 = atomic_dump.o atomic_print.o
 main = atomic_main.o
