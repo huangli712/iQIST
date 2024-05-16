@@ -23,7 +23,7 @@
      use control, only : norbs
      use m_fock, only : dec_basis, ind_basis
      use m_sector, only : nsectors, sectors
-     use m_sector, only : alloc_one_fmat
+     use m_sector, only : cat_alloc_fmat
 
      implicit none
 
@@ -63,7 +63,7 @@
 ! allocate memory for fmat and then initialize it
                  sectors(isec)%fmat(iorb,ityp)%n = sectors(jsec)%ndim
                  sectors(isec)%fmat(iorb,ityp)%m = sectors(isec)%ndim
-                 call alloc_one_fmat(sectors(isec)%fmat(iorb,ityp))
+                 call cat_alloc_fmat(sectors(isec)%fmat(iorb,ityp))
                  sectors(isec)%fmat(iorb,ityp)%val = zero
 
 ! loop over the basis for the isec-th sector
@@ -680,7 +680,6 @@
 
      return
   end subroutine atomic_make_sectors
-
 
 !!
 !! @sub atomic_check_shmat
