@@ -302,48 +302,40 @@
      public :: Ts
      type Ts
 
-         ! the dimension of this sector
+         ! global index of the first Fock state in this subspace
+         integer :: istart
+
+         ! dimension of this subspace
+         ! how many Fock states are there in this subspace
          integer :: ndim
  
          ! number of fermion operators
+         ! it is actually equal to norbs
          integer :: nops
 
-         ! the start index of this sector
-         integer :: istart
+         ! we just use N, Sz, Jz, and PS to label the subspaces
+         ! they are the so-called good quantum numbers
 
-         ! total number of electrons N
+         ! total number of electrons: N
          integer :: nele
 
          ! z component of spin: Sz
          integer :: sz
 
-         ! z component of spin-orbit momentum: Jz
          integer :: jz
 
-         ! PS good quantum number
          integer :: ps
 
-         ! the Fock basis index of this sector
          integer, allocatable  :: basis(:)
 
-! the next sector after a fermion operator acts on this sector
-! next(nops,0) for annihilation and next(nops,1) for creation operators
-! -1: outside of the Hilbert space
-! otherwise, it is the index of next sector
          integer, allocatable  :: next(:,:)
 
-! the eigenvalues
          real(dp), allocatable :: eval(:)
 
-! the eigenvectors, since Hamiltonian must be real, then it is real as well
          real(dp), allocatable :: evec(:,:)
 
-! the Hamiltonian of this sector
          complex(dp), allocatable :: hmat(:,:)
 
-! the F-matrix between this sector and all other sectors
-! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
-! if this sector doesn't point to some other sectors, the pointer is null
          type (Tf), allocatable :: fmat(:,:)
 
      end type Ts
