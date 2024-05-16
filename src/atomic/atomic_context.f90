@@ -113,10 +113,12 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
+     ! declaration of module procedures: allocate memory
      public :: cat_alloc_fock_basis
-     public :: cat_free_fock_basis
-
      public :: cat_alloc_fock_eigen
+
+     ! declaration of module procedures: deallocate memory
+     public :: cat_free_fock_basis
      public :: cat_free_fock_eigen
 
   contains ! encapsulated functionality
@@ -133,7 +135,8 @@
   subroutine cat_alloc_fock_basis()
      implicit none
 
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
 !! [body
@@ -146,7 +149,8 @@
 
      ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_fock_basis','can not allocate enough memory')
+         call s_print_error('cat_alloc_fock_basis', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
