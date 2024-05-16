@@ -606,6 +606,11 @@
      return
   end subroutine cat_free_sector
 
+!!
+!! @sub cat_free_sectors
+!!
+!! deallocate memory for subspaces
+!!
   subroutine cat_free_sectors()
      implicit none
 
@@ -615,12 +620,12 @@
 
 !! [body
 
-     ! deallocate memory for arrays in T_sector
-     ! before deallocating sectors to avoid memory leak
+     ! deallocate memory for an array of Ts
      if ( allocated(sectors) ) then
          do i=1,nsectors
-             call cat_free_sector(sectors(i))
+             call cat_free_sector( sectors(i) )
          enddo ! over i={1,nsectors} loop
+         !
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
 
