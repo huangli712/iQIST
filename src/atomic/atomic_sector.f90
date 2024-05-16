@@ -55,53 +55,45 @@
      integer :: k
      integer :: l
 
-! total electrons
+     ! good quantum number: total electrons N
      integer :: my_ntot
 
-! Sz value
+     ! good quantum number: Sz
      integer :: my_sz
 
-! Jz value
+     ! good quantum number: Jz
      integer :: my_jz
 
-! PS value
+     ! good quantum number: PS
      integer :: my_ps
 
-! a counter
      integer :: counter
 
-! index of Fock basis
+     ! index of Fock state
      integer :: ibasis
 
-! number of sectors
+     ! number of subspaces (sectors)
      integer :: nsect
 
-! which sector point to
      integer :: which_sect
 
-! can point to next sector
      logical :: can
 
-! the Sz and Jz values for each orbital
      integer :: orb_good_sz(norbs)
      integer :: orb_good_jz(norbs)
 
-! good quantum number N, Sz, Jz, and PS for each Fock state
      integer :: fock_ntot(ncfgs)
      integer :: fock_sz(ncfgs)
      integer :: fock_jz(ncfgs)
      integer :: fock_ps(ncfgs)
 
-! good quantum number N, Sz, Jz, and PS for each sector
      integer :: sect_ntot(ncfgs)
      integer :: sect_sz(ncfgs)
      integer :: sect_jz(ncfgs)
      integer :: sect_ps(ncfgs)
 
-! dimension of each sector
      integer :: ndims(ncfgs)
 
-! a temp binary form of Fock basis
      integer :: code(norbs)
 
 ! sector basis index
@@ -666,31 +658,51 @@
      return
   end subroutine atomic_make_shmat
 
-!!>>> atomic_diag_shmat: diagonalize the Hamiltonian for each sector
+!!
+!! @sub atomic_diag_shmat
+!!
+!! diagonalize the atomic Hamiltonian subspace by subspace
+!!
   subroutine atomic_diag_shmat()
      use constants, only : dp
+     use constants, only : mystd
 
-     use m_sector, only : nsectors, sectors
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! dummy array
+     ! dummy array
      real(dp), allocatable :: hmat(:,:)
 
+!! [body
+
      do i=1,nsectors
+
+         ! we will not destroy the raw Hamiltonian data,
+         ! so we usually make a copy of it
          allocate(hmat(sectors(i)%ndim,sectors(i)%ndim))
          hmat = real( sectors(i)%hmat )
+
+         ! diagonalize it, eval and evec will be updated
          call s_eig_sy( sectors(i)%ndim, &
                         sectors(i)%ndim, &
                         hmat,            &
                         sectors(i)%eval, &
                         sectors(i)%evec )
+
+         ! deallocate memory
          deallocate(hmat)
+
+         write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'done'
+
      enddo ! over i={1,nsectors} loop
+
+!! body]
 
      return
   end subroutine atomic_diag_shmat
