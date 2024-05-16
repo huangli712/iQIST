@@ -7,9 +7,9 @@
 !!! type    : modules
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : define global data structures for the atomic eigenvalue
-!!!           problem solver
+!!!           01/30/2024 by li huang (last modified)
+!!! purpose : define global data structures, arrays, and variables for
+!!!           the atomic eigenvalue problem solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -18,7 +18,12 @@
 !!>>> module m_fock                                                    <<<
 !!========================================================================
 
-!!>>> define Fock basis of full Hilbert space and corresponding eigensystem
+!!
+!! @mod m_fock
+!!
+!! define the Fock basis, density matrix, spin matrix, atomic Hamiltonian
+!! and the corresponding eigensystem
+!!
   module m_fock
      use constants, only : dp, zero, czero
 
@@ -275,19 +280,20 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> alloc_one_fmat: allocate one fmat
   subroutine alloc_one_fmat(one_fmat)
      implicit none
 
-! external arguments
-! the fmat
+!! external arguments
+     ! the fmat
      type (t_fmat), intent(inout) :: one_fmat
 
-! local variables
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(one_fmat%val(one_fmat%n,one_fmat%m), stat=istat)
 
 ! check status
@@ -298,24 +304,27 @@
 ! initialize it
      one_fmat%val = zero
 
+!! body]
+
      return
   end subroutine alloc_one_fmat
 
-!>>> alloc_one_sector: allocate memory for one sector
   subroutine alloc_one_sector(one_sector)
      implicit none
 
-! external arguments
-! the sector
+!! external arguments
+     ! the sector
      type (t_sector), intent(inout) :: one_sector
 
-! local variables
+!! local variables
 ! loop index
      integer :: i
      integer :: j
 
-! the status flag
+     ! the status flag
      integer :: istat
+
+!! [body
 
 ! allocate memory
      allocate(one_sector%basis(one_sector%ndim),                stat=istat)
@@ -344,6 +353,8 @@
             one_sector%fmat(i,j)%m = 0
         enddo ! over j={0,1} loop
      enddo ! over i={1,one_sector%nops} loop
+
+!! body]
 
      return
   end subroutine alloc_one_sector
