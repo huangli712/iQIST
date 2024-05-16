@@ -267,7 +267,7 @@
 
      public :: dealloc_one_fmat
      public :: dealloc_one_sector
-     public :: dealloc_m_sector
+     public :: cat_free_sectors
 
   contains ! encapsulated functionality
 
@@ -417,7 +417,7 @@
   end subroutine dealloc_one_sector
 
 !!>>> dealloc_m_sector: deallocate memory of sectors
-  subroutine dealloc_m_sector()
+  subroutine cat_free_sectors()
      implicit none
 
 ! local variables
@@ -434,7 +434,7 @@
      endif ! back if ( allocated(sectors) ) block
 
      return
-  end subroutine dealloc_m_sector
+  end subroutine cat_free_sectors
 
   end module m_sector
 
