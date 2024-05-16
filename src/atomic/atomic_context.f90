@@ -308,7 +308,7 @@
          ! dimension of this subspace
          ! how many Fock states are there in this subspace
          integer :: ndim
- 
+
          ! number of fermion operators
          ! it is actually equal to norbs
          integer :: nops
@@ -494,6 +494,7 @@
      one_sector%hmat  = czero
 
      ! initialize fmat one by one
+     ! memory of one_sector%fmat%val should be allocated elsewhere
      do i=1,one_sector%nops
         do j=0,1
             one_sector%fmat(i,j)%n = 0
@@ -506,11 +507,16 @@
      return
   end subroutine cat_alloc_sector
 
+!!
+!! @sub cat_alloc_sectors
+!!
+!! allocate memory for subspaces
+!!
   subroutine cat_alloc_sectors()
      implicit none
 
 !! local variables
-! the status flag
+     ! the status flag
      integer :: istat
 
 !! [body
@@ -520,8 +526,11 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_sectors','can not allocate enough memory')
+         call s_print_error('cat_alloc_sectors', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+     ! initialization of each subspaces should be done elsewhere
 
 !! body]
 
@@ -532,30 +541,41 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!>>> cat_free_fmat: deallocate one fmat
+!!
+!! @sub cat_free_fmat
+!!
+!! deallocate memory for annihilation operator f or creation operator f^+
+!!
   subroutine cat_free_fmat(one_fmat)
      implicit none
 
-! external arguments
-! the fmat
-     type (Tf), intent(inout) :: one_fmat
+!! external arguments
+     ! annihilation operator f or creation operator f^+
+     type(Tf), intent(inout) :: one_fmat
 
 !! [body
 
      if ( allocated(one_fmat%val) ) deallocate(one_fmat%val)
+     !
+     one_fmat%n = 0
+     one_fmat%m = 0
 
 !! body]
 
      return
   end subroutine cat_free_fmat
 
-!!>>> cat_free_sector: deallocate memory for one sector
+!!
+!! @sub cat_free_sector
+!!
+!! deallocate memory for a subspace
+!!
   subroutine cat_free_sector(one_sector)
      implicit none
 
 !! external arguments
-     ! the sector
-     type (Ts), intent(inout) :: one_sector
+     ! this subspace
+     type(Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index
@@ -577,6 +597,7 @@
                  call cat_free_fmat(one_sector%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,one_sector%nops} loop
+         !
          deallocate(one_sector%fmat)
      endif ! back if ( allocated(one_sector%fmat)  ) block
 
@@ -585,7 +606,6 @@
      return
   end subroutine cat_free_sector
 
-!!>>> cat_free_sectors: deallocate memory of sectors
   subroutine cat_free_sectors()
      implicit none
 
