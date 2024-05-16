@@ -84,7 +84,7 @@
 
      ! Sz, Jz, and PS for all orbitals
      integer :: orb_sz(norbs)
-     integer :: orb_good_jz(norbs)
+     integer :: orb_jz(norbs)
 
      integer :: fock_ntot(ncfgs)
      integer :: fock_sz(ncfgs)
@@ -117,15 +117,15 @@
 ! allocate memory
      allocate(sector_basis(ncfgs,ncfgs))
 
-! make orb_sz and orb_good_jz
+! make orb_sz and orb_jz
 !-------------------------------------------------------------------------
      orb_sz = 0
      call atomic_make_gsz(orb_sz)
 
 ! jz only valid for nband==3, 5, 7
-     orb_good_jz = 0
+     orb_jz = 0
      if ( nband == 3 .or. nband == 5 .or. nband == 7 ) then
-         call atomic_make_gjz(orb_good_jz)
+         call atomic_make_gjz(orb_jz)
      endif ! back if ( nband == 3 .or. nband == 5 .or. nband == 7 ) block
 
 ! build good quantum numbers for each Fock state
@@ -152,7 +152,7 @@
 ! build Jz
               my_jz = 0
               do k=1,norbs
-                  my_jz = my_jz + orb_good_jz(k) * bin_basis(k,counter)
+                  my_jz = my_jz + orb_jz(k) * bin_basis(k,counter)
               enddo ! over k={1,norbs} loop
               fock_jz(counter) = my_jz
 ! build PS number
@@ -375,10 +375,10 @@
                          case (5)
                              if ( k == 1 ) then
                                  my_ntot = sect_ntot(i) + 1
-                                 my_jz = sect_jz(i) + orb_good_jz(j)
+                                 my_jz = sect_jz(i) + orb_jz(j)
                              else
                                  my_ntot = sect_ntot(i) - 1
-                                 my_jz = sect_jz(i) - orb_good_jz(j)
+                                 my_jz = sect_jz(i) - orb_jz(j)
                              endif ! back if ( k == 1 ) block
 ! loop over all sectors to see which sector it will point to
                              do l=1,nsectors
