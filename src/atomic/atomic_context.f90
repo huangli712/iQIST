@@ -89,7 +89,9 @@
 ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(dim_sub_n(0:norbs),     stat=istat)
      allocate(bin_basis(norbs,ncfgs), stat=istat)
      allocate(dec_basis(ncfgs),       stat=istat)
@@ -105,6 +107,8 @@
      bin_basis = 0
      dec_basis = 0
      ind_basis = 0
+
+!! body]
 
      return
   end subroutine cat_alloc_fock_basis
