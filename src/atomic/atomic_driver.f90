@@ -181,10 +181,11 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! build F-matrix
-! first, build fmat of annihilation operators in Fock basis
-! then, transform them to the eigen basis
-     write(mystd,'(2X,a)') 'build F-matrix for annihilation fermion operators'
+     ! calculate annihilation operator matrix
+     !
+     ! at first, build annihilation operator matrix in the Fock basis
+     ! and then, it should be transformed to the atomic eigenbasis
+     write(mystd,'(2X,a)') 'compute f operator in atomic eigenbasis'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_ffmat()
@@ -193,8 +194,11 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! build occupancy number
-     write(mystd,'(2X,a)') 'compute occupancy number of atomic eigenstates'
+     ! calculate occupancy matrix in atomic eigenbasis
+     !
+     ! the occupancy matrix is built in the Fock basis, and then is
+     ! rotated to the atomic eigenbasis
+     write(mystd,'(2X,a)') 'compute density matrix in atomic eigenbasis'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_foccu()
@@ -203,8 +207,11 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! build Sz
-     write(mystd,'(2X,a)') 'compute magnetic moment of atomic eigenstates'
+     ! calculate Sz in atomic eigenbasis
+     !
+     ! the Sz matrix is built in the Fock basis, and then is rotated to
+     ! the atomic eigenbasis
+     write(mystd,'(2X,a)') 'compute magnetic moment in atomic eigenbasis'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_fspin()
@@ -213,11 +220,12 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! write eigenvalues of hmat to file 'atom.eigval.dat'
-! write eigenvectors of hmat to file 'atom.eigvec.dat'
-! write eigenvalue of hmat, occupany number of eigenstates and fmat of
-! annihilation fermion operators to file 'atom.cix'
-     write(mystd,'(2X,a)') 'write eigenvalue, eigenvector, and F-matrix to files'
+     ! write essential data to external files for reference
+     !
+     ! write eigenvalues of hmat to file 'atom.eigval.dat'
+     ! write eigenvectors of hmat to file 'atom.eigvec.dat'
+     ! write f operator to file 'atom.cix'
+     write(mystd,'(2X,a)') 'write atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_dump_feigval()
@@ -228,7 +236,7 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! deallocate memory
+     ! deallocate memory for atomic eigenstates
      write(mystd,'(2X,a)') 'deallocate memory for global variables in full Hilbert space'
      !
      call cpu_time(time_begin) ! record starting time
@@ -237,6 +245,8 @@
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+
+!! body]
 
      return
   end subroutine atomic_f_driver
