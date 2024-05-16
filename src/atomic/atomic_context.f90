@@ -284,11 +284,11 @@
      private :: Tf
      type Tf
 
-! the dimension, n x m
+         ! dimension of operator matrix, n x m
          integer :: n
          integer :: m
 
-! the memory space for the matrix
+         ! memory space for operator matrix
          real(dp), allocatable :: val(:,:)
 
      end type Tf
