@@ -359,13 +359,14 @@
      return
   end subroutine alloc_one_sector
 
-!!>>> alloc_m_sector: allocate memory for sectors
   subroutine alloc_m_sector()
      implicit none
 
-! local variables
+!! local variables
 ! the status flag
      integer :: istat
+
+!! [body
 
 ! allocate memory
      allocate(sectors(nsectors), stat=istat)
@@ -374,6 +375,8 @@
      if ( istat /= 0 ) then
          call s_print_error('alloc_m_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+!! body]
 
      return
   end subroutine alloc_m_sector
