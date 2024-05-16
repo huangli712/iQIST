@@ -237,7 +237,7 @@
      write(mystd,*)
 
      ! deallocate memory for atomic eigenstates
-     write(mystd,'(2X,a)') 'deallocate memory for global variables in full Hilbert space'
+     write(mystd,'(2X,a)') 'deallocate memory for atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call cat_free_fock_eigen()
