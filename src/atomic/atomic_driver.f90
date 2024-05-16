@@ -171,11 +171,11 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! diagonalize hmat
-     write(mystd,'(2X,a)') 'diagonalize the atomic Hamiltonian'
+     ! diagonalize the atomic Hamiltonian
+     write(mystd,'(2X,a)') 'diagonalize atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
-     call s_eig_sy(ncfgs, ncfgs, real(hmat), eval, evec)
+     call atomic_diag_fhmat()
      call cpu_time(time_end)   ! record ending   time
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
@@ -218,29 +218,36 @@
 ! write eigenvalue of hmat, occupany number of eigenstates and fmat of
 ! annihilation fermion operators to file 'atom.cix'
      write(mystd,'(2X,a)') 'write eigenvalue, eigenvector, and F-matrix to files'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_dump_feigval()
      call atomic_dump_feigvec()
      call atomic_dump_fcix()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
 ! deallocate memory
      write(mystd,'(2X,a)') 'deallocate memory for global variables in full Hilbert space'
+     !
      call cpu_time(time_begin) ! record starting time
      call cat_free_fock_eigen()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
      return
   end subroutine atomic_f_driver
 
-!!>>> atomic_s_driver: solve the atomic eigenvalue problem using good
-!!>>> quantum numbers (GQNs) algorithm and sector-by-sector diagonalization
-!!>>> note: the output files are only compatible with PANSY and MANJUSHAKA
-!!>>> commponents in the iQIST software package
+!!
+!! @sub atomic_s_driver
+!!
+!! solve the atomic eigenvalue problem using good quantum numbers (GQNs)
+!! algorithm and subspace diagonalization. this subroutine is called
+!! when 2 <= ictqmc <= 5
+!!
   subroutine atomic_s_driver()
      use constants, only : dp, eps6, mystd
 
@@ -262,22 +269,27 @@
 
 ! make all the sectors, allocate sectors memory inside
      write(mystd,'(2X,a)') 'determine sectors using good quantum numbers'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_sectors()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
 ! make atomic Hamiltonian
      write(mystd,'(2X,a)') 'assemble atomic Hamiltonian for all sectors'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_shmat()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
 ! check whether the many particle Hamiltonian is real
      write(mystd,'(2X,a)') 'check whether the atomic Hamiltonian is real or not'
+     !
      call cpu_time(time_begin) ! record starting time
      do i=1,nsectors
          if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
@@ -290,17 +302,21 @@
 
 ! diagonalize Hamiltonian of each sector one by one
      write(mystd,'(2X,a)') 'diagonalize the atomic Hamiltonian for all sectors'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_diag_shmat()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
 ! make F-matrix of both creation and annihilation operators for each sector
      write(mystd,'(2X,a)') 'build F-matrix for all sectors'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_sfmat()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
@@ -308,19 +324,23 @@
 ! write eigenvectors to file 'atom.eigvec.dat'
 ! write information of sectors to file 'atom.cix'
      write(mystd,'(2X,a)') 'write eigenvalue, eigenvector, and F-matrix to files'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_dump_seigval()
      call atomic_dump_seigvec()
      call atomic_dump_scix()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! deallocate memory
+     ! deallocate memory
      write(mystd,'(2X,a)') 'deallocate memory for global variables in sectors'
+     !
      call cpu_time(time_begin) ! record starting time
      call dealloc_m_sector()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
