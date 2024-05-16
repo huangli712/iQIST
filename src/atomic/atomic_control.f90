@@ -145,18 +145,48 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!!
+!! @var nband
+!!
+!! number of correlated bands
+!!
      integer, public, save :: nband  = 1
 
+!!
+!! @var nspin
+!!
+!! number of spin projections, it should not be changed
+!!
      integer, public, save :: nspin  = 2
 
+!!
+!! @var norbs
+!!
+!! number of correlated orbitals (= nband * nspin)
+!!
      integer, public, save :: norbs  = 2
 
+!!
+!! @var ncfgs
+!!
+!! number of many-body configurations, the dimension of full Hilbert space
+!!
      integer, public, save :: ncfgs  = 4
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!!
+!! @var nmini
+!!
+!! the lower boundary of occupancy N for Fock states
+!!
      integer, public, save :: nmini = 0
 
+!!
+!! @var nmaxi
+!!
+!! the upper boundary of occupancy N for Fock states
+!!
      integer, public, save :: nmaxi = 2
 
 !!========================================================================
