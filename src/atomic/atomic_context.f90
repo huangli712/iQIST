@@ -322,10 +322,13 @@
          ! z component of spin: Sz
          integer :: sz
 
+         ! z component of spin-orbit momentum: Jz
          integer :: jz
 
+         ! SU(2) good quantum number: PS
          integer :: ps
 
+         ! SU(2) good quantum number: PS
          integer, allocatable  :: basis(:)
 
          integer, allocatable  :: next(:,:)
