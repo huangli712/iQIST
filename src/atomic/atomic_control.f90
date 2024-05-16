@@ -193,6 +193,15 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
+!!
+!! the following parameters are useful when icu = 1 or icu = 3
+!!
+
+!!
+!! @var Uc
+!!
+!! intra-orbital Coulomb interaction
+!!
      real(dp), public, save :: Uc    = 2.0_dp
 
      real(dp), public, save :: Uv    = 2.0_dp
