@@ -234,12 +234,33 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!!
+!! the following parameters are useful when icu = 2. they are used to
+!! calculate the Slater integrals (F0, F2, F4, and F6).
+!!
+
+!!
+!! @var Ud
+!!
+!! Coulomb interaction parameter
+!!
      real(dp), public, save :: Ud    = 2.0_dp
 
+!!
+!! @var Jh
+!!
+!! Hund's exchange parameter
+!!
      real(dp), public, save :: Jh    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!!
+!! @var mune
+!!
+!! chemical potential or fermi level. it is used to shift energy level.
+!! it is only useful for model calculation
+!!
      real(dp), public, save :: mune  = 0.0_dp
 
 !!
