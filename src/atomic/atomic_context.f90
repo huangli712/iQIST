@@ -535,6 +535,11 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
+!!
+!! @sub cat_alloc_spmat
+!!
+!! allocate memory for single particle matrices
+!!
   subroutine cat_alloc_spmat()
      implicit none
 
@@ -572,6 +577,11 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
+!!
+!! @sub cat_free_spmat
+!!
+!! deallocate memory for single particle matrices
+!!
   subroutine cat_free_spmat()
      implicit none
 
