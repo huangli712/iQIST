@@ -259,25 +259,24 @@
 !! when 2 <= ictqmc <= 5
 !!
   subroutine atomic_s_driver()
-     use constants, only : dp, eps6, mystd
+     use constants, only : dp
+     use constants, only : mystd
 
-     use m_sector, only : nsectors
-     use m_sector, only : sectors
-     use m_sector, only : dealloc_m_sector
+     use m_sector, only : cat_free_sectors
 
      implicit none
 
-! local variables
-! loop index
-     integer :: i
-
-! starting time
+!! local variables
+     ! starting time
      real(dp) :: time_begin
 
-! ending time
+     ! ending time
      real(dp) :: time_end
 
+!! [body
+
 ! make all the sectors, allocate sectors memory inside
+     write(mystd,*)
      write(mystd,'(2X,a)') 'determine sectors using good quantum numbers'
      !
      call cpu_time(time_begin) ! record starting time
@@ -353,6 +352,8 @@
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+
+!! body]
 
      return
   end subroutine atomic_s_driver
