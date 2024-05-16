@@ -94,8 +94,8 @@
 
 ! good quantum number N, Sz, Jz, and PS for each sector
      integer :: sect_good_ntot(ncfgs)
-     integer :: sect_good_sz(ncfgs)
-     integer :: sect_good_jz(ncfgs)
+     integer :: sect_sz(ncfgs)
+     integer :: sect_jz(ncfgs)
      integer :: sect_ps(ncfgs)
 
 ! dimension of each sector
@@ -114,8 +114,8 @@
 
 ! initialize some variables
      sect_good_ntot = 0
-     sect_good_sz = 0
-     sect_good_jz = 0
+     sect_sz = 0
+     sect_jz = 0
      sect_ps = 0
 
 ! allocate memory
@@ -193,13 +193,13 @@
          if ( nsect == 0 ) then
              sect_good_ntot(1) = my_ntot
              if ( ictqmc == 3 .or. ictqmc == 4 ) then
-                 sect_good_sz(1) = my_sz
+                 sect_sz(1) = my_sz
              endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
              if (ictqmc == 4) then
                  sect_ps(1) = my_ps
              endif ! back if ( ictqmc == 4 ) block
              if ( ictqmc == 5 ) then
-                 sect_good_jz(1) = my_jz
+                 sect_jz(1) = my_jz
              endif ! back if ( ictqmc == 5 ) block
 
              nsect = nsect + 1
@@ -218,25 +218,25 @@
 
                      case (3)
                          if ( sect_good_ntot(j) == my_ntot ) then
-                             if ( sect_good_sz(j) == my_sz ) then
+                             if ( sect_sz(j) == my_sz ) then
                                  which_sect = j; EXIT
-                             endif ! back if ( sect_good_sz(j) == my_sz ) block
+                             endif ! back if ( sect_sz(j) == my_sz ) block
                          endif ! back if ( sect_good_ntot(j) == my_ntot ) block
 
                      case (4)
                          if ( sect_good_ntot(j) == my_ntot ) then
-                             if ( sect_good_sz(j) == my_sz ) then
+                             if ( sect_sz(j) == my_sz ) then
                                  if ( sect_ps(j) == my_ps) then
                                      which_sect = j; EXIT
                                  endif ! back if ( sect_ps(j) == my_ps) block
-                             endif ! back if ( sect_good_sz(j) == my_sz ) block
+                             endif ! back if ( sect_sz(j) == my_sz ) block
                          endif ! back if ( sect_good_ntot(j) == my_ntot ) block
 
                      case (5)
                          if ( sect_good_ntot(j) == my_ntot ) then
-                             if ( sect_good_jz(j) == my_jz ) then
+                             if ( sect_jz(j) == my_jz ) then
                                  which_sect = j; EXIT
-                             endif ! back if ( sect_good_jz(j) == my_jz ) block
+                             endif ! back if ( sect_jz(j) == my_jz ) block
                          endif ! back if ( sect_good_ntot(j) == my_ntot ) block
 
                  end select
@@ -248,13 +248,13 @@
                  nsect = nsect + 1
                  sect_good_ntot(nsect) = my_ntot
                  if ( ictqmc == 3 .or. ictqmc == 4 ) then
-                     sect_good_sz(nsect) = my_sz
+                     sect_sz(nsect) = my_sz
                  endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
                  if ( ictqmc == 4 ) then
                      sect_ps(nsect) = my_ps
                  endif ! back if ( ictqmc == 4 ) block
                  if ( ictqmc == 5 ) then
-                     sect_good_jz(nsect) = my_jz
+                     sect_jz(nsect) = my_jz
                  endif ! back if ( ictqmc == 5 ) block
                  ndims(nsect) = ndims(nsect) + 1
                  sector_basis(ndims(nsect),nsect) = i
@@ -278,8 +278,8 @@
      do i=1,nsect
          sectors(i)%ndim = ndims(i)
          sectors(i)%nele = sect_good_ntot(i)
-         sectors(i)%sz   = sect_good_sz(i)
-         sectors(i)%jz   = sect_good_jz(i)
+         sectors(i)%sz   = sect_sz(i)
+         sectors(i)%jz   = sect_jz(i)
          sectors(i)%ps   = sect_ps(i)
          sectors(i)%nops = norbs
          sectors(i)%istart = counter
@@ -336,28 +336,28 @@
                          case (3)
                              if ( k == 1 ) then
                                  my_ntot = sect_good_ntot(i) + 1
-                                 my_sz = sect_good_sz(i) + orb_good_sz(j)
+                                 my_sz = sect_sz(i) + orb_good_sz(j)
                              else
                                  my_ntot = sect_good_ntot(i) - 1
-                                 my_sz = sect_good_sz(i) - orb_good_sz(j)
+                                 my_sz = sect_sz(i) - orb_good_sz(j)
                              endif ! back if ( k == 1 ) block
 ! loop over all sectors to see which sector it will point to
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
-                                     if ( sect_good_sz(l) == my_sz ) then
+                                     if ( sect_sz(l) == my_sz ) then
                                          which_sect = l; EXIT
-                                     endif ! back if ( sect_good_sz(l) == my_sz ) block
+                                     endif ! back if ( sect_sz(l) == my_sz ) block
                                  endif ! back if ( sect_good_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
 
                          case (4)
                              if ( k == 1 ) then
                                  my_ntot = sect_good_ntot(i) + 1
-                                 my_sz = sect_good_sz(i) + orb_good_sz(j)
+                                 my_sz = sect_sz(i) + orb_good_sz(j)
                                  code(j) = 1
                              else
                                  my_ntot = sect_good_ntot(i) - 1
-                                 my_sz   = sect_good_sz(i) - orb_good_sz(j)
+                                 my_sz   = sect_sz(i) - orb_good_sz(j)
                                  code(j) = 0
                              endif ! back if ( k == 1 ) block
 ! calculate new PS number
@@ -368,28 +368,28 @@
 ! loop over all sectors to see which sector it will point to
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
-                                     if ( sect_good_sz(l) == my_sz ) then
+                                     if ( sect_sz(l) == my_sz ) then
                                          if ( sect_ps(l) == my_ps) then
                                              which_sect = l; EXIT
                                          endif ! back if ( sect_ps(l) == my_ps) block
-                                     endif ! back if ( sect_good_sz(l) == my_sz ) block
+                                     endif ! back if ( sect_sz(l) == my_sz ) block
                                  endif ! back if ( sect_good_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
 
                          case (5)
                              if ( k == 1 ) then
                                  my_ntot = sect_good_ntot(i) + 1
-                                 my_jz = sect_good_jz(i) + orb_good_jz(j)
+                                 my_jz = sect_jz(i) + orb_good_jz(j)
                              else
                                  my_ntot = sect_good_ntot(i) - 1
-                                 my_jz = sect_good_jz(i) - orb_good_jz(j)
+                                 my_jz = sect_jz(i) - orb_good_jz(j)
                              endif ! back if ( k == 1 ) block
 ! loop over all sectors to see which sector it will point to
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
-                                     if ( sect_good_jz(l) == my_jz ) then
+                                     if ( sect_jz(l) == my_jz ) then
                                          which_sect = l; EXIT
-                                     endif ! back if ( sect_good_jz(l) == my_jz ) block
+                                     endif ! back if ( sect_jz(l) == my_jz ) block
                                  endif ! back if ( sect_good_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
 
@@ -411,7 +411,7 @@
 
 ! dump sector information for reference
 !-------------------------------------------------------------------------
-     call atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_ps, sect_good_jz)
+     call atomic_dump_sector(sect_good_ntot, sect_sz, sect_ps, sect_jz)
 
 ! deallocate memory
      deallocate(sector_basis)
