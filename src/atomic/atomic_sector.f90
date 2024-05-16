@@ -27,6 +27,7 @@
 !!
   subroutine atomic_make_sectors()
      use constants, only : zero
+     use constants, only : mystd
 
      use control, only : ictqmc
      use control, only : nband, norbs, ncfgs
@@ -42,6 +43,10 @@
      use m_sector, only : cat_alloc_sectors
 
      implicit none
+
+!! local parameters
+     ! maximum number of subspaces 
+     integer, parameter :: max_num_sect = 400
 
 !! local variables
      ! loop index
@@ -84,14 +89,14 @@
 ! good quantum number N, Sz, Jz, and PS for each Fock state
      integer :: fock_ntot(ncfgs)
      integer :: fock_sz(ncfgs)
-     integer :: fock_good_jz(ncfgs)
-     integer :: fock_good_ps(ncfgs)
+     integer :: fock_jz(ncfgs)
+     integer :: fock_ps(ncfgs)
 
 ! good quantum number N, Sz, Jz, and PS for each sector
      integer :: sect_good_ntot(ncfgs)
      integer :: sect_good_sz(ncfgs)
      integer :: sect_good_jz(ncfgs)
-     integer :: sect_good_ps(ncfgs)
+     integer :: sect_ps(ncfgs)
 
 ! dimension of each sector
      integer :: ndims(ncfgs)
@@ -111,7 +116,7 @@
      sect_good_ntot = 0
      sect_good_sz = 0
      sect_good_jz = 0
-     sect_good_ps = 0
+     sect_ps = 0
 
 ! allocate memory
      allocate(sector_basis(ncfgs,ncfgs))
@@ -132,8 +137,8 @@
      counter = 0
      fock_ntot = 0
      fock_sz = 0
-     fock_good_jz = 0
-     fock_good_ps = 0
+     fock_jz = 0
+     fock_ps = 0
 ! loop over all number of total electrons
      do i=0,norbs
 ! loop over each state
@@ -153,11 +158,11 @@
               do k=1,norbs
                   my_jz = my_jz + orb_good_jz(k) * bin_basis(k,counter)
               enddo ! over k={1,norbs} loop
-              fock_good_jz(counter) = my_jz
+              fock_jz(counter) = my_jz
 ! build PS number
              do k=1,nband
-                 fock_good_ps(counter) = &
-                 fock_good_ps(counter) + (2**k) * &
+                 fock_ps(counter) = &
+                 fock_ps(counter) + (2**k) * &
                      (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
              enddo ! over k={1,nband} loop
          enddo ! over j={1,dim_sub_n(i)} loop
@@ -178,10 +183,10 @@
              my_sz = fock_sz(i)
          endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
          if ( ictqmc == 4 ) then
-             my_ps = fock_good_ps(i)
+             my_ps = fock_ps(i)
          endif ! back if ( ictqmc == 4 ) block
          if ( ictqmc == 5 ) then
-             my_jz = fock_good_jz(i)
+             my_jz = fock_jz(i)
          endif ! back if ( ictqmc == 5 ) block
 
 ! determine the first sector
@@ -191,7 +196,7 @@
                  sect_good_sz(1) = my_sz
              endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
              if (ictqmc == 4) then
-                 sect_good_ps(1) = my_ps
+                 sect_ps(1) = my_ps
              endif ! back if ( ictqmc == 4 ) block
              if ( ictqmc == 5 ) then
                  sect_good_jz(1) = my_jz
@@ -221,9 +226,9 @@
                      case (4)
                          if ( sect_good_ntot(j) == my_ntot ) then
                              if ( sect_good_sz(j) == my_sz ) then
-                                 if ( sect_good_ps(j) == my_ps) then
+                                 if ( sect_ps(j) == my_ps) then
                                      which_sect = j; EXIT
-                                 endif ! back if ( sect_good_ps(j) == my_ps) block
+                                 endif ! back if ( sect_ps(j) == my_ps) block
                              endif ! back if ( sect_good_sz(j) == my_sz ) block
                          endif ! back if ( sect_good_ntot(j) == my_ntot ) block
 
@@ -246,7 +251,7 @@
                      sect_good_sz(nsect) = my_sz
                  endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
                  if ( ictqmc == 4 ) then
-                     sect_good_ps(nsect) = my_ps
+                     sect_ps(nsect) = my_ps
                  endif ! back if ( ictqmc == 4 ) block
                  if ( ictqmc == 5 ) then
                      sect_good_jz(nsect) = my_jz
@@ -275,7 +280,7 @@
          sectors(i)%nele = sect_good_ntot(i)
          sectors(i)%sz   = sect_good_sz(i)
          sectors(i)%jz   = sect_good_jz(i)
-         sectors(i)%ps   = sect_good_ps(i)
+         sectors(i)%ps   = sect_ps(i)
          sectors(i)%nops = norbs
          sectors(i)%istart = counter
          counter = counter + ndims(i)
@@ -364,9 +369,9 @@
                              do l=1,nsectors
                                  if ( sect_good_ntot(l) == my_ntot ) then
                                      if ( sect_good_sz(l) == my_sz ) then
-                                         if ( sect_good_ps(l) == my_ps) then
+                                         if ( sect_ps(l) == my_ps) then
                                              which_sect = l; EXIT
-                                         endif ! back if ( sect_good_ps(l) == my_ps) block
+                                         endif ! back if ( sect_ps(l) == my_ps) block
                                      endif ! back if ( sect_good_sz(l) == my_sz ) block
                                  endif ! back if ( sect_good_ntot(l) == my_ntot ) block
                              enddo ! over l={1,nsectors} loop
@@ -406,7 +411,7 @@
 
 ! dump sector information for reference
 !-------------------------------------------------------------------------
-     call atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
+     call atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_ps, sect_good_jz)
 
 ! deallocate memory
      deallocate(sector_basis)
