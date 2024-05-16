@@ -293,6 +293,12 @@
 
      end type Tf
 
+!!
+!! @struct Ts
+!!
+!! data structure for subspace of atomic Hamiltonian. sometimes we
+!! call subspace as sector
+!!
      public :: Ts
      type Ts
 
@@ -368,17 +374,19 @@
 !!
 !! an array of structs that stores all the subspaces
 !!
-     type (Ts), public, save, allocatable :: sectors(:)
+     type(Ts), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: alloc_one_fmat
+     ! declaration of module procedures: allocate memory
+     public :: cat_alloc_fmat
      public :: alloc_one_sector
      public :: alloc_m_sector
 
-     public :: dealloc_one_fmat
+     ! declaration of module procedures: deallocate memory
+     public :: decat_alloc_fmat
      public :: dealloc_one_sector
      public :: cat_free_sectors
 
@@ -388,7 +396,7 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-  subroutine alloc_one_fmat(one_fmat)
+  subroutine cat_alloc_fmat(one_fmat)
      implicit none
 
 !! external arguments
@@ -406,7 +414,7 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_fmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_fmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize it
@@ -415,7 +423,7 @@
 !! body]
 
      return
-  end subroutine alloc_one_fmat
+  end subroutine cat_alloc_fmat
 
   subroutine alloc_one_sector(one_sector)
      implicit none
@@ -493,8 +501,8 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!>>> dealloc_one_fmat: deallocate one fmat
-  subroutine dealloc_one_fmat(one_fmat)
+!>>> decat_alloc_fmat: deallocate one fmat
+  subroutine decat_alloc_fmat(one_fmat)
      implicit none
 
 ! external arguments
@@ -508,7 +516,7 @@
 !! body]
 
      return
-  end subroutine dealloc_one_fmat
+  end subroutine decat_alloc_fmat
 
 !!>>> dealloc_one_sector: deallocate memory for one sector
   subroutine dealloc_one_sector(one_sector)
@@ -535,7 +543,7 @@
      if ( allocated(one_sector%fmat)  ) then
          do i=1,one_sector%nops
              do j=0,1
-                 call dealloc_one_fmat(one_sector%fmat(i,j))
+                 call decat_alloc_fmat(one_sector%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,one_sector%nops} loop
          deallocate(one_sector%fmat)
