@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
-!!! program : m_fock     module
-!!!           m_sector   module
-!!!           m_spmat    module
+!!! project : iqist @ jasmine
+!!! program : m_fock   module
+!!!           m_sector module
+!!!           m_spmat  module
 !!! source  : atomic_context.f90
 !!! type    : modules
 !!! author  : yilin wang (email:qhwyl2006@126.com)
