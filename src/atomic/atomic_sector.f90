@@ -680,3 +680,39 @@
 
      return
   end subroutine atomic_make_sectors
+
+
+!!
+!! @sub atomic_check_shmat
+!!
+!! verify whether the atomic Hamiltonian is real
+!!
+  subroutine atomic_check_shmat()
+     use constants, only : eps6
+     use constants, only : mystd
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
+
+     implicit none
+
+!! local variables
+     ! loop index
+     integer :: i
+
+!! [body
+
+     ! we should go through every subspace
+     do i=1,nsectors
+         if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
+             call s_print_error('atomic_check_shmat', &
+                 & 'atomic Hamiltonian is not real!')
+         else
+             write(mystd,'(4X,a,i4,2X,a)') 'subspace: ', i, 'is valid'
+         endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
+     enddo ! over i={1,nsectors} loop
+
+!! body]
+
+     return
+  end subroutine atomic_check_shmat
