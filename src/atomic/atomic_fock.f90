@@ -272,6 +272,31 @@
   end subroutine atomic_make_fhmat
 
 !!
+!! @sub atomic_diag_fhmat
+!!
+!! diagonalize atomic Hamiltonian directly by a lapack call
+!!
+  subroutine atomic_diag_fhmat()
+     use constants, only : mystd
+
+     use control, only : ncfgs
+
+     use m_fock, only : hmat
+     use m_fock, only : eval, evec
+
+     implicit none
+
+!! [body
+
+     call s_eig_sy(ncfgs, ncfgs, real(hmat), eval, evec)
+     write(mystd,'(4X,a)') 'eigenvalues and eigenvectors are built'
+
+!! body]
+
+     return
+  end subroutine atomic_diag_fhmat
+
+!!
 !! @sub atomic_check_fhmat
 !!
 !! verify whether the atomic Hamiltonian is real
