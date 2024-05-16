@@ -204,12 +204,32 @@
 !!
      real(dp), public, save :: Uc    = 2.0_dp
 
+!!
+!! @var Uv
+!!
+!! inter-orbital Coulomb interaction
+!!
      real(dp), public, save :: Uv    = 2.0_dp
 
+!!
+!! @var Jz
+!!
+!! Hund's exchange interaction in z axis
+!!
      real(dp), public, save :: Jz    = 0.0_dp
 
+!!
+!! @var Js
+!!
+!! spin-flip interaction
+!!
      real(dp), public, save :: Js    = 0.0_dp
 
+!!
+!! @var Jp
+!!
+!! pair-hopping interaction
+!!
      real(dp), public, save :: Jp    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
