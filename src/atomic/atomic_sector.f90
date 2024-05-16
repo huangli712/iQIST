@@ -542,49 +542,49 @@
 !-------------------------------------------------------------------------
          do jbas=1,sectors(isec)%ndim
              alploop: do alpha=1,norbs
-                 betloop: do betta=1,norbs
+             betloop: do betta=1,norbs
 
-                     isgn = 0
-                     knew = dec_basis(sectors(isec)%basis(jbas))
-                     code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
+             isgn = 0
+             knew = dec_basis(sectors(isec)%basis(jbas))
+             code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
 
-! impurity level is too small
-                     if ( abs(emat(alpha,betta)) < epst ) CYCLE
+             ! impurity level is too small
+             if ( abs(emat(alpha,betta)) < epst ) CYCLE
 
-! simulate one annihilation operator
-                     if ( code(betta) == 1 ) then
-                         do i=1,betta-1
-                             if ( code(i) == 1 ) isgn = isgn + 1
-                         enddo ! over i={1,betta-1} loop
-                         code(betta) = 0
+             ! simulate one annihilation operator
+             if ( code(betta) == 1 ) then
+                 do i=1,betta-1
+                     if ( code(i) == 1 ) isgn = isgn + 1
+                 enddo ! over i={1,betta-1} loop
+                 code(betta) = 0
 
-! simulate one creation operator
-                         if ( code(alpha) == 0 ) then
-                             do i=1,alpha-1
-                                 if ( code(i) == 1 ) isgn = isgn + 1
-                             enddo ! over i={1,alpha-1} loop
-                             code(alpha) = 1
+                 ! simulate one creation operator
+                 if ( code(alpha) == 0 ) then
+                     do i=1,alpha-1
+                         if ( code(i) == 1 ) isgn = isgn + 1
+                     enddo ! over i={1,alpha-1} loop
+                     code(alpha) = 1
 
-! determine the row number and hamiltonian matrix elememt
-                             knew = knew - 2**(betta-1)
-                             knew = knew + 2**(alpha-1)
-                             isgn = mod(isgn,2)
+                     ! determine the row number and hamiltonian matrix elememt
+                     knew = knew - 2**(betta-1)
+                     knew = knew + 2**(alpha-1)
+                     isgn = mod(isgn,2)
 
-! now ind_basis(knew) means the index of new Fock state
-                             if ( ind_basis(knew) == 0 ) then
-                                 call s_print_error('atomic_make_shmat','error while determining new state!')
-                             endif ! back if ( ind_basis(knew) == 0 ) block
-                             do ibas=1,sectors(isec)%ndim
-                                 if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
-                                     sectors(isec)%hmat(ibas,jbas) = &
-                                     sectors(isec)%hmat(ibas,jbas) + &
-                                     emat(alpha,betta) * (-one)**isgn
-                                 endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
-                             enddo ! over ibas={1,sectors(isec)%ndim} loop
-                         endif ! back if ( code(alpha) == 0 ) block
-                     endif ! back if ( code(betta_ == 1 ) block
+                     ! now ind_basis(knew) means the index of new Fock state
+                     if ( ind_basis(knew) == 0 ) then
+                         call s_print_error('atomic_make_shmat','error while determining new state!')
+                     endif ! back if ( ind_basis(knew) == 0 ) block
+                     do ibas=1,sectors(isec)%ndim
+                         if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
+                             sectors(isec)%hmat(ibas,jbas) = &
+                             sectors(isec)%hmat(ibas,jbas) + &
+                             emat(alpha,betta) * (-one)**isgn
+                         endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
+                     enddo ! over ibas={1,sectors(isec)%ndim} loop
+                 endif ! back if ( code(alpha) == 0 ) block
+             endif ! back if ( code(betta_ == 1 ) block
 
-                 enddo betloop ! over betta={1,norbs} loop
+             enddo betloop ! over betta={1,norbs} loop
              enddo alploop ! over alpha={1,norbs} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
