@@ -199,7 +199,7 @@
      occu = zero
      spin = zero
      fmat = zero
-
+     !
      hmat = czero
 
 !! body]

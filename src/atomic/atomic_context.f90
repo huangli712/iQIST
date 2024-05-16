@@ -172,6 +172,7 @@
   subroutine cat_alloc_fock_eigen()
      implicit none
 
+!! local variables
      ! the status flag
      integer :: istat
 
@@ -183,12 +184,13 @@
      allocate(occu(ncfgs,ncfgs),       stat=istat)
      allocate(spin(ncfgs,ncfgs),       stat=istat)
      allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
-
+     !
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
      ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_fock','can not allocate enough memory')
+         call s_print_error('cat_alloc_fock_eigen', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
@@ -197,7 +199,7 @@
      occu = zero
      spin = zero
      fmat = zero
-
+     !
      hmat = czero
 
 !! body]
@@ -258,7 +260,6 @@
 !!>>> module m_sector                                                  <<<
 !!========================================================================
 
-!!>>> data structure for good quantum numbers (GQNs) algorithm
   module m_sector
      use constants, only : dp, zero, czero
 
