@@ -85,19 +85,24 @@
      ! Sz, Jz, and PS for all orbitals
      integer :: orb_sz(norbs)
      integer :: orb_jz(norbs)
+     integer :: orb_ps(nband)
 
+     ! N, Sz, Jz, and PS for all Fock states
      integer :: fock_ntot(ncfgs)
      integer :: fock_sz(ncfgs)
      integer :: fock_jz(ncfgs)
      integer :: fock_ps(ncfgs)
 
+     ! N, Sz, Jz, and PS for all subspaces
      integer :: sect_ntot(ncfgs)
      integer :: sect_sz(ncfgs)
      integer :: sect_jz(ncfgs)
      integer :: sect_ps(ncfgs)
 
+     ! dimension for subspaces
      integer :: ndims(ncfgs)
 
+     ! binary form of Fock state
      integer :: code(norbs)
 
 ! sector basis index
