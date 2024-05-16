@@ -502,13 +502,23 @@
 
 !!>>> atomic_make_shmat: make Hamiltonian for each sector one by one
   subroutine atomic_make_shmat()
-     use constants, only : one, epst, czero
+     use constants, only : dp
+     use constants, only : one
+     use constants, only : czero
+     use constants, only : epst
      use constants, only : mystd
 
      use control, only : norbs
-     use m_fock, only : bin_basis, dec_basis, ind_basis
-     use m_spmat, only : emat, umat
-     use m_sector, only : nsectors, sectors
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
+
+     use m_spmat, only : emat
+     use m_spmat, only : umat
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
 
      implicit none
 
@@ -516,10 +526,10 @@
      ! loop index
      integer :: i
 
-     ! loop index for sector
+     ! loop index for subspace (sector)
      integer :: isec
 
-     ! loop index for basis
+     ! loop index for Fock state
      integer :: ibas
      integer :: jbas
 
