@@ -378,7 +378,7 @@
      one_sector%evec  = zero
      one_sector%hmat  = czero
 
-! initialize fmat one by one
+     ! initialize fmat one by one
      do i=1,one_sector%nops
         do j=0,1
             one_sector%fmat(i,j)%n = 0
@@ -400,10 +400,10 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(sectors(nsectors), stat=istat)
 
-! check status
+     ! check status
      if ( istat /= 0 ) then
          call s_print_error('alloc_m_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -438,12 +438,12 @@
   subroutine dealloc_one_sector(one_sector)
      implicit none
 
-! external arguments
-! the sector
+!! external arguments
+     ! the sector
      type (t_sector), intent(inout) :: one_sector
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
@@ -474,14 +474,14 @@
   subroutine cat_free_sectors()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
 !! [body
 
-! deallocate memory for arrays in T_sector
-! before deallocating sectors to avoid memory leak
+     ! deallocate memory for arrays in T_sector
+     ! before deallocating sectors to avoid memory leak
      if ( allocated(sectors) ) then
          do i=1,nsectors
              call dealloc_one_sector(sectors(i))
@@ -500,8 +500,6 @@
 !!>>> module m_spmat                                                   <<<
 !!========================================================================
 
-!!>>> single particle related matrices, including:
-!!>>> crystal field, spin-orbital coupling, Coulomb interaction U tensor
   module m_spmat
      use constants, only : dp, czero
 
