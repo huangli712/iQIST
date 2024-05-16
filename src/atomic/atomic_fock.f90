@@ -21,8 +21,8 @@
   subroutine atomic_make_ffmat()
      use control, only : ictqmc
      use control, only : norbs, ncfgs
-     use m_full, only : dec_basis, ind_basis
-     use m_full, only : fmat, evec
+     use m_fock, only : dec_basis, ind_basis
+     use m_fock, only : fmat, evec
 
      implicit none
 
@@ -69,8 +69,8 @@
      use constants, only : zero, one
 
      use control, only : norbs, ncfgs
-     use m_full, only : bin_basis
-     use m_full, only : occu, evec
+     use m_fock, only : bin_basis
+     use m_fock, only : occu, evec
 
      implicit none
 
@@ -103,8 +103,8 @@
      use constants, only: zero, half
 
      use control, only : norbs, ncfgs
-     use m_full, only : bin_basis
-     use m_full, only : spin, evec
+     use m_fock, only : bin_basis
+     use m_fock, only : spin, evec
 
 ! local variables
 ! loop index over orbits
@@ -138,8 +138,8 @@
      use constants, only : one, czero, epst
 
      use control, only : norbs, ncfgs
-     use m_full, only : bin_basis, dec_basis, ind_basis
-     use m_full, only : hmat
+     use m_fock, only : bin_basis, dec_basis, ind_basis
+     use m_fock, only : hmat
      use m_spmat, only : emat, umat
 
      implicit none

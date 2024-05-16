@@ -12,6 +12,107 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! @sub atomic_dispatcher
+!!
+!! launch various computational tasks. it is the core subroutine of the
+!! atomic eigenvalue problem solver
+!!
+  subroutine atomic_dispatcher()
+     use constants, only : mystd
+
+     use control, only : ictqmc
+
+     implicit none
+
+!! local variables
+     ! used to draw a dashed line
+     character (len=1) :: dash(54)
+
+!! [body
+
+     ! setup dash
+     dash = '-'
+
+     write(mystd,'(2X,a)') 'start initialization'
+     write(mystd,'(2X,54a1)') dash ! dashed line
+     write(mystd,*)
+
+     ! make Fock basis for the full many particle Hiblert space
+     write(mystd,'(2X,a)') 'make Fock basis'
+     call atomic_build_fock()
+     write(mystd,*)
+
+     ! make single particle matrix
+     ! such as spin-orbit coupling and crystal field splitting
+     write(mystd,'(2X,a)') 'make single particle matrix'
+     call atomic_build_spmat()
+     write(mystd,*)
+
+     ! make natural eigenbasis
+     write(mystd,'(2X,a)') 'make natural eigenbasis'
+     call atomic_build_natural()
+     write(mystd,*)
+
+     ! launch the computational kernel
+     select case (ictqmc)
+
+         ! diagonalize the atomic Hamiltonian directly
+         ! good quantum numbers -> N/A
+         case (1)
+             write(mystd,'(2X,a)') 'start exact diagonalization'
+             write(mystd,'(2X,54a1)') dash ! dashed line
+             call atomic_f_driver()
+
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers -> N
+         !
+         ! crystal field splitting: yes
+         ! spin-orbit coupling: yes
+         case (2)
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
+             call atomic_s_driver()
+
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers -> N, Sz
+         !
+         ! spin-orbit coupling: no
+         ! Coulomb interaction: Slater-Condon type
+         case (3)
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N, Sz)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
+             call atomic_s_driver()
+
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers -> N, Sz, PS
+         !
+         ! spin-orbit coupling: no
+         ! Coulomb interaction: Kanamori type
+         case (4)
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N, Sz, PS)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
+             call atomic_s_driver()
+
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers -> N, Jz
+         !
+         ! crystal field splitting: no
+         ! spin-orbit coupling: yes
+         case (5)
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N, Jz)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
+             call atomic_s_driver()
+
+         case default
+             call s_print_error('atomic_dispatcher','this task is not supported')
+
+     end select
+
+!! body]
+
+     return
+  end subroutine atomic_dispatcher
 !!>>> atomic_f_driver: solve the atomic eigenvalue problem using full
 !!>>> Hilbert space diagonalization
 !!>>> note: the output files are only compatible with BEGONIA and LAVENDER
@@ -20,8 +121,8 @@
      use constants, only : dp, eps6, mystd
 
      use control, only : ncfgs
-     use m_full, only : hmat, eval, evec
-     use m_full, only : alloc_m_full, dealloc_m_full
+     use m_fock, only : hmat, eval, evec
+     use m_fock, only : cat_alloc_fock_eigen, cat_free_fock_eigen
 
      implicit none
 
@@ -35,7 +136,7 @@
 ! allocate memory for global variables
      write(mystd,'(2X,a)') 'allocate memory for global variables in full Hilbert space'
      call cpu_time(time_begin) ! record starting time
-     call alloc_m_full()
+     call cat_alloc_fock_eigen()
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
@@ -108,7 +209,7 @@
 ! deallocate memory
      write(mystd,'(2X,a)') 'deallocate memory for global variables in full Hilbert space'
      call cpu_time(time_begin) ! record starting time
-     call dealloc_m_full()
+     call cat_free_fock_eigen()
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)

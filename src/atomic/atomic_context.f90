@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : jasmine
-!!! program : m_full     module
+!!! program : m_fock     module
 !!!           m_sector   module
 !!!           m_spmat    module
 !!! source  : atomic_context.f90
@@ -15,11 +15,11 @@
 !!!-----------------------------------------------------------------------
 
 !!========================================================================
-!!>>> module m_full                                                    <<<
+!!>>> module m_fock                                                    <<<
 !!========================================================================
 
 !!>>> define Fock basis of full Hilbert space and corresponding eigensystem
-  module m_full
+  module m_fock
      use constants, only : dp, zero, czero
 
      use control, only : norbs, ncfgs
@@ -65,11 +65,11 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: alloc_m_full_basis
-     public :: dealloc_m_full_basis
+     public :: cat_alloc_fock_basis
+     public :: cat_free_fock_basis
 
-     public :: alloc_m_full
-     public :: dealloc_m_full
+     public :: cat_alloc_fock_eigen
+     public :: cat_free_fock_eigen
 
   contains ! encapsulated functionality
 
@@ -77,8 +77,8 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> alloc_m_full_basis: allocate memory for Fock basis matrices
-  subroutine alloc_m_full_basis()
+!!>>> alloc_m_fock_basis: allocate memory for Fock basis matrices
+  subroutine cat_alloc_fock_basis()
      implicit none
 
 ! the status flag
@@ -92,7 +92,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_full_basis','can not allocate enough memory')
+         call s_print_error('alloc_m_fock_basis','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -102,10 +102,10 @@
      ind_basis = 0
 
      return
-  end subroutine alloc_m_full_basis
+  end subroutine cat_alloc_fock_basis
 
-!!>>> alloc_m_full: allocate memory for eigensystem defined in Fock basis
-  subroutine alloc_m_full()
+!!>>> alloc_m_fock: allocate memory for eigensystem defined in Fock basis
+  subroutine cat_alloc_fock_eigen()
      implicit none
 
 ! the status flag
@@ -122,7 +122,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_full','can not allocate enough memory')
+         call s_print_error('alloc_m_fock','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -135,14 +135,14 @@
      hmat = czero
 
      return
-  end subroutine alloc_m_full
+  end subroutine cat_alloc_fock_eigen
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> dealloc_m_full_basis: deallocate memory for these matrices
-  subroutine dealloc_m_full_basis()
+!!>>> dealloc_m_fock_basis: deallocate memory for these matrices
+  subroutine cat_free_fock_basis()
      implicit none
 
      if ( allocated(dim_sub_n) ) deallocate(dim_sub_n)
@@ -151,10 +151,10 @@
      if ( allocated(ind_basis) ) deallocate(ind_basis)
 
      return
-  end subroutine dealloc_m_full_basis
+  end subroutine cat_free_fock_basis
 
-!!>>> dealloc_m_full: deallocate memory for these matrices
-  subroutine dealloc_m_full()
+!!>>> dealloc_m_fock: deallocate memory for these matrices
+  subroutine cat_free_fock_eigen()
      implicit none
 
      if ( allocated(eval) ) deallocate(eval)
@@ -166,9 +166,9 @@
      if ( allocated(hmat) ) deallocate(hmat)
 
      return
-  end subroutine dealloc_m_full
+  end subroutine cat_free_fock_eigen
 
-  end module m_full
+  end module m_fock
 
 !!========================================================================
 !!>>> module m_sector                                                  <<<
@@ -470,8 +470,8 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: alloc_m_spmat
-     public :: dealloc_m_spmat
+     public :: cat_alloc_spmat
+     public :: cat_free_spmat
 
   contains ! encapsulated functionality
 
@@ -480,7 +480,7 @@
 !!========================================================================
 
 !!>>> alloc_m_spmat: allocate memory for these matrices
-  subroutine alloc_m_spmat()
+  subroutine cat_alloc_spmat()
      implicit none
 
 ! local variables
@@ -507,14 +507,14 @@
      tmat = czero
 
      return
-  end subroutine alloc_m_spmat
+  end subroutine cat_alloc_spmat
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
 !!>>> dealloc_m_spmat: deallocate memory for these matrices
-  subroutine dealloc_m_spmat()
+  subroutine cat_free_spmat()
      implicit none
 
      if ( allocated(umat) ) deallocate(umat)
@@ -524,6 +524,6 @@
      if ( allocated(tmat) ) deallocate(tmat)
 
      return
-  end subroutine dealloc_m_spmat
+  end subroutine cat_free_spmat
 
   end module m_spmat

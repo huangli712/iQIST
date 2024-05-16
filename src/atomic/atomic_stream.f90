@@ -24,7 +24,7 @@
 !!!-----------------------------------------------------------------------
 
 !!>>> atomic_config: read config parameters from file atom.config.in
-  subroutine atomic_config()
+  subroutine atomic_setup_param()
      use constants, only : dp
      use parser, only : p_create, p_destroy, p_parse, p_get
 
@@ -120,10 +120,10 @@
      endif ! back if ( exists .eqv. .true. ) block
 
      return
-  end subroutine atomic_config
+  end subroutine atomic_setup_param
 
 !!>>> atomic_check_config: check the validity of input config parameters
-  subroutine atomic_check_config()
+  subroutine atomic_check_param()
      use constants, only : zero, mystd
 
      use control ! ALL
@@ -298,7 +298,7 @@
      endif ! back if ( lpass .eqv. .false. ) block
 
      return
-  end subroutine atomic_check_config
+  end subroutine atomic_check_param
 
 !!>>> atomic_read_cmat: read crystal field from file atomic.cmat.in
   subroutine atomic_read_cmat()
@@ -442,7 +442,7 @@
 !!>>> atomic_make_spmat: make single particle related matrices, including
 !!>>> crystal field (CF), spin-orbit coupling (SOC), and Coulomb interaction
 !!>>> U tensor
-  subroutine atomic_make_spmat()
+  subroutine atomic_build_spmat()
      use constants, only : two, czero
 
      use control, only : ibasis
@@ -512,12 +512,12 @@
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
      return
-  end subroutine atomic_make_spmat
+  end subroutine atomic_build_spmat
 
 !!>>> atomic_make_fock: make Fock basis for the full Hilbert space
-  subroutine atomic_make_fock()
+  subroutine atomic_build_fock()
      use control, only : norbs, ncfgs
-     use m_full, only : dim_sub_n, bin_basis, dec_basis, ind_basis
+     use m_fock, only : dim_sub_n, bin_basis, dec_basis, ind_basis
 
      implicit none
 
@@ -571,11 +571,11 @@
      call atomic_dump_fock()
 
      return
-  end subroutine atomic_make_fock
+  end subroutine atomic_build_fock
 
 !!>>> atomic_make_natural: make natural basis, on which the impurity
 !!>>> energy matrix is diagonal
-  subroutine atomic_make_natural()
+  subroutine atomic_build_natural()
      use constants, only : dp, czero
 
      use control, only : ibasis
@@ -677,7 +677,7 @@
      call atomic_dump_umat()
 
      return
-  end subroutine atomic_make_natural
+  end subroutine atomic_build_natural
 
 !!>>> atomic_2natural_case1: make natural basis for no crystal field or
 !!>>> diagonal crystal field, without spin-orbital coupling
@@ -873,3 +873,55 @@
 
      return
   end subroutine atomic_2natural_case4
+
+!!========================================================================
+!!>>> manage memory for atomic eigenvalue problem solver               <<<
+!!========================================================================
+
+!!
+!! @sub atomic_alloc_array
+!!
+!! allocate memory for global arrays and then initialize them
+!!
+  subroutine atomic_alloc_array()
+     use m_fock, only : cat_alloc_fock_basis
+     use m_spmat, only : cat_alloc_spmat
+
+     implicit none
+
+!! [body
+
+     ! allocate memory for Fock basis
+     call cat_alloc_fock_basis()
+
+     ! allocate memory for single particle matrices
+     call cat_alloc_spmat()
+
+!! body]
+
+     return
+  end subroutine atomic_alloc_array
+
+!!
+!! @sub atomic_final_array
+!!
+!! garbage collection for this code, please refer to atomic_alloc_array()
+!!
+  subroutine atomic_final_array()
+     use m_fock, only : cat_free_fock_basis
+     use m_spmat, only : cat_free_spmat
+
+     implicit none
+
+!! [body
+
+     ! deallocate memory for single particle matrices
+     call cat_free_spmat()
+
+     ! deallocate memory for Fock basis
+     call cat_free_fock_basis()
+
+!! body]
+
+     return
+  end subroutine atomic_final_array
