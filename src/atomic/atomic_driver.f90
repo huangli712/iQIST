@@ -275,9 +275,10 @@
 
 !! [body
 
-! make all the sectors, allocate sectors memory inside
+     ! make the subspaces (sectors)
+     ! the memory will be allocated automatically
      write(mystd,*)
-     write(mystd,'(2X,a)') 'determine sectors using good quantum numbers'
+     write(mystd,'(2X,a)') 'construct subspaces for atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_sectors()
@@ -286,8 +287,8 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! make atomic Hamiltonian
-     write(mystd,'(2X,a)') 'assemble atomic Hamiltonian for all sectors'
+     ! build the atomic Hamiltonian
+     write(mystd,'(2X,a)') 'assemble atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_shmat()
@@ -300,11 +301,7 @@
      write(mystd,'(2X,a)') 'check whether the atomic Hamiltonian is real or not'
      !
      call cpu_time(time_begin) ! record starting time
-     do i=1,nsectors
-         if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
-             call s_print_error('atomic_s_driver','hmat is not real!')
-         endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
-     enddo ! over i={1,nsectors} loop
+     call atomic_check_shmat()
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)

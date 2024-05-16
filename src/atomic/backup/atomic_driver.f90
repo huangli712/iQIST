@@ -287,7 +287,7 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! buid the atomic Hamiltonian
+     ! build the atomic Hamiltonian
      write(mystd,'(2X,a)') 'assemble atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
