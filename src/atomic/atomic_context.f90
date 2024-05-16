@@ -307,19 +307,19 @@
 ! the start index of this sector
          integer :: istart
 
-! total number of electrons N
+         ! total number of electrons N
          integer :: nele
 
-! z component of spin: Sz
+         ! z component of spin: Sz
          integer :: sz
  
-! z component of spin-orbit momentum: Jz
+         ! z component of spin-orbit momentum: Jz
          integer :: jz
 
-! PS good quantum number
+         ! PS good quantum number
          integer :: ps
 
-! the Fock basis index of this sector
+         ! the Fock basis index of this sector
          integer, allocatable  :: basis(:)
 
 ! the next sector after a fermion operator acts on this sector
@@ -344,16 +344,32 @@
 
      end type t_sector
 
-! number of sectors
+!!
+!! @var nsectors
+!!
+!! number of subspaces (sectors)
+!!
      integer, public, save  :: nsectors
 
-! maximum dimension of sectors
+!!
+!! @var max_dim_sect
+!!
+!! maximum dimension of subspaces (sectors)
+!!
      integer, public, save  :: max_dim_sect
 
-! average dimension of sectors
+!!
+!! @var ave_dim_sect
+!!
+!! average dimension of subspaces (sectors)
+!!
      real(dp), public, save :: ave_dim_sect
 
-! all the sectors
+!!
+!! @var sectors
+!!
+!! an array of structs that stores all the subspaces
+!!
      type (t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
