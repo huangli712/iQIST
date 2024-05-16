@@ -146,7 +146,11 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> dealloc_m_fock_basis: deallocate memory for these matrices
+!!
+!! @sub cat_free_fock_basis
+!!
+!! deallocate memory for the Fock basis
+!!
   subroutine cat_free_fock_basis()
      implicit none
 
@@ -162,7 +166,11 @@
      return
   end subroutine cat_free_fock_basis
 
-!!>>> dealloc_m_fock: deallocate memory for these matrices
+!!
+!! @sub cat_free_fock_eigen
+!!
+!! deallocate memory for atomic eigensystem
+!!
   subroutine cat_free_fock_eigen()
      implicit none
 
