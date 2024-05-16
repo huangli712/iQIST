@@ -31,39 +31,24 @@
 
      implicit none
 
-! dimension of subspace with total electron N
-! if i is the number of electrons, then dim_sub_n(i) will tell you how
-! many states there are in the subspace with i electrons
      integer, public, save, allocatable  :: dim_sub_n(:)
 
-! binary form of Fock basis
      integer, public, save, allocatable  :: bin_basis(:,:)
 
-! decimal form of Fock basis
-! dec_basis(i) will tell you what the i-th Fock state is (a decimal number)
      integer, public, save, allocatable  :: dec_basis(:)
 
-! index of Fock basis, given their decimal number
-! ind_basis(i) will tell you for a given decimal number what its
-! corresponding Fock state index is
      integer, public, save, allocatable  :: ind_basis(:)
 
-! eigenvalues of hmat
      real(dp), public, save, allocatable :: eval(:)
 
-! eigenvectors of hmat
      real(dp), public, save, allocatable :: evec(:,:)
 
-! N occupany number for the atomic eigenstates
      real(dp), public, save, allocatable :: occu(:,:)
 
-! Sz for the atomic eigenstates
      real(dp), public, save, allocatable :: spin(:,:)
 
-! F-matrix for annihilation fermion operators
      real(dp), public, save, allocatable :: fmat(:,:,:)
 
-! atomic Hamiltonian
      complex(dp), public, save, allocatable :: hmat(:,:)
 
 !!========================================================================
