@@ -386,8 +386,8 @@
      public :: cat_alloc_sectors
 
      ! declaration of module procedures: deallocate memory
-     public :: decat_alloc_fmat
-     public :: decat_alloc_sector
+     public :: cat_free_fmat
+     public :: cat_free_sector
      public :: cat_free_sectors
 
   contains ! encapsulated functionality
@@ -501,8 +501,8 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!>>> decat_alloc_fmat: deallocate one fmat
-  subroutine decat_alloc_fmat(one_fmat)
+!>>> cat_free_fmat: deallocate one fmat
+  subroutine cat_free_fmat(one_fmat)
      implicit none
 
 ! external arguments
@@ -516,10 +516,10 @@
 !! body]
 
      return
-  end subroutine decat_alloc_fmat
+  end subroutine cat_free_fmat
 
-!!>>> decat_alloc_sector: deallocate memory for one sector
-  subroutine decat_alloc_sector(one_sector)
+!!>>> cat_free_sector: deallocate memory for one sector
+  subroutine cat_free_sector(one_sector)
      implicit none
 
 !! external arguments
@@ -543,7 +543,7 @@
      if ( allocated(one_sector%fmat)  ) then
          do i=1,one_sector%nops
              do j=0,1
-                 call decat_alloc_fmat(one_sector%fmat(i,j))
+                 call cat_free_fmat(one_sector%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,one_sector%nops} loop
          deallocate(one_sector%fmat)
@@ -552,9 +552,9 @@
 !! body]
 
      return
-  end subroutine decat_alloc_sector
+  end subroutine cat_free_sector
 
-!!>>> decat_alloc_sectors: deallocate memory of sectors
+!!>>> cat_free_sectors: deallocate memory of sectors
   subroutine cat_free_sectors()
      implicit none
 
@@ -568,7 +568,7 @@
      ! before deallocating sectors to avoid memory leak
      if ( allocated(sectors) ) then
          do i=1,nsectors
-             call decat_alloc_sector(sectors(i))
+             call cat_free_sector(sectors(i))
          enddo ! over i={1,nsectors} loop
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
