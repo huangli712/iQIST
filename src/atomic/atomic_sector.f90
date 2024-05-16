@@ -228,12 +228,15 @@
          ! the first Fock state should belong to the first subspace
          if ( nsect == 0 ) then
              sect_ntot(1) = my_ntot
+             !
              if ( ictqmc == 3 .or. ictqmc == 4 ) then
                  sect_sz(1) = my_sz
              endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
+             !
              if (ictqmc == 4) then
                  sect_ps(1) = my_ps
              endif ! back if ( ictqmc == 4 ) block
+             !
              if ( ictqmc == 5 ) then
                  sect_jz(1) = my_jz
              endif ! back if ( ictqmc == 5 ) block
@@ -241,9 +244,18 @@
              nsect = nsect + 1
              ndims(1) = ndims(1) + 1
              sector_basis(ndims(1),1) = i
-         else
-! loop over the exists sectors
+
+             write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', nsect
+             write(mystd,'(2X,a,i2)', advance = 'no') 'N  = ', my_ntot
+             write(mystd,'(2X,a,i2)', advance = 'no') 'Sz = ', my_sz
+             write(mystd,'(2X,a,i2)', advance = 'no') 'PS = ', my_ps
+             write(mystd,'(2X,a,i2)') 'Jz = ', my_jz
+         else ! nsect > 0
+             ! loop over the exists subspaces
+             ! if which_sect > 0, it means that the Fock state can
+             ! be classified into an existing subspace
              which_sect = -1
+             !
              do j=1,nsect
 ! compare the current state with existing sectors
                  select case (ictqmc)
