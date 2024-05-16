@@ -167,3 +167,73 @@
      real(dp), public, save :: lambda= 0.0_dp
 
   end module control
+
+!!========================================================================
+!!>>> module version                                                   <<<
+!!========================================================================
+
+!!
+!! @mod version
+!!
+!! define the semantic version string for the jasmine code.
+!!
+  module version
+     implicit none
+
+!!
+!! @var V_FULL
+!!
+!! version string, version number + date info. + status info.
+!!
+     character(len=20), public, parameter :: V_FULL = 'v0.8.5 @ 2024.01.30D'
+
+!!
+!! @var V_CURR
+!!
+!! version string, only version number
+!!
+     character(len=06), public, parameter :: V_CURR = 'v0.8.5'
+
+!!
+!! @var V_DATE
+!!
+!! version string, only date info.
+!!
+     character(len=11), public, parameter :: V_DATE = '2024.01.30'
+
+!!
+!! @var V_STAT
+!!
+!! version string, only status info., D means devel, T testing, R released.
+!!
+     character(len=01), public, parameter :: V_STAT = 'D'
+
+!!
+!! @var V_AUTH
+!!
+!! version string, author info.
+!!
+     character(len=11), public, parameter :: V_AUTH = 'by li huang'
+
+!!
+!! @var V_INST
+!!
+!! version string, affiliation info.
+!!
+     character(len=36), public, parameter :: V_INST = 'China Academy of Engineering Physics'
+
+!!
+!! @var V_MAIL
+!!
+!! version string, email info.
+!!
+     character(len=22), public, parameter :: V_MAIL = 'huangli@caep.cn'
+
+!!
+!! @var V_GPL3
+!!
+!! version string, license info.
+!!
+     character(len=36), public, parameter :: V_GPL3 = 'GNU General Public License version 3'
+
+  end module version
