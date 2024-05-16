@@ -246,7 +246,7 @@
      if ( allocated(occu) ) deallocate(occu)
      if ( allocated(spin) ) deallocate(spin)
      if ( allocated(fmat) ) deallocate(fmat)
-
+     !
      if ( allocated(hmat) ) deallocate(hmat)
 
 !! body]
