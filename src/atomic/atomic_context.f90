@@ -271,10 +271,18 @@
 
      implicit none
 
-! data structure for one F-matrix
-!-------------------------------------------------------------------------
-     private :: t_fmat
-     type t_fmat
+!!
+!! @struct Tf
+!!
+!! data structure for annihilation operator f or creation operator f^+,
+!!
+!!     < alpha | f | beta > or < alpha | f^+ | beta >
+!!
+!! where | alpha > and | beta > are the atomic eigenstates in the
+!! given subspace labelled by good quantum numbers
+!!
+     private :: Tf
+     type Tf
 
 ! the dimension, n x m
          integer :: n
@@ -283,7 +291,7 @@
 ! the memory space for the matrix
          real(dp), allocatable :: val(:,:)
 
-     end type t_fmat
+     end type Tf
 
 ! data structure for one sector
 !-------------------------------------------------------------------------
@@ -332,7 +340,7 @@
 ! the F-matrix between this sector and all other sectors
 ! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
 ! if this sector doesn't point to some other sectors, the pointer is null
-         type (t_fmat), allocatable :: fmat(:,:)
+         type (Tf), allocatable :: fmat(:,:)
 
      end type t_sector
 
@@ -371,7 +379,7 @@
 
 !! external arguments
      ! the fmat
-     type (t_fmat), intent(inout) :: one_fmat
+     type (Tf), intent(inout) :: one_fmat
 
 !! local variables
      ! the status flag
@@ -477,7 +485,7 @@
 
 ! external arguments
 ! the fmat
-     type (t_fmat), intent(inout) :: one_fmat
+     type (Tf), intent(inout) :: one_fmat
 
 !! [body
 
