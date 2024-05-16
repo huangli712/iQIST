@@ -257,7 +257,7 @@
              which_sect = -1
              !
              do j=1,nsect
-! compare the current state with existing sectors
+                 ! compare the current Fock state with existing subspaces
                  select case (ictqmc)
                      case (2)
                          if ( sect_ntot(j) == my_ntot ) then
@@ -290,23 +290,36 @@
                  end select
              enddo ! over j={1,nsect} loop
 
-! we can not assign the current state into any existing sectors, so we
-! have to define a new sector
+             ! we can not assign the current Fock state into any existing
+             ! subspaces, so we have to create a new one
              if ( which_sect == -1 ) then
                  nsect = nsect + 1
+                 call s_assert( nsect <= max_num_sect )
+
                  sect_ntot(nsect) = my_ntot
+                 !
                  if ( ictqmc == 3 .or. ictqmc == 4 ) then
                      sect_sz(nsect) = my_sz
                  endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
+                 !
                  if ( ictqmc == 4 ) then
                      sect_ps(nsect) = my_ps
                  endif ! back if ( ictqmc == 4 ) block
+                 !
                  if ( ictqmc == 5 ) then
                      sect_jz(nsect) = my_jz
                  endif ! back if ( ictqmc == 5 ) block
+
                  ndims(nsect) = ndims(nsect) + 1
                  sector_basis(ndims(nsect),nsect) = i
-! we assign the current state to one of the old sectors
+
+                 write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', nsect
+                 write(mystd,'(2X,a,i2)', advance = 'no') 'N  = ', my_ntot
+                 write(mystd,'(2X,a,i2)', advance = 'no') 'Sz = ', my_sz
+                 write(mystd,'(2X,a,i2)', advance = 'no') 'PS = ', my_ps
+                 write(mystd,'(2X,a,i2)') 'Jz = ', my_jz
+             ! we assign the current Fock state to one of the old subspace
+             ! that totally matched
              else
                  ndims(which_sect) = ndims(which_sect) + 1
                  sector_basis(ndims(which_sect),which_sect) = i
@@ -314,9 +327,12 @@
          endif ! back if ( nsect == 0 ) block
      enddo ! over i={1,ncfgs} loop
 
-! after we know how many sectors and the dimension of each sector are there,
-! we can allocate memory for global variables for sectors
-!-------------------------------------------------------------------------
+     ! after we know the number of subspaces, and and the dimension (size)
+     ! of each subspace, we can allocate memory for the variables that
+     ! related to the subspaces
+     !--------------------------------------------------------------------
+     write(mystd,'(4X,a)') 'allocate memory for subspaces'
+     !
      max_dim_sect = 0
      ave_dim_sect = zero
      nsectors = nsect
