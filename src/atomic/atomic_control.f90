@@ -88,43 +88,75 @@
 !!
      integer, public, save :: ictqmc = 1
 
-! control flag: type of Coulomb interaction U
-! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
-! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
-! 3: Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
+!!
+!! @var icu
+!!
+!! control flag. type of Coulomb interaction matrix
+!!
+!! if icu == 1:
+!!     Kanamori type interaction. the Hund's rule coupling is isotropic.
+!!     it needs the Uc, Uv, Jz, Js, Jp parameters to build the Coulomb
+!!     interaction matrix
+!!
+!! if icu == 2:
+!!     Slater-Cordon type interaction. it needs the Ud, Jh parameters to
+!!     evaluate the Slater integrals (F0, F2, F4, F6). and they are used
+!!     build the Coulomb interaction matrix
+!!
+!! if icu == 3:
+!!     Kanamori type interaction. the Hund's rule coupling is anisotropic.
+!!     it needs the Uc, Uv, Jz, Js, Jp parameters to build the Coulomb
+!!     interaction matrix
+!!
+!! we note that if icu == 3, perhaps users need to modify the
+!!     atomic_util.f90/atomic_make_hund()
+!! subroutine to customize the Hund's rule coupling matrix
+!!
      integer, public, save :: icu    = 1
 
-! control flag: type of crystal field (CF)
-! 0: no crystal field
-! 1: diagonal crystal field
-! 2: non-diagonal crystal field
+!!
+!! @var icf
+!!
+!! control flag. type of crystal field splitting (CFS)
+!!
+!! if icf == 0:
+!!     without crystal field splitting
+!!
+!! if icf == 1:
+!!     diagonal crystal field splitting
+!!
+!! if icf == 2:
+!!     non-diagonal crystal field splitting
+!!
      integer, public, save :: icf    = 0
 
-! control flag: type of spin-orbit coupling (SOC)
-! 0: no SOC
-! 1: onsite atomic SOC, H_soc = \lambda * L*S
+!!
+!! @var isoc
+!!
+!! control flag, type of spin-orbit coupling (SOC)
+!!
+!! if isoc == 0:
+!!     without spin-orbit coupling
+!!
+!! if isoc == 1:
+!!     onsite atomic spin-orbit coupling, H_{soc} = \lambda * L \cdot S
+!!
      integer, public, save :: isoc   = 0
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! number of bands
      integer, public, save :: nband  = 1
 
-! number of spins, it should not be changed
      integer, public, save :: nspin  = 2
 
-! number of orbitals
      integer, public, save :: norbs  = 2
 
-! number of many-body configurations, the dimension of Hilbert space
      integer, public, save :: ncfgs  = 4
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! the minimal total occupancy N will be kept
      integer, public, save :: nmini = 0
 
-! the maximal total occupancy N will be kept
      integer, public, save :: nmaxi = 2
 
 !!========================================================================
