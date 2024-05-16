@@ -83,7 +83,7 @@
      logical :: can
 
      ! Sz, Jz, and PS for all orbitals
-     integer :: orb_good_sz(norbs)
+     integer :: orb_sz(norbs)
      integer :: orb_good_jz(norbs)
 
      integer :: fock_ntot(ncfgs)
@@ -117,10 +117,10 @@
 ! allocate memory
      allocate(sector_basis(ncfgs,ncfgs))
 
-! make orb_good_sz and orb_good_jz
+! make orb_sz and orb_good_jz
 !-------------------------------------------------------------------------
-     orb_good_sz = 0
-     call atomic_make_gsz(orb_good_sz)
+     orb_sz = 0
+     call atomic_make_gsz(orb_sz)
 
 ! jz only valid for nband==3, 5, 7
      orb_good_jz = 0
@@ -146,7 +146,7 @@
 ! build Sz
              my_sz = 0
              do k=1,norbs
-                 my_sz = my_sz + orb_good_sz(k) * bin_basis(k,counter)
+                 my_sz = my_sz + orb_sz(k) * bin_basis(k,counter)
              enddo ! over k={1,norbs} loop
              fock_sz(counter) = my_sz
 ! build Jz
@@ -332,10 +332,10 @@
                          case (3)
                              if ( k == 1 ) then
                                  my_ntot = sect_ntot(i) + 1
-                                 my_sz = sect_sz(i) + orb_good_sz(j)
+                                 my_sz = sect_sz(i) + orb_sz(j)
                              else
                                  my_ntot = sect_ntot(i) - 1
-                                 my_sz = sect_sz(i) - orb_good_sz(j)
+                                 my_sz = sect_sz(i) - orb_sz(j)
                              endif ! back if ( k == 1 ) block
 ! loop over all sectors to see which sector it will point to
                              do l=1,nsectors
@@ -349,11 +349,11 @@
                          case (4)
                              if ( k == 1 ) then
                                  my_ntot = sect_ntot(i) + 1
-                                 my_sz = sect_sz(i) + orb_good_sz(j)
+                                 my_sz = sect_sz(i) + orb_sz(j)
                                  code(j) = 1
                              else
                                  my_ntot = sect_ntot(i) - 1
-                                 my_sz   = sect_sz(i) - orb_good_sz(j)
+                                 my_sz   = sect_sz(i) - orb_sz(j)
                                  code(j) = 0
                              endif ! back if ( k == 1 ) block
 ! calculate new PS number
