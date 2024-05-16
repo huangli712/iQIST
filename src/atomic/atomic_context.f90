@@ -150,10 +150,14 @@
   subroutine cat_free_fock_basis()
      implicit none
 
+!! [body
+
      if ( allocated(dim_sub_n) ) deallocate(dim_sub_n)
      if ( allocated(bin_basis) ) deallocate(bin_basis)
      if ( allocated(dec_basis) ) deallocate(dec_basis)
      if ( allocated(ind_basis) ) deallocate(ind_basis)
+
+!! body]
 
      return
   end subroutine cat_free_fock_basis
@@ -162,6 +166,8 @@
   subroutine cat_free_fock_eigen()
      implicit none
 
+!! [body
+
      if ( allocated(eval) ) deallocate(eval)
      if ( allocated(evec) ) deallocate(evec)
      if ( allocated(occu) ) deallocate(occu)
@@ -169,6 +175,8 @@
      if ( allocated(fmat) ) deallocate(fmat)
 
      if ( allocated(hmat) ) deallocate(hmat)
+
+!! body]
 
      return
   end subroutine cat_free_fock_eigen
@@ -423,7 +431,7 @@
      if ( allocated(one_sector%evec)  ) deallocate(one_sector%evec )
      if ( allocated(one_sector%hmat)  ) deallocate(one_sector%hmat )
 
-! deallocate fmat one by one
+     ! deallocate fmat one by one
      if ( allocated(one_sector%fmat)  ) then
          do i=1,one_sector%nops
              do j=0,1
@@ -432,6 +440,8 @@
          enddo ! over i={1,one_sector%nops} loop
          deallocate(one_sector%fmat)
      endif ! back if ( allocated(one_sector%fmat)  ) block
+
+!! body]
 
      return
   end subroutine dealloc_one_sector
@@ -454,6 +464,8 @@
          enddo ! over i={1,nsectors} loop
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
+
+!! body]
 
      return
   end subroutine cat_free_sectors
@@ -511,24 +523,26 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(umat(norbs,norbs,norbs,norbs), stat=istat)
      allocate(cmat(norbs,norbs),             stat=istat)
      allocate(smat(norbs,norbs),             stat=istat)
      allocate(emat(norbs,norbs),             stat=istat)
      allocate(tmat(norbs,norbs),             stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('alloc_m_spmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      umat = czero
      cmat = czero
      smat = czero
      emat = czero
      tmat = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_spmat
@@ -548,6 +562,8 @@
      if ( allocated(smat) ) deallocate(smat)
      if ( allocated(emat) ) deallocate(emat)
      if ( allocated(tmat) ) deallocate(tmat)
+
+!! body]
 
      return
   end subroutine cat_free_spmat
