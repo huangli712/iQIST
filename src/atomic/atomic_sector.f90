@@ -366,15 +366,15 @@
          write(mystd,'(2X,a,i4)') 'start:', sectors(i)%istart
      enddo ! over i={1,nsect} loop
 
-! make next sector index
-!-------------------------------------------------------------------------
-! loop over all the sectors
-     do i=1,nsectors
-! loop over all the orbtials
-         do j=1,norbs
-! loop over creation and annihilation fermion operators
-             do k=0,1
+     ! make index for next subspace
+     !--------------------------------------------------------------------
+     write(mystd,'(4X,a)') 'simulate fermion operator acts on subspaces'
+     do i=1,nsectors  ! loop over all the subspaces
+         do j=1,norbs ! loop over all the orbtials
+             do k=0,1 ! loop over creation and annihilation fermion operators
+
                  which_sect = -1
+
 ! we should check each state in this sector
                  can = .false.
                  do l=1,sectors(i)%ndim
