@@ -650,7 +650,8 @@
 !!     Coulomb interaction U tensor, etc
 !!
   module m_spmat
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : norbs
 
@@ -730,7 +731,8 @@
 
      ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_spmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_spmat', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
