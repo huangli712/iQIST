@@ -260,8 +260,14 @@
 !!>>> module m_sector                                                  <<<
 !!========================================================================
 
+!!
+!! @mod m_sector
+!!
+!! define global structures and arrays for subspace of atomic Hamiltonian
+!!
   module m_sector
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      implicit none
 
