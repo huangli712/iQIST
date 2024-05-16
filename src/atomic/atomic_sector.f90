@@ -105,13 +105,16 @@
      ! binary form of Fock state
      integer :: code(norbs)
 
-! sector basis index
-! the first index: dimension size of the sector
-! the second index: the index of sector
+     ! global indices of Fock states of subspaces
+     !
+     ! the first index: local index of Fock state in the given subspace
+     ! the second index: index of subspace
+     !
+     ! for example, sector_basis(j,i) gives the global index of Fock
+     ! state for the j-th basis function in the i-th subspace
      integer, allocatable :: sector_basis(:,:)
 
-! dummy variable
-     integer :: sum_dim
+!! [body
 
 ! initialize some variables
      sect_ntot = 0
