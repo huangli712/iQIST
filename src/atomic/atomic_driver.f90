@@ -317,8 +317,8 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! make F-matrix of both creation and annihilation operators for each sector
-     write(mystd,'(2X,a)') 'build F-matrix for all sectors'
+     ! calculate both creation and annihilation operators matrices
+     write(mystd,'(2X,a)') 'compute f^+ and f operators in atomic eigenbasis'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_sfmat()
@@ -343,7 +343,7 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! deallocate memory
+     ! deallocate memory for atomic eigenstates
      write(mystd,'(2X,a)') 'deallocate memory for atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
