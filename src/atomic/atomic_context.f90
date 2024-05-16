@@ -328,18 +328,41 @@
          ! SU(2) good quantum number: PS
          integer :: ps
 
-         ! SU(2) good quantum number: PS
+         ! collection of global indices of Fock states for this subspace
          integer, allocatable  :: basis(:)
 
+         ! pointer to (or index of) the next subspace after a fermion
+         ! operator acts on this subspace
+         !
+         !     next(nops,0) for annihilation
+         !     next(nops,1) for creation operators
+         !
+         ! if it is -1, it means the next subspace is null (outside of
+         ! the Hilbert space). otherwise, it is the index of next subspace
          integer, allocatable  :: next(:,:)
 
+         ! eigenvalues of atomic Hamiltonian in this subspace
          real(dp), allocatable :: eval(:)
 
+         ! eigenvectors of atomic Hamiltonian in this subspace
+         ! since Hamiltonian must be real, then it is real as well
          real(dp), allocatable :: evec(:,:)
 
+         ! atomic Hamiltonian in this subspace
          complex(dp), allocatable :: hmat(:,:)
 
-         type (Tf), allocatable :: fmat(:,:)
+         ! annihilation operator f or creation operator f^+ matrix
+         !
+         !     < alpha | f | beta > or < alpha | f^+ | beta >
+         !
+         ! where | alpha > and | beta > are the atomic eigenstates.
+         !
+         !     fmat(nops,0) for annihilation
+         !     fmat(nops,1) for creation operators
+         !
+         ! if the corresponding matrix element of next(:,:) is -1, then
+         ! the Tf is invalid (not allocated)
+         type(Tf), allocatable :: fmat(:,:)
 
      end type Ts
 
