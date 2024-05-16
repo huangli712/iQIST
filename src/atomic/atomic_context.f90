@@ -396,12 +396,18 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
+!!
+!! @sub cat_alloc_fmat
+!!
+!! allocate memory for annihilation operator f or creation operator f^+
+!!
   subroutine cat_alloc_fmat(one_fmat)
      implicit none
 
 !! external arguments
-     ! the fmat
-     type (Tf), intent(inout) :: one_fmat
+     ! struct for annihilation operator f or creation operator f^+
+     ! we have to make sure one_fmat%n and one_fmat%m are valid
+     type(Tf), intent(inout) :: one_fmat
 
 !! local variables
      ! the status flag
@@ -414,7 +420,8 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_fmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_fmat', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize it
@@ -425,12 +432,17 @@
      return
   end subroutine cat_alloc_fmat
 
+!!
+!! @sub cat_alloc_sector
+!!
+!! allocate memory for a subspace
+!!
   subroutine cat_alloc_sector(one_sector)
      implicit none
 
 !! external arguments
-     ! the sector
-     type (Ts), intent(inout) :: one_sector
+     ! this subspace
+     type(Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index
@@ -452,7 +464,8 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_sector','can not allocate enough memory')
+         call s_print_error('cat_alloc_sector', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
