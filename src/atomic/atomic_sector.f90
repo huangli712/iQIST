@@ -510,31 +510,31 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! loop index for sector
+     ! loop index for sector
      integer :: isec
 
-! loop index for basis
+     ! loop index for basis
      integer :: ibas
      integer :: jbas
 
-! loop index for orbital
+     ! loop index for orbital
      integer :: alpha, betta
      integer :: delta, gamma
 
-! sign change due to fermion anti-commute relation
+     ! sign change due to fermion anti-commute relation
      integer :: isgn
 
-! new basis state after four fermion operation
+     ! new basis state after four fermion operation
      integer :: knew
 
-! binary form of a Fock state
+     ! binary form of a Fock state
      integer :: code(norbs)
 
-! loop over all sectors
+     ! loop over all subspaces
      do isec=1,nsectors
          sectors(isec)%hmat = czero
 
@@ -612,6 +612,7 @@
                      if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,gamma-1} loop
                  code(gamma) = 0
+                 !
                  do i=1,delta-1
                      if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,delta-1} loop
@@ -623,6 +624,7 @@
                          if ( code(i) == 1 ) isgn = isgn + 1
                      enddo ! over i={1,betta-1} loop
                      code(betta) = 1
+                     !
                      do i=1,alpha-1
                          if ( code(i) == 1 ) isgn = isgn + 1
                      enddo ! over i={1,alpha-1} loop
