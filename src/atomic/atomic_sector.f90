@@ -556,9 +556,10 @@
              alploop: do alpha=1,norbs
              betloop: do betta=1,norbs
 
+             ! retrieve the Fock state |jbas>
              isgn = 0
              knew = dec_basis(sectors(isec)%basis(jbas))
-             code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
+             code = bin_basis(:,sectors(isec)%basis(jbas))
 
              ! impurity level is too small
              if ( abs(emat(alpha,betta)) < epst ) CYCLE
