@@ -305,7 +305,7 @@
      use m_fock, only : dim_sub_n, bin_basis
      use m_sector, only : max_dim_sect, ave_dim_sect
      use m_sector, only : nsectors, sectors
-     use m_sector, only : alloc_one_sector
+     use m_sector, only : cat_alloc_sector
      use m_sector, only : alloc_m_sector
 
      implicit none
@@ -547,7 +547,7 @@
          sectors(i)%istart = counter
          counter = counter + ndims(i)
 ! allocate memory for each sector
-         call alloc_one_sector( sectors(i) )
+         call cat_alloc_sector( sectors(i) )
 ! set basis for each sector
          do j=1,ndims(i)
              sectors(i)%basis(j) = sector_basis(j,i)
