@@ -131,39 +131,31 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
-! the following parameters are useful when icu = 1 or icu = 3
-! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 2.0_dp
 
-! interorbital Coulomb interaction
      real(dp), public, save :: Uv    = 2.0_dp
 
-! Hund's exchange interaction
      real(dp), public, save :: Jz    = 0.0_dp
 
-! spin-flip interaction
      real(dp), public, save :: Js    = 0.0_dp
 
-! pair-hopping interaction
      real(dp), public, save :: Jp    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! the following parameters are useful when icu = 2. they are used to
-! calculate the F0, F2, F4, and F6.
-! Coulomb parameter
      real(dp), public, save :: Ud    = 2.0_dp
 
-! Hund's exchange parameter
      real(dp), public, save :: Jh    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! chemical potential, used to shift energy level
-! only useful for model calculation
      real(dp), public, save :: mune  = 0.0_dp
 
-! SOC strength
+!!
+!! @var lambda
+!!
+!! strength of spin-orbit coupling
+!!
      real(dp), public, save :: lambda= 0.0_dp
 
   end module control
