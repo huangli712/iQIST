@@ -180,24 +180,32 @@
              fock_jz(ibasis) = my_jz
              !
              ! build PS
+             my_ps = 0
              do k=1,nband
-                 fock_ps(counter) = &
-                 fock_ps(counter) + (2**k) * &
-                     (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
+                 val = bin_basis(2*k-1,ibasis) - bin_basis(2*k,ibasis)
+                 my_ps = my_ps + orb_ps(k) * val**2
              enddo ! over k={1,nband} loop
+             fock_ps(ibasis) = my_ps
+
          enddo ! over j={1,dim_sub_n(i)} loop
      enddo ! over i={0,norbs} loop
+     !
+     call s_assert( ibasis == ncfgs )
+     !
+     write(mystd,'(4X,a)') 'compute [N Sz Jz PS] for Fock states'
 
-! loop over all the Fock states to determine sectors
-!-------------------------------------------------------------------------
-     nsect = 0
-     ndims = 0
-! initialize some variables
-     sect_ntot = 0
-     sect_sz = 0
-     sect_jz = 0
-     sect_ps = 0
-     sector_basis = 0
+     ! loop over all the Fock states to determine subspaces
+     !--------------------------------------------------------------------
+     write(mystd,'(4X,a)') 'create subspaces automatically'
+     !
+     nsect = 0        ! number of subspaces, a counter
+     ndims = 0        ! dimension of subspaces
+     sect_ntot = 0    ! good quantum numbers
+     sect_sz = 0      ! good quantum numbers
+     sect_jz = 0      ! good quantum numbers
+     sect_ps = 0      ! good quantum numbers
+     sector_basis = 0 ! Fock states in subspaces
+     !
      do i=1,ncfgs
          my_ntot = fock_ntot(i)
 
