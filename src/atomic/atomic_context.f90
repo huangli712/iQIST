@@ -382,12 +382,12 @@
 
      ! declaration of module procedures: allocate memory
      public :: cat_alloc_fmat
-     public :: alloc_one_sector
+     public :: cat_alloc_sector
      public :: alloc_m_sector
 
      ! declaration of module procedures: deallocate memory
      public :: decat_alloc_fmat
-     public :: dealloc_one_sector
+     public :: decat_alloc_sector
      public :: cat_free_sectors
 
   contains ! encapsulated functionality
@@ -425,7 +425,7 @@
      return
   end subroutine cat_alloc_fmat
 
-  subroutine alloc_one_sector(one_sector)
+  subroutine cat_alloc_sector(one_sector)
      implicit none
 
 !! external arguments
@@ -452,7 +452,7 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_sector','can not allocate enough memory')
+         call s_print_error('cat_alloc_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
@@ -473,7 +473,7 @@
 !! body]
 
      return
-  end subroutine alloc_one_sector
+  end subroutine cat_alloc_sector
 
   subroutine alloc_m_sector()
      implicit none
@@ -518,8 +518,8 @@
      return
   end subroutine decat_alloc_fmat
 
-!!>>> dealloc_one_sector: deallocate memory for one sector
-  subroutine dealloc_one_sector(one_sector)
+!!>>> decat_alloc_sector: deallocate memory for one sector
+  subroutine decat_alloc_sector(one_sector)
      implicit none
 
 !! external arguments
@@ -552,7 +552,7 @@
 !! body]
 
      return
-  end subroutine dealloc_one_sector
+  end subroutine decat_alloc_sector
 
 !!>>> dealloc_m_sector: deallocate memory of sectors
   subroutine cat_free_sectors()
@@ -568,7 +568,7 @@
      ! before deallocating sectors to avoid memory leak
      if ( allocated(sectors) ) then
          do i=1,nsectors
-             call dealloc_one_sector(sectors(i))
+             call decat_alloc_sector(sectors(i))
          enddo ! over i={1,nsectors} loop
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
