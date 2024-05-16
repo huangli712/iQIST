@@ -67,18 +67,22 @@
      ! good quantum number: PS
      integer :: my_ps
 
-     integer :: counter
-
      ! index of Fock state
      integer :: ibasis
 
      ! number of subspaces (sectors)
      integer :: nsect
 
+     ! index of selected subspace
      integer :: which_sect
 
+     ! dummy variable
+     integer :: val
+
+     ! can point to next subspace (sector)
      logical :: can
 
+     ! Sz, Jz, and PS for all orbitals
      integer :: orb_good_sz(norbs)
      integer :: orb_good_jz(norbs)
 
