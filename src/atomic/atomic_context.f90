@@ -113,10 +113,12 @@
   subroutine cat_alloc_fock_eigen()
      implicit none
 
-! the status flag
+     ! the status flag
      integer :: istat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(eval(ncfgs),             stat=istat)
      allocate(evec(ncfgs,ncfgs),       stat=istat)
      allocate(occu(ncfgs,ncfgs),       stat=istat)
@@ -138,6 +140,8 @@
      fmat = zero
 
      hmat = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_fock_eigen
