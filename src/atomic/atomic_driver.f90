@@ -140,37 +140,44 @@
 
 !! [body
 
-! allocate memory for global variables
-     write(mystd,'(2X,a)') 'allocate memory for global variables in full Hilbert space'
+     ! allocate memory for atomic eigenstates
+     write(mystd,*)
+     write(mystd,'(2X,a)') 'allocate memory for atomic eigenstates'
+     !
      call cpu_time(time_begin) ! record starting time
      call cat_alloc_fock_eigen()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! build atomic many particle Hamiltonian matrix
-     write(mystd,'(2X,a)') 'assemble atomic many particle Hamiltonian'
+     ! build the atomic Hamiltonian
+     write(mystd,'(2X,a)') 'assemble atomic Hamiltonian'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_fhmat()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! check whether the many particle Hamiltonian is real
-     write(mystd,"(2X,a)") 'check whether the atomic Hamiltonian is real or not'
+     ! check whether the atomic Hamiltonian is real
+     write(mystd,"(2X,a)") 'check atomic Hamiltonian'
+     !
      call cpu_time(time_begin) ! record starting time
-     if ( any( abs( aimag(hmat) ) > eps6 ) ) then
-         call s_print_error('atomic_f_driver','hmat is not real!')
-     endif ! back if ( any( abs( aimag(hmat) ) > eps6 ) ) block
+     call atomic_check_fhmat()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! diagonalize hmat
+     ! diagonalize hmat
      write(mystd,'(2X,a)') 'diagonalize the atomic Hamiltonian'
+     !
      call cpu_time(time_begin) ! record starting time
      call s_eig_sy(ncfgs, ncfgs, real(hmat), eval, evec)
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
@@ -178,25 +185,31 @@
 ! first, build fmat of annihilation operators in Fock basis
 ! then, transform them to the eigen basis
      write(mystd,'(2X,a)') 'build F-matrix for annihilation fermion operators'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_ffmat()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
 ! build occupancy number
      write(mystd,'(2X,a)') 'compute occupancy number of atomic eigenstates'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_foccu()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
 ! build Sz
      write(mystd,'(2X,a)') 'compute magnetic moment of atomic eigenstates'
+     !
      call cpu_time(time_begin) ! record starting time
      call atomic_make_fspin()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
