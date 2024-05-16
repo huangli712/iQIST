@@ -507,26 +507,24 @@
 
      implicit none
 
-! Coulomb interaction U tensor
      complex(dp), public, allocatable, save :: umat(:,:,:,:)
 
-! crystal field (CF)
      complex(dp), public, allocatable, save :: cmat(:,:)
 
-! spin-orbital coupling (SOC)
      complex(dp), public, allocatable, save :: smat(:,:)
 
-! onsite energy (CF + SOC) of impurity
      complex(dp), public, allocatable, save :: emat(:,:)
 
-! the transformation matrix from original basis to natural basis
      complex(dp), public, allocatable, save :: tmat(:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
+     ! declaration of module procedures: allocate memory
      public :: cat_alloc_spmat
+
+     ! declaration of module procedures: deallocate memory
      public :: cat_free_spmat
 
   contains ! encapsulated functionality
