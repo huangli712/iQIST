@@ -410,6 +410,7 @@
 
      return
   end subroutine atomic_make_sectors
+
 !!>>> atomic_make_sfmat: build F-matrix (fmat) for good quantum numbers
 !!>>> (GQNs) algorithm
   subroutine atomic_make_sfmat()
@@ -596,6 +597,7 @@
              gammaloop: do gamma=1,norbs
              deltaloop: do delta=1,norbs
 
+             ! retrieve the Fock state |jbas>
              isgn = 0
              knew = dec_basis(sectors(isec)%basis(jbas))
              code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
@@ -603,10 +605,11 @@
              ! applying Pauli principle
              if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
 
-             ! U-matrix element is too small
+             ! U matrix element is too small
              if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
 
              ! simulate two annihilation operators
+             ! they are f_{\delta} f_{\gamma}
              if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
                  do i=1,gamma-1
                      if ( code(i) == 1 ) isgn = isgn + 1
@@ -619,6 +622,7 @@
                  code(delta) = 0
 
                  ! simulate two creation operators
+                 ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
                  if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
                      do i=1,betta-1
                          if ( code(i) == 1 ) isgn = isgn + 1
