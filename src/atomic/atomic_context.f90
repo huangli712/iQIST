@@ -535,12 +535,11 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> alloc_m_spmat: allocate memory for these matrices
   subroutine cat_alloc_spmat()
      implicit none
 
-! local variables
-! the status flag
+!! local variables
+     ! the status flag
      integer :: istat
 
 !! [body
@@ -573,7 +572,6 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> dealloc_m_spmat: deallocate memory for these matrices
   subroutine cat_free_spmat()
      implicit none
 
