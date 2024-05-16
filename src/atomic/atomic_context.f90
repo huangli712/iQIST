@@ -25,20 +25,52 @@
 !! and the corresponding eigensystem
 !!
   module m_fock
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : norbs, ncfgs
 
      implicit none
 
+!!
+!! @var dim_sub_n
+!!
+!! dimension of subspace with total electron N
+!! if i is the number of electrons, then dim_sub_n(i) will tell you
+!! how many Fock states there are in the subspace with i electrons
+!!
      integer, public, save, allocatable  :: dim_sub_n(:)
 
+!!
+!! @var bin_basis
+!!
+!! binary form of Fock state (something like |110110>)
+!! bin_basis(:,i) denotes the binary form of the i-th Fock state
+!!
      integer, public, save, allocatable  :: bin_basis(:,:)
 
+!!
+!! @var dec_basis
+!!
+!! decimal form of Fock state (a decimal number)
+!! dec_basis(i) denotes the decimal form of the i-th Fock state
+!!
      integer, public, save, allocatable  :: dec_basis(:)
 
+!!
+!! @var ind_basis
+!!
+!! index of Fock state, given their decimal number
+!! for a given decimal number, ind_basis(i) will tell you what
+!! the corresponding Fock state index is
+!!
      integer, public, save, allocatable  :: ind_basis(:)
 
+!!
+!! @var eval
+!!
+!! eigenvalues of atomic Hamiltonian
+!!
      real(dp), public, save, allocatable :: eval(:)
 
      real(dp), public, save, allocatable :: evec(:,:)
