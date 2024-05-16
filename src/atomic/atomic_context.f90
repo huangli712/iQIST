@@ -293,18 +293,16 @@
 
      end type Tf
 
-! data structure for one sector
-!-------------------------------------------------------------------------
-     public :: t_sector
-     type t_sector
+     public :: Ts
+     type Ts
 
-! the dimension of this sector
+         ! the dimension of this sector
          integer :: ndim
  
-! number of fermion operators
+         ! number of fermion operators
          integer :: nops
 
-! the start index of this sector
+         ! the start index of this sector
          integer :: istart
 
          ! total number of electrons N
@@ -312,7 +310,7 @@
 
          ! z component of spin: Sz
          integer :: sz
- 
+
          ! z component of spin-orbit momentum: Jz
          integer :: jz
 
@@ -342,7 +340,7 @@
 ! if this sector doesn't point to some other sectors, the pointer is null
          type (Tf), allocatable :: fmat(:,:)
 
-     end type t_sector
+     end type Ts
 
 !!
 !! @var nsectors
@@ -370,7 +368,7 @@
 !!
 !! an array of structs that stores all the subspaces
 !!
-     type (t_sector), public, save, allocatable :: sectors(:)
+     type (Ts), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -424,7 +422,7 @@
 
 !! external arguments
      ! the sector
-     type (t_sector), intent(inout) :: one_sector
+     type (Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index
@@ -518,7 +516,7 @@
 
 !! external arguments
      ! the sector
-     type (t_sector), intent(inout) :: one_sector
+     type (Ts), intent(inout) :: one_sector
 
 !! local variables
      ! loop index
