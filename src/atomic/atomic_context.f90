@@ -500,6 +500,15 @@
 !!>>> module m_spmat                                                   <<<
 !!========================================================================
 
+!!
+!! @mod m_spmat
+!!
+!! it contains some physical quantities that defined in single particle
+!! basis, including
+!!     crystal field splitting,
+!!     spin-orbit coupling,
+!!     Coulomb interaction U tensor, etc
+!!
   module m_spmat
      use constants, only : dp, czero
 
@@ -507,14 +516,39 @@
 
      implicit none
 
+!!
+!! @var umat
+!!
+!! Coulomb interaction U, a rank-4 tensor
+!!
      complex(dp), public, allocatable, save :: umat(:,:,:,:)
 
+!!
+!! @var cmat
+!!
+!! crystal field splitting (CFS)
+!!
      complex(dp), public, allocatable, save :: cmat(:,:)
 
+!!
+!! @var smat
+!!
+!! spin-orbit coupling (SOC)
+!!
      complex(dp), public, allocatable, save :: smat(:,:)
 
+!!
+!! @var emat
+!!
+!! onsite energy (CFS + SOC) of impurity
+!!
      complex(dp), public, allocatable, save :: emat(:,:)
 
+!!
+!! @var tmat
+!!
+!! transformation matrix from original basis to natural eigenbasis
+!!
      complex(dp), public, allocatable, save :: tmat(:,:)
 
 !!========================================================================
