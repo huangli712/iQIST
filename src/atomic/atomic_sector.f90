@@ -596,53 +596,53 @@
              gammaloop: do gamma=1,norbs
              deltaloop: do delta=1,norbs
 
-                 isgn = 0
-                 knew = dec_basis(sectors(isec)%basis(jbas))
-                 code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
+             isgn = 0
+             knew = dec_basis(sectors(isec)%basis(jbas))
+             code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
 
-                 ! applying Pauli principle
-                 if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
+             ! applying Pauli principle
+             if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
 
-                 ! U-matrix element is too small
-                 if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
+             ! U-matrix element is too small
+             if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
 
-                 ! simulate two annihilation operators
-                 if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
-                     do i=1,gamma-1
+             ! simulate two annihilation operators
+             if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
+                 do i=1,gamma-1
+                     if ( code(i) == 1 ) isgn = isgn + 1
+                 enddo ! over i={1,gamma-1} loop
+                 code(gamma) = 0
+                 do i=1,delta-1
+                     if ( code(i) == 1 ) isgn = isgn + 1
+                 enddo ! over i={1,delta-1} loop
+                 code(delta) = 0
+
+                 ! simulate two creation operators
+                 if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
+                     do i=1,betta-1
                          if ( code(i) == 1 ) isgn = isgn + 1
-                     enddo ! over i={1,gamma-1} loop
-                     code(gamma) = 0
-                     do i=1,delta-1
+                     enddo ! over i={1,betta-1} loop
+                     code(betta) = 1
+                     do i=1,alpha-1
                          if ( code(i) == 1 ) isgn = isgn + 1
-                     enddo ! over i={1,delta-1} loop
-                     code(delta) = 0
+                     enddo ! over i={1,alpha-1} loop
+                     code(alpha) = 1
 
-                     ! simulate two creation operators
-                     if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
-                         do i=1,betta-1
-                             if ( code(i) == 1 ) isgn = isgn + 1
-                         enddo ! over i={1,betta-1} loop
-                         code(betta) = 1
-                         do i=1,alpha-1
-                             if ( code(i) == 1 ) isgn = isgn + 1
-                         enddo ! over i={1,alpha-1} loop
-                         code(alpha) = 1
+                     ! determine the row number and hamiltonian matrix elememt
+                     knew = knew - 2**(gamma-1) - 2**(delta-1)
+                     knew = knew + 2**(betta-1) + 2**(alpha-1)
+                     isgn = mod(isgn,2)
 
-                         ! determine the row number and hamiltonian matrix elememt
-                         knew = knew - 2**(gamma-1) - 2**(delta-1)
-                         knew = knew + 2**(betta-1) + 2**(alpha-1)
-                         isgn = mod(isgn,2)
-
-                         ! now ind_basis(knew) means the index of new Fock state
-                         if ( ind_basis(knew) == 0 ) then
-                             call s_print_error('atomic_make_shmat','error while determining new state!')
-                         endif ! back if ( ind_basis(knew) == 0 ) block
-                         do ibas=1,sectors(isec)%ndim
-                             if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
-                                 sectors(isec)%hmat(ibas,jbas) = &
-                                 sectors(isec)%hmat(ibas,jbas) + &
-                                 umat(alpha,betta,delta,gamma) * (-one)**isgn
-                             endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
+                     ! now ind_basis(knew) means the index of new Fock state
+                     if ( ind_basis(knew) == 0 ) then
+                         call s_print_error('atomic_make_shmat','error while determining new state!')
+                     endif ! back if ( ind_basis(knew) == 0 ) block
+                     do ibas=1,sectors(isec)%ndim
+                         if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
+                             sectors(isec)%hmat(ibas,jbas) = &
+                             sectors(isec)%hmat(ibas,jbas) + &
+                             umat(alpha,betta,delta,gamma) * (-one)**isgn
+                         endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
                          enddo ! over ibas={1,sectors(isec)%ndim} loop
                      endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
                  endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
