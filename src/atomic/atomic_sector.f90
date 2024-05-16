@@ -503,6 +503,7 @@
 !!>>> atomic_make_shmat: make Hamiltonian for each sector one by one
   subroutine atomic_make_shmat()
      use constants, only : one, epst, czero
+     use constants, only : mystd
 
      use control, only : norbs
      use m_fock, only : bin_basis, dec_basis, ind_basis
@@ -580,8 +581,13 @@
                              sectors(isec)%hmat(ibas,jbas) = &
                              sectors(isec)%hmat(ibas,jbas) + &
                              emat(alpha,betta) * (-one)**isgn
-                         endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
+                             EXIT
+                         endif ! back if block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
+                     !
+                     ! write the Fock states and the operators
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                     write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
                  endif ! back if ( code(alpha) == 0 ) block
              endif ! back if ( code(betta_ == 1 ) block
 
@@ -600,7 +606,7 @@
              ! retrieve the Fock state |jbas>
              isgn = 0
              knew = dec_basis(sectors(isec)%basis(jbas))
-             code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
+             code = bin_basis(:,sectors(isec)%basis(jbas))
 
              ! applying Pauli principle
              if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
@@ -650,6 +656,12 @@
                              umat(alpha,betta,delta,gamma) * (-one)**isgn
                          endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
                      enddo ! over ibas={1,sectors(isec)%ndim} loop
+                     !
+                     ! write the Fock states and the operators
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
+                     write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
+                     write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
                  endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 
