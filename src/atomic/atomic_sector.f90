@@ -536,12 +536,22 @@
      ! binary form of a Fock state
      integer :: code(norbs)
 
+!! [body
+
      ! loop over all subspaces
      do isec=1,nsectors
+
+         write(mystd,'(4X,a,i4)') 'subspace: ', isec
+
+         ! start to make atomic Hamiltonian
+         ! we should initialize hmat at first
          sectors(isec)%hmat = czero
 
-! two fermions term
-!-------------------------------------------------------------------------
+         ! compute two fermion operators term (onsite impurity energy)
+         ! it is f^{\dagger}_{\alpha} f_{\beta}
+         !----------------------------------------------------------------
+         write(mystd,'(4X,a)') 'compute two fermion operators term'
+         !
          do jbas=1,sectors(isec)%ndim
              alploop: do alpha=1,norbs
              betloop: do betta=1,norbs
@@ -553,14 +563,14 @@
              ! impurity level is too small
              if ( abs(emat(alpha,betta)) < epst ) CYCLE
 
-             ! simulate one annihilation operator
+             ! simulate one annihilation operator, f_{\beta}
              if ( code(betta) == 1 ) then
                  do i=1,betta-1
                      if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,betta-1} loop
                  code(betta) = 0
 
-                 ! simulate one creation operator
+                 ! simulate one creation operator, f^{\dagger}_{\alpha}
                  if ( code(alpha) == 0 ) then
                      do i=1,alpha-1
                          if ( code(i) == 1 ) isgn = isgn + 1
