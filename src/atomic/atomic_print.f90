@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_print_header
 !!!           atomic_print_footer
 !!!           atomic_print_summary
@@ -71,7 +71,7 @@
   subroutine atomic_print_summary()
      use constants, only : mystd
 
-     use m_cntr ! ALL
+     use control ! ALL
 
      implicit none
 

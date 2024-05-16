@@ -70,7 +70,7 @@
   program atomic_main
      use constants, only : mystd
 
-     use m_cntr, only : ictqmc
+     use control, only : ictqmc
      use m_full, only : alloc_m_full_basis
      use m_full, only : dealloc_m_full_basis
      use m_spmat, only : alloc_m_spmat

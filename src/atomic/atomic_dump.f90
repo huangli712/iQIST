@@ -25,7 +25,7 @@
   subroutine atomic_dump_fock()
      use constants, only : mytmp
 
-     use m_cntr, only : ncfgs
+     use control, only : ncfgs
      use m_full, only : bin_basis, dec_basis, ind_basis
 
      implicit none
@@ -67,7 +67,7 @@
   subroutine atomic_dump_tmat()
      use constants, only : mytmp
 
-     use m_cntr, only : norbs
+     use control, only : norbs
      use m_spmat, only : tmat
 
 ! local variables
@@ -106,8 +106,8 @@
   subroutine atomic_dump_emat()
      use constants, only : mytmp
 
-     use m_cntr, only : isoc
-     use m_cntr, only : nband, norbs
+     use control, only : isoc
+     use control, only : nband, norbs
      use m_spmat, only : emat
 
      implicit none
@@ -157,8 +157,8 @@
   subroutine atomic_dump_umat()
      use constants, only : dp, zero, two, epst, mytmp
 
-     use m_cntr, only : icu
-     use m_cntr, only : nband, norbs
+     use control, only : icu
+     use control, only : nband, norbs
      use m_spmat, only : umat
 
      implicit none
@@ -263,7 +263,7 @@
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
 
-     use m_cntr, only : ncfgs
+     use control, only : ncfgs
      use m_full, only : eval
 
      implicit none
@@ -302,7 +302,7 @@
   subroutine atomic_dump_feigvec()
      use constants, only : eps6, mytmp
 
-     use m_cntr, only : ncfgs
+     use control, only : ncfgs
      use m_full, only : evec
 
      implicit none
@@ -346,12 +346,12 @@
   subroutine atomic_dump_fcix()
      use constants, only : epst, mytmp
 
-     use m_cntr, only : ictqmc, icu, icf, isoc
-     use m_cntr, only : nband, nspin, norbs, ncfgs
-     use m_cntr, only : nmini, nmaxi
-     use m_cntr, only : Uc, Uv, Js, Jp, Jz
-     use m_cntr, only : Ud, Jh
-     use m_cntr, only : mune, lambda
+     use control, only : ictqmc, icu, icf, isoc
+     use control, only : nband, nspin, norbs, ncfgs
+     use control, only : nmini, nmaxi
+     use control, only : Uc, Uv, Js, Jp, Jz
+     use control, only : Ud, Jh
+     use control, only : mune, lambda
      use m_full, only : eval, evec, occu, spin, fmat, hmat
 
      implicit none
@@ -571,12 +571,12 @@
   subroutine atomic_dump_scix()
      use constants, only : epst, mytmp
 
-     use m_cntr, only : icu, icf, isoc
-     use m_cntr, only : nband, nspin, norbs, ncfgs
-     use m_cntr, only : nmini, nmaxi
-     use m_cntr, only : Uc, Uv, Jz, Js, Jp
-     use m_cntr, only : Ud, Jh
-     use m_cntr, only : mune, lambda
+     use control, only : icu, icf, isoc
+     use control, only : nband, nspin, norbs, ncfgs
+     use control, only : nmini, nmaxi
+     use control, only : Uc, Uv, Jz, Js, Jp
+     use control, only : Ud, Jh
+     use control, only : mune, lambda
      use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
      use m_sector, only : sectors
 
@@ -722,8 +722,8 @@
   subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
      use constants, only : mytmp
 
-     use m_cntr, only : ictqmc
-     use m_cntr, only : ncfgs
+     use control, only : ictqmc
+     use control, only : ncfgs
      use m_full, only : bin_basis
      use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
      use m_sector, only : sectors
