@@ -58,29 +58,41 @@
      return
   end subroutine atomic_print_header
 
-!!>>> atomic_print_footer: print running footer
+!!
+!! @sub atomic_print_footer
+!!
+!! print the runtime information (end) to the terminal
+!!
   subroutine atomic_print_footer()
-     use constants, only : dp, mystd
+     use constants, only : dp
+     use constants, only : mystd
+
+     use control, only : cname
 
      implicit none
 
- ! string for current date and time
+!! local variables
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
- ! used to record the time usage information
+     ! used to record the time usage information
      real(dp) :: tot_time
 
- ! obtain time usage information
+!! [body
+
+     ! obtain time usage information
      call cpu_time(tot_time)
 
- ! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a,f10.2,a)') 'JASMINE >>> total time spent:', tot_time, 's'
+     write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'JASMINE >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'JASMINE >>> happy ending at '//date_time_string
+     write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
+
+!! body]
 
      return
   end subroutine atomic_print_footer
