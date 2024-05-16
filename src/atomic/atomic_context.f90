@@ -73,14 +73,40 @@
 !!
      real(dp), public, save, allocatable :: eval(:)
 
+!!
+!! @var evec
+!!
+!! eigenvectors of atomic Hamiltonian
+!!
      real(dp), public, save, allocatable :: evec(:,:)
 
+!!
+!! @var occu
+!!
+!! density matrix (occupancy) in the atomic eigenbasis
+!!
      real(dp), public, save, allocatable :: occu(:,:)
 
+!!
+!! @var spin
+!!
+!! magnetic moment (Sz) in the atomic eigenbasis
+!!
      real(dp), public, save, allocatable :: spin(:,:)
 
+!!
+!! @var fmat
+!!
+!! annihilation operator matrix, < alpha | f | beta >
+!! where | alpha > and | beta > are the atomic eigenstates
+!!
      real(dp), public, save, allocatable :: fmat(:,:,:)
 
+!!
+!! @var hmat
+!!
+!! atomic Hamiltonian in the Fock basis
+!!
      complex(dp), public, save, allocatable :: hmat(:,:)
 
 !!========================================================================
