@@ -393,7 +393,11 @@
 ! the fmat
      type (t_fmat), intent(inout) :: one_fmat
 
+!! [body
+
      if ( allocated(one_fmat%val) ) deallocate(one_fmat%val)
+
+!! body]
 
      return
   end subroutine dealloc_one_fmat
@@ -410,6 +414,8 @@
 ! loop index
      integer :: i
      integer :: j
+
+!! [body
 
      if ( allocated(one_sector%basis) ) deallocate(one_sector%basis)
      if ( allocated(one_sector%next)  ) deallocate(one_sector%next )
@@ -437,6 +443,8 @@
 ! local variables
 ! loop index
      integer :: i
+
+!! [body
 
 ! deallocate memory for arrays in T_sector
 ! before deallocating sectors to avoid memory leak
@@ -501,6 +509,8 @@
 ! the status flag
      integer :: istat
 
+!! [body
+
 ! allocate memory
      allocate(umat(norbs,norbs,norbs,norbs), stat=istat)
      allocate(cmat(norbs,norbs),             stat=istat)
@@ -530,6 +540,8 @@
 !!>>> dealloc_m_spmat: deallocate memory for these matrices
   subroutine cat_free_spmat()
      implicit none
+
+!! [body
 
      if ( allocated(umat) ) deallocate(umat)
      if ( allocated(cmat) ) deallocate(cmat)
