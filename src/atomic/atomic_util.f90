@@ -50,6 +50,8 @@
 ! new Fock state
      integer, intent(out):: jnew
 
+!! body]
+
 ! sign due to anti-commute relation between fermions
      integer, intent(out):: isgn
 
@@ -202,6 +204,36 @@
 
      return
   end subroutine atomic_make_gjz
+
+!!
+!! @sub atomic_make_gps
+!!
+!! calculate PS quantum number for each band. note that only the pure
+!! band-dependent part is calculated in this subroutine
+!!
+  subroutine atomic_make_gps(good_ps)
+     use control, only : nband
+
+     implicit none
+
+!! external arguments
+     ! good quantum number: PS
+     integer, intent(out) :: good_ps(nband)
+
+!! local variables
+     ! loop index
+     integer :: i
+
+!! [body
+
+     do i=1,nband
+         good_ps(i) = 2**i
+     enddo ! over i={1,nband} loop
+
+!! body]
+
+     return
+  end subroutine atomic_make_gps
 
 !!========================================================================
 !!>>> determine gaunt coefficients                                     <<<

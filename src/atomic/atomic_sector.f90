@@ -401,12 +401,14 @@
                  if ( can .eqv. .true. ) then
                      select case (ictqmc)
                          case (2)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                             else
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
                              endif ! back if ( k == 1 ) block
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all subspaces to see which
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      which_sect = l; EXIT
@@ -414,14 +416,16 @@
                              enddo ! over l={1,nsectors} loop
 
                          case (3)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                                 my_sz = sect_sz(i) + orb_sz(j)
-                             else
+                                 my_sz   = sect_sz(i) + orb_sz(j)
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
-                                 my_sz = sect_sz(i) - orb_sz(j)
+                                 my_sz   = sect_sz(i) - orb_sz(j)
                              endif ! back if ( k == 1 ) block
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all subspaces to see which
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      if ( sect_sz(l) == my_sz ) then
@@ -431,21 +435,25 @@
                              enddo ! over l={1,nsectors} loop
 
                          case (4)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                                 my_sz = sect_sz(i) + orb_sz(j)
+                                 my_sz   = sect_sz(i) + orb_sz(j)
                                  code(j) = 1
-                             else
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
                                  my_sz   = sect_sz(i) - orb_sz(j)
                                  code(j) = 0
                              endif ! back if ( k == 1 ) block
-! calculate new PS number
+                             !
+                             ! calculate new PS
                              my_ps = 0
                              do l=1,nband
-                                 my_ps = my_ps + (2**l) * ( code(2*l-1) - code(2*l) )**2
+                                 val = code(2*l-1) - code(2*l)
+                                 my_ps = my_ps + orb_ps(l) * val**2
                              enddo ! over l={1,nband} loop
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all subspaces to see which
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      if ( sect_sz(l) == my_sz ) then
@@ -457,14 +465,16 @@
                              enddo ! over l={1,nsectors} loop
 
                          case (5)
-                             if ( k == 1 ) then
+                             if ( k == 1 ) then ! f^+ operator
                                  my_ntot = sect_ntot(i) + 1
-                                 my_jz = sect_jz(i) + orb_jz(j)
-                             else
+                                 my_jz   = sect_jz(i) + orb_jz(j)
+                             else               ! f   operator
                                  my_ntot = sect_ntot(i) - 1
-                                 my_jz = sect_jz(i) - orb_jz(j)
+                                 my_jz   = sect_jz(i) - orb_jz(j)
                              endif ! back if ( k == 1 ) block
-! loop over all sectors to see which sector it will point to
+                             !
+                             ! loop over all subspaces to see which
+                             ! subspace will match
                              do l=1,nsectors
                                  if ( sect_ntot(l) == my_ntot ) then
                                      if ( sect_jz(l) == my_jz ) then
@@ -475,26 +485,40 @@
 
                      end select ! back select case (ictqmc) block
                  endif  ! back if ( can == .true. ) block
+
+                 ! setup the next array
                  sectors(i)%next(j,k) = which_sect
+
+                 if (k == 1) then
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
+                     write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
+                     write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
+                 else
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f  (alpha =', j, ')'
+                     write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
+                     write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
+                 endif ! back if (k == 1) block
+
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsectors} loop
 
-! calculate the maximum and average dimensions of sectors
-!-------------------------------------------------------------------------
+     ! calculate the maximum and average dimensions of subspaces
+     !--------------------------------------------------------------------
      max_dim_sect = maxval(ndims)
-     sum_dim = 0
-     do i=1,nsectors
-         sum_dim = sum_dim + sectors(i)%ndim
-     enddo
-     ave_dim_sect = real(sum_dim) / real(nsectors)
+     ave_dim_sect = sum(ndims) / real(nsectors)
+     !
+     write(mystd,'(4X,a,i4)') 'maximum dimension of subspaces:', max_dim_sect
+     write(mystd,'(4X,a,f6.2)') 'averaged dimension of subspaces:', ave_dim_sect
 
-! dump sector information for reference
-!-------------------------------------------------------------------------
+     ! dump subspace information for reference
+     !--------------------------------------------------------------------
      call atomic_dump_sector(sect_ntot, sect_sz, sect_ps, sect_jz)
 
-! deallocate memory
+     ! deallocate memory
      deallocate(sector_basis)
+
+!! body]
 
      return
   end subroutine atomic_make_sectors
