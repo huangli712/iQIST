@@ -146,34 +146,40 @@
      call atomic_make_gps(orb_ps)
      write(mystd,'(4X,a)') 'compute [PS] for orbitals'
 
-! build good quantum numbers for each Fock state
-!-------------------------------------------------------------------------
-     counter = 0
+     ! build good quantum numbers for each Fock state
+     !--------------------------------------------------------------------
+     ibasis = 0
      fock_ntot = 0
      fock_sz = 0
      fock_jz = 0
      fock_ps = 0
-! loop over all number of total electrons
+     !
+     ! loop over all number of total electrons (N)
      do i=0,norbs
-! loop over each state
+         ! loop over each Fock state for given N
          do j=1,dim_sub_n(i)
-! here counter denotes the index of Fock state
-             counter = counter + 1
-! build N
-             fock_ntot(counter) = i
-! build Sz
+
+             ! here ibasis denotes the index of Fock state
+             ibasis = ibasis + 1
+
+             ! build N
+             fock_ntot(ibasis) = i
+             !
+             ! build Sz
              my_sz = 0
              do k=1,norbs
-                 my_sz = my_sz + orb_sz(k) * bin_basis(k,counter)
+                 my_sz = my_sz + orb_sz(k) * bin_basis(k,ibasis)
              enddo ! over k={1,norbs} loop
-             fock_sz(counter) = my_sz
-! build Jz
-              my_jz = 0
-              do k=1,norbs
-                  my_jz = my_jz + orb_jz(k) * bin_basis(k,counter)
-              enddo ! over k={1,norbs} loop
-              fock_jz(counter) = my_jz
-! build PS number
+             fock_sz(ibasis) = my_sz
+             !
+             ! build Jz
+             my_jz = 0
+             do k=1,norbs
+                 my_jz = my_jz + orb_jz(k) * bin_basis(k,ibasis)
+             enddo ! over k={1,norbs} loop
+             fock_jz(ibasis) = my_jz
+             !
+             ! build PS
              do k=1,nband
                  fock_ps(counter) = &
                  fock_ps(counter) + (2**k) * &
