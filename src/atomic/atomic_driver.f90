@@ -297,16 +297,17 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! check whether the many particle Hamiltonian is real
+     ! check whether the atomic Hamiltonian is real
      write(mystd,'(2X,a)') 'check whether the atomic Hamiltonian is real or not'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_check_shmat()
      call cpu_time(time_end)   ! record ending   time
+     !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! diagonalize Hamiltonian of each sector one by one
+     ! diagonalize Hamiltonian of each sector one by one
      write(mystd,'(2X,a)') 'diagonalize the atomic Hamiltonian for all sectors'
      !
      call cpu_time(time_begin) ! record starting time
@@ -316,7 +317,7 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! make F-matrix of both creation and annihilation operators for each sector
+     ! make F-matrix of both creation and annihilation operators for each sector
      write(mystd,'(2X,a)') 'build F-matrix for all sectors'
      !
      call cpu_time(time_begin) ! record starting time
@@ -326,10 +327,12 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-! write eigenvalues to file 'atom.eigval.dat'
-! write eigenvectors to file 'atom.eigvec.dat'
-! write information of sectors to file 'atom.cix'
-     write(mystd,'(2X,a)') 'write eigenvalue, eigenvector, and F-matrix to files'
+     ! write essential data to external files
+     !
+     ! write eigenvalues of hmat to file 'atom.eigval.dat'
+     ! write eigenvectors of hmat to file 'atom.eigvec.dat'
+     ! write f^+ and f operators to file 'atom.cix'
+     write(mystd,'(2X,a)') 'write atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_dump_seigval()
@@ -341,10 +344,10 @@
      write(mystd,*)
 
      ! deallocate memory
-     write(mystd,'(2X,a)') 'deallocate memory for global variables in sectors'
+     write(mystd,'(2X,a)') 'deallocate memory for atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
-     call dealloc_m_sector()
+     call cat_free_sectors()
      call cpu_time(time_end)   ! record ending   time
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
