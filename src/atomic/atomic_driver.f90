@@ -298,7 +298,7 @@
      write(mystd,*)
 
      ! check whether the atomic Hamiltonian is real
-     write(mystd,'(2X,a)') 'check whether the atomic Hamiltonian is real or not'
+     write(mystd,'(2X,a)') 'check atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_check_shmat()
@@ -307,8 +307,8 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
-     ! diagonalize Hamiltonian of each sector one by one
-     write(mystd,'(2X,a)') 'diagonalize the atomic Hamiltonian for all sectors'
+     ! diagonalize the atomic Hamiltonian
+     write(mystd,'(2X,a)') 'diagonalize atomic Hamiltonian'
      !
      call cpu_time(time_begin) ! record starting time
      call atomic_diag_shmat()
