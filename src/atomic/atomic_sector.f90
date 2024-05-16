@@ -306,7 +306,7 @@
      use m_sector, only : max_dim_sect, ave_dim_sect
      use m_sector, only : nsectors, sectors
      use m_sector, only : cat_alloc_sector
-     use m_sector, only : alloc_m_sector
+     use m_sector, only : cat_alloc_sectors
 
      implicit none
 
@@ -534,7 +534,7 @@
      max_dim_sect = 0
      ave_dim_sect = zero
      nsectors = nsect
-     call alloc_m_sector()
+     call cat_alloc_sectors()
 ! now we will build each sector
      counter = 1
      do i=1,nsect
