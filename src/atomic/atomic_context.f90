@@ -82,7 +82,11 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> alloc_m_fock_basis: allocate memory for Fock basis matrices
+!!
+!! @sub cat_alloc_fock_basis
+!!
+!! allocate memory for the Fock basis
+!!
   subroutine cat_alloc_fock_basis()
      implicit none
 
@@ -97,12 +101,12 @@
      allocate(dec_basis(ncfgs),       stat=istat)
      allocate(ind_basis(0:ncfgs-1),   stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('alloc_m_fock_basis','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      dim_sub_n = 0
      bin_basis = 0
      dec_basis = 0
@@ -113,7 +117,11 @@
      return
   end subroutine cat_alloc_fock_basis
 
-!!>>> alloc_m_fock: allocate memory for eigensystem defined in Fock basis
+!!
+!! @sub cat_alloc_fock_eigen
+!!
+!! allocate memory for atomic eigensystem
+!!
   subroutine cat_alloc_fock_eigen()
      implicit none
 
@@ -131,12 +139,12 @@
 
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('alloc_m_fock','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      eval = zero
      evec = zero
      occu = zero
@@ -320,12 +328,12 @@
      ! allocate memory
      allocate(one_fmat%val(one_fmat%n,one_fmat%m), stat=istat)
 
-! check status
+     ! check status
      if ( istat /= 0 ) then
          call s_print_error('alloc_one_fmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize it
+     ! initialize it
      one_fmat%val = zero
 
 !! body]
@@ -341,7 +349,7 @@
      type (t_sector), intent(inout) :: one_sector
 
 !! local variables
-! loop index
+     ! loop index
      integer :: i
      integer :: j
 
@@ -350,7 +358,7 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(one_sector%basis(one_sector%ndim),                stat=istat)
      allocate(one_sector%next(one_sector%nops,0:1),             stat=istat)
      allocate(one_sector%eval(one_sector%ndim),                 stat=istat)
@@ -358,12 +366,12 @@
      allocate(one_sector%hmat(one_sector%ndim,one_sector%ndim), stat=istat)
      allocate(one_sector%fmat(one_sector%nops,0:1),             stat=istat)
 
-! check status
+     ! check status
      if ( istat /= 0 ) then
          call s_print_error('alloc_one_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      one_sector%basis = 0
      one_sector%next  = 0
      one_sector%eval  = zero
