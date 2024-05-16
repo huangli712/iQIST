@@ -116,25 +116,35 @@
 
 !! [body
 
-! initialize some variables
-     sect_ntot = 0
-     sect_sz = 0
-     sect_jz = 0
-     sect_ps = 0
+     ! allocate memory
+     if (ncfgs > max_num_sect) then
+         nsect = max_num_sect
+     else
+         nsect = ncfgs
+     endif ! back if (ncfgs > max_num_sect) block
+     !
+     write(mystd,'(4X,a,i4)') 'maximum number of subspaces is', nsect
+     allocate(sector_basis(ncfgs,nsect))
 
-! allocate memory
-     allocate(sector_basis(ncfgs,ncfgs))
-
-! make orb_sz and orb_jz
-!-------------------------------------------------------------------------
+     ! build good quantum numbers for each orbital
+     !--------------------------------------------------------------------
+     ! calculate orb_sz
      orb_sz = 0
      call atomic_make_gsz(orb_sz)
-
-! jz only valid for nband==3, 5, 7
+     write(mystd,'(4X,a)') 'compute [Sz] for orbitals'
+     !
+     ! calculate orb_jz
      orb_jz = 0
      if ( nband == 3 .or. nband == 5 .or. nband == 7 ) then
+         ! jz only valid for nband == 3, 5, 7
          call atomic_make_gjz(orb_jz)
      endif ! back if ( nband == 3 .or. nband == 5 .or. nband == 7 ) block
+     write(mystd,'(4X,a)') 'compute [Jz] for orbitals'
+     !
+     ! calculate orb_ps
+     orb_ps = 0
+     call atomic_make_gps(orb_ps)
+     write(mystd,'(4X,a)') 'compute [PS] for orbitals'
 
 ! build good quantum numbers for each Fock state
 !-------------------------------------------------------------------------
@@ -176,6 +186,11 @@
 !-------------------------------------------------------------------------
      nsect = 0
      ndims = 0
+! initialize some variables
+     sect_ntot = 0
+     sect_sz = 0
+     sect_jz = 0
+     sect_ps = 0
      sector_basis = 0
      do i=1,ncfgs
          my_ntot = fock_ntot(i)
