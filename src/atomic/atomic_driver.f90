@@ -1,13 +1,15 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_f_driver
+!!! project : iqist @ jasmine
+!!! program : atomic_dispatcher
+!!!           atomic_f_driver
 !!!           atomic_s_driver
 !!! source  : atomic_driver.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : kernel drivers for atomic eigenvalue problem solver
+!!!           01/30/2024 by li huang (last modified)
+!!! purpose : try to launch various computational tasks for the atomic
+!!!           eigenvalue problem solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -113,25 +115,30 @@
 
      return
   end subroutine atomic_dispatcher
-!!>>> atomic_f_driver: solve the atomic eigenvalue problem using full
-!!>>> Hilbert space diagonalization
-!!>>> note: the output files are only compatible with BEGONIA and LAVENDER
-!!>>> commponents in the iQIST software package
-  subroutine atomic_f_driver()
-     use constants, only : dp, eps6, mystd
 
-     use control, only : ncfgs
-     use m_fock, only : hmat, eval, evec
-     use m_fock, only : cat_alloc_fock_eigen, cat_free_fock_eigen
+!!
+!! @sub atomic_f_driver
+!!
+!! solve the atomic eigenvalue problem by direct diagonalization in the
+!! full Hilbert space. this subroutine is called when ictqmc == 1
+!!
+  subroutine atomic_f_driver()
+     use constants, only : dp
+     use constants, only : mystd
+
+     use m_fock, only : cat_alloc_fock_eigen
+     use m_fock, only : cat_free_fock_eigen
 
      implicit none
 
-! local variables
-! starting time
+!! local variables
+     ! starting time
      real(dp) :: time_begin
 
-! ending time
+     ! ending time
      real(dp) :: time_end
+
+!! [body
 
 ! allocate memory for global variables
      write(mystd,'(2X,a)') 'allocate memory for global variables in full Hilbert space'
