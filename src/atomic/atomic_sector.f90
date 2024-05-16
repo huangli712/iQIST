@@ -209,20 +209,23 @@
      do i=1,ncfgs
          my_ntot = fock_ntot(i)
 
-! truncate the occupancy according to nmini and nmaxi
+         ! truncate the occupancy according to nmini and nmaxi
          if ( my_ntot < nmini  .or. my_ntot > nmaxi ) CYCLE
 
          if ( ictqmc == 3 .or. ictqmc == 4 ) then
              my_sz = fock_sz(i)
          endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block
+         !
          if ( ictqmc == 4 ) then
              my_ps = fock_ps(i)
          endif ! back if ( ictqmc == 4 ) block
+         !
          if ( ictqmc == 5 ) then
              my_jz = fock_jz(i)
          endif ! back if ( ictqmc == 5 ) block
 
-! determine the first sector
+         ! create the first subspace
+         ! the first Fock state should belong to the first subspace
          if ( nsect == 0 ) then
              sect_ntot(1) = my_ntot
              if ( ictqmc == 3 .or. ictqmc == 4 ) then
