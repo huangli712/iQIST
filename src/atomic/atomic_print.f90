@@ -7,35 +7,53 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/25/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for the atomic eigenvalue
-!!!           problem solver
+!!!           problem solver. the subroutines will print many runtime
+!!!           information about the solver to the terminal.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_print_header: print the running header
+!!
+!! @sub atomic_print_header
+!!
+!! print the runtime information (start) to the terminal
+!!
   subroutine atomic_print_header()
      use constants, only : mystd
 
-! string for current date and time
+     use version, only : V_FULL
+     use version, only : V_AUTH
+     use version, only : V_INST
+     use version, only : V_MAIL
+     use version, only : V_GPL3
+
+     use control, only : cname
+
+!! local variables
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! obtain current date and time
+!! [body
+
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') 'JASMINE'
-     write(mystd,'(2X,a)') '>>> An Atomic Eigenvalue Problem Solver'
+     write(mystd,'(2X,a)') cname//' (Sequential Edition)'
+     write(mystd,'(2X,a)') 'A Modern Atomic Eigenvalue Problem Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: by yilin wang (at IOP/CAS)'
-     write(mystd,'(2X,a)') 'Support: qhwyl2006@126.com'
-     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
+     write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//' '//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: '//V_AUTH//' ('//V_INST//')'
+     write(mystd,'(2X,a)') 'Support: '//V_MAIL
+     write(mystd,'(2X,a)') 'License: '//V_GPL3
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'JASMINE >>> start running at '//date_time_string
-     write(mystd,*)
+     write(mystd,'(2X,a)') 'start running at '//date_time_string
+     write(mystd,'(2X,a,i4)') 'currently using cpu cores:', 1
+
+!! body]
 
      return
   end subroutine atomic_print_header
@@ -67,7 +85,11 @@
      return
   end subroutine atomic_print_footer
 
-!!>>> atomic_print_summary: print summary of parameters list
+!!
+!! @sub atomic_print_summary
+!!
+!! print the control parameters to the terminal
+!!
   subroutine atomic_print_summary()
      use constants, only : mystd
 
@@ -75,24 +97,37 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'JASMINE >>> parameters list:'
+!! [body
 
-     write(mystd,'(2(4X,a,i10))')   'ibasis :', ibasis , 'ictqmc :', ictqmc
-     write(mystd,'(2(4X,a,i10))')   'icu    :', icu    , 'icf    :', icf
-     write(mystd,'(1(4X,a,i10))')   'isoc   :', isoc
+     write(mystd,'(2X,a)') '[configuration parameters] -> core control'
+     write(mystd,'(2X,a)') '-----------------------------------------------------'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'ibasis / value :', ibasis , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'ictqmc / value :', ictqmc , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'icu    / value :', icu    , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'icf    / value :', icf    , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'isoc   / value :', isoc   , 'type : i'
 
-     write(mystd,'(2(4X,a,i10))')   'nband  :', nband  , 'nspin  :', nspin
-     write(mystd,'(2(4X,a,i10))')   'norbs  :', norbs  , 'ncfgs  :', ncfgs
-     write(mystd,'(2(4X,a,i10))')   'nmini  :', nmini  , 'nmaxi  :', nmaxi
-
-     write(mystd,'(2(4X,a,f10.5))') 'Uc     :', Uc     , 'Uv     :', Uv
-     write(mystd,'(2(4X,a,f10.5))') 'Jz     :', Jz     , 'Js     :', Js
-     write(mystd,'(1(4X,a,f10.5))') 'Jp     :', Jp
-     write(mystd,'(2(4X,a,f10.5))') 'Ud     :', Ud     , 'Jh     :', Jh
-
-     write(mystd,'(2(4X,a,f10.5))') 'mune   :', mune   , 'lambda :', lambda
+     write(mystd,'(2X,a)') '[configuration parameters] -> atomic Hamiltonian'
+     write(mystd,'(2X,a)') '-----------------------------------------------------'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nband  / value :', nband  , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nspin  / value :', nspin  , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'norbs  / value :', norbs  , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'ncfgs  / value :', ncfgs  , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nmini  / value :', nmini  , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nmaxi  / value :', nmaxi  , 'type : i'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Uc     / value :', Uc     , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Uv     / value :', Uv     , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Jz     / value :', Jz     , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Js     / value :', Js     , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Jp     / value :', Jp     , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Ud     / value :', Ud     , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Jh     / value :', Jh     , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'mune   / value :', mune   , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'lambda / value :', lambda , 'type : d'
 
      write(mystd,*)
+
+!! body]
 
      return
   end subroutine atomic_print_summary
