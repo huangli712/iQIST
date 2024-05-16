@@ -383,7 +383,7 @@
      ! declaration of module procedures: allocate memory
      public :: cat_alloc_fmat
      public :: cat_alloc_sector
-     public :: alloc_m_sector
+     public :: cat_alloc_sectors
 
      ! declaration of module procedures: deallocate memory
      public :: decat_alloc_fmat
@@ -475,7 +475,7 @@
      return
   end subroutine cat_alloc_sector
 
-  subroutine alloc_m_sector()
+  subroutine cat_alloc_sectors()
      implicit none
 
 !! local variables
@@ -489,13 +489,13 @@
 
      ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_sector','can not allocate enough memory')
+         call s_print_error('cat_alloc_sectors','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 !! body]
 
      return
-  end subroutine alloc_m_sector
+  end subroutine cat_alloc_sectors
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
@@ -554,7 +554,7 @@
      return
   end subroutine decat_alloc_sector
 
-!!>>> dealloc_m_sector: deallocate memory of sectors
+!!>>> decat_alloc_sectors: deallocate memory of sectors
   subroutine cat_free_sectors()
      implicit none
 
