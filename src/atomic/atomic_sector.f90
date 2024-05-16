@@ -375,23 +375,29 @@
 
                  which_sect = -1
 
-! we should check each state in this sector
+                 ! we should check each Fock state in this subspace
                  can = .false.
                  do l=1,sectors(i)%ndim
                      ibasis = sectors(i)%basis(l)
-! for creation fermion operator
+
+                     ! test creation fermion operator
                      if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
-! for annihilation fermion operator
-                     else if ( k==0 .and. bin_basis(j, ibasis) == 1 ) then
+                     !
+                     ! test annihilation fermion operator
+                     else if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
+                     !
                      endif ! back if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) block
                  enddo ! over l={1,sectors(i)%ndim} loop
 
+                 ! if can == .true., it means that the fermion operator
+                 ! can act on the given subspace. next, we would like to
+                 ! figure out the resulting subspace.
                  if ( can .eqv. .true. ) then
                      select case (ictqmc)
                          case (2)
