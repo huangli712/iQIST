@@ -645,9 +645,9 @@
                              sectors(isec)%hmat(ibas,jbas) + &
                              umat(alpha,betta,delta,gamma) * (-one)**isgn
                          endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
-                         enddo ! over ibas={1,sectors(isec)%ndim} loop
-                     endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
-                 endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
+                     enddo ! over ibas={1,sectors(isec)%ndim} loop
+                 endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
+             endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 
              enddo deltaloop ! over delta={1,norbs} loop
              enddo gammaloop ! over gamma={1,norbs} loop
@@ -656,6 +656,8 @@
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
      enddo ! over isec={1,nsectors} loop
+
+!! body]
 
      return
   end subroutine atomic_make_shmat
