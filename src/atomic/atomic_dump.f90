@@ -853,10 +853,10 @@
              write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%nele
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%nele
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
@@ -866,11 +866,11 @@
              write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_sz(i)
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_sz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
@@ -880,12 +880,12 @@
              write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_sz(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ps(i)
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_sz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_ps(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
@@ -895,11 +895,11 @@
               write(mytmp,'(75a1)') dash ! dashed line
               do i=1,nsectors
                   do j=1,sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') i
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(i4,2X)',advance='no') sect_good_jz(i)
-                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
+                     write(mytmp,'(i4,2X)', advance='no') sect_jz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                   enddo ! over j={1,sectors(i)%ndim} loop
               enddo ! over i={1,nsectors} loop
@@ -911,4 +911,4 @@
 !! body]
 
      return
-   end subroutine atomic_dump_sector
+  end subroutine atomic_dump_sector
