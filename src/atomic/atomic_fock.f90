@@ -235,13 +235,13 @@
      integer :: alpha, betta
      integer :: delta, gamma
 
-     ! sign change due to fermion anti-commute relation
+     ! sign change due to fermion anti-commutation relation
      integer :: sgn
 
-     ! new atomic state after fermion operators act
+     ! new Fock state after a fermion operator acts
      integer :: knew
 
-     ! binary code form of an atomic state
+     ! binary form of a Fock state
      integer :: code(norbs)
 
      ! matrix element of the atomic Hamiltonian
