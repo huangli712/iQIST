@@ -24,10 +24,15 @@
 !! rotate it to the atomic eigenbasis
 !!
   subroutine atomic_make_ffmat()
-     use control, only : ictqmc
+     use constants, only : mystd
+
      use control, only : norbs, ncfgs
-     use m_fock, only : dec_basis, ind_basis
-     use m_fock, only : fmat, evec
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
+     use m_fock, only : evec
+     use m_fock, only : fmat
 
      implicit none
 
