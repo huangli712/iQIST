@@ -292,8 +292,17 @@
                          & 'error while determining new Fock state!')
                  endif ! back if ( ibas == 0 ) block
                  !
-                 isgn  = mod(isgn,2)
-                 hmat(ibas,jbas) = hmat(ibas,jbas) + emat(alpha,betta) * (-one)**isgn
+                 ! determine the matrix element between the two Fock
+                 ! states, i.e., <ibas| and |jbas>
+                 isgn = mod(isgn,2)
+                 val = emat(alpha,betta) * (-one)**isgn
+                 !
+                 ! setup the two fermion operators term
+                 hmat(ibas,jbas) = hmat(ibas,jbas) + val
+                 !
+                 ! write the combination of operators
+                 write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                 write(mystd,'(2X,a,i2,a)') 'f(beta = ', betta, ')'
              endif ! back if (code(alpha) == 0) block
          endif ! back if (code(betta) == 1) block
 
