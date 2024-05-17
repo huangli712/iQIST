@@ -200,35 +200,52 @@
      return
   end subroutine atomic_make_fspin
 
+!!
+!! @sub atomic_make_fhmat
+!!
+!! assemble atomic Hamiltonian in the Fock space
+!!
   subroutine atomic_make_fhmat()
-     use constants, only : one, czero, epst
+     use constants, only : dp
+     use constants, only : one
+     use constants, only : czero
+     use constants, only : epst
+     use constants, only : mystd
 
      use control, only : norbs, ncfgs
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
      use m_fock, only : hmat
-     use m_spmat, only : emat, umat
+
+     use m_spmat, only : emat
+     use m_spmat, only : umat
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! loop index for basis
+     ! loop index for Fock state
      integer :: ibas, jbas
 
-! loop index for orbital
+     ! loop index for orbital
      integer :: alpha, betta
      integer :: delta, gamma
 
-! sign change due to fermion anti-commute relation
+     ! sign change due to fermion anti-commute relation
      integer :: sgn
 
-! new atomic state after fermion operators act
+     ! new atomic state after fermion operators act
      integer :: knew
 
-! binary code form of an atomic state
+     ! binary code form of an atomic state
      integer :: code(norbs)
+
+     ! matrix element of the atomic Hamiltonian
+     real(dp) :: val
 
 !! [body
 
