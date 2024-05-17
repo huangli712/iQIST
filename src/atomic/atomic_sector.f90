@@ -523,37 +523,47 @@
      return
   end subroutine atomic_make_sectors
 
-!!>>> atomic_make_sfmat: build F-matrix (fmat) for good quantum numbers
-!!>>> (GQNs) algorithm
+!!
+!! @sub atomic_make_sfmat
+!!
+!! build annihilation operator matrix in the subspace, and then rotate
+!! it to the atomic eigenbasis. actually, the creation operator matrix
+!! is calculated as well
+!!
   subroutine atomic_make_sfmat()
      use constants, only : zero
+     use constants, only : mystd
 
      use control, only : norbs
-     use m_fock, only : dec_basis, ind_basis
-     use m_sector, only : nsectors, sectors
+
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
      use m_sector, only : cat_alloc_fmat
 
      implicit none
 
-! local variables
-! loop index for orbital
+!! local variables
+     ! loop index for orbital
      integer :: iorb
 
-! loop index for annihilation and creation operators
+     ! loop index for annihilation and creation operators
      integer :: ityp
 
-! loop index for sector
+     ! loop index for subspace (sector)
      integer :: isec
      integer :: jsec
 
-! loop index for basis
+     ! loop index for Fock state
      integer :: ibas
      integer :: jbas
 
-! sign change due to commute relation
+     ! sign change due to commute relation
      integer :: isgn
 
-! auxiliary integer variables
+     ! auxiliary integer variables
      integer :: jold
      integer :: jnew
 
