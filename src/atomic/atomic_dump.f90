@@ -635,14 +635,20 @@
      use constants, only : epst
      use constants, only : mytmp
 
+     use control, only : cname
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : nmini, nmaxi
      use control, only : Uc, Uv, Jz, Js, Jp
      use control, only : Ud, Jh
      use control, only : mune, lambda
-     use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
+
+     use version, only : V_MAIL
+
+     use m_sector, only : nsectors
      use m_sector, only : sectors
+     use m_sector, only : max_dim_sect
+     use m_sector, only : ave_dim_sect
 
      implicit none
 
@@ -674,14 +680,14 @@
      ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     ! open atom.cix to write
+     ! open file atom.cix to write
      open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
      ! write header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v2.3, designed for PANSY and MANJUSHAKA'
-     write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
+     write(mytmp,'(a)') '# Format  : v2.3, designed for MANJUSHAKA'
+     write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
      write(mytmp,*)
      write(mytmp,*)
@@ -697,14 +703,15 @@
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
 
-     ! write summary of sectors
+     ! write summary of subspace (sectors)
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SECTORS:'
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SUMMARY: NSECTORS | MAX_DIM_SECT | AVE_DIM_SECT'
      write(mytmp,'(5X,2(i10,2X),f20.10)') nsectors, max_dim_sect, ave_dim_sect
 
-     ! write dimension, total electrons, next sector, eigenvalue of each sector
+     ! write dimension, total electrons, next subspace (sector),
+     ! eigenvalue of each subspace (sector)
      do i=1,nsectors
          write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NE | SZ | JZ | PS'
          write(mytmp,'(12X,8i6)') i, sectors(i)%ndim,   &
