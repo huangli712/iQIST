@@ -114,7 +114,7 @@
      ! loop index over orbits
      integer :: iorb
 
-     ! loop index over configurations
+     ! loop index over Fock states
      integer :: ibas
 
 !! [body
@@ -129,6 +129,10 @@
                  occu(ibas,ibas) = occu(ibas,ibas) + one
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
          enddo ! over iorb={1,norbs} loop
+         !
+         write(mystd,'(4X,a)', advance = 'no') '| ket > = '
+         write(mystd,'(*(i1))', advance = 'no') bin_basis(:,ibas)
+         write(mystd,'(2X,a,f5.2)') 'N = ', occu(ibas,ibas)
      enddo ! over ibas={1,ncfgs} loop
 
      ! try to transform the density matrix from the Fock basis
