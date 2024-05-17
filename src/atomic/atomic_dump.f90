@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_dump_fock
 !!!           atomic_dump_tmat
 !!!           atomic_dump_emat
@@ -15,13 +15,12 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : write output files
+!!!           01/31/2024 by li huang (last modified)
+!!! purpose : write some essential arrays and data structures to files.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_dump_fock: write Fock basis to file atom.fock.dat
   subroutine atomic_dump_fock()
      use constants, only : mytmp
 
@@ -30,25 +29,25 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! open file atom.fock.dat to write
+     ! open file atom.fock.dat to write
      open(mytmp, file='atom.fock.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | decimal | index | binary'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,ncfgs
          write(mytmp,'(i6)',advance='no') i
          write(mytmp,'(i6)',advance='no') dec_basis(i)
@@ -56,14 +55,12 @@
          write(mytmp,'(4X,14i1)') bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
   end subroutine atomic_dump_fock
 
-!!>>> atomic_dump_tmat: write the transformation matrix from the original
-!!>>> basis to natural basis
   subroutine atomic_dump_tmat()
      use constants, only : mytmp
 
@@ -102,7 +99,6 @@
      return
   end subroutine atomic_dump_tmat
 
-!!>>> atomic_dump_emat: write onsite impurity energy on natural basis
   subroutine atomic_dump_emat()
      use constants, only : mytmp
 
@@ -153,7 +149,6 @@
      return
   end subroutine atomic_dump_emat
 
-!!>>> atomic_dump_umat: write onsite Coulomb interaction matrix
   subroutine atomic_dump_umat()
      use constants, only : dp, zero, two, epst, mytmp
 
@@ -258,8 +253,6 @@
      return
   end subroutine atomic_dump_umat
 
-!!>>> atomic_dump_feigval: write eigenvalue for full Hilbert space to
-!!>>> file atom.eigval.dat
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
 
@@ -297,8 +290,6 @@
      return
   end subroutine atomic_dump_feigval
 
-!!>>> atomic_dump_feigvec: write eigenvector for full Hilbert space to
-!!>>> file atom.eigvec.dat
   subroutine atomic_dump_feigvec()
      use constants, only : eps6, mytmp
 
@@ -341,8 +332,6 @@
      return
   end subroutine atomic_dump_feigvec
 
-!!>>> atomic_dump_fcix: write atom.cix file which are only compatible with
-!!>>> the CAMELLIA, BEGONIA and LAVENDER components
   subroutine atomic_dump_fcix()
      use constants, only : epst, mytmp
 
@@ -472,8 +461,6 @@
      return
   end subroutine atomic_dump_fcix
 
-!!>>> atomic_dump_seigval: write eigenvalues of all sectors to the
-!!>>> file atom.eigval.dat
   subroutine atomic_dump_seigval()
      use constants, only : mytmp
 
@@ -519,8 +506,6 @@
      return
   end subroutine atomic_dump_seigval
 
-!!>>> atomic_dump_seigvec: write eigenvectors of all sectors to the
-!!>>> file atom.eigvec.dat
   subroutine atomic_dump_seigvec()
      use constants, only : eps6, mytmp
 
@@ -566,8 +551,6 @@
      return
   end subroutine atomic_dump_seigvec
 
-!!>>> atomic_dump_scix: write atom.cix file which are only compatible with
-!!>>> the PANSY and MANJUSHAKA components
   subroutine atomic_dump_scix()
      use constants, only : epst, mytmp
 
@@ -717,8 +700,6 @@
      return
   end subroutine atomic_dump_scix
 
-!!>>> atomic_dump_sector: write out the configuration for each sector
-!!>>> to file atom.sector.dat
   subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
      use constants, only : mytmp
 
