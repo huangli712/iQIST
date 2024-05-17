@@ -30,7 +30,10 @@
      use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
 
      implicit none
 
@@ -56,10 +59,10 @@
 
      ! write the data
      do i=1,ncfgs
-         write(mytmp,'(i6)',advance='no') i
-         write(mytmp,'(i6)',advance='no') dec_basis(i)
-         write(mytmp,'(i6)',advance='no') ind_basis(dec_basis(i))
-         write(mytmp,'(4X,14i1)') bin_basis(:,i)
+         write(mytmp,'(i6)', advance='no') i
+         write(mytmp,'(i6)', advance='no') dec_basis(i)
+         write(mytmp,'(i6)', advance='no') ind_basis(dec_basis(i))
+         write(mytmp,'(4X,*(i1))') bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
      ! close data file
