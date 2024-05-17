@@ -36,20 +36,22 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
 
-! left Fock state
+     ! left Fock state, < bra |
      integer :: left
 
-! right Fock state
+     ! right Fock state, | ket >
      integer :: right
 
-! the sign change
+     ! the sign change
      integer :: isgn
+
+!! [body
 
 ! evaluate F-matrix in the Fock basis
      do i=1,norbs
@@ -69,6 +71,8 @@
              call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
          enddo ! over i={1,norbs} loop
      endif ! back if ( ictqmc == 1 ) block
+
+!! body]
 
      return
   end subroutine atomic_make_ffmat
@@ -90,6 +94,8 @@
 
 ! loop index over configurations
      integer :: ibas
+
+!! [body
 
 ! evaluate occupancy in the Fock basis
      occu = zero
@@ -122,6 +128,8 @@
 
 ! loop index over configurations
      integer :: ibas
+
+!! [body
 
 ! evaluate spin moment in the Fock basis
      spin = zero
@@ -173,6 +181,8 @@
 
 ! binary code form of an atomic state
      integer :: code(norbs)
+
+!! [body
 
 ! start to make Hamiltonian
 ! initialize hmat
