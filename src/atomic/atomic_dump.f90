@@ -797,29 +797,33 @@
 !!
 !! write configurations of subspaces (sectors) to the file atom.sector.dat
 !!
-  subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
+  subroutine atomic_dump_sector(sect_ntot, sect_sz, sect_ps, sect_jz)
      use constants, only : mytmp
 
      use control, only : ictqmc
      use control, only : ncfgs
+
      use m_fock, only : bin_basis
-     use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
+
+     use m_sector, only : nsectors
      use m_sector, only : sectors
+     use m_sector, only : max_dim_sect
+     use m_sector, only : ave_dim_sect
 
      implicit none
 
 !! external arguments
      ! good quantum number: N
-     integer, intent(in) :: sect_good_ntot(ncfgs)
+     integer, intent(in) :: sect_ntot(ncfgs)
 
      ! good quantum number: Sz
-     integer, intent(in) :: sect_good_sz(ncfgs)
+     integer, intent(in) :: sect_sz(ncfgs)
 
      ! good quantum number: PS
-     integer, intent(in) :: sect_good_ps(ncfgs)
+     integer, intent(in) :: sect_ps(ncfgs)
 
      ! good quantum number: Jz
-     integer, intent(in) :: sect_good_jz(ncfgs)
+     integer, intent(in) :: sect_jz(ncfgs)
 
 !! local variables
      ! loop index
@@ -834,7 +838,7 @@
      ! setup dash
      dash = '-'
 
-     ! open 'atom.sector.dat' to write
+     ! open file 'atom.sector.dat' to write
      open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
 
      ! write header
@@ -846,7 +850,8 @@
      ! write the data
      select case (ictqmc)
          case (1)
-             call s_print_error('atomic_dump_sector','this case is not implemented')
+             call s_print_error('atomic_dump_sector', &
+                 & 'this case is not implemented')
 
          case (2)
              write(mytmp,'(a)') '# i | Ntot | Ndim | j | Fock'
