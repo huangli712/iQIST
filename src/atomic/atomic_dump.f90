@@ -576,7 +576,8 @@
 !! write eigenvectors in subspaces (sectors) to the file atom.eigvec.dat
 !!
   subroutine atomic_dump_seigvec()
-     use constants, only : eps6, mytmp
+     use constants, only : eps6
+     use constants, only : mytmp
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
@@ -631,7 +632,8 @@
 !! for the manjushaka code only.
 !!
   subroutine atomic_dump_scix()
-     use constants, only : epst, mytmp
+     use constants, only : epst
+     use constants, only : mytmp
 
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
