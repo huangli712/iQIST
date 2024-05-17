@@ -457,21 +457,6 @@
          write(mytmp,'(i10,3f20.10)') i, eval(i), occu(i,i), spin(i,i)
      enddo ! over i={1,ncfgs} loop
 
-     ! write eigenvectors
-     ! only for the camellia code
-     if ( ictqmc == 0 ) then
-         write(mytmp,'(75a1)') dash ! dashed line
-         write(mytmp,'(a)') '# EIGENVECTORS: ALPHA | BETA | EVEC'
-         write(mytmp,'(75a1)') dash ! dashed line
-         do i=1,ncfgs
-             do j=1,ncfgs
-                 if ( abs( evec(i,j) ) > epst ) then
-                     write(mytmp,'(2i10,f20.10)') i, j, evec(i,j)
-                 endif ! back if ( abs( evec(i,j) ) > epst ) block
-             enddo ! over j={1,ncfgs} loop
-         enddo ! over i={1,ncfgs} loop
-     endif ! back if ( ictqmc == 0 ) block
-
      ! write annihilation operator matrix in atomic eigenbasis
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT'

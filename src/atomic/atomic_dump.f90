@@ -427,7 +427,6 @@
      use m_fock, only : eval, evec
      use m_fock, only : occu, spin
      use m_fock, only : fmat
-     use m_fock, only : hmat
 
      implicit none
 
@@ -485,40 +484,7 @@
          write(mytmp,'(i10,3f20.10)') i, eval(i), occu(i,i), spin(i,i)
      enddo ! over i={1,ncfgs} loop
 
-     ! write eigenvectors
-     ! only for the camellia code
-     if ( ictqmc == 0 ) then
-         write(mytmp,'(75a1)') dash ! dashed line
-         write(mytmp,'(a)') '# EIGENVECTORS: ALPHA | BETA | EVEC'
-         write(mytmp,'(75a1)') dash ! dashed line
-         do i=1,ncfgs
-             do j=1,ncfgs
-                 if ( abs( evec(i,j) ) > epst ) then
-                     write(mytmp,'(2i10,f20.10)') i, j, evec(i,j)
-                 endif ! back if ( abs( evec(i,j) ) > epst ) block
-             enddo ! over j={1,ncfgs} loop
-         enddo ! over i={1,ncfgs} loop
-     endif ! back if ( ictqmc == 0 ) block
-
-     ! write local hamiltonian
-     ! only for the camellia code
-     if ( ictqmc == 0 ) then
-         write(mytmp,'(75a1)') dash ! dashed line
-         write(mytmp,'(a)') '# HAMILTONIAN: ALPHA | BETA | HMAT'
-         write(mytmp,'(75a1)') dash ! dashed line
-         do i=1,ncfgs
-             do j=1,ncfgs
-                 if ( abs( hmat(i,j) ) > epst ) then
-                     write(mytmp,'(2i10,f20.10)') i, j, real( hmat(i,j) )
-                 endif ! back if ( abs( hmat(i,j) ) > epst ) block
-             enddo ! over j={1,ncfgs} loop
-         enddo ! over i={1,ncfgs} loop
-     endif ! back if ( ictqmc == 0 ) block
-
-! write F-matrix
-! for non-soc case, the spin order of CTQMC is like up, up, up, dn, dn, dn
-! but the spin order of this program is up, dn, up, dn, up, dn. So we have
-! to adjust it here. However for soc case, it doesn't matter
+     ! write annihilation operator matrix in atomic eigenbasis
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT'
      write(mytmp,'(75a1)') dash ! dashed line
