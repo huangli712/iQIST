@@ -592,8 +592,11 @@
          ! initialize fmat
          sectors(isec)%fmat(iorb,ityp)%val = zero
 
-         ! loop over the basis for the isec-th sector
+         ! (C) evaluate fmat in the Fock basis
+         !
+         ! loop over the Fock states in the isec-th subspace
          do jbas=1,sectors(isec)%ndim
+             ! get Fock state |jold>
              jold = dec_basis(sectors(isec)%basis(jbas))
 
              ! apply creation fermion operator
