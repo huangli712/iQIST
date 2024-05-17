@@ -299,12 +299,17 @@
          enddo alploop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
 
+     ! compute four fermion operators term (coulomb interaction)
+     ! it is f^{\dagger}_{\alpha} f^{\dagger}_{\beta} f_{\delta} f_{\gamma}
+     write(mystd,'(4X,a)') 'compute four fermion operators term'
+     !
      do jbas=1,ncfgs
-         alphaloop : do alpha=1,norbs
-         bettaloop : do betta=1,norbs
-         gammaloop : do gamma=1,norbs
-         deltaloop : do delta=1,norbs
+         alphaloop : do alpha=1,norbs ! loop over creation operators
+         bettaloop : do betta=1,norbs ! loop over creation operators
+         gammaloop : do gamma=1,norbs ! loop over annihilation operators
+         deltaloop : do delta=1,norbs ! loop over annihilation operators
 
+         ! retrieve the Fock state |jbas>
          isgn  = 0
          knew = dec_basis(jbas)
          code = bin_basis(:,jbas)
@@ -316,6 +321,7 @@
          if ( abs( umat(alpha,betta,delta,gamma) ) < epst ) CYCLE
 
          ! simulate two annihilation operators
+         ! they are f_{\delta} f_{\gamma}
          if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
              do i=1,gamma-1
                  if ( code(i) == 1 ) isgn = isgn + 1
@@ -328,6 +334,7 @@
              code(delta) = 0
 
              ! simulate two creation operator
+             ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
              if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
                  do i=1,betta-1
                      if ( code(i) == 1 ) isgn = isgn + 1
@@ -357,6 +364,8 @@
          enddo bettaloop ! over betta={1,norbs} loop
          enddo alphaloop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
+
+!! body]
 
      return
   end subroutine atomic_make_fhmat
