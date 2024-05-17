@@ -565,36 +565,36 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
      integer :: m
      integer :: n
 
-! counter for the non-zero matrix elements
+     ! counter for the non-zero matrix elements
      integer :: counter
 
-! auxiliary integer variable used to convert the spin sequence
+     ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! string for current date and time
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
-! open atom.cix to write
+     ! open atom.cix to write
      open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
-! write header
+     ! write header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
      write(mytmp,'(a)') '# Format  : v2.3, designed for PANSY and MANJUSHAKA'
@@ -603,7 +603,7 @@
      write(mytmp,*)
      write(mytmp,*)
 
-! write configurations
+     ! write configurations
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# PARAMETERS:'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -614,14 +614,14 @@
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
 
-! write summary of sectors
+     ! write summary of sectors
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SECTORS:'
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SUMMARY: NSECTORS | MAX_DIM_SECT | AVE_DIM_SECT'
      write(mytmp,'(5X,2(i10,2X),f20.10)') nsectors, max_dim_sect, ave_dim_sect
 
-! write dimension, total electrons, next sector, eigenvalue of each sector
+     ! write dimension, total electrons, next sector, eigenvalue of each sector
      do i=1,nsectors
          write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NE | SZ | JZ | PS'
          write(mytmp,'(12X,8i6)') i, sectors(i)%ndim,   &
@@ -632,10 +632,10 @@
                                      sectors(i)%jz,     &
                                      sectors(i)%ps
 
-! write next sector
+         ! write next sector
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
-! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
+             ! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1
@@ -648,7 +648,7 @@
              write(mytmp,'(2X,3i10)') j, sectors(i)%next(s_order,0), sectors(i)%next(s_order,1)
          enddo ! over j={1,sectors(i)%nops} loop
 
-! write eigeanvalue
+         ! write eigeanvalue
          write(mytmp,'(4X,a)') '# EIGENVALUES'
          do j=1,sectors(i)%ndim
              write(mytmp,'(2X,i10,f20.10)') j, sectors(i)%eval(j)
@@ -660,7 +660,7 @@
      write(mytmp,'(a)') '# F-MATRIX:'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
 ! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
@@ -711,21 +711,21 @@
 
      implicit none
 
-! external arguments
-! good quantum number: N
+!! external arguments
+     ! good quantum number: N
      integer, intent(in) :: sect_good_ntot(ncfgs)
 
-! good quantum number: Sz
+     ! good quantum number: Sz
      integer, intent(in) :: sect_good_sz(ncfgs)
 
-! good quantum number: PS
+     ! good quantum number: PS
      integer, intent(in) :: sect_good_ps(ncfgs)
 
-! good quantum number: Jz
+     ! good quantum number: Jz
      integer, intent(in) :: sect_good_jz(ncfgs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
@@ -744,7 +744,7 @@
      write(mytmp,'(a,f10.5)') '# ave_dim_sectors: ', ave_dim_sect
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      select case (ictqmc)
          case (1)
              call s_print_error('atomic_dump_sector','this case is not implemented')
@@ -806,7 +806,7 @@
               enddo ! over i={1,nsectors} loop
      end select ! back select case (ictqmc) block
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
