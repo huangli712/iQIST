@@ -528,6 +528,11 @@
      return
   end subroutine atomic_dump_fcix
 
+!!
+!! @sub atomic_dump_seigval
+!!
+!! write eigenvalues in subspaces (sectors) to the file atom.eigval.dat
+!!
   subroutine atomic_dump_seigval()
      use constants, only : mytmp
 
@@ -577,6 +582,11 @@
      return
   end subroutine atomic_dump_seigval
 
+!!
+!! @sub atomic_dump_seigvec
+!!
+!! write eigenvectors in subspaces (sectors) to the file atom.eigvec.dat
+!!
   subroutine atomic_dump_seigvec()
      use constants, only : eps6, mytmp
 
@@ -626,6 +636,12 @@
      return
   end subroutine atomic_dump_seigvec
 
+!!
+!! @sub atomic_dump_scix
+!!
+!! write atom.cix file for the ctqmc solver. the file format is designed
+!! for the manjushaka code only.
+!!
   subroutine atomic_dump_scix()
      use constants, only : epst, mytmp
 
@@ -779,6 +795,11 @@
      return
   end subroutine atomic_dump_scix
 
+!!
+!! @sub atomic_dump_sector
+!!
+!! write configurations of subspaces (sectors) to the file atom.sector.dat
+!!
   subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
      use constants, only : mytmp
 
