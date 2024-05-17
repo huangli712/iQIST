@@ -560,19 +560,21 @@
      integer :: ibas
      integer :: jbas
 
-     ! sign change due to commute relation
+     ! sign change due to commutation relation
      integer :: isgn
 
      ! auxiliary integer variables
      integer :: jold
      integer :: jnew
 
-! loop over all the sectors
-     do isec=1,nsectors
-! loop over all the orbitals
-         do iorb=1,norbs
-! loop over the creation and annihilation fermion operators
-             do ityp=0,1
+!! [body
+
+     do isec=1,nsectors ! loop over all the subspaces
+         !
+         write(mystd,'(4X,a,i4)') 'subspace: ', isec
+         !
+         do iorb=1,norbs ! loop over all the orbitals
+             do ityp=0,1 ! loop over the f^+ and f operators
 
 ! get the next sector: jsec
                  jsec = sectors(isec)%next(iorb,ityp)
