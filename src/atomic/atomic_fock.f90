@@ -53,14 +53,29 @@
 
 !! [body
 
-! evaluate F-matrix in the Fock basis
+     ! evaluate annihilation operator matrix in the Fock basis
+     ! actually, we want to get < bra | f | ket >
      do i=1,norbs
+         write(mystd,'(4X,a,i2,a)') 'build f(alpha =', i, ') in Fock basis'
          do j=1,ncfgs
+             ! get | ket >
              right = dec_basis(j)
+             !
+             ! simulate an annihilation operator
              if ( btest(right,i-1) .eqv. .true. ) then
-                call atomic_make_c(i, right, left, isgn)
-                k = ind_basis(left)
-                fmat(k,j,i) = dble(isgn)
+                 ! get < bra |
+                 call atomic_make_c(i, right, left, isgn)
+                 k = ind_basis(left)
+                 !
+                 ! evaluate < bra | f | ket >
+                 fmat(k,j,i) = dble(isgn)
+                 !
+                 ! write the Fock states and the matrix elements
+                 write(mystd,'(4X,a)', advance = 'no') '< bra | = '
+                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,k)
+                 write(mystd,'(2X,a)', advance = 'no') '| ket > = '
+                 write(mystd,'(*(i1))', advance = 'no') bin_basis(:,j)
+                 write(mystd,'(2X,a,i2)') 'value = ', isgn
              endif ! back if ( btest(right,i-1) .eqv. .true. ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
@@ -68,8 +83,8 @@
      ! rotate annihilation operator matrix from the Fock basis to
      ! the atomic eigenbasis. here evec are eigenvectors of hmat
      do i=1,norbs
-         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
          write(mystd,'(4X,a,i2,a)') 'rotate f(alpha =', i, ') to atomic eigenbasis'
+         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
      enddo ! over i={1,norbs} loop
 
 !! body]

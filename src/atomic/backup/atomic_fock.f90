@@ -61,7 +61,7 @@
              ! get | ket >
              right = dec_basis(j)
              !
-             ! simulate an annihilation operator 
+             ! simulate an annihilation operator
              if ( btest(right,i-1) .eqv. .true. ) then
                  ! get < bra |
                  call atomic_make_c(i, right, left, isgn)
