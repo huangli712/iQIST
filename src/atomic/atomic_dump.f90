@@ -415,7 +415,7 @@
      use constants, only : mytmp
 
      use control, only : cname
-     use control, only : ictqmc, icu, icf, isoc
+     use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : nmini, nmaxi
      use control, only : Uc, Uv, Js, Jp, Jz
@@ -424,7 +424,7 @@
 
      use version, only : V_MAIL
 
-     use m_fock, only : eval, evec
+     use m_fock, only : eval
      use m_fock, only : occu, spin
      use m_fock, only : fmat
 
