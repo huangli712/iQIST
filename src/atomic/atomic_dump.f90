@@ -36,6 +36,8 @@
      ! used to draw a dashed line
      character (len=1) :: dash(75)
 
+!! [body
+
      ! setup dash
      dash = '-'
 
@@ -74,6 +76,8 @@
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
+
+!! [body
 
      ! setup dash
      dash = '-'
@@ -117,6 +121,8 @@
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
+
+!! [body
 
      ! setup dash
      dash = '-'
@@ -170,6 +176,8 @@
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
+
+!! [body
 
      ! setup dash
      dash = '-'
@@ -268,6 +276,8 @@
      ! used to draw a dashed line
      character (len=1) :: dash(75)
 
+!! [body
+
      ! setup dash
      dash = '-'
 
@@ -305,6 +315,8 @@
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
+
+!! [body
 
      ! setup dash
      dash = '-'
@@ -359,6 +371,8 @@
 
      ! string for current date and time
      character (len = 20) :: date_time_string
+
+!! [body
 
      ! setup dash
      dash = '-'
@@ -480,6 +494,8 @@
      ! used to draw a dashed line
      character (len=1) :: dash(75)
 
+!! [body
+
      ! setup dash
      dash = '-'
 
@@ -522,6 +538,8 @@
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
+
+!! [body
 
      ! setup dash
      dash = '-'
@@ -584,6 +602,8 @@
 
      ! string for current date and time
      character (len = 20) :: date_time_string
+
+!! [body
 
      ! setup dash
      dash = '-'
@@ -663,7 +683,7 @@
      ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
-! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
+             ! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1
@@ -729,16 +749,18 @@
      integer :: i
      integer :: j
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+!! [body
+
+     ! setup dash
      dash = '-'
 
-! open 'atom.sector.dat' to write
+     ! open 'atom.sector.dat' to write
      open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
 
-! write header
+     ! write header
      write(mytmp,'(a,i10)')   '# number_sectors : ', nsectors
      write(mytmp,'(a,i10)')   '# max_dim_sectors: ', max_dim_sect
      write(mytmp,'(a,f10.5)') '# ave_dim_sectors: ', ave_dim_sect
