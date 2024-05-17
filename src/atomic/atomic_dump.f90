@@ -460,10 +460,9 @@
      ! write the header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     if ( ictqmc == 0 ) write(mytmp,'(a)') '# Format  : v1.3, designed for CAMELLIA'
-     if ( ictqmc == 1 ) write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
-     write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
+     write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
+     write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
+     write(mytmp,'(a)') '# Support : any problem, please contact me: '//V_MAIL
      write(mytmp,*)
      write(mytmp,*)
 
