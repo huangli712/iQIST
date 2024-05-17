@@ -83,6 +83,7 @@
      use constants, only : mytmp
 
      use control, only : norbs
+
      use m_spmat, only : tmat
 
 !! local variables
@@ -132,6 +133,7 @@
 
      use control, only : isoc
      use control, only : nband, norbs
+
      use m_spmat, only : emat
 
      implicit none
@@ -187,10 +189,14 @@
 !! write onsite Coulomb interaction U, a rank-4 tensor
 !!
   subroutine atomic_dump_umat()
-     use constants, only : dp, zero, two, epst, mytmp
+     use constants, only : dp
+     use constants, only : zero, two
+     use constants, only : epst
+     use constants, only : mytmp
 
      use control, only : icu
      use control, only : nband, norbs
+
      use m_spmat, only : umat
 
      implicit none
@@ -202,7 +208,7 @@
      integer  :: k
      integer  :: l
 
-     ! two index umat
+     ! rank-2 Coulomb interaction tensor
      real(dp) :: umat_t(norbs,norbs)
 
      ! used to draw a dashed line
@@ -222,7 +228,6 @@
      write(mytmp,'(75a1)') dash ! dashed line
 
      ! write the data, only the non-zero elements are outputed
-     ! note: we do not change the spin sequence here
      do i=1,norbs
          do j=1,norbs
              do k=1,norbs
@@ -238,19 +243,22 @@
      ! close data file
      close(mytmp)
 
-     ! get two index umat
+     ! initialize rank-2 Coulomb interaction tensor
      umat_t = zero
 
      ! Kanamori type
      if ( icu == 1 .or. icu == 3 ) then
+         !
          do i=1,norbs
              do j=i+1,norbs
-                 umat_t(i,j) = real(umat(i,j,j,i))
+                 umat_t(i,j) = real( umat(i,j,j,i) )
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
+         !
      ! Slater type
      elseif ( icu == 2 ) then
+         !
          do i=1,norbs
              do j=i+1,norbs
                  if ( mod(i,2) == mod(j,2) ) then
@@ -261,6 +269,7 @@
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
+         !
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
      ! open file atom.umat.dat to write
