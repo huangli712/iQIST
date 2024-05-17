@@ -100,10 +100,13 @@
 !!
   subroutine atomic_make_foccu()
      use constants, only : zero, one
+     use constants, only : mystd
 
      use control, only : norbs, ncfgs
+
      use m_fock, only : bin_basis
-     use m_fock, only : occu, evec
+     use m_fock, only : evec
+     use m_fock, only : occu
 
      implicit none
 
@@ -116,8 +119,10 @@
 
 !! [body
 
-     ! evaluate occupancy in the Fock basis
+     ! evaluate density matrix in the Fock basis
+     ! note that it is diagonal
      occu = zero
+     !
      do ibas=1,ncfgs
          do iorb=1,norbs
              if ( bin_basis(iorb,ibas) == 1 ) then
@@ -126,7 +131,9 @@
          enddo ! over iorb={1,norbs} loop
      enddo ! over ibas={1,ncfgs} loop
 
-     ! transform the occupancy from Fock basis to atomic eigenbasis
+     ! try to transform the density matrix from the Fock basis
+     ! to the atomic eigenbasis
+     write(mystd,'(4X,a)') 'rotate density matrix to atomic eigenbasis'
      call atomic_tran_repr_real(ncfgs, occu, evec)
 
 !! body]
