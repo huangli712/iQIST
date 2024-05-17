@@ -153,22 +153,27 @@
 !!
   subroutine atomic_make_fspin()
      use constants, only: zero, half
+     use constants, only : mystd
 
      use control, only : norbs, ncfgs
-     use m_fock, only : bin_basis
-     use m_fock, only : spin, evec
 
-! local variables
-! loop index over orbits
+     use m_fock, only : bin_basis
+     use m_fock, only : evec
+     use m_fock, only : spin
+
+!! local variables
+     ! loop index over orbits
      integer :: iorb
 
-! loop index over configurations
+     ! loop index over Fock states
      integer :: ibas
 
 !! [body
 
-! evaluate spin moment in the Fock basis
+     ! evaluate magnetic moment in the Fock basis
+     ! note that it is diagonal
      spin = zero
+     !
      do ibas=1,ncfgs
          do iorb=1,norbs
              if ( bin_basis(iorb,ibas) == 1 ) then
@@ -179,10 +184,18 @@
                  endif ! back if ( mod(iorb,2) /= 0 ) block
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
          enddo ! over iorb={1,norbs} loop
+         !
+         write(mystd,'(4X,a)', advance = 'no') '| ket > = '
+         write(mystd,'(*(i1))', advance = 'no') bin_basis(:,ibas)
+         write(mystd,'(2X,a,f5.2)') 'Sz = ', spin(ibas,ibas)
      enddo ! over ibas={1,ncfgs} loop
 
-! transform the net Sz from Fock basis to atomic eigenbasis
+     ! try to transform the magnetic moment from the Fock basis
+     ! to the atomic eigenbasis
+     write(mystd,'(4X,a)') 'rotate magnetic moment to atomic eigenbasis'
      call atomic_tran_repr_real(ncfgs, spin, evec)
+
+!! body]
 
      return
   end subroutine atomic_make_fspin
