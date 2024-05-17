@@ -710,7 +710,7 @@
      write(mytmp,'(a)') '# SUMMARY: NSECTORS | MAX_DIM_SECT | AVE_DIM_SECT'
      write(mytmp,'(5X,2(i10,2X),f20.10)') nsectors, max_dim_sect, ave_dim_sect
 
-     ! write dimension, total electrons, next subspace (sector),
+     ! write dimension, total electrons, next subspace (sector), and
      ! eigenvalue of each subspace (sector)
      do i=1,nsectors
          write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NE | SZ | JZ | PS'
@@ -838,7 +838,7 @@
      ! setup dash
      dash = '-'
 
-     ! open file 'atom.sector.dat' to write
+     ! open file atom.sector.dat to write
      open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
 
      ! write header

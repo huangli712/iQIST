@@ -750,7 +750,6 @@
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
-
      use m_sector, only : max_dim_sect
      use m_sector, only : ave_dim_sect
 
