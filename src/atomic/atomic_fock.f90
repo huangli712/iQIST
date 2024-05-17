@@ -258,39 +258,41 @@
      write(mystd,'(4X,a)') 'compute two fermion operators term'
      !
      do jbas=1,ncfgs
-         alploop: do alpha=1,norbs
-         betloop: do betta=1,norbs
+         alploop: do alpha=1,norbs ! loop over creation operators
+         betloop: do betta=1,norbs ! loop over annihilation operators
 
+         ! retrieve the Fock state |jbas>
          isgn = 0
          knew = dec_basis(jbas)
-         code(1:norbs) = bin_basis(1:norbs,jbas)
+         code = bin_basis(:,jbas)
 
          ! impurity level is too small
          if ( abs( emat(alpha,betta) ) < epst ) CYCLE
 
-         ! simulate one annihilation operator
+         ! simulate one annihilation operator, f_{\beta}
          if ( code(betta) == 1 ) then
              do i=1,betta-1
                  if ( code(i) == 1 ) isgn = isgn + 1
              enddo ! over i={1,betta-1} loop
              code(betta) = 0
 
-             ! simulate one creation operator
+             ! simulate one creation operator, f^{\dagger}_{\alpha}
              if ( code(alpha) == 0 ) then
                  do i=1,alpha-1
                      if ( code(i) == 1 ) isgn = isgn + 1
                  enddo ! over i={1,alpha-1} loop
                  code(alpha) = 1
 
-                 ! determine the row number and hamiltonian matrix elememt
-                 knew = knew - 2**(betta-1)
-                 knew = knew + 2**(alpha-1)
-                 isgn  = mod(isgn,2)
-                 ! now ibas means the index for the new state
+                 ! determine the new Fock state, <ibas|
+                 ! now ibas means the index for the new Fock state
+                 knew = knew - 2**(betta-1) + 2**(alpha-1)
                  ibas = ind_basis(knew)
                  if ( ibas == 0 ) then
-                     call s_print_error('atomic_make_fhmat','error while determining new state!')
+                     call s_print_error('atomic_make_fhmat', &
+                         & 'error while determining new Fock state!')
                  endif ! back if ( ibas == 0 ) block
+                 !
+                 isgn  = mod(isgn,2)
                  hmat(ibas,jbas) = hmat(ibas,jbas) + emat(alpha,betta) * (-one)**isgn
              endif ! back if (code(alpha) == 0) block
          endif ! back if (code(betta) == 1) block
@@ -333,7 +335,7 @@
              enddo ! over i={1,delta-1} loop
              code(delta) = 0
 
-             ! simulate two creation operator
+             ! simulate two creation operators
              ! they are f^{\dagger}_{\alpha} f^{\dagger}_{\beta}
              if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
                  do i=1,betta-1
