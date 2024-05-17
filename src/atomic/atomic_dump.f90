@@ -345,31 +345,31 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
 
-! auxiliary integer variable used to convert the spin sequence
+     ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! string for current date and time
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
-! open file atom.cix to write
+     ! open file atom.cix to write
      open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
      if ( ictqmc == 0 ) write(mytmp,'(a)') '# Format  : v1.3, designed for CAMELLIA'
