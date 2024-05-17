@@ -21,6 +21,11 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! @sub atomic_dump_fock
+!!
+!! write Fock basis to file atom.fock.dat
+!!
   subroutine atomic_dump_fock()
      use constants, only : mytmp
 
@@ -30,7 +35,7 @@
      implicit none
 
 !! local variables
-     ! loop index
+     ! loop index over Fock states
      integer :: i
 
      ! used to draw a dashed line
@@ -65,6 +70,12 @@
      return
   end subroutine atomic_dump_fock
 
+!!
+!! @sub atomic_dump_tmat
+!!
+!! write the transformation matrix from the original basis to the
+!! natural eigenbasis (eigenstates of H_{CFS} + H_{SOC})
+!!
   subroutine atomic_dump_tmat()
      use constants, only : mytmp
 
@@ -107,6 +118,12 @@
      return
   end subroutine atomic_dump_tmat
 
+!!
+!! @sub atomic_dump_emat
+!!
+!! write onsite impurity energy on natural eigenbasis
+!! it should be a diagonal matrix
+!!
   subroutine atomic_dump_emat()
      use constants, only : mytmp
 
@@ -161,6 +178,11 @@
      return
   end subroutine atomic_dump_emat
 
+!!
+!! @sub atomic_dump_umat
+!!
+!! write onsite Coulomb interaction U, a rank-4 tensor
+!!
   subroutine atomic_dump_umat()
      use constants, only : dp, zero, two, epst, mytmp
 
@@ -269,6 +291,11 @@
      return
   end subroutine atomic_dump_umat
 
+!!
+!! @sub atomic_dump_feigval
+!!
+!! write eigenvalues in full Hilbert space to the file atom.eigval.dat
+!!
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
 
@@ -310,6 +337,11 @@
      return
   end subroutine atomic_dump_feigval
 
+!!
+!! @sub atomic_dump_feigvec
+!!
+!! write eigenvectors in full Hilbert space to the file atom.eigvec.dat
+!!
   subroutine atomic_dump_feigvec()
      use constants, only : eps6, mytmp
 
@@ -356,6 +388,13 @@
      return
   end subroutine atomic_dump_feigvec
 
+!!
+!! @sub atomic_dump_fcix
+!!
+!! write atom.cix file for the ctqmc solver. the file format is
+!! designed for the lavender code. however, the code is already 
+!! deprecated. we retain this subroutine only for reference.
+!!
   subroutine atomic_dump_fcix()
      use constants, only : epst, mytmp
 
