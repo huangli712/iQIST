@@ -514,27 +514,27 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! open file atom.eigvec.dat to write
+     ! open file atom.eigvec.dat to write
      open(mytmp, file='atom.eigvec.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# sector | i | j | eigenvectors'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%ndim
              do k=1,sectors(i)%ndim
@@ -545,7 +545,7 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
@@ -655,7 +655,7 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-! write F-matrix of each sector
+     ! write F-matrix of each sector
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F-MATRIX:'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -694,7 +694,7 @@
          enddo ! over j={1,sectors(i)%nops} loop
      enddo  ! over i={1,nsect} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
