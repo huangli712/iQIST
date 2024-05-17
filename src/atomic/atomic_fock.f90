@@ -65,20 +65,24 @@
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
 
-! rotate fmat from Fock basis to the atomic eigenvector basis
-     if ( ictqmc == 1 ) then
-         do i=1,norbs
-             call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
-         enddo ! over i={1,norbs} loop
-     endif ! back if ( ictqmc == 1 ) block
+     ! rotate annihilation operator matrix from the Fock basis to
+     ! the atomic eigenbasis. here evec are eigenvectors of hmat
+     do i=1,norbs
+         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
+         write(mystd,'(4X,a,i2,a)') 'rotate f(alpha =', i, ') to atomic eigenbasis'
+     enddo ! over i={1,norbs} loop
 
 !! body]
 
      return
   end subroutine atomic_make_ffmat
 
-!!>>> atomic_make_foccu: make occupancy for atomic eigenstates in the full
-!!>>> Hilbert space case
+!!
+!! @sub atomic_make_foccu
+!!
+!! construct density matrix (occupancy matrix) in the Fock space, and
+!! then rotate it to the atomic eigenbasis
+!!
   subroutine atomic_make_foccu()
      use constants, only : zero, one
 
@@ -113,8 +117,12 @@
      return
   end subroutine atomic_make_foccu
 
-!!>>> atomic_make_fspin: make net Sz for atomic eigenstates in the full
-!!>>> Hilbert space case
+!!
+!! @sub atomic_make_fspin
+!!
+!! construct magnetic moment (Sz) in the Fock space, and
+!! then rotate it to the atomic eigenbasis
+!!
   subroutine atomic_make_fspin()
      use constants, only: zero, half
 
@@ -151,7 +159,6 @@
      return
   end subroutine atomic_make_fspin
 
-!!>>> atomic_make_fhmat: make atomic Hamiltonian in the full Hilbert space
   subroutine atomic_make_fhmat()
      use constants, only : one, czero, epst
 
