@@ -60,6 +60,8 @@
      ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine atomic_dump_fock
 
@@ -99,6 +101,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_tmat
@@ -151,6 +155,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_emat
@@ -258,6 +264,8 @@
      ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine atomic_dump_umat
 
@@ -296,6 +304,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_feigval
@@ -340,6 +350,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_feigvec
@@ -472,6 +484,8 @@
      ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine atomic_dump_fcix
 
@@ -519,6 +533,8 @@
      ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine atomic_dump_seigval
 
@@ -565,6 +581,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_dump_seigvec
@@ -717,6 +735,8 @@
      ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine atomic_dump_scix
 
@@ -830,6 +850,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
    end subroutine atomic_dump_sector
