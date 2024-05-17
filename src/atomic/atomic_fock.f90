@@ -107,16 +107,16 @@
 
      implicit none
 
-! local variables
-! loop index over orbits
+!! local variables
+     ! loop index over orbits
      integer :: iorb
 
-! loop index over configurations
+     ! loop index over configurations
      integer :: ibas
 
 !! [body
 
-! evaluate occupancy in the Fock basis
+     ! evaluate occupancy in the Fock basis
      occu = zero
      do ibas=1,ncfgs
          do iorb=1,norbs
@@ -126,8 +126,10 @@
          enddo ! over iorb={1,norbs} loop
      enddo ! over ibas={1,ncfgs} loop
 
-! transform the occupancy from Fock basis to atomic eigenbasis
+     ! transform the occupancy from Fock basis to atomic eigenbasis
      call atomic_tran_repr_real(ncfgs, occu, evec)
+
+!! body]
 
      return
   end subroutine atomic_make_foccu
