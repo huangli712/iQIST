@@ -357,18 +357,31 @@
                  enddo ! over i={1,alpha-1} loop
                  code(alpha) = 1
 
-                 ! determine the row number and hamiltonian matrix elememt
+                 ! determine the new Fock state, <ibas|
+                 ! now ibas means the index for the new Fock state
                  knew = knew - 2**(gamma-1) - 2**(delta-1)
                  knew = knew + 2**(betta-1) + 2**(alpha-1)
-                 isgn  = mod(isgn,2)
-                 ! now ibas means the index for the new state
                  ibas = ind_basis(knew)
                  if ( ibas == 0 ) then
-                     call s_print_error('atomic_make_fhmat','error while determining new state')
+                     call s_print_error('atomic_make_fhmat', &
+                         & 'error while determining new Fock state')
                  endif ! back if ( ibas == 0 ) block
-                 hmat(ibas,jbas) = hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**isgn
-             endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
-         endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
+                 !
+                 ! determine the matrix element between the two Fock
+                 ! states, i.e., <ibas| and |jbas>
+                 isgn = mod(isgn,2)
+                 val = umat(alpha,betta,delta,gamma) * (-one)**isgn
+                 !
+                 ! setup the four fermion operators term
+                 hmat(ibas,jbas) = hmat(ibas,jbas) + val
+                 !
+                 ! write the combination of the operators
+                 write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha = ', alpha, ')'
+                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f^+(beta = ', betta, ')'
+                 write(mystd,'(2X,a,i2,a)', advance = 'no') 'f(delta = ', delta, ')'
+                 write(mystd,'(2X,a,i2,a)') 'f(gamma = ', gamma, ')'
+             endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
+         endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 
          enddo deltaloop ! over delta={1,norbs} loop
          enddo gammaloop ! over gamma={1,norbs} loop
