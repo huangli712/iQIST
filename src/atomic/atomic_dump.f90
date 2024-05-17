@@ -550,13 +550,13 @@
 
      ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(a)') '# i | sector | j | eigenvalues'
+     write(mytmp,'(a)') '# i | sector | dim | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
      ! write the data
      counter = 0
-     do i=1,nsectors
-         do j=1,sectors(i)%ndim
+     do i=1,nsectors ! loop over subspaces
+         do j=1,sectors(i)%ndim ! loop over eigenstates in the subspace
              counter = counter + 1
              write(mytmp,'(3i6,f16.8)') counter, i, j, sectors(i)%eval(j)
          enddo ! over i={1,nsectors} loop
