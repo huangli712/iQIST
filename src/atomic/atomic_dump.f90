@@ -196,13 +196,13 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
-! get two index umat
+     ! get two index umat
      umat_t = zero
 
-! Kanamori type
+     ! Kanamori type
      if ( icu == 1 .or. icu == 3 ) then
          do i=1,norbs
              do j=i+1,norbs
@@ -210,7 +210,7 @@
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
-! Slater type
+     ! Slater type
      elseif ( icu == 2 ) then
          do i=1,norbs
              do j=i+1,norbs
@@ -224,7 +224,7 @@
          enddo ! over i={1,norbs} loop
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
-! open file atom.umat.dat to write
+     ! open file atom.umat.dat to write
      open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
 
 ! write the data, all of the elements are outputed
@@ -247,7 +247,7 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
@@ -261,30 +261,30 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! open file atom.eigval.dat to write
+     ! open file atom.eigval.dat to write
      open(mytmp, file='atom.eigval.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,ncfgs
          write(mytmp,'(i6,f16.8)') i, eval(i)
      enddo ! over i={1,ncfgs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
