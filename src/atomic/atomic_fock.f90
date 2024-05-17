@@ -1,23 +1,28 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_make_ffmat
 !!!           atomic_make_foccu
 !!!           atomic_make_fspin
 !!!           atomic_make_fhmat
-!!! source  : atomic_full.f90
+!!!           atomic_diag_fhmat
+!!!           atomic_check_fhmat
+!!! source  : atomic_fock.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : computational subroutines for the calculations of occupation
-!!!           number, spin moment, F-matrix, and atomic Hamiltonian in the
-!!!           full Fock space.
+!!!           01/31/2024 by li huang (last modified)
+!!! purpose : core subroutines for solving atomic eigenvalue problem in
+!!!           the Fock space.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_make_ffmat: make F-matrix for annihilation operators in
-!!>>> full Hilbert space case
+!!
+!! @sub atomic_make_ffmat
+!!
+!! construct annihilation operator matrix in the Fock space, and then
+!! rotate it to the atomic eigenbasis
+!!
   subroutine atomic_make_ffmat()
      use control, only : ictqmc
      use control, only : norbs, ncfgs
