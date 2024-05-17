@@ -312,6 +312,7 @@
      use constants, only : mytmp
 
      use control, only : ncfgs
+
      use m_fock, only : eval
 
      implicit none
@@ -355,9 +356,11 @@
 !! write eigenvectors in full Hilbert space to the file atom.eigvec.dat
 !!
   subroutine atomic_dump_feigvec()
-     use constants, only : eps6, mytmp
+     use constants, only : eps6
+     use constants, only : mytmp
 
      use control, only : ncfgs
+
      use m_fock, only : evec
 
      implicit none
@@ -408,15 +411,23 @@
 !! deprecated. we retain this subroutine only for reference.
 !!
   subroutine atomic_dump_fcix()
-     use constants, only : epst, mytmp
+     use constants, only : epst
+     use constants, only : mytmp
 
+     use control, only : cname
      use control, only : ictqmc, icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : nmini, nmaxi
      use control, only : Uc, Uv, Js, Jp, Jz
      use control, only : Ud, Jh
      use control, only : mune, lambda
-     use m_fock, only : eval, evec, occu, spin, fmat, hmat
+
+     use version, only : V_MAIL
+
+     use m_fock, only : eval, evec
+     use m_fock, only : occu, spin
+     use m_fock, only : fmat
+     use m_fock, only : hmat
 
      implicit none
 
