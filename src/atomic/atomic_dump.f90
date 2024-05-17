@@ -272,11 +272,11 @@
          !
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
-     ! open file atom.umat.dat to write
+     ! open file solver.umat.in to write
+     ! this file is used as input for the the other ctqmc code
      open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
 
-     ! write the data, all of the elements are outputed
-     ! note: we have to change the spin sequence here
+     ! write the data, all of the elements are written
      do i=1,norbs
          if ( i <= nband ) then
              k = 2*i-1
