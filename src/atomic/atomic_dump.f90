@@ -67,33 +67,33 @@
      use control, only : norbs
      use m_spmat, only : tmat
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! open file atom.tmat.dat to write
+     ! open file atom.tmat.dat to write
      open(mytmp, file='atom.tmat.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | j | tmat_real | tmat_imag'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,norbs
          do j=1,norbs
              write(mytmp,'(2i6,2f16.8)') i, j, tmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
@@ -108,28 +108,28 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! auxiliary integer variable used to convert the spin sequence
+     ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
 
-! used to draw a dashed line
+     ! used to draw a dashed line
      character (len=1) :: dash(75)
 
-! setup dash
+     ! setup dash
      dash = '-'
 
-! open file atom.emat.dat to write
+     ! open file atom.emat.dat to write
      open(mytmp, file='atom.emat.dat', form='formatted', status='unknown')
 
-! write the header
+     ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# i | emat_real | emat_imag'
      write(mytmp,'(75a1)') dash ! dashed line
 
-! write the data
+     ! write the data
      do i=1,norbs
          if ( isoc == 0 ) then
              if ( i <= nband ) then
@@ -143,7 +143,7 @@
          write(mytmp,'(i6,2f16.8)') i, emat(s_order,s_order)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
