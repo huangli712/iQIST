@@ -552,16 +552,21 @@
          endif ! back if ( nband == 5 ) block
      endif ! back if ( icu == 3 ) block
 
+!! body]
+
+     return
   end subroutine atomic_make_hund
 
-!!========================================================================
-!!>>> determine Coulomb interaction matrix                             <<<
-!!========================================================================
-
-!!>>> atomic_make_umatK: make Coulomb interaction U according to Kanamori
-!!>>> parameterized Hamiltonian
+!!
+!! @sub atomic_make_umatK
+!!
+!! make Coulomb interaction U (a rank-4 tensor) according to Kanamori
+!! parameterized Hamiltonian
+!!
   subroutine atomic_make_umatK()
-     use constants, only : dp, zero, two, czero
+     use constants, only : dp
+     use constants, only : zero, two
+     use constants, only : czero
 
      use control, only : nband, norbs
      use control, only : Uc
@@ -569,41 +574,43 @@
 
      implicit none
 
-! local varibales
-! orbital index
+!! local varibales
+     ! orbital index
      integer  :: alpha, betta
      integer  :: delta, gamma
 
-! band index and spin index
+     ! band index and spin index
      integer  :: aband, bband
      integer  :: dband, gband
      integer  :: aspin, bspin
      integer  :: dspin, gspin
 
-! dummy variables
+     ! dummy variables
      real(dp) :: dtmp
 
-! Hund's rule matrix
+     ! Hund's rule matrix
      real(dp) :: hund(nband,nband,3)
 
-! initialize hund to zero
+!! [body
+
+     ! initialize hund to zero
      hund = zero
 
-! build Hund's rule coupling matrix
+     ! build Hund's rule coupling matrix
      call atomic_make_hund(hund)
 
-! initialize umat to zero
+     ! initialize umat to zero
      umat = czero
 
-! loop for creation operators
+     ! loop for creation operators
      alphaloop: do alpha=1,norbs-1
          bettaloop: do betta=alpha+1,norbs
 
-! loop for annihilation operators
+             ! loop for annihilation operators
              gammaloop: do gamma=1,norbs-1
                  deltaloop: do delta=gamma+1,norbs
 
-! get the band and spin indices
+                     ! get the band and spin indices
                      aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
                      bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
                      gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
@@ -611,35 +618,35 @@
 
                      dtmp = zero
 
-! intraorbital Coulomb interaction
+                     ! intraorbital Coulomb interaction
                      if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
                          if ( ( aband == bband ) .and. ( aspin /= bspin ) ) then
                              dtmp = dtmp + Uc
                          endif ! back if ( ( aband == bband ) .and. ( aspin /= bspin ) ) block
                      endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
-! interorbital Coulomb interaction
+                     ! interorbital Coulomb interaction
                      if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
                          if ( aband /= bband ) then
                              dtmp = dtmp + (Uc - two * hund(aband,bband,1))
                          endif ! back if ( aband /= bband ) block
                      endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
-! Hund's exchange interaction
+                     ! Hund's exchange interaction
                      if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
                          if ( ( aband /= bband ) .and. ( aspin == bspin ) ) then
                              dtmp = dtmp - hund(aband,bband,1)
                          endif ! back if ( ( aband /= bband ) .and. ( aspin == bspin ) ) block
                      endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
-! spin flip term
+                     ! spin flip term
                      if ( ( aband == gband ) .and. ( bband == dband ) ) then
                          if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) then
                              dtmp = dtmp - hund(aband,bband,2)
                          endif ! back if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) block
                      endif ! back if ( ( aband == gband ) .and. ( bband == dband ) ) block
 
-! pair hopping term
+                     ! pair hopping term
                      if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) then
                          if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) then
                              dtmp = dtmp + hund(aband,gband,3)
@@ -652,6 +659,8 @@
              enddo gammaloop ! over gamma={1,norbs-1} loop
          enddo bettaloop ! over betta={alpha+1,norbs} loop
      enddo alphaloop ! over alpha={1,norbs-1} loop
+
+!! body]
 
      return
   end subroutine atomic_make_umatK
