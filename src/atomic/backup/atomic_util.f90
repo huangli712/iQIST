@@ -569,6 +569,7 @@
 
      use control, only : nband, norbs
      use control, only : Uc
+
      use m_spmat, only : umat
 
      implicit none

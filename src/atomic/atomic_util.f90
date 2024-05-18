@@ -570,6 +570,7 @@
 
      use control, only : nband, norbs
      use control, only : Uc
+
      use m_spmat, only : umat
 
      implicit none
@@ -677,6 +678,7 @@
 
      use control, only : nband, norbs
      use control, only : Ud, Jh
+
      use m_spmat, only : umat
 
      implicit none
@@ -739,39 +741,42 @@
 
      end select
 
-! make Coulomb interaction U matrix
+     ! make Coulomb interaction U matrix
      do alpha=1,norbs
-         do betta=1,norbs
-             aband = ( alpha - 1 ) / 2 - l
-             bband = ( betta - 1 ) / 2 - l
-             aspin = mod(alpha,2)
-             bspin = mod(betta,2)
+     do betta=1,norbs
+         aband = ( alpha - 1 ) / 2 - l
+         bband = ( betta - 1 ) / 2 - l
+         aspin = mod(alpha,2)
+         bspin = mod(betta,2)
 
-             do gamma=1,norbs
-                 do delta=1,norbs
-                     dband = ( delta - 1 ) / 2 - l
-                     gband = ( gamma - 1 ) / 2 - l
-                     dspin = mod(delta,2)
-                     gspin = mod(gamma,2)
+         do gamma=1,norbs
+         do delta=1,norbs
+             dband = ( delta - 1 ) / 2 - l
+             gband = ( gamma - 1 ) / 2 - l
+             dspin = mod(delta,2)
+             gspin = mod(gamma,2)
 
-                     if ( ( aband + bband ) /= ( dband + gband ) ) CYCLE
-                     if ( ( aspin /= gspin ) .or. ( bspin /= dspin ) ) CYCLE
+             if ( ( aband + bband ) /= ( dband + gband ) ) CYCLE
+             if ( ( aspin /= gspin ) .or. ( bspin /= dspin ) ) CYCLE
 
-                     res = zero
-                     do i=0,2*l,2
-                         res = res + gaunt(aband,gband,i) * gaunt(dband,bband,i) * slater_cordon(i)
-                     enddo ! over i={0,2*l} loop
-                     umat(alpha,betta,delta,gamma) = res
-                 enddo ! over gamma={1,norbs} loop
-             enddo ! over delta={1,norbs} loop
+             res = zero
+             do i=0,2*l,2
+                 res = res + gaunt(aband,gband,i) * gaunt(dband,bband,i) * slater_cordon(i)
+             enddo ! over i={0,2*l} loop
+             umat(alpha,betta,delta,gamma) = res
+         enddo ! over gamma={1,norbs} loop
+         enddo ! over delta={1,norbs} loop
 
-         enddo ! over betta={1,norbs} loop
+     enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
+     !
      umat = half * umat
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(gaunt) )         deallocate(gaunt)
      if ( allocated(slater_cordon) ) deallocate(slater_cordon)
+
+!! body]
 
      return
   end subroutine atomic_make_umatS
