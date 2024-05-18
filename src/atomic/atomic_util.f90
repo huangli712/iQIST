@@ -1284,13 +1284,17 @@
      implicit none
 
 !! external arguments
-     ! transformation matrix from orginal basis to natural basis
+     ! transformation matrix from orginal basis to natural eigenbasis
+     !
+     ! the original basis could be real orbial basis or complex
+     ! orbital basis. it depends on how to determine the Coulomb
+     ! interaction matrix
      complex(dp), intent(in)  :: amtrx(norbs,norbs)
 
      ! coefficents matrix for general interaction U in orginal basis
      complex(dp), intent(in)  :: umat(norbs,norbs,norbs,norbs)
 
-     ! coefficents matrix for general interaction U in natural basis
+     ! coefficents matrix for general interaction U in natural eigenbasis
      complex(dp), intent(out) :: umat_t(norbs,norbs,norbs,norbs)
 
 !! local variables
@@ -1307,30 +1311,35 @@
 
      ! initialize umat_t to be zero
      umat_t = czero
-
+     !
      sigma1loop: do sigma1=1,norbs
-         sigma2loop: do sigma2=1,norbs
-             sigma3loop: do sigma3=1,norbs
-                 sigma4loop: do sigma4=1,norbs
-                     ctmp = czero
+     sigma2loop: do sigma2=1,norbs
+     sigma3loop: do sigma3=1,norbs
+     sigma4loop: do sigma4=1,norbs
+         !
+         ctmp = czero
+         !
+         alpha1loop: do alpha1=1,norbs
+         alpha2loop: do alpha2=1,norbs
+         alpha3loop: do alpha3=1,norbs
+         alpha4loop: do alpha4=1,norbs
 
-                     alpha1loop: do alpha1=1,norbs
-                         alpha2loop: do alpha2=1,norbs
-                             alpha3loop: do alpha3=1,norbs
-                                 alpha4loop: do alpha4=1,norbs
-                                     if ( abs( umat(alpha1,alpha2,alpha3,alpha4) ) < epst ) CYCLE
-                                     ctmp = ctmp + umat(alpha1,alpha2,alpha3,alpha4)                   &
-                                                 * conjg(amtrx(alpha1,sigma1)) * amtrx(alpha3,sigma3)  &
-                                                 * conjg(amtrx(alpha2,sigma2)) * amtrx(alpha4,sigma4)
-                                 enddo alpha4loop ! over alpha4={1,norbs} loop
-                             enddo alpha3loop ! over alpha3={1,norbs} loop
-                         enddo alpha2loop ! over alpha2={1,norbs} loop
-                     enddo alpha1loop ! over alpha1={1,norbs} loop
+             if ( abs( umat(alpha1,alpha2,alpha3,alpha4) ) < epst ) CYCLE
 
-                     umat_t(sigma1,sigma2,sigma3,sigma4) = ctmp
-                 enddo sigma4loop ! over sigma4={1,norbs} loop
-             enddo sigma3loop ! over sigma3={1,norbs} loop
-         enddo sigma2loop ! over sigma2={1,norbs} loop
+             ctmp = ctmp + umat(alpha1,alpha2,alpha3,alpha4)                   &
+                         * conjg(amtrx(alpha1,sigma1)) * amtrx(alpha3,sigma3)  &
+                         * conjg(amtrx(alpha2,sigma2)) * amtrx(alpha4,sigma4)
+
+         enddo alpha4loop ! over alpha4={1,norbs} loop
+         enddo alpha3loop ! over alpha3={1,norbs} loop
+         enddo alpha2loop ! over alpha2={1,norbs} loop
+         enddo alpha1loop ! over alpha1={1,norbs} loop
+         !
+         umat_t(sigma1,sigma2,sigma3,sigma4) = ctmp
+         !
+     enddo sigma4loop ! over sigma4={1,norbs} loop
+     enddo sigma3loop ! over sigma3={1,norbs} loop
+     enddo sigma2loop ! over sigma2={1,norbs} loop
      enddo sigma1loop ! over sigma1={1,norbs} loop
 
 !! body]
