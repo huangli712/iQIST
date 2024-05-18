@@ -1095,21 +1095,28 @@
      return
   end subroutine atomic_make_tmat_r2c
 
-!!>>> atomic_make_tmat_c2j: make transformation matrix from complex
-!!>>> orbital basis (|lz,sz>) to j2-jz orbital basis (|j2,jz>), i.e.,
-!!>>> the Cordon-Gaunt (CG) coefficients
+!!
+!! @sub atomic_make_tmat_c2j
+!!
+!! make transformation matrix from complex orbital basis (|lz,sz>) to
+!! j2-jz orbital basis (|j2,jz>)
+!!
   subroutine atomic_make_tmat_c2j(tmat_c2j)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : nband, norbs
 
      implicit none
 
-! external arguments
-! the transformation matrix from complex orbitals |lz,sz> to |j2,jz>
+!! external arguments
+     ! transformation matrix from complex orbitals |lz,sz> to |j2,jz>
      complex(dp), intent(out) :: tmat_c2j(norbs,norbs)
 
+!! [body
+
      tmat_c2j = czero
+     !
      select case (nband)
 
 ! the |lz,sz> order is:
