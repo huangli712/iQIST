@@ -1,9 +1,10 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
+!!! project : iqist @ jasmine
 !!! program : atomic_make_cdagger
 !!!           atomic_make_c
 !!!           atomic_make_gsz
 !!!           atomic_make_gjz
+!!!           atomic_make_gps
 !!!           atomic_make_gaunt5
 !!!           atomic_make_gaunt7
 !!!           atomic_make_hund
@@ -19,14 +20,19 @@
 !!!           atomic_tran_umat
 !!!           atomic_tran_repr_cmpl
 !!!           atomic_tran_repr_real
+!!!           atomic_natural_basis1
+!!!           atomic_natural_basis2
+!!!           atomic_natural_basis3
+!!!           atomic_natural_basis4
 !!! source  : atomic_util.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/31/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
-!!!           gaunt coefficients and Coulomb interaction matrices, etc.
+!!!           gaunt coefficients, spin-orbit coupling matrix, Coulomb
+!!!           interaction tensor, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -35,22 +41,18 @@
 !!>>> simulate creation and destroy operators                          <<<
 !!========================================================================
 
-!!>>> atomic_make_cdagger: create one electron on ipos of |jold> to obtain
-!!>>> new Fock state |jnew>
   subroutine atomic_make_cdagger(ipos, jold, jnew, isgn)
      implicit none
 
-! external arguments
-! position number (serial number of orbital)
+!! external arguments
+     ! position number (serial number of orbital)
      integer, intent(in) :: ipos
 
-! old Fock state
+     ! old Fock state
      integer, intent(in ):: jold
 
-! new Fock state
+     ! new Fock state
      integer, intent(out):: jnew
-
-!! body]
 
 ! sign due to anti-commute relation between fermions
      integer, intent(out):: isgn
@@ -74,6 +76,8 @@
 
 ! get the final Fock state
      jnew = jold + 2**(ipos-1)
+
+!! body]
 
      return
   end subroutine atomic_make_cdagger
