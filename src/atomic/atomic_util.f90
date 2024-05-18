@@ -160,7 +160,7 @@
      implicit none
 
 !! external arguments
-     ! good quantum numbers: Sz
+     ! good quantum number: Sz
      integer, intent(out) :: good_sz(norbs)
 
 !! local variables
@@ -194,7 +194,7 @@
      implicit none
 
 !! external arguments
-     ! good quantum numbers: Jz
+     ! good quantum number: Jz
      integer, intent(out) :: good_jz(norbs)
 
 !! [body
@@ -238,9 +238,12 @@
              good_jz(14) =  7
 
          case default
-             call s_print_error('atomic_make_gjz','not implemented for this norbs value!')
+             call s_print_error('atomic_make_gjz', &
+                 & 'not implemented for this norbs value!')
 
      end select
+
+!! body]
 
      return
   end subroutine atomic_make_gjz
