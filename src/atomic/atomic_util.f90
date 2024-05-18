@@ -140,11 +140,13 @@
      ! get the final Fock state
      jnew = jold - 2**(ipos-1)
 
+!! body]
+
      return
   end subroutine atomic_make_c
 
 !!========================================================================
-!!>>> determine good quantum numbers                                   <<<
+!!>>> calculate good quantum numbers                                   <<<
 !!========================================================================
 
 !!
@@ -162,7 +164,7 @@
      integer, intent(out) :: good_sz(norbs)
 
 !! local variables
-     ! loop index
+     ! loop index over orbitals
      integer :: i
 
 !! [body
@@ -175,6 +177,8 @@
              good_sz(i) = -1
          endif ! back if ( mod(i,2) /= 0 ) block
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine atomic_make_gsz

@@ -119,6 +119,8 @@
      ! loop index
      integer :: iorb
 
+!! [body
+
      ! it is already unoccupied at ipos
      ! we can not violate the Pauli principle
      if ( btest(jold, ipos-1) .eqv. .false. ) then
