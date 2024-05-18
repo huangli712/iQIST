@@ -282,13 +282,20 @@
 !!>>> determine gaunt coefficients                                     <<<
 !!========================================================================
 
-!!>>> atomic_make_gaunt5: build gaunt coefficients for 5 band case
+!!
+!! @sub atomic_make_gaunt5
+!!
+!! build gaunt coefficients for 5 band case
+!!
   subroutine atomic_make_gaunt5(gaunt)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
-! external arguments
-! gaunt coefficients
+!! external arguments
+     ! gaunt coefficients
      real(dp), intent(out) :: gaunt(-2:2,-2:2,0:4)
+
+!! [body
 
      gaunt = zero
 
@@ -328,18 +335,27 @@
      gaunt( 2,  1, 4) = -sqrt( 5.0_dp/441.0_dp); gaunt( 1,  2, 4) = gaunt( 2,  1, 4) * (-1)**( 2-1)
      gaunt( 2,  2, 4) =  sqrt( 1.0_dp/441.0_dp)
 
+!! body]
+
      return
   end subroutine atomic_make_gaunt5
 
-!!>>> atomic_make_gaunt7: build gaunt coefficients for 7 band case
+!!
+!! @sub atomic_make_gaunt7
+!!
+!! build gaunt coefficients for 7 band case
+!!
   subroutine atomic_make_gaunt7(gaunt)
-     use constants, only: dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      implicit none
 
-! external arguments
-! gaunt coefficients
+!! external arguments
+     ! gaunt coefficients
      real(dp), intent(out) :: gaunt(-3:3,-3:3,0:6)
+
+!! [body
 
      gaunt = zero
 
@@ -423,26 +439,37 @@
      gaunt( 3,  2, 6) =  sqrt(  175.0_dp/184041_dp); gaunt( 2,  3, 6) = gaunt( 3,  2, 6) * (-1.0)**( 3-2)
      gaunt( 3,  3, 6) = -sqrt(   25.0_dp/184041_dp)
 
+!! body]
+
      return
   end subroutine atomic_make_gaunt7
 
-!!>>> atomic_make_hund: make the Hund's rule coupling matrix
+!!========================================================================
+!!>>> determine Coulomb interaction matrix                             <<<
+!!========================================================================
+
+!!
+!! @sub atomic_make_hund
+!!
+!! make the Hund's rule coupling matrix
+!!
   subroutine atomic_make_hund(hund)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : icu
      use control, only : nband
      use control, only : Jz, Js, Jp
 
-! external arguments
-! Hund's rule coupling matrix
+!! external arguments
+     ! Hund's rule coupling matrix
      real(dp), intent(out) :: hund(nband,nband,3)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      real(dp) :: ff2(3)
      real(dp) :: ff4(3)
      real(dp) :: jj1(3)
@@ -451,15 +478,17 @@
      real(dp) :: jj4(3)
      real(dp) :: jzsp(3)
 
-! initialize hund to be zero
+!! [body
+
+     ! initialize hund to be zero
      hund = zero
 
-! set jzsp
+     ! set jzsp
      jzsp(1) = Jz
      jzsp(2) = Js
      jzsp(3) = Jp
 
-! for isotropic Hund's rule coupling
+     ! for isotropic Hund's rule coupling
      if ( icu == 1 ) then
          hund(:,:,1) = Jz
          hund(:,:,2) = Js
@@ -469,15 +498,32 @@
          enddo ! over i={1,nband} loop
      endif ! back if ( icu == 1 ) block
 
-! for anisotropic Hund's rule coupling
+     ! for anisotropic Hund's rule coupling
      if ( icu == 3 ) then
          if ( nband == 5 ) then
-! J(dxy,dxz) = J(dxy,dyz) = J(dxz,dyz) = J(dxz,dx2) = J(dyz,dx2) = 3/49 * F^2 + 20/441 * F^4
-! J(dxy,dz2) = J(dx2,dz2) = 4/49 * F^2 + 15/441 * F^4
-! J(dxz,dz2) = J(dyz,dz2) = 1/49 * F^2 + 30/441 * F^4
-! J(dxy,dx2) = 35/441 * F^4
-! the averaged Hund's rule coupling is J_{ave} = 5/98 * (F^2 + F^4)
-! and F^4 = 0.625 * F^2.
+             !
+             ! J(dxy,dxz) = J(dxy,dyz)
+             !            = J(dxz,dyz)
+             !            = J(dxz,dx2)
+             !            = J(dyz,dx2)
+             !            = 3/49 * F^2 + 20/441 * F^4
+             !
+             ! J(dxy,dz2) = J(dx2,dz2)
+             !            = 4/49 * F^2 + 15/441 * F^4
+             !
+             ! J(dxz,dz2) = J(dyz,dz2)
+             !            = 1/49 * F^2 + 30/441 * F^4
+             !
+             ! J(dxy,dx2) = 35/441 * F^4
+             !
+             ! the averaged Hund's rule coupling is
+             !
+             !     J_{ave} = 5/98 * (F^2 + F^4)
+             !
+             ! and
+             !
+             !     F^4 = 0.625 * F^2.
+             !
              ff2 = (98.0 * jzsp) / (1.625 * 5.0)
              ff4 = 0.625 * ff2
              jj1 = 3.0 / 49.0 * ff2 + 20.0 / 441.0 * ff4
@@ -485,19 +531,21 @@
              jj3 = 1.0 / 49.0 * ff2 + 30.0 / 441.0 * ff4
              jj4 = 35.0 / 441.0 * ff4
 
-! orbital order is: (1) dz2, (2) dxz, (3) dyz, (4) dx2, (5) dxy
+             ! orbital order is:
+             !     (1) dz2, (2) dxz,
+             !     (3) dyz, (4) dx2, (5) dxy
              hund(2,3,:) = jj1;   hund(3,2,:) = jj1
              hund(2,5,:) = jj1;   hund(5,2,:) = jj1
              hund(3,5,:) = jj1;   hund(5,3,:) = jj1
              hund(2,4,:) = jj1;   hund(4,2,:) = jj1
              hund(3,4,:) = jj1;   hund(4,3,:) = jj1
-
+             !
              hund(1,4,:) = jj2;   hund(4,1,:) = jj2
              hund(1,5,:) = jj2;   hund(5,1,:) = jj2
-
+             !
              hund(1,2,:) = jj3;   hund(2,1,:) = jj3
              hund(1,3,:) = jj3;   hund(3,1,:) = jj3
-
+             !
              hund(4,5,:) = jj4;   hund(5,4,:) = jj4
          else
              call s_print_error('atomic_make_hund','not implemented!')
