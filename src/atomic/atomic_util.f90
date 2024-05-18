@@ -60,23 +60,28 @@
      ! new Fock state
      integer, intent(out):: jnew
 
-     ! sign due to anti-commute relation between fermions
+     ! sign due to anti-commutation relation between fermions
      integer, intent(out):: isgn
 
 !! local variables
-     ! loop index over orbital
+     ! loop index over orbitals
      integer :: iorb
 
-     ! it is occupied at ipos
+!! [body
+
+     ! it is already occupied at ipos
+     ! we can not violate the Pauli principle
      if ( btest(jold, ipos-1) .eqv. .true. ) then
          call s_print_error('atomic_make_cdagger','severe error happened')
      endif ! back if ( btest(jold, ipos-1) .eqv. .true. ) block
 
      ! evaluate the sign
      isgn = 0
+     !
      do iorb=1,ipos-1
         if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
      enddo ! over iorb={1,ipos-1} loop
+     !
      isgn = mod(isgn,2)
      isgn = (-1)**isgn
 
@@ -88,29 +93,35 @@
      return
   end subroutine atomic_make_cdagger
 
+!!
+!! @sub atomic_make_c
+!!
+!! simulate an annihilation operator. destroy one electron on ipos of
+!! |jold> to obtain new Fock state |jnew>
+!!
   subroutine atomic_make_c(ipos, jold, jnew, isgn)
       implicit none
 
-! external arguments
-! position number (serial number of orbital)
+!! external arguments
+      ! position number (serial number of orbital)
       integer, intent(in)  :: ipos
 
-! old Fock state
+      ! old Fock state
       integer, intent(in ) :: jold
 
-! new Fock state
+      ! new Fock state
       integer, intent(out) :: jnew
 
-! sign due to anti-commute relation between fermions
+      ! sign due to anti-commutation relation between fermions
       integer, intent(out) :: isgn
 
-! local variables
-! loop index
+!! local variables
+      ! loop index
       integer :: iorb
 
 !! [body
 
-      ! it is unoccupied at ipos
+      ! it is already unoccupied at ipos
       if ( btest(jold, ipos-1) .eqv. .false. ) then
           call s_print_error('atomic_make_c','severe error happened')
       endif ! back if ( btest(jold, ipos-1) .eqv. .false. ) block

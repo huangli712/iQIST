@@ -77,9 +77,11 @@
 
      ! evaluate the sign
      isgn = 0
+     !
      do iorb=1,ipos-1
         if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
      enddo ! over iorb={1,ipos-1} loop
+     !
      isgn = mod(isgn,2)
      isgn = (-1)**isgn
 
