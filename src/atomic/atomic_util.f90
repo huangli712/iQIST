@@ -970,6 +970,7 @@
 !! [body
 
      tmat_c2r = czero
+     !
      select case (nband)
 
 ! the real orbital order (t2g) is:
@@ -1063,24 +1064,33 @@
      return
   end subroutine atomic_make_tmat_c2r
 
-!!>>> atomic_make_tmat_r2c: make transformation matrix from real orbital
-!!>>> basis to complex orbital basis
+!!
+!! @sub atomic_make_tmat_r2c
+!!
+!! make transformation matrix from real orbital basis to
+!! complex orbital basis
+!!
   subroutine atomic_make_tmat_r2c(tmat_r2c)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      use control, only : norbs
 
-! external arguments
-! the transformation matrix from real orbitals to complex orbitals
+!! external arguments
+     ! transformation matrix from real orbitals to complex orbitals
      complex(dp), intent(out) :: tmat_r2c(norbs,norbs)
 
-! local variables
-! dummy array, transpose of tmat_r2c
+!! local variables
+     ! dummy array, transpose of tmat_r2c
      complex(dp) :: tmat_c2r(norbs,norbs)
+
+!! [body
 
      tmat_c2r = czero
      call atomic_make_tmat_c2r(tmat_c2r)
      tmat_r2c = transpose( dconjg(tmat_c2r) )
+
+!! body]
 
      return
   end subroutine atomic_make_tmat_r2c
