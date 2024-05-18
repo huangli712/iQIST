@@ -150,14 +150,13 @@
      return
   end subroutine atomic_make_gsz
 
-!>>> atomic_make_gjz: make Jz quantum number for each orbital
   subroutine atomic_make_gjz(good_jz)
      use control, only : nband, norbs
 
      implicit none
 
-! external arguments
-! good quantum numbers: Jz
+!! external arguments
+     ! good quantum numbers: Jz
      integer, intent(out) :: good_jz(norbs)
 
      select case (nband)
