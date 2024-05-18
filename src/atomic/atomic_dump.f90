@@ -265,7 +265,7 @@
                      umat_t(i,j) = two * real(umat(i,j,j,i) - umat(i,j,i,j))
                  else
                      umat_t(i,j) = two * real(umat(i,j,j,i))
-                 endif  ! back if ( mod(i,2) == mod(j,2) ) block
+                 endif ! back if ( mod(i,2) == mod(j,2) ) block
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
@@ -688,7 +688,7 @@
      write(mytmp,'(a)') '# File    : atom.cix'
      write(mytmp,'(a)') '# Format  : v2.3, designed for MANJUSHAKA'
      write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
+     write(mytmp,'(a)') '# Support : any problem, please contact me: '//V_MAIL
      write(mytmp,*)
      write(mytmp,*)
 
@@ -703,7 +703,7 @@
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
 
-     ! write summary of subspace (sectors)
+     ! write summary of subspaces (sectors)
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# SECTORS:'
      write(mytmp,'(75a1)') dash ! dashed line
@@ -722,7 +722,7 @@
                                      sectors(i)%jz,     &
                                      sectors(i)%ps
 
-         ! write next sector
+         ! write next subspace (sector)
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
              ! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
@@ -745,11 +745,11 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
-     ! write F-matrix of each sector
+     ! write f and f^+ operator for each subspace (sector)
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# F-MATRIX:'
      write(mytmp,'(75a1)') dash ! dashed line
-
+     !
      ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
@@ -779,6 +779,7 @@
                          endif ! back if ( abs( sectors(i)%fmat(s_order,k)%val(n,m) ) > epst ) block
                      enddo ! over m={1,sectors(i)%fmat(s_order,k)%m} loop
                  enddo ! over n={1,sectors(i)%fmat(s_order,k)%n} loop
+                 !
                  call s_assert( counter == count( abs(sectors(i)%fmat(s_order,k)%val) > epst ) )
              enddo  ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
