@@ -665,10 +665,15 @@
      return
   end subroutine atomic_make_umatK
 
-!!>>> atomic_make_umatS: make Coulomb interation U, according to
-!!>>> Slater-Cordon parameterized Hamiltonian
+!!
+!! @sub atomic_make_umatS
+!!
+!! make Coulomb interation U rank-4 tensor, according to Slater-Cordon
+!! parameterized Hamiltonian
+!!
   subroutine atomic_make_umatS()
-     use constants, only : dp, zero, half
+     use constants, only : dp
+     use constants, only : zero, half
 
      use control, only : nband, norbs
      use control, only : Ud, Jh
@@ -676,33 +681,35 @@
 
      implicit none
 
-! local variables
-! orbital momentum quantum number
+!! local variables
+     ! orbital momentum quantum number
      integer  :: l
 
-! loop index
+     ! loop index
      integer  :: i
 
-! orbital index
+     ! orbital index
      integer  :: alpha, betta
      integer  :: delta, gamma
 
-! band index and spin index
+     ! band index and spin index
      integer  :: aband, aspin
      integer  :: bband, bspin
      integer  :: dband, dspin
      integer  :: gband, gspin
 
-! dummy variables
+     ! dummy variables
      real(dp) :: res
 
-! gaunt coefficients
+     ! gaunt coefficients
      real(dp), allocatable :: gaunt(:,:,:)
 
-! Slater-Cordon parameters: F0, F2, F4, and F6
+     ! Slater-Cordon parameters: F0, F2, F4, and F6
      real(dp), allocatable :: slater_cordon(:)
 
-! allocate memory for slater_cordon and gaunt and then build them
+!! [body
+
+     ! allocate memory for slater_cordon and gaunt and then build them
      select case (nband)
 
          case (5)
