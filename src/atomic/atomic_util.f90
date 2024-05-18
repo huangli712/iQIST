@@ -783,22 +783,29 @@
   end subroutine atomic_make_umatS
 
 !!========================================================================
-!!>>> determine spin-orbital coupling matrix                           <<<
+!!>>> determine spin-orbit coupling matrix                             <<<
 !!========================================================================
 
-!>>> atomic_make_smat3: make spin-orbit coupling matrix for 3-band case
+!!
+!! @sub atomic_make_smat3
+!!
+!! make spin-orbit coupling matrix for 3-band case
+!!
   subroutine atomic_make_smat3(smat)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
-! external arguments
-! SOC matrix
+!! external arguments
+     ! spin-orbit coupling matrix
      complex(dp), intent(out) :: smat(6,6)
 
-! local parameters
-! \sqrt{2}
+!! local parameters
+     ! \sqrt{2}
      real(dp), parameter :: sqrt2 = sqrt(2.0_dp)
+
+!! [body
 
 ! make SOC on complex orbital basis, the orbital order is:
 ! |-1,up>, |-1,dn>,
@@ -815,22 +822,31 @@
      smat( 3, 6) =  sqrt2
      smat( 6, 6) = -1.0_dp
 
+!! body]
+
      return
   end subroutine atomic_make_smat3
 
-!!>>> atomic_make_smat5: make spin-orbit coupling matrix for 5-band case
+!!
+!! @sub atomic_make_smat5
+!!
+!! make spin-orbit coupling matrix for 5-band case
+!!
   subroutine atomic_make_smat5(smat)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
-! external arguments
-! SOC matrix
+!! external arguments
+     ! spin-orbit coupling matrix
      complex(dp), intent(out) :: smat(10,10)
 
-! local parameters
-! \sqrt{6}
+!! local parameters
+     ! \sqrt{6}
      real(dp), parameter :: sqrt6 = sqrt(6.0_dp)
+
+!! [body
 
 ! make SOC on complex orbital basis, the orbital order is:
 ! |-2,up>, |-2,dn>,
@@ -857,24 +873,33 @@
      smat( 7,10) = +2.0_dp
      smat(10,10) = -2.0_dp
 
+!! body]
+
      return
   end subroutine atomic_make_smat5
 
-!!>>> atomic_make_smat7: make spin-orbit coupling matrix for 7-band case
+!!
+!! @sub atomic_make_smat7
+!!
+!! make spin-orbit coupling matrix for 7-band case
+!!
   subroutine atomic_make_smat7(smat)
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
 
      implicit none
 
-! external arguments
-! SOC matrix
+!! external arguments
+     ! spin-orbit coupling matrix
      complex(dp), intent(out) :: smat(14,14)
 
-! local parameters
-! \sqrt{6}, \sqrt{10}, and \sqrt{12}
+!! local parameters
+     ! \sqrt{6}, \sqrt{10}, and \sqrt{12}
      real(dp), parameter :: sqrt6  = sqrt( 6.0_dp)
      real(dp), parameter :: sqrt10 = sqrt(10.0_dp)
      real(dp), parameter :: sqrt12 = sqrt(12.0_dp)
+
+!! [body
 
 ! make SOC on complex orbital basis, the orbital order is:
 ! |-3,up>, |-3,dn>,
@@ -911,6 +936,8 @@
      smat(11,14) =  sqrt6
      smat(14,14) = -3.0_dp
 
+!! body]
+
      return
   end subroutine atomic_make_smat7
 
@@ -918,22 +945,29 @@
 !!>>> determine representation transformation matrix                   <<<
 !!========================================================================
 
-!!>>> atomic_make_tmat_c2r: make transformation matrix from complex
-!!>>> orbital basis to real orbital basis
+!!
+!! @sub atomic_make_tmat_c2r
+!!
+!! make transformation matrix from complex orbital basis to
+!! real orbital basis
+!!
   subroutine atomic_make_tmat_c2r(tmat_c2r)
-     use constants, only : dp, czero, cone, czi
+     use constants, only : dp
+     use constants, only : czero, cone, czi
 
      use control, only : nband, norbs
 
      implicit none
 
-! external arguments
-! the transformation matrix from complex orbitals to real orbitals
+!! external arguments
+     ! transformation matrix from complex orbitals to real orbitals
      complex(dp), intent(out) :: tmat_c2r(norbs,norbs)
 
-! local parameters
-! \sqrt{2}
+!! local parameters
+     ! \sqrt{2}
      real(dp), parameter :: sqrt2 = sqrt(2.0_dp)
+
+!! [body
 
      tmat_c2r = czero
      select case (nband)
@@ -1019,9 +1053,12 @@
              tmat_c2r(14,14) =  czi/sqrt2
 
          case default
-             call s_print_error('atomic_make_tmat_c2r','not implemented for this nband!')
+             call s_print_error('atomic_make_tmat_c2r', &
+                 & 'not implemented for this nband!')
 
      end select
+
+!! body]
 
      return
   end subroutine atomic_make_tmat_c2r
