@@ -116,28 +116,28 @@
      integer, intent(out) :: isgn
 
 !! local variables
-      ! loop index
-      integer :: iorb
+     ! loop index
+     integer :: iorb
 
 !! [body
 
-      ! it is already unoccupied at ipos
-      if ( btest(jold, ipos-1) .eqv. .false. ) then
-          call s_print_error('atomic_make_c','severe error happened')
-      endif ! back if ( btest(jold, ipos-1) .eqv. .false. ) block
+     ! it is already unoccupied at ipos
+     if ( btest(jold, ipos-1) .eqv. .false. ) then
+         call s_print_error('atomic_make_c','severe error happened')
+     endif ! back if ( btest(jold, ipos-1) .eqv. .false. ) block
 
-      ! evaluate the sign
-      isgn = 0
-      do iorb=1,ipos-1
-          if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
-      enddo ! back iorb={1,ipos-1} loop
-      isgn = mod(isgn,2)
-      isgn = (-1)**isgn
+     ! evaluate the sign
+     isgn = 0
+     do iorb=1,ipos-1
+         if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
+     enddo ! back iorb={1,ipos-1} loop
+     isgn = mod(isgn,2)
+     isgn = (-1)**isgn
 
-      ! get the final Fock state
-      jnew = jold - 2**(ipos-1)
+     ! get the final Fock state
+     jnew = jold - 2**(ipos-1)
 
-      return
+     return
   end subroutine atomic_make_c
 
 !!========================================================================
