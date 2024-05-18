@@ -100,20 +100,20 @@
 !! |jold> to obtain new Fock state |jnew>
 !!
   subroutine atomic_make_c(ipos, jold, jnew, isgn)
-      implicit none
+     implicit none
 
 !! external arguments
-      ! position number (serial number of orbital)
-      integer, intent(in)  :: ipos
+     ! position number (serial number of orbital)
+     integer, intent(in)  :: ipos
 
-      ! old Fock state
-      integer, intent(in ) :: jold
+     ! old Fock state
+     integer, intent(in ) :: jold
 
-      ! new Fock state
-      integer, intent(out) :: jnew
+     ! new Fock state
+     integer, intent(out) :: jnew
 
-      ! sign due to anti-commutation relation between fermions
-      integer, intent(out) :: isgn
+     ! sign due to anti-commutation relation between fermions
+     integer, intent(out) :: isgn
 
 !! local variables
       ! loop index
