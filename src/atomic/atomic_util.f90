@@ -1218,8 +1218,8 @@
 !! rotate annihilation or creation operator matrix (fmat) from Fock basis
 !! to atomic eigenbasis
 !!
-  subroutine atomic_tran_fmat(ndimx, ndimy, amat, bmat, cmat)
-     use constants, only: dp
+  subroutine atomic_tran_fmat(ndimx, ndimy, amat, fmat, cmat)
+     use constants, only : dp
      use constants, only : zero, one
 
      implicit none
@@ -1237,8 +1237,8 @@
      ! right transformation matrix
      real(dp), intent(in) :: cmat(ndimy,ndimy)
 
-     ! F-matrix
-     real(dp), intent(inout) :: bmat(ndimx,ndimy)
+     ! annihilation or creation operator matrix
+     real(dp), intent(inout) :: fmat(ndimx,ndimy)
 
 !! local variables
      ! dummy array
@@ -1251,14 +1251,14 @@
 
      tmp_mat = zero
      call dgemm('N', 'N', ndimx, ndimy, ndimy, &
-                             one, bmat, ndimx, &
+                             one, fmat, ndimx, &
                                   cmat, ndimy, &
                          zero, tmp_mat, ndimx  )
 
      call dgemm('T', 'N', ndimx, ndimy, ndimx, &
                              one, amat, ndimx, &
                                tmp_mat, ndimx, &
-                            zero, bmat, ndimx  )
+                            zero, fmat, ndimx  )
 
      ! deallocate memory
      deallocate(tmp_mat)
