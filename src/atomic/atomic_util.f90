@@ -147,6 +147,11 @@
 !!>>> determine good quantum numbers                                   <<<
 !!========================================================================
 
+!!
+!! @sub atomic_make_gsz
+!!
+!! calculate Sz quantum number for each orbital
+!!
   subroutine atomic_make_gsz(good_sz)
      use control, only : norbs
 
@@ -174,6 +179,11 @@
      return
   end subroutine atomic_make_gsz
 
+!!
+!! @sub atomic_make_gjz
+!!
+!! calculate Jz quantum number for each orbital
+!!
   subroutine atomic_make_gjz(good_jz)
      use control, only : nband, norbs
 
