@@ -102,12 +102,14 @@
 ! loop index
       integer :: iorb
 
-! it is unoccupied at ipos
+!! [body
+
+      ! it is unoccupied at ipos
       if ( btest(jold, ipos-1) .eqv. .false. ) then
           call s_print_error('atomic_make_c','severe error happened')
       endif ! back if ( btest(jold, ipos-1) .eqv. .false. ) block
 
-! evaluate the sign
+      ! evaluate the sign
       isgn = 0
       do iorb=1,ipos-1
           if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
@@ -115,7 +117,7 @@
       isgn = mod(isgn,2)
       isgn = (-1)**isgn
 
-! get the final Fock state
+      ! get the final Fock state
       jnew = jold - 2**(ipos-1)
 
       return
@@ -138,6 +140,8 @@
      ! loop index
      integer :: i
 
+!! [body
+
      ! note: the spin arrangement likes up dn up dn up dn ...
      do i=1,norbs
          if ( mod(i,2) /= 0 ) then
@@ -158,6 +162,8 @@
 !! external arguments
      ! good quantum numbers: Jz
      integer, intent(out) :: good_jz(norbs)
+
+!! [body
 
      select case (nband)
 
