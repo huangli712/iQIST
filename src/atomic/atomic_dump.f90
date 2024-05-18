@@ -765,11 +765,13 @@
              endif ! back if ( isoc == 0 ) block
              do k=0,1
                  if ( sectors(i)%next(s_order,k) == -1 ) CYCLE
+                 !
                  write(mytmp,'(a)') '# SECTOR | FLAVOR | DAGGER |      N |      M | SPARSE'
                  write(mytmp,'(2X,6(i6,3X))') i, j, k, &
                                               sectors(i)%fmat(s_order,k)%n, &
                                               sectors(i)%fmat(s_order,k)%m, &
                                               count( abs(sectors(i)%fmat(s_order,k)%val) > epst )
+                 !
                  counter = 0
                  do n=1,sectors(i)%fmat(s_order,k)%n
                      do m=1,sectors(i)%fmat(s_order,k)%m
