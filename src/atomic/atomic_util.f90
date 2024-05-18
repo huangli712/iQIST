@@ -41,6 +41,12 @@
 !!>>> simulate creation and destroy operators                          <<<
 !!========================================================================
 
+!!
+!! @sub atomic_make_cdagger
+!!
+!! simulate a creation operator. create one electron on ipos of |jold>
+!! to obtain new Fock state |jnew>
+!!
   subroutine atomic_make_cdagger(ipos, jold, jnew, isgn)
      implicit none
 
@@ -54,19 +60,19 @@
      ! new Fock state
      integer, intent(out):: jnew
 
-! sign due to anti-commute relation between fermions
+     ! sign due to anti-commute relation between fermions
      integer, intent(out):: isgn
 
-! local variables
-! loop index over orbital
+!! local variables
+     ! loop index over orbital
      integer :: iorb
 
-! it is occupied at ipos
+     ! it is occupied at ipos
      if ( btest(jold, ipos-1) .eqv. .true. ) then
          call s_print_error('atomic_make_cdagger','severe error happened')
      endif ! back if ( btest(jold, ipos-1) .eqv. .true. ) block
 
-! evaluate the sign
+     ! evaluate the sign
      isgn = 0
      do iorb=1,ipos-1
         if ( btest(jold, iorb-1) .eqv. .true. ) isgn = isgn + 1
@@ -74,7 +80,7 @@
      isgn = mod(isgn,2)
      isgn = (-1)**isgn
 
-! get the final Fock state
+     ! get the final Fock state
      jnew = jold + 2**(ipos-1)
 
 !! body]
