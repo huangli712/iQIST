@@ -737,7 +737,8 @@
              call atomic_make_gaunt7(gaunt)
 
          case default
-             call s_print_error('atomic_make_umatS','not implemented for this nband!')
+             call s_print_error('atomic_make_umatS', &
+                 & 'not implemented for this nband!')
 
      end select
 
@@ -764,8 +765,8 @@
                  res = res + gaunt(aband,gband,i) * gaunt(dband,bband,i) * slater_cordon(i)
              enddo ! over i={0,2*l} loop
              umat(alpha,betta,delta,gamma) = res
-         enddo ! over gamma={1,norbs} loop
          enddo ! over delta={1,norbs} loop
+         enddo ! over gamma={1,norbs} loop
 
      enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
