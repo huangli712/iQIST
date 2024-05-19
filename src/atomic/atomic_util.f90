@@ -1595,18 +1595,18 @@
 
 !! [body
 
-     ! set emat
+     ! setup emat to spin-orbit coupling
      ! since cmat is zero, so emat is equal to smat
      emat = smat
 
-    ! evaluate transformation matrix tmat_c2j
+     ! evaluate transformation matrix tmat_c2j
      call atomic_make_tmat_c2j(tmat_c2j)
 
-! for this case, the transformation matrix is from complex orbital basis
-! to natural basis (|j2,jz> basis)
+     ! the transformation matrix is from complex orbital
+     ! basis to natural eigenbasis (|j2,jz> basis)
      tmat = tmat_c2j
 
-     ! transform emat to natural basis
+     ! transform emat to natural eigenbasis
      call atomic_tran_repr_cmpl(norbs, emat, tmat)
 
     ! add chemical potential to emat
