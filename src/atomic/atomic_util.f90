@@ -1449,6 +1449,8 @@
      ! loop index
      integer :: i
 
+!! [body
+
      ! set emat
      ! since smat is zero, so emat is equal to cmat
      emat = cmat
@@ -1461,6 +1463,8 @@
      ! for this case, the natural basis is the real orbital basis
      ! so, the tmat is a unity matrix
      call s_identity_z(norbs, tmat)
+
+!! body]
 
      return
   end subroutine atomic_2natural_case1
@@ -1491,6 +1495,8 @@
 
      ! tmat for no spin freedom
      complex(dp) :: tmat_nospin(nband,nband)
+
+!! [body
 
      ! set emat to crystal field
      ! since smat is zero, so emat is equal to cmat
@@ -1527,6 +1533,8 @@
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
 
+!! body]
+
      return
   end subroutine atomic_2natural_case2
 
@@ -1547,6 +1555,8 @@
      ! transformation matrix from complex orbital basis to |j2,jz> basis
      complex(dp) :: tmat_c2j(norbs,norbs)
 
+!! [body
+
      ! set emat
      ! since cmat is zero, so emat is equal to smat
      emat = smat
@@ -1565,6 +1575,8 @@
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine atomic_2natural_case3
@@ -1595,6 +1607,8 @@
      ! transformation matrix from complex orbital basis to natural basis
      complex(dp) :: tmat_c2n(norbs,norbs)
 
+!! [body
+
      ! build tmat_r2c
      call atomic_make_tmat_r2c(tmat_r2c)
 
@@ -1623,6 +1637,8 @@
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine atomic_2natural_case4
