@@ -1609,7 +1609,7 @@
      ! transform emat to natural eigenbasis
      call atomic_tran_repr_cmpl(norbs, emat, tmat)
 
-    ! add chemical potential to emat
+     ! add chemical potential to emat
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
@@ -1646,16 +1646,18 @@
      ! loop index
      integer  :: i
 
-     ! eigenvalue
+     ! eigenvalues
      real(dp) :: eigval(norbs)
 
-     ! eigenvector
+     ! eigenvectors
      real(dp) :: eigvec(norbs,norbs)
 
-     ! transformation matrix from real orbital basis to complex orbital basis
+     ! transformation matrix from real orbital basis
+     ! to complex orbital basis
      complex(dp) :: tmat_r2c(norbs,norbs)
 
-     ! transformation matrix from complex orbital basis to natural basis
+     ! transformation matrix from complex orbital basis
+     ! to natural eigenbasis
      complex(dp) :: tmat_c2n(norbs,norbs)
 
 !! [body
@@ -1663,10 +1665,10 @@
      ! build tmat_r2c
      call atomic_make_tmat_r2c(tmat_r2c)
 
-     ! transfrom crystal field (cmat) to complex orbital basis
+     ! transfrom crystal field splitting (cmat) to complex orbital basis
      call atomic_tran_repr_cmpl(norbs, cmat, tmat_r2c)
 
-     ! check whether cmat is real, if not, we cann't make natural basis
+     ! check whether cmat is real, if not, we cann't make natural eigenbasis
      if ( any( abs( aimag(cmat) ) > eps6 ) ) then
          call s_print_error('atomic_natural_basis4', &
              & 'crystal field on complex orbital basis should be real!')

@@ -1967,7 +1967,7 @@
      ! check whether cmat is real, if not, we cann't make natural eigenbasis
      if ( any( abs( aimag(cmat) ) > eps6 ) ) then
          call s_print_error('atomic_natural_basis4', &
-             'crystal field on complex orbital basis should be real!')
+             & 'crystal field on complex orbital basis should be real!')
      endif ! back if ( any( abs( aimag(cmat) ) > eps6 ) ) block
 
      ! setup emat: crystal field splitting + spin-orbit coupling
