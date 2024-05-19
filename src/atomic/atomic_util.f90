@@ -1631,8 +1631,9 @@
 !! crystal field splitting
 !! spin-orbit coupling
 !!
-  subroutine atomic_2natural_case4()
-     use constants, only : dp, eps6
+  subroutine atomic_natural_basis4()
+     use constants, only : dp
+     use constants, only : eps6
 
      use control, only : norbs
      use control, only : mune
@@ -1667,7 +1668,8 @@
 
      ! check whether cmat is real, if not, we cann't make natural basis
      if ( any( abs( aimag(cmat) ) > eps6 ) ) then
-         call s_print_error('atomic_2natural_case4','crystal field on complex orbital basis should be real!')
+         call s_print_error('atomic_natural_basis4', &
+             & 'crystal field on complex orbital basis should be real!')
      endif ! back if ( any( abs( aimag(cmat) ) > eps6 ) ) block
 
      ! set emat: CF + SOC
@@ -1691,4 +1693,4 @@
 !! body]
 
      return
-  end subroutine atomic_2natural_case4
+  end subroutine atomic_natural_basis4
