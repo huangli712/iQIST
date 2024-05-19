@@ -1576,7 +1576,7 @@
 !!
 !! for this special case, the natural eigenbasis is |j2,jz>
 !!
-  subroutine atomic_2natural_case3()
+  subroutine atomic_natural_basis3()
      use constants, only : dp
 
      use control, only : norbs
@@ -1617,7 +1617,7 @@
 !! body]
 
      return
-  end subroutine atomic_2natural_case3
+  end subroutine atomic_natural_basis3
 
 !!
 !! @sub atomic_natural_basis4
