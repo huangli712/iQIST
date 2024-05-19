@@ -607,7 +607,7 @@
 ! no spin-orbital coupling, no crystal field or crystal field is diagonal
 ! the original basis is the real orbital basis
 ! the natural basis is the real orbital basis
-             call atomic_2natural_case1()
+             call atomic_natural_basis1()
 
 ! no spin-orbital coupling, non-diagonal crystal field
 ! the original basis is the real orbital basis
