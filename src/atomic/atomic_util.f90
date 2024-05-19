@@ -1508,10 +1508,10 @@
      integer  :: i
      integer  :: j
 
-     ! eigenvalue
+     ! eigenvalues
      real(dp) :: eigval(nband)
 
-     ! eigen vector
+     ! eigenvectors
      real(dp) :: eigvec(nband,nband)
 
      ! emat matrix for no spin freedom
@@ -1522,7 +1522,7 @@
 
 !! [body
 
-     ! set emat to crystal field
+     ! setup emat to crystal field splitting
      ! since smat is zero, so emat is equal to cmat
      emat = cmat
 
@@ -1533,7 +1533,7 @@
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband}
 
-     ! diagonalize emat_nospin to get natural basis
+     ! diagonalize emat_nospin to get natural eigenbasis
      call s_eig_sy(nband, nband, real(emat_nospin), eigval, eigvec)
 
      ! get diagonal emat for no spin freedom
@@ -1552,7 +1552,7 @@
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband} loop
 
-    ! add chemical potential to emat
+     ! add chemical potential to emat
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
