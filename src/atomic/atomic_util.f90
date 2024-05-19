@@ -1437,6 +1437,18 @@
 !!>>> generate natural eigenbasis                                      <<<
 !!========================================================================
 
+!!
+!! @sub atomic_natural_basis1
+!!
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
+!!
+!! case 1
+!!
+!! no crystal field splitting or it is diagonal
+!! no spin-orbit coupling
+!!
   subroutine atomic_2natural_case1()
      use control, only : norbs
      use control, only : mune
@@ -1469,6 +1481,18 @@
      return
   end subroutine atomic_2natural_case1
 
+!!
+!! @sub atomic_natural_basis2
+!!
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
+!!
+!! case 2
+!!
+!! non-diagonal crystal field splitting
+!! no spin-orbit coupling
+!!
   subroutine atomic_2natural_case2()
      use constants, only : dp
 
@@ -1538,6 +1562,20 @@
      return
   end subroutine atomic_2natural_case2
 
+!!
+!! @sub atomic_natural_basis3
+!!
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
+!!
+!! case 3
+!!
+!! no crystal field splitting
+!! spin-orbit coupling
+!!
+!! for this special case, the natural eigenbasis is |j2,jz>
+!!
   subroutine atomic_2natural_case3()
      use constants, only : dp
 
@@ -1581,6 +1619,18 @@
      return
   end subroutine atomic_2natural_case3
 
+!!
+!! @sub atomic_natural_basis4
+!!
+!! make natural eigenbasis, the onsite energy of impurity (emat) and
+!! the transformation matrix from original basis to natural eigenbasis
+!! are determined as well.
+!!
+!! case 4
+!!
+!! crystal field splitting
+!! spin-orbit coupling
+!!
   subroutine atomic_2natural_case4()
      use constants, only : dp, eps6
 
