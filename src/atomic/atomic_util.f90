@@ -1347,10 +1347,9 @@
      return
   end subroutine atomic_tran_umat
 
-!!>>> atomic_tran_repr_cmpl: transformation from one representation
-!!>>> to another representation, complex version
   subroutine atomic_tran_repr_cmpl(ndim, amat, tmat)
-     use constants, only : dp, cone, czero
+     use constants, only : dp
+     use constants, only : cone, czero
 
      implicit none
 
@@ -1381,8 +1380,6 @@
      return
   end subroutine atomic_tran_repr_cmpl
 
-!!>>> atomic_tran_repr_real: transformation from one representation to
-!!>>> another representation, real version
   subroutine atomic_tran_repr_real(ndim, amat, tmat)
      use constants, only : dp, zero, one
 
