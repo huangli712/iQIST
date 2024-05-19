@@ -1397,7 +1397,8 @@
 !! real version
 !!
   subroutine atomic_tran_repr_real(ndim, amat, tmat)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      implicit none
 
