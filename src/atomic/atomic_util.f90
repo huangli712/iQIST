@@ -1432,3 +1432,193 @@
 
      return
   end subroutine atomic_tran_repr_real
+
+!!========================================================================
+!!>>> generate natural eigenbasis                                      <<<
+!!========================================================================
+
+  subroutine atomic_2natural_case1()
+     use control, only : norbs
+     use control, only : mune
+     use m_spmat, only : cmat, emat, tmat
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+
+! set emat
+! since smat is zero, so emat is equal to cmat
+     emat = cmat
+
+! add chemical potential to eimpmat
+     do i=1,norbs
+         emat(i,i) = emat(i,i) + mune
+     enddo ! over i={1,norbs} loop
+
+! for this case, the natural basis is the real orbital basis
+! so, the tmat is a unity matrix
+     call s_identity_z(norbs, tmat)
+
+     return
+  end subroutine atomic_2natural_case1
+
+  subroutine atomic_2natural_case2()
+     use constants, only : dp
+
+     use control, only : nband, norbs
+     use control, only : mune
+     use m_spmat, only : cmat, emat, tmat
+
+     implicit none
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! eigenvalue
+     real(dp) :: eigval(nband)
+
+! eigen vector
+     real(dp) :: eigvec(nband,nband)
+
+! emat matrix for no spin freedom
+     complex(dp) :: emat_nospin(nband,nband)
+
+! tmat for no spin freedom
+     complex(dp) :: tmat_nospin(nband,nband)
+
+! set emat to crystal field
+! since smat is zero, so emat is equal to cmat
+     emat = cmat
+
+! get emat for no spin freedom
+     do i=1,nband
+         do j=1,nband
+             emat_nospin(j,i) = emat(2*j-1,2*i-1)
+         enddo ! over j={1,nband} loop
+     enddo ! over i={1,nband}
+
+! diagonalize emat_nospin to get natural basis
+     call s_eig_sy(nband, nband, real(emat_nospin), eigval, eigvec)
+
+! get diagonal emat for no spin freedom
+     call s_diag_z(nband, dcmplx(eigval), emat_nospin)
+
+! get tmat for no spin freedom
+     tmat_nospin = dcmplx(eigvec)
+
+! build emat and tmat with spin freedom
+     do i=1,nband
+         do j=1,nband
+             emat(2*j-1,2*i-1) = emat_nospin(j,i)
+             emat(2*j,2*i)     = emat_nospin(j,i)
+             tmat(2*j-1,2*i-1) = tmat_nospin(j,i)
+             tmat(2*j,2*i)     = tmat_nospin(j,i)
+         enddo ! over j={1,nband} loop
+     enddo ! over i={1,nband} loop
+
+! add chemical potential to emat
+     do i=1,norbs
+         emat(i,i) = emat(i,i) + mune
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine atomic_2natural_case2
+
+  subroutine atomic_2natural_case3()
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mune
+     use m_spmat, only : emat, smat, tmat
+
+     implicit none
+
+! local variables
+! loop inex
+     integer :: i
+
+! transformation matrix from complex orbital basis to |j2,jz> basis
+     complex(dp) :: tmat_c2j(norbs,norbs)
+
+! set emat
+! since cmat is zero, so emat is equal to smat
+     emat = smat
+
+! evaluate transformation matrix tmat_c2j
+     call atomic_make_tmat_c2j(tmat_c2j)
+
+! for this case, the transformation matrix is from complex orbital basis
+! to natural basis (|j2,jz> basis)
+     tmat = tmat_c2j
+
+! transform emat to natural basis
+     call atomic_tran_repr_cmpl(norbs, emat, tmat)
+
+! add chemical potential to emat
+     do i=1,norbs
+         emat(i,i) = emat(i,i) + mune
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine atomic_2natural_case3
+
+  subroutine atomic_2natural_case4()
+     use constants, only : dp, eps6
+
+     use control, only : norbs
+     use control, only : mune
+     use m_spmat, only : cmat, smat, emat, tmat
+
+     implicit none
+
+! local variables
+! loop index
+     integer  :: i
+
+! eigenvalue
+     real(dp) :: eigval(norbs)
+
+! eigenvector
+     real(dp) :: eigvec(norbs,norbs)
+
+! transformation matrix from real orbital basis to complex orbital basis
+     complex(dp) :: tmat_r2c(norbs,norbs)
+
+! transformation matrix from complex orbital basis to natural basis
+     complex(dp) :: tmat_c2n(norbs,norbs)
+
+! build tmat_r2c
+     call atomic_make_tmat_r2c(tmat_r2c)
+
+! transfrom crystal field (cmat) to complex orbital basis
+     call atomic_tran_repr_cmpl(norbs, cmat, tmat_r2c)
+
+! check whether cmat is real, if not, we cann't make natural basis
+     if ( any( abs( aimag(cmat) ) > eps6 ) ) then
+         call s_print_error('atomic_2natural_case4','crystal field on complex orbital basis should be real!')
+     endif ! back if ( any( abs( aimag(cmat) ) > eps6 ) ) block
+
+! set emat: CF + SOC
+     emat = smat + cmat
+
+! diagonalize real(emat)
+     call s_eig_sy(norbs, norbs, real(emat), eigval, eigvec)
+
+! get the transformation matrix from complex orbital basis to natural basis
+     tmat_c2n = eigvec
+     tmat = tmat_c2n
+
+     ! transform emat from complex orbital basis to natural basis
+     call atomic_tran_repr_cmpl(norbs, emat, tmat_c2n)
+
+     ! add chemical poential to emat
+     do i=1,norbs
+         emat(i,i) = emat(i,i) + mune
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine atomic_2natural_case4
