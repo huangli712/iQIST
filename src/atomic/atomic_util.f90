@@ -1674,17 +1674,18 @@
              & 'crystal field on complex orbital basis should be real!')
      endif ! back if ( any( abs( aimag(cmat) ) > eps6 ) ) block
 
-     ! set emat: CF + SOC
+     ! setup emat: crystal field splitting + spin-orbit coupling
      emat = smat + cmat
 
      ! diagonalize real(emat)
      call s_eig_sy(norbs, norbs, real(emat), eigval, eigvec)
 
-     ! get the transformation matrix from complex orbital basis to natural basis
+     ! build transformation matrix from complex orbital basis
+     ! to natural eigenbasis
      tmat_c2n = eigvec
      tmat = tmat_c2n
 
-     ! transform emat from complex orbital basis to natural basis
+     ! transform emat from complex orbital basis to natural eigenbasis
      call atomic_tran_repr_cmpl(norbs, emat, tmat_c2n)
 
      ! add chemical poential to emat
