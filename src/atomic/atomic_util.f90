@@ -1493,7 +1493,7 @@
 !! non-diagonal crystal field splitting
 !! no spin-orbit coupling
 !!
-  subroutine atomic_2natural_case2()
+  subroutine atomic_natural_basis2()
      use constants, only : dp
 
      use control, only : nband, norbs
@@ -1560,7 +1560,7 @@
 !! body]
 
      return
-  end subroutine atomic_2natural_case2
+  end subroutine atomic_natural_basis2
 
 !!
 !! @sub atomic_natural_basis3
