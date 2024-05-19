@@ -1571,44 +1571,45 @@
 
      use control, only : norbs
      use control, only : mune
+
      use m_spmat, only : cmat, smat, emat, tmat
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! eigenvalue
+     ! eigenvalue
      real(dp) :: eigval(norbs)
 
-! eigenvector
+     ! eigenvector
      real(dp) :: eigvec(norbs,norbs)
 
-! transformation matrix from real orbital basis to complex orbital basis
+     ! transformation matrix from real orbital basis to complex orbital basis
      complex(dp) :: tmat_r2c(norbs,norbs)
 
-! transformation matrix from complex orbital basis to natural basis
+     ! transformation matrix from complex orbital basis to natural basis
      complex(dp) :: tmat_c2n(norbs,norbs)
 
-! build tmat_r2c
+     ! build tmat_r2c
      call atomic_make_tmat_r2c(tmat_r2c)
 
-! transfrom crystal field (cmat) to complex orbital basis
+     ! transfrom crystal field (cmat) to complex orbital basis
      call atomic_tran_repr_cmpl(norbs, cmat, tmat_r2c)
 
-! check whether cmat is real, if not, we cann't make natural basis
+     ! check whether cmat is real, if not, we cann't make natural basis
      if ( any( abs( aimag(cmat) ) > eps6 ) ) then
          call s_print_error('atomic_2natural_case4','crystal field on complex orbital basis should be real!')
      endif ! back if ( any( abs( aimag(cmat) ) > eps6 ) ) block
 
-! set emat: CF + SOC
+     ! set emat: CF + SOC
      emat = smat + cmat
 
-! diagonalize real(emat)
+     ! diagonalize real(emat)
      call s_eig_sy(norbs, norbs, real(emat), eigval, eigvec)
 
-! get the transformation matrix from complex orbital basis to natural basis
+     ! get the transformation matrix from complex orbital basis to natural basis
      tmat_c2n = eigvec
      tmat = tmat_c2n
 
