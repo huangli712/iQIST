@@ -1440,25 +1440,26 @@
   subroutine atomic_2natural_case1()
      use control, only : norbs
      use control, only : mune
+
      use m_spmat, only : cmat, emat, tmat
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! set emat
-! since smat is zero, so emat is equal to cmat
+     ! set emat
+     ! since smat is zero, so emat is equal to cmat
      emat = cmat
 
-! add chemical potential to eimpmat
+     ! add chemical potential to eimpmat
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
 
-! for this case, the natural basis is the real orbital basis
-! so, the tmat is a unity matrix
+     ! for this case, the natural basis is the real orbital basis
+     ! so, the tmat is a unity matrix
      call s_identity_z(norbs, tmat)
 
      return
