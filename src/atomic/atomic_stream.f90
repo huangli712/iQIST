@@ -613,19 +613,19 @@
 ! the original basis is the real orbital basis
 ! the natural basis is linear combination of real orbitals
          else if ( isoc == 0 .and. icf == 2 ) then
-             call atomic_2natural_case2()
+             call atomic_natural_basis2()
 
 ! with spin-orbital coupling, no crystal field
 ! the original basis is the complex orbital basis
 ! the natural basis is |j2,jz>
          else if ( isoc == 1 .and. icf == 0 ) then
-             call atomic_2natural_case3()
+             call atomic_natural_basis3()
 
 ! with spin-orbital coupling and crystal field
 ! the original basis is the complex orbital basis
 ! the natural basis is linear combination of complex orbitals
          else if ( isoc == 1 .and. icf >  0 ) then
-             call atomic_2natural_case4()
+             call atomic_natural_basis4()
 
          endif ! back if      ( isoc == 0 .and. icf <  2 ) block
 ! B: read the transformation matrices used to transfer emat from original
