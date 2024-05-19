@@ -1347,25 +1347,33 @@
      return
   end subroutine atomic_tran_umat
 
+!!
+!! @sub atomic_tran_repr_cmpl
+!!
+!! transformation from one representation to another representation,
+!! complex version
+!!
   subroutine atomic_tran_repr_cmpl(ndim, amat, tmat)
      use constants, only : dp
      use constants, only : cone, czero
 
      implicit none
 
-! external arguments
-! size of the matrix
+!! external arguments
+     ! size of the matrix
      integer, intent(in) :: ndim
 
-! transformation matrix
+     ! transformation matrix
      complex(dp), intent(in) :: tmat(ndim,ndim)
 
-! physical quantities
+     ! physical quantities
      complex(dp), intent(inout) :: amat(ndim,ndim)
 
-! local variables
-! dummy matrix
+!! local variables
+     ! dummy matrix
      complex(dp) :: tmp_mat(ndim,ndim)
+
+!! [body
 
      call zgemm('N', 'N', ndim, ndim, ndim, &
                           cone, amat, ndim, &
@@ -1377,9 +1385,17 @@
                              tmp_mat, ndim, &
                          czero, amat, ndim  )
 
+!! body]
+
      return
   end subroutine atomic_tran_repr_cmpl
 
+!!
+!! @sub atomic_tran_repr_real
+!!
+!! transformation from one representation to another representation,
+!! real version
+!!
   subroutine atomic_tran_repr_real(ndim, amat, tmat)
      use constants, only : dp, zero, one
 
