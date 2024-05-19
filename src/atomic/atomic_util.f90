@@ -1401,19 +1401,21 @@
 
      implicit none
 
-! external arguments
-! size of the matrix
+!! external arguments
+     ! size of the matrix
      integer, intent(in) :: ndim
 
-! transformation matrix
+     ! transformation matrix
      real(dp), intent(in) :: tmat(ndim,ndim)
 
-! physical quantities
+     ! physical quantities
      real(dp), intent(inout) :: amat(ndim,ndim)
 
-! local variables
-! dummy matrix
+!! local variables
+     ! dummy matrix
      real(dp) :: tmp_mat(ndim,ndim)
+
+!! [body
 
      call dgemm('N', 'N', ndim, ndim, ndim, &
                            one, amat, ndim, &
@@ -1424,6 +1426,8 @@
                            one, tmat, ndim, &
                              tmp_mat, ndim, &
                           zero, amat, ndim  )
+
+!! body]
 
      return
   end subroutine atomic_tran_repr_real
