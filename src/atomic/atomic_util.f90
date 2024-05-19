@@ -1449,7 +1449,7 @@
 !! no crystal field splitting or it is diagonal
 !! no spin-orbit coupling
 !!
-  subroutine atomic_2natural_case1()
+  subroutine atomic_natural_basis1()
      use control, only : norbs
      use control, only : mune
 
@@ -1463,23 +1463,23 @@
 
 !! [body
 
-     ! set emat
+     ! setup emat to crystal field splitting
      ! since smat is zero, so emat is equal to cmat
      emat = cmat
 
-     ! add chemical potential to eimpmat
+     ! add chemical potential to emat
      do i=1,norbs
          emat(i,i) = emat(i,i) + mune
      enddo ! over i={1,norbs} loop
 
-     ! for this case, the natural basis is the real orbital basis
+     ! for this case, the natural eigenbasis is the real orbital basis
      ! so, the tmat is a unity matrix
      call s_identity_z(norbs, tmat)
 
 !! body]
 
      return
-  end subroutine atomic_2natural_case1
+  end subroutine atomic_natural_basis1
 
 !!
 !! @sub atomic_natural_basis2
