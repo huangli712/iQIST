@@ -149,7 +149,8 @@
 !! check validity and consistency of the control parameters
 !!
   subroutine atomic_check_param()
-     use constants, only : zero, mystd
+     use constants, only : zero
+     use constants, only : mystd
 
      use control ! ALL
 
@@ -170,8 +171,9 @@
      endif ! back if ( ibasis < 1 .or. ibasis > 2 ) block
 
      ! check ictqmc
-     if ( ictqmc < 0 .or. ictqmc > 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 0, 1, 2, 3, 4, 5!'
+     if ( ictqmc < 1 .or. ictqmc > 5 ) then
+         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 0, 1, &
+             & 2, 3, 4, 5!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
