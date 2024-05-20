@@ -138,6 +138,8 @@
      ! status flag for whether all of the parameters are OK
      logical :: lpass
 
+!! [body
+
      ! initialize lpass
      lpass = .true.
 
@@ -329,6 +331,8 @@
      integer  :: i2
      real(dp) :: raux
 
+!! [body
+
      ! we shall read crystal field (cmat) from file atom.cmat.in
      ! inquire file at first
      inquire( file = 'atom.cmat.in', exist = exists )
@@ -376,6 +380,8 @@
      integer  :: i2
      real(dp) :: raux
 
+!! [body
+
 ! we shall read onsite impurity level (emat) from file atomic.emat.in
 ! inquire file at first
      inquire( file = 'atom.emat.in', exist = exists )
@@ -421,6 +427,8 @@
      integer :: i1
      integer :: i2
      real(dp) :: raux
+
+!! [body
 
 ! we shall read transformation matrix tmat from file atomic.tmat.in
 ! inquire file at first
