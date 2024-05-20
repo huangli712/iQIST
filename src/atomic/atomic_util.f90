@@ -822,6 +822,15 @@
      smat( 3, 6) =  sqrt2
      smat( 6, 6) = -1.0_dp
 
+     !smat(1,1) = -1.0_dp
+     !smat(1,5) = sqrt2
+     !smat(2,6) = sqrt2
+     !smat(3,3) = 1.0_dp
+     !smat(4,4) = 1.0_dp
+     !smat(5,1) = sqrt2
+     !smat(6,2) = sqrt2
+     !smat(6,6) = -1.0_dp
+
 !! body]
 
      return
@@ -993,6 +1002,17 @@
              tmat_c2r( 3, 5) =  cone
              tmat_c2r( 4, 6) =  cone
 
+             !tmat_c2r(1,1) = czi / sqrt2
+             !tmat_c2r(1,3) = cone / sqrt2
+             !tmat_c2r(2,2) = cone
+             !tmat_c2r(3,1) = czi / sqrt2
+             !tmat_c2r(3,3) = -cone / sqrt2
+             !tmat_c2r(4,4) = czi / sqrt2
+             !tmat_c2r(4,6) = cone / sqrt2
+             !tmat_c2r(5,5) = cone
+             !tmat_c2r(6,4) = czi / sqrt2
+             !tmat_c2r(6,6) = -cone / sqrt2
+
 ! the real orbital order is:
 ! dz2up, dz2dn, dxzup, dxzdn, dyzup, dyzdn, dx2-y2up, dx2-y2dn, dxyup, dxydn
 !
@@ -1136,6 +1156,17 @@
              tmat_c2j( 3, 5) =  sqrt(2.0_dp/3.0_dp)
              tmat_c2j( 6, 5) =  sqrt(1.0_dp/3.0_dp)
              tmat_c2j( 5, 6) =  1.0_dp
+
+             !tmat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j(1,4) = sqrt(1.0_dp/3.0_dp)
+             !tmat_c2j(2,2) = -sqrt(1.0_dp/3.0_dp)
+             !tmat_c2j(2,5) = sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j(3,6) = 1.0_dp
+             !tmat_c2j(4,3) = 1.0_dp
+             !tmat_c2j(5,1) = sqrt(1.0_dp/3.0_dp)
+             !tmat_c2j(5,4) = sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j(6,2) = sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j(6,5) = sqrt(1.0_dp/3.0_dp)
 
 ! the |lz,sz> order is:
 ! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>
