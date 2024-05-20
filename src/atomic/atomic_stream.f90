@@ -693,7 +693,7 @@
 
      if ( ibasis == 1 ) then
          if ( icf > 0 ) then
-             call atomic_read_cmat()
+             call atomic_input_cmat()
          else
              cmat = czero
          endif ! back if ( icf > 0 ) block
@@ -722,21 +722,13 @@
          else
              smat = czero
          endif ! back if ( isoc > 0 ) block
-! method 2: make them outside
      else
-! read the emat (CF + SOC) matrices on natural basis, this matrix should be
-! a diagonal matrix, and the elements must be real
-         call atomic_read_emat()
+         call atomic_input_emat()
      endif ! back if ( ibasis == 1 ) block
 
-! make Coulomb interaction U
      if ( icu == 1 .or. icu == 3 ) then
-! Kanamori parameters type
-! it is defined on real orbital basis
          call atomic_make_umatK()
      else
-! Slater-Cordon parameters type
-! it is defined on complex orbital basis
          call atomic_make_umatS()
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
