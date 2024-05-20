@@ -452,24 +452,27 @@
 
 !! [body
 
-! we shall read onsite impurity level (emat) from file atomic.emat.in
-! inquire file at first
+     ! we shall read onsite impurity level into matrix emat from
+     ! file atomic.emat.in. note that emat is actually real and
+     ! diagonal in natural eigenbasis
+     !
+     ! inquire file's status at first
      inquire( file = 'atom.emat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_read_emat','file atomic.emat.in does not exist!')
+         call s_print_error('atomic_input_emat', &
+             & 'file atomic.emat.in does not exist!')
      endif ! back if ( exists .eqv. .false. ) block
 
-! open file atom.emat.in
+     ! open file atom.emat.in
      open(mytmp, file='atom.emat.in', form='formatted', status='unknown')
 
-! read the data file
+     ! read the data file
      do i=1,norbs
          read(mytmp,*) i1, i2, raux
-! emat is actually real in natural basis
          emat(i,i) = dcmplx(raux, zero)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
 !! body]
