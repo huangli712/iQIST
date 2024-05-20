@@ -691,13 +691,30 @@
 
 !! [body
 
+     ! make crystal field splitting and spin-orbit coupling
+     !
+     ! method 1: make them separately
      if ( ibasis == 1 ) then
+
+         ! 1A: make crysal field splitting
+         write(mystd,'(4X,a)') 'make crystal field splitting term'
+         !
+         ! we read the non-zero elements of crystal field splitting
+         ! from file atom.cmat.in. the crystal field splitting must
+         ! be defined on real orbital basis. so far, we only support
+         ! real crystal field splitting. thus, the elements in this
+         ! file provided by users must be real
          if ( icf > 0 ) then
              call atomic_input_cmat()
          else
              cmat = czero
          endif ! back if ( icf > 0 ) block
 
+         ! 1B: make spin-orbit coupling
+         write(mystd,'(4X,a)') 'make spin-orbit coupling term'
+         !
+         ! make an atomic spin-orbit coupling, $\lambda * L * S$
+         ! it is defined on the complex orbital basis
          if ( isoc > 0 ) then
              select case (nband)
 
