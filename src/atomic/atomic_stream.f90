@@ -582,15 +582,21 @@
      dec_basis = 0
      ind_basis = 0
 
-     ! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
+     ! evaluate dim_sub_n
+     ! it is a number of combination C_{norbs}^{i}
      do i=0,norbs
          call s_combination(i, norbs, dim_sub_n(i))
+         !
+         write(mystd,'(4X,a)', advance = 'no') 'number of Fock states: '
+         write(mystd,'(2X,i4)', advance = 'no') dim_sub_n(i)
+         write(mystd,'(1X,a,i2,a)') '( N = ', i, ' )'
      enddo ! over i={0,norbs} loop
 
      ! construct decimal form and index of Fock basis
      state_count = 0
+     !
      do i=0,norbs
-         do j=0,2**norbs-1
+         do j=0,2**norbs-1 ! actually go through every Fock state
              nelec = 0
              do k=1,norbs
                  if ( btest(j, k-1) ) nelec = nelec + 1
@@ -602,12 +608,18 @@
              endif ! back if ( nelec == i ) block
          enddo ! over j={0,2**norbs-1} loop
      enddo ! over i={0,norbs} loop
+     !
+     call s_assert( state_count == ncfgs )
 
      ! construct binary form of Fock basis
      do i=1,ncfgs
          do j=1,norbs
              if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
          enddo ! over j={1,norbs} loop
+         !
+         write(mystd,'(4X,a,i6)', advance = 'no') 'Fock state: ', i
+         write(mystd,'(2X,a,i6)', advance = 'no') 'decimal: ', dec_basis(i)
+         write(mystd,'(2X,a,*(i1))') 'binary: ', bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
      ! dump Fock basis to file atom.fock.dat for reference
