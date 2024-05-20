@@ -691,29 +691,19 @@
 
 !! [body
 
-! make crystal field and spin-orbital coupling
-! method 1: make them inside
      if ( ibasis == 1 ) then
-! 1A: make crysal field
-! we read the non-zero elements of crystal field from file atom.cmat.in.
-! the crystal field is defined on real orbital basis. at present, we only
-! support real crystal field, so, the elements in this file provided by
-! users must be real
          if ( icf > 0 ) then
              call atomic_read_cmat()
          else
              cmat = czero
          endif ! back if ( icf > 0 ) block
 
-! 1B: make spin-orbit coupling
-! make an atomic on-site SOC, $\lambda * L * S$
-! it is defined on the complex orbital basis
          if ( isoc > 0 ) then
              select case (nband)
 
                  case (3) ! 3-band system
                      call atomic_make_smat3(smat)
-! for 3 bands system, there is a minus sign
+                     ! for 3 band system, there is a minus sign
                      smat = -smat * lambda / two
 
                  case (5) ! 5-band system
@@ -725,7 +715,8 @@
                      smat = smat * lambda / two
 
                  case default
-                     call s_print_error('atomic_make_spmat','not implemented!')
+                     call s_print_error('atomic_build_spmat', &
+                         & 'not implemented!')
 
              end select
          else
