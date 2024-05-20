@@ -80,14 +80,14 @@
      lambda = 0.00_dp     ! spin-orbit coupling strength
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     ! read in input file if possible
+     ! read the input file if available
      ! reset file status
      exists = .false.
 
-     ! inquire the input file status: atomic.config.in
+     ! inquire the status of input file: atomic.config.in
      inquire( file = "atom.config.in", exist = exists )
 
-     ! read parameters from atom.config.in
+     ! read control parameters from atom.config.in
      if ( exists .eqv. .true. ) then
          ! create the file parser
          call p_create()
@@ -107,7 +107,7 @@
          call p_get('norbs' ,  norbs) ! not useful
          call p_get('ncfgs' ,  ncfgs) ! not useful
 
-         ! calculate the norbs and ncfgs
+         ! calculate norbs and ncfgs
          norbs = nband * nspin
          ncfgs = 2 ** norbs
 
