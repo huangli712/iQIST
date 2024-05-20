@@ -35,8 +35,10 @@
      implicit none
 
 !! local variables
-     ! file status, if the atom.config.in file exists
+     ! file status, if the file atom.config.in exists
      logical :: exists
+
+!! [body
 
      ! setup default values
      ibasis = 1           ! source of the natural basis
