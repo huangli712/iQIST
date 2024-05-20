@@ -211,6 +211,9 @@
      endif ! back if ( ictqmc == 5 .and. isoc == 0 ) block
      !
      if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) then
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Jz) is NOT supported for &
+             & SOC + CFS case!'
          write(mystd, *)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
@@ -223,14 +226,16 @@
      endif ! back if ( icu < 1 .or. icu > 3 ) block
      !
      if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for 5- or 7-band system!'
+         write(mystd,'(2X,a)') 'ERROR: Slater-Cordon type Coulomb &
+             & interaction is only suitable for 5- or 7-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
 
      if ( icu == 3 .and. nband /= 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support anisotropic Hunds &
-             & rule exchange in Kanamori type Coulomb interaction for 5-band system!'
+         write(mystd,'(2X,a)') 'ERROR: anisotropic Hunds rule exchange &
+             & in Kanamori type Coulomb interaction is only suitable   &
+             & for 5-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 3 .and. nband /= 5 ) block
