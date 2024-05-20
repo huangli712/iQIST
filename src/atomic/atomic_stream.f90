@@ -134,6 +134,11 @@
      return
   end subroutine atomic_setup_param
 
+!!
+!! @sub atomic_check_config
+!!
+!! check validity and consistency of the control parameters
+!!
   subroutine atomic_check_param()
      use constants, only : zero, mystd
 
