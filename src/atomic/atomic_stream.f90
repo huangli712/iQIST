@@ -155,7 +155,7 @@
      use control ! ALL
 
 !! local variables
-     ! status flag for whether all of the parameters are OK
+     ! whether all the control parameters are valid
      logical :: lpass
 
 !! [body
@@ -172,38 +172,36 @@
 
      ! check ictqmc
      if ( ictqmc < 1 .or. ictqmc > 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 0, 1, &
+         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, &
              & 2, 3, 4, 5!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
      !
      if ( ictqmc == 3 .and. isoc == 1 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz) algorithm is NOT supported for SOC case!'
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Sz) is NOT supported for &
+             & SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 3 .and. isoc == 1 ) block
      !
      if ( ictqmc == 4 .and. isoc == 1 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. isoc == 1 ) block
      !
      if ( ictqmc == 4 .and. icu == 2 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for Slater-Cordon type interaction U!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. icu == 2 ) block
      !
      if ( ictqmc == 5 .and. isoc == 0 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is ONLY supported for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 0 ) block
      !
      if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is NOT supported for SOC + CF case!'
          write(mystd, *)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
