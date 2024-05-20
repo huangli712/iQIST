@@ -354,11 +354,24 @@
      return
   end subroutine atomic_check_param
 
-  subroutine atomic_read_cmat()
+!!========================================================================
+!!>>> setup atomic Hamiltonian                                         <<<
+!!========================================================================
+
+!!
+!! @sub atomic_input_cmat
+!!
+!! read crystal field splitting from file atomic.cmat.in
+!!
+  subroutine atomic_input_cmat()
      use, intrinsic :: iso_fortran_env, only : iostat_end
-     use constants, only : dp, zero, mytmp
+
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use control, only : norbs
+
      use m_spmat, only : cmat
 
      implicit none
@@ -377,11 +390,15 @@
 
 !! [body
 
-     ! we shall read crystal field (cmat) from file atom.cmat.in
-     ! inquire file at first
+     ! we shall read crystal field splitting into matrix cmat from
+     ! file atom.cmat.in. note that crystal field splitting could
+     ! be non-diagonal
+     !
+     ! inquire file's status at first
      inquire( file = 'atom.cmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_read_cmat','file atomic.cmat.in does not exist!')
+         call s_print_error('atomic_input_cmat', &
+             & 'file atomic.cmat.in does not exist!')
      endif ! back if ( exists .eqv. .false. ) block
 
      ! open file atom.cmat.in
@@ -391,7 +408,8 @@
      do
          read(mytmp,*,iostat = ierr) i1, i2, raux
          if ( ierr == iostat_end ) EXIT
-         ! crystal field is actually real
+         !
+         ! crystal field splitting is actually real
          call s_assert( i1 <= norbs .and. i2 <= norbs )
          cmat(i1,i2) = dcmplx(raux, zero)
      enddo ! over do while loop
@@ -402,9 +420,9 @@
 !! body]
 
      return
-  end subroutine atomic_read_cmat
+  end subroutine atomic_input_cmat
 
-  subroutine atomic_read_emat()
+  subroutine atomic_input_emat()
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -449,9 +467,9 @@
 !! body]
 
      return
-  end subroutine atomic_read_emat
+  end subroutine atomic_input_emat
 
-  subroutine atomic_read_tmat()
+  subroutine atomic_input_tmat()
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -499,7 +517,7 @@
 !! body]
 
      return
-  end subroutine atomic_read_tmat
+  end subroutine atomic_input_tmat
 
   subroutine atomic_build_fock()
      use control, only : norbs, ncfgs
