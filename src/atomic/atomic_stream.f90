@@ -422,10 +422,18 @@
      return
   end subroutine atomic_input_cmat
 
+!!
+!! @sub atomic_input_emat
+!!
+!! read onsite impurity level from file atomic.emat.in
+!!
   subroutine atomic_input_emat()
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use control, only : norbs
+
      use m_spmat, only : emat
 
      implicit none
