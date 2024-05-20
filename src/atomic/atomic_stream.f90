@@ -384,6 +384,8 @@
 ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine atomic_read_emat
 
@@ -395,15 +397,15 @@
 
      implicit none
 
-! local variables
-! file status
+!! local variables
+     ! file status
      logical :: exists
 
-! loop index
+     ! loop index
      integer :: i
      integer :: j
 
-! dummy variables
+     ! dummy variables
      integer :: i1
      integer :: i2
      real(dp) :: raux
@@ -415,20 +417,22 @@
          call s_print_error('atomic_read_tmat','file atomic.tmat.in does not exist')
      endif ! back if ( exists .eqv. .false. ) block
 
-! open file atom.tmat.in
+     ! open file atom.tmat.in
      open(mytmp, file='atom.tmat.in', form='formatted', status='unknown')
 
-! read the data file
+     ! read the data file
      do i=1,norbs
          do j=1,norbs
              read(mytmp,*) i1, i2, raux
-! tmat is actually real
+             ! tmat is actually real
              tmat(j,i) = dcmplx(raux, zero)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine atomic_read_tmat
