@@ -269,7 +269,7 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Uc < zero .or. Uv < zero ) block
-
+     !
      if ( Jz < zero .or. Js < zero .or. Jp < zero ) then
          write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger than or equal to zero!'
          write(mystd,*)
