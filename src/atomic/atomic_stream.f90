@@ -541,6 +541,15 @@
      return
   end subroutine atomic_input_tmat
 
+!!========================================================================
+!!>>> build basis for atomic Hamiltonian                               <<<
+!!========================================================================
+
+!!
+!! @sub atomic_build_fock
+!!
+!! make Fock basis in the full Hilbert space
+!!
   subroutine atomic_build_fock()
      use control, only : norbs, ncfgs
      use m_fock, only : dim_sub_n, bin_basis, dec_basis, ind_basis
@@ -603,6 +612,50 @@
      return
   end subroutine atomic_build_fock
 
+!!
+!! make single particle matrices, including the crystal field splitting
+!! (CFS), spin-orbit coupling (SOC), and Coulomb interaction U etc.
+!!
+!! when constructing these matrices, we should define a single particle
+!! basis at first. there are four basis sets that we adopt in the jasmine
+!! code. now let us take a 5-orbitals system as an example to illustrate
+!! the four basis sets.
+!!
+!! (1) real orbital basis (the real spherical harmonics)
+!!     |dxy,up>,   |dyz,up>,   |dz2,up>,   |dxz,up>,   |dx2-y2,up>
+!!     |dxy,down>, |dyz,down>, |dz2,down>, |dxz,down>, |dx2-y2,down>
+!!
+!! (2) complex orbital basis (the complex spherical functions)
+!!     it is eigenstate of operators l^2 and l_z, |l,m,spin>
+!!     for d electron system, l = 2, m = \pm 2, \pm 1, and 0
+!!     |2,-2,up>,   |2,-1,up>,   |2,0,up>,   |2,1,up>,   |2,2,up>
+!!     |2,-2,down>, |2,-1,down>, |2,0,down>, |2,1,down>, |2,2,down>
+!!
+!! (3) j^2 - j_z diagonal basis
+!!     it is eigenstate of operators j^2 and j_z, |j,m_j>
+!!     for d electron system, j = l \pm 1/2 = 3/2 or 5/2,
+!!     m_j = -j, -j+1, ..., j-1, j
+!!     |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2> |3/2,3/2>
+!!     |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2> |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
+!!
+!! (4) the natural eigenbasis, on which the onsite energy of impurity
+!!     is diagonal. we have to diagonalize H_{CFS} + H_{SOC} to obtain
+!!     the natural eigenbasis
+!!
+!! note that the CFS is always defined in real orbital basis, SOC is
+!! always defined in complex orbital basis. the Coulomb interaction U
+!! should be defined in real orbital basis or complex orbital basis,
+!! which depends on the form of Coulomb interaction. thus, we often
+!! need to transform them between two different basis sets
+!!
+
+!!
+!! @sub atomic_build_spmat
+!!
+!! try to build various single particle matrices, including the crystal
+!! field splitting (CFS), the spin-orbit coupling (SOC), and the Coulomb
+!! interaction tensor (U)
+!!
   subroutine atomic_build_spmat()
      use constants, only : two, czero
 
@@ -677,6 +730,12 @@
      return
   end subroutine atomic_build_spmat
 
+!!
+!! @sub atomic_build_natural
+!!
+!! make natural eigenbasis, on which the impurity energy matrix
+!! should is diagonal
+!!
   subroutine atomic_build_natural()
      use constants, only : dp, czero
 
@@ -700,9 +759,9 @@
 !! [body
 
      ! initialize them
-     umat_tmp = czero
      tmat_r2c = czero
      tmat_c2r = czero
+     umat_tmp = czero
 
 ! make transformation matrix from origional basis to natural basis: tmat
 ! A: make tmat internally for different cases
@@ -771,6 +830,7 @@
              call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
              umat = umat_tmp
          endif ! back if ( icu == 1 .or. icu == 3 ) block
+
      endif ! back if ( isoc == 0 ) block
 
      ! finally, transform umat from original basis to natural basis
