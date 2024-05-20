@@ -510,6 +510,11 @@
 
 !! [body
 
+     ! we shall read transformation matrix tmat from file atomic.tmat.in.
+     ! it is used to transform the single particle matrices from original
+     ! basis to natural eigenbasis 
+     !
+     ! inquire file's status at first
      inquire( file = 'atom.tmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
          call s_print_error('atomic_input_tmat', &
@@ -524,7 +529,7 @@
          do j=1,norbs
              read(mytmp,*) i1, i2, raux
              ! tmat is actually real
-             tmat(j,i) = dcmplx(raux, zero)
+             tmat(i,j) = dcmplx(raux, zero)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
