@@ -739,8 +739,18 @@
          else
              smat = czero
          endif ! back if ( isoc > 0 ) block
+
+     ! method 2: make them as a whole
      else
+
+         ! read the matrix emat (CFS + SOC) on natural eigenbasis,
+         ! this matrix must be a diagonal matrix, and the elements
+         ! must be real
+         write(mystd,'(4X,a)') 'make crystal field splitting + &
+             & spin-orbiit coupling terms'
+         !
          call atomic_input_emat()
+
      endif ! back if ( ibasis == 1 ) block
 
      if ( icu == 1 .or. icu == 3 ) then
