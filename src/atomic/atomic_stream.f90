@@ -675,15 +675,21 @@
 !! interaction tensor (U)
 !!
   subroutine atomic_build_spmat()
-     use constants, only : two, czero
+     use constants, only : two
+     use constants, only : czero
+     use constants, only : mystd
 
      use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : nband
      use control, only : lambda
-     use m_spmat, only : cmat, smat
+
+     use m_spmat, only : cmat ! crystal field splitting
+     use m_spmat, only : smat ! spin-orbit coupling
 
      implicit none
+
+!! [body
 
 ! make crystal field and spin-orbital coupling
 ! method 1: make them inside
