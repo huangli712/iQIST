@@ -22,6 +22,11 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! @sub atomic_setup_param
+!!
+!! read control parameters from file atom.config.in
+!!
   subroutine atomic_setup_param()
      use constants, only : dp
 
@@ -463,30 +468,32 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
 
-! basis counter
+     ! basis counter
      integer :: basis_count
 
-! number of electrons for Fock state
+     ! number of electrons for Fock state
      integer :: nelec
 
-! initialize them
+!! [body
+
+     ! initialize them
      dim_sub_n = 0
      bin_basis = 0
      dec_basis = 0
      ind_basis = 0
 
-! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
+     ! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
      do i=0,norbs
          call s_combination(i, norbs, dim_sub_n(i))
      enddo ! over i={0,norbs} loop
 
-! construct decimal form and index of Fock basis
+     ! construct decimal form and index of Fock basis
      basis_count = 0
      do i=0,norbs
          do j=0,2**norbs-1
@@ -601,17 +608,19 @@
 
      implicit none
 
-! local variables
-! transformation matrix from real orbital basis to complex orbital basis
+!! local variables
+     ! transformation matrix from real orbital basis to complex orbital basis
      complex(dp) :: tmat_r2c(norbs,norbs)
 
-! transformation matrix from complex orbital basis to real orbital basis
+     ! transformation matrix from complex orbital basis to real orbital basis
      complex(dp) :: tmat_c2r(norbs,norbs)
 
-! dummy Coulomb interaction matrix
+     ! dummy Coulomb interaction matrix
      complex(dp) :: umat_tmp(norbs,norbs,norbs,norbs)
 
-! initialize them
+!! [body
+
+     ! initialize them
      umat_tmp = czero
      tmat_r2c = czero
      tmat_c2r = czero
