@@ -814,22 +814,58 @@
      tmat_c2r = czero
      umat_tmp = czero
 
+     ! make transformation matrix (tmat). it is used to transfer matrix
+     ! emat from original basis to natural eigenbasis. the onsite energy
+     ! of impurity (emat) should be updated as well
+     !
+     ! A: make tmat internally for different cases
      if ( ibasis == 1 ) then
+
+         write(mystd,'(4X,a)') 'make transformation matrix internally'
+
+         ! no spin-orbit coupling
+         ! no crystal field splitting or it is diagonal
+         !
+         ! the original basis is the real orbital basis
+         ! the natural eigenbasis is the real orbital basis
          if      ( isoc == 0 .and. icf <  2 ) then
              call atomic_natural_basis1()
 
+         ! no spin-orbit coupling
+         ! non-diagonal crystal field splitting
+         !
+         ! the original basis is the real orbital basis
+         ! the natural eigenbasis is linear combination of real orbitals
          else if ( isoc == 0 .and. icf == 2 ) then
              call atomic_natural_basis2()
 
+         ! with spin-orbit coupling
+         ! no crystal field splitting
+         !
+         ! the original basis is the complex orbital basis
+         ! the natural eigenbasis is the j^2 - j_z diagonal basis
          else if ( isoc == 1 .and. icf == 0 ) then
              call atomic_natural_basis3()
 
+         ! with spin-orbit coupling
+         ! with crystal field splitting
+         !
+         ! the original basis is the complex orbital basis
+         ! the natural eigenbasis is linear combination of complex orbitals
          else if ( isoc == 1 .and. icf >  0 ) then
              call atomic_natural_basis4()
 
-         endif ! back if      ( isoc == 0 .and. icf <  2 ) block
+         endif ! back if block
+
+     ! B: read transformation matrix (tmat) from external file
      else
-         call atomic_read_tmat()
+
+         write(mystd,'(4X,a)') 'read transformation matrix'
+
+         ! note that emat is already built in atomic_build_spmat(),
+         ! here we just read tmat. tmat must be compatible with emat
+         call atomic_input_tmat()
+
      endif ! back if ( ibasis == 1 ) block
 
      call atomic_dump_emat()
