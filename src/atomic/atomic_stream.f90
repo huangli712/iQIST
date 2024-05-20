@@ -1,42 +1,41 @@
 !!!-----------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_config
-!!!           atomic_check_config
-!!!           atomic_read_cmat
-!!!           atomic_read_emat
-!!!           atomic_read_tmat
-!!!           atomic_make_spmat
-!!!           atomic_make_fock
-!!!           atomic_make_natural
-!!!           atomic_2natural_case1
-!!!           atomic_2natural_case2
-!!!           atomic_2natural_case3
-!!!           atomic_2natural_case4
+!!! project : iqist @ jasmine
+!!! program : atomic_setup_param
+!!!           atomic_check_param
+!!!           atomic_input_cmat
+!!!           atomic_input_emat
+!!!           atomic_input_tmat
+!!!           atomic_build_fock
+!!!           atomic_build_spmat
+!!!           atomic_build_natural
+!!!           atomic_alloc_array
+!!!           atomic_final_array
 !!! source  : atomic_stream.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : read input data from the external files, make the Fock basis
-!!!           and natural basis, etc.
+!!!           01/31/2024 by li huang (last modified)
+!!! purpose : read essential input data from the external files, build
+!!!           the Fock basis, construct single particle matrices and
+!!!           natural eigenbasis, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_config: read config parameters from file atom.config.in
   subroutine atomic_setup_param()
      use constants, only : dp
+
      use parser, only : p_create, p_destroy, p_parse, p_get
 
      use control ! ALL
 
      implicit none
 
-! local variables
-! file status, if the atom.config.in file exists
+!! local variables
+     ! file status, if the atom.config.in file exists
      logical :: exists
 
-! setup default values
+     ! setup default values
      ibasis = 1           ! source of the natural basis
      ictqmc = 1           ! type of atomic Hamiltonian matrix diagonalization
      icu    = 1           ! type of Coulomb interaction
@@ -122,7 +121,6 @@
      return
   end subroutine atomic_setup_param
 
-!!>>> atomic_check_config: check the validity of input config parameters
   subroutine atomic_check_param()
      use constants, only : zero, mystd
 
@@ -300,7 +298,6 @@
      return
   end subroutine atomic_check_param
 
-!!>>> atomic_read_cmat: read crystal field from file atomic.cmat.in
   subroutine atomic_read_cmat()
      use, intrinsic :: iso_fortran_env, only : iostat_end
      use constants, only : dp, zero, mytmp
@@ -347,7 +344,6 @@
      return
   end subroutine atomic_read_cmat
 
-!!>>> atomic_read_emat: read onsite impurity level from file atomic.emat.in
   subroutine atomic_read_emat()
      use constants, only : dp, zero, mytmp
 
@@ -391,8 +387,6 @@
      return
   end subroutine atomic_read_emat
 
-!!>>> atomic_read_tmat: read the transformation matrix tmat from
-!!>>> file atomic.tmat.in
   subroutine atomic_read_tmat()
      use constants, only : dp, zero, mytmp
 
@@ -439,9 +433,64 @@
      return
   end subroutine atomic_read_tmat
 
-!!>>> atomic_make_spmat: make single particle related matrices, including
-!!>>> crystal field (CF), spin-orbit coupling (SOC), and Coulomb interaction
-!!>>> U tensor
+  subroutine atomic_build_fock()
+     use control, only : norbs, ncfgs
+     use m_fock, only : dim_sub_n, bin_basis, dec_basis, ind_basis
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! basis counter
+     integer :: basis_count
+
+! number of electrons for Fock state
+     integer :: nelec
+
+! initialize them
+     dim_sub_n = 0
+     bin_basis = 0
+     dec_basis = 0
+     ind_basis = 0
+
+! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
+     do i=0,norbs
+         call s_combination(i, norbs, dim_sub_n(i))
+     enddo ! over i={0,norbs} loop
+
+! construct decimal form and index of Fock basis
+     basis_count = 0
+     do i=0,norbs
+         do j=0,2**norbs-1
+             nelec = 0
+             do k=1,norbs
+                 if ( btest(j, k-1) ) nelec = nelec + 1
+             enddo ! over k={1,norbs} loop
+             if ( nelec == i ) then
+                 basis_count = basis_count + 1
+                 dec_basis(basis_count) = j
+                 ind_basis(j) = basis_count
+             endif ! back if ( nelec == i ) block
+         enddo ! over j={0,2**norbs-1} loop
+     enddo ! over i={0,norbs} loop
+
+! construct binary form of Fock basis
+     do i=1,ncfgs
+         do j=1,norbs
+             if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,ncfgs} loop
+
+! dump Fock basis to file atom.fock.dat for reference
+     call atomic_dump_fock()
+
+     return
+  end subroutine atomic_build_fock
+
   subroutine atomic_build_spmat()
      use constants, only : two, czero
 
@@ -514,67 +563,6 @@
      return
   end subroutine atomic_build_spmat
 
-!!>>> atomic_make_fock: make Fock basis for the full Hilbert space
-  subroutine atomic_build_fock()
-     use control, only : norbs, ncfgs
-     use m_fock, only : dim_sub_n, bin_basis, dec_basis, ind_basis
-
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-     integer :: k
-
-! basis counter
-     integer :: basis_count
-
-! number of electrons for Fock state
-     integer :: nelec
-
-! initialize them
-     dim_sub_n = 0
-     bin_basis = 0
-     dec_basis = 0
-     ind_basis = 0
-
-! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
-     do i=0,norbs
-         call s_combination(i, norbs, dim_sub_n(i))
-     enddo ! over i={0,norbs} loop
-
-! construct decimal form and index of Fock basis
-     basis_count = 0
-     do i=0,norbs
-         do j=0,2**norbs-1
-             nelec = 0
-             do k=1,norbs
-                 if ( btest(j, k-1) ) nelec = nelec + 1
-             enddo ! over k={1,norbs} loop
-             if ( nelec == i ) then
-                 basis_count = basis_count + 1
-                 dec_basis(basis_count) = j
-                 ind_basis(j) = basis_count
-             endif ! back if ( nelec == i ) block
-         enddo ! over j={0,2**norbs-1} loop
-     enddo ! over i={0,norbs} loop
-
-! construct binary form of Fock basis
-     do i=1,ncfgs
-         do j=1,norbs
-             if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,ncfgs} loop
-
-! dump Fock basis to file atom.fock.dat for reference
-     call atomic_dump_fock()
-
-     return
-  end subroutine atomic_build_fock
-
-!!>>> atomic_make_natural: make natural basis, on which the impurity
-!!>>> energy matrix is diagonal
   subroutine atomic_build_natural()
      use constants, only : dp, czero
 
