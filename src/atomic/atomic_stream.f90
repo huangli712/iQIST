@@ -187,16 +187,25 @@
      endif ! back if ( ictqmc == 3 .and. isoc == 1 ) block
      !
      if ( ictqmc == 4 .and. isoc == 1 ) then
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Sz,Ps) is NOT supported  &
+             & for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. isoc == 1 ) block
      !
      if ( ictqmc == 4 .and. icu == 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Sz,Ps) is NOT supported  &
+             & for Slater-Cordon type interaction U!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. icu == 2 ) block
      !
      if ( ictqmc == 5 .and. isoc == 0 ) then
+         write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
+             & algorithm using GQNs (N,Jz) is ONLY supported    &
+             & for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 0 ) block
