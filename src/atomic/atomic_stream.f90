@@ -115,7 +115,8 @@
          ! destroy the parser
          call p_destroy()
      else
-         call s_print_exception('atomic_config','file atom.config.in does not exist!')
+         call s_print_exception('atomic_setup_param', &
+             & 'file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
 !! body]
