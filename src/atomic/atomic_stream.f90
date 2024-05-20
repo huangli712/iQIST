@@ -58,13 +58,14 @@
      isoc   = 0           ! type of spin-orbital coupling (SOC)
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+     ! setup common variables for atomic Hamiltonian
      !--------------------------------------------------------------------
      nband  = 1           ! number of bands
      nspin  = 2           ! number of spins
-     norbs  = nband*nspin ! number of orbits
+     norbs  = nband*nspin ! number of orbitals
      ncfgs  = 2**norbs    ! number of many-body configurations
-     nmini  = 0           ! minimal of total occupancy N to be kept
-     nmaxi  = norbs       ! maximal of total occupancy N to be kept
+     nmini  = 0           ! minimal total occupancy N to be kept
+     nmaxi  = norbs       ! maximal total occupancy N to be kept
      !--------------------------------------------------------------------
      Uc     = 2.00_dp     ! intraorbital Coulomb interaction
      Uv     = 2.00_dp     ! interorbital Coulomb interaction
