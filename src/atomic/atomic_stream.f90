@@ -480,8 +480,15 @@
      return
   end subroutine atomic_input_emat
 
+!!
+!! @sub atomic_input_tmat
+!!
+!! read the transformation matrix tmat from file atomic.tmat.in
+!!
   subroutine atomic_input_tmat()
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use control, only : norbs
      use m_spmat, only : tmat
@@ -503,11 +510,10 @@
 
 !! [body
 
-! we shall read transformation matrix tmat from file atomic.tmat.in
-! inquire file at first
      inquire( file = 'atom.tmat.in', exist = exists )
      if ( exists .eqv. .false. ) then
-         call s_print_error('atomic_read_tmat','file atomic.tmat.in does not exist')
+         call s_print_error('atomic_input_tmat', &
+             & 'file atomic.tmat.in does not exist')
      endif ! back if ( exists .eqv. .false. ) block
 
      ! open file atom.tmat.in
