@@ -286,7 +286,8 @@
 
      ! check norbs
      if ( norbs /= nspin * nband ) then
-         write(mystd,'(2X,a)') 'ERROR: number of bands is not compatible with number of orbitals!'
+         write(mystd,'(2X,a)') 'ERROR: number of bands is not compatible &
+             & with number of orbitals!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( norbs /= nspin * nband ) block
