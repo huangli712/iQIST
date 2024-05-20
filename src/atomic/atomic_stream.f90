@@ -753,10 +753,21 @@
 
      endif ! back if ( ibasis == 1 ) block
 
+     ! make Coulomb interaction U
+     write(mystd,'(4X,a)') 'make Coulomb interaction term'
+     !
+     ! Kanamori parameterized form
+     ! it is defined on real orbital basis
      if ( icu == 1 .or. icu == 3 ) then
+     !
          call atomic_make_umatK()
+     !
+     ! Slater-Cordon parameterized form
+     ! it is defined on complex orbital basis
      else
+     !
          call atomic_make_umatS()
+     !
      endif ! back if ( icu == 1 .or. icu == 3 ) block
 
 !! body]
