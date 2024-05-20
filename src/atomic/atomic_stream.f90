@@ -782,20 +782,26 @@
 !! should is diagonal
 !!
   subroutine atomic_build_natural()
-     use constants, only : dp, czero
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mystd
 
      use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : norbs
-     use m_spmat, only : umat, tmat
+
+     use m_spmat, only : umat
+     use m_spmat, only : tmat
 
      implicit none
 
 !! local variables
-     ! transformation matrix from real orbital basis to complex orbital basis
+     ! transformation matrix from real orbital basis to
+     ! complex orbital basis
      complex(dp) :: tmat_r2c(norbs,norbs)
 
-     ! transformation matrix from complex orbital basis to real orbital basis
+     ! transformation matrix from complex orbital basis
+     ! to real orbital basis
      complex(dp) :: tmat_c2r(norbs,norbs)
 
      ! dummy Coulomb interaction matrix
