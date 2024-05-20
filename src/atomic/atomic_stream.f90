@@ -868,17 +868,51 @@
 
      endif ! back if ( ibasis == 1 ) block
 
+     ! dump emat for reference
      call atomic_dump_emat()
 
+     ! dump tmat for reference
      call atomic_dump_tmat()
 
+     ! we need transform Coulomb interaction U
+     !
+     ! for non-SOC case, the transformation matrix is defined as from
+     ! real orbital basis to natural eigenbasis. so we have to make sure
+     ! the Coulomb interaction U is built at real orbital basis
      if ( isoc == 0 ) then
+
+         write(mystd,'(4X,a)') 'transform Coulomb interaction to &
+             &real orbital basis'
+
+         ! for Slater-Cordon parameterized Coulomb interaction U,
+         ! since it is defined at complex orbital basis, we first
+         ! need to transfrom umat from complex orbital basis to real
+         ! orbital basis
+         !
+         ! for Kanamori parameterized Coulomb interaction U, since
+         ! it is already defined at real orbital basis, we do not
+         ! need to transform it now
          if ( icu == 2 ) then
              call atomic_make_tmat_c2r(tmat_c2r)
              call atomic_tran_umat(tmat_c2r, umat, umat_tmp)
              umat = umat_tmp
          endif ! back if ( icu == 2 ) block
+
+     ! for SOC case, the transformation matrix is defined as from complex
+     ! orbital basis to natural eigenbasis. so we have to make sure the
+     ! Coulomb interaction U is built at complex orbital basis
      else
+
+         write(mystd,'(4X,a)') 'transform Coulomb interaction to &
+             &complex orbital basis'
+
+         ! for Slater-Cordon parameterized Coulomb interaction U,
+         ! since it is already defined at complex orbital basis, we
+         ! do not need to transform it now
+         !
+         ! for Kanamori parameterized Coulomb interaction U, since
+         ! it is defined at real orbital basis, so we have to transfrom
+         ! umat from real orbital basis to complex orbital basis
          if ( icu == 1 .or. icu == 3 ) then
              call atomic_make_tmat_r2c(tmat_r2c)
              call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
@@ -887,9 +921,15 @@
 
      endif ! back if ( isoc == 0 ) block
 
+     ! finally, transform umat from original basis to natural eigenbasis.
+     ! the transformation matrix is just tmat
+     write(mystd,'(4X,a)') 'transform Coulomb interaction to &
+             &natural eigenbasis'
+     !
      call atomic_tran_umat(tmat, umat, umat_tmp)
      umat = umat_tmp
 
+     ! write the Coulomb interaction matrix as reference
      call atomic_dump_umat()
 
 !! body]
