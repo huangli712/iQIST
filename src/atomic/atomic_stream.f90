@@ -438,14 +438,14 @@
 
      implicit none
 
-! local variables
-! file status
+!! local variables
+     ! file status
      logical  :: exists
 
-! loop index
+     ! loop index
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      integer  :: i1
      integer  :: i2
      real(dp) :: raux
