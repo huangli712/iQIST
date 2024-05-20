@@ -126,11 +126,11 @@
 
      use control ! ALL
 
-! local variables
-! status flag for whether all of the parameters are OK
+!! local variables
+     ! status flag for whether all of the parameters are OK
      logical :: lpass
 
-! initialize lpass
+     ! initialize lpass
      lpass = .true.
 
      ! check ibasis
@@ -146,31 +146,31 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
-
+     !
      if ( ictqmc == 3 .and. isoc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz) algorithm is NOT supported for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 3 .and. isoc == 1 ) block
-
+     !
      if ( ictqmc == 4 .and. isoc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. isoc == 1 ) block
-
+     !
      if ( ictqmc == 4 .and. icu == 2 ) then
          write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for Slater-Cordon type interaction U!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 4 .and. icu == 2 ) block
-
+     !
      if ( ictqmc == 5 .and. isoc == 0 ) then
          write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is ONLY supported for SOC case!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 0 ) block
-
+     !
      if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) then
          write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is NOT supported for SOC + CF case!'
          write(mystd, *)
@@ -183,7 +183,7 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu < 1 .or. icu > 3 ) block
-
+     !
      if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
          write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for 5- or 7-band system!'
          write(mystd,*)
