@@ -814,68 +814,35 @@
      tmat_c2r = czero
      umat_tmp = czero
 
-! make transformation matrix from origional basis to natural basis: tmat
-! A: make tmat internally for different cases
      if ( ibasis == 1 ) then
          if      ( isoc == 0 .and. icf <  2 ) then
-! no spin-orbital coupling, no crystal field or crystal field is diagonal
-! the original basis is the real orbital basis
-! the natural basis is the real orbital basis
              call atomic_natural_basis1()
 
-! no spin-orbital coupling, non-diagonal crystal field
-! the original basis is the real orbital basis
-! the natural basis is linear combination of real orbitals
          else if ( isoc == 0 .and. icf == 2 ) then
              call atomic_natural_basis2()
 
-! with spin-orbital coupling, no crystal field
-! the original basis is the complex orbital basis
-! the natural basis is |j2,jz>
          else if ( isoc == 1 .and. icf == 0 ) then
              call atomic_natural_basis3()
 
-! with spin-orbital coupling and crystal field
-! the original basis is the complex orbital basis
-! the natural basis is linear combination of complex orbitals
          else if ( isoc == 1 .and. icf >  0 ) then
              call atomic_natural_basis4()
 
          endif ! back if      ( isoc == 0 .and. icf <  2 ) block
-! B: read the transformation matrices used to transfer emat from original
-! basis to natural basis.
      else
          call atomic_read_tmat()
      endif ! back if ( ibasis == 1 ) block
 
-! dump emat for reference
      call atomic_dump_emat()
 
-! dump tmat for reference
      call atomic_dump_tmat()
 
-! we need transform Coulomb interaction U
-! for non-soc case, the transformation matrix is defined as from real
-! orbital basis to natural basis
      if ( isoc == 0 ) then
-! for Slater-Cordon parameters Coulomb interaction U, since it is defined
-! at complex orbital basis, we first need to transfrom umat from complex
-! orbital basis to real orbital basis
-! for Kanamori parameters Coulomb interaction U, since it is defined at
-! real orbital basis, we do not need to transform it now
          if ( icu == 2 ) then
              call atomic_make_tmat_c2r(tmat_c2r)
              call atomic_tran_umat(tmat_c2r, umat, umat_tmp)
              umat = umat_tmp
          endif ! back if ( icu == 2 ) block
-! for soc case, the transformation matrix is defined as from complex
-! orbital basis to natural basis
      else
-! for Slater-Cordon parameters Coulomb interaction U, since it is defined
-! at complex orbital basis, we do not need to transform it now
-! for Kanamori parameters Coulomb interaction U, since it is defined at
-! real orbital basis, we first need to transfrom umat from real orbital
-! basis to complex orbital basis
          if ( icu == 1 .or. icu == 3 ) then
              call atomic_make_tmat_r2c(tmat_r2c)
              call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
