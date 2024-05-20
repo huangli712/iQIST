@@ -482,15 +482,17 @@
          enddo ! over j={0,2**norbs-1} loop
      enddo ! over i={0,norbs} loop
 
-! construct binary form of Fock basis
+     ! construct binary form of Fock basis
      do i=1,ncfgs
          do j=1,norbs
              if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
-! dump Fock basis to file atom.fock.dat for reference
+     ! dump Fock basis to file atom.fock.dat for reference
      call atomic_dump_fock()
+
+!! body]
 
      return
   end subroutine atomic_build_fock
@@ -563,6 +565,8 @@
 ! it is defined on complex orbital basis
          call atomic_make_umatS()
      endif ! back if ( icu == 1 .or. icu == 3 ) block
+
+!! body]
 
      return
   end subroutine atomic_build_spmat
@@ -661,12 +665,14 @@
          endif ! back if ( icu == 1 .or. icu == 3 ) block
      endif ! back if ( isoc == 0 ) block
 
-! finally, transform umat from original basis to natural basis
+     ! finally, transform umat from original basis to natural basis
      call atomic_tran_umat(tmat, umat, umat_tmp)
      umat = umat_tmp
 
-! write the U matrix as reference
+     ! write the U matrix as reference
      call atomic_dump_umat()
+
+!! body]
 
      return
   end subroutine atomic_build_natural
