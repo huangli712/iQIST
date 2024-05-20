@@ -49,13 +49,13 @@
 
 !! [body
 
-     ! setup default values
+     ! setup general control flags
      !--------------------------------------------------------------------
-     ibasis = 1           ! source of the natural basis
-     ictqmc = 1           ! type of atomic Hamiltonian matrix diagonalization
+     ibasis = 1           ! source of the natural eigenbasis
+     ictqmc = 1           ! how to diagonalize atomic Hamiltonian
      icu    = 1           ! type of Coulomb interaction
-     icf    = 0           ! type of crystal field (CF)
-     isoc   = 0           ! type of spin-orbital coupling (SOC)
+     icf    = 0           ! type of crystal field splitting (CFS)
+     isoc   = 0           ! type of spin-orbit coupling (SOC)
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      ! setup common variables for atomic Hamiltonian
