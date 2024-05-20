@@ -210,7 +210,7 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( isoc < 0 .or. isoc > 1 ) block
-
+     !
      if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) then
          write(mystd,'(2X,a)') 'ERROR: only support SOC for 3-, 5-, or 7-band system!'
          write(mystd,*)
@@ -223,7 +223,7 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( nband <= 0 ) block
-
+     !
      if ( nband >= 5 .and. ictqmc <= 1 ) then
          write(mystd,'(2X,a)') 'ERROR: when number of bands is larger than 4, direct diagonalization is NOT supported!'
          write(mystd,*)
@@ -256,7 +256,7 @@
          nmini = 0
          write(mystd,'(2X,a)') 'WARNING: nmini < 0, enforce to be zero!'
      endif ! back if ( nmini < 0 ) block
-
+     !
      if ( nmaxi > norbs ) then
          nmaxi = norbs
          write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
