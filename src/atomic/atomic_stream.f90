@@ -231,7 +231,7 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
-
+     !
      if ( icu == 3 .and. nband /= 5 ) then
          write(mystd,'(2X,a)') 'ERROR: anisotropic Hunds rule exchange &
              & in Kanamori type Coulomb interaction is only suitable   &
@@ -255,23 +255,27 @@
      endif ! back if ( isoc < 0 .or. isoc > 1 ) block
      !
      if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support SOC for 3-, 5-, or 7-band system!'
+         write(mystd,'(2X,a)') 'ERROR: the SOC setup is only possible &
+             & for 3-, 5-, or 7-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
 
      ! check nband
-     if ( nband <= 0 ) then
-         write(mystd,'(2X,a)') 'ERROR: number of bands must be larger than zero!'
+     if ( nband <= 0 .or. nband >= 8 ) then
+         write(mystd,'(2X,a)') 'ERROR: number of bands should be a &
+             & positive integer (1 <= nband <= 7)!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( nband <= 0 ) block
+     endif ! back if ( nband <= 0 .or. nband >= 8 ) block
      !
-     if ( nband >= 5 .and. ictqmc <= 1 ) then
-         write(mystd,'(2X,a)') 'ERROR: when number of bands is larger than 4, direct diagonalization is NOT supported!'
+     if ( nband >= 5 .and. ictqmc == 1 ) then
+         write(mystd,'(2X,a)') 'ERROR: when number of bands is larger &
+             & than 4, the direct diagonalization algorithm is NOT    &
+             & supported any more!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( nband >= 5 .and. ictqmc <= 1 ) block
+     endif ! back if ( nband >= 5 .and. ictqmc == 1 ) block
 
      ! check nspin
      if ( nspin /= 2 ) then

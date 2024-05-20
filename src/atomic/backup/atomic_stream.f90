@@ -275,7 +275,7 @@
              & supported any more!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( nband >= 5 .and. ictqmc <= 1 ) block
+     endif ! back if ( nband >= 5 .and. ictqmc == 1 ) block
 
      ! check nspin
      if ( nspin /= 2 ) then
