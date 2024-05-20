@@ -25,7 +25,10 @@
   subroutine atomic_setup_param()
      use constants, only : dp
 
-     use parser, only : p_create, p_destroy, p_parse, p_get
+     use parser, only : p_create
+     use parser, only : p_parse
+     use parser, only : p_get
+     use parser, only : p_destroy
 
      use control ! ALL
 
@@ -61,22 +64,22 @@
      mune   = 0.00_dp     ! chemical potential
      lambda = 0.00_dp     ! spin-orbit coupling strength
 
-! read in input file if possible
-! reset file status
+     ! read in input file if possible
+     ! reset file status
      exists = .false.
 
-! inquire the input file status: atomic.config.in
+     ! inquire the input file status: atomic.config.in
      inquire( file = "atom.config.in", exist = exists )
 
-! read parameters from atom.config.in
+     ! read parameters from atom.config.in
      if ( exists .eqv. .true. ) then
-! create the file parser
+         ! create the file parser
          call p_create()
 
-! parse the config file
+         ! parse the config file
          call p_parse('atom.config.in')
 
-! extract parameters
+         ! extract parameters
          call p_get('ibasis', ibasis)
          call p_get('ictqmc', ictqmc)
          call p_get('icu'   ,    icu)
