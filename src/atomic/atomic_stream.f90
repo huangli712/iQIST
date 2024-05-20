@@ -277,7 +277,8 @@
 
      ! check ncfgs
      if ( ncfgs /= 2 ** norbs ) then
-         write(mystd,'(2X,a)') 'ERROR: number of orbitals is not compatible with number of configurations!'
+         write(mystd,'(2X,a)') 'ERROR: number of many body states is not &
+             & compatible with number of orbitals!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ncfgs /= 2 ** norbs ) block
@@ -296,34 +297,39 @@
 
      ! check Uc, Uv, Jz, Js, Jp
      if ( Uc < zero .or. Uv < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than &
+             & or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Uc < zero .or. Uv < zero ) block
      !
      if ( Jz < zero .or. Js < zero .or. Jp < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger &
+             & than or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Jz < zero .or. Js < zero .or. Jp < zero ) block
 
      ! check Ud and Jh
      if ( Ud < zero .or. Jh < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than &
+             & or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Ud < zero .or. Jh < zero ) block
 
      ! check lambda
      if ( lambda < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: lambda must be larger than or equal to zero!'
+         write(mystd,'(2X,a)') 'ERROR: lambda must be larger than or &
+             & equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( lambda < zero ) block
 
-     ! final assert
+     ! final assertion
      if ( lpass .eqv. .false. ) then
-         call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
+         call s_print_error('atomic_check_param','invalid parameters &
+             & found in atom.config.in file!')
      endif ! back if ( lpass .eqv. .false. ) block
 
 !! body]
