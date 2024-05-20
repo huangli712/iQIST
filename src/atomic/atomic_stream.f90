@@ -551,8 +551,14 @@
 !! make Fock basis in the full Hilbert space
 !!
   subroutine atomic_build_fock()
+     use constants, only : mystd
+
      use control, only : norbs, ncfgs
-     use m_fock, only : dim_sub_n, bin_basis, dec_basis, ind_basis
+
+     use m_fock, only : dim_sub_n
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
 
      implicit none
 
@@ -562,10 +568,10 @@
      integer :: j
      integer :: k
 
-     ! basis counter
-     integer :: basis_count
+     ! counter for Fock states
+     integer :: state_count
 
-     ! number of electrons for Fock state
+     ! number of electrons for the current Fock state
      integer :: nelec
 
 !! [body
@@ -582,7 +588,7 @@
      enddo ! over i={0,norbs} loop
 
      ! construct decimal form and index of Fock basis
-     basis_count = 0
+     state_count = 0
      do i=0,norbs
          do j=0,2**norbs-1
              nelec = 0
@@ -590,9 +596,9 @@
                  if ( btest(j, k-1) ) nelec = nelec + 1
              enddo ! over k={1,norbs} loop
              if ( nelec == i ) then
-                 basis_count = basis_count + 1
-                 dec_basis(basis_count) = j
-                 ind_basis(j) = basis_count
+                 state_count = state_count + 1
+                 dec_basis(state_count) = j
+                 ind_basis(j) = state_count
              endif ! back if ( nelec == i ) block
          enddo ! over j={0,2**norbs-1} loop
      enddo ! over i={0,norbs} loop
@@ -833,11 +839,9 @@
 
      endif ! back if ( isoc == 0 ) block
 
-     ! finally, transform umat from original basis to natural basis
      call atomic_tran_umat(tmat, umat, umat_tmp)
      umat = umat_tmp
 
-     ! write the U matrix as reference
      call atomic_dump_umat()
 
 !! body]
