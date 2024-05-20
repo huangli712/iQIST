@@ -88,15 +88,15 @@
          call p_get('norbs' ,  norbs) ! not useful
          call p_get('ncfgs' ,  ncfgs) ! not useful
 
-! calculate the norbs and ncfgs
+         ! calculate the norbs and ncfgs
          norbs = nband * nspin
          ncfgs = 2 ** norbs
 
-! setup nmini and nmaxi
+         ! setup nmini and nmaxi
          nmini = 0
          nmaxi = norbs
 
-! continue to extract parameters
+         ! continue to extract parameters
          call p_get('nmini' ,  nmini)
          call p_get('nmaxi' ,  nmaxi)
 
@@ -112,11 +112,13 @@
          call p_get('mune'  ,   mune)
          call p_get('lambda', lambda)
 
-! destroy the parser
+         ! destroy the parser
          call p_destroy()
      else
          call s_print_exception('atomic_config','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine atomic_setup_param
@@ -294,6 +296,8 @@
      if ( lpass .eqv. .false. ) then
          call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
      endif ! back if ( lpass .eqv. .false. ) block
+
+!! body]
 
      return
   end subroutine atomic_check_param
