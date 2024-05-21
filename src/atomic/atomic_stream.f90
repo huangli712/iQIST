@@ -529,7 +529,7 @@
          do j=1,norbs
              read(mytmp,*) i1, i2, raux
              ! tmat is actually real
-             tmat(j,i) = dcmplx(raux, zero)
+             tmat(i,j) = dcmplx(raux, zero)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
