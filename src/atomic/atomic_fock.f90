@@ -155,7 +155,7 @@
      use constants, only: zero, half
      use constants, only : mystd
 
-     use control, only : norbs, ncfgs
+     use control, only : nband, norbs, ncfgs
 
      use m_fock, only : bin_basis
      use m_fock, only : evec
@@ -177,11 +177,12 @@
      do ibas=1,ncfgs
          do iorb=1,norbs
              if ( bin_basis(iorb,ibas) == 1 ) then
-                 if ( mod(iorb,2) /= 0 ) then ! spin up
+                 ! the spin order is always: up up up down down down
+                 if ( iorb <= nband ) then ! spin up
                      spin(ibas,ibas) = spin(ibas,ibas) + half
-                 else                         ! spin down
+                 else                      ! spin down
                      spin(ibas,ibas) = spin(ibas,ibas) - half
-                 endif ! back if ( mod(iorb,2) /= 0 ) block
+                 endif ! back if ( iorb <= nband ) block
              endif ! back if ( bin_basis(iorb,ibas ) == 1) block
          enddo ! over iorb={1,norbs} loop
          !
