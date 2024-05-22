@@ -26,11 +26,11 @@ In this single particle basis, the Coulomb interaction Hamiltonian is:
 
 ```math
 \begin{equation}
-\hat{H}_{U}=\frac{1}{2}\sum_{m_{1},m_{2},m_{1}^{\prime},m_{2}^{\prime},\sigma,\sigma^{\prime}}\left\langle m_{1}\sigma,m_{2}\sigma^{\prime}\left|\frac{1}{r_{12}}\right|m_{1}^{\prime}\sigma,m_{2}^{\prime}\sigma^{\prime}\right\rangle \hat{f}_{m_{1}\sigma}^{\dagger}\hat{f}_{m_{2}\sigma^{\prime}}^{\dagger}\hat{f}_{m_{2}^{\prime}\sigma^{\prime}}\hat{f}_{m_{1}^{\prime}\sigma},
+\hat{H}_{U}=\frac{1}{2}\sum_{m_{1},m_{2},m_{1}^{\prime},m_{2}^{\prime},\sigma,\sigma^{\prime}}\left\langle m_{1}\sigma,m_{2}\sigma^{\prime}\left|\frac{1}{r_{12}}\right|m_{1}^{\prime}\sigma,m_{2}^{\prime}\sigma^{\prime}\right\rangle \hat{f}_{m_{1}\sigma}^{\dagger}\hat{f}_{m_{2}\sigma^{\prime}}^{\dagger}\hat{f}_{m_{2}^{\prime}\sigma^{\prime}}\hat{f}_{m_{1}^{\prime}\sigma}.
 \end{equation}
 ```
 
-where ``\sigma,\sigma^{\prime}`` is spin index. Set
+Set
 
 ```math
 \alpha=m_{1}\sigma,\ \beta=m_{2}\sigma^{\prime},\ \gamma=m_{1}^{\prime}\sigma,\ \delta=m_{2}^{\prime}\sigma^{\prime},
