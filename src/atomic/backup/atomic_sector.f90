@@ -46,7 +46,7 @@
 
 !! local parameters
      ! maximum number of subspaces 
-     integer, parameter :: max_num_sect = 400 
+     integer, parameter :: max_num_sect = 400
 
 !! local variables
      ! loop index
