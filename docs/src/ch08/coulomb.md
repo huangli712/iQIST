@@ -65,6 +65,20 @@ Y_{l}^{m^{\prime\prime}}(\theta,\phi)
 \end{equation}
 ```
 
+Note that the Gaunt coefficient is defined as the integral over three spherical harmonics:
+
+```math
+\begin{aligned}
+\operatorname{Gaunt}(l_1,l_2,l_3,m_1,m_2,m_3)
+&=\int Y_{l_1,m_1}(\Omega)
+       Y_{l_2,m_2}(\Omega)
+       Y_{l_3,m_3}(\Omega) \,d\Omega \\
+&=\sqrt{\frac{(2l_1+1)(2l_2+1)(2l_3+1)}{4\pi}}
+      \operatorname{Wigner3j}(l_1,l_2,l_3,0,0,0)
+      \operatorname{Wigner3j}(l_1,l_2,l_3,m_1,m_2,m_3)
+\end{aligned}
+```
+
 ---
 
 **Kanamori Type Interaction**
