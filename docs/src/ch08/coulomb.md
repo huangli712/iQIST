@@ -56,8 +56,8 @@ F_{nl}^{k}=\int_{0}^{\infty}r_{1}^{2}dr_{1}\int_{0}^{\infty}r_{2}^{2}dr_{2}R_{nl
 
 ```math
 \begin{equation}
-c_{l}^{k}(m^{\prime},m^{\prime\prime}) = 
-\sqrt{\frac{4\pi}{2k+1}} 
+c_{l}^{k}(m^{\prime},m^{\prime\prime}) =
+\sqrt{\frac{4\pi}{2k+1}}
 \int d\phi d\theta\sin(\theta)
 Y_{l}^{m^{\prime}*}(\theta,\phi)
 Y_{k}^{m^{\prime}-m^{\prime\prime}}(\theta,\phi)
@@ -111,7 +111,7 @@ The Kanomori type of Coulomb interaction Hamiltonian in the **JASMINE** componen
 
 ```math
 \begin{align}
-\hat{H}_{U} 
+\hat{H}_{U}
   =  U^{\prime}\sum_{a\text{<}b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,\sigma}\hat{f}_{b,-\sigma}^{\dagger}\hat{f}_{b,-\sigma}
   + (U^{\prime}-J_{z})\sum_{a<b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,\sigma}\hat{f}_{b,\sigma}^{\dagger}\hat{f}_{b,\sigma} \\
   -  J_{s}\sum_{a<b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,-\sigma}\hat{f}_{b,-\sigma}^{\dagger}\hat{f}_{b,\sigma}

@@ -293,7 +293,7 @@ Since
 ```
 
 ```math
-\hat{l} \cdot \hat{\sigma} = 2 \hat{l} \cdot \hat{s} 
+\hat{l} \cdot \hat{\sigma} = 2 \hat{l} \cdot \hat{s}
                            = \hat{j}^2 - \hat{l}^2 - \hat{s}^2,
 ```
 
