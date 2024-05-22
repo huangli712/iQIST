@@ -79,6 +79,30 @@ Note that the Gaunt coefficient is defined as the integral over three spherical 
 \end{aligned}
 ```
 
+We adopted the following Python script to generate ``c_{l}^{k}(m^{\prime},m^{\prime\prime})``:
+
+```python
+from sympy import *
+from sympy.physics.wigner import gaunt
+
+def get_gaunt(l1, l2):
+    for k in range(l1 + l2 + 1):
+        if not ((l1 + l2 + k) % 2 == 0 and abs(l1 - l2) <= k <= l1 + l2):
+            continue
+        for i1, m1 in enumerate(range(-l1, l1 + 1)):
+            for i2, m2 in enumerate(range(-l2, l2 + 1)):
+                x = symbols('x')
+                f1 = sqrt(4*pi / (2*x + 1)) * gaunt(l1, k, l2, -m1, m1 - m2, m2)
+                f2 = f1.subs(x, k)
+                f3 = (-1.0)**m1
+                if f2 == 0:
+                    continue
+                print('gaunt(', i1-l1, ',', i2-l2, ', ', k, ') = ', f2, '* (', f3, ')')
+
+```
+
+For $d$-electron system, we use *get_gaunt(2,2)*. As for $f$-electron system, we use *get_gaunt(3,3)*.
+
 ---
 
 **Kanamori Type Interaction**
