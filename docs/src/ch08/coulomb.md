@@ -60,7 +60,7 @@ c_{l}^{k}(m^{\prime},m^{\prime\prime}) =
 \sqrt{\frac{4\pi}{2k+1}} 
 \int d\phi d\theta\sin(\theta)
 Y_{l}^{m^{\prime}*}(\theta,\phi)
-Y_{l}^{m^{\prime}-m^{\prime\prime}}(\theta,\phi)
+Y_{k}^{m^{\prime}-m^{\prime\prime}}(\theta,\phi)
 Y_{l}^{m^{\prime\prime}}(\theta,\phi)
 \end{equation}
 ```
