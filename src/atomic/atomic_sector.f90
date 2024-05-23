@@ -182,7 +182,7 @@
              ! build PS
              my_ps = 0
              do k=1,nband
-                 val = bin_basis(2*k-1,ibasis) - bin_basis(2*k,ibasis)
+                 val = bin_basis(k,ibasis) - bin_basis(k+nband,ibasis)
                  my_ps = my_ps + orb_ps(k) * val**2
              enddo ! over k={1,nband} loop
              fock_ps(ibasis) = my_ps
@@ -448,7 +448,7 @@
                              ! calculate new PS
                              my_ps = 0
                              do l=1,nband
-                                 val = code(2*l-1) - code(2*l)
+                                 val = code(l) - code(l+nband)
                                  my_ps = my_ps + orb_ps(l) * val**2
                              enddo ! over l={1,nband} loop
                              !

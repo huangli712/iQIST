@@ -155,7 +155,7 @@
 !! calculate Sz quantum number for each orbital
 !!
   subroutine atomic_make_gsz(good_sz)
-     use control, only : norbs
+     use control, only : nband, norbs
 
      implicit none
 
@@ -171,7 +171,8 @@
 
      ! note: the spin arrangement likes up dn up dn up dn ...
      do i=1,norbs
-         if ( mod(i,2) /= 0 ) then
+         !if ( mod(i,2) /= 0 ) then
+         if ( i <= nband ) then
              good_sz(i) = +1
          else
              good_sz(i) = -1
