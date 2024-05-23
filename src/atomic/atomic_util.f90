@@ -658,8 +658,6 @@
      ! Hund's rule matrix
      real(dp) :: hund(nband,nband,3)
 
-     integer  :: i, j, k, l
-
 !! [body
 
      ! initialize hund to zero
@@ -688,39 +686,9 @@
                      bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
                      gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
                      dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
-                     !if ( alpha <= nband ) then
-                     !    aband = alpha
-                     !    aspin = +1
-                     !else
-                     !    aband = alpha - nband
-                     !    aspin = -1
-                     !endif
-
-                     !if ( betta <= nband ) then
-                     !    bband = betta
-                     !    bspin = +1
-                     !else
-                     !    bband = betta - nband
-                     !    bspin = -1
-                     !endif
-
-                     !if ( gamma <= nband ) then
-                     !    gband = gamma
-                     !    gspin = +1
-                     !else
-                     !    gband = gamma - nband
-                     !    gspin = -1
-                     !endif
-
-                     !if ( delta <= nband ) then
-                     !    dband = delta
-                     !    dspin = +1
-                     !else
-                     !    dband = delta - nband
-                     !    dspin = -1
-                     !endif
 
                      dtmp = zero
+                     !print *, alpha, aband, aspin
 
                      ! intraorbital Coulomb interaction
                      if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
@@ -757,31 +725,10 @@
                          endif ! back if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) block
                      endif ! back if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) block
 
-                     !umat(alpha,betta,delta,gamma) = dtmp
-
-         if ( alpha <= nband ) then
-             i = 2*alpha-1
-         else
-             i = 2*(alpha-nband)
-         endif ! back if ( alpha <= nband ) block
-
-             if ( betta <= nband ) then
-                 j = 2*betta-1
-             else
-                 j = 2*(betta-nband)
-             endif ! back if ( betta <= nband ) block
-                 if ( gamma <= nband ) then
-                     k = 2*gamma-1
-                 else
-                     k = 2*(gamma-nband)
-                 endif ! back if ( gamma <= nband ) block
-                     if ( delta <= nband ) then
-                         l = 2*delta-1
-                     else
-                         l = 2*(delta-nband)
-                     endif ! back if ( delta <= nband ) block
-                     
-                     umat(i,j,l,k) = dtmp
+                     umat( aband + nband * (1 - aspin), &
+                           bband + nband * (1 - bspin), &
+                           dband + nband * (1 - dspin), &
+                           gband + nband * (1 - gspin) ) = dtmp
                  enddo deltaloop ! over delta={gamma+1,norbs} loop
              enddo gammaloop ! over gamma={1,norbs-1} loop
          enddo bettaloop ! over betta={alpha+1,norbs} loop
