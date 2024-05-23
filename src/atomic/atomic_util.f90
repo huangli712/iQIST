@@ -659,7 +659,6 @@
      real(dp) :: hund(nband,nband,3)
 
      integer  :: i, j, k, l
-     complex(dp) :: utmp(norbs,norbs,norbs,norbs)
 
 !! [body
 
@@ -674,17 +673,52 @@
 
      ! loop for creation operators
      alphaloop: do alpha=1,norbs-1
+     !alphaloop: do alpha=1,norbs
          bettaloop: do betta=alpha+1,norbs
+         !bettaloop: do betta=1,norbs
 
              ! loop for annihilation operators
              gammaloop: do gamma=1,norbs-1
+             !gammaloop: do gamma=1,norbs
                  deltaloop: do delta=gamma+1,norbs
+                 !deltaloop: do delta=1,norbs
 
                      ! get the band and spin indices
                      aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
                      bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
                      gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
                      dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
+                     !if ( alpha <= nband ) then
+                     !    aband = alpha
+                     !    aspin = +1
+                     !else
+                     !    aband = alpha - nband
+                     !    aspin = -1
+                     !endif
+
+                     !if ( betta <= nband ) then
+                     !    bband = betta
+                     !    bspin = +1
+                     !else
+                     !    bband = betta - nband
+                     !    bspin = -1
+                     !endif
+
+                     !if ( gamma <= nband ) then
+                     !    gband = gamma
+                     !    gspin = +1
+                     !else
+                     !    gband = gamma - nband
+                     !    gspin = -1
+                     !endif
+
+                     !if ( delta <= nband ) then
+                     !    dband = delta
+                     !    dspin = +1
+                     !else
+                     !    dband = delta - nband
+                     !    dspin = -1
+                     !endif
 
                      dtmp = zero
 
@@ -723,48 +757,35 @@
                          endif ! back if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) block
                      endif ! back if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) block
 
-                     umat(alpha,betta,delta,gamma) = dtmp
+                     !umat(alpha,betta,delta,gamma) = dtmp
 
-                 enddo deltaloop ! over delta={gamma+1,norbs} loop
-             enddo gammaloop ! over gamma={1,norbs-1} loop
-         enddo bettaloop ! over betta={alpha+1,norbs} loop
-     enddo alphaloop ! over alpha={1,norbs-1} loop
-
-     utmp = czero
-     do alpha=1,norbs
          if ( alpha <= nband ) then
              i = 2*alpha-1
          else
              i = 2*(alpha-nband)
          endif ! back if ( alpha <= nband ) block
 
-         do betta=1,norbs
              if ( betta <= nband ) then
                  j = 2*betta-1
              else
                  j = 2*(betta-nband)
              endif ! back if ( betta <= nband ) block
-
-             do gamma=1,norbs
                  if ( gamma <= nband ) then
                      k = 2*gamma-1
                  else
                      k = 2*(gamma-nband)
                  endif ! back if ( gamma <= nband ) block
-
-                 do delta=1,norbs
                      if ( delta <= nband ) then
                          l = 2*delta-1
                      else
                          l = 2*(delta-nband)
                      endif ! back if ( delta <= nband ) block
-
-                     utmp(alpha,betta,gamma,delta) = umat(i,j,k,l)
-                 enddo
-             enddo
-         enddo
-     enddo
-     umat = utmp
+                     
+                     umat(i,j,l,k) = dtmp
+                 enddo deltaloop ! over delta={gamma+1,norbs} loop
+             enddo gammaloop ! over gamma={1,norbs-1} loop
+         enddo bettaloop ! over betta={alpha+1,norbs} loop
+     enddo alphaloop ! over alpha={1,norbs-1} loop
 
 !! body]
 
