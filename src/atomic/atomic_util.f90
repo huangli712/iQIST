@@ -658,6 +658,9 @@
      ! Hund's rule matrix
      real(dp) :: hund(nband,nband,3)
 
+     integer  :: i, j, k, l
+     complex(dp) :: utmp(norbs,norbs,norbs,norbs)
+
 !! [body
 
      ! initialize hund to zero
@@ -726,6 +729,42 @@
              enddo gammaloop ! over gamma={1,norbs-1} loop
          enddo bettaloop ! over betta={alpha+1,norbs} loop
      enddo alphaloop ! over alpha={1,norbs-1} loop
+
+     utmp = czero
+     do alpha=1,norbs
+         if ( alpha <= nband ) then
+             i = 2*alpha-1
+         else
+             i = 2*(alpha-nband)
+         endif ! back if ( alpha <= nband ) block
+
+         do betta=1,norbs
+             if ( betta <= nband ) then
+                 j = 2*betta-1
+             else
+                 j = 2*(betta-nband)
+             endif ! back if ( betta <= nband ) block
+
+             do gamma=1,norbs
+                 if ( gamma <= nband ) then
+                     k = 2*gamma-1
+                 else
+                     k = 2*(gamma-nband)
+                 endif ! back if ( gamma <= nband ) block
+
+                 do delta=1,norbs
+                     if ( delta <= nband ) then
+                         l = 2*delta-1
+                     else
+                         l = 2*(delta-nband)
+                     endif ! back if ( delta <= nband ) block
+
+                     utmp(alpha,betta,gamma,delta) = umat(i,j,k,l)
+                 enddo
+             enddo
+         enddo
+     enddo
+     umat = utmp
 
 !! body]
 
