@@ -411,9 +411,6 @@
      integer :: j
      integer :: k
 
-     ! auxiliary integer variable used to convert the spin sequence
-     integer :: s_order
-
      ! used to draw a dashed line
      character (len=1) :: dash(75)
 
@@ -464,21 +461,11 @@
      write(mytmp,'(a)') '# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT'
      write(mytmp,'(75a1)') dash ! dashed line
      do i=1,norbs
-         if ( isoc == 0 ) then
-             if ( i <= nband ) then
-                 s_order = 2*i-1
-             else
-                 s_order = 2*(i-nband)
-             endif ! back if ( i <= nband ) block
-         else
-             s_order = i
-         endif ! back if ( isoc == 0 ) block
-
          do j=1,ncfgs
              do k=1,ncfgs
-                 if ( abs( fmat(j,k,s_order) ) > epst ) then
-                     write(mytmp,'(3i10,f20.10)') j, k, i, fmat(j,k,s_order)
-                 endif ! back if ( abs( fmat(j,k,s_order) ) > epst ) block
+                 if ( abs( fmat(j,k,i) ) > epst ) then
+                     write(mytmp,'(3i10,f20.10)') j, k, i, fmat(j,k,i)
+                 endif ! back if ( abs( fmat(j,k,i) ) > epst ) block
              enddo ! back k={1,ncfgs} loop
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
