@@ -169,14 +169,12 @@
 
 !! [body
 
-     ! note: the spin arrangement likes up dn up dn up dn ...
      do i=1,norbs
-         !if ( mod(i,2) /= 0 ) then
          if ( i <= nband ) then
              good_sz(i) = +1
          else
              good_sz(i) = -1
-         endif ! back if ( mod(i,2) /= 0 ) block
+         endif ! back if ( i <= nband ) block
      enddo ! over i={1,norbs} loop
 
 !! body]
@@ -672,15 +670,11 @@
 
      ! loop for creation operators
      alphaloop: do alpha=1,norbs-1
-     !alphaloop: do alpha=1,norbs
          bettaloop: do betta=alpha+1,norbs
-         !bettaloop: do betta=1,norbs
 
              ! loop for annihilation operators
              gammaloop: do gamma=1,norbs-1
-             !gammaloop: do gamma=1,norbs
                  deltaloop: do delta=gamma+1,norbs
-                 !deltaloop: do delta=1,norbs
 
                      ! get the band and spin indices
                      aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
@@ -689,7 +683,6 @@
                      dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
 
                      dtmp = zero
-                     !print *, alpha, aband, aspin
 
                      ! intraorbital Coulomb interaction
                      if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
@@ -730,6 +723,7 @@
                            bband + nband * (1 - bspin), &
                            dband + nband * (1 - dspin), &
                            gband + nband * (1 - gspin) ) = dtmp
+
                  enddo deltaloop ! over delta={gamma+1,norbs} loop
              enddo gammaloop ! over gamma={1,norbs-1} loop
          enddo bettaloop ! over betta={alpha+1,norbs} loop
@@ -1634,7 +1628,7 @@
      ! get emat for no spin freedom
      do i=1,nband
          do j=1,nband
-             emat_nospin(j,i) = emat(2*j-1,2*i-1)
+             emat_nospin(i,j) = emat(i,j)
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband}
 
@@ -1650,10 +1644,10 @@
      ! build emat and tmat with spin freedom
      do i=1,nband
          do j=1,nband
-             emat(2*j-1,2*i-1) = emat_nospin(j,i)
-             emat(2*j,2*i)     = emat_nospin(j,i)
-             tmat(2*j-1,2*i-1) = tmat_nospin(j,i)
-             tmat(2*j,2*i)     = tmat_nospin(j,i)
+             emat(i,j) = emat_nospin(i,j)
+             emat(i+nband,j+nband) = emat_nospin(i,j)
+             tmat(i,j) = tmat_nospin(i,j)
+             tmat(i+nband,j+nband) = tmat_nospin(i,j)
          enddo ! over j={1,nband} loop
      enddo ! over i={1,nband} loop
 
