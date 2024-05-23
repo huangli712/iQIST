@@ -131,8 +131,7 @@
   subroutine atomic_dump_emat()
      use constants, only : mytmp
 
-     use control, only : isoc
-     use control, only : nband, norbs
+     use control, only : norbs
 
      use m_spmat, only : emat
 
@@ -141,9 +140,6 @@
 !! local variables
      ! loop index
      integer :: i
-
-     ! auxiliary integer variable used to convert the spin sequence
-     integer :: s_order
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
@@ -163,16 +159,7 @@
 
      ! write the data
      do i=1,norbs
-         if ( isoc == 0 ) then
-             if ( i <= nband ) then
-                 s_order = 2*i-1
-             else
-                 s_order = 2*(i-nband)
-             endif ! back if ( i <= nband ) block
-         else
-             s_order = i
-         endif ! back if ( isoc == 0 ) block
-         write(mytmp,'(i6,2f16.8)') i, emat(s_order,s_order)
+         write(mytmp,'(i6,2f16.8)') i, emat(i,i)
      enddo ! over i={1,norbs} loop
 
      ! close data file
@@ -251,7 +238,6 @@
          !
          do i=1,norbs
              do j=i+1,norbs
-                 print *, i,j
                  umat_t(i,j) = real( umat(i,j,j,i) ) + real( umat(j,i,i,j))
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
@@ -279,20 +265,8 @@
 
      ! write the data, all of the elements are written
      do i=1,norbs
-         !if ( i <= nband ) then
-         !    k = 2*i-1
-         !else
-         !    k = 2*(i-nband)
-         !endif ! back if ( i <= nband ) block
-
          do j=1,norbs
-             !if ( j <= nband ) then
-             !    l = 2*j-1
-             !else
-             !    l = 2*(j-nband)
-             !endif ! back if ( j <= nband ) block
-
-             write(mytmp,'(2i6,f16.8)') i, j, umat_t(i,j) !umat_t(k,l)
+             write(mytmp,'(2i6,f16.8)') i, j, umat_t(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -811,6 +785,7 @@
 
      use m_sector, only : nsectors
      use m_sector, only : sectors
+
      use m_sector, only : max_dim_sect
      use m_sector, only : ave_dim_sect
 
