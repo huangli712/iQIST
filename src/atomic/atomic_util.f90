@@ -875,29 +875,31 @@
 
 !! [body
 
-! make SOC on complex orbital basis, the orbital order is:
-! |-1,up>, |-1,dn>,
-! | 0,up>, | 0,dn>,
-! | 1,up>, | 1,dn>
+     ! make SOC on complex orbital basis, the orbital order is:
+     !
+     !     | -1, up >, | -1, dn >,
+     !     |  0, up >, |  0, dn >,
+     !     |  1, up >, |  1, dn >
+     !
      smat = czero
+     !
+     !smat( 1, 1) = -1.0_dp
+     !smat( 4, 1) =  sqrt2
+     !smat( 2, 2) = +1.0_dp
+     !smat( 6, 3) =  sqrt2
+     !smat( 1, 4) =  sqrt2
+     !smat( 5, 5) = +1.0_dp
+     !smat( 3, 6) =  sqrt2
+     !smat( 6, 6) = -1.0_dp
 
-     smat( 1, 1) = -1.0_dp
-     smat( 4, 1) =  sqrt2
-     smat( 2, 2) = +1.0_dp
-     smat( 6, 3) =  sqrt2
-     smat( 1, 4) =  sqrt2
-     smat( 5, 5) = +1.0_dp
-     smat( 3, 6) =  sqrt2
-     smat( 6, 6) = -1.0_dp
-
-     !smat(1,1) = -1.0_dp
-     !smat(1,5) = sqrt2
-     !smat(2,6) = sqrt2
-     !smat(3,3) = 1.0_dp
-     !smat(4,4) = 1.0_dp
-     !smat(5,1) = sqrt2
-     !smat(6,2) = sqrt2
-     !smat(6,6) = -1.0_dp
+     smat(1,1) = -1.0_dp
+     smat(1,5) = sqrt2
+     smat(2,6) = sqrt2
+     smat(3,3) = 1.0_dp
+     smat(4,4) = 1.0_dp
+     smat(5,1) = sqrt2
+     smat(6,2) = sqrt2
+     smat(6,6) = -1.0_dp
 
 !! body]
 
@@ -925,29 +927,48 @@
 
 !! [body
 
-! make SOC on complex orbital basis, the orbital order is:
-! |-2,up>, |-2,dn>,
-! |-1,up>, |-1,dn>,
-! | 0,up>, | 0,dn>,
-! | 1,up>, | 1,dn>,
-! | 2,up>, | 2,dn>
+     ! make SOC on complex orbital basis, the orbital order is:
+     !
+     !     | -2, up >, | -2, dn >,
+     !     | -1, up >, | -1, dn >,
+     !     |  0, up >, |  0, dn >,
+     !     |  1, up >, |  1, dn >,
+     !     |  2, up >, |  2, dn >
+     !
      smat = czero
+     !
+     !smat( 1, 1) = -2.0_dp
+     !smat( 4, 1) = +2.0_dp
+     !smat( 2, 2) = +2.0_dp
+     !smat( 3, 3) = -1.0_dp
+     !smat( 6, 3) =  sqrt6
+     !smat( 1, 4) = +2.0_dp
+     !smat( 4, 4) = +1.0_dp
+     !smat( 8, 5) =  sqrt6
+     !smat( 3, 6) =  sqrt6
+     !smat( 7, 7) = +1.0_dp
+     !smat(10, 7) = +2.0_dp
+     !smat( 5, 8) =  sqrt6
+     !smat( 8, 8) = -1.0_dp
+     !smat( 9, 9) = +2.0_dp
+     !smat( 7,10) = +2.0_dp
+     !smat(10,10) = -2.0_dp
 
-     smat( 1, 1) = -2.0_dp
-     smat( 4, 1) = +2.0_dp
-     smat( 2, 2) = +2.0_dp
-     smat( 3, 3) = -1.0_dp
-     smat( 6, 3) =  sqrt6
-     smat( 1, 4) = +2.0_dp
-     smat( 4, 4) = +1.0_dp
-     smat( 8, 5) =  sqrt6
-     smat( 3, 6) =  sqrt6
-     smat( 7, 7) = +1.0_dp
-     smat(10, 7) = +2.0_dp
-     smat( 5, 8) =  sqrt6
-     smat( 8, 8) = -1.0_dp
-     smat( 9, 9) = +2.0_dp
-     smat( 7,10) = +2.0_dp
+     smat(1,1) = -2.0_dp
+     smat(1,7) = 2.0_dp
+     smat(2,2) = -1.0_dp
+     smat(2,8) = sqrt6
+     smat(3,9) = sqrt6
+     smat(4,4) = 1.0_dp
+     smat(4,10) = 2.0_dp
+     smat(5,5) = 2.0_dp
+     smat(6,6) = 2.0_dp
+     smat(7,1) = 2.0_dp
+     smat(7,7) = 1.0_dp
+     smat(8,2) = sqrt6
+     smat(9,3) = sqrt6
+     smat(9,9) = -1.0_dp
+     smat(10,4) = 2.0_dp
      smat(10,10) = -2.0_dp
 
 !! body]
@@ -978,40 +999,67 @@
 
 !! [body
 
-! make SOC on complex orbital basis, the orbital order is:
-! |-3,up>, |-3,dn>,
-! |-2,up>, |-2,dn>,
-! |-1,up>, |-1,dn>,
-! | 0,up>, | 0,dn>,
-! | 1,up>, | 1,dn>,
-! | 2,up>, | 2,dn>
-! | 3,up>, | 3,dn>
+     ! make SOC on complex orbital basis, the orbital order is:
+     !
+     ! | -3, up >, | -3, dn >,
+     ! | -2, up >, | -2, dn >,
+     ! | -1, up >, | -1, dn >,
+     ! |  0, up >, |  0, dn >,
+     ! |  1, up >, |  1, dn >,
+     ! |  2, up >, |  2, dn >
+     ! |  3, up >, |  3, dn >
+     !
      smat = czero
+     !
+     !smat( 1, 1) = -3.0_dp
+     !smat( 4, 1) =  sqrt6
+     !smat( 2, 2) = +3.0_dp
+     !smat( 3, 3) = -2.0_dp
+     !smat( 6, 3) =  sqrt10
+     !smat( 1, 4) =  sqrt6
+     !smat( 4, 4) = +2.0_dp
+     !smat( 5, 5) = -1.0_dp
+     !smat( 8, 5) =  sqrt12
+     !smat( 3, 6) =  sqrt10
+     !smat( 6, 6) = +1.0_dp
+     !smat(10, 7) =  sqrt12
+     !smat( 5, 8) =  sqrt12
+     !smat( 9, 9) = +1.0_dp
+     !smat(12, 9) =  sqrt10
+     !smat( 7,10) =  sqrt12
+     !smat(10,10) = -1.0_dp
+     !smat(11,11) = +2.0_dp
+     !smat(14,11) =  sqrt6
+     !smat( 9,12) =  sqrt10
+     !smat(12,12) = -2.0_dp
+     !smat(13,13) = +3.0_dp
+     !smat(11,14) =  sqrt6
+     !smat(14,14) = -3.0_dp
 
-     smat( 1, 1) = -3.0_dp
-     smat( 4, 1) =  sqrt6
-     smat( 2, 2) = +3.0_dp
-     smat( 3, 3) = -2.0_dp
-     smat( 6, 3) =  sqrt10
-     smat( 1, 4) =  sqrt6
-     smat( 4, 4) = +2.0_dp
-     smat( 5, 5) = -1.0_dp
-     smat( 8, 5) =  sqrt12
-     smat( 3, 6) =  sqrt10
-     smat( 6, 6) = +1.0_dp
-     smat(10, 7) =  sqrt12
-     smat( 5, 8) =  sqrt12
-     smat( 9, 9) = +1.0_dp
-     smat(12, 9) =  sqrt10
-     smat( 7,10) =  sqrt12
-     smat(10,10) = -1.0_dp
-     smat(11,11) = +2.0_dp
-     smat(14,11) =  sqrt6
-     smat( 9,12) =  sqrt10
-     smat(12,12) = -2.0_dp
-     smat(13,13) = +3.0_dp
-     smat(11,14) =  sqrt6
-     smat(14,14) = -3.0_dp
+     smat(1,1) = -3.0_dp 
+     smat(1,9) = sqrt6 
+     smat(2,2) = -2.0_dp 
+     smat(2,10) = sqrt10 
+     smat(3,3) = -1.0_dp
+     smat(3,11) = sqrt12
+     smat(4,12) = sqrt12
+     smat(5,5) = 1.0_dp 
+     smat(5,13) = sqrt10 
+     smat(6,6) = 2.0_dp 
+     smat(6,14) = sqrt6 
+     smat(7,7) = 3.0_dp 
+     smat(8,8) = 3.0_dp
+     smat(9,1) = sqrt6 
+     smat(9,9) = 2.0_dp
+     smat(10,2) = sqrt10 
+     smat(10,10) = 1.0_dp 
+     smat(11,3) = sqrt12
+     smat(12,4) = sqrt12
+     smat(12,12) = -1.0_dp 
+     smat(13,5) = sqrt10 
+     smat(13,13) = -2.0_dp 
+     smat(14,6) = sqrt6
+     smat(14,14) = -3.0_dp 
 
 !! body]
 
@@ -1050,42 +1098,56 @@
      !
      select case (nband)
 
-! the real orbital order (t2g) is:
-! dxzup, dxzdn, dyzup, dyzdn, dxyup, dxydn
-!
-! the corresponding p orbital order is:
-! pyup, pydn, pxup, pxdn, pzup, pzdn
-!
-! the complex orbital |lz,sz> order is
-! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
+         ! the real orbital order (t2g) is:
+         !     dxzup, dxzdn,
+         !     dyzup, dyzdn,
+         !     dxyup, dxydn
+         !
+         ! the corresponding p orbital order is:
+         !     pyup, pydn,
+         !     pxup, pxdn,
+         !     pzup, pzdn
+         !
+         ! the complex orbital |lz,sz> order is
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >
          case (3)
-             tmat_c2r( 1, 1) =  czi/sqrt2
-             tmat_c2r( 5, 1) =  czi/sqrt2
-             tmat_c2r( 2, 2) =  czi/sqrt2
-             tmat_c2r( 6, 2) =  czi/sqrt2
-             tmat_c2r( 1, 3) =  cone/sqrt2
-             tmat_c2r( 5, 3) = -cone/sqrt2
-             tmat_c2r( 2, 4) =  cone/sqrt2
-             tmat_c2r( 6, 4) = -cone/sqrt2
-             tmat_c2r( 3, 5) =  cone
-             tmat_c2r( 4, 6) =  cone
+             !tmat_c2r( 1, 1) =  czi/sqrt2
+             !tmat_c2r( 5, 1) =  czi/sqrt2
+             !tmat_c2r( 2, 2) =  czi/sqrt2
+             !tmat_c2r( 6, 2) =  czi/sqrt2
+             !tmat_c2r( 1, 3) =  cone/sqrt2
+             !tmat_c2r( 5, 3) = -cone/sqrt2
+             !tmat_c2r( 2, 4) =  cone/sqrt2
+             !tmat_c2r( 6, 4) = -cone/sqrt2
+             !tmat_c2r( 3, 5) =  cone
+             !tmat_c2r( 4, 6) =  cone
 
-             !tmat_c2r(1,1) = czi / sqrt2
-             !tmat_c2r(1,3) = cone / sqrt2
-             !tmat_c2r(2,2) = cone
-             !tmat_c2r(3,1) = czi / sqrt2
-             !tmat_c2r(3,3) = -cone / sqrt2
-             !tmat_c2r(4,4) = czi / sqrt2
-             !tmat_c2r(4,6) = cone / sqrt2
-             !tmat_c2r(5,5) = cone
-             !tmat_c2r(6,4) = czi / sqrt2
-             !tmat_c2r(6,6) = -cone / sqrt2
+             tmat_c2r(1,1) = czi / sqrt2
+             tmat_c2r(1,3) = cone / sqrt2
+             tmat_c2r(2,2) = cone
+             tmat_c2r(3,1) = czi / sqrt2
+             tmat_c2r(3,3) = -cone / sqrt2
+             tmat_c2r(4,4) = czi / sqrt2
+             tmat_c2r(4,6) = cone / sqrt2
+             tmat_c2r(5,5) = cone
+             tmat_c2r(6,4) = czi / sqrt2
+             tmat_c2r(6,6) = -cone / sqrt2
 
-! the real orbital order is:
-! dz2up, dz2dn, dxzup, dxzdn, dyzup, dyzdn, dx2-y2up, dx2-y2dn, dxyup, dxydn
-!
-! the complex orbital |lz,sz> order is:
-! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>
+         ! the real orbital order is:
+         !     dz2up, dz2dn,
+         !     dxzup, dxzdn,
+         !     dyzup, dyzdn,
+         !     dx2-y2up, dx2-y2dn,
+         !     dxyup, dxydn
+         !
+         ! the complex orbital |lz,sz> order is:
+         !     | -2, up >, | -2, dn >,
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >,
+         !     |  2, up >, |  2, dn >
          case (5)
              tmat_c2r( 5, 1) =  cone
              tmat_c2r( 6, 2) =  cone
@@ -1106,13 +1168,23 @@
              tmat_c2r( 2,10) =  czi/sqrt2
              tmat_c2r(10,10) = -czi/sqrt2
 
-! the real orbital order is:
-! fz3up, fz3dn, fxz2up, fxz2dn, fyz2up, fyz2dn, fz(x2-y2)up, fz(x2-y2)dn, fxyzup, fxyzdn,
-! fx(x2-3y2)up, fx(x2-3y2)dn, fy(3x2-y2)up, fy(3x2-y2)dn
-!
-! the complex orbital |lz,sz> order is:
-! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>,
-! | 0,dn>, | 1,up>, | 1,dn>, | 2,up>, | 2,dn>, | 3,up>, |3,dn>
+         ! the real orbital order is:
+         !     fz3up, fz3dn,
+         !     fxz2up, fxz2dn,
+         !     fyz2up, fyz2dn,
+         !     fz(x2-y2)up, fz(x2-y2)dn,
+         !     fxyzup, fxyzdn,
+         !     fx(x2-3y2)up, fx(x2-3y2)dn,
+         !     fy(3x2-y2)up, fy(3x2-y2)dn
+         !
+         ! the complex orbital |lz,sz> order is:
+         !     | -3, up >, | -3, dn >,
+         !     | -2, up >, | -2, dn >,
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >,
+         !     |  2, up >, |  2, dn >,
+         !     |  3, up >, |  3, dn >
          case (7)
              tmat_c2r( 7, 1) =  cone
              tmat_c2r( 8, 2) =  cone
