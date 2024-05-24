@@ -1149,24 +1149,44 @@
          !     |  1, up >, |  1, dn >,
          !     |  2, up >, |  2, dn >
          case (5)
-             tmat_c2r( 5, 1) =  cone
-             tmat_c2r( 6, 2) =  cone
-             tmat_c2r( 3, 3) =  cone/sqrt2
-             tmat_c2r( 7, 3) = -cone/sqrt2
-             tmat_c2r( 4, 4) =  cone/sqrt2
-             tmat_c2r( 8, 4) = -cone/sqrt2
-             tmat_c2r( 3, 5) =  czi/sqrt2
-             tmat_c2r( 7, 5) =  czi/sqrt2
-             tmat_c2r( 4, 6) =  czi/sqrt2
-             tmat_c2r( 8, 6) =  czi/sqrt2
-             tmat_c2r( 1, 7) =  cone/sqrt2
-             tmat_c2r( 9, 7) =  cone/sqrt2
-             tmat_c2r( 2, 8) =  cone/sqrt2
-             tmat_c2r(10, 8) =  cone/sqrt2
-             tmat_c2r( 1, 9) =  czi/sqrt2
-             tmat_c2r( 9, 9) = -czi/sqrt2
-             tmat_c2r( 2,10) =  czi/sqrt2
-             tmat_c2r(10,10) = -czi/sqrt2
+             !tmat_c2r( 5, 1) =  cone
+             !tmat_c2r( 6, 2) =  cone
+             !tmat_c2r( 3, 3) =  cone/sqrt2
+             !tmat_c2r( 7, 3) = -cone/sqrt2
+             !tmat_c2r( 4, 4) =  cone/sqrt2
+             !tmat_c2r( 8, 4) = -cone/sqrt2
+             !tmat_c2r( 3, 5) =  czi/sqrt2
+             !tmat_c2r( 7, 5) =  czi/sqrt2
+             !tmat_c2r( 4, 6) =  czi/sqrt2
+             !tmat_c2r( 8, 6) =  czi/sqrt2
+             !tmat_c2r( 1, 7) =  cone/sqrt2
+             !tmat_c2r( 9, 7) =  cone/sqrt2
+             !tmat_c2r( 2, 8) =  cone/sqrt2
+             !tmat_c2r(10, 8) =  cone/sqrt2
+             !tmat_c2r( 1, 9) =  czi/sqrt2
+             !tmat_c2r( 9, 9) = -czi/sqrt2
+             !tmat_c2r( 2,10) =  czi/sqrt2
+             !tmat_c2r(10,10) = -czi/sqrt2
+
+             tmat_c2r(1,1) = czi / sqrt2
+             tmat_c2r(1,5) = cone / sqrt2
+             tmat_c2r(2,2) = czi / sqrt2
+             tmat_c2r(2,4) = cone / sqrt2
+             tmat_c2r(3,3) = cone
+             tmat_c2r(4,2) = czi / sqrt2
+             tmat_c2r(4,4) = -cone / sqrt2
+             tmat_c2r(5,1) = -czi /sqrt2
+             tmat_c2r(5,5) = cone / sqrt2
+
+             tmat_c2r(6,6) = czi / sqrt2
+             tmat_c2r(6,10) = cone / sqrt2
+             tmat_c2r(7,7) = czi / sqrt2
+             tmat_c2r(7,9) = cone / sqrt2
+             tmat_c2r(8,8) = cone
+             tmat_c2r(9,7) = czi / sqrt2
+             tmat_c2r(9,9) = -cone / sqrt2
+             tmat_c2r(10,6) = -czi / sqrt2
+             tmat_c2r(10,10) = cone / sqrt2
 
          ! the real orbital order is:
          !     fz3up, fz3dn,
@@ -1186,32 +1206,60 @@
          !     |  2, up >, |  2, dn >,
          !     |  3, up >, |  3, dn >
          case (7)
-             tmat_c2r( 7, 1) =  cone
-             tmat_c2r( 8, 2) =  cone
-             tmat_c2r( 5, 3) =  cone/sqrt2
-             tmat_c2r( 9, 3) = -cone/sqrt2
-             tmat_c2r( 6, 4) =  cone/sqrt2
-             tmat_c2r(10, 4) = -cone/sqrt2
-             tmat_c2r( 5, 5) =  czi/sqrt2
-             tmat_c2r( 9, 5) =  czi/sqrt2
-             tmat_c2r( 6, 6) =  czi/sqrt2
-             tmat_c2r(10, 6) =  czi/sqrt2
-             tmat_c2r( 3, 7) =  cone/sqrt2
-             tmat_c2r(11, 7) =  cone/sqrt2
-             tmat_c2r( 4, 8) =  cone/sqrt2
-             tmat_c2r(12, 8) =  cone/sqrt2
-             tmat_c2r( 3, 9) =  czi/sqrt2
-             tmat_c2r(11, 9) = -czi/sqrt2
-             tmat_c2r( 4,10) =  czi/sqrt2
-             tmat_c2r(12,10) = -czi/sqrt2
-             tmat_c2r( 1,11) =  cone/sqrt2
-             tmat_c2r(13,11) = -cone/sqrt2
-             tmat_c2r( 2,12) =  cone/sqrt2
-             tmat_c2r(14,12) = -cone/sqrt2
-             tmat_c2r( 1,13) =  czi/sqrt2
-             tmat_c2r(13,13) =  czi/sqrt2
-             tmat_c2r( 2,14) =  czi/sqrt2
-             tmat_c2r(14,14) =  czi/sqrt2
+             !tmat_c2r( 7, 1) =  cone
+             !tmat_c2r( 8, 2) =  cone
+             !tmat_c2r( 5, 3) =  cone/sqrt2
+             !tmat_c2r( 9, 3) = -cone/sqrt2
+             !tmat_c2r( 6, 4) =  cone/sqrt2
+             !tmat_c2r(10, 4) = -cone/sqrt2
+             !tmat_c2r( 5, 5) =  czi/sqrt2
+             !tmat_c2r( 9, 5) =  czi/sqrt2
+             !tmat_c2r( 6, 6) =  czi/sqrt2
+             !tmat_c2r(10, 6) =  czi/sqrt2
+             !tmat_c2r( 3, 7) =  cone/sqrt2
+             !tmat_c2r(11, 7) =  cone/sqrt2
+             !tmat_c2r( 4, 8) =  cone/sqrt2
+             !tmat_c2r(12, 8) =  cone/sqrt2
+             !tmat_c2r( 3, 9) =  czi/sqrt2
+             !tmat_c2r(11, 9) = -czi/sqrt2
+             !tmat_c2r( 4,10) =  czi/sqrt2
+             !tmat_c2r(12,10) = -czi/sqrt2
+             !tmat_c2r( 1,11) =  cone/sqrt2
+             !tmat_c2r(13,11) = -cone/sqrt2
+             !tmat_c2r( 2,12) =  cone/sqrt2
+             !tmat_c2r(14,12) = -cone/sqrt2
+             !tmat_c2r( 1,13) =  czi/sqrt2
+             !tmat_c2r(13,13) =  czi/sqrt2
+             !tmat_c2r( 2,14) =  czi/sqrt2
+             !tmat_c2r(14,14) =  czi/sqrt2
+
+             tmat_c2r(1,1) = czi/sqrt2
+             tmat_c2r(1,7) = cone/sqrt2
+             tmat_c2r(2,2) = czi/sqrt2
+             tmat_c2r(2,6) = cone/sqrt2
+             tmat_c2r(3,3) = czi/sqrt2
+             tmat_c2r(3,5) = cone/sqrt2
+             tmat_c2r(4,4) = cone
+             tmat_c2r(5,3) = czi/sqrt2
+             tmat_c2r(5,5) = -cone/sqrt2
+             tmat_c2r(6,2) = -czi/sqrt2
+             tmat_c2r(6,6) = cone/sqrt2
+             tmat_c2r(7,1) = czi/sqrt2
+             tmat_c2r(7,7) = -cone/sqrt2
+
+             tmat_c2r(8,8) = czi/sqrt2
+             tmat_c2r(8,14) = cone/sqrt2
+             tmat_c2r(9,9) = czi/sqrt2
+             tmat_c2r(9,13) = cone/sqrt2
+             tmat_c2r(10,10) = czi/sqrt2
+             tmat_c2r(10,12) = cone/sqrt2
+             tmat_c2r(11,11) = cone
+             tmat_c2r(12,10) = czi/sqrt2
+             tmat_c2r(12,12) = -cone/sqrt2
+             tmat_c2r(13,9) = -czi/sqrt2
+             tmat_c2r(13,13) = cone/sqrt2
+             tmat_c2r(14,8) = czi/sqrt2
+             tmat_c2r(14,14) = -cone/sqrt2
 
          case default
              call s_print_error('atomic_make_tmat_c2r', &
