@@ -253,7 +253,7 @@
                      umat_t(i,j) = two * real(umat(i,j,j,i) - umat(i,j,i,j))
                  else
                      umat_t(i,j) = two * real(umat(i,j,j,i))
-                 endif  ! back if block
+                 endif ! back if block
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop

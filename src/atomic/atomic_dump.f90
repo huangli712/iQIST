@@ -248,11 +248,12 @@
          !
          do i=1,norbs
              do j=i+1,norbs
-                 if ( mod(i,2) == mod(j,2) ) then
+                 if ( (i <= nband .and. j <= nband) .or. &
+                      (i >  nband .and. j >  nband) ) then
                      umat_t(i,j) = two * real(umat(i,j,j,i) - umat(i,j,i,j))
                  else
                      umat_t(i,j) = two * real(umat(i,j,j,i))
-                 endif ! back if ( mod(i,2) == mod(j,2) ) block
+                 endif ! back if block
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
@@ -624,9 +625,6 @@
 
      ! counter for the non-zero matrix elements
      integer :: counter
-
-     ! auxiliary integer variable used to convert the spin sequence
-     integer :: s_order
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
