@@ -685,17 +685,7 @@
          ! write next subspace (sector)
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
-             ! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
-             if ( isoc == 0 ) then
-                 if (j <= sectors(i)%nops / 2) then
-                     s_order = 2*j-1
-                 else
-                     s_order = 2*(j - sectors(i)%nops / 2)
-                 endif ! back if (j <= sectors(i)%nops / 2) block
-             else
-                 s_order = j
-             endif ! back if ( isoc == 0 ) block
-             write(mytmp,'(2X,3i10)') j, sectors(i)%next(s_order,0), sectors(i)%next(s_order,1)
+             write(mytmp,'(2X,3i10)') j, sectors(i)%next(j,0), sectors(i)%next(j,1)
          enddo ! over j={1,sectors(i)%nops} loop
 
          ! write eigeanvalue
@@ -713,36 +703,26 @@
      ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
-             ! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
-             if ( isoc == 0 ) then
-                 if (j <= sectors(i)%nops / 2) then
-                     s_order = 2*j-1
-                 else
-                     s_order = 2*(j-sectors(i)%nops / 2)
-                 endif ! back if (j <= sectors(i)%nops / 2) block
-             else
-                 s_order = j
-             endif ! back if ( isoc == 0 ) block
              do k=0,1
-                 if ( sectors(i)%next(s_order,k) == -1 ) CYCLE
+                 if ( sectors(i)%next(j,k) == -1 ) CYCLE
                  !
                  write(mytmp,'(a)') '# SECTOR | FLAVOR | DAGGER |      N |      M | SPARSE'
                  write(mytmp,'(2X,6(i6,3X))') i, j, k, &
-                                              sectors(i)%fmat(s_order,k)%n, &
-                                              sectors(i)%fmat(s_order,k)%m, &
-                                              count( abs(sectors(i)%fmat(s_order,k)%val) > epst )
+                                              sectors(i)%fmat(j,k)%n, &
+                                              sectors(i)%fmat(j,k)%m, &
+                                              count( abs(sectors(i)%fmat(j,k)%val) > epst )
                  !
                  counter = 0
-                 do n=1,sectors(i)%fmat(s_order,k)%n
-                     do m=1,sectors(i)%fmat(s_order,k)%m
-                         if ( abs( sectors(i)%fmat(s_order,k)%val(n,m) ) > epst ) then
+                 do n=1,sectors(i)%fmat(j,k)%n
+                     do m=1,sectors(i)%fmat(j,k)%m
+                         if ( abs( sectors(i)%fmat(j,k)%val(n,m) ) > epst ) then
                              counter = counter + 1
-                             write(mytmp,'(2i6,f20.10)') n, m, sectors(i)%fmat(s_order,k)%val(n,m)
-                         endif ! back if ( abs( sectors(i)%fmat(s_order,k)%val(n,m) ) > epst ) block
-                     enddo ! over m={1,sectors(i)%fmat(s_order,k)%m} loop
-                 enddo ! over n={1,sectors(i)%fmat(s_order,k)%n} loop
+                             write(mytmp,'(2i6,f20.10)') n, m, sectors(i)%fmat(j,k)%val(n,m)
+                         endif ! back if ( abs( sectors(i)%fmat(j,k)%val(n,m) ) > epst ) block
+                     enddo ! over m={1,sectors(i)%fmat(j,k)%m} loop
+                 enddo ! over n={1,sectors(i)%fmat(j,k)%n} loop
                  !
-                 call s_assert( counter == count( abs(sectors(i)%fmat(s_order,k)%val) > epst ) )
+                 call s_assert( counter == count( abs(sectors(i)%fmat(j,k)%val) > epst ) )
              enddo  ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo  ! over i={1,nsect} loop
