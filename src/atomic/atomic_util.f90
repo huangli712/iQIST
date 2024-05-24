@@ -743,6 +743,7 @@
   subroutine atomic_make_umatS()
      use constants, only : dp
      use constants, only : zero, half
+     use constants, only : czero
 
      use control, only : nband, norbs
      use control, only : Ud, Jh
@@ -776,6 +777,9 @@
 
      ! Slater-Cordon parameters: F0, F2, F4, and F6
      real(dp), allocatable :: slater_cordon(:)
+
+     integer  :: j, k
+     complex(dp) :: utmp(norbs,norbs,norbs,norbs)
 
 !! [body
 
@@ -840,6 +844,43 @@
      enddo ! over alpha={1,norbs} loop
      !
      umat = half * umat
+
+     utmp = czero
+     do alpha=1,norbs
+         if ( alpha <= nband ) then
+             i = 2*alpha-1
+         else
+             i = 2*(alpha-nband)
+         endif ! back if ( alpha <= nband ) block
+
+         do betta=1,norbs
+             if ( betta <= nband ) then
+                 j = 2*betta-1
+             else
+                 j = 2*(betta-nband)
+             endif ! back if ( betta <= nband ) block
+
+             do gamma=1,norbs
+                 if ( gamma <= nband ) then
+                     k = 2*gamma-1
+                 else
+                     k = 2*(gamma-nband)
+                 endif ! back if ( gamma <= nband ) block
+
+                 do delta=1,norbs
+                     if ( delta <= nband ) then
+                         l = 2*delta-1
+                     else
+                         l = 2*(delta-nband)
+                     endif ! back if ( delta <= nband ) block
+
+                     !utmp(i,j,k,l) = umat(alpha,betta,gamma,delta)
+                     utmp(alpha,betta,gamma,delta) = umat(i,j,k,l)
+                 enddo
+             enddo
+         enddo
+     enddo
+     umat = utmp
 
      ! deallocate memory
      if ( allocated(gaunt) )         deallocate(gaunt)
@@ -1327,95 +1368,162 @@
      !
      select case (nband)
 
-! the |lz,sz> order is:
-! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
-!
-! the |j2,jz> order is:
-! |1/2,-1/2>, |1/2,1/2>,
-! |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2>, |3/2,3/2>
+         ! the |lz,sz> order is:
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >
+         !
+         ! the |j2,jz> order is:
+         !     | 1/2, -1/2 >, | 1/2,  1/2 >,
+         !     | 3/2, -3/2 >, | 3/2, -1/2 >,
+         !     | 3/2,  1/2 >, | 3/2,  3/2 >
          case (3)
-             tmat_c2j( 1, 1) = -sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 4, 1) =  sqrt(1.0_dp/3.0_dp)
-             tmat_c2j( 3, 2) = -sqrt(1.0_dp/3.0_dp)
-             tmat_c2j( 6, 2) =  sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 2, 3) =  1.0_dp
-             tmat_c2j( 1, 4) =  sqrt(1.0_dp/3.0_dp)
-             tmat_c2j( 4, 4) =  sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 3, 5) =  sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 6, 5) =  sqrt(1.0_dp/3.0_dp)
-             tmat_c2j( 5, 6) =  1.0_dp
+             !tmat_c2j( 1, 1) = -sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/3.0_dp)
+             !tmat_c2j( 3, 2) = -sqrt(1.0_dp/3.0_dp)
+             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j( 2, 3) =  1.0_dp
+             !tmat_c2j( 1, 4) =  sqrt(1.0_dp/3.0_dp)
+             !tmat_c2j( 4, 4) =  sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j( 3, 5) =  sqrt(2.0_dp/3.0_dp)
+             !tmat_c2j( 6, 5) =  sqrt(1.0_dp/3.0_dp)
+             !tmat_c2j( 5, 6) =  1.0_dp
 
-             !tmat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j(1,4) = sqrt(1.0_dp/3.0_dp)
-             !tmat_c2j(2,2) = -sqrt(1.0_dp/3.0_dp)
-             !tmat_c2j(2,5) = sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j(3,6) = 1.0_dp
-             !tmat_c2j(4,3) = 1.0_dp
-             !tmat_c2j(5,1) = sqrt(1.0_dp/3.0_dp)
-             !tmat_c2j(5,4) = sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j(6,2) = sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j(6,5) = sqrt(1.0_dp/3.0_dp)
+             tmat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
+             tmat_c2j(1,4) = sqrt(1.0_dp/3.0_dp)
+             tmat_c2j(2,2) = -sqrt(1.0_dp/3.0_dp)
+             tmat_c2j(2,5) = sqrt(2.0_dp/3.0_dp)
+             tmat_c2j(3,6) = 1.0_dp
+             tmat_c2j(4,3) = 1.0_dp
+             tmat_c2j(5,1) = sqrt(1.0_dp/3.0_dp)
+             tmat_c2j(5,4) = sqrt(2.0_dp/3.0_dp)
+             tmat_c2j(6,2) = sqrt(2.0_dp/3.0_dp)
+             tmat_c2j(6,5) = sqrt(1.0_dp/3.0_dp)
 
-! the |lz,sz> order is:
-! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>
-!
-! the |j2,jz> order is:
-! |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2>, |3/2,3/2>
-! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
+         ! the |lz,sz> order is:
+         !     | -2, up >, | -2, dn >,
+         !     | -1, up >, | -1, dn >,
+         !     |  0, up >, |  0, dn >,
+         !     |  1, up >, |  1, dn >,
+         !     |  2, up >, |  2, dn >
+         !
+         ! the |j2,jz> order is:
+         !     | 3/2, -3/2 >, | 3/2, -1/2 >,
+         !     | 3/2,  1/2 >, | 3/2,  3/2 >,
+         !     | 5/2, -5/2 >, | 5/2, -3/2 >,
+         !     | 5/2, -1/2 >, | 5/2,  1/2 >,
+         !     | 5/2,  3/2 >, | 5/2,  5/2 >
          case (5)
-             tmat_c2j( 1, 1) = -sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 4, 1) =  sqrt(1.0_dp/5.0_dp)
-             tmat_c2j( 3, 2) = -sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 6, 2) =  sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 5, 3) = -sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 8, 3) =  sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 7, 4) = -sqrt(1.0_dp/5.0_dp)
-             tmat_c2j(10, 4) =  sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 2, 5) =  1.0_dp
-             tmat_c2j( 1, 6) =  sqrt(1.0_dp/5.0_dp)
-             tmat_c2j( 4, 6) =  sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 3, 7) =  sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 6, 7) =  sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 5, 8) =  sqrt(3.0_dp/5.0_dp)
-             tmat_c2j( 8, 8) =  sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 7, 9) =  sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(10, 9) =  sqrt(1.0_dp/5.0_dp)
-             tmat_c2j( 9,10) =  1.0_dp
+             !tmat_c2j( 1, 1) = -sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j( 3, 2) = -sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 5, 3) = -sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 8, 3) =  sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 7, 4) = -sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j(10, 4) =  sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j( 2, 5) =  1.0_dp
+             !tmat_c2j( 1, 6) =  sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j( 4, 6) =  sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j( 3, 7) =  sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 6, 7) =  sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 5, 8) =  sqrt(3.0_dp/5.0_dp)
+             !tmat_c2j( 8, 8) =  sqrt(2.0_dp/5.0_dp)
+             !tmat_c2j( 7, 9) =  sqrt(4.0_dp/5.0_dp)
+             !tmat_c2j(10, 9) =  sqrt(1.0_dp/5.0_dp)
+             !tmat_c2j( 9,10) =  1.0_dp
 
-! the |lz,sz> order is:
-! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>,
-! | 0,dn>, | 1,up>, | 1,dn>, | 2,up>, | 2,dn>, | 3,up>, |3,dn>
-!
-! the |j2,jz> order is:
-! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
-! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, |7/2,5/2>, |7/2,7/2>
+             tmat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(1,6) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(2,2) = -sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(2,7) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(3,3) = -sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(3,8) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(4,4) = -sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(4,9) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(5,10) = 1.0_dp
+             tmat_c2j(6,5) = 1.0_dp
+             tmat_c2j(7,1) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(7,6) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(8,2) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(8,7) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(9,3) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(9,8) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(10,4) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(10,9) = sqrt(1.0_dp/5.0_dp)
+
+         ! the |lz,sz> order is:
+         ! | -3, up >, | -3, dn >,
+         ! | -2, up >, | -2, dn >,
+         ! | -1, up >, | -1, dn >,
+         ! |  0, up >, |  0, dn >,
+         ! |  1, up >, |  1, dn >,
+         ! |  2, up >, |  2, dn >,
+         ! |  3, up >, |  3, dn >
+         !
+         ! the |j2,jz> order is:
+         ! | 5/2, -5/2 >, | 5/2, -3/2 >,
+         ! | 5/2, -1/2 >, | 5/2,  1/2 >,
+         ! | 5/2,  3/2 >, | 5/2,  5/2 >,
+         ! | 7/2, -7/2 >, | 7/2, -5/2 >,
+         ! | 7/2, -3/2 >, | 7/2, -1/2 >,
+         ! | 7/2,  1/2 >, | 7/2,  3/2 >,
+         ! | 7/2,  5/2 >, | 7/2,  7/2 >
          case (7)
-             tmat_c2j( 1, 1) = -sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 4, 1) =  sqrt(1.0_dp/7.0_dp)
-             tmat_c2j( 3, 2) = -sqrt(5.0_dp/7.0_dp)
-             tmat_c2j( 6, 2) =  sqrt(2.0_dp/7.0_dp)
-             tmat_c2j( 5, 3) = -sqrt(4.0_dp/7.0_dp)
-             tmat_c2j( 8, 3) =  sqrt(3.0_dp/7.0_dp)
-             tmat_c2j( 7, 4) = -sqrt(3.0_dp/7.0_dp)
-             tmat_c2j(10, 4) =  sqrt(4.0_dp/7.0_dp)
-             tmat_c2j( 9, 5) = -sqrt(2.0_dp/7.0_dp)
-             tmat_c2j(12, 5) =  sqrt(5.0_dp/7.0_dp)
-             tmat_c2j(11, 6) = -sqrt(1.0_dp/7.0_dp)
-             tmat_c2j(14, 6) =  sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 2, 7) =  1.0_dp
-             tmat_c2j( 1, 8) =  sqrt(1.0_dp/7.0_dp)
-             tmat_c2j( 4, 8) =  sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 3, 9) =  sqrt(2.0_dp/7.0_dp)
-             tmat_c2j( 6, 9) =  sqrt(5.0_dp/7.0_dp)
-             tmat_c2j( 5,10) =  sqrt(3.0_dp/7.0_dp)
-             tmat_c2j( 8,10) =  sqrt(4.0_dp/7.0_dp)
-             tmat_c2j( 7,11) =  sqrt(4.0_dp/7.0_dp)
-             tmat_c2j(10,11) =  sqrt(3.0_dp/7.0_dp)
-             tmat_c2j( 9,12) =  sqrt(5.0_dp/7.0_dp)
-             tmat_c2j(12,12) =  sqrt(2.0_dp/7.0_dp)
-             tmat_c2j(11,13) =  sqrt(6.0_dp/7.0_dp)
-             tmat_c2j(14,13) =  sqrt(1.0_dp/7.0_dp)
-             tmat_c2j(13,14) =  1.0_dp
+             !tmat_c2j( 1, 1) = -sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j( 3, 2) = -sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j( 5, 3) = -sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j( 8, 3) =  sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j( 7, 4) = -sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j(10, 4) =  sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j( 9, 5) = -sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j(12, 5) =  sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j(11, 6) = -sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j(14, 6) =  sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j( 2, 7) =  1.0_dp
+             !tmat_c2j( 1, 8) =  sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j( 4, 8) =  sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j( 3, 9) =  sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j( 6, 9) =  sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j( 5,10) =  sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j( 8,10) =  sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j( 7,11) =  sqrt(4.0_dp/7.0_dp)
+             !tmat_c2j(10,11) =  sqrt(3.0_dp/7.0_dp)
+             !tmat_c2j( 9,12) =  sqrt(5.0_dp/7.0_dp)
+             !tmat_c2j(12,12) =  sqrt(2.0_dp/7.0_dp)
+             !tmat_c2j(11,13) =  sqrt(6.0_dp/7.0_dp)
+             !tmat_c2j(14,13) =  sqrt(1.0_dp/7.0_dp)
+             !tmat_c2j(13,14) =  1.0_dp
+
+             tmat_c2j(1,1) = -sqrt(6.0_dp/7.0_dp) 
+             tmat_c2j(1,8) = sqrt(1.0_dp/7.0_dp) 
+             tmat_c2j(2,2) = -sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(2,9) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(3,3) = -sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(3,10) = sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(4,4) = -sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(4,11) = sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(5,5) = -sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(5,12) = sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(6,6) = -sqrt(1.0_dp/7.0_dp)
+             tmat_c2j(6,13) = sqrt(6.0_dp/7.0_dp)
+             tmat_c2j(7,14) = 1.0_dp
+ 
+             tmat_c2j(8,7) = 1.0_dp 
+             tmat_c2j(9,1) = sqrt(1.0_dp/7.0_dp)
+             tmat_c2j(9,8) = sqrt(6.0_dp/7.0_dp)
+             tmat_c2j(10,2) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(10,9) = sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(11,3) = sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(11,10) = sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(12,4) = sqrt(4.0_dp/7.0_dp)
+             tmat_c2j(12,11) = sqrt(3.0_dp/7.0_dp)
+             tmat_c2j(13,5) = sqrt(5.0_dp/7.0_dp)
+             tmat_c2j(13,12) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(14,6) = sqrt(6.0_dp/7.0_dp)
+             tmat_c2j(14,13) = sqrt(1.0_dp/7.0_dp)
 
          case default
              call s_print_error('atomic_make_tmat_c2j','not implemented for this nband!')
