@@ -778,9 +778,6 @@
      ! Slater-Cordon parameters: F0, F2, F4, and F6
      real(dp), allocatable :: slater_cordon(:)
 
-     integer  :: j, k
-     complex(dp) :: utmp(norbs,norbs,norbs,norbs)
-
 !! [body
 
      ! allocate memory for slater_cordon and gaunt and then build them
@@ -836,7 +833,12 @@
              do i=0,2*l,2
                  res = res + gaunt(aband,gband,i) * gaunt(dband,bband,i) * slater_cordon(i)
              enddo ! over i={0,2*l} loop
-             umat(alpha,betta,delta,gamma) = res
+
+             umat( (alpha + 1) / 2 + nband * (1 - aspin), &
+                   (betta + 1) / 2 + nband * (1 - bspin), &
+                   (delta + 1) / 2 + nband * (1 - dspin), &
+                   (gamma + 1) / 2 + nband * (1 - gspin) ) = res
+
          enddo ! over delta={1,norbs} loop
          enddo ! over gamma={1,norbs} loop
 
@@ -844,43 +846,6 @@
      enddo ! over alpha={1,norbs} loop
      !
      umat = half * umat
-
-     utmp = czero
-     do alpha=1,norbs
-         if ( alpha <= nband ) then
-             i = 2*alpha-1
-         else
-             i = 2*(alpha-nband)
-         endif ! back if ( alpha <= nband ) block
-
-         do betta=1,norbs
-             if ( betta <= nband ) then
-                 j = 2*betta-1
-             else
-                 j = 2*(betta-nband)
-             endif ! back if ( betta <= nband ) block
-
-             do gamma=1,norbs
-                 if ( gamma <= nband ) then
-                     k = 2*gamma-1
-                 else
-                     k = 2*(gamma-nband)
-                 endif ! back if ( gamma <= nband ) block
-
-                 do delta=1,norbs
-                     if ( delta <= nband ) then
-                         l = 2*delta-1
-                     else
-                         l = 2*(delta-nband)
-                     endif ! back if ( delta <= nband ) block
-
-                     !utmp(i,j,k,l) = umat(alpha,betta,gamma,delta)
-                     utmp(alpha,betta,gamma,delta) = umat(i,j,k,l)
-                 enddo
-             enddo
-         enddo
-     enddo
-     umat = utmp
 
      ! deallocate memory
      if ( allocated(gaunt) )         deallocate(gaunt)
