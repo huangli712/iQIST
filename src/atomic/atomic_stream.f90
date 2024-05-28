@@ -447,8 +447,7 @@
 
      ! dummy variables
      integer  :: i1
-     integer  :: i2
-     real(dp) :: raux
+     real(dp) :: raux, rtmp
 
 !! [body
 
@@ -468,7 +467,7 @@
 
      ! read the data file
      do i=1,norbs
-         read(mytmp,*) i1, i2, raux
+         read(mytmp,*) i1, raux, rtmp
          emat(i,i) = dcmplx(raux, zero)
      enddo ! over i={1,norbs} loop
 
