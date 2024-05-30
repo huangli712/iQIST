@@ -81,7 +81,7 @@ Now the question is how to write down the matrix elements for ``\hat{l} \cdot \h
 \end{equation}
 ```
 
-where ``\hat{l}_{\pm}=\hat{l}_{x}\pm\hat{l}_{y}``. It is easy to prove that Eq.(6) can be rewritten as
+where ``\hat{l}_{\pm}=\hat{l}_{x}\pm\hat{l}_{y}``. It is easy to prove that the above equation can be rewritten as
 
 ```math
 \begin{equation}
