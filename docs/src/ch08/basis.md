@@ -126,7 +126,7 @@ For ``j = l - \frac{1}{2} (l \neq 0)``, ``m_j = m + \frac{1}{2}``,
 
 **Real orbital basis**
 
-The basis functions are the real spherical harmonics ``Y_{lm}``.
+The basis functions are the real spherical harmonics ``Y_{lm}(\theta,\phi)``.
 
 For ``p`` system, the basis order is[^4]
 
@@ -499,6 +499,76 @@ T= \left[
 \right]
 ```
 
+The following Julia script is used to construct the complex orbital basis and the real orbital basis, and the transformation matrix between them.
+
+```julia
+# To calculate the transformation matrix from the complex orbital basis
+# to the real orbital basis.
+function calc_matrix(l::Int64)
+    println("Construct complex orbital basis for 𝑙 = $l")
+    COB = [] # To save the complex orbital basis
+    # m = -l, -l+1, ..., l-1, l
+    mlist = collect(-l:1:l)
+    for s in ("up", "down")
+        for m in mlist
+            push!(COB, [m, s])
+        end
+    end
+    #
+    for i in eachindex(COB)
+        m = COB[i][1]
+        s = COB[i][2] == "up" ? "↑" : "↓"
+        println("$i -> | $l, $m, $s ⟩")
+    end
+
+    println("Construct real orbital basis for 𝑙 = $l")
+    RO = [] # To save the real orbital basis basis
+    ROB = [] # To save the detailed expressions for the real orbital basis
+    for s in ("up", "down")
+        for m in mlist
+            if m < 0
+                b = ["i/sqrt(2)", -abs(m), -(-1)^m, abs(m)]
+            elseif m == 0
+                b = [0]
+            elseif m > 0
+                b = ["1/sqrt(2)", -abs(m),  (-1)^m, abs(m)]
+            end
+            push!(RO, [m,s])
+            push!(ROB, b)
+        end
+    end
+    #
+    for i in eachindex(RO)
+        m = RO[i][1]
+        s = RO[i][2] == "up" ? "↑" : "↓"
+        println("$i -> Y_{$l,$m} χ$s")        
+    end
+
+    println("Evaluate transformation matrix for 𝑙 = $l")
+    for m in eachindex(COB)
+        for n in eachindex(RO)
+            if COB[m][2] == RO[n][2] # their spins are the same
+                # for Y_{l0} case
+                if length(ROB[n]) == 1
+                    if COB[m][1] == ROB[n][1]
+                        println("T($m,$n) -> 1")
+                    end
+                # for Y_{lm} case where m /= 0
+                else
+                    if COB[m][1] == ROB[n][2]
+                        println("T($m,$n) -> ", ROB[n][1])
+                    end
+                    if COB[m][1] == ROB[n][4]
+                        s = ROB[n][3] < 0 ? "-" : ""
+                        println("T($m,$n) -> $s", ROB[n][1])
+                    end
+                end
+            end
+        end
+    end
+end
+```
+
 ---
 
 **Transformation matrix from complex orbital basis to ``\hat{j}^{2}-\hat{j}_{z}-\hat{l}^2-\hat{s}^2`` diagonal basis**
@@ -564,10 +634,6 @@ T = \left[
 \end{array}
 \right]
 ```
-
----
-
-**Julia script for generating transformation basis**
 
 The following Julia script is used to construct the complex orbital basis and the ``j^2-j_z`` basis, and the transformation matrix between them.
 
