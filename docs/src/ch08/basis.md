@@ -45,7 +45,7 @@ where ``\delta_{ij}`` is the Kronecker delta and ``d\Omega = \sin(\theta) d\phi 
 
 **Real Spherical Harmonics**
 
-The real spherical harmonics ``Y_{lm}`` are defined as
+The real spherical harmonics ``Y_{lm}`` are defined as[^3]
 
 ```math
 \begin{gather}
@@ -128,7 +128,7 @@ For ``j = l - \frac{1}{2} (l \neq 0)``, ``m_j = m + \frac{1}{2}``,
 
 The basis functions are the real spherical harmonics ``Y_{lm}``.
 
-For ``p`` system, the basis order is[^3]
+For ``p`` system, the basis order is[^4]
 
 ```math
 \begin{equation}
@@ -646,4 +646,6 @@ end
 
 [^2]: D. A. Varshalovich, A. N. Moskalev, and V. K. Khersonskii, Quantum Theory of Angular Momentum, World Scientific, 1988.
 
-[^3]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
+[^3]: https://handwiki.org/wiki/Physics:Spherical_harmonics.
+
+[^4]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
