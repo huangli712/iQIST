@@ -20,7 +20,32 @@ The complex spherical harmonics ``Y_{l}^{m}(\theta,\phi)`` are the eigenstates o
 \end{equation}
 ```
 
-where ``l`` is the azimuthal quantum number (``l = 0,~1,~2,~\cdots,~n-1``), and ``m`` is the magnetic quantum number (``m=-l,~-l+1,~\cdots,~l``)[^1][^2]. The real spherical harmonics ``Y_{lm}`` are defined as
+where ``l`` is the azimuthal quantum number (``l = 0,~1,~2,~\cdots,~n-1``), and ``m`` is the magnetic quantum number (``m=-l,~-l+1,~\cdots,~l``)[^1][^2]. They are defined as follows:
+
+```math
+\begin{equation}
+Y^m_l(\theta,\phi) = \sqrt{\frac{2l+1}{4\pi}\frac{(l-m)!}{(l+m)!}}
+P^m_l(\cos{\theta}) e^{im\phi},
+\end{equation}
+```
+
+where ``\theta`` is taken as the polar (colatitudinal) coordinate with ``\theta \in [0,\pi]``, and ``\phi`` as the azimuthal (longitudinal) coordinate with ``\phi \in [0,2\pi]``, and ``P^m_l(z)`` is an associated Legendre polynomial.
+
+The spherical harmonics are orthonormal
+
+```math
+\begin{equation}
+\int^{\pi}_{\theta = 0} \int^{2\pi}_{\phi = 0}
+Y^m_l(\theta,\phi) Y^{m'*}_{l'}(\theta,\phi)~d\Omega = \delta_{ll'} \delta_{mm'},
+\end{equation}
+```
+where ``\delta_{ij}`` is the Kronecker delta and ``d\Omega = \sin(\theta) d\phi d\theta``.
+
+---
+
+**Real Spherical Harmonics**
+
+The real spherical harmonics ``Y_{lm}`` are defined as
 
 ```math
 \begin{gather}
@@ -32,15 +57,20 @@ Y_{lm}=\begin{cases}
 \end{gather}
 ```
 
-The spherical harmonics are orthonormal
+The corresponding inverse equations defining the complex spherical harmonics ``Y^m_l`` in terms of the real spherical harmonics ``Y_{lm}`` read:
 
 ```math
-\begin{equation}
-\int^{\pi}_{\theta = 0} \int^{2\pi}_{\phi = 0}
-Y^m_l Y^{m'*}_{l'} d\Omega = \delta_{ll'} \delta_{mm'},
-\end{equation}
+\begin{gather}
+Y_{l}^{m}=\begin{cases}
+  \frac{1}{\sqrt{2}}\left(Y_{l|m|}-iY_{l,-|m|}\right) & \text{if}\ m<0,\\
+  Y_{l0} & \text{if}\ m=0,\\
+  \frac{(-1)^m}{\sqrt{2}}\left(Y_{l|m|}+iY_{l,-|m|}\right) & \text{if}\ m>0.
+\end{cases}
+\end{gather}
 ```
-where ``\delta_{ij}`` is the Kronecker delta and ``d\Omega = \sin(\theta) d\phi d\theta``.
+
+The real spherical harmonics ``Y_{lm}`` are sometimes known as tesseral spherical harmonics. These functions have the same orthonormality properties as the complex ones ``Y_{l}^{m}``.
+
 
 ---
 
