@@ -163,7 +163,7 @@ For ``p`` system, the basis order is[^4]
 \end{equation}
 ```
 
-For ``d`` system, the basis order is[^3]
+For ``d`` system, the basis order is[^4]
 
 ```math
 \begin{equation}
@@ -214,7 +214,7 @@ d_{x^{2}-y^{2}} = Y_{22}=\frac{1}{\sqrt{2}}\left(Y_{2}^{-2}+Y_{2}^{2}\right).
 \end{equation}
 ```
 
-For ``f`` system, the basis order is[^3]
+For ``f`` system, the basis order is[^4]
 
 ```math
 \begin{equation}
@@ -646,6 +646,6 @@ end
 
 [^2]: D. A. Varshalovich, A. N. Moskalev, and V. K. Khersonskii, Quantum Theory of Angular Momentum, World Scientific, 1988.
 
-[^3]: https://handwiki.org/wiki/Physics:Spherical_harmonics.
+[^3]: See https://handwiki.org/wiki/Physics:Spherical_harmonics.
 
 [^4]: The orbital orders are consistent with the definition of local basis used by VASP (see https://www.vasp.at/wiki/index.php/LOCPROJ), and the definition in HandWiki (see https://handwiki.org/wiki/Table\_of\_spherical\_harmonics).
