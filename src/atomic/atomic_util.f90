@@ -1094,7 +1094,7 @@
          !     | pz, dn >
          !     | px, dn >
          !
-         ! the complex orbital |lz,sz> order is
+         ! the complex orbital order is
          !     | 1, -1, up >,
          !     | 1,  0, up >,
          !     | 1,  1, up >,
@@ -1108,6 +1108,7 @@
              tmat_c2r( 2, 2 ) = cone
              tmat_c2r( 3, 1 ) = czi / sqrt2
              tmat_c2r( 3, 3 ) = -cone / sqrt2
+             !
              tmat_c2r( 4, 4 ) = czi / sqrt2
              tmat_c2r( 4, 6 ) = cone / sqrt2
              tmat_c2r( 5, 5 ) = cone
@@ -1115,38 +1116,49 @@
              tmat_c2r( 6, 6 ) = -cone / sqrt2
 
          ! the real orbital order is:
-         !     dz2up, dz2dn,
-         !     dxzup, dxzdn,
-         !     dyzup, dyzdn,
-         !     dx2-y2up, dx2-y2dn,
-         !     dxyup, dxydn
+         !     | dxy, up >
+         !     | dyz, up >
+         !     | dz2, up >
+         !     | dxz, up >
+         !     | dx2-y2, up >
+         !     | dxy, dn >
+         !     | dyz, dn >
+         !     | dz2, dn >
+         !     | dxz, dn >  
+         !     | dx2-y2, dn >
          !
-         ! the complex orbital |lz,sz> order is:
-         !     | -2, up >, | -2, dn >,
-         !     | -1, up >, | -1, dn >,
-         !     |  0, up >, |  0, dn >,
-         !     |  1, up >, |  1, dn >,
-         !     |  2, up >, |  2, dn >
+         ! the complex orbital order is:
+         !     | 2, -2, up >,
+         !     | 2, -1, up >,
+         !     | 2,  0, up >,
+         !     | 2,  1, up >,
+         !     | 2,  2, up >,
+         !     | 2, -2, dn >,
+         !     | 2, -1, dn >,
+         !     | 2,  0, dn >,
+         !     | 2,  1, dn >,
+         !     | 2,  2, dn >
+         !
          case (5)
-             tmat_c2r(1,1) = czi / sqrt2
-             tmat_c2r(1,5) = cone / sqrt2
-             tmat_c2r(2,2) = czi / sqrt2
-             tmat_c2r(2,4) = cone / sqrt2
-             tmat_c2r(3,3) = cone
-             tmat_c2r(4,2) = czi / sqrt2
-             tmat_c2r(4,4) = -cone / sqrt2
-             tmat_c2r(5,1) = -czi /sqrt2
-             tmat_c2r(5,5) = cone / sqrt2
-
-             tmat_c2r(6,6) = czi / sqrt2
-             tmat_c2r(6,10) = cone / sqrt2
-             tmat_c2r(7,7) = czi / sqrt2
-             tmat_c2r(7,9) = cone / sqrt2
-             tmat_c2r(8,8) = cone
-             tmat_c2r(9,7) = czi / sqrt2
-             tmat_c2r(9,9) = -cone / sqrt2
-             tmat_c2r(10,6) = -czi / sqrt2
-             tmat_c2r(10,10) = cone / sqrt2
+             tmat_c2r(  1,  1 ) = czi / sqrt2
+             tmat_c2r(  1,  5 ) = cone / sqrt2
+             tmat_c2r(  2,  2 ) = czi / sqrt2
+             tmat_c2r(  2,  4 ) = cone / sqrt2
+             tmat_c2r(  3,  3 ) = cone
+             tmat_c2r(  4,  2 ) = czi / sqrt2
+             tmat_c2r(  4,  4 ) = -cone / sqrt2
+             tmat_c2r(  5,  1 ) = -czi /sqrt2
+             tmat_c2r(  5,  5 ) = cone / sqrt2
+             !
+             tmat_c2r(  6,  6 ) = czi / sqrt2
+             tmat_c2r(  6, 10 ) = cone / sqrt2
+             tmat_c2r(  7,  7 ) = czi / sqrt2
+             tmat_c2r(  7,  9 ) = cone / sqrt2
+             tmat_c2r(  8,  8 ) = cone
+             tmat_c2r(  9,  7 ) = czi / sqrt2
+             tmat_c2r(  9,  9 ) = -cone / sqrt2
+             tmat_c2r( 10,  6 ) = -czi / sqrt2
+             tmat_c2r( 10, 10 ) = cone / sqrt2
 
          ! the real orbital order is:
          !     fz3up, fz3dn,
