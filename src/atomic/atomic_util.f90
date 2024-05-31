@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           05/31/2024 by li huang (last modified)
+!!!           06/01/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients, spin-orbit coupling matrix, Coulomb
@@ -1053,8 +1053,8 @@
 !!
 !! @sub atomic_make_tmat_c2r
 !!
-!! make transformation matrix from complex orbital basis to
-!! real orbital basis
+!! make transformation matrix from complex orbital basis Y^{m}_{l} to
+!! real orbital basis Y_{lm}
 !!
   subroutine atomic_make_tmat_c2r(tmat_c2r)
      use constants, only : dp
@@ -1079,30 +1079,40 @@
      select case (nband)
 
          ! the real orbital order (t2g) is:
-         !     dxzup, dxzdn,
-         !     dyzup, dyzdn,
-         !     dxyup, dxydn
+         !     | dxz, up >
+         !     | dxy, up >
+         !     | dyz, up >
+         !     | dxz, dn >
+         !     | dxy, dn >
+         !     | dyz, dn >
          !
          ! the corresponding p orbital order is:
-         !     pyup, pydn,
-         !     pxup, pxdn,
-         !     pzup, pzdn
+         !     | py, up >
+         !     | pz, up >
+         !     | px, up >
+         !     | py, dn >
+         !     | pz, dn >
+         !     | px, dn >
          !
          ! the complex orbital |lz,sz> order is
-         !     | -1, up >, | -1, dn >,
-         !     |  0, up >, |  0, dn >,
-         !     |  1, up >, |  1, dn >
+         !     | 1, -1, up >,
+         !     | 1,  0, up >,
+         !     | 1,  1, up >,
+         !     | 1, -1, dn >,
+         !     | 1,  0, dn >,
+         !     | 1,  1, dn >
+         !
          case (3)
-             tmat_c2r(1,1) = czi / sqrt2
-             tmat_c2r(1,3) = cone / sqrt2
-             tmat_c2r(2,2) = cone
-             tmat_c2r(3,1) = czi / sqrt2
-             tmat_c2r(3,3) = -cone / sqrt2
-             tmat_c2r(4,4) = czi / sqrt2
-             tmat_c2r(4,6) = cone / sqrt2
-             tmat_c2r(5,5) = cone
-             tmat_c2r(6,4) = czi / sqrt2
-             tmat_c2r(6,6) = -cone / sqrt2
+             tmat_c2r( 1, 1 ) = czi / sqrt2
+             tmat_c2r( 1, 3 ) = cone / sqrt2
+             tmat_c2r( 2, 2 ) = cone
+             tmat_c2r( 3, 1 ) = czi / sqrt2
+             tmat_c2r( 3, 3 ) = -cone / sqrt2
+             tmat_c2r( 4, 4 ) = czi / sqrt2
+             tmat_c2r( 4, 6 ) = cone / sqrt2
+             tmat_c2r( 5, 5 ) = cone
+             tmat_c2r( 6, 4 ) = czi / sqrt2
+             tmat_c2r( 6, 6 ) = -cone / sqrt2
 
          ! the real orbital order is:
          !     dz2up, dz2dn,
