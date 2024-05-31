@@ -1169,42 +1169,50 @@
          !     fx(x2-3y2)up, fx(x2-3y2)dn,
          !     fy(3x2-y2)up, fy(3x2-y2)dn
          !
-         ! the complex orbital |lz,sz> order is:
-         !     | -3, up >, | -3, dn >,
-         !     | -2, up >, | -2, dn >,
-         !     | -1, up >, | -1, dn >,
-         !     |  0, up >, |  0, dn >,
-         !     |  1, up >, |  1, dn >,
-         !     |  2, up >, |  2, dn >,
-         !     |  3, up >, |  3, dn >
+         ! the complex orbital order is:
+         !     | 3, -3, up >,
+         !     | 3, -2, up >,
+         !     | 3, -1, up >,
+         !     | 3,  0, up >,
+         !     | 3,  1, up >,
+         !     | 3,  2, up >,
+         !     | 3,  3, up >,
+         !     | 3, -3, dn >,
+         !     | 3, -2, dn >,
+         !     | 3, -1, dn >,
+         !     | 3,  0, dn >,
+         !     | 3,  1, dn >,
+         !     | 3,  2, dn >,
+         !     | 3,  3, dn >
+         !
          case (7)
-             tmat_c2r(1,1) = czi/sqrt2
-             tmat_c2r(1,7) = cone/sqrt2
-             tmat_c2r(2,2) = czi/sqrt2
-             tmat_c2r(2,6) = cone/sqrt2
-             tmat_c2r(3,3) = czi/sqrt2
-             tmat_c2r(3,5) = cone/sqrt2
-             tmat_c2r(4,4) = cone
-             tmat_c2r(5,3) = czi/sqrt2
-             tmat_c2r(5,5) = -cone/sqrt2
-             tmat_c2r(6,2) = -czi/sqrt2
-             tmat_c2r(6,6) = cone/sqrt2
-             tmat_c2r(7,1) = czi/sqrt2
-             tmat_c2r(7,7) = -cone/sqrt2
-
-             tmat_c2r(8,8) = czi/sqrt2
-             tmat_c2r(8,14) = cone/sqrt2
-             tmat_c2r(9,9) = czi/sqrt2
-             tmat_c2r(9,13) = cone/sqrt2
-             tmat_c2r(10,10) = czi/sqrt2
-             tmat_c2r(10,12) = cone/sqrt2
-             tmat_c2r(11,11) = cone
-             tmat_c2r(12,10) = czi/sqrt2
-             tmat_c2r(12,12) = -cone/sqrt2
-             tmat_c2r(13,9) = -czi/sqrt2
-             tmat_c2r(13,13) = cone/sqrt2
-             tmat_c2r(14,8) = czi/sqrt2
-             tmat_c2r(14,14) = -cone/sqrt2
+             tmat_c2r(  1,  1 ) = czi/sqrt2
+             tmat_c2r(  1,  7 ) = cone/sqrt2
+             tmat_c2r(  2,  2 ) = czi/sqrt2
+             tmat_c2r(  2,  6 ) = cone/sqrt2
+             tmat_c2r(  3,  3 ) = czi/sqrt2
+             tmat_c2r(  3,  5 ) = cone/sqrt2
+             tmat_c2r(  4,  4 ) = cone
+             tmat_c2r(  5,  3 ) = czi/sqrt2
+             tmat_c2r(  5,  5 ) = -cone/sqrt2
+             tmat_c2r(  6,  2 ) = -czi/sqrt2
+             tmat_c2r(  6,  6 ) = cone/sqrt2
+             tmat_c2r(  7,  1 ) = czi/sqrt2
+             tmat_c2r(  7,  7 ) = -cone/sqrt2
+             !
+             tmat_c2r(  8,  8 ) = czi/sqrt2
+             tmat_c2r(  8, 14 ) = cone/sqrt2
+             tmat_c2r(  9,  9 ) = czi/sqrt2
+             tmat_c2r(  9, 13 ) = cone/sqrt2
+             tmat_c2r( 10, 10 ) = czi/sqrt2
+             tmat_c2r( 10, 12 ) = cone/sqrt2
+             tmat_c2r( 11, 11 ) = cone
+             tmat_c2r( 12, 10 ) = czi/sqrt2
+             tmat_c2r( 12, 12 ) = -cone/sqrt2
+             tmat_c2r( 13,  9 ) = -czi/sqrt2
+             tmat_c2r( 13, 13 ) = cone/sqrt2
+             tmat_c2r( 14,  8 ) = czi/sqrt2
+             tmat_c2r( 14, 14 ) = -cone/sqrt2
 
          case default
              call s_print_error('atomic_make_tmat_c2r', &
