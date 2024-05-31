@@ -886,8 +886,8 @@
      ! make SOC on complex orbital basis, the orbital order is:
      !     | l,  m, up or down >
      !
-     !     | 1, -1, up >, 
-     !     | 1,  0, up >, 
+     !     | 1, -1, up >,
+     !     | 1,  0, up >,
      !     | 1,  1, up >,
      !     | 1, -1, dn >,
      !     | 1,  0, dn >,
@@ -973,10 +973,12 @@
 !!
 !! @sub atomic_make_smat7
 !!
-!! make spin-orbit coupling matrix for 7-band case
+!! make spin-orbit coupling matrix for 7-band case, it is defined in the
+!! complex orbital basis: Y^{m}_{l}(\theta,\phi).
 !!
   subroutine atomic_make_smat7(smat)
      use constants, only : dp
+     use constants, only : one, two
      use constants, only : czero
 
      implicit none
@@ -986,7 +988,8 @@
      complex(dp), intent(out) :: smat(14,14)
 
 !! local parameters
-     ! \sqrt{6}, \sqrt{10}, and \sqrt{12}
+     ! three, \sqrt{6}, \sqrt{10}, and \sqrt{12}
+     real(dp), parameter :: three  = 3.0_dp
      real(dp), parameter :: sqrt6  = sqrt( 6.0_dp)
      real(dp), parameter :: sqrt10 = sqrt(10.0_dp)
      real(dp), parameter :: sqrt12 = sqrt(12.0_dp)
@@ -994,41 +997,49 @@
 !! [body
 
      ! make SOC on complex orbital basis, the orbital order is:
+     !     | l,  m, up or down >
      !
-     ! | -3, up >, | -3, dn >,
-     ! | -2, up >, | -2, dn >,
-     ! | -1, up >, | -1, dn >,
-     ! |  0, up >, |  0, dn >,
-     ! |  1, up >, |  1, dn >,
-     ! |  2, up >, |  2, dn >
-     ! |  3, up >, |  3, dn >
+     !     | 3, -3, up >,
+     !     | 3, -2, up >,
+     !     | 3, -1, up >,
+     !     | 3,  0, up >,
+     !     | 3,  1, up >,
+     !     | 3,  2, up >,
+     !     | 3,  3, up >,
+     !     | 3, -3, dn >,
+     !     | 3, -2, dn >,
+     !     | 3, -1, dn >,
+     !     | 3,  0, dn >,
+     !     | 3,  1, dn >,
+     !     | 3,  2, dn >,
+     !     | 3,  3, dn >
      !
      smat = czero
      !
-     smat(1,1) = -3.0_dp 
-     smat(1,9) = sqrt6 
-     smat(2,2) = -2.0_dp 
-     smat(2,10) = sqrt10 
-     smat(3,3) = -1.0_dp
-     smat(3,11) = sqrt12
-     smat(4,12) = sqrt12
-     smat(5,5) = 1.0_dp 
-     smat(5,13) = sqrt10 
-     smat(6,6) = 2.0_dp 
-     smat(6,14) = sqrt6 
-     smat(7,7) = 3.0_dp 
-     smat(8,8) = 3.0_dp
-     smat(9,1) = sqrt6 
-     smat(9,9) = 2.0_dp
-     smat(10,2) = sqrt10 
-     smat(10,10) = 1.0_dp 
-     smat(11,3) = sqrt12
-     smat(12,4) = sqrt12
-     smat(12,12) = -1.0_dp 
-     smat(13,5) = sqrt10 
-     smat(13,13) = -2.0_dp 
-     smat(14,6) = sqrt6
-     smat(14,14) = -3.0_dp 
+     smat(  1,  1 ) = -three
+     smat(  1,  9 ) = sqrt6 
+     smat(  2,  2 ) = -two
+     smat(  2, 10 ) = sqrt10 
+     smat(  3,  3 ) = -one
+     smat(  3, 11 ) = sqrt12
+     smat(  4, 12 ) = sqrt12
+     smat(  5,  5 ) = one 
+     smat(  5, 13 ) = sqrt10 
+     smat(  6,  6 ) = two 
+     smat(  6, 14 ) = sqrt6 
+     smat(  7,  7 ) = three 
+     smat(  8,  8 ) = three
+     smat(  9,  1 ) = sqrt6 
+     smat(  9,  9 ) = two
+     smat( 10,  2 ) = sqrt10 
+     smat( 10, 10 ) = one 
+     smat( 11,  3 ) = sqrt12
+     smat( 12,  4 ) = sqrt12
+     smat( 12, 12 ) = -one 
+     smat( 13,  5 ) = sqrt10 
+     smat( 13, 13 ) = -two 
+     smat( 14,  6 ) = sqrt6
+     smat( 14, 14 ) = -three 
 
 !! body]
 
