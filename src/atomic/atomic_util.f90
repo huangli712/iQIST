@@ -1017,29 +1017,29 @@
      smat = czero
      !
      smat(  1,  1 ) = -three
-     smat(  1,  9 ) = sqrt6 
+     smat(  1,  9 ) = sqrt6
      smat(  2,  2 ) = -two
-     smat(  2, 10 ) = sqrt10 
+     smat(  2, 10 ) = sqrt10
      smat(  3,  3 ) = -one
      smat(  3, 11 ) = sqrt12
      smat(  4, 12 ) = sqrt12
-     smat(  5,  5 ) = one 
-     smat(  5, 13 ) = sqrt10 
-     smat(  6,  6 ) = two 
-     smat(  6, 14 ) = sqrt6 
-     smat(  7,  7 ) = three 
+     smat(  5,  5 ) = one
+     smat(  5, 13 ) = sqrt10
+     smat(  6,  6 ) = two
+     smat(  6, 14 ) = sqrt6
+     smat(  7,  7 ) = three
      smat(  8,  8 ) = three
-     smat(  9,  1 ) = sqrt6 
+     smat(  9,  1 ) = sqrt6
      smat(  9,  9 ) = two
-     smat( 10,  2 ) = sqrt10 
-     smat( 10, 10 ) = one 
+     smat( 10,  2 ) = sqrt10
+     smat( 10, 10 ) = one
      smat( 11,  3 ) = sqrt12
      smat( 12,  4 ) = sqrt12
-     smat( 12, 12 ) = -one 
-     smat( 13,  5 ) = sqrt10 
-     smat( 13, 13 ) = -two 
+     smat( 12, 12 ) = -one
+     smat( 13,  5 ) = sqrt10
+     smat( 13, 13 ) = -two
      smat( 14,  6 ) = sqrt6
-     smat( 14, 14 ) = -three 
+     smat( 14, 14 ) = -three
 
 !! body]
 
@@ -1322,8 +1322,8 @@
          ! | 7/2,  1/2 >, | 7/2,  3/2 >,
          ! | 7/2,  5/2 >, | 7/2,  7/2 >
          case (7)
-             tmat_c2j(1,1) = -sqrt(6.0_dp/7.0_dp) 
-             tmat_c2j(1,8) = sqrt(1.0_dp/7.0_dp) 
+             tmat_c2j(1,1) = -sqrt(6.0_dp/7.0_dp)
+             tmat_c2j(1,8) = sqrt(1.0_dp/7.0_dp)
              tmat_c2j(2,2) = -sqrt(5.0_dp/7.0_dp)
              tmat_c2j(2,9) = sqrt(2.0_dp/7.0_dp)
              tmat_c2j(3,3) = -sqrt(4.0_dp/7.0_dp)
@@ -1335,8 +1335,8 @@
              tmat_c2j(6,6) = -sqrt(1.0_dp/7.0_dp)
              tmat_c2j(6,13) = sqrt(6.0_dp/7.0_dp)
              tmat_c2j(7,14) = 1.0_dp
- 
-             tmat_c2j(8,7) = 1.0_dp 
+
+             tmat_c2j(8,7) = 1.0_dp
              tmat_c2j(9,1) = sqrt(1.0_dp/7.0_dp)
              tmat_c2j(9,8) = sqrt(6.0_dp/7.0_dp)
              tmat_c2j(10,2) = sqrt(2.0_dp/7.0_dp)
