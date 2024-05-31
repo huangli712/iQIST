@@ -1079,19 +1079,19 @@
      select case (nband)
 
          ! the real orbital order (t2g) is:
-         !     | dxz, up >
-         !     | dxy, up >
-         !     | dyz, up >
-         !     | dxz, dn >
-         !     | dxy, dn >
+         !     | dxz, up >,
+         !     | dxy, up >,
+         !     | dyz, up >,
+         !     | dxz, dn >,
+         !     | dxy, dn >,
          !     | dyz, dn >
          !
          ! the corresponding p orbital order is:
-         !     | py, up >
-         !     | pz, up >
-         !     | px, up >
-         !     | py, dn >
-         !     | pz, dn >
+         !     | py, up >,
+         !     | pz, up >,
+         !     | px, up >,
+         !     | py, dn >,
+         !     | pz, dn >,
          !     | px, dn >
          !
          ! the complex orbital order is
@@ -1116,15 +1116,15 @@
              tmat_c2r( 6, 6 ) = -cone / sqrt2
 
          ! the real orbital order is:
-         !     | dxy, up >
-         !     | dyz, up >
-         !     | dz2, up >
-         !     | dxz, up >
-         !     | dx2-y2, up >
-         !     | dxy, dn >
-         !     | dyz, dn >
-         !     | dz2, dn >
-         !     | dxz, dn >  
+         !     | dxy, up >,
+         !     | dyz, up >,
+         !     | dz2, up >,
+         !     | dxz, up >,
+         !     | dx2-y2, up >,
+         !     | dxy, dn >,
+         !     | dyz, dn >,
+         !     | dz2, dn >,
+         !     | dxz, dn >, 
          !     | dx2-y2, dn >
          !
          ! the complex orbital order is:
@@ -1161,13 +1161,20 @@
              tmat_c2r( 10, 10 ) = cone / sqrt2
 
          ! the real orbital order is:
-         !     fz3up, fz3dn,
-         !     fxz2up, fxz2dn,
-         !     fyz2up, fyz2dn,
-         !     fz(x2-y2)up, fz(x2-y2)dn,
-         !     fxyzup, fxyzdn,
-         !     fx(x2-3y2)up, fx(x2-3y2)dn,
-         !     fy(3x2-y2)up, fy(3x2-y2)dn
+         !     | fy(3x2-y2), up >,
+         !     | fxyz, up >,
+         !     | fyz2, up >,
+         !     | fz3, up >,
+         !     | fxz2, up >,
+         !     | fz(x2-y2), up >,
+         !     | fx(x2-3y2), up >,
+         !     | fy(3x2-y2), dn >,
+         !     | fxyz, dn >,
+         !     | fyz2, dn >,
+         !     | fz3, dn >,
+         !     | fxz2, dn >,
+         !     | fz(x2-y2), dn >,
+         !     | fx(x2-3y2), dn >
          !
          ! the complex orbital order is:
          !     | 3, -3, up >,
