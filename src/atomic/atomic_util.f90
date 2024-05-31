@@ -884,7 +884,7 @@
 !! [body
 
      ! make SOC on complex orbital basis, the orbital order is:
-     !     ! l,  m, up or down >
+     !     | l,  m, up or down >
      !
      !     | 1, -1, up >, 
      !     | 1,  0, up >, 
@@ -895,14 +895,14 @@
      !
      smat = czero
      !
-     smat(1,1) = -one
-     smat(1,5) = sqrt2
-     smat(2,6) = sqrt2
-     smat(3,3) = one
-     smat(4,4) = one
-     smat(5,1) = sqrt2
-     smat(6,2) = sqrt2
-     smat(6,6) = -one
+     smat( 1, 1 ) = -one
+     smat( 1, 5 ) = sqrt2
+     smat( 2, 6 ) = sqrt2
+     smat( 3, 3 ) = one
+     smat( 4, 4 ) = one
+     smat( 5, 1 ) = sqrt2
+     smat( 6, 2 ) = sqrt2
+     smat( 6, 6 ) = -one
 
 !! body]
 
@@ -933,31 +933,37 @@
 !! [body
 
      ! make SOC on complex orbital basis, the orbital order is:
+     !     | l,  m, up or down >
      !
-     !     | -2, up >, | -2, dn >,
-     !     | -1, up >, | -1, dn >,
-     !     |  0, up >, |  0, dn >,
-     !     |  1, up >, |  1, dn >,
-     !     |  2, up >, |  2, dn >
+     !     | 2, -2, up >,
+     !     | 2, -1, up >,
+     !     | 2,  0, up >,
+     !     | 2,  1, up >,
+     !     | 2,  2, up >,
+     !     | 2, -2, dn >,
+     !     | 2, -1, dn >,
+     !     | 2,  0, dn >,
+     !     | 2,  1, dn >,
+     !     | 2,  2, dn >
      !
      smat = czero
      !
-     smat(1,1) = -two
-     smat(1,7) = two
-     smat(2,2) = -one
-     smat(2,8) = sqrt6
-     smat(3,9) = sqrt6
-     smat(4,4) = one
-     smat(4,10) = two
-     smat(5,5) = two
-     smat(6,6) = two
-     smat(7,1) = two
-     smat(7,7) = one
-     smat(8,2) = sqrt6
-     smat(9,3) = sqrt6
-     smat(9,9) = -one
-     smat(10,4) = two
-     smat(10,10) = -two
+     smat(  1,  1 ) = -two
+     smat(  1,  7 ) = two
+     smat(  2,  2 ) = -one
+     smat(  2,  8 ) = sqrt6
+     smat(  3,  9 ) = sqrt6
+     smat(  4,  4 ) = one
+     smat(  4, 10 ) = two
+     smat(  5,  5 ) = two
+     smat(  6,  6 ) = two
+     smat(  7,  1 ) = two
+     smat(  7,  7 ) = one
+     smat(  8,  2 ) = sqrt6
+     smat(  9,  3 ) = sqrt6
+     smat(  9,  9 ) = -one
+     smat( 10,  4 ) = two
+     smat( 10, 10 ) = -two
 
 !! body]
 
