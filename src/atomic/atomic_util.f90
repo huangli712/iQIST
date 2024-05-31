@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/31/2024 by li huang (last modified)
+!!!           05/31/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients, spin-orbit coupling matrix, Coulomb
@@ -889,15 +889,6 @@
      !
      smat = czero
      !
-     !smat( 1, 1) = -1.0_dp
-     !smat( 4, 1) =  sqrt2
-     !smat( 2, 2) = +1.0_dp
-     !smat( 6, 3) =  sqrt2
-     !smat( 1, 4) =  sqrt2
-     !smat( 5, 5) = +1.0_dp
-     !smat( 3, 6) =  sqrt2
-     !smat( 6, 6) = -1.0_dp
-
      smat(1,1) = -1.0_dp
      smat(1,5) = sqrt2
      smat(2,6) = sqrt2
@@ -943,23 +934,6 @@
      !
      smat = czero
      !
-     !smat( 1, 1) = -2.0_dp
-     !smat( 4, 1) = +2.0_dp
-     !smat( 2, 2) = +2.0_dp
-     !smat( 3, 3) = -1.0_dp
-     !smat( 6, 3) =  sqrt6
-     !smat( 1, 4) = +2.0_dp
-     !smat( 4, 4) = +1.0_dp
-     !smat( 8, 5) =  sqrt6
-     !smat( 3, 6) =  sqrt6
-     !smat( 7, 7) = +1.0_dp
-     !smat(10, 7) = +2.0_dp
-     !smat( 5, 8) =  sqrt6
-     !smat( 8, 8) = -1.0_dp
-     !smat( 9, 9) = +2.0_dp
-     !smat( 7,10) = +2.0_dp
-     !smat(10,10) = -2.0_dp
-
      smat(1,1) = -2.0_dp
      smat(1,7) = 2.0_dp
      smat(2,2) = -1.0_dp
@@ -1017,31 +991,6 @@
      !
      smat = czero
      !
-     !smat( 1, 1) = -3.0_dp
-     !smat( 4, 1) =  sqrt6
-     !smat( 2, 2) = +3.0_dp
-     !smat( 3, 3) = -2.0_dp
-     !smat( 6, 3) =  sqrt10
-     !smat( 1, 4) =  sqrt6
-     !smat( 4, 4) = +2.0_dp
-     !smat( 5, 5) = -1.0_dp
-     !smat( 8, 5) =  sqrt12
-     !smat( 3, 6) =  sqrt10
-     !smat( 6, 6) = +1.0_dp
-     !smat(10, 7) =  sqrt12
-     !smat( 5, 8) =  sqrt12
-     !smat( 9, 9) = +1.0_dp
-     !smat(12, 9) =  sqrt10
-     !smat( 7,10) =  sqrt12
-     !smat(10,10) = -1.0_dp
-     !smat(11,11) = +2.0_dp
-     !smat(14,11) =  sqrt6
-     !smat( 9,12) =  sqrt10
-     !smat(12,12) = -2.0_dp
-     !smat(13,13) = +3.0_dp
-     !smat(11,14) =  sqrt6
-     !smat(14,14) = -3.0_dp
-
      smat(1,1) = -3.0_dp 
      smat(1,9) = sqrt6 
      smat(2,2) = -2.0_dp 
@@ -1119,17 +1068,6 @@
          !     |  0, up >, |  0, dn >,
          !     |  1, up >, |  1, dn >
          case (3)
-             !tmat_c2r( 1, 1) =  czi/sqrt2
-             !tmat_c2r( 5, 1) =  czi/sqrt2
-             !tmat_c2r( 2, 2) =  czi/sqrt2
-             !tmat_c2r( 6, 2) =  czi/sqrt2
-             !tmat_c2r( 1, 3) =  cone/sqrt2
-             !tmat_c2r( 5, 3) = -cone/sqrt2
-             !tmat_c2r( 2, 4) =  cone/sqrt2
-             !tmat_c2r( 6, 4) = -cone/sqrt2
-             !tmat_c2r( 3, 5) =  cone
-             !tmat_c2r( 4, 6) =  cone
-
              tmat_c2r(1,1) = czi / sqrt2
              tmat_c2r(1,3) = cone / sqrt2
              tmat_c2r(2,2) = cone
@@ -1155,25 +1093,6 @@
          !     |  1, up >, |  1, dn >,
          !     |  2, up >, |  2, dn >
          case (5)
-             !tmat_c2r( 5, 1) =  cone
-             !tmat_c2r( 6, 2) =  cone
-             !tmat_c2r( 3, 3) =  cone/sqrt2
-             !tmat_c2r( 7, 3) = -cone/sqrt2
-             !tmat_c2r( 4, 4) =  cone/sqrt2
-             !tmat_c2r( 8, 4) = -cone/sqrt2
-             !tmat_c2r( 3, 5) =  czi/sqrt2
-             !tmat_c2r( 7, 5) =  czi/sqrt2
-             !tmat_c2r( 4, 6) =  czi/sqrt2
-             !tmat_c2r( 8, 6) =  czi/sqrt2
-             !tmat_c2r( 1, 7) =  cone/sqrt2
-             !tmat_c2r( 9, 7) =  cone/sqrt2
-             !tmat_c2r( 2, 8) =  cone/sqrt2
-             !tmat_c2r(10, 8) =  cone/sqrt2
-             !tmat_c2r( 1, 9) =  czi/sqrt2
-             !tmat_c2r( 9, 9) = -czi/sqrt2
-             !tmat_c2r( 2,10) =  czi/sqrt2
-             !tmat_c2r(10,10) = -czi/sqrt2
-
              tmat_c2r(1,1) = czi / sqrt2
              tmat_c2r(1,5) = cone / sqrt2
              tmat_c2r(2,2) = czi / sqrt2
@@ -1212,33 +1131,6 @@
          !     |  2, up >, |  2, dn >,
          !     |  3, up >, |  3, dn >
          case (7)
-             !tmat_c2r( 7, 1) =  cone
-             !tmat_c2r( 8, 2) =  cone
-             !tmat_c2r( 5, 3) =  cone/sqrt2
-             !tmat_c2r( 9, 3) = -cone/sqrt2
-             !tmat_c2r( 6, 4) =  cone/sqrt2
-             !tmat_c2r(10, 4) = -cone/sqrt2
-             !tmat_c2r( 5, 5) =  czi/sqrt2
-             !tmat_c2r( 9, 5) =  czi/sqrt2
-             !tmat_c2r( 6, 6) =  czi/sqrt2
-             !tmat_c2r(10, 6) =  czi/sqrt2
-             !tmat_c2r( 3, 7) =  cone/sqrt2
-             !tmat_c2r(11, 7) =  cone/sqrt2
-             !tmat_c2r( 4, 8) =  cone/sqrt2
-             !tmat_c2r(12, 8) =  cone/sqrt2
-             !tmat_c2r( 3, 9) =  czi/sqrt2
-             !tmat_c2r(11, 9) = -czi/sqrt2
-             !tmat_c2r( 4,10) =  czi/sqrt2
-             !tmat_c2r(12,10) = -czi/sqrt2
-             !tmat_c2r( 1,11) =  cone/sqrt2
-             !tmat_c2r(13,11) = -cone/sqrt2
-             !tmat_c2r( 2,12) =  cone/sqrt2
-             !tmat_c2r(14,12) = -cone/sqrt2
-             !tmat_c2r( 1,13) =  czi/sqrt2
-             !tmat_c2r(13,13) =  czi/sqrt2
-             !tmat_c2r( 2,14) =  czi/sqrt2
-             !tmat_c2r(14,14) =  czi/sqrt2
-
              tmat_c2r(1,1) = czi/sqrt2
              tmat_c2r(1,7) = cone/sqrt2
              tmat_c2r(2,2) = czi/sqrt2
@@ -1343,17 +1235,6 @@
          !     | 3/2, -3/2 >, | 3/2, -1/2 >,
          !     | 3/2,  1/2 >, | 3/2,  3/2 >
          case (3)
-             !tmat_c2j( 1, 1) = -sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/3.0_dp)
-             !tmat_c2j( 3, 2) = -sqrt(1.0_dp/3.0_dp)
-             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j( 2, 3) =  1.0_dp
-             !tmat_c2j( 1, 4) =  sqrt(1.0_dp/3.0_dp)
-             !tmat_c2j( 4, 4) =  sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j( 3, 5) =  sqrt(2.0_dp/3.0_dp)
-             !tmat_c2j( 6, 5) =  sqrt(1.0_dp/3.0_dp)
-             !tmat_c2j( 5, 6) =  1.0_dp
-
              tmat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
              tmat_c2j(1,4) = sqrt(1.0_dp/3.0_dp)
              tmat_c2j(2,2) = -sqrt(1.0_dp/3.0_dp)
@@ -1379,25 +1260,6 @@
          !     | 5/2, -1/2 >, | 5/2,  1/2 >,
          !     | 5/2,  3/2 >, | 5/2,  5/2 >
          case (5)
-             !tmat_c2j( 1, 1) = -sqrt(4.0_dp/5.0_dp)
-             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/5.0_dp)
-             !tmat_c2j( 3, 2) = -sqrt(3.0_dp/5.0_dp)
-             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/5.0_dp)
-             !tmat_c2j( 5, 3) = -sqrt(2.0_dp/5.0_dp)
-             !tmat_c2j( 8, 3) =  sqrt(3.0_dp/5.0_dp)
-             !tmat_c2j( 7, 4) = -sqrt(1.0_dp/5.0_dp)
-             !tmat_c2j(10, 4) =  sqrt(4.0_dp/5.0_dp)
-             !tmat_c2j( 2, 5) =  1.0_dp
-             !tmat_c2j( 1, 6) =  sqrt(1.0_dp/5.0_dp)
-             !tmat_c2j( 4, 6) =  sqrt(4.0_dp/5.0_dp)
-             !tmat_c2j( 3, 7) =  sqrt(2.0_dp/5.0_dp)
-             !tmat_c2j( 6, 7) =  sqrt(3.0_dp/5.0_dp)
-             !tmat_c2j( 5, 8) =  sqrt(3.0_dp/5.0_dp)
-             !tmat_c2j( 8, 8) =  sqrt(2.0_dp/5.0_dp)
-             !tmat_c2j( 7, 9) =  sqrt(4.0_dp/5.0_dp)
-             !tmat_c2j(10, 9) =  sqrt(1.0_dp/5.0_dp)
-             !tmat_c2j( 9,10) =  1.0_dp
-
              tmat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp)
              tmat_c2j(1,6) = sqrt(1.0_dp/5.0_dp)
              tmat_c2j(2,2) = -sqrt(3.0_dp/5.0_dp)
@@ -1435,33 +1297,6 @@
          ! | 7/2,  1/2 >, | 7/2,  3/2 >,
          ! | 7/2,  5/2 >, | 7/2,  7/2 >
          case (7)
-             !tmat_c2j( 1, 1) = -sqrt(6.0_dp/7.0_dp)
-             !tmat_c2j( 4, 1) =  sqrt(1.0_dp/7.0_dp)
-             !tmat_c2j( 3, 2) = -sqrt(5.0_dp/7.0_dp)
-             !tmat_c2j( 6, 2) =  sqrt(2.0_dp/7.0_dp)
-             !tmat_c2j( 5, 3) = -sqrt(4.0_dp/7.0_dp)
-             !tmat_c2j( 8, 3) =  sqrt(3.0_dp/7.0_dp)
-             !tmat_c2j( 7, 4) = -sqrt(3.0_dp/7.0_dp)
-             !tmat_c2j(10, 4) =  sqrt(4.0_dp/7.0_dp)
-             !tmat_c2j( 9, 5) = -sqrt(2.0_dp/7.0_dp)
-             !tmat_c2j(12, 5) =  sqrt(5.0_dp/7.0_dp)
-             !tmat_c2j(11, 6) = -sqrt(1.0_dp/7.0_dp)
-             !tmat_c2j(14, 6) =  sqrt(6.0_dp/7.0_dp)
-             !tmat_c2j( 2, 7) =  1.0_dp
-             !tmat_c2j( 1, 8) =  sqrt(1.0_dp/7.0_dp)
-             !tmat_c2j( 4, 8) =  sqrt(6.0_dp/7.0_dp)
-             !tmat_c2j( 3, 9) =  sqrt(2.0_dp/7.0_dp)
-             !tmat_c2j( 6, 9) =  sqrt(5.0_dp/7.0_dp)
-             !tmat_c2j( 5,10) =  sqrt(3.0_dp/7.0_dp)
-             !tmat_c2j( 8,10) =  sqrt(4.0_dp/7.0_dp)
-             !tmat_c2j( 7,11) =  sqrt(4.0_dp/7.0_dp)
-             !tmat_c2j(10,11) =  sqrt(3.0_dp/7.0_dp)
-             !tmat_c2j( 9,12) =  sqrt(5.0_dp/7.0_dp)
-             !tmat_c2j(12,12) =  sqrt(2.0_dp/7.0_dp)
-             !tmat_c2j(11,13) =  sqrt(6.0_dp/7.0_dp)
-             !tmat_c2j(14,13) =  sqrt(1.0_dp/7.0_dp)
-             !tmat_c2j(13,14) =  1.0_dp
-
              tmat_c2j(1,1) = -sqrt(6.0_dp/7.0_dp) 
              tmat_c2j(1,8) = sqrt(1.0_dp/7.0_dp) 
              tmat_c2j(2,2) = -sqrt(5.0_dp/7.0_dp)
