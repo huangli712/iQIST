@@ -1312,16 +1312,16 @@
          !     | 3/2,  3/2 >
          !
          case (3)
-             tmat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
-             tmat_c2j(1,4) = sqrt(1.0_dp/3.0_dp)
-             tmat_c2j(2,2) = -sqrt(1.0_dp/3.0_dp)
-             tmat_c2j(2,5) = sqrt(2.0_dp/3.0_dp)
-             tmat_c2j(3,6) = 1.0_dp
-             tmat_c2j(4,3) = 1.0_dp
-             tmat_c2j(5,1) = sqrt(1.0_dp/3.0_dp)
-             tmat_c2j(5,4) = sqrt(2.0_dp/3.0_dp)
-             tmat_c2j(6,2) = sqrt(2.0_dp/3.0_dp)
-             tmat_c2j(6,5) = sqrt(1.0_dp/3.0_dp)
+             tmat_c2j( 1, 1 ) = -sqrt(2.0_dp/3.0_dp)
+             tmat_c2j( 1, 4 ) = sqrt(1.0_dp/3.0_dp)
+             tmat_c2j( 2, 2 ) = -sqrt(1.0_dp/3.0_dp)
+             tmat_c2j( 2, 5 ) = sqrt(2.0_dp/3.0_dp)
+             tmat_c2j( 3, 6 ) = 1.0_dp
+             tmat_c2j( 4, 3 ) = 1.0_dp
+             tmat_c2j( 5, 1 ) = sqrt(1.0_dp/3.0_dp)
+             tmat_c2j( 5, 4 ) = sqrt(2.0_dp/3.0_dp)
+             tmat_c2j( 6, 2 ) = sqrt(2.0_dp/3.0_dp)
+             tmat_c2j( 6, 5 ) = sqrt(1.0_dp/3.0_dp)
 
          ! the complex orbital order is:
          !     | 2, -2, up >,
@@ -1348,24 +1348,24 @@
          !     | 5/2,  5/2 >
          !
          case (5)
-             tmat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(1,6) = sqrt(1.0_dp/5.0_dp)
-             tmat_c2j(2,2) = -sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(2,7) = sqrt(2.0_dp/5.0_dp)
-             tmat_c2j(3,3) = -sqrt(2.0_dp/5.0_dp)
-             tmat_c2j(3,8) = sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(4,4) = -sqrt(1.0_dp/5.0_dp)
-             tmat_c2j(4,9) = sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(5,10) = 1.0_dp
-             tmat_c2j(6,5) = 1.0_dp
-             tmat_c2j(7,1) = sqrt(1.0_dp/5.0_dp)
-             tmat_c2j(7,6) = sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(8,2) = sqrt(2.0_dp/5.0_dp)
-             tmat_c2j(8,7) = sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(9,3) = sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(9,8) = sqrt(2.0_dp/5.0_dp)
-             tmat_c2j(10,4) = sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(10,9) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(  1,  1 ) = -sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(  1,  6 ) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(  2,  2 ) = -sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(  2,  7 ) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(  3,  3 ) = -sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(  3,  8 ) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(  4,  4 ) = -sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(  4,  9 ) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(  5, 10 ) = 1.0_dp
+             tmat_c2j(  6,  5 ) = 1.0_dp
+             tmat_c2j(  7,  1 ) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(  7,  6 ) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(  8,  2 ) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j(  8,  7 ) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(  9,  3 ) = sqrt(3.0_dp/5.0_dp)
+             tmat_c2j(  9,  8 ) = sqrt(2.0_dp/5.0_dp)
+             tmat_c2j( 10,  4 ) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j( 10,  9 ) = sqrt(1.0_dp/5.0_dp)
 
          ! the complex orbital order is:
          !     | 3, -3, up >,
@@ -1413,7 +1413,6 @@
              tmat_c2j(6,6) = -sqrt(1.0_dp/7.0_dp)
              tmat_c2j(6,13) = sqrt(6.0_dp/7.0_dp)
              tmat_c2j(7,14) = 1.0_dp
-
              tmat_c2j(8,7) = 1.0_dp
              tmat_c2j(9,1) = sqrt(1.0_dp/7.0_dp)
              tmat_c2j(9,8) = sqrt(6.0_dp/7.0_dp)
@@ -1429,7 +1428,8 @@
              tmat_c2j(14,13) = sqrt(1.0_dp/7.0_dp)
 
          case default
-             call s_print_error('atomic_make_tmat_c2j','not implemented for this nband!')
+             call s_print_error('atomic_make_tmat_c2j', &
+                 & 'not implemented for this nband!')
 
      end select
 
