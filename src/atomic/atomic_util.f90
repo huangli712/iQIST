@@ -1047,7 +1047,7 @@
   end subroutine atomic_make_smat7
 
 !!========================================================================
-!!>>> determine representation transformation matrix                   <<<
+!!>>> build transformation matrix for single particle basis            <<<
 !!========================================================================
 
 !!
@@ -1235,8 +1235,8 @@
 !!
 !! @sub atomic_make_tmat_r2c
 !!
-!! make transformation matrix from real orbital basis to
-!! complex orbital basis
+!! make transformation matrix from real orbital basis Y_{lm} to
+!! complex orbital basis Y^{m}_{l}
 !!
   subroutine atomic_make_tmat_r2c(tmat_r2c)
      use constants, only : dp
@@ -1266,11 +1266,12 @@
 !!
 !! @sub atomic_make_tmat_c2j
 !!
-!! make transformation matrix from complex orbital basis (|lz,sz>) to
-!! j2-jz orbital basis (|j2,jz>)
+!! make transformation matrix from complex orbital basis Y^{m}_{l} to
+!! j^2-j_z orbital basis
 !!
   subroutine atomic_make_tmat_c2j(tmat_c2j)
      use constants, only : dp
+     use constants, only : one, two
      use constants, only : czero
 
      use control, only : nband, norbs
@@ -1278,8 +1279,15 @@
      implicit none
 
 !! external arguments
-     ! transformation matrix from complex orbitals |lz,sz> to |j2,jz>
+     ! transformation matrix from complex orbitals to j^2-j_z basis
      complex(dp), intent(out) :: tmat_c2j(norbs,norbs)
+
+!! local parameters
+     real(dp), parameter :: three = 3.0_dp
+     real(dp), parameter :: four  = 4.0_dp
+     real(dp), parameter :: five  = 5.0_dp
+     real(dp), parameter :: six   = 6.0_dp
+     real(dp), parameter :: seven = 7.0_dp
 
 !! [body
 
@@ -1287,15 +1295,22 @@
      !
      select case (nband)
 
-         ! the |lz,sz> order is:
-         !     | -1, up >, | -1, dn >,
-         !     |  0, up >, |  0, dn >,
-         !     |  1, up >, |  1, dn >
+         ! the complex orbital order is:
+         !     | 1, -1, up >,
+         !     | 1,  0, up >,
+         !     | 1,  1, up >,
+         !     | 1, -1, dn >,
+         !     | 1,  0, dn >,
+         !     | 1,  1, dn >
          !
-         ! the |j2,jz> order is:
-         !     | 1/2, -1/2 >, | 1/2,  1/2 >,
-         !     | 3/2, -3/2 >, | 3/2, -1/2 >,
-         !     | 3/2,  1/2 >, | 3/2,  3/2 >
+         ! the j^2-j_z basis order is:
+         !     | 1/2, -1/2 >,
+         !     | 1/2,  1/2 >,
+         !     | 3/2, -3/2 >,
+         !     | 3/2, -1/2 >,
+         !     | 3/2,  1/2 >,
+         !     | 3/2,  3/2 >
+         !
          case (3)
              tmat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
              tmat_c2j(1,4) = sqrt(1.0_dp/3.0_dp)
@@ -1308,19 +1323,30 @@
              tmat_c2j(6,2) = sqrt(2.0_dp/3.0_dp)
              tmat_c2j(6,5) = sqrt(1.0_dp/3.0_dp)
 
-         ! the |lz,sz> order is:
-         !     | -2, up >, | -2, dn >,
-         !     | -1, up >, | -1, dn >,
-         !     |  0, up >, |  0, dn >,
-         !     |  1, up >, |  1, dn >,
-         !     |  2, up >, |  2, dn >
+         ! the complex orbital order is:
+         !     | 2, -2, up >,
+         !     | 2, -1, up >,
+         !     | 2,  0, up >,
+         !     | 2,  1, up >,
+         !     | 2,  2, up >,
+         !     | 2, -2, dn >,
+         !     | 2, -1, dn >,
+         !     | 2,  0, dn >,
+         !     | 2,  1, dn >,
+         !     | 2,  2, dn >
          !
-         ! the |j2,jz> order is:
-         !     | 3/2, -3/2 >, | 3/2, -1/2 >,
-         !     | 3/2,  1/2 >, | 3/2,  3/2 >,
-         !     | 5/2, -5/2 >, | 5/2, -3/2 >,
-         !     | 5/2, -1/2 >, | 5/2,  1/2 >,
-         !     | 5/2,  3/2 >, | 5/2,  5/2 >
+         ! the j^2-j_z basis order is:
+         !     | 3/2, -3/2 >,
+         !     | 3/2, -1/2 >,
+         !     | 3/2,  1/2 >,
+         !     | 3/2,  3/2 >,
+         !     | 5/2, -5/2 >,
+         !     | 5/2, -3/2 >,
+         !     | 5/2, -1/2 >,
+         !     | 5/2,  1/2 >,
+         !     | 5/2,  3/2 >,
+         !     | 5/2,  5/2 >
+         !
          case (5)
              tmat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp)
              tmat_c2j(1,6) = sqrt(1.0_dp/5.0_dp)
@@ -1341,23 +1367,38 @@
              tmat_c2j(10,4) = sqrt(4.0_dp/5.0_dp)
              tmat_c2j(10,9) = sqrt(1.0_dp/5.0_dp)
 
-         ! the |lz,sz> order is:
-         ! | -3, up >, | -3, dn >,
-         ! | -2, up >, | -2, dn >,
-         ! | -1, up >, | -1, dn >,
-         ! |  0, up >, |  0, dn >,
-         ! |  1, up >, |  1, dn >,
-         ! |  2, up >, |  2, dn >,
-         ! |  3, up >, |  3, dn >
+         ! the complex orbital order is:
+         !     | 3, -3, up >,
+         !     | 3, -2, up >,
+         !     | 3, -1, up >,
+         !     | 3,  0, up >,
+         !     | 3,  1, up >,
+         !     | 3,  2, up >,
+         !     | 3,  3, up >,
+         !     | 3, -3, dn >,
+         !     | 3, -2, dn >,
+         !     | 3, -1, dn >,
+         !     | 3,  0, dn >,
+         !     | 3,  1, dn >,
+         !     | 3,  2, dn >,
+         !     | 3,  3, dn >
          !
-         ! the |j2,jz> order is:
-         ! | 5/2, -5/2 >, | 5/2, -3/2 >,
-         ! | 5/2, -1/2 >, | 5/2,  1/2 >,
-         ! | 5/2,  3/2 >, | 5/2,  5/2 >,
-         ! | 7/2, -7/2 >, | 7/2, -5/2 >,
-         ! | 7/2, -3/2 >, | 7/2, -1/2 >,
-         ! | 7/2,  1/2 >, | 7/2,  3/2 >,
-         ! | 7/2,  5/2 >, | 7/2,  7/2 >
+         ! the j^2-j_z basis order is:
+         !     | 5/2, -5/2 >,
+         !     | 5/2, -3/2 >,
+         !     | 5/2, -1/2 >,
+         !     | 5/2,  1/2 >,
+         !     | 5/2,  3/2 >,
+         !     | 5/2,  5/2 >,
+         !     | 7/2, -7/2 >,
+         !     | 7/2, -5/2 >,
+         !     | 7/2, -3/2 >,
+         !     | 7/2, -1/2 >,
+         !     | 7/2,  1/2 >,
+         !     | 7/2,  3/2 >,
+         !     | 7/2,  5/2 >,
+         !     | 7/2,  7/2 >
+         !
          case (7)
              tmat_c2j(1,1) = -sqrt(6.0_dp/7.0_dp)
              tmat_c2j(1,8) = sqrt(1.0_dp/7.0_dp)
