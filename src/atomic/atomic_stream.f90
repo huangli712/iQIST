@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/31/2024 by li huang (last modified)
+!!!           06/01/2024 by li huang (last modified)
 !!! purpose : read essential input data from the external files, build
 !!!           the Fock basis, construct single particle matrices and
 !!!           natural eigenbasis, etc.
@@ -219,11 +219,11 @@
      endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
 
      ! check icu
-     if ( icu < 1 .or. icu > 3 ) then
-         write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2 or 3!'
+     if ( icu < 1 .or. icu > 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icu < 1 .or. icu > 3 ) block
+     endif ! back if ( icu < 1 .or. icu > 2 ) block
      !
      if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
          write(mystd,'(2X,a)') 'ERROR: Slater-Cordon type Coulomb &
@@ -231,14 +231,6 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
-     !
-     if ( icu == 3 .and. nband /= 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: anisotropic Hunds rule exchange &
-             & in Kanamori type Coulomb interaction is only suitable   &
-             & for 5-band system!'
-         write(mystd,*)
-         lpass = .false.
-     endif ! back if ( icu == 3 .and. nband /= 5 ) block
 
      ! check icf
      if ( icf < 0 .or. icf > 2 ) then
@@ -757,7 +749,7 @@
      !
      ! Kanamori parameterized form
      ! it is defined on real orbital basis
-     if ( icu == 1 .or. icu == 3 ) then
+     if ( icu == 1 ) then
      !
          call atomic_make_umatK()
      !
@@ -767,7 +759,7 @@
      !
          call atomic_make_umatS()
      !
-     endif ! back if ( icu == 1 .or. icu == 3 ) block
+     endif ! back if ( icu == 1 ) block
 
 !! body]
 
@@ -912,11 +904,11 @@
          ! for Kanamori parameterized Coulomb interaction U, since
          ! it is defined at real orbital basis, so we have to transfrom
          ! umat from real orbital basis to complex orbital basis
-         if ( icu == 1 .or. icu == 3 ) then
+         if ( icu == 1 ) then
              call atomic_make_tmat_r2c(tmat_r2c)
              call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
              umat = umat_tmp
-         endif ! back if ( icu == 1 .or. icu == 3 ) block
+         endif ! back if ( icu == 1 ) block
 
      endif ! back if ( isoc == 0 ) block
 
