@@ -72,7 +72,8 @@
      ! it is already occupied at ipos
      ! we can not violate the Pauli principle
      if ( btest(jold, ipos-1) .eqv. .true. ) then
-         call s_print_error('atomic_make_cdagger','severe error happened')
+         call s_print_error('atomic_make_cdagger', &
+             & 'severe error happened')
      endif ! back if ( btest(jold, ipos-1) .eqv. .true. ) block
 
      ! evaluate the sign
@@ -124,7 +125,8 @@
      ! it is already unoccupied at ipos
      ! we can not violate the Pauli principle
      if ( btest(jold, ipos-1) .eqv. .false. ) then
-         call s_print_error('atomic_make_c','severe error happened')
+         call s_print_error('atomic_make_c', &
+             & 'severe error happened')
      endif ! back if ( btest(jold, ipos-1) .eqv. .false. ) block
 
      ! evaluate the sign
@@ -169,6 +171,7 @@
 
 !! [body
 
+     ! the orbital order is up up up ... dn dn dn ...
      do i=1,norbs
          if ( i <= nband ) then
              good_sz(i) = +1
@@ -284,26 +287,28 @@
 !!
 !! @sub atomic_make_gaunt5
 !!
-!! build gaunt coefficients for 5 band case
+!! build c^{k}_{l}(m_1,m_2) coefficients for 5 band case (l = 2)
 !!
   subroutine atomic_make_gaunt5(gaunt)
      use constants, only : dp
-     use constants, only : zero, one
+     use constants, only : zero
 
 !! external arguments
-     ! gaunt coefficients
+     ! gaunt coefficients, gaunt(m_1, m_2, k)
      real(dp), intent(out) :: gaunt(-2:2,-2:2,0:4)
 
 !! [body
 
      gaunt = zero
-
+     !
+     ! for k = 2
      gaunt( -2 , -2 ,  0 ) =  1.0_dp * (  1.0 )
      gaunt( -1 , -1 ,  0 ) = -1.0_dp * ( -1.0 )
      gaunt(  0 ,  0 ,  0 ) =  1.0_dp * (  1.0 )
      gaunt(  1 ,  1 ,  0 ) = -1.0_dp * ( -1.0 )
      gaunt(  2 ,  2 ,  0 ) =  1.0_dp * (  1.0 )
-
+     !
+     ! for k = 2
      gaunt( -2 , -2 ,  2 ) = -sqrt(4.0_dp) / 7.0_dp * (  1.0 )
      gaunt( -2 , -1 ,  2 ) =  sqrt(6.0_dp) / 7.0_dp * (  1.0 )
      gaunt( -2 ,  0 ,  2 ) = -sqrt(4.0_dp) / 7.0_dp * (  1.0 )
@@ -323,7 +328,8 @@
      gaunt(  2 ,  0 ,  2 ) = -sqrt(4.0_dp) / 7.0_dp * (  1.0 )
      gaunt(  2 ,  1 ,  2 ) =  sqrt(6.0_dp) / 7.0_dp * (  1.0 )
      gaunt(  2 ,  2 ,  2 ) = -sqrt(4.0_dp) / 7.0_dp * (  1.0 )
-
+     !
+     ! for k = 4
      gaunt( -2 , -2 ,  4 ) =  sqrt( 1.0_dp) / 21.0_dp * (  1.0 )
      gaunt( -2 , -1 ,  4 ) = -sqrt( 5.0_dp) / 21.0_dp * (  1.0 )
      gaunt( -2 ,  0 ,  4 ) =  sqrt(15.0_dp) / 21.0_dp * (  1.0 )
@@ -358,22 +364,23 @@
 !!
 !! @sub atomic_make_gaunt7
 !!
-!! build gaunt coefficients for 7 band case
+!! build c^{k}_{l}(m_1,m_2) coefficients for 7 band case (l = 3)
 !!
   subroutine atomic_make_gaunt7(gaunt)
      use constants, only : dp
-     use constants, only : zero, one
+     use constants, only : zero
 
      implicit none
 
 !! external arguments
-     ! gaunt coefficients
+     ! gaunt coefficients, gaunt(m_1, m_2, k)
      real(dp), intent(out) :: gaunt(-3:3,-3:3,0:6)
 
 !! [body
 
      gaunt = zero
-
+     !
+     ! for k = 0
      gaunt( -3 , -3 ,  0 ) = -1 * ( -1.0 )
      gaunt( -2 , -2 ,  0 ) =  1 * (  1.0 )
      gaunt( -1 , -1 ,  0 ) = -1 * ( -1.0 )
@@ -381,7 +388,8 @@
      gaunt(  1 ,  1 ,  0 ) = -1 * ( -1.0 )
      gaunt(  2 ,  2 ,  0 ) =  1 * (  1.0 )
      gaunt(  3 ,  3 ,  0 ) = -1 * ( -1.0 )
-
+     !
+     ! for k = 2
      gaunt( -3 , -3 ,  2 ) =  sqrt( 1.0_dp) /  3.0_dp * ( -1.0 )
      gaunt( -3 , -2 ,  2 ) = -sqrt( 1.0_dp) /  3.0_dp * ( -1.0 )
      gaunt( -3 , -1 ,  2 ) =  sqrt(10.0_dp) / 15.0_dp * ( -1.0 )
@@ -409,7 +417,8 @@
      gaunt(  3 ,  1 ,  2 ) =  sqrt(10.0_dp) / 15.0_dp * ( -1.0 )
      gaunt(  3 ,  2 ,  2 ) = -sqrt( 1.0_dp) /  3.0_dp * ( -1.0 )
      gaunt(  3 ,  3 ,  2 ) =  sqrt( 1.0_dp) /  3.0_dp * ( -1.0 )
-
+     !
+     ! for k = 4
      gaunt( -3 , -3 ,  4 ) = -sqrt( 1.0_dp) / 11.0_dp * ( -1.0 )
      gaunt( -3 , -2 ,  4 ) =  sqrt(30.0_dp) / 33.0_dp * ( -1.0 )
      gaunt( -3 , -1 ,  4 ) = -sqrt( 6.0_dp) / 11.0_dp * ( -1.0 )
@@ -453,7 +462,8 @@
      gaunt(  3 ,  1 ,  4 ) = -sqrt( 6.0_dp) / 11.0_dp * ( -1.0 )
      gaunt(  3 ,  2 ,  4 ) =  sqrt(30.0_dp) / 33.0_dp * ( -1.0 )
      gaunt(  3 ,  3 ,  4 ) = -sqrt( 1.0_dp) / 11.0_dp * ( -1.0 )
-
+     !
+     ! for k = 6
      gaunt( -3 , -3 ,  6 ) =  sqrt(   25.0_dp) / 429.0_dp * ( -1.0 )
      gaunt( -3 , -2 ,  6 ) = -sqrt(  175.0_dp) / 429.0_dp * ( -1.0 )
      gaunt( -3 , -1 ,  6 ) =  sqrt(  700.0_dp) / 429.0_dp * ( -1.0 )
