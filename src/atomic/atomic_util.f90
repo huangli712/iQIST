@@ -1312,16 +1312,16 @@
          !     | 3/2,  3/2 >
          !
          case (3)
-             tmat_c2j( 1, 1 ) = -sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 1, 4 ) = sqrt(1.0_dp/3.0_dp)
-             tmat_c2j( 2, 2 ) = -sqrt(1.0_dp/3.0_dp)
-             tmat_c2j( 2, 5 ) = sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 3, 6 ) = 1.0_dp
-             tmat_c2j( 4, 3 ) = 1.0_dp
-             tmat_c2j( 5, 1 ) = sqrt(1.0_dp/3.0_dp)
-             tmat_c2j( 5, 4 ) = sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 6, 2 ) = sqrt(2.0_dp/3.0_dp)
-             tmat_c2j( 6, 5 ) = sqrt(1.0_dp/3.0_dp)
+             tmat_c2j( 1, 1 ) = -sqrt(two/3.0_dp)
+             tmat_c2j( 1, 4 ) = sqrt(one/3.0_dp)
+             tmat_c2j( 2, 2 ) = -sqrt(one/3.0_dp)
+             tmat_c2j( 2, 5 ) = sqrt(two/3.0_dp)
+             tmat_c2j( 3, 6 ) = one
+             tmat_c2j( 4, 3 ) = one
+             tmat_c2j( 5, 1 ) = sqrt(one/3.0_dp)
+             tmat_c2j( 5, 4 ) = sqrt(two/3.0_dp)
+             tmat_c2j( 6, 2 ) = sqrt(two/3.0_dp)
+             tmat_c2j( 6, 5 ) = sqrt(one/3.0_dp)
 
          ! the complex orbital order is:
          !     | 2, -2, up >,
