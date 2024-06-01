@@ -580,14 +580,14 @@
 
 !! local varibales
      ! orbital index
-     integer  :: alpha, betta
-     integer  :: delta, gamma
+     integer  :: m, n
+     integer  :: q, p
 
      ! band index and spin index
-     integer  :: aband, bband
-     integer  :: dband, gband
-     integer  :: aspin, bspin
-     integer  :: dspin, gspin
+     integer  :: m_b, n_b
+     integer  :: q_b, p_b
+     integer  :: m_s, n_s
+     integer  :: q_s, p_s
 
      ! dummy variables
      real(dp) :: dtmp
@@ -607,65 +607,80 @@
      umat = czero
 
      ! loop for creation operators
-     alphaloop: do alpha=1,norbs-1
-         bettaloop: do betta=alpha+1,norbs
+     alpha: do m=1,norbs-1
+         beta: do n=m+1,norbs
 
              ! loop for annihilation operators
-             gammaloop: do gamma=1,norbs-1
-                 deltaloop: do delta=gamma+1,norbs
+             gamma: do p=1,norbs-1
+                 delta: do q=p+1,norbs
+
+                     !
+                     ! notice:
+                     !
+                     ! here we just assume the orbital order is
+                     !
+                     ! up dn up dn up dn ...
+                     !
 
                      ! get the band and spin indices
-                     aband = ( alpha + 1 ) / 2; aspin = mod(alpha,2)
-                     bband = ( betta + 1 ) / 2; bspin = mod(betta,2)
-                     gband = ( gamma + 1 ) / 2; gspin = mod(gamma,2)
-                     dband = ( delta + 1 ) / 2; dspin = mod(delta,2)
+                     m_b = ( m + 1 ) / 2; m_s = mod(m,2)
+                     n_b = ( n + 1 ) / 2; n_s = mod(n,2)
+                     p_b = ( p + 1 ) / 2; p_s = mod(p,2)
+                     q_b = ( q + 1 ) / 2; q_s = mod(q,2)
 
                      dtmp = zero
 
                      ! intraorbital Coulomb interaction
-                     if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
-                         if ( ( aband == bband ) .and. ( aspin /= bspin ) ) then
+                     if ( ( m == p ) .and. ( n == q ) ) then
+                         if ( ( m_b == n_b ) .and. ( m_s /= n_s ) ) then
                              dtmp = dtmp + Uc
-                         endif ! back if ( ( aband == bband ) .and. ( aspin /= bspin ) ) block
-                     endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
+                         endif ! back if block
+                     endif ! back if block
 
                      ! interorbital Coulomb interaction
-                     if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
-                         if ( aband /= bband ) then
-                             dtmp = dtmp + (Uc - two * hund(aband,bband,1))
-                         endif ! back if ( aband /= bband ) block
-                     endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
+                     if ( ( m == p ) .and. ( n == q ) ) then
+                         if ( m_b /= n_b ) then
+                             dtmp = dtmp + (Uc - two * hund(m_b,n_b,1))
+                         endif ! back if ( m_b /= n_b ) block
+                     endif ! back if block
 
                      ! Hund's exchange interaction
-                     if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
-                         if ( ( aband /= bband ) .and. ( aspin == bspin ) ) then
-                             dtmp = dtmp - hund(aband,bband,1)
-                         endif ! back if ( ( aband /= bband ) .and. ( aspin == bspin ) ) block
-                     endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
+                     if ( ( m == p ) .and. ( n == q ) ) then
+                         if ( ( m_b /= n_b ) .and. ( m_s == n_s ) ) then
+                             dtmp = dtmp - hund(m_b,n_b,1)
+                         endif ! back if block
+                     endif ! back if block
 
                      ! spin flip term
-                     if ( ( aband == gband ) .and. ( bband == dband ) ) then
-                         if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) then
-                             dtmp = dtmp - hund(aband,bband,2)
-                         endif ! back if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) block
-                     endif ! back if ( ( aband == gband ) .and. ( bband == dband ) ) block
+                     if ( ( m_b == p_b ) .and. ( n_b == q_b ) ) then
+                         if ( ( m_s /= p_s ) .and. ( n_s /= q_s ) .and. ( m_s /= n_s ) ) then
+                             dtmp = dtmp - hund(m_b,n_b,2)
+                         endif ! back if block
+                     endif ! back if block
 
                      ! pair hopping term
-                     if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) then
-                         if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) then
-                             dtmp = dtmp + hund(aband,gband,3)
-                         endif ! back if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) block
-                     endif ! back if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) block
+                     if ( ( m_b == n_b ) .and. ( q_b == p_b ) .and. ( m_b /= q_b ) ) then
+                         if ( ( m_s /= n_s ) .and. ( q_s /= p_s ) .and. ( m_s == p_s ) ) then
+                             dtmp = dtmp + hund(m_b,p_b,3)
+                         endif ! back if block
+                     endif ! back if block
 
-                     umat( aband + nband * (1 - aspin), &
-                           bband + nband * (1 - bspin), &
-                           dband + nband * (1 - dspin), &
-                           gband + nband * (1 - gspin) ) = dtmp
+                     !
+                     ! notice:
+                     !
+                     ! now we change the orbital order to
+                     !
+                     ! up up up ... dn dn dn ...
+                     !
+                     umat( m_b + nband * (1 - m_s), &
+                           n_b + nband * (1 - n_s), &
+                           q_b + nband * (1 - q_s), &
+                           p_b + nband * (1 - p_s) ) = dtmp
 
-                 enddo deltaloop ! over delta={gamma+1,norbs} loop
-             enddo gammaloop ! over gamma={1,norbs-1} loop
-         enddo bettaloop ! over betta={alpha+1,norbs} loop
-     enddo alphaloop ! over alpha={1,norbs-1} loop
+                 enddo delta ! over q={p+1,norbs} loop
+             enddo gamma ! over p={1,norbs-1} loop
+         enddo beta ! over n={m+1,norbs} loop
+     enddo alpha ! over m={1,norbs-1} loop
 
 !! body]
 
@@ -678,7 +693,7 @@
 !! make Coulomb interation U rank-4 tensor, according to Slater-Cordon
 !! parameterized Hamiltonian
 !!
-  subroutine atomic_make_umatS()
+  subroutine atomic_make_umatS1()
      use constants, only : dp
      use constants, only : zero, half
      use constants, only : czero
@@ -782,6 +797,128 @@
 
      enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
+     !
+     umat = half * umat
+
+     ! deallocate memory
+     if ( allocated(gaunt) )         deallocate(gaunt)
+     if ( allocated(slater_cordon) ) deallocate(slater_cordon)
+
+!! body]
+
+     return
+  end subroutine atomic_make_umatS1
+  subroutine atomic_make_umatS()
+     use constants, only : dp
+     use constants, only : zero, half
+     use constants, only : czero
+
+     use control, only : nband, norbs
+     use control, only : Ud, Jh
+
+     use m_spmat, only : umat
+
+     implicit none
+
+!! local variables
+     ! orbital momentum quantum number
+     integer  :: l
+
+     ! loop index
+     integer  :: i
+
+     ! orbital index
+     integer  :: m, n
+     integer  :: q, p
+
+     ! band index and spin index
+     integer  :: m_b, m_s
+     integer  :: n_b, n_s
+     integer  :: q_b, q_s
+     integer  :: p_b, p_s
+
+     ! dummy variables
+     real(dp) :: res
+
+     ! c^k_l(m_1,m_2) coefficients
+     real(dp), allocatable :: gaunt(:,:,:)
+
+     ! Slater-Cordon parameters: F0, F2, F4, and F6
+     real(dp), allocatable :: slater_cordon(:)
+
+!! [body
+
+     ! allocate memory for slater_cordon and gaunt and then build them
+     select case (nband)
+
+         case (5)
+             l = 2
+             allocate(slater_cordon(0:2*l))
+             slater_cordon = zero
+             slater_cordon(0) = Ud
+             slater_cordon(2) = Jh * 14.0_dp / 1.625_dp
+             slater_cordon(4) = 0.625_dp * slater_cordon(2)
+             allocate(gaunt(-l:l,-l:l,0:2*l))
+             call atomic_make_gaunt5(gaunt)
+
+         case (7)
+             l = 3
+             allocate(slater_cordon(0:2*l))
+             slater_cordon = zero
+             slater_cordon(0) = Ud
+             slater_cordon(2) = Jh * 6435.0_dp / ( 286.0_dp + ( 195.0_dp * &
+                 & 451.0_dp / 675.0_dp ) + ( 250.0_dp * 1001.0_dp / 2025.0_dp ) )
+             slater_cordon(4) = 451.0_dp / 675.0_dp * slater_cordon(2)
+             slater_cordon(6) = 1001.0_dp / 2025.0_dp * slater_cordon(2)
+             allocate(gaunt(-l:l,-l:l,0:2*l))
+             call atomic_make_gaunt7(gaunt)
+
+         case default
+             call s_print_error('atomic_make_umatS', &
+                 & 'not implemented for this nband!')
+
+     end select
+
+     ! make Coulomb interaction U matrix
+     do m=1,norbs
+     do n=1,norbs
+
+         ! determine band index and spin index
+         ! the orbital order is : up dn up dn up dn ...
+         m_b = ( m - 1 ) / 2 - l
+         n_b = ( n - 1 ) / 2 - l
+         m_s = mod(m,2)
+         n_s = mod(n,2)
+
+         do p=1,norbs
+         do q=1,norbs
+
+             ! determine band index and spin index
+             ! the orbital order is : up dn up dn up dn ...
+             q_b = ( q - 1 ) / 2 - l
+             p_b = ( p - 1 ) / 2 - l
+             q_s = mod(q,2)
+             p_s = mod(p,2)
+
+             if ( ( m_b + n_b ) /= ( q_b + p_b ) ) CYCLE
+             if ( ( m_s /= p_s ) .or. ( n_s /= q_s ) ) CYCLE
+
+             res = zero
+             do i=0,2*l,2
+                 res = res + gaunt(m_b,p_b,i) * gaunt(q_b,n_b,i) * slater_cordon(i)
+             enddo ! over i={0,2*l} loop
+
+             ! transform the orbital order to: up up up ... dn dn dn ...
+             umat( (m + 1) / 2 + nband * (1 - m_s), &
+                   (n + 1) / 2 + nband * (1 - n_s), &
+                   (q + 1) / 2 + nband * (1 - q_s), &
+                   (p + 1) / 2 + nband * (1 - p_s) ) = res
+
+         enddo ! over q={1,norbs} loop
+         enddo ! over p={1,norbs} loop
+
+     enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
      !
      umat = half * umat
 
