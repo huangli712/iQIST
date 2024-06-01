@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/31/2024 by li huang (last modified)
+!!!           06/01/2024 by li huang (last modified)
 !!! purpose : define global control parameters for the atomic eigenvalue
 !!!           problem solver.
 !!! status  : unstable
@@ -102,15 +102,6 @@
 !!     Slater-Cordon type interaction. it needs the Ud, Jh parameters to
 !!     evaluate the Slater integrals (F0, F2, F4, F6). and they are used
 !!     build the Coulomb interaction matrix
-!!
-!! if icu == 3:
-!!     Kanamori type interaction. the Hund's rule coupling is anisotropic.
-!!     it needs the Uc, Uv, Jz, Js, Jp parameters to build the Coulomb
-!!     interaction matrix
-!!
-!! we note that if icu == 3, perhaps users need to modify the
-!!     atomic_util.f90/atomic_make_hund()
-!! subroutine to customize the Hund's rule coupling matrix
 !!
      integer, public, save :: icu    = 1
 

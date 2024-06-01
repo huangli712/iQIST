@@ -532,7 +532,6 @@
      use constants, only : dp
      use constants, only : zero
 
-     use control, only : icu
      use control, only : nband
      use control, only : Jz, Js, Jp
 
@@ -544,28 +543,17 @@
      ! loop index
      integer  :: i
 
-     ! dummy variables
-     real(dp) :: ff2(3)
-     real(dp) :: ff4(3)
-     real(dp) :: jj1(3)
-     real(dp) :: jj2(3)
-     real(dp) :: jj3(3)
-     real(dp) :: jj4(3)
-     real(dp) :: jzsp(3)
-
 !! [body
 
-     ! initialize hund to be zero
      hund = zero
-
-     if ( icu == 1 ) then
-         hund(:,:,1) = Jz
-         hund(:,:,2) = Js
-         hund(:,:,3) = Jp
-         do i=1,nband
-             hund(i,i,:) = zero
-         enddo ! over i={1,nband} loop
-     endif ! back if ( icu == 1 ) block
+     !
+     hund(:,:,1) = Jz
+     hund(:,:,2) = Js
+     hund(:,:,3) = Jp
+     !
+     do i=1,nband
+         hund(i,i,:) = zero
+     enddo ! over i={1,nband} loop
 
 !! body]
 
