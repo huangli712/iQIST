@@ -1349,23 +1349,23 @@
          !
          case (5)
              tmat_c2j(  1,  1 ) = -sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(  1,  6 ) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(  1,  6 ) = sqrt(one/5.0_dp)
              tmat_c2j(  2,  2 ) = -sqrt(3.0_dp/5.0_dp)
              tmat_c2j(  2,  7 ) = sqrt(2.0_dp/5.0_dp)
              tmat_c2j(  3,  3 ) = -sqrt(2.0_dp/5.0_dp)
              tmat_c2j(  3,  8 ) = sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(  4,  4 ) = -sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(  4,  4 ) = -sqrt(one/5.0_dp)
              tmat_c2j(  4,  9 ) = sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(  5, 10 ) = 1.0_dp
-             tmat_c2j(  6,  5 ) = 1.0_dp
-             tmat_c2j(  7,  1 ) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j(  5, 10 ) = one
+             tmat_c2j(  6,  5 ) = one
+             tmat_c2j(  7,  1 ) = sqrt(one/5.0_dp)
              tmat_c2j(  7,  6 ) = sqrt(4.0_dp/5.0_dp)
              tmat_c2j(  8,  2 ) = sqrt(2.0_dp/5.0_dp)
              tmat_c2j(  8,  7 ) = sqrt(3.0_dp/5.0_dp)
              tmat_c2j(  9,  3 ) = sqrt(3.0_dp/5.0_dp)
              tmat_c2j(  9,  8 ) = sqrt(2.0_dp/5.0_dp)
              tmat_c2j( 10,  4 ) = sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 10,  9 ) = sqrt(1.0_dp/5.0_dp)
+             tmat_c2j( 10,  9 ) = sqrt(one/5.0_dp)
 
          ! the complex orbital order is:
          !     | 3, -3, up >,
@@ -1401,7 +1401,7 @@
          !
          case (7)
              tmat_c2j(  1,  1 ) = -sqrt(6.0_dp/7.0_dp)
-             tmat_c2j(  1,  8 ) = sqrt(1.0_dp/7.0_dp)
+             tmat_c2j(  1,  8 ) = sqrt(one/7.0_dp)
              tmat_c2j(  2,  2 ) = -sqrt(5.0_dp/7.0_dp)
              tmat_c2j(  2,  9 ) = sqrt(2.0_dp/7.0_dp)
              tmat_c2j(  3,  3 ) = -sqrt(4.0_dp/7.0_dp)
@@ -1410,11 +1410,11 @@
              tmat_c2j(  4, 11 ) = sqrt(4.0_dp/7.0_dp)
              tmat_c2j(  5,  5 ) = -sqrt(2.0_dp/7.0_dp)
              tmat_c2j(  5, 12 ) = sqrt(5.0_dp/7.0_dp)
-             tmat_c2j(  6,  6 ) = -sqrt(1.0_dp/7.0_dp)
+             tmat_c2j(  6,  6 ) = -sqrt(one/7.0_dp)
              tmat_c2j(  6, 13 ) = sqrt(6.0_dp/7.0_dp)
-             tmat_c2j(  7, 14 ) = 1.0_dp
-             tmat_c2j(  8,  7 ) = 1.0_dp
-             tmat_c2j(  9,  1 ) = sqrt(1.0_dp/7.0_dp)
+             tmat_c2j(  7, 14 ) = one
+             tmat_c2j(  8,  7 ) = one
+             tmat_c2j(  9,  1 ) = sqrt(one/7.0_dp)
              tmat_c2j(  9,  8 ) = sqrt(6.0_dp/7.0_dp)
              tmat_c2j( 10,  2 ) = sqrt(2.0_dp/7.0_dp)
              tmat_c2j( 10,  9 ) = sqrt(5.0_dp/7.0_dp)
@@ -1425,7 +1425,7 @@
              tmat_c2j( 13,  5 ) = sqrt(5.0_dp/7.0_dp)
              tmat_c2j( 13, 12 ) = sqrt(2.0_dp/7.0_dp)
              tmat_c2j( 14,  6 ) = sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 14, 13 ) = sqrt(1.0_dp/7.0_dp)
+             tmat_c2j( 14, 13 ) = sqrt(one/7.0_dp)
 
          case default
              call s_print_error('atomic_make_tmat_c2j', &
