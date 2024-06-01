@@ -1318,10 +1318,10 @@
              tmat_c2j( 2, 5 ) = sqrt(two/3.0_dp)
              tmat_c2j( 3, 6 ) = one
              tmat_c2j( 4, 3 ) = one
-             tmat_c2j( 5, 1 ) = sqrt(one/3.0_dp)
-             tmat_c2j( 5, 4 ) = sqrt(two/3.0_dp)
-             tmat_c2j( 6, 2 ) = sqrt(two/3.0_dp)
-             tmat_c2j( 6, 5 ) = sqrt(one/3.0_dp)
+             tmat_c2j( 5, 1 ) = sqrt(one/three)
+             tmat_c2j( 5, 4 ) = sqrt(two/three)
+             tmat_c2j( 6, 2 ) = sqrt(two/three)
+             tmat_c2j( 6, 5 ) = sqrt(one/three)
 
          ! the complex orbital order is:
          !     | 2, -2, up >,
@@ -1348,24 +1348,24 @@
          !     | 5/2,  5/2 >
          !
          case (5)
-             tmat_c2j(  1,  1 ) = -sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(  1,  6 ) = sqrt(one/5.0_dp)
-             tmat_c2j(  2,  2 ) = -sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(  2,  7 ) = sqrt(2.0_dp/5.0_dp)
-             tmat_c2j(  3,  3 ) = -sqrt(2.0_dp/5.0_dp)
-             tmat_c2j(  3,  8 ) = sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(  4,  4 ) = -sqrt(one/5.0_dp)
-             tmat_c2j(  4,  9 ) = sqrt(4.0_dp/5.0_dp)
+             tmat_c2j(  1,  1 ) = -sqrt(four/five)
+             tmat_c2j(  1,  6 ) = sqrt(one/five)
+             tmat_c2j(  2,  2 ) = -sqrt(three/five)
+             tmat_c2j(  2,  7 ) = sqrt(two/five)
+             tmat_c2j(  3,  3 ) = -sqrt(two/five)
+             tmat_c2j(  3,  8 ) = sqrt(three/five)
+             tmat_c2j(  4,  4 ) = -sqrt(one/five)
+             tmat_c2j(  4,  9 ) = sqrt(four/five)
              tmat_c2j(  5, 10 ) = one
              tmat_c2j(  6,  5 ) = one
-             tmat_c2j(  7,  1 ) = sqrt(one/5.0_dp)
-             tmat_c2j(  7,  6 ) = sqrt(4.0_dp/5.0_dp)
-             tmat_c2j(  8,  2 ) = sqrt(2.0_dp/5.0_dp)
-             tmat_c2j(  8,  7 ) = sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(  9,  3 ) = sqrt(3.0_dp/5.0_dp)
-             tmat_c2j(  9,  8 ) = sqrt(2.0_dp/5.0_dp)
-             tmat_c2j( 10,  4 ) = sqrt(4.0_dp/5.0_dp)
-             tmat_c2j( 10,  9 ) = sqrt(one/5.0_dp)
+             tmat_c2j(  7,  1 ) = sqrt(one/five)
+             tmat_c2j(  7,  6 ) = sqrt(four/five)
+             tmat_c2j(  8,  2 ) = sqrt(two/five)
+             tmat_c2j(  8,  7 ) = sqrt(three/five)
+             tmat_c2j(  9,  3 ) = sqrt(three/five)
+             tmat_c2j(  9,  8 ) = sqrt(two/five)
+             tmat_c2j( 10,  4 ) = sqrt(four/five)
+             tmat_c2j( 10,  9 ) = sqrt(one/five)
 
          ! the complex orbital order is:
          !     | 3, -3, up >,
@@ -1403,12 +1403,12 @@
              tmat_c2j(  1,  1 ) = -sqrt(6.0_dp/7.0_dp)
              tmat_c2j(  1,  8 ) = sqrt(one/7.0_dp)
              tmat_c2j(  2,  2 ) = -sqrt(5.0_dp/7.0_dp)
-             tmat_c2j(  2,  9 ) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(  2,  9 ) = sqrt(two/7.0_dp)
              tmat_c2j(  3,  3 ) = -sqrt(4.0_dp/7.0_dp)
              tmat_c2j(  3, 10 ) = sqrt(3.0_dp/7.0_dp)
              tmat_c2j(  4,  4 ) = -sqrt(3.0_dp/7.0_dp)
              tmat_c2j(  4, 11 ) = sqrt(4.0_dp/7.0_dp)
-             tmat_c2j(  5,  5 ) = -sqrt(2.0_dp/7.0_dp)
+             tmat_c2j(  5,  5 ) = -sqrt(two/7.0_dp)
              tmat_c2j(  5, 12 ) = sqrt(5.0_dp/7.0_dp)
              tmat_c2j(  6,  6 ) = -sqrt(one/7.0_dp)
              tmat_c2j(  6, 13 ) = sqrt(6.0_dp/7.0_dp)
@@ -1416,14 +1416,14 @@
              tmat_c2j(  8,  7 ) = one
              tmat_c2j(  9,  1 ) = sqrt(one/7.0_dp)
              tmat_c2j(  9,  8 ) = sqrt(6.0_dp/7.0_dp)
-             tmat_c2j( 10,  2 ) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j( 10,  2 ) = sqrt(two/7.0_dp)
              tmat_c2j( 10,  9 ) = sqrt(5.0_dp/7.0_dp)
              tmat_c2j( 11,  3 ) = sqrt(3.0_dp/7.0_dp)
              tmat_c2j( 11, 10 ) = sqrt(4.0_dp/7.0_dp)
              tmat_c2j( 12,  4 ) = sqrt(4.0_dp/7.0_dp)
              tmat_c2j( 12, 11 ) = sqrt(3.0_dp/7.0_dp)
              tmat_c2j( 13,  5 ) = sqrt(5.0_dp/7.0_dp)
-             tmat_c2j( 13, 12 ) = sqrt(2.0_dp/7.0_dp)
+             tmat_c2j( 13, 12 ) = sqrt(two/7.0_dp)
              tmat_c2j( 14,  6 ) = sqrt(6.0_dp/7.0_dp)
              tmat_c2j( 14, 13 ) = sqrt(one/7.0_dp)
 
