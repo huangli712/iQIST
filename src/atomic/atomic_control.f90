@@ -185,7 +185,7 @@
 !!========================================================================
 
 !!
-!! the following parameters are useful when icu = 1 or icu = 3
+!! the following parameters are useful when icu = 1
 !!
 
 !!

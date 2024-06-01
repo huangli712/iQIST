@@ -234,7 +234,7 @@
      umat_t = zero
 
      ! Kanamori type
-     if ( icu == 1 .or. icu == 3 ) then
+     if ( icu == 1 ) then
          !
          do i=1,norbs
              do j=i+1,norbs
@@ -244,7 +244,7 @@
          enddo ! over i={1,norbs} loop
          !
      ! Slater type
-     elseif ( icu == 2 ) then
+     else
          !
          do i=1,norbs
              do j=i+1,norbs
@@ -258,7 +258,7 @@
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
          !
-     endif ! back if ( icu == 1 .or. icu == 3 ) block
+     endif ! back if ( icu == 1 ) block
 
      ! open file solver.umat.in to write
      ! this file is used as input for the the other ctqmc code
