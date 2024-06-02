@@ -503,7 +503,7 @@
 
      ! we shall read transformation matrix tmat from file atomic.tmat.in.
      ! it is used to transform the single particle matrices from original
-     ! basis to natural eigenbasis 
+     ! basis to natural eigenbasis
      !
      ! inquire file's status at first
      inquire( file = 'atom.tmat.in', exist = exists )

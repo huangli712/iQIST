@@ -1084,7 +1084,7 @@
          !     | dxy, dn >,
          !     | dyz, dn >,
          !     | dz2, dn >,
-         !     | dxz, dn >, 
+         !     | dxz, dn >,
          !     | dx2-y2, dn >
          !
          ! the complex orbital order is:

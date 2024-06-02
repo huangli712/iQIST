@@ -383,7 +383,7 @@
 !! @sub atomic_dump_fcix
 !!
 !! write atom.cix file for the ctqmc solver. the file format is
-!! designed for the lavender code. however, the code is already 
+!! designed for the lavender code. however, the code is already
 !! deprecated. we retain this subroutine only for reference.
 !!
   subroutine atomic_dump_fcix()

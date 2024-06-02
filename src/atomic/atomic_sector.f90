@@ -45,7 +45,7 @@
      implicit none
 
 !! local parameters
-     ! maximum number of subspaces 
+     ! maximum number of subspaces
      integer, parameter :: max_num_sect = 400
 
 !! local variables
