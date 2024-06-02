@@ -1007,7 +1007,7 @@
   end subroutine atomic_make_smat7
 
 !!========================================================================
-!!>>> build transformation matrix for single particle basis            <<<
+!!>>> determine transformation matrix for single particle basis        <<<
 !!========================================================================
 
 !!
@@ -1272,10 +1272,10 @@
          !     | 3/2,  3/2 >
          !
          case (3)
-             tmat_c2j( 1, 1 ) = -sqrt(two/3.0_dp)
-             tmat_c2j( 1, 4 ) = sqrt(one/3.0_dp)
-             tmat_c2j( 2, 2 ) = -sqrt(one/3.0_dp)
-             tmat_c2j( 2, 5 ) = sqrt(two/3.0_dp)
+             tmat_c2j( 1, 1 ) = -sqrt(two/three)
+             tmat_c2j( 1, 4 ) = sqrt(one/three)
+             tmat_c2j( 2, 2 ) = -sqrt(one/three)
+             tmat_c2j( 2, 5 ) = sqrt(two/three)
              tmat_c2j( 3, 6 ) = one
              tmat_c2j( 4, 3 ) = one
              tmat_c2j( 5, 1 ) = sqrt(one/three)
@@ -1489,10 +1489,10 @@
 
 !! local variables
      ! loop index over orbitals in orginal single particle basis
-     integer :: alpha1, alpha2
-     integer :: alpha3, alpha4
-     integer :: sigma1, sigma2
-     integer :: sigma3, sigma4
+     integer :: a1, a2
+     integer :: a3, a4
+     integer :: s1, s2
+     integer :: s3, s4
 
      ! auxiliary complex(dp) variables
      complex(dp) :: ctmp
@@ -1502,35 +1502,35 @@
      ! initialize umat_t to be zero
      umat_t = czero
      !
-     sigma1loop: do sigma1=1,norbs
-     sigma2loop: do sigma2=1,norbs
-     sigma3loop: do sigma3=1,norbs
-     sigma4loop: do sigma4=1,norbs
+     s1loop: do s1=1,norbs
+     s2loop: do s2=1,norbs
+     s3loop: do s3=1,norbs
+     s4loop: do s4=1,norbs
          !
          ctmp = czero
          !
-         alpha1loop: do alpha1=1,norbs
-         alpha2loop: do alpha2=1,norbs
-         alpha3loop: do alpha3=1,norbs
-         alpha4loop: do alpha4=1,norbs
+         a1loop: do a1=1,norbs
+         a2loop: do a2=1,norbs
+         a3loop: do a3=1,norbs
+         a4loop: do a4=1,norbs
 
-             if ( abs( umat(alpha1,alpha2,alpha3,alpha4) ) < epst ) CYCLE
+             if ( abs( umat(a1,a2,a3,a4) ) < epst ) CYCLE
 
-             ctmp = ctmp + umat(alpha1,alpha2,alpha3,alpha4)                   &
-                         * conjg(amtrx(alpha1,sigma1)) * amtrx(alpha3,sigma3)  &
-                         * conjg(amtrx(alpha2,sigma2)) * amtrx(alpha4,sigma4)
+             ctmp = ctmp + umat(a1,a2,a3,a4)                   &
+                         * conjg(amtrx(a1,s1)) * amtrx(a3,s3)  &
+                         * conjg(amtrx(a2,s2)) * amtrx(a4,s4)
 
-         enddo alpha4loop ! over alpha4={1,norbs} loop
-         enddo alpha3loop ! over alpha3={1,norbs} loop
-         enddo alpha2loop ! over alpha2={1,norbs} loop
-         enddo alpha1loop ! over alpha1={1,norbs} loop
+         enddo a4loop ! over a4={1,norbs} loop
+         enddo a3loop ! over a3={1,norbs} loop
+         enddo a2loop ! over a2={1,norbs} loop
+         enddo a1loop ! over a1={1,norbs} loop
          !
-         umat_t(sigma1,sigma2,sigma3,sigma4) = ctmp
+         umat_t(s1,s2,s3,s4) = ctmp
          !
-     enddo sigma4loop ! over sigma4={1,norbs} loop
-     enddo sigma3loop ! over sigma3={1,norbs} loop
-     enddo sigma2loop ! over sigma2={1,norbs} loop
-     enddo sigma1loop ! over sigma1={1,norbs} loop
+     enddo s4loop ! over s4={1,norbs} loop
+     enddo s3loop ! over s3={1,norbs} loop
+     enddo s2loop ! over s2={1,norbs} loop
+     enddo s1loop ! over s1={1,norbs} loop
 
 !! body]
 
@@ -1764,7 +1764,7 @@
 !! no crystal field splitting
 !! spin-orbit coupling
 !!
-!! for this special case, the natural eigenbasis is |j2,jz>
+!! for this special case, the natural eigenbasis is |j^2,j_z>
 !!
   subroutine atomic_natural_basis3()
      use constants, only : dp
@@ -1780,7 +1780,7 @@
      ! loop inex
      integer :: i
 
-     ! transformation matrix from complex orbital basis to |j2,jz> basis
+     ! transformation matrix from complex orbital basis to |j^2,j_z> basis
      complex(dp) :: tmat_c2j(norbs,norbs)
 
 !! [body
@@ -1793,7 +1793,7 @@
      call atomic_make_tmat_c2j(tmat_c2j)
 
      ! the transformation matrix is from complex orbital
-     ! basis to natural eigenbasis (|j2,jz> basis)
+     ! basis to natural eigenbasis (|j^2,j_z> basis)
      tmat = tmat_c2j
 
      ! transform emat to natural eigenbasis
