@@ -310,6 +310,60 @@
   end subroutine atomic_make_slater3
 
 !!
+!! @sub atomic_make_slater5
+!!
+!! build Slater integrals (radial integrals) F_k for 5 band case (l = 2)
+!!
+  subroutine atomic_make_slater5(Fk)
+     use constants, only : dp
+     use constants, only : zero
+
+     use control, only : Ud, Jh
+
+!! external arguments
+     ! Slater integrals F_k for l = 2
+     real(dp), intent(out) :: Fk(0:4)
+     
+!! [body
+
+     Fk = zero
+
+
+!! body]
+
+     return
+  end subroutine atomic_make_slater5
+
+!!
+!! @sub atomic_make_slater7
+!!
+!! build Slater integrals (radial integrals) F_k for 7 band case (l = 3)
+!!
+  subroutine atomic_make_slater7(Fk)
+     use constants, only : dp
+     use constants, only : zero
+
+     use control, only : Ud, Jh
+
+!! external arguments
+     ! Slater integrals F_k for l = 3
+     real(dp), intent(out) :: Fk(0:6)
+     
+!! [body
+
+     Fk = zero
+
+
+!! body]
+
+     return
+  end subroutine atomic_make_slater7
+
+!!========================================================================
+!!>>> determine gaunt coefficients                                     <<<
+!!========================================================================
+
+!!
 !! @sub atomic_make_gaunt5
 !!
 !! build c^{k}_{l}(m_1,m_2) coefficients for 5 band case (l = 2)
