@@ -295,6 +295,8 @@
 
      use control, only : Ud, Jh
 
+     implicit none
+
 !! external arguments
      ! Slater integrals F_k for l = 1
      real(dp), intent(out) :: Fk(0:2)
@@ -321,6 +323,8 @@
      use constants, only : zero
 
      use control, only : Ud, Jh
+
+     implicit none
 
 !! external arguments
      ! Slater integrals F_k for l = 2
@@ -352,6 +356,8 @@
 
      use control, only : Ud, Jh
 
+     implicit none
+
 !! external arguments
      ! Slater integrals F_k for l = 3
      real(dp), intent(out) :: Fk(0:6)
@@ -378,6 +384,30 @@
 !!========================================================================
 
 !!
+!! @sub atomic_make_gaunt3
+!!
+!! build c^{k}_{l}(m_1,m_2) coefficients for 3 band case (l = 1)
+!!
+  subroutine atomic_make_gaunt3(gaunt)
+     use constants, only : dp
+     use constants, only : zero
+
+     implicit none
+
+!! external arguments
+     ! gaunt coefficients, gaunt(m_1, m_2, k)
+     real(dp), intent(out) :: gaunt(-1:1,-1:1,0:2)
+
+!! [body
+
+     gaunt = zero
+
+!! body]
+
+     return
+  end subroutine atomic_make_gaunt3
+
+!!
 !! @sub atomic_make_gaunt5
 !!
 !! build c^{k}_{l}(m_1,m_2) coefficients for 5 band case (l = 2)
@@ -385,6 +415,8 @@
   subroutine atomic_make_gaunt5(gaunt)
      use constants, only : dp
      use constants, only : zero
+
+     implicit none
 
 !! external arguments
      ! gaunt coefficients, gaunt(m_1, m_2, k)
@@ -792,7 +824,6 @@
      use constants, only : czero
 
      use control, only : nband, norbs
-     use control, only : Ud, Jh
 
      use m_spmat, only : umat
 
@@ -840,14 +871,10 @@
 
          case (7)
              l = 3
+             !
              allocate(slater_cordon(0:2*l))
-             !slater_cordon = zero
-             !slater_cordon(0) = Ud
-             !slater_cordon(2) = Jh * 6435.0_dp / ( 286.0_dp + ( 195.0_dp * &
-             !    & 451.0_dp / 675.0_dp ) + ( 250.0_dp * 1001.0_dp / 2025.0_dp ) )
-             !slater_cordon(4) = 451.0_dp / 675.0_dp * slater_cordon(2)
-             !slater_cordon(6) = 1001.0_dp / 2025.0_dp * slater_cordon(2)
              call atomic_make_slater7(slater_cordon)
+             !
              allocate(gaunt(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt7(gaunt)
 
