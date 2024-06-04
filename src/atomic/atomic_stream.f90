@@ -261,7 +261,7 @@
          lpass = .false.
      endif ! back if ( nband <= 0 .or. nband >= 8 ) block
      !
-     if ( nband >= 5 .and. ictqmc == 1 ) then
+     if ( nband > 7 .and. ictqmc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: when number of bands is larger &
              & than 4, the direct diagonalization algorithm is NOT    &
              & supported any more!'
