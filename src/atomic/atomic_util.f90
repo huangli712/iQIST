@@ -302,7 +302,9 @@
 !! [body
 
      Fk = zero
-
+     !
+     Fk(0) = Ud
+     Fk(2) = 5.0_dp * Jh
 
 !! body]
 
