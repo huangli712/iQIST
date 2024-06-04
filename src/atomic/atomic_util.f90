@@ -304,7 +304,7 @@
      Fk = zero
      !
      Fk(0) = Ud
-     Fk(2) = 5.0_dp * Jh
+     Fk(2) = Jh * 5.0_dp
 
 !! body]
 
@@ -329,7 +329,12 @@
 !! [body
 
      Fk = zero
+     !
+     Fk(0) = Ud
+     Fk(2) = Jh * 14.0_dp / (1.0_dp + 0.625_dp)
+     Fk(4) = 0.625_dp * Fk(2)
 
+     ! the triqs code uses 0.63, insead of 0.625
 
 !! body]
 
@@ -819,11 +824,10 @@
 
          case (5)
              l = 2
+             !
              allocate(slater_cordon(0:2*l))
-             slater_cordon = zero
-             slater_cordon(0) = Ud
-             slater_cordon(2) = Jh * 14.0_dp / 1.625_dp
-             slater_cordon(4) = 0.625_dp * slater_cordon(2)
+             call atomic_make_slater5(slater_cordon)
+             !
              allocate(gaunt(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt5(gaunt)
 
