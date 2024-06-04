@@ -860,6 +860,15 @@
      ! allocate memory for slater_cordon and gaunt and then build them
      select case (nband)
 
+         case (3)
+             l = 1
+             !
+             allocate(slater_cordon(0:2*l))
+             call atomic_make_slater3(slater_cordon)
+             !
+             allocate(gaunt(-l:l,-l:l,0:2*l))
+             call atomic_make_gaunt3(gaunt)
+
          case (5)
              l = 2
              !
