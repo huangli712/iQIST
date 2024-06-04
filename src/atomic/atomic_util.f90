@@ -841,12 +841,13 @@
          case (7)
              l = 3
              allocate(slater_cordon(0:2*l))
-             slater_cordon = zero
-             slater_cordon(0) = Ud
-             slater_cordon(2) = Jh * 6435.0_dp / ( 286.0_dp + ( 195.0_dp * &
-                 & 451.0_dp / 675.0_dp ) + ( 250.0_dp * 1001.0_dp / 2025.0_dp ) )
-             slater_cordon(4) = 451.0_dp / 675.0_dp * slater_cordon(2)
-             slater_cordon(6) = 1001.0_dp / 2025.0_dp * slater_cordon(2)
+             !slater_cordon = zero
+             !slater_cordon(0) = Ud
+             !slater_cordon(2) = Jh * 6435.0_dp / ( 286.0_dp + ( 195.0_dp * &
+             !    & 451.0_dp / 675.0_dp ) + ( 250.0_dp * 1001.0_dp / 2025.0_dp ) )
+             !slater_cordon(4) = 451.0_dp / 675.0_dp * slater_cordon(2)
+             !slater_cordon(6) = 1001.0_dp / 2025.0_dp * slater_cordon(2)
+             call atomic_make_slater7(slater_cordon)
              allocate(gaunt(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt7(gaunt)
 
