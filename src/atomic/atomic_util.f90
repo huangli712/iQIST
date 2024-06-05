@@ -5,6 +5,10 @@
 !!!           atomic_make_gsz
 !!!           atomic_make_gjz
 !!!           atomic_make_gps
+!!!           atomic_make_slater3
+!!!           atomic_make_slater5
+!!!           atomic_make_slater7
+!!!           atomic_make_gaunt3
 !!!           atomic_make_gaunt5
 !!!           atomic_make_gaunt7
 !!!           atomic_make_hund
@@ -28,7 +32,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/01/2024 by li huang (last modified)
+!!!           06/04/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients, spin-orbit coupling matrix, Coulomb
@@ -281,7 +285,7 @@
   end subroutine atomic_make_gps
 
 !!========================================================================
-!!>>> determine gaunt coefficients                                     <<<
+!!>>> determine Slater integrals                                       <<<
 !!========================================================================
 
 !!
@@ -380,7 +384,7 @@
   end subroutine atomic_make_slater7
 
 !!========================================================================
-!!>>> determine gaunt coefficients                                     <<<
+!!>>> determine Gaunt coefficients                                     <<<
 !!========================================================================
 
 !!
@@ -401,6 +405,22 @@
 !! [body
 
      gaunt = zero
+     !
+     ! for k = 0
+     gaunt( -1 , -1 ,  0 ) =  -1.0_dp * ( -1.0 )
+     gaunt(  0 ,  0 ,  0 ) =   1.0_dp * (  1.0 )
+     gaunt(  1 ,  1 ,  0 ) =  -1.0_dp * ( -1.0 )
+     !
+     ! for k = 2
+     gaunt( -1 , -1 ,  2 ) =   sqrt(1.0_dp) / 5.0_dp * ( -1.0 )
+     gaunt( -1 ,  0 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * ( -1.0 )
+     gaunt( -1 ,  1 ,  2 ) =   sqrt(6.0_dp) / 5.0_dp * ( -1.0 )
+     gaunt(  0 , -1 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * (  1.0 )
+     gaunt(  0 ,  0 ,  2 ) =   sqrt(4.0_dp) / 5.0_dp * (  1.0 )
+     gaunt(  0 ,  1 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * (  1.0 )
+     gaunt(  1 , -1 ,  2 ) =   sqrt(6.0_dp) / 5.0_dp * ( -1.0 )
+     gaunt(  1 ,  0 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * ( -1.0 )
+     gaunt(  1 ,  1 ,  2 ) =   sqrt(1.0_dp) / 5.0_dp * ( -1.0 )
 
 !! body]
 
