@@ -417,6 +417,17 @@
      return
   end function fact
 
+!!
+!! @fun w3j
+!!
+!! calculate the Wigner 3j symbol. that is
+!!
+!! / l1 l2 l3 \
+!! |          |
+!! \ m1 m2 m3 /
+!!
+!! this implementation is taken from triqs.operators.util.U_matrix.
+!!
   function w3j(l1, l2, l3, m1, m2, m3) result(v)
      use constants, only : dp
      use constants, only : zero, one
@@ -424,21 +435,36 @@
      implicit none
 
 !! external arguments
+     ! the l and m parameters of the 3j symbol
      integer, intent(in) :: l1, l2, l3
      integer, intent(in) :: m1, m2, m3
 
 !! external functions
+     ! return n factorial
      real(dp), external :: fact
 
 !! local variables
+     ! loop index
+     integer  :: t
+     integer  :: t_min, t_max
+
      ! return value
      real(dp) :: v
 
-     real(dp) :: t_sum, R
-     integer :: t_min, t_max, t
+     real(dp) :: R
+     real(dp) :: t_sum
 
 !! [body
 
+     ! to make sure the following rules are fulfilled
+     !
+     ! m1 + m2 + m3 = 0
+     ! m1 \in [-l1, l1]
+     ! m2 \in [-l2, l2]
+     ! m3 \in [-l3, l3]
+     ! abs(l1 - l2) <= l3 <= l1 + l2
+     !
+     ! see: https://mathworld.wolfram.com/Wigner3j-Symbol.html
      if ( m1 + m2 + m3 /= 0 .or. &
           m1 < -l1 .or. &
           m1 >  l1 .or. &
@@ -447,11 +473,18 @@
           m3 < -l3 .or. &
           m3 >  l3 .or. &
           l3 > l1 + l2 .or. &
-          l3 < abs( l1-l2 ) ) then
+          l3 < abs( l1 - l2 ) ) then
          v = zero
          return
      endif
 
+     ! to calculate the 3j symbol using the Racah formula
+     !
+     ! Eq. (7) in
+     !
+     ! https://mathworld.wolfram.com/Wigner3j-Symbol.html
+
+     ! for \sum_t (-1)^t / x term
      t_min = max(l2 - l3 - m1, l1 - l3 + m2, 0)
      t_max = min(l1 - m1, l2 + m2, l1 + l2 - l3)
      t_sum = zero
@@ -463,23 +496,26 @@
          t_sum = t_sum + (-one)**(t) / R
      enddo
 
+     ! for (-1)^(a - b - \gamma) term
      v = -one
      !
      if ( mod(l1 - l2 - m3, 2) == 0) then
          v = one
      endif
-     !
+
+     ! for triangle coefficient term: \sqrt(\Delta(a b c))
      v = v * sqrt( fact(l1 + l2 - l3) * &
                    fact(l1 - l2 + l3) * &
                    fact(l2 + l3 - l1) / &
                    fact(l1 + l2 + l3 + 1) )
-     !
-     v = v * sqrt( fact(l1 - m1) * &
-                   fact(l1 + m1) * &
-                   fact(l2 - m2) * &
-                   fact(l2 + m2) * &
-                   fact(l3 - m3) * &
-                   fact(l3 + m3) )
+
+     ! for sqrt term
+     v = v * sqrt( fact(l1 - m1) * & ! (a - \alpha)!
+                   fact(l1 + m1) * & ! (a + \alpha)!
+                   fact(l2 - m2) * & ! (b - \beta)!
+                   fact(l2 + m2) * & ! (b + \beta)!
+                   fact(l3 - m3) * & ! (c - \gamma)!
+                   fact(l3 + m3) )   ! (c + \gamma)!
      !
      v = v * t_sum
 
