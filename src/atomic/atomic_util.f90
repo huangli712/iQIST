@@ -545,12 +545,14 @@
      real(dp), external :: w3j
 
 !! local variables
+     ! return value
      real(dp) :: v
 
 !! [body
 
      ! see https://docs.sympy.org/latest/modules/physics/wigner.html or
-     ! https://doc.sagemath.org/html/en/reference/functions/sage/functions/wigner.html
+     ! https://doc.sagemath.org/html/en/
+     !     reference/functions/sage/functions/wigner.html
      ! for the formula about Gaunt coefficient
      v = sqrt((2 * l1 + 1) * (2 * l2 + 1) * (2 * l3 + 1) / (4.0_dp * pi))
      v = v * w3j(l1, l2, l3, 0, 0, 0) * w3j(l1, l2, l3, m1, m2, m3)
@@ -560,47 +562,73 @@
      return
   end function gaunt
 
-
+!!
+!! @sub atomic_make_gaunt_
+!!
+!! build c^{k}_{l}(m_1,m_2) coefficients for given l
+!!
   subroutine atomic_make_gaunt_(l, ck)
      use constants, only : dp
-     use constants, only : zero, one, pi, epst
+     use constants, only : zero, one, pi
+     use constants, only : epst
 
      implicit none
 
 !! external arguments
+     ! orbital momentum quantum number
      integer, intent(in) :: l
+
+     ! c^{k}_{l}(m_1,m_2) coefficients
      real(dp), intent(out) :: ck(-l:l,-l:l,0:2*l)
 
 !! external functions
      real(dp), external :: gaunt
 
 !! local variables
-     integer :: i, j, k
+     ! loop index
+     integer  :: i, j, k
 
+     ! dummy variable
      real(dp) :: res
 
 !! [body
 
+     ! this subroutine can replace the following three subroutines:
+     !
+     !     atomic_make_gaunt3()
+     !     atomic_make_gaunt5()
+     !     atomic_make_gaunt7()
+     !
+     ! see Eq (1.8) and Eq (1.15) in
+     !
+     ! Multiplets of Transition-Metal Ions in Crystals
+     ! Satoru Sugano, Yukito Tanabe, and Hiroshi Kamimura
+     ! Academic Press, 1970
+     !
+     ! for the definition of the c^{k}_{l}(m_1,m_2) coefficients.
      ck = zero
 
      do k=0,2*l
+         ! see Eq (1.16) - Eq (1.18) in Satoru's book
          if (.not. ( mod(2*l + k, 2) == 0 .and. k >= 0 .and. k <= 2*l)) then
              cycle
          endif
 
+         ! see https://github.com/NSLS-II/edrixs/blob/
+         !         master/edrixs/coulomb_utensor.py
          do i=-l,l
-             do j =-l,l
+             do j=-l,l
                  res = sqrt(4.0_dp * pi / (2*k + 1)) * (-one)**i
                  res = res * gaunt(l, k, l, -i, i - j, j)
+                 !
                  if ( abs(res) < epst ) then
                      cycle
                  endif
-
-                 !print *, i, j, k, res
+                 !
                  ck(i,j,k) = res
-             enddo
-         enddo
-     enddo
+             enddo ! over j={-l,l} loop
+         enddo ! over i={-l,l} loop
+     enddo ! over k={0,2*l} loop
 
 !! body]
 
@@ -612,35 +640,35 @@
 !!
 !! build c^{k}_{l}(m_1,m_2) coefficients for 3 band case (l = 1)
 !!
-  subroutine atomic_make_gaunt3(gaunt)
+  subroutine atomic_make_gaunt3(ck)
      use constants, only : dp
      use constants, only : zero
 
      implicit none
 
 !! external arguments
-     ! gaunt coefficients, gaunt(m_1, m_2, k)
-     real(dp), intent(out) :: gaunt(-1:1,-1:1,0:2)
+     ! c^{k}_{l}(m_1,m_2) coefficients, ck(m_1, m_2, k)
+     real(dp), intent(out) :: ck(-1:1,-1:1,0:2)
 
 !! [body
 
-     gaunt = zero
+     ck = zero
      !
      ! for k = 0
-     gaunt( -1 , -1 ,  0 ) =  -1.0_dp * ( -1.0 )
-     gaunt(  0 ,  0 ,  0 ) =   1.0_dp * (  1.0 )
-     gaunt(  1 ,  1 ,  0 ) =  -1.0_dp * ( -1.0 )
+     ck( -1 , -1 ,  0 ) =  -1.0_dp * ( -1.0 )
+     ck(  0 ,  0 ,  0 ) =   1.0_dp * (  1.0 )
+     ck(  1 ,  1 ,  0 ) =  -1.0_dp * ( -1.0 )
      !
      ! for k = 2
-     gaunt( -1 , -1 ,  2 ) =   sqrt(1.0_dp) / 5.0_dp * ( -1.0 )
-     gaunt( -1 ,  0 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * ( -1.0 )
-     gaunt( -1 ,  1 ,  2 ) =   sqrt(6.0_dp) / 5.0_dp * ( -1.0 )
-     gaunt(  0 , -1 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * (  1.0 )
-     gaunt(  0 ,  0 ,  2 ) =   sqrt(4.0_dp) / 5.0_dp * (  1.0 )
-     gaunt(  0 ,  1 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * (  1.0 )
-     gaunt(  1 , -1 ,  2 ) =   sqrt(6.0_dp) / 5.0_dp * ( -1.0 )
-     gaunt(  1 ,  0 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * ( -1.0 )
-     gaunt(  1 ,  1 ,  2 ) =   sqrt(1.0_dp) / 5.0_dp * ( -1.0 )
+     ck( -1 , -1 ,  2 ) =   sqrt(1.0_dp) / 5.0_dp * ( -1.0 )
+     ck( -1 ,  0 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * ( -1.0 )
+     ck( -1 ,  1 ,  2 ) =   sqrt(6.0_dp) / 5.0_dp * ( -1.0 )
+     ck(  0 , -1 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * (  1.0 )
+     ck(  0 ,  0 ,  2 ) =   sqrt(4.0_dp) / 5.0_dp * (  1.0 )
+     ck(  0 ,  1 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * (  1.0 )
+     ck(  1 , -1 ,  2 ) =   sqrt(6.0_dp) / 5.0_dp * ( -1.0 )
+     ck(  1 ,  0 ,  2 ) =  -sqrt(3.0_dp) / 5.0_dp * ( -1.0 )
+     ck(  1 ,  1 ,  2 ) =   sqrt(1.0_dp) / 5.0_dp * ( -1.0 )
 
 !! body]
 
@@ -652,14 +680,14 @@
 !!
 !! build c^{k}_{l}(m_1,m_2) coefficients for 5 band case (l = 2)
 !!
-  subroutine atomic_make_gaunt5(gaunt)
+  subroutine atomic_make_gaunt5(ck)
      use constants, only : dp
      use constants, only : zero
 
      implicit none
 
 !! external arguments
-     ! gaunt coefficients, gaunt(m_1, m_2, k)
+     ! c^{k}_{l}(m_1,m_2) coefficients, ck(m_1, m_2, k)
      real(dp), intent(out) :: gaunt(-2:2,-2:2,0:4)
 
 !! [body
@@ -738,7 +766,7 @@
      implicit none
 
 !! external arguments
-     ! gaunt coefficients, gaunt(m_1, m_2, k)
+     ! c^{k}_{l}(m_1,m_2) coefficients, ck(m_1, m_2, k)
      real(dp), intent(out) :: gaunt(-3:3,-3:3,0:6)
 
 !! [body
