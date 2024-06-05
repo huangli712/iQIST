@@ -524,6 +524,11 @@
      return
   end function w3j
 
+!!
+!! @fun gaunt
+!!
+!! calculate the Gaunt coefficient
+!!
   function gaunt(l1, l2, l3, m1, m2, m3) result(v)
      use constants, only : dp
      use constants, only : pi
@@ -531,10 +536,12 @@
      implicit none
 
 !! external arguments
+     ! the l and m parameters of the Gaunt coefficient
      integer, intent(in) :: l1, l2, l3
      integer, intent(in) :: m1, m2, m3
 
 !! external functions
+     ! to calculate the Wigner 3j symbol
      real(dp), external :: w3j
 
 !! local variables
@@ -542,6 +549,9 @@
 
 !! [body
 
+     ! see https://docs.sympy.org/latest/modules/physics/wigner.html or
+     ! https://doc.sagemath.org/html/en/reference/functions/sage/functions/wigner.html
+     ! for the formula about Gaunt coefficient
      v = sqrt((2 * l1 + 1) * (2 * l2 + 1) * (2 * l3 + 1) / (4.0_dp * pi))
      v = v * w3j(l1, l2, l3, 0, 0, 0) * w3j(l1, l2, l3, m1, m2, m3)
 
