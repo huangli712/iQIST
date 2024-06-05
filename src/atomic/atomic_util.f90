@@ -8,6 +8,7 @@
 !!!           atomic_make_slater3
 !!!           atomic_make_slater5
 !!!           atomic_make_slater7
+!!!           atomic_make_gaunt_
 !!!           atomic_make_gaunt3
 !!!           atomic_make_gaunt5
 !!!           atomic_make_gaunt7
@@ -32,7 +33,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/04/2024 by li huang (last modified)
+!!!           06/05/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients, spin-orbit coupling matrix, Coulomb
@@ -386,6 +387,168 @@
 !!========================================================================
 !!>>> determine Gaunt coefficients                                     <<<
 !!========================================================================
+
+  function fact(n) result(v)
+     use constants, only : dp
+     use constants, only : one
+
+     implicit none
+
+!! external arguments
+     integer, intent(in) :: n
+
+!! local variables
+     ! return value
+     real(dp) :: v
+
+!! [body
+
+     v = gamma(n + one)
+
+!! body]
+
+     return
+  end function fact
+
+  function w3j(l1, l2, l3, m1, m2, m3) result(v)
+     use constants, only : dp
+     use constants, only : zero, one
+
+     implicit none
+
+!! external arguments
+     integer, intent(in) :: l1, l2, l3
+     integer, intent(in) :: m1, m2, m3
+
+!! external functions
+     real(dp), external :: fact
+
+!! local variables
+     ! return value
+     real(dp) :: v
+
+     real(dp) :: t_sum, R
+     integer :: t_min, t_max, t
+
+!! [body
+
+     if ( m1 + m2 + m3 /= 0 .or. &
+          m1 < -l1 .or. &
+          m1 >  l1 .or. &
+          m2 < -l2 .or. &
+          m2 >  l2 .or. &
+          m3 < -l3 .or. &
+          m3 >  l3 .or. &
+          l3 > l1 + l2 .or. &
+          l3 < abs( l1-l2 ) ) then
+         v = zero
+         return
+     endif
+
+     t_min = max(l2 - l3 - m1, l1 - l3 + m2, 0)
+     t_max = min(l1 - m1, l2 + m2, l1 + l2 - l3)
+     t_sum = zero
+     do t=t_min,t_max
+         R = fact(t) * fact(l1 - m1 - t) * fact(l2 + m2 - t) * &
+             fact(l3 - l2 + m1 + t) * &
+             fact(l3 - l1 - m2 + t) * &
+             fact(l1 + l2 - l3 - t)
+         t_sum = t_sum + (-one)**(t) / R
+     enddo
+
+     v = -one
+     !
+     if ( mod(l1 - l2 - m3, 2) == 0) then
+         v = one
+     endif
+     !
+     v = v * sqrt( fact(l1 + l2 - l3) * &
+                   fact(l1 - l2 + l3) * &
+                   fact(l2 + l3 - l1) / &
+                   fact(l1 + l2 + l3 + 1) )
+     !
+     v = v * sqrt( fact(l1 - m1) * &
+                   fact(l1 + m1) * &
+                   fact(l2 - m2) * &
+                   fact(l2 + m2) * &
+                   fact(l3 - m3) * &
+                   fact(l3 + m3) )
+     !
+     v = v * t_sum
+
+!! body]
+
+     return
+  end function w3j
+
+  function gaunt(l1, l2, l3, m1, m2, m3) result(v)
+     use constants, only : dp
+     use constants, only : pi
+
+     implicit none
+
+!! external arguments
+     integer, intent(in) :: l1, l2, l3
+     integer, intent(in) :: m1, m2, m3
+
+!! external functions
+     real(dp), external :: w3j
+
+!! local variables
+     real(dp) :: v
+
+!! [body
+
+     v = sqrt((2 * l1 + 1) * (2 * l2 + 1) * (2 * l3 + 1) / (4.0_dp * pi))
+     v = v * w3j(l1, l2, l3, 0, 0, 0) * w3j(l1, l2, l3, m1, m2, m3)
+
+!! body]
+
+     return
+  end function gaunt
+
+
+  subroutine atomic_make_gaunt_(l)
+     use constants, only : dp
+     use constants, only : one, pi, epst
+
+     implicit none
+
+!! external arguments
+     integer, intent(in) :: l
+
+!! external functions
+     real(dp), external :: gaunt
+
+!! local variables
+     integer :: i, j, k
+
+     real(dp) :: res
+
+!! [body
+
+     do k=0,2*l
+         if (.not. ( mod(2*l + k, 2) == 0 .and. k >= 0 .and. k <= 2*l)) then
+             cycle
+         endif
+        
+         do i=-l,l
+             do j =-l,l
+                 res = sqrt(4.0_dp * pi / (2*k + 1)) * (-one)**i
+                 res = res * gaunt(l, k, l, -i, i - j, j)
+                 if ( abs(res) < epst ) then
+                     cycle
+                 endif
+
+                 print *, i, j, k, res
+             enddo
+         enddo
+     enddo
+
+!! body]
+
+     return
+  end subroutine atomic_make_gaunt_
 
 !!
 !! @sub atomic_make_gaunt3
