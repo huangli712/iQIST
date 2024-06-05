@@ -612,7 +612,7 @@
      do k=0,2*l
          ! see Eq (1.16) - Eq (1.18) in Satoru's book
          if (.not. ( mod(2*l + k, 2) == 0 .and. k >= 0 .and. k <= 2*l)) then
-             cycle
+             CYCLE
          endif
 
          ! see https://github.com/NSLS-II/edrixs/blob/
@@ -623,7 +623,7 @@
                  res = res * gaunt(l, k, l, -i, i - j, j)
                  !
                  if ( abs(res) < epst ) then
-                     cycle
+                     CYCLE
                  endif
                  !
                  ck(i,j,k) = res
@@ -1124,36 +1124,31 @@
      ! dummy variables
      real(dp) :: res
 
+     ! Slater-Cordon parameters: F0, F2, F4, and F6
+     real(dp), allocatable :: Fk(:)
+
      ! c^k_l(m_1,m_2) coefficients
      real(dp), allocatable :: ck(:,:,:)
-     real(dp), allocatable :: ck1(:,:,:)
-
-     ! Slater-Cordon parameters: F0, F2, F4, and F6
-     real(dp), allocatable :: slater_cordon(:)
 
 !! [body
 
-     ! allocate memory for slater_cordon and ck and then build them
+     ! allocate memory for Fk and ck and then build them
      select case (nband)
 
          case (3)
              l = 1
              !
-             allocate(slater_cordon(0:2*l))
-             call atomic_make_slater3(slater_cordon)
+             allocate(Fk(0:2*l))
+             call atomic_make_slater3(Fk)
              !
              allocate(ck(-l:l,-l:l,0:2*l))
-             allocate(ck1(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt3(ck)
-             call atomic_make_gaunt_(l, ck1)
-             print *, ck - ck1
-             STOP
 
          case (5)
              l = 2
              !
-             allocate(slater_cordon(0:2*l))
-             call atomic_make_slater5(slater_cordon)
+             allocate(Fk(0:2*l))
+             call atomic_make_slater5(Fk)
              !
              allocate(ck(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt5(ck)
@@ -1161,8 +1156,8 @@
          case (7)
              l = 3
              !
-             allocate(slater_cordon(0:2*l))
-             call atomic_make_slater7(slater_cordon)
+             allocate(Fk(0:2*l))
+             call atomic_make_slater7(Fk)
              !
              allocate(ck(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt7(ck)
@@ -1199,7 +1194,7 @@
 
              res = zero
              do i=0,2*l,2
-                 res = res + ck(m_b,p_b,i) * ck(q_b,n_b,i) * slater_cordon(i)
+                 res = res + ck(m_b,p_b,i) * ck(q_b,n_b,i) * Fk(i)
              enddo ! over i={0,2*l} loop
 
              ! transform the orbital order to: up up up ... dn dn dn ...
@@ -1217,8 +1212,8 @@
      umat = half * umat
 
      ! deallocate memory
-     if ( allocated(ck) )         deallocate(ck)
-     if ( allocated(slater_cordon) ) deallocate(slater_cordon)
+     if ( allocated(ck) ) deallocate(ck)
+     if ( allocated(Fk) ) deallocate(Fk)
 
 !! body]
 
