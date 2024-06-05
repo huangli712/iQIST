@@ -305,7 +305,7 @@
 !! external arguments
      ! Slater integrals F_k for l = 1
      real(dp), intent(out) :: Fk(0:2)
-     
+
 !! [body
 
      Fk = zero
@@ -334,7 +334,7 @@
 !! external arguments
      ! Slater integrals F_k for l = 2
      real(dp), intent(out) :: Fk(0:4)
-     
+
 !! [body
 
      Fk = zero
@@ -388,6 +388,12 @@
 !!>>> determine Gaunt coefficients                                     <<<
 !!========================================================================
 
+!!
+!! @fun fact
+!!
+!! return n factorial as a float number. here we adopt the gamma function
+!! to calculate n!, instead of using the recursive algorithm
+!!
   function fact(n) result(v)
      use constants, only : dp
      use constants, only : one
@@ -395,6 +401,7 @@
      implicit none
 
 !! external arguments
+     ! this function will calculate n!
      integer, intent(in) :: n
 
 !! local variables
@@ -534,7 +541,7 @@
          if (.not. ( mod(2*l + k, 2) == 0 .and. k >= 0 .and. k <= 2*l)) then
              cycle
          endif
-        
+
          do i=-l,l
              do j =-l,l
                  res = sqrt(4.0_dp * pi / (2*k + 1)) * (-one)**i
