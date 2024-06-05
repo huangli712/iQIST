@@ -508,14 +508,15 @@
   end function gaunt
 
 
-  subroutine atomic_make_gaunt_(l)
+  subroutine atomic_make_gaunt_(l, ck)
      use constants, only : dp
-     use constants, only : one, pi, epst
+     use constants, only : zero, one, pi, epst
 
      implicit none
 
 !! external arguments
      integer, intent(in) :: l
+     real(dp), intent(out) :: ck(-l:l,-l:l,0:2*l)
 
 !! external functions
      real(dp), external :: gaunt
@@ -526,6 +527,8 @@
      real(dp) :: res
 
 !! [body
+
+     ck = zero
 
      do k=0,2*l
          if (.not. ( mod(2*l + k, 2) == 0 .and. k >= 0 .and. k <= 2*l)) then
@@ -540,7 +543,8 @@
                      cycle
                  endif
 
-                 print *, i, j, k, res
+                 !print *, i, j, k, res
+                 ck(i,j,k) = res
              enddo
          enddo
      enddo
@@ -1059,7 +1063,8 @@
              call atomic_make_slater5(slater_cordon)
              !
              allocate(gaunt(-l:l,-l:l,0:2*l))
-             call atomic_make_gaunt5(gaunt)
+             !call atomic_make_gaunt5(gaunt)
+             call atomic_make_gaunt_(l, gaunt)
 
          case (7)
              l = 3
