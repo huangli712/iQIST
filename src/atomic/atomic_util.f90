@@ -1126,6 +1126,7 @@
 
      ! c^k_l(m_1,m_2) coefficients
      real(dp), allocatable :: ck(:,:,:)
+     real(dp), allocatable :: ck1(:,:,:)
 
      ! Slater-Cordon parameters: F0, F2, F4, and F6
      real(dp), allocatable :: slater_cordon(:)
@@ -1142,7 +1143,11 @@
              call atomic_make_slater3(slater_cordon)
              !
              allocate(ck(-l:l,-l:l,0:2*l))
+             allocate(ck1(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt3(ck)
+             call atomic_make_gaunt_(l, ck1)
+             print *, ck - ck1
+             STOP
 
          case (5)
              l = 2
@@ -1151,8 +1156,7 @@
              call atomic_make_slater5(slater_cordon)
              !
              allocate(ck(-l:l,-l:l,0:2*l))
-             !call atomic_make_gaunt5(ck)
-             call atomic_make_gaunt_(l, ck)
+             call atomic_make_gaunt5(ck)
 
          case (7)
              l = 3

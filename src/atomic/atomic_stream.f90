@@ -225,12 +225,12 @@
          lpass = .false.
      endif ! back if ( icu < 1 .or. icu > 2 ) block
      !
-     if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
+     if ( icu == 2 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) then
          write(mystd,'(2X,a)') 'ERROR: Slater-Cordon type Coulomb &
-             & interaction is only suitable for 5- or 7-band system!'
+             & interaction is only suitable for 3-, 5- or 7-band system!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
+     endif ! back if ( icu == 2 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
 
      ! check icf
      if ( icf < 0 .or. icf > 2 ) then
