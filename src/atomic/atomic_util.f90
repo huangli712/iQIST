@@ -565,7 +565,8 @@
 !!
 !! @sub atomic_make_gaunt_
 !!
-!! build c^{k}_{l}(m_1,m_2) coefficients for given l
+!! build c^{k}_{l}(m_1,m_2) coefficients for given l. it is related to
+!! the Gaunt coefficients.
 !!
   subroutine atomic_make_gaunt_(l, ck)
      use constants, only : dp
@@ -1023,37 +1024,43 @@
 
                      dtmp = zero
 
-                     ! intraorbital Coulomb interaction
+                     ! for intraorbital Coulomb interaction
                      if ( ( m == p ) .and. ( n == q ) ) then
                          if ( ( m_b == n_b ) .and. ( m_s /= n_s ) ) then
                              dtmp = dtmp + Uc
                          endif ! back if block
                      endif ! back if block
 
-                     ! interorbital Coulomb interaction
+                     ! for interorbital Coulomb interaction
                      if ( ( m == p ) .and. ( n == q ) ) then
                          if ( m_b /= n_b ) then
                              dtmp = dtmp + (Uc - two * hund(m_b,n_b,1))
                          endif ! back if ( m_b /= n_b ) block
                      endif ! back if block
 
-                     ! Hund's exchange interaction
+                     ! for Hund's exchange interaction
                      if ( ( m == p ) .and. ( n == q ) ) then
                          if ( ( m_b /= n_b ) .and. ( m_s == n_s ) ) then
                              dtmp = dtmp - hund(m_b,n_b,1)
                          endif ! back if block
                      endif ! back if block
 
-                     ! spin flip term
+                     ! for spin flip term
                      if ( ( m_b == p_b ) .and. ( n_b == q_b ) ) then
-                         if ( ( m_s /= p_s ) .and. ( n_s /= q_s ) .and. ( m_s /= n_s ) ) then
+                         if ( ( m_s /= p_s ) .and. &
+                              ( n_s /= q_s ) .and. &
+                              ( m_s /= n_s ) ) then
                              dtmp = dtmp - hund(m_b,n_b,2)
                          endif ! back if block
                      endif ! back if block
 
-                     ! pair hopping term
-                     if ( ( m_b == n_b ) .and. ( q_b == p_b ) .and. ( m_b /= q_b ) ) then
-                         if ( ( m_s /= n_s ) .and. ( q_s /= p_s ) .and. ( m_s == p_s ) ) then
+                     ! for pair hopping term
+                     if ( ( m_b == n_b ) .and. &
+                          ( q_b == p_b ) .and. &
+                          ( m_b /= q_b ) ) then
+                         if ( ( m_s /= n_s ) .and. &
+                              ( q_s /= p_s ) .and. &
+                              ( m_s == p_s ) ) then
                              dtmp = dtmp + hund(m_b,p_b,3)
                          endif ! back if block
                      endif ! back if block
