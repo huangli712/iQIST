@@ -389,7 +389,7 @@
          enddo alphaloop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
 
-     !call atomic_test_ad()
+     call atomic_test_ad()
 
 !! body]
 
@@ -524,36 +524,24 @@
          do j=1,ncfgs
              if ( abs(hmat(i,j)) > 0.0_dp ) then
 
-                 call atomic_find_subspace(ib, i, sector_size, sector_basis)
-                 call atomic_find_subspace(ia, j, sector_size, sector_basis)
+                 call atomic_find_subspace(ia, i, sector_size, sector_basis)
+                 call atomic_find_subspace(ib, j, sector_size, sector_basis)
 
                  if ( ia /= ib ) then
-                     call s_assert(sector_size(ib) >= 1)
                      call s_assert(sector_size(ia) >= 1)
+                     call s_assert(sector_size(ib) >= 1)
                      !
-                     do m=1,sector_size(ia)
-                         sector_basis(ib, sector_size(ib) + m) = sector_basis(ia,m)
+                     do m=1,sector_size(ib)
+                         sector_basis(ia, sector_size(ia) + m) = sector_basis(ib,m)
                      enddo
                      !
-                     sector_size(ib) = sector_size(ib) + sector_size(ia)
-                     sector_size(ia) = 0
-                     sector_basis(ia,:) = 0
+                     sector_size(ia) = sector_size(ia) + sector_size(ib)
+                     sector_size(ib) = 0
+                     sector_basis(ib,:) = 0
                  endif
 
              endif
          enddo
-     enddo
-
-     ! print subspaces
-     m = 0
-     do i=1,ncfgs
-         if ( sector_size(i) > 0 ) then
-             m = m + 1
-             write(mystd,'(a,i6)') 'subspace -> ', m
-             write(mystd,'(a,i6)') 'size :', sector_size(i)
-             write(mystd,'(a,*(i6))') 'basis :', sector_basis(i,1:sector_size(i))
-             print *
-         endif
      enddo
 
      sector_size_ = 0
@@ -569,17 +557,34 @@
      sector_size = sector_size_
      sector_basis = sector_basis_
 
+     ! print subspaces
+     m = 0
+     do i=1,ncfgs
+         if ( sector_size(i) > 0 ) then
+             m = m + 1
+             write(mystd,'(a,i6)') 'subspace -> ', m
+             write(mystd,'(a,i6)') 'size :', sector_size(i)
+             write(mystd,'(a)') 'basis :'
+             do j=1,sector_size(i)
+                 write(mystd,'(14i1)') bin_basis(:,sector_basis(i,j))
+             enddo
+             print *
+         endif
+     enddo
+
+
+     DO iorb = 1,norbs
+
      ! create mapping
      iup = 0
      idn = 0
      Mup = 0
      Mdn = 0
 
-     DO iorb = 1,2
-
      do i=1,ncfgs
          call atomic_find_subspace(ia, i, sector_size, sector_basis)
 
+         ! c^+
          if ( bin_basis(iorb,i) == 0 ) then
              jold = dec_basis(i)
              call atomic_make_cdagger(iorb, jold, jnew, isgn)
@@ -593,6 +598,7 @@
              Mup(iup,2) = ib
          endif
 
+         ! c
          if ( bin_basis(iorb,i) == 1 ) then
              jold = dec_basis(i)
              call atomic_make_c(iorb, jold, jnew, isgn)
@@ -607,16 +613,14 @@
          endif
      enddo
 
-     ENDDO
-
+     print *, '# orb: ', iorb
      print *, 'number of Mup:', iup
      print *, 'number of Mdn:', idn
+
      !
      do i=1,iup
-         print *, Mup(i,:), Mdn(i,:)
+         print *, i, Mup(i,:), Mdn(i,:)
      enddo
-     STOP
-
 
      do i=1,max_mapping
          HA = Mup(i,1)
@@ -628,6 +632,8 @@
          endif
      enddo
 
+     enddo
+
      ! print subspaces
      m = 0
      do i=1,ncfgs
@@ -635,11 +641,14 @@
              m = m + 1
              write(mystd,'(a,i6)') 'subspace -> ', m
              write(mystd,'(a,i6)') 'size :', sector_size(i)
-             write(mystd,'(a,*(i6))') 'basis :', sector_basis(i,1:sector_size(i))
+             write(mystd,'(a)') 'basis :'
+             do j=1,sector_size(i)
+                 write(mystd,'(14i1)') bin_basis(:,sector_basis(i,j))
+             enddo
              print *
          endif
      enddo
-     !STOP
+     STOP
 
      return
   end subroutine atomic_test_ad
