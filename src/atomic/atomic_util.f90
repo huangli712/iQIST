@@ -402,7 +402,7 @@
 
 !! external arguments
      ! this function will calculate n!
-     integer, intent(in) :: n
+     real(dp), intent(in) :: n
 
 !! local variables
      ! return value
@@ -410,6 +410,7 @@
 
 !! [body
 
+     ! gamma() is an intrinsic function
      v = gamma(n + one)
 
 !! body]
@@ -426,18 +427,18 @@
 !! |          |
 !! \ m1 m2 m3 /
 !!
-!! this implementation is taken from triqs.operators.util.U_matrix.
+!! this implementation is learnt from triqs.operators.util.U_matrix.
 !!
   function w3j(l1, l2, l3, m1, m2, m3) result(v)
      use constants, only : dp
-     use constants, only : zero, one
+     use constants, only : zero, one, two, epst
 
      implicit none
 
 !! external arguments
      ! the l and m parameters of the 3j symbol
-     integer, intent(in) :: l1, l2, l3
-     integer, intent(in) :: m1, m2, m3
+     real(dp), intent(in) :: l1, l2, l3
+     real(dp), intent(in) :: m1, m2, m3
 
 !! external functions
      ! return n factorial
@@ -465,7 +466,7 @@
      ! abs(l1 - l2) <= l3 <= l1 + l2
      !
      ! see: https://mathworld.wolfram.com/Wigner3j-Symbol.html
-     if ( m1 + m2 + m3 /= 0 .or. &
+     if ( abs(m1 + m2 + m3) > epst .or. &
           m1 < -l1 .or. &
           m1 >  l1 .or. &
           m2 < -l2 .or. &
@@ -480,16 +481,18 @@
 
      ! to calculate the 3j symbol using the Racah formula
      !
-     ! Eq. (7) in
+     ! see Eq. (7) in
      !
      ! https://mathworld.wolfram.com/Wigner3j-Symbol.html
 
      ! for \sum_t (-1)^t / x term
-     t_min = max(l2 - l3 - m1, l1 - l3 + m2, 0)
-     t_max = min(l1 - m1, l2 + m2, l1 + l2 - l3)
+     t_min = int( max(l2 - l3 - m1, l1 - l3 + m2, zero) + epst )
+     t_max = int( min(l1 - m1, l2 + m2, l1 + l2 - l3) + epst )
+     !
      t_sum = zero
+     !
      do t=t_min,t_max
-         R = fact(t) * fact(l1 - m1 - t) * fact(l2 + m2 - t) * &
+         R = fact(t + zero) * fact(l1 - m1 - t) * fact(l2 + m2 - t) * &
              fact(l3 - l2 + m1 + t) * &
              fact(l3 - l1 - m2 + t) * &
              fact(l1 + l2 - l3 - t)
@@ -499,7 +502,7 @@
      ! for (-1)^(a - b - \gamma) term
      v = -one
      !
-     if ( mod(l1 - l2 - m3, 2) == 0) then
+     if ( abs(mod(l1 - l2 - m3, two)) < epst ) then
          v = one
      endif
 
@@ -507,7 +510,7 @@
      v = v * sqrt( fact(l1 + l2 - l3) * &
                    fact(l1 - l2 + l3) * &
                    fact(l2 + l3 - l1) / &
-                   fact(l1 + l2 + l3 + 1) )
+                   fact(l1 + l2 + l3 + one) )
 
      ! for sqrt term
      v = v * sqrt( fact(l1 - m1) * & ! (a - \alpha)!
@@ -516,7 +519,8 @@
                    fact(l2 + m2) * & ! (b + \beta)!
                    fact(l3 - m3) * & ! (c - \gamma)!
                    fact(l3 + m3) )   ! (c + \gamma)!
-     !
+
+     ! final value
      v = v * t_sum
 
 !! body]
@@ -531,7 +535,7 @@
 !!
   function gaunt(l1, l2, l3, m1, m2, m3) result(v)
      use constants, only : dp
-     use constants, only : pi
+     use constants, only : zero, pi
 
      implicit none
 
@@ -548,14 +552,28 @@
      ! return value
      real(dp) :: v
 
+     ! real l1, l2, l3, m1, m2, and m3
+     real(dp) :: l1_, l2_, l3_
+     real(dp) :: m1_, m2_, m3_
+
 !! [body
 
-     ! see https://docs.sympy.org/latest/modules/physics/wigner.html or
+     l1_ = l1; l2_ = l2; l3_ = l3
+     m1_ = m1; m2_ = m2; m3_ = m3
+
+     ! see the following webs
+     !
+     ! https://docs.sympy.org/latest/modules/physics/wigner.html
+     !
+     ! or
+     !
      ! https://doc.sagemath.org/html/en/
      !     reference/functions/sage/functions/wigner.html
+     !
      ! for the formula about Gaunt coefficient
-     v = sqrt((2 * l1 + 1) * (2 * l2 + 1) * (2 * l3 + 1) / (4.0_dp * pi))
-     v = v * w3j(l1, l2, l3, 0, 0, 0) * w3j(l1, l2, l3, m1, m2, m3)
+     v = sqrt((2 * l1_ + 1) * (2 * l2_ + 1) * (2 * l3_ + 1) / (4.0_dp * pi))
+     v = v * w3j(l1_, l2_, l3_, zero, zero, zero)
+     v = v * w3j(l1_, l2_, l3_, m1_, m2_, m3_)
 
 !! body]
 

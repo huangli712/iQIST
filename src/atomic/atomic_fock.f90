@@ -389,7 +389,7 @@
          enddo alphaloop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
 
-     call atomic_test_ad()
+     !call atomic_test_ad()
 
 !! body]
 
@@ -639,7 +639,7 @@
              print *
          endif
      enddo
-     STOP
+     !STOP
 
      return
   end subroutine atomic_test_ad
