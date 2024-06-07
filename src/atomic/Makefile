@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 01/03/2024 by li huang (last modified)
+## 06/07/2024 by li huang (last modified)
 ##
 ##
 
@@ -31,7 +31,7 @@ include ../../build/make.inc
 
 modc = atomic_control.o atomic_context.o
 core = atomic_driver.o
-lev1 = atomic_fock.o atomic_sector.o
+lev1 = atomic_fock.o atomic_sector.o atomic_partition.o
 lev2 = atomic_stream.o atomic_util.o
 lev3 = atomic_dump.o atomic_print.o
 main = atomic_main.o
