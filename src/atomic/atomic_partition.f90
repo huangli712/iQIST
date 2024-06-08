@@ -48,9 +48,11 @@
      integer :: ia, ib, isgn
      integer :: iup, idn
      integer :: HA, HL, HU
+     integer :: N, Sz, Jz, Ap
 
      integer, allocatable :: sector_size(:), sector_size_(:)
      integer, allocatable :: sector_basis(:,:), sector_basis_(:,:)
+     integer, allocatable :: sector_N(:), sector_Sz(:), sector_Jz(:), sector_Ap(:)
      integer, allocatable :: Mup(:,:)
      integer, allocatable :: Mdn(:,:)
 
@@ -60,6 +62,10 @@
      allocate(sector_basis_(ncfgs,ncfgs))
      allocate(Mup(max_mapping,2))
      allocate(Mdn(max_mapping,2))
+     allocate(sector_N(ncfgs))
+     allocate(sector_Sz(ncfgs))
+     allocate(sector_Jz(ncfgs))
+     allocate(sector_Ap(ncfgs))
 
      ! initialization
      sector_size = 1
@@ -67,6 +73,10 @@
      do i=1,ncfgs
          sector_basis(i,1) = i
      enddo
+     sector_N = 0
+     sector_Sz = 0
+     sector_Jz = 0
+     sector_Ap = 0
 
      ! phase 1
      do i=1,ncfgs
@@ -167,9 +177,9 @@
      print *, 'number of Mdn:', idn
 
      !
-     do i=1,iup
-         print *, i, Mup(i,:), Mdn(i,:)
-     enddo
+     !do i=1,iup
+     !    print *, i, Mup(i,:), Mdn(i,:)
+     !enddo
 
      do i=1,max_mapping
          HA = Mup(i,1)
@@ -194,28 +204,44 @@
              do j=1,sector_size(i)
                  write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(i,j))
              enddo
-             call atomic_sector_N(sector_size(i), sector_basis(i,:))
-             call atomic_sector_Sz(sector_size(i), sector_basis(i,:))
+             call atomic_sector_N(N, sector_size(i), sector_basis(i,:))
+             call atomic_sector_Sz(Sz, sector_size(i), sector_basis(i,:))
+             !call atomic_sector_Jz(Jz, sector_size(i), sector_basis(i,:))
+             Ap = 1
+             do j=1,m-1
+                 if ( ( sector_N(j) == N ) .and. ( sector_Sz(j) == Sz ) ) then
+                     Ap = Ap + 1
+                 endif
+             enddo
+             write(mystd, '(a, i3)') 'N :', N
+             write(mystd, '(a, i3)') 'Sz:', Sz
+             !write(mystd, '(a, i3)') 'Jz:', Jz
+             write(mystd, '(a, i3)') 'AP:', Ap
+             sector_N(m) = N
+             sector_Sz(m) = Sz
+             !sector_Jz(m) = Jz
+             sector_Ap(m) = Ap
              print *
          endif
      enddo
-
 
      STOP
 
      return
   end subroutine atomic_test_ad
 
-  subroutine atomic_sector_N(sector_size, sector_basis)
+  subroutine atomic_sector_N(GQN_N, sector_size, sector_basis)
      use control, only : norbs, ncfgs
      use m_fock, only : bin_basis
 
+     implicit none
+
      integer, intent(in) :: sector_size
      integer, intent(in) :: sector_basis(ncfgs)
+     integer, intent(out) :: GQN_N
 
      integer :: i
      integer :: basis(norbs)
-     integer :: GQN_N
      integer :: N
 
      GQN_N = 999
@@ -229,22 +255,24 @@
                  STOP "wrong in GQN(N)"
              endif
          endif
-         print *, i, ' GQN(N) -> ', N
      enddo
 
+     return
   end subroutine atomic_sector_N
 
-  subroutine atomic_sector_Sz(sector_size, sector_basis)
+  subroutine atomic_sector_Sz(GQN_Sz, sector_size, sector_basis)
      use control, only : nband, norbs, ncfgs
      use m_fock, only : bin_basis
 
+     implicit none
+
      integer, intent(in) :: sector_size
      integer, intent(in) :: sector_basis(ncfgs)
+     integer, intent(out) :: GQN_Sz
 
      integer :: i
      integer :: basis(norbs)
      integer :: Sz
-     integer :: GQN_Sz
 
      GQN_Sz = 999
      do i=1,sector_size
@@ -257,10 +285,48 @@
                  STOP "wrong in GQN(Sz)"
              endif
          endif
-         print *, i, ' GQN(Sz) -> ', Sz
      enddo
 
+     return
   end subroutine atomic_sector_Sz
+
+  subroutine atomic_sector_Jz(GQN_Jz, sector_size, sector_basis)
+     use control, only : nband, norbs, ncfgs
+     use m_fock, only : bin_basis
+
+     implicit none
+
+     integer, intent(in) :: sector_size
+     integer, intent(in) :: sector_basis(ncfgs)
+     integer, intent(out) :: GQN_Jz
+
+     integer :: i, k
+     integer :: basis(norbs)
+     integer :: Jz
+     integer :: good_jz(norbs)
+
+     call atomic_make_gjz(good_jz)
+
+     GQN_Jz = 999
+     do i=1,sector_size
+         basis = bin_basis(:,sector_basis(i))
+
+         Jz = 0
+         do k=1,norbs
+             Jz = Jz + good_jz(k) * basis(k)
+         enddo ! over k={1,norbs} loop
+
+         if ( i == 1 ) then
+             GQN_Jz = Jz
+         else
+             if ( Jz /= GQN_Jz ) then
+                 STOP "wrong in GQN(Jz)"
+             endif
+         endif
+     enddo
+
+     return
+  end subroutine atomic_sector_Jz
 
 recursive &
   subroutine zigzag(up_or_down, HA, HL, HU, sector_size, sector_basis, Mup, Mdn, max_mapping)
