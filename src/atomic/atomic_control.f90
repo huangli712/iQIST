@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/01/2024 by li huang (last modified)
+!!!           06/07/2024 by li huang (last modified)
 !!! purpose : define global control parameters for the atomic eigenvalue
 !!!           problem solver.
 !!! status  : unstable
@@ -77,6 +77,9 @@
 !!
 !! if ictqmc == 5:
 !!     subspace diagonalization using good quantum numbers (N and Jz)
+!!
+!! if ictqmc == 6:
+!!     subspace diagonalization using automatic partition
 !!
 !! we note that the format of the atom.cix file exactly depends on the
 !! ictqmc parameter. if ictqmc == 1, the generated atom.cix file is

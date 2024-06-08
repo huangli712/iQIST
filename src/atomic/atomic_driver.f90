@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/30/2024 by li huang (last modified)
+!!!           06/07/2024 by li huang (last modified)
 !!! purpose : try to launch various computational tasks for the atomic
 !!!           eigenvalue problem solver.
 !!! status  : unstable
