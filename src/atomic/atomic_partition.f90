@@ -192,15 +192,75 @@
              write(mystd,'(a,i6)') 'size :', sector_size(i)
              write(mystd,'(a)') 'basis :'
              do j=1,sector_size(i)
-                 write(mystd,'(14i1)') bin_basis(:,sector_basis(i,j))
+                 write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(i,j))
              enddo
+             call atomic_sector_N(sector_size(i), sector_basis(i,:))
+             call atomic_sector_Sz(sector_size(i), sector_basis(i,:))
              print *
          endif
      enddo
+
+
      STOP
 
      return
   end subroutine atomic_test_ad
+
+  subroutine atomic_sector_N(sector_size, sector_basis)
+     use control, only : norbs, ncfgs
+     use m_fock, only : bin_basis
+
+     integer, intent(in) :: sector_size
+     integer, intent(in) :: sector_basis(ncfgs)
+
+     integer :: i
+     integer :: basis(norbs)
+     integer :: GQN_N
+     integer :: N
+
+     GQN_N = 999
+     do i=1,sector_size
+         basis = bin_basis(:,sector_basis(i))
+         N = sum(basis)
+         if ( i == 1 ) then
+             GQN_N = N
+         else
+             if ( N /= GQN_N ) then
+                 STOP "wrong in GQN(N)"
+             endif
+         endif
+         print *, i, ' GQN(N) -> ', N
+     enddo
+
+  end subroutine atomic_sector_N
+
+  subroutine atomic_sector_Sz(sector_size, sector_basis)
+     use control, only : nband, norbs, ncfgs
+     use m_fock, only : bin_basis
+
+     integer, intent(in) :: sector_size
+     integer, intent(in) :: sector_basis(ncfgs)
+
+     integer :: i
+     integer :: basis(norbs)
+     integer :: Sz
+     integer :: GQN_Sz
+
+     GQN_Sz = 999
+     do i=1,sector_size
+         basis = bin_basis(:,sector_basis(i))
+         Sz = sum(basis(1:nband)) - sum(basis(nband+1:norbs))
+         if ( i == 1 ) then
+             GQN_Sz = Sz
+         else
+             if ( Sz /= GQN_Sz ) then
+                 STOP "wrong in GQN(Sz)"
+             endif
+         endif
+         print *, i, ' GQN(Sz) -> ', Sz
+     enddo
+
+  end subroutine atomic_sector_Sz
 
 recursive &
   subroutine zigzag(up_or_down, HA, HL, HU, sector_size, sector_basis, Mup, Mdn, max_mapping)
