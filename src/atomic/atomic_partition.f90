@@ -10,6 +10,7 @@
      integer :: i
      integer :: j
      integer :: ia, ib
+     integer :: max_num, max_size
 
      integer, allocatable :: sector_size(:)
      integer, allocatable :: sector_size_(:)
@@ -39,6 +40,11 @@
 
      call print_sector(ncfgs, ncfgs, sector_size_, sector_basis_)
 
+     max_num = get_max_num(ncfgs, sector_size_)
+     max_size = get_max_size(ncfgs, sector_size_)
+
+     print *, 'max sector number: ', max_num
+     print *, 'max sector size: ', max_size
      STOP
 
      return
