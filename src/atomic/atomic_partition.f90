@@ -5,6 +5,7 @@
      use control, only : ncfgs
 
      use m_fock, only : hmat
+     use m_fock, only : bin_basis, dec_basis, ind_basis
 
      implicit none
 
@@ -12,6 +13,8 @@
      integer :: j
      integer :: ia, ib
      integer :: nsect, nsize
+     integer :: iorb, iup, idn
+     integer :: jnew, jold, isgn
      integer, external :: get_nsect
      integer, external :: get_nsize
 
@@ -48,10 +51,69 @@
 
      print *, 'number of sectors: ', nsect
      print *, 'maximum size of sectors: ', nsize
+
+     allocate(sector_size(nsect))
+     allocate(sector_basis(nsect,ncfgs))
+     !
+     j = 0
+     do i=1,ncfgs
+         if ( sector_size_(i) > 0 ) then
+             j = j + 1
+             sector_size(j) = sector_size_(i)
+             sector_basis(j,:) = sector_basis_(i,:)
+         endif
+     enddo
+     !
+     call s_assert(j == nsect)
+
      STOP
 
      return
   end subroutine automatic_partition
+
+  subroutine refine_sector()
+     implicit none
+
+     iorb = 2
+     iup = 0
+     idn = 0
+     do i=1,ncfgs
+         call locate_sector(ia, i, nsect, sector_size, sector_basis)
+
+         ! c^+
+         if ( bin_basis(iorb,i) == 0 ) then
+             jold = dec_basis(i)
+             call atomic_make_cdagger(iorb, jold, jnew, isgn)
+             j = ind_basis(jnew)
+
+             call locate_sector(ib, j, nsect, sector_size, sector_basis)
+
+             iup = iup + 1
+             !call s_assert(iup <= max_mapping)
+             !Mup(iup,1) = ia
+             !Mup(iup,2) = ib
+         endif
+
+         ! c
+         if ( bin_basis(iorb,i) == 1 ) then
+             jold = dec_basis(i)
+             call atomic_make_c(iorb, jold, jnew, isgn)
+             j = ind_basis(jnew)
+
+             call locate_sector(ib, j, nsect, sector_size, sector_basis)
+
+             idn = idn + 1
+             !call s_assert(idn <= max_mapping)
+             !Mdn(idn,1) = ia
+             !Mdn(idn,2) = ib
+         endif
+     enddo
+     print *, '# orb: ', iorb
+     print *, 'number of Mup:', iup
+     print *, 'number of Mdn:', idn
+
+     return
+  end subroutine refine_sector
 
   subroutine locate_sector(sind, find, nsect, sector_size, sector_basis)
      use control, only : ncfgs
