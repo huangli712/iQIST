@@ -10,9 +10,9 @@
      integer :: i
      integer :: j
      integer :: ia, ib
-     integer :: max_num, max_size
-     integer, external :: get_max_num
-     integer, external :: get_max_size
+     integer :: nsect, nsize
+     integer, external :: get_nsect
+     integer, external :: get_nsize
 
      integer, allocatable :: sector_size(:)
      integer, allocatable :: sector_size_(:)
@@ -42,33 +42,33 @@
 
      call print_sector(ncfgs, sector_size_, sector_basis_)
 
-     max_num = get_max_num(ncfgs, sector_size_)
-     max_size = get_max_size(ncfgs, sector_size_)
+     nsect = get_nsect(ncfgs, sector_size_)
+     nsize = get_nsize(ncfgs, sector_size_)
 
-     print *, 'max sector number: ', max_num
-     print *, 'max sector size: ', max_size
+     print *, 'number of sectors: ', nsect
+     print *, 'maximum size of sectors: ', nsize
      STOP
 
      return
   end subroutine automatic_partition
 
-  subroutine locate_sector(sind, find, max_num, sector_size, sector_basis)
+  subroutine locate_sector(sind, find, nsect, sector_size, sector_basis)
      use control, only : ncfgs
 
      implicit none
 
      integer, intent(out) :: sind
      integer, intent(in) :: find
-     integer, intent(in) :: max_num
-     integer, intent(in) :: sector_size(max_num)
-     integer, intent(in) :: sector_basis(max_num,ncfgs)
+     integer, intent(in) :: nsect
+     integer, intent(in) :: sector_size(nsect)
+     integer, intent(in) :: sector_basis(nsect,ncfgs)
 
      integer :: m
      integer :: n
 
      sind = 0
 
-     SECTOR: do m=1,max_num
+     SECTOR: do m=1,nsect
          do n=1,sector_size(m)
              if ( sector_basis(m,n) == find ) then
                  sind = m
@@ -82,16 +82,16 @@
      return
   end subroutine locate_sector
 
-  subroutine merge_sector(ia, ib, max_num, sector_size, sector_basis)
+  subroutine merge_sector(ia, ib, nsect, sector_size, sector_basis)
      use control, only : ncfgs
 
      implicit none
 
      integer, intent(in) :: ia
      integer, intent(in) :: ib
-     integer, intent(in) :: max_num
-     integer, intent(inout) :: sector_size(max_num)
-     integer, intent(inout) :: sector_basis(max_num,ncfgs)
+     integer, intent(in) :: nsect
+     integer, intent(inout) :: sector_size(nsect)
+     integer, intent(inout) :: sector_basis(nsect,ncfgs)
 
      integer :: m
 
@@ -109,7 +109,7 @@
      return
   end subroutine merge_sector
 
-  subroutine print_sector(max_num, sector_size, sector_basis)
+  subroutine print_sector(nsect, sector_size, sector_basis)
      use constants, only : mystd
 
      use control, only : ncfgs
@@ -118,16 +118,16 @@
 
      implicit none
 
-     integer, intent(in) :: max_num
-     integer, intent(in) :: sector_size(max_num)
-     integer, intent(in) :: sector_basis(max_num,ncfgs)
+     integer, intent(in) :: nsect
+     integer, intent(in) :: sector_size(nsect)
+     integer, intent(in) :: sector_basis(nsect,ncfgs)
 
      integer :: i
      integer :: j
      integer :: m
 
      m = 0
-     do i=1,max_num
+     do i=1,nsect
          if ( sector_size(i) > 0 ) then
              m = m + 1
              write(mystd,'(a,i6)') 'subspace -> ', m
@@ -143,35 +143,35 @@
      return
    end subroutine print_sector
 
-   function get_max_num(max_num, sector_size) result(val)
+   function get_nsect(nsect, sector_size) result(val)
      implicit none
 
-     integer, intent(in) :: max_num
-     integer, intent(in) :: sector_size(max_num)
+     integer, intent(in) :: nsect
+     integer, intent(in) :: sector_size(nsect)
 
      integer :: val
 
      integer :: i
 
      val = 0
-     do i=1,max_num
+     do i=1,nsect
          if ( sector_size(i) > 0 ) then
              val = val + 1
          endif
      enddo
 
      return
-   end function get_max_num
+   end function get_nsect
 
-   function get_max_size(max_num, sector_size) result(val)
+   function get_nsize(nsect, sector_size) result(val)
      implicit none
 
-     integer, intent(in) :: max_num
-     integer, intent(in) :: sector_size(max_num)
+     integer, intent(in) :: nsect
+     integer, intent(in) :: sector_size(nsect)
 
      integer :: val
 
      val = maxval(sector_size)
 
      return
-   end function get_max_size
+   end function get_nsize
