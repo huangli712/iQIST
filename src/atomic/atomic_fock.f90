@@ -389,7 +389,7 @@
          enddo alphaloop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
 
-     call atomic_test_ad()
+     call automatic_partition()
 
 !! body]
 
