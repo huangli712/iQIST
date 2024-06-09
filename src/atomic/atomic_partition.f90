@@ -1,5 +1,6 @@
   subroutine automatic_partition()
      use constants, only : dp
+     use constants, only : zero
 
      use control, only : ncfgs
 
@@ -29,7 +30,7 @@
 
      do i=1,ncfgs
          do j=1,ncfgs
-             if ( abs(hmat(i,j)) > 0.0_dp ) then
+             if ( abs(hmat(i,j)) > zero ) then
                  call locate_sector(ia, i, ncfgs, sector_size_, sector_basis_)
                  call locate_sector(ib, j, ncfgs, sector_size_, sector_basis_)
 
