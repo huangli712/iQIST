@@ -1,33 +1,4 @@
 
-  subroutine atomic_find_subspace(sind, find, sector_size, sector_basis)
-     use control, only : ncfgs
-
-     implicit none
-
-     integer, intent(out) :: sind
-     integer, intent(in) :: find
-     integer, intent(in) :: sector_size(ncfgs)
-     integer, intent(in) :: sector_basis(ncfgs,ncfgs)
-
-     integer :: m
-     integer :: n
-
-     sind = 0
-
-     m1loop: do m=1,ncfgs
-         do n=1,sector_size(m)
-             if ( sector_basis(m,n) == find ) then
-                 sind = m
-                 EXIT m1loop
-             endif
-         enddo
-     enddo m1loop
-
-     call s_assert(sind /= 0)
-
-     return
-  end subroutine atomic_find_subspace
-
   subroutine atomic_test_ad()
      use constants, only : dp
      use constants, only : mystd
@@ -229,6 +200,35 @@
 
      return
   end subroutine atomic_test_ad
+
+  subroutine atomic_find_subspace(sind, find, sector_size, sector_basis)
+     use control, only : ncfgs
+
+     implicit none
+
+     integer, intent(out) :: sind
+     integer, intent(in) :: find
+     integer, intent(in) :: sector_size(ncfgs)
+     integer, intent(in) :: sector_basis(ncfgs,ncfgs)
+
+     integer :: m
+     integer :: n
+
+     sind = 0
+
+     m1loop: do m=1,ncfgs
+         do n=1,sector_size(m)
+             if ( sector_basis(m,n) == find ) then
+                 sind = m
+                 EXIT m1loop
+             endif
+         enddo
+     enddo m1loop
+
+     call s_assert(sind /= 0)
+
+     return
+  end subroutine atomic_find_subspace
 
   subroutine atomic_sector_N(GQN_N, sector_size, sector_basis)
      use control, only : norbs, ncfgs
