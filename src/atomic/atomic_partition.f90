@@ -11,6 +11,8 @@
      integer :: j
      integer :: ia, ib
      integer :: max_num, max_size
+     integer, external :: get_max_num
+     integer, external :: get_max_size
 
      integer, allocatable :: sector_size(:)
      integer, allocatable :: sector_size_(:)
