@@ -30,17 +30,17 @@
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs(hmat(i,j)) > 0.0_dp ) then
-                 call locate_sector(ia, i, ncfgs, ncfgs, sector_size_, sector_basis_)
-                 call locate_sector(ib, j, ncfgs, ncfgs, sector_size_, sector_basis_)
+                 call locate_sector(ia, i, ncfgs, sector_size_, sector_basis_)
+                 call locate_sector(ib, j, ncfgs, sector_size_, sector_basis_)
 
                  if ( ia /= ib ) then
-                     call merge_sector(ia, ib, ncfgs, ncfgs, sector_size_, sector_basis_) 
+                     call merge_sector(ia, ib, ncfgs, sector_size_, sector_basis_) 
                  endif
              endif
          enddo
      enddo
 
-     call print_sector(ncfgs, ncfgs, sector_size_, sector_basis_)
+     call print_sector(ncfgs, sector_size_, sector_basis_)
 
      max_num = get_max_num(ncfgs, sector_size_)
      max_size = get_max_size(ncfgs, sector_size_)
@@ -52,15 +52,16 @@
      return
   end subroutine automatic_partition
 
-  subroutine locate_sector(sind, find, max_num, max_size, sector_size, sector_basis)
+  subroutine locate_sector(sind, find, max_num, sector_size, sector_basis)
+     use control, only : ncfgs
+
      implicit none
 
      integer, intent(out) :: sind
      integer, intent(in) :: find
      integer, intent(in) :: max_num
-     integer, intent(in) :: max_size
      integer, intent(in) :: sector_size(max_num)
-     integer, intent(in) :: sector_basis(max_num,max_size)
+     integer, intent(in) :: sector_basis(max_num,ncfgs)
 
      integer :: m
      integer :: n
@@ -81,15 +82,16 @@
      return
   end subroutine locate_sector
 
-  subroutine merge_sector(ia, ib, max_num, max_size, sector_size, sector_basis)
+  subroutine merge_sector(ia, ib, max_num, sector_size, sector_basis)
+     use control, only : ncfgs
+
      implicit none
 
      integer, intent(in) :: ia
      integer, intent(in) :: ib
      integer, intent(in) :: max_num
-     integer, intent(in) :: max_size
      integer, intent(inout) :: sector_size(max_num)
-     integer, intent(inout) :: sector_basis(max_num,max_size)
+     integer, intent(inout) :: sector_basis(max_num,ncfgs)
 
      integer :: m
 
@@ -107,17 +109,18 @@
      return
   end subroutine merge_sector
 
-  subroutine print_sector(max_num, max_size, sector_size, sector_basis)
+  subroutine print_sector(max_num, sector_size, sector_basis)
      use constants, only : mystd
+
+     use control, only : ncfgs
 
      use m_fock, only : bin_basis
 
      implicit none
 
      integer, intent(in) :: max_num
-     integer, intent(in) :: max_size
      integer, intent(in) :: sector_size(max_num)
-     integer, intent(in) :: sector_basis(max_num,max_size)
+     integer, intent(in) :: sector_basis(max_num,ncfgs)
 
      integer :: i
      integer :: j
