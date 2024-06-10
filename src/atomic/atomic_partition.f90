@@ -3,18 +3,17 @@
      use constants, only : zero
 
      use control, only : ncfgs
+     use control, only : norbs
 
      use m_fock, only : hmat
-     use m_fock, only : bin_basis, dec_basis, ind_basis
 
      implicit none
 
      integer :: i
      integer :: j
      integer :: ia, ib
-     integer :: nsect, nsize
-     integer :: iorb, iup, idn
-     integer :: jnew, jold, isgn
+     integer :: iorb
+     integer :: nsect, nsize, nsect_, nsize_
      integer, external :: get_nsect
      integer, external :: get_nsize
 
@@ -44,8 +43,6 @@
          enddo
      enddo
 
-     call print_sector(ncfgs, sector_size_, sector_basis_)
-
      nsect = get_nsect(ncfgs, sector_size_)
      nsize = get_nsize(ncfgs, sector_size_)
 
@@ -65,18 +62,77 @@
      enddo
      !
      call s_assert(j == nsect)
+     deallocate(sector_size_)
+     deallocate(sector_basis_)
 
+     do iorb=1,norbs
+         call refine_sector(iorb, nsect, sector_size, sector_basis)
+     enddo
+
+     nsect_ = get_nsect(nsect, sector_size)
+     nsize_ = get_nsize(nsect, sector_size)
+
+     print *, 'number of sectors: ', nsect_
+     print *, 'maximum size of sectors: ', nsize_
+
+     allocate(sector_size_(nsect_))
+     allocate(sector_basis_(nsect_,ncfgs))
+     !
+     j = 0
+     do i=1,nsect
+         if ( sector_size(i) > 0 ) then
+             j = j + 1
+             sector_size_(j) = sector_size(i)
+             sector_basis_(j,:) = sector_basis(i,:)
+         endif
+     enddo
+     !
+     call s_assert(j == nsect_)
+
+     deallocate(sector_size)
+     deallocate(sector_basis)
+     nsect = nsect_
+     nsize = nsize_
+     allocate(sector_size(nsect))
+     allocate(sector_basis(nsect,ncfgs))
+     sector_size = sector_size_
+     sector_basis = sector_basis_
+
+
+     call print_sector(nsect, sector_size, sector_basis)
      STOP
 
      return
   end subroutine automatic_partition
 
-  subroutine refine_sector()
+  subroutine refine_sector(iorb, nsect, sector_size, sector_basis)
+     use control, only : ncfgs
+
+     use m_fock, only : bin_basis, dec_basis, ind_basis
+
      implicit none
 
-     iorb = 2
+     integer, intent(in) :: iorb
+     integer, intent(in) :: nsect
+     integer, intent(inout) :: sector_size(nsect)
+     integer, intent(inout) :: sector_basis(nsect,ncfgs)
+
+     integer :: i
+     integer :: j
+     integer :: iup
+     integer :: idn
+     integer :: jnew, jold, isgn
+     integer :: ia, ib
+     integer :: HA, HL, HU
+
+     integer, allocatable :: Mup(:,:)
+     integer, allocatable :: Mdn(:,:)
+     allocate(Mup(ncfgs/2,2))
+     allocate(Mdn(ncfgs/2,2))
+
      iup = 0
      idn = 0
+
      do i=1,ncfgs
          call locate_sector(ia, i, nsect, sector_size, sector_basis)
 
@@ -89,9 +145,8 @@
              call locate_sector(ib, j, nsect, sector_size, sector_basis)
 
              iup = iup + 1
-             !call s_assert(iup <= max_mapping)
-             !Mup(iup,1) = ia
-             !Mup(iup,2) = ib
+             Mup(iup,1) = ia
+             Mup(iup,2) = ib
          endif
 
          ! c
@@ -103,17 +158,94 @@
              call locate_sector(ib, j, nsect, sector_size, sector_basis)
 
              idn = idn + 1
-             !call s_assert(idn <= max_mapping)
-             !Mdn(idn,1) = ia
-             !Mdn(idn,2) = ib
+             Mdn(idn,1) = ia
+             Mdn(idn,2) = ib
          endif
      enddo
+
+     call s_assert(iup == ncfgs / 2)
+     call s_assert(idn == ncfgs / 2)
+
      print *, '# orb: ', iorb
      print *, 'number of Mup:', iup
      print *, 'number of Mdn:', idn
 
+
+     do i=1,ncfgs/2
+         HA = Mup(i,1)
+         HL = Mup(i,1)
+         HU = Mup(i,2)
+
+         if ( HL /= 0 .and. HU /= 0 ) then
+             call zigzag(1, HA, HL, HU, nsect, sector_size, sector_basis, Mup, Mdn)
+         endif
+     enddo
+
+     deallocate(Mup)
+     deallocate(Mdn)
+
      return
   end subroutine refine_sector
+
+recursive &
+  subroutine zigzag(up_or_down, HA, HL, HU, nsect, sector_size, sector_basis, Mup, Mdn)
+     use control, only : ncfgs
+
+     implicit none
+
+     integer, intent(in) :: up_or_down
+     integer, intent(in) :: HA
+     integer, intent(in) :: HL
+     integer, intent(in) :: HU
+     integer, intent(in) :: nsect
+     integer, intent(inout) :: sector_size(nsect)
+     integer, intent(inout) :: sector_basis(nsect,ncfgs)
+     integer, intent(inout) :: Mup(ncfgs/2,2)
+     integer, intent(inout) :: Mdn(ncfgs/2,2)
+
+     integer :: i, j
+     integer :: HB
+
+     if ( up_or_down == 1 ) then
+         do i=1,ncfgs/2
+             if ( Mup(i,1) == HA ) then
+                 HB = Mup(i,2)
+                 Mup(i,:) = 0
+
+                 if ( HB /= HU ) then
+                     print *, 'merge up:', HA, HB, HU
+                     do j=1,sector_size(HB)
+                         sector_basis(HU, sector_size(HU) + j) = sector_basis(HB,j)
+                     enddo
+                     sector_size(HU) = sector_size(HU) + sector_size(HB)
+                     sector_size(HB) = 0
+                 endif
+
+                 call zigzag(2, HB, HL, HU, nsect, sector_size, sector_basis, Mup, Mdn)
+             endif
+         enddo 
+     else
+         do i=1,ncfgs/2
+             if ( Mdn(i,1) == HA ) then
+                 HB = Mdn(i,2)
+                 Mdn(i,:) = 0
+
+                 if ( HB /= HL ) then
+                     print *, 'merge dn:', HA, HB, HL
+                     do j=1,sector_size(HB)
+                         sector_basis(HL, sector_size(HL) + j) = sector_basis(HB,j)
+                     enddo
+                     sector_size(HL) = sector_size(HL) + sector_size(HB)
+                     sector_size(HB) = 0
+                 endif
+
+                 call zigzag(1, HB, HL, HU, nsect, sector_size, sector_basis, Mup, Mdn)
+             endif
+         enddo 
+     endif
+
+     return
+  end subroutine zigzag
 
   subroutine locate_sector(sind, find, nsect, sector_size, sector_basis)
      use control, only : ncfgs
@@ -204,9 +336,71 @@
      enddo
 
      return
-   end subroutine print_sector
+  end subroutine print_sector
 
-   function get_nsect(nsect, sector_size) result(val)
+  subroutine print_sector_new(nsect, sector_size, sector_basis)
+     use constants, only : mystd
+
+     use control, only : ncfgs
+     use m_fock, only : bin_basis
+
+     implicit none
+
+     integer, intent(in) :: nsect
+     integer, intent(in) :: sector_size(nsect)
+     integer, intent(in) :: sector_basis(nsect, ncfgs)
+
+     integer :: m
+     integer :: i
+     integer :: j
+
+     integer :: N
+     integer :: Sz
+     integer :: Ap
+     integer :: sector_N(nsect)
+     integer :: sector_Sz(nsect)
+     integer :: sector_Ap(nsect)
+
+     sector_N = 0
+     sector_Sz = 0
+     sector_Ap = 0
+
+     ! print subspaces
+     m = 0
+     do i=1,nsect
+         if ( sector_size(i) > 0 ) then
+             m = m + 1
+             write(mystd,'(a,i6)') 'subspace -> ', m
+             write(mystd,'(a,i6)') 'size :', sector_size(i)
+             write(mystd,'(a)') 'basis :'
+             do j=1,sector_size(i)
+                 write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(i,j))
+             enddo
+             call atomic_sector_N(N, sector_size(i), sector_basis(i,:))
+             call atomic_sector_Sz(Sz, sector_size(i), sector_basis(i,:))
+             !call atomic_sector_Jz(Jz, sector_size(i), sector_basis(i,:))
+             Ap = 1
+             do j=1,m-1
+                 if ( ( sector_N(j) == N ) .and. ( sector_Sz(j) == Sz ) ) then
+                     Ap = Ap + 1
+                 endif
+             enddo
+             write(mystd, '(a, i3)') 'N :', N
+             write(mystd, '(a, i3)') 'Sz:', Sz
+             !write(mystd, '(a, i3)') 'Jz:', Jz
+             write(mystd, '(a, i3)') 'AP:', Ap
+             sector_N(m) = N
+             sector_Sz(m) = Sz
+             !sector_Jz(m) = Jz
+             sector_Ap(m) = Ap
+             print *
+         endif
+     enddo
+ 
+     return
+  end subroutine print_sector_new
+
+  function get_nsect(nsect, sector_size) result(val)
      implicit none
 
      integer, intent(in) :: nsect
@@ -224,9 +418,9 @@
      enddo
 
      return
-   end function get_nsect
+  end function get_nsect
 
-   function get_nsize(nsect, sector_size) result(val)
+  function get_nsize(nsect, sector_size) result(val)
      implicit none
 
      integer, intent(in) :: nsect
@@ -237,4 +431,102 @@
      val = maxval(sector_size)
 
      return
-   end function get_nsize
+  end function get_nsize
+
+  subroutine atomic_sector_N(GQN_N, sector_size, sector_basis)
+     use control, only : norbs, ncfgs
+     use m_fock, only : bin_basis
+
+     implicit none
+
+     integer, intent(in) :: sector_size
+     integer, intent(in) :: sector_basis(ncfgs)
+     integer, intent(out) :: GQN_N
+
+     integer :: i
+     integer :: basis(norbs)
+     integer :: N
+
+     GQN_N = 999
+     do i=1,sector_size
+         basis = bin_basis(:,sector_basis(i))
+         N = sum(basis)
+         if ( i == 1 ) then
+             GQN_N = N
+         else
+             if ( N /= GQN_N ) then
+                 STOP "wrong in GQN(N)"
+             endif
+         endif
+     enddo
+
+     return
+  end subroutine atomic_sector_N
+
+  subroutine atomic_sector_Sz(GQN_Sz, sector_size, sector_basis)
+     use control, only : nband, norbs, ncfgs
+     use m_fock, only : bin_basis
+
+     implicit none
+
+     integer, intent(in) :: sector_size
+     integer, intent(in) :: sector_basis(ncfgs)
+     integer, intent(out) :: GQN_Sz
+
+     integer :: i
+     integer :: basis(norbs)
+     integer :: Sz
+
+     GQN_Sz = 999
+     do i=1,sector_size
+         basis = bin_basis(:,sector_basis(i))
+         Sz = sum(basis(1:nband)) - sum(basis(nband+1:norbs))
+         if ( i == 1 ) then
+             GQN_Sz = Sz
+         else
+             if ( Sz /= GQN_Sz ) then
+                 STOP "wrong in GQN(Sz)"
+             endif
+         endif
+     enddo
+
+     return
+  end subroutine atomic_sector_Sz
+
+  subroutine atomic_sector_Jz(GQN_Jz, sector_size, sector_basis)
+     use control, only : norbs, ncfgs
+     use m_fock, only : bin_basis
+
+     implicit none
+
+     integer, intent(in) :: sector_size
+     integer, intent(in) :: sector_basis(ncfgs)
+     integer, intent(out) :: GQN_Jz
+
+     integer :: i, k
+     integer :: basis(norbs)
+     integer :: Jz
+     integer :: good_jz(norbs)
+
+     call atomic_make_gjz(good_jz)
+
+     GQN_Jz = 999
+     do i=1,sector_size
+         basis = bin_basis(:,sector_basis(i))
+
+         Jz = 0
+         do k=1,norbs
+             Jz = Jz + good_jz(k) * basis(k)
+         enddo ! over k={1,norbs} loop
+
+         if ( i == 1 ) then
+             GQN_Jz = Jz
+         else
+             if ( Jz /= GQN_Jz ) then
+                 STOP "wrong in GQN(Jz)"
+             endif
+         endif
+     enddo
+
+     return
+  end subroutine atomic_sector_Jz
