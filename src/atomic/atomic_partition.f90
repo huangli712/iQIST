@@ -278,8 +278,6 @@
 
 !! body]
 
-     STOP
-
      return
   end subroutine automatic_partition
 
