@@ -136,23 +136,23 @@
      enddo
      call s_assert(k == nsect)
 
-     !k = 0
-     !do i=1,nsect_
-     !    if ( ndims(i) > 0 ) then
-     !        k = k + 1
-     !        write(mystd,'(a,i6)') 'subspace -> ', k
-     !        write(mystd,'(a,i6)') 'size :', ndims(i)
-     !        write(mystd,'(a)') 'basis :'
-     !        do j=1,ndims(i)
-     !            write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(j,i))
-     !        enddo
-     !        write(mystd, '(a, i3)') 'N :', sect_ntot(i)
-     !        write(mystd, '(a, i3)') 'Sz:', sect_sz(i)
-     !        write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
-     !        write(mystd, '(a, i3)') 'AP:', sect_ap(i)
-     !        write(mystd, *)
-     !    endif 
-     !enddo
+     k = 0
+     do i=1,nsect_
+         if ( ndims(i) > 0 ) then
+             k = k + 1
+             write(mystd,'(a,i6)') 'subspace -> ', k
+             write(mystd,'(a,i6)') 'size :', ndims(i)
+             write(mystd,'(a)') 'basis :'
+             do j=1,ndims(i)
+                 write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(j,i))
+             enddo
+             write(mystd, '(a, i3)') 'N :', sect_ntot(i)
+             write(mystd, '(a, i3)') 'Sz:', sect_sz(i)
+             write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
+             write(mystd, '(a, i3)') 'AP:', sect_ap(i)
+             write(mystd, *)
+         endif 
+     enddo
 
      write(mystd,'(4X,a)') 'allocate memory for subspaces'
      !
@@ -243,6 +243,7 @@
 
                  ! setup the next array
                  sectors(i)%next(j,k) = which_sect
+                 call check_next(i, j, k, which_sect)
 
                  if (k == 1) then
                      write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
@@ -253,10 +254,29 @@
                      write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
                      write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
                  endif ! back if (k == 1) block
+                 !print *
 
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsectors} loop
+
+
+     ! calculate the maximum and average dimensions of subspaces
+     !--------------------------------------------------------------------
+     max_dim_sect = maxval(ndims)
+     ave_dim_sect = sum(ndims) / real(nsectors)
+     !
+     write(mystd,'(4X,a,i4)') 'maximum dimension of subspaces:', max_dim_sect
+     write(mystd,'(4X,a,f6.2)') 'averaged dimension of subspaces:', ave_dim_sect
+
+     ! dump subspace information for reference
+     !--------------------------------------------------------------------
+     !call atomic_dump_sector(sect_ntot, sect_sz, sect_ap, sect_jz)
+
+     ! deallocate memory
+     deallocate(sector_basis)
+
+!! body]
 
      STOP
 
@@ -461,6 +481,53 @@ recursive &
 
      return
   end subroutine locate_sector_new
+
+  subroutine check_next(i, j, k, which_sect)
+     use m_fock, only : dec_basis, ind_basis, bin_basis
+     use m_sector, only : sectors
+
+     implicit none
+
+     integer, intent(in) :: i
+     integer, intent(in) :: j
+     integer, intent(in) :: k
+     integer, intent(in) :: which_sect
+
+     integer :: m
+     integer :: n
+     integer :: jold, jnew, isgn
+     integer :: ibasis
+
+     if ( k == 1 ) then
+         do n=1,sectors(i)%ndim
+             ibasis = sectors(i)%basis(n)
+             if ( bin_basis(j,ibasis) == 0 ) then
+                 jold = dec_basis(ibasis)
+                 call atomic_make_cdagger(j, jold, jnew, isgn)
+                 m = ind_basis(jnew)
+                 call s_assert( count(sectors(which_sect)%basis == m) == 1 )
+                 !print *, n, m
+             endif
+         enddo
+         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
+     endif
+
+     if ( k == 0 ) then
+         do n=1,sectors(i)%ndim
+             ibasis = sectors(i)%basis(n)
+             if ( bin_basis(j,ibasis) == 1 ) then
+                 jold = dec_basis(ibasis)
+                 call atomic_make_c(j, jold, jnew, isgn)
+                 m = ind_basis(jnew)
+                 call s_assert( count(sectors(which_sect)%basis == m) == 1 )
+                 !print *, n, m
+             endif
+         enddo
+         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
+     endif
+
+     return
+  end subroutine check_next
 
   subroutine merge_sector(ia, ib, nsect, ndims, sector_basis)
      use control, only : ncfgs
