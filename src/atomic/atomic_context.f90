@@ -7,7 +7,7 @@
 !!! type    : modules
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/30/2024 by li huang (last modified)
+!!!           06/11/2024 by li huang (last modified)
 !!! purpose : define global data structures, arrays, and variables for
 !!!           the atomic eigenvalue problem solver.
 !!! status  : unstable
@@ -116,10 +116,12 @@
      ! declaration of module procedures: allocate memory
      public :: cat_alloc_fock_basis
      public :: cat_alloc_fock_eigen
+     public :: cat_alloc_hmat_only
 
      ! declaration of module procedures: deallocate memory
      public :: cat_free_fock_basis
      public :: cat_free_fock_eigen
+     public :: cat_free_hmat_only
 
   contains ! encapsulated functionality
 
@@ -206,6 +208,38 @@
 
      return
   end subroutine cat_alloc_fock_eigen
+
+!!
+!! @sub cat_alloc_hmat_only
+!!
+!! allocate memory for atomic Hamiltonian only. this subroutine is for
+!! the automatic partition algorithm.
+!!
+  subroutine cat_alloc_hmat_only()
+     implicit none
+
+!! local variables
+     ! the status flag
+     integer :: istat
+
+!! [body
+
+     ! allocate memory
+     allocate(hmat(ncfgs,ncfgs),       stat=istat)
+
+     ! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('cat_alloc_hmat_only', &
+             & 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     ! initialize them
+     hmat = czero
+
+!! body]
+
+     return
+  end subroutine cat_alloc_hmat_only
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
