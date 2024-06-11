@@ -65,7 +65,7 @@
                  call locate_sector(ib, j, ncfgs, ndims_, sector_basis_)
 
                  if ( ia /= ib ) then
-                     call merge_sector(ia, ib, ncfgs, ndims_, sector_basis_) 
+                     call merge_sector(ia, ib, ncfgs, ndims_, sector_basis_)
                  endif
              endif
          enddo
@@ -113,7 +113,7 @@
      sect_jz = 0
      sect_ap = 0
 
-     k = 0     
+     k = 0
      do i=1,nsect_
          if ( ndims(i) > 0 ) then
              k = k + 1
@@ -151,7 +151,7 @@
              write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
              write(mystd, '(a, i3)') 'AP:', sect_ap(i)
              write(mystd, *)
-         endif 
+         endif
      enddo
 
      write(mystd,'(4X,a)') 'allocate memory for subspaces'
@@ -401,7 +401,7 @@ recursive &
 
                  call zigzag(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
              endif
-         enddo 
+         enddo
      else
          do i=1,ncfgs/2
              if ( Mdn(i,1) == HA ) then
@@ -419,7 +419,7 @@ recursive &
 
                  call zigzag(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
              endif
-         enddo 
+         enddo
      endif
 
      return
@@ -476,7 +476,7 @@ recursive &
              endif
          enddo
      enddo SECTOR
-     
+
      call s_assert(sind /= 0)
 
      return
