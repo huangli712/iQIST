@@ -229,14 +229,14 @@
                          jold = dec_basis(ibasis)
                          call atomic_make_cdagger(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
-                         call locate_sector_new(which_sect, m, nsect, sectors)
+                         call locate_sector_new(which_sect, m)
                      endif
 
                      if ( k == 0 ) then
                          jold = dec_basis(ibasis)
                          call atomic_make_c(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
-                         call locate_sector_new(which_sect, m, nsect, sectors)
+                         call locate_sector_new(which_sect, m)
                      endif
 
                  endif  ! back if ( can == .true. ) block
@@ -434,6 +434,33 @@ recursive &
 
      return
   end subroutine locate_sector
+
+  subroutine locate_sector_new(sind, find)
+     use m_sector, only : nsectors, sectors
+
+     implicit none
+
+     integer, intent(out) :: sind
+     integer, intent(in) :: find
+
+     integer :: m
+     integer :: n
+
+     sind = 0
+
+     SECTOR: do m=1,nsectors
+         do n=1,sectors(m)%ndim
+             if ( sectors(m)%basis(n) == find ) then
+                 sind = m
+                 EXIT SECTOR
+             endif
+         enddo
+     enddo SECTOR
+     
+     call s_assert(sind /= 0)
+
+     return
+  end subroutine locate_sector_new
 
   subroutine merge_sector(ia, ib, nsect, ndims, sector_basis)
      use control, only : ncfgs
