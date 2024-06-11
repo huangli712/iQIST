@@ -339,12 +339,11 @@
          call atomic_make_sectors()
      else
          call automatic_partition()
-     endif
+     endif ! back if ( ictqmc /= 6 ) block
      call cpu_time(time_end)   ! record ending   time
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
-     STOP
 
      ! build the atomic Hamiltonian
      write(mystd,'(2X,a)') 'assemble atomic Hamiltonian'
@@ -411,6 +410,19 @@
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+
+     ! for automatic partition algorithm only
+     if ( ictqmc == 6 ) then
+         ! deallocate memory for atomic Hamiltonian
+         write(mystd,'(2X,a)') 'deallocate memory for atomic Hamiltonian'
+         !
+         call cpu_time(time_begin) ! record starting time
+         call cat_free_hmat_only()
+         call cpu_time(time_end)   ! record ending   time
+         !
+         write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
+     endif ! back if ( ictqmc == 6 ) block
 
 !! body]
 
