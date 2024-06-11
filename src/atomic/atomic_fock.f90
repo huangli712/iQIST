@@ -389,8 +389,6 @@
          enddo alphaloop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
 
-     call automatic_partition()
-
 !! body]
 
      return

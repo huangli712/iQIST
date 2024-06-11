@@ -328,7 +328,6 @@
          !
          write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      endif ! back if ( ictqmc == 6 ) block
-     STOP
 
      ! make the subspaces (sectors)
      ! the memory will be allocated automatically
@@ -336,11 +335,16 @@
      write(mystd,'(2X,a)') 'construct subspaces for atomic eigenstates'
      !
      call cpu_time(time_begin) ! record starting time
-     call atomic_make_sectors()
+     if ( ictqmc /= 6 ) then
+         call atomic_make_sectors()
+     else
+         call automatic_partition()
+     endif
      call cpu_time(time_end)   ! record ending   time
      !
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+     STOP
 
      ! build the atomic Hamiltonian
      write(mystd,'(2X,a)') 'assemble atomic Hamiltonian'
