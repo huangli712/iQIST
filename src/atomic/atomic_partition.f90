@@ -14,7 +14,7 @@
      integer :: ia, ib
      integer :: iorb
      integer :: nsect, nsize, nsect_, nsize_
-     integer :: N, Ap, Sz
+     integer :: N, Sz, Jz, Ap
 
      integer, external :: get_nsect
      integer, external :: get_nsize
@@ -81,18 +81,34 @@
 
      nsect = get_nsect(nsect_, sector_size)
      nsize = get_nsize(nsect_, sector_size)
-
      print *, 'number of sectors: ', nsect
      print *, 'maximum size of sectors: ', nsize
-     STOP
 
-     !call print_sector(nsect, sector_size, sector_basis)
+     allocate(sect_ntot(nsect_))
+     allocate(sect_sz(nsect_))
+     allocate(sect_jz(nsect_))
+     allocate(sect_ap(nsect_))
+     sect_ntot = 0
+     sect_sz = 0
+     sect_jz = 0
+     sect_ap = 0
 
-     allocate(sect_ntot(nsect))
-     allocate(sect_sz(nsect))
-     allocate(sect_jz(nsect))
-     allocate(sect_ap(nsect))
+     do i=1,nsect_
+         if ( sector_size(i) > 0 ) then
+             call atomic_sector_N(N, sector_size(i), sector_basis(:,i))
+             call atomic_sector_Sz(Sz, sector_size(i), sector_basis(:,i))
+             call atomic_sector_Jz(Jz, sector_size(i), sector_basis(:,i))
 
+             Ap = 1
+             do j=1,i-1
+                 if ( ( sect_ntot(j) == N ) .and. ( sect_sz(j) == Sz ) ) then
+                     Ap = Ap + 1
+                 endif
+             enddo
+
+         endif
+     enddo
+ 
      STOP
 
      return
@@ -457,6 +473,7 @@ recursive &
   end subroutine atomic_sector_N
 
   subroutine atomic_sector_Sz(GQN_Sz, sector_size, sector_basis)
+     use control, only : isoc
      use control, only : nband, norbs, ncfgs
      use m_fock, only : bin_basis
 
@@ -471,6 +488,7 @@ recursive &
      integer :: Sz
 
      GQN_Sz = 999
+     if ( isoc == 1 ) return
      do i=1,sector_size
          basis = bin_basis(:,sector_basis(i))
          Sz = sum(basis(1:nband)) - sum(basis(nband+1:norbs))
@@ -487,6 +505,7 @@ recursive &
   end subroutine atomic_sector_Sz
 
   subroutine atomic_sector_Jz(GQN_Jz, sector_size, sector_basis)
+     use control, only : isoc
      use control, only : norbs, ncfgs
      use m_fock, only : bin_basis
 
@@ -504,6 +523,8 @@ recursive &
      call atomic_make_gjz(good_jz)
 
      GQN_Jz = 999
+     if ( isoc == 0 ) return
+
      do i=1,sector_size
          basis = bin_basis(:,sector_basis(i))
 
