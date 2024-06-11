@@ -117,9 +117,9 @@
      do i=1,nsect_
          if ( ndims(i) > 0 ) then
              k = k + 1
-             call atomic_sector_N(N, ndims(i), sector_basis(:,i))
-             call atomic_sector_Sz(Sz, ndims(i), sector_basis(:,i))
-             call atomic_sector_Jz(Jz, ndims(i), sector_basis(:,i))
+             call get_ntot(N, ndims(i), sector_basis(:,i))
+             call get_sz(Sz, ndims(i), sector_basis(:,i))
+             call get_jz(Jz, ndims(i), sector_basis(:,i))
 
              Ap = 1
              do j=1,i-1
@@ -229,21 +229,21 @@
                          jold = dec_basis(ibasis)
                          call atomic_make_cdagger(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
-                         call locate_sector_new(which_sect, m)
+                         call lookup_sector(which_sect, m)
                      endif
 
                      if ( k == 0 ) then
                          jold = dec_basis(ibasis)
                          call atomic_make_c(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
-                         call locate_sector_new(which_sect, m)
+                         call lookup_sector(which_sect, m)
                      endif
 
                  endif  ! back if ( can == .true. ) block
 
                  ! setup the next array
                  sectors(i)%next(j,k) = which_sect
-                 call check_next(i, j, k, which_sect)
+                 call verify_connection(i, j, k, which_sect)
 
                  if (k == 1) then
                      write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
@@ -280,6 +280,12 @@
 
      return
   end subroutine automatic_partition
+
+  subroutine create_sector()
+     implicit none
+
+     return
+  end subroutine create_sector
 
   subroutine refine_sector(iorb, nsect, ndims, sector_basis)
      use control, only : ncfgs
@@ -363,66 +369,6 @@
      return
   end subroutine refine_sector
 
-recursive &
-  subroutine zigzag(up_or_down, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
-     use control, only : ncfgs
-
-     implicit none
-
-     integer, intent(in) :: up_or_down
-     integer, intent(in) :: HA
-     integer, intent(in) :: HL
-     integer, intent(in) :: HU
-     integer, intent(in) :: nsect
-     integer, intent(inout) :: ndims(nsect)
-     integer, intent(inout) :: sector_basis(ncfgs,nsect)
-     integer, intent(inout) :: Mup(ncfgs/2,2)
-     integer, intent(inout) :: Mdn(ncfgs/2,2)
-
-     integer :: i, j
-     integer :: HB
-
-     if ( up_or_down == 1 ) then
-         do i=1,ncfgs/2
-             if ( Mup(i,1) == HA ) then
-                 HB = Mup(i,2)
-                 Mup(i,:) = 0
-
-                 if ( HB /= HU ) then
-                     print *, 'merge up:', HA, HB, HU
-                     do j=1,ndims(HB)
-                         sector_basis(ndims(HU) + j, HU) = sector_basis(j,HB)
-                     enddo
-                     ndims(HU) = ndims(HU) + ndims(HB)
-                     ndims(HB) = 0
-                 endif
-
-                 call zigzag(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
-             endif
-         enddo
-     else
-         do i=1,ncfgs/2
-             if ( Mdn(i,1) == HA ) then
-                 HB = Mdn(i,2)
-                 Mdn(i,:) = 0
-
-                 if ( HB /= HL ) then
-                     print *, 'merge dn:', HA, HB, HL
-                     do j=1,ndims(HB)
-                         sector_basis(ndims(HL) + j, HL) = sector_basis(j,HB)
-                     enddo
-                     ndims(HL) = ndims(HL) + ndims(HB)
-                     ndims(HB) = 0
-                 endif
-
-                 call zigzag(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
-             endif
-         enddo
-     endif
-
-     return
-  end subroutine zigzag
-
   subroutine locate_sector(sind, find, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
@@ -453,7 +399,7 @@ recursive &
      return
   end subroutine locate_sector
 
-  subroutine locate_sector_new(sind, find)
+  subroutine lookup_sector(sind, find)
      use m_sector, only : nsectors, sectors
 
      implicit none
@@ -478,54 +424,7 @@ recursive &
      call s_assert(sind /= 0)
 
      return
-  end subroutine locate_sector_new
-
-  subroutine check_next(i, j, k, which_sect)
-     use m_fock, only : dec_basis, ind_basis, bin_basis
-     use m_sector, only : sectors
-
-     implicit none
-
-     integer, intent(in) :: i
-     integer, intent(in) :: j
-     integer, intent(in) :: k
-     integer, intent(in) :: which_sect
-
-     integer :: m
-     integer :: n
-     integer :: jold, jnew, isgn
-     integer :: ibasis
-
-     if ( k == 1 ) then
-         do n=1,sectors(i)%ndim
-             ibasis = sectors(i)%basis(n)
-             if ( bin_basis(j,ibasis) == 0 ) then
-                 jold = dec_basis(ibasis)
-                 call atomic_make_cdagger(j, jold, jnew, isgn)
-                 m = ind_basis(jnew)
-                 call s_assert( count(sectors(which_sect)%basis == m) == 1 )
-                 !print *, n, m
-             endif
-         enddo
-         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
-     endif
-
-     if ( k == 0 ) then
-         do n=1,sectors(i)%ndim
-             ibasis = sectors(i)%basis(n)
-             if ( bin_basis(j,ibasis) == 1 ) then
-                 jold = dec_basis(ibasis)
-                 call atomic_make_c(j, jold, jnew, isgn)
-                 m = ind_basis(jnew)
-                 call s_assert( count(sectors(which_sect)%basis == m) == 1 )
-                 !print *, n, m
-             endif
-         enddo
-         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
-     endif
-
-     return
-  end subroutine check_next
+  end subroutine lookup_sector
 
   subroutine merge_sector(ia, ib, nsect, ndims, sector_basis)
      use control, only : ncfgs
@@ -588,40 +487,114 @@ recursive &
      return
   end subroutine print_sector
 
-  function get_nsect(nsect, ndims) result(val)
+recursive &
+  subroutine zigzag(up_or_down, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+     use control, only : ncfgs
+
      implicit none
 
+     integer, intent(in) :: up_or_down
+     integer, intent(in) :: HA
+     integer, intent(in) :: HL
+     integer, intent(in) :: HU
      integer, intent(in) :: nsect
-     integer, intent(in) :: ndims(nsect)
+     integer, intent(inout) :: ndims(nsect)
+     integer, intent(inout) :: sector_basis(ncfgs,nsect)
+     integer, intent(inout) :: Mup(ncfgs/2,2)
+     integer, intent(inout) :: Mdn(ncfgs/2,2)
 
-     integer :: val
+     integer :: i, j
+     integer :: HB
 
-     integer :: i
+     if ( up_or_down == 1 ) then
+         do i=1,ncfgs/2
+             if ( Mup(i,1) == HA ) then
+                 HB = Mup(i,2)
+                 Mup(i,:) = 0
 
-     val = 0
-     do i=1,nsect
-         if ( ndims(i) > 0 ) then
-             val = val + 1
-         endif
-     enddo
+                 if ( HB /= HU ) then
+                     print *, 'merge up:', HA, HB, HU
+                     do j=1,ndims(HB)
+                         sector_basis(ndims(HU) + j, HU) = sector_basis(j,HB)
+                     enddo
+                     ndims(HU) = ndims(HU) + ndims(HB)
+                     ndims(HB) = 0
+                 endif
+
+                 call zigzag(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+             endif
+         enddo
+     else
+         do i=1,ncfgs/2
+             if ( Mdn(i,1) == HA ) then
+                 HB = Mdn(i,2)
+                 Mdn(i,:) = 0
+
+                 if ( HB /= HL ) then
+                     print *, 'merge dn:', HA, HB, HL
+                     do j=1,ndims(HB)
+                         sector_basis(ndims(HL) + j, HL) = sector_basis(j,HB)
+                     enddo
+                     ndims(HL) = ndims(HL) + ndims(HB)
+                     ndims(HB) = 0
+                 endif
+
+                 call zigzag(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+             endif
+         enddo
+     endif
 
      return
-  end function get_nsect
+  end subroutine zigzag
 
-  function get_nsize(nsect, ndims) result(val)
+  subroutine verify_connection(i, j, k, which_sect)
+     use m_fock, only : dec_basis, ind_basis, bin_basis
+     use m_sector, only : sectors
+
      implicit none
 
-     integer, intent(in) :: nsect
-     integer, intent(in) :: ndims(nsect)
+     integer, intent(in) :: i
+     integer, intent(in) :: j
+     integer, intent(in) :: k
+     integer, intent(in) :: which_sect
 
-     integer :: val
+     integer :: m
+     integer :: n
+     integer :: jold, jnew, isgn
+     integer :: ibasis
 
-     val = maxval(ndims)
+     if ( k == 1 ) then
+         do n=1,sectors(i)%ndim
+             ibasis = sectors(i)%basis(n)
+             if ( bin_basis(j,ibasis) == 0 ) then
+                 jold = dec_basis(ibasis)
+                 call atomic_make_cdagger(j, jold, jnew, isgn)
+                 m = ind_basis(jnew)
+                 call s_assert( count(sectors(which_sect)%basis == m) == 1 )
+                 !print *, n, m
+             endif
+         enddo
+         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
+     endif
+
+     if ( k == 0 ) then
+         do n=1,sectors(i)%ndim
+             ibasis = sectors(i)%basis(n)
+             if ( bin_basis(j,ibasis) == 1 ) then
+                 jold = dec_basis(ibasis)
+                 call atomic_make_c(j, jold, jnew, isgn)
+                 m = ind_basis(jnew)
+                 call s_assert( count(sectors(which_sect)%basis == m) == 1 )
+                 !print *, n, m
+             endif
+         enddo
+         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
+     endif
 
      return
-  end function get_nsize
+  end subroutine verify_connection
 
-  subroutine atomic_sector_N(GQN_N, ndims, sector_basis)
+  subroutine get_ntot(GQN_N, ndims, sector_basis)
      use control, only : norbs, ncfgs
      use m_fock, only : bin_basis
 
@@ -649,9 +622,9 @@ recursive &
      enddo
 
      return
-  end subroutine atomic_sector_N
+  end subroutine get_ntot
 
-  subroutine atomic_sector_Sz(GQN_Sz, ndims, sector_basis)
+  subroutine get_sz(GQN_Sz, ndims, sector_basis)
      use control, only : isoc
      use control, only : nband, norbs, ncfgs
      use m_fock, only : bin_basis
@@ -681,9 +654,9 @@ recursive &
      enddo
 
      return
-  end subroutine atomic_sector_Sz
+  end subroutine get_sz
 
-  subroutine atomic_sector_Jz(GQN_Jz, ndims, sector_basis)
+  subroutine get_jz(GQN_Jz, ndims, sector_basis)
      use control, only : isoc
      use control, only : norbs, ncfgs
      use m_fock, only : bin_basis
@@ -722,4 +695,43 @@ recursive &
      enddo
 
      return
-  end subroutine atomic_sector_Jz
+  end subroutine get_jz
+
+  subroutine get_ap()
+     implicit none
+
+     return
+  end subroutine get_ap
+
+  function get_nsect(nsect, ndims) result(val)
+     implicit none
+
+     integer, intent(in) :: nsect
+     integer, intent(in) :: ndims(nsect)
+
+     integer :: val
+
+     integer :: i
+
+     val = 0
+     do i=1,nsect
+         if ( ndims(i) > 0 ) then
+             val = val + 1
+         endif
+     enddo
+
+     return
+  end function get_nsect
+
+  function get_nsize(nsect, ndims) result(val)
+     implicit none
+
+     integer, intent(in) :: nsect
+     integer, intent(in) :: ndims(nsect)
+
+     integer :: val
+
+     val = maxval(ndims)
+
+     return
+  end function get_nsize
