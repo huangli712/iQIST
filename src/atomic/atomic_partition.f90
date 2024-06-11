@@ -14,6 +14,8 @@
      integer :: ia, ib
      integer :: iorb
      integer :: nsect, nsize, nsect_, nsize_
+     integer :: N, Ap, Sz
+
      integer, external :: get_nsect
      integer, external :: get_nsize
 
@@ -22,14 +24,21 @@
      integer, allocatable :: sector_basis(:,:)
      integer, allocatable :: sector_basis_(:,:)
 
+     integer, allocatable :: sect_ntot(:)
+     integer, allocatable :: sect_sz(:)
+     integer, allocatable :: sect_jz(:)
+     integer, allocatable :: sect_ap(:)
+
+     ! initialization
      allocate(sector_size_(ncfgs))
      allocate(sector_basis_(ncfgs,ncfgs))
      sector_size_ = 1
      sector_basis_ = 0
      do i=1,ncfgs
-         sector_basis_(i,1) = i
+         sector_basis_(1,i) = i
      enddo
 
+     ! phase 1
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs(hmat(i,j)) > zero ) then
@@ -43,63 +52,47 @@
          enddo
      enddo
 
-     nsect = get_nsect(ncfgs, sector_size_)
-     nsize = get_nsize(ncfgs, sector_size_)
+     nsect_ = get_nsect(ncfgs, sector_size_)
+     nsize_ = get_nsize(ncfgs, sector_size_)
+     print *, 'number of sectors: ', nsect_
+     print *, 'maximum size of sectors: ', nsize_
 
-     print *, 'number of sectors: ', nsect
-     print *, 'maximum size of sectors: ', nsize
-
-     allocate(sector_size(nsect))
-     allocate(sector_basis(nsect,ncfgs))
+     ! filter sectors
+     allocate(sector_size(nsect_))
+     allocate(sector_basis(ncfgs,nsect_))
      !
      j = 0
      do i=1,ncfgs
          if ( sector_size_(i) > 0 ) then
              j = j + 1
              sector_size(j) = sector_size_(i)
-             sector_basis(j,:) = sector_basis_(i,:)
-         endif
-     enddo
-     !
-     call s_assert(j == nsect)
-     deallocate(sector_size_)
-     deallocate(sector_basis_)
-
-     do iorb=1,norbs
-         call refine_sector(iorb, nsect, sector_size, sector_basis)
-     enddo
-
-     nsect_ = get_nsect(nsect, sector_size)
-     nsize_ = get_nsize(nsect, sector_size)
-
-     print *, 'number of sectors: ', nsect_
-     print *, 'maximum size of sectors: ', nsize_
-
-     allocate(sector_size_(nsect_))
-     allocate(sector_basis_(nsect_,ncfgs))
-     !
-     j = 0
-     do i=1,nsect
-         if ( sector_size(i) > 0 ) then
-             j = j + 1
-             sector_size_(j) = sector_size(i)
-             sector_basis_(j,:) = sector_basis(i,:)
+             sector_basis(:,j) = sector_basis_(:,i)
          endif
      enddo
      !
      call s_assert(j == nsect_)
+     deallocate(sector_size_)
+     deallocate(sector_basis_)
 
-     deallocate(sector_size)
-     deallocate(sector_basis)
-     nsect = nsect_
-     nsize = nsize_
-     allocate(sector_size(nsect))
-     allocate(sector_basis(nsect,ncfgs))
-     sector_size = sector_size_
-     sector_basis = sector_basis_
+     ! phase 2
+     do iorb=1,norbs
+         call refine_sector(iorb, nsect_, sector_size, sector_basis)
+     enddo
 
+     nsect = get_nsect(nsect_, sector_size)
+     nsize = get_nsize(nsect_, sector_size)
 
-     call print_sector(nsect, sector_size, sector_basis)
+     print *, 'number of sectors: ', nsect
+     print *, 'maximum size of sectors: ', nsize
+     STOP
+
+     !call print_sector(nsect, sector_size, sector_basis)
+
+     allocate(sect_ntot(nsect))
+     allocate(sect_sz(nsect))
+     allocate(sect_jz(nsect))
+     allocate(sect_ap(nsect))
+
      STOP
 
      return
@@ -115,7 +108,7 @@
      integer, intent(in) :: iorb
      integer, intent(in) :: nsect
      integer, intent(inout) :: sector_size(nsect)
-     integer, intent(inout) :: sector_basis(nsect,ncfgs)
+     integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
      integer :: i
      integer :: j
@@ -199,7 +192,7 @@ recursive &
      integer, intent(in) :: HU
      integer, intent(in) :: nsect
      integer, intent(inout) :: sector_size(nsect)
-     integer, intent(inout) :: sector_basis(nsect,ncfgs)
+     integer, intent(inout) :: sector_basis(ncfgs,nsect)
      integer, intent(inout) :: Mup(ncfgs/2,2)
      integer, intent(inout) :: Mdn(ncfgs/2,2)
 
@@ -215,7 +208,7 @@ recursive &
                  if ( HB /= HU ) then
                      print *, 'merge up:', HA, HB, HU
                      do j=1,sector_size(HB)
-                         sector_basis(HU, sector_size(HU) + j) = sector_basis(HB,j)
+                         sector_basis(sector_size(HU) + j, HU) = sector_basis(j,HB)
                      enddo
                      sector_size(HU) = sector_size(HU) + sector_size(HB)
                      sector_size(HB) = 0
@@ -233,7 +226,7 @@ recursive &
                  if ( HB /= HL ) then
                      print *, 'merge dn:', HA, HB, HL
                      do j=1,sector_size(HB)
-                         sector_basis(HL, sector_size(HL) + j) = sector_basis(HB,j)
+                         sector_basis(sector_size(HL) + j, HL) = sector_basis(j,HB)
                      enddo
                      sector_size(HL) = sector_size(HL) + sector_size(HB)
                      sector_size(HB) = 0
@@ -256,7 +249,7 @@ recursive &
      integer, intent(in) :: find
      integer, intent(in) :: nsect
      integer, intent(in) :: sector_size(nsect)
-     integer, intent(in) :: sector_basis(nsect,ncfgs)
+     integer, intent(in) :: sector_basis(ncfgs,nsect)
 
      integer :: m
      integer :: n
@@ -265,7 +258,7 @@ recursive &
 
      SECTOR: do m=1,nsect
          do n=1,sector_size(m)
-             if ( sector_basis(m,n) == find ) then
+             if ( sector_basis(n,m) == find ) then
                  sind = m
                  EXIT SECTOR
              endif
@@ -286,7 +279,7 @@ recursive &
      integer, intent(in) :: ib
      integer, intent(in) :: nsect
      integer, intent(inout) :: sector_size(nsect)
-     integer, intent(inout) :: sector_basis(nsect,ncfgs)
+     integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
      integer :: m
 
@@ -294,12 +287,12 @@ recursive &
      call s_assert(sector_size(ib) >= 1)
 
      do m=1,sector_size(ib)
-           sector_basis(ia, sector_size(ia) + m) = sector_basis(ib,m)
+           sector_basis(sector_size(ia) + m, ia) = sector_basis(m, ib)
      enddo
      !
      sector_size(ia) = sector_size(ia) + sector_size(ib)
      sector_size(ib) = 0
-     sector_basis(ib,:) = 0
+     sector_basis(:,ib) = 0
 
      return
   end subroutine merge_sector
