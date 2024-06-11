@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/07/2024 by li huang (last modified)
+!!!           06/11/2024 by li huang (last modified)
 !!! purpose : define global control parameters for the atomic eigenvalue
 !!!           problem solver.
 !!! status  : unstable
@@ -79,7 +79,10 @@
 !!     subspace diagonalization using good quantum numbers (N and Jz)
 !!
 !! if ictqmc == 6:
-!!     subspace diagonalization using automatic partition
+!!     subspace diagonalization using automatic partition algorithm.
+!!     if spin-orbit coupling is disabled (isoc = 1), the good quantum
+!!     numbers are N, Sz, and AP. if spin-orbit coupling is enabled,
+!!     the good quantum numbers are N, Jz, and AP.
 !!
 !! we note that the format of the atom.cix file exactly depends on the
 !! ictqmc parameter. if ictqmc == 1, the generated atom.cix file is
@@ -104,7 +107,7 @@
 !! if icu == 2:
 !!     Slater-Cordon type interaction. it needs the Ud, Jh parameters to
 !!     evaluate the Slater integrals (F0, F2, F4, F6). and they are used
-!!     build the Coulomb interaction matrix
+!!     to build the Coulomb interaction matrix
 !!
      integer, public, save :: icu    = 1
 
@@ -133,7 +136,9 @@
 !!     without spin-orbit coupling
 !!
 !! if isoc == 1:
-!!     onsite atomic spin-orbit coupling, H_{soc} = \lambda * L \cdot S
+!!     onsite atomic spin-orbit coupling, H_{soc} = \lambda * L \cdot S.
+!!     note that the strength of spin-orbit coupling is determined by the
+!!     lambda parameter.
 !!
      integer, public, save :: isoc   = 0
 
@@ -230,7 +235,7 @@
 
 !!
 !! the following parameters are useful when icu = 2. they are used to
-!! calculate the Slater integrals (F0, F2, F4, and F6).
+!! evaluate the Slater integrals (F0, F2, F4, and F6).
 !!
 
 !!
@@ -283,21 +288,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.8.5 @ 2024.01.30D'
+     character(len=20), public, parameter :: V_FULL = 'v0.8.6 @ 2024.06.12D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.8.5'
+     character(len=06), public, parameter :: V_CURR = 'v0.8.6'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2024.01.30'
+     character(len=11), public, parameter :: V_DATE = '2024.06.12'
 
 !!
 !! @var V_STAT

@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/25/2024 by li huang (last modified)
+!!!           06/11/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for the atomic eigenvalue
 !!!           problem solver. the subroutines will print many runtime
 !!!           information about the solver to the terminal.
@@ -118,7 +118,7 @@
      write(mystd,'(4X,a16,i10,  2X,a8)') 'icu    / value :', icu    , 'type : i'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'icf    / value :', icf    , 'type : i'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'isoc   / value :', isoc   , 'type : i'
-
+     !
      write(mystd,'(2X,a)') '[configuration parameters] -> atomic Hamiltonian'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      write(mystd,'(4X,a16,i10,  2X,a8)') 'nband  / value :', nband  , 'type : i'
@@ -136,7 +136,7 @@
      write(mystd,'(4X,a16,f10.5,2X,a8)') 'Jh     / value :', Jh     , 'type : d'
      write(mystd,'(4X,a16,f10.5,2X,a8)') 'mune   / value :', mune   , 'type : d'
      write(mystd,'(4X,a16,f10.5,2X,a8)') 'lambda / value :', lambda , 'type : d'
-
+     !
      write(mystd,*)
 
 !! body]
