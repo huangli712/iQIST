@@ -11,6 +11,7 @@
 
      integer :: i
      integer :: j
+     integer :: k
      integer :: ia, ib
      integer :: iorb
      integer :: nsect, nsize, nsect_, nsize_
@@ -93,8 +94,10 @@
      sect_jz = 0
      sect_ap = 0
 
+     k = 0     
      do i=1,nsect_
          if ( sector_size(i) > 0 ) then
+             k = k + 1
              call atomic_sector_N(N, sector_size(i), sector_basis(:,i))
              call atomic_sector_Sz(Sz, sector_size(i), sector_basis(:,i))
              call atomic_sector_Jz(Jz, sector_size(i), sector_basis(:,i))
@@ -112,6 +115,7 @@
              sect_ap(i) = Ap
          endif
      enddo
+     call s_assert(k == nsect)
  
      STOP
 
@@ -328,7 +332,7 @@ recursive &
 
      integer, intent(in) :: nsect
      integer, intent(in) :: sector_size(nsect)
-     integer, intent(in) :: sector_basis(nsect,ncfgs)
+     integer, intent(in) :: sector_basis(ncfgs,nsect)
 
      integer :: i
      integer :: j
@@ -342,7 +346,7 @@ recursive &
              write(mystd,'(a,i6)') 'size :', sector_size(i)
              write(mystd,'(a)') 'basis :'
              do j=1,sector_size(i)
-                 write(mystd,'(14i1)') bin_basis(:,sector_basis(i,j))
+                 write(mystd,'(14i1)') bin_basis(:,sector_basis(j,i))
              enddo
              write(mystd,*)
          endif
@@ -350,68 +354,6 @@ recursive &
 
      return
   end subroutine print_sector
-
-  subroutine print_sector_new(nsect, sector_size, sector_basis)
-     use constants, only : mystd
-
-     use control, only : ncfgs
-     use m_fock, only : bin_basis
-
-     implicit none
-
-     integer, intent(in) :: nsect
-     integer, intent(in) :: sector_size(nsect)
-     integer, intent(in) :: sector_basis(nsect, ncfgs)
-
-     integer :: m
-     integer :: i
-     integer :: j
-
-     integer :: N
-     integer :: Sz
-     integer :: Ap
-     integer :: sector_N(nsect)
-     integer :: sector_Sz(nsect)
-     integer :: sector_Ap(nsect)
-
-     sector_N = 0
-     sector_Sz = 0
-     sector_Ap = 0
-
-     ! print subspaces
-     m = 0
-     do i=1,nsect
-         if ( sector_size(i) > 0 ) then
-             m = m + 1
-             write(mystd,'(a,i6)') 'subspace -> ', m
-             write(mystd,'(a,i6)') 'size :', sector_size(i)
-             write(mystd,'(a)') 'basis :'
-             do j=1,sector_size(i)
-                 write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(i,j))
-             enddo
-             call atomic_sector_N(N, sector_size(i), sector_basis(i,:))
-             call atomic_sector_Sz(Sz, sector_size(i), sector_basis(i,:))
-             !call atomic_sector_Jz(Jz, sector_size(i), sector_basis(i,:))
-             Ap = 1
-             do j=1,m-1
-                 if ( ( sector_N(j) == N ) .and. ( sector_Sz(j) == Sz ) ) then
-                     Ap = Ap + 1
-                 endif
-             enddo
-             write(mystd, '(a, i3)') 'N :', N
-             write(mystd, '(a, i3)') 'Sz:', Sz
-             !write(mystd, '(a, i3)') 'Jz:', Jz
-             write(mystd, '(a, i3)') 'AP:', Ap
-             sector_N(m) = N
-             sector_Sz(m) = Sz
-             !sector_Jz(m) = Jz
-             sector_Ap(m) = Ap
-             print *
-         endif
-     enddo
- 
-     return
-  end subroutine print_sector_new
 
   function get_nsect(nsect, sector_size) result(val)
      implicit none
