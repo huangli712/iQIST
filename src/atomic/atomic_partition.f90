@@ -5,7 +5,7 @@
      use control, only : ncfgs
      use control, only : norbs
 
-     use m_fock, only : hmat, bin_basis
+     use m_fock, only : hmat, bin_basis, dec_basis, ind_basis
 
      use m_sector, only : max_dim_sect
      use m_sector, only : ave_dim_sect
@@ -18,13 +18,22 @@
      integer :: i
      integer :: j
      integer :: k
+     integer :: l
+     integer :: m
      integer :: ia, ib
      integer :: iorb
      integer :: nsect, nsize, nsect_, nsize_
      integer :: N, Sz, Jz, Ap
+     integer :: jold, jnew, isgn
+
+     ! index of selected subspace
+     integer :: which_sect
 
      ! index of Fock state
      integer :: ibasis
+
+     ! can point to next subspace (sector)
+     logical :: can
 
      integer, external :: get_nsect
      integer, external :: get_nsize
@@ -200,13 +209,11 @@
 
                      ! test creation fermion operator
                      if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) then
-                         code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
                      !
                      ! test annihilation fermion operator
                      else if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
-                         code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
                      !
@@ -218,6 +225,19 @@
                  ! figure out the resulting subspace.
                  if ( can .eqv. .true. ) then
 
+                     if ( k == 1 ) then
+                         jold = dec_basis(ibasis)
+                         call atomic_make_cdagger(j, jold, jnew, isgn)
+                         m = ind_basis(jnew)
+                         call locate_sector_new(which_sect, m, nsect, sectors)
+                     endif
+
+                     if ( k == 0 ) then
+                         jold = dec_basis(ibasis)
+                         call atomic_make_c(j, jold, jnew, isgn)
+                         m = ind_basis(jnew)
+                         call locate_sector_new(which_sect, m, nsect, sectors)
+                     endif
 
                  endif  ! back if ( can == .true. ) block
 
@@ -237,9 +257,6 @@
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsectors} loop
-
-
-
 
      STOP
 
