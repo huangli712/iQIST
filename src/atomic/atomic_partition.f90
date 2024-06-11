@@ -1,11 +1,11 @@
   subroutine automatic_partition()
-     use constants, only : dp
+     use constants, only : dp, mystd
      use constants, only : zero
 
      use control, only : ncfgs
      use control, only : norbs
 
-     use m_fock, only : hmat
+     use m_fock, only : hmat, bin_basis
 
      implicit none
 
@@ -122,7 +122,7 @@
      do i=1,nsect_
          if ( sector_size(i) > 0 ) then
              k = k + 1
-             write(mystd,'(a,i6)') 'subspace -> ', m
+             write(mystd,'(a,i6)') 'subspace -> ', k
              write(mystd,'(a,i6)') 'size :', sector_size(i)
              write(mystd,'(a)') 'basis :'
              do j=1,sector_size(i)
@@ -134,7 +134,9 @@
              write(mystd, '(a, i3)') 'AP:', sect_ap(i)
              write(mystd, *)
          endif 
-     enddo 
+     enddo
+
+
      STOP
 
      return
