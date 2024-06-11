@@ -272,11 +272,16 @@
 !!
 !! solve the atomic eigenvalue problem using good quantum numbers (GQNs)
 !! algorithm and subspace diagonalization. this subroutine is called
-!! when 2 <= ictqmc <= 5
+!! when 2 <= ictqmc <= 6
 !!
   subroutine atomic_s_driver()
      use constants, only : dp
      use constants, only : mystd
+
+     use control, only : ictqmc
+
+     use m_fock, only : cat_alloc_hmat_only
+     use m_fock, only : cat_free_hmat_only
 
      use m_sector, only : cat_free_sectors
 
@@ -290,6 +295,40 @@
      real(dp) :: time_end
 
 !! [body
+
+     ! for automatic partition algorithm only
+     if ( ictqmc == 6 ) then
+         ! allocate memory for atomic Hamiltonian
+         write(mystd,*)
+         write(mystd,'(2X,a)') 'allocate memory for atomic Hamiltonian'
+         !
+         call cpu_time(time_begin) ! record starting time
+         call cat_alloc_hmat_only()
+         call cpu_time(time_end)   ! record ending   time
+         !
+         write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
+
+         ! build the atomic Hamiltonian
+         write(mystd,'(2X,a)') 'assemble atomic Hamiltonian'
+         !
+         call cpu_time(time_begin) ! record starting time
+         call atomic_make_fhmat()
+         call cpu_time(time_end)   ! record ending   time
+         !
+         write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
+
+         ! check whether the atomic Hamiltonian is real
+         write(mystd,"(2X,a)") 'check atomic Hamiltonian'
+         !
+         call cpu_time(time_begin) ! record starting time
+         call atomic_check_fhmat()
+         call cpu_time(time_end)   ! record ending   time
+         !
+         write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     endif ! back if ( ictqmc == 6 ) block
+     STOP
 
      ! make the subspaces (sectors)
      ! the memory will be allocated automatically

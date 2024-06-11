@@ -171,9 +171,9 @@
      endif ! back if ( ibasis < 1 .or. ibasis > 2 ) block
 
      ! check ictqmc
-     if ( ictqmc < 1 .or. ictqmc > 5 ) then
+     if ( ictqmc < 1 .or. ictqmc > 6 ) then
          write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, &
-             & 2, 3, 4, 5!'
+             & 2, 3, 4, 5, 6!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
