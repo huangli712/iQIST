@@ -288,6 +288,30 @@
      return
   end subroutine cat_free_fock_eigen
 
+!!
+!! @sub cat_free_hmat_only
+!!
+!! deallocate memory for atomic Hamiltonian only. this subroutine is for
+!! the automatic partition.
+!!
+  subroutine cat_free_hmat_only()
+     implicit none
+
+!! [body
+
+     if ( allocated(eval) ) deallocate(eval)
+     if ( allocated(evec) ) deallocate(evec)
+     if ( allocated(occu) ) deallocate(occu)
+     if ( allocated(spin) ) deallocate(spin)
+     if ( allocated(fmat) ) deallocate(fmat)
+     !
+     if ( allocated(hmat) ) deallocate(hmat)
+
+!! body]
+
+     return
+  end subroutine cat_free_hmat_only
+
   end module m_fock
 
 !!========================================================================
@@ -347,8 +371,9 @@
          ! it is actually equal to norbs
          integer :: nops
 
-         ! we just use N, Sz, Jz, and PS to label the subspaces
-         ! they are the so-called good quantum numbers
+         ! we just use N, Sz, Jz, and PS (AP) to label the subspaces.
+         ! they are the so-called good quantum numbers. the good quantum
+         ! number AP is only used in the automatic partition algorithm.
 
          ! total number of electrons: N
          integer :: nele
@@ -359,7 +384,11 @@
          ! z component of spin-orbit momentum: Jz
          integer :: jz
 
-         ! SU(2) good quantum number: PS
+         ! SU(2) good quantum number: PS (only for ictqmc = 4)
+         !
+         ! or
+         !
+         ! auxiliary good quantum number: AP (only for ictqmc = 6)
          integer :: ps
 
          ! collection of global indices of Fock states for this subspace
@@ -424,7 +453,7 @@
 !!
 !! @var sectors
 !!
-!! an array of structs that stores all the subspaces
+!! an array of structs that stores all the subspaces (sectors)
 !!
      type(Ts), public, save, allocatable :: sectors(:)
 
@@ -715,7 +744,7 @@
 !!
 !! @var emat
 !!
-!! onsite energy (CFS + SOC) of impurity
+!! onsite energy (CFS + SOC) of impurity (emat = cmat + smat)
 !!
      complex(dp), public, allocatable, save :: emat(:,:)
 
