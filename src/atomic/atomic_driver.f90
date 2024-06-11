@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/07/2024 by li huang (last modified)
+!!!           06/11/2024 by li huang (last modified)
 !!! purpose : try to launch various computational tasks for the atomic
 !!!           eigenvalue problem solver.
 !!! status  : unstable
@@ -51,7 +51,8 @@
      call atomic_build_spmat()
      write(mystd,*)
 
-     ! make natural eigenbasis
+     ! make natural eigenbasis. the onsite energy (CFS + SOC) matrix of
+     ! impurity will become diagonal in this basis.
      write(mystd,'(2X,a)') 'make natural eigenbasis'
      call atomic_build_natural()
      write(mystd,*)
@@ -69,8 +70,9 @@
          ! subspace diagonalization by using good quantum numbers
          ! good quantum numbers -> N
          !
-         ! crystal field splitting: yes
-         ! spin-orbit coupling: yes
+         ! crystal field splitting: no limits
+         ! spin-orbit coupling: no limits
+         ! Coulomb interaction: no limits
          case (2)
              write(mystd,'(2X,a)') 'start subspace diagonalization (N)'
              write(mystd,'(2X,54a1)') dash ! dashed line
@@ -79,8 +81,9 @@
          ! subspace diagonalization by using good quantum numbers
          ! good quantum numbers -> N, Sz
          !
+         ! crystal field splitting: no limits
          ! spin-orbit coupling: no
-         ! Coulomb interaction: Slater-Condon type
+         ! Coulomb interaction: no limits
          case (3)
              write(mystd,'(2X,a)') 'start subspace diagonalization (N, Sz)'
              write(mystd,'(2X,54a1)') dash ! dashed line
@@ -89,6 +92,7 @@
          ! subspace diagonalization by using good quantum numbers
          ! good quantum numbers -> N, Sz, PS
          !
+         ! crystal field splitting: no limits
          ! spin-orbit coupling: no
          ! Coulomb interaction: Kanamori type
          case (4)
@@ -101,8 +105,20 @@
          !
          ! crystal field splitting: no
          ! spin-orbit coupling: yes
+         ! Coulomb interaction: no limits
          case (5)
              write(mystd,'(2X,a)') 'start subspace diagonalization (N, Jz)'
+             write(mystd,'(2X,54a1)') dash ! dashed line
+             call atomic_s_driver()
+
+         ! subspace diagonalization by using good quantum numbers
+         ! good quantum numbers -> N + Sz (or Jz) + AP
+         !
+         ! crystal field splitting: no limits
+         ! spin-orbit coupling: no limits
+         ! Coulomb interaction: no limits
+         case (6)
+             write(mystd,'(2X,a)') 'start subspace diagonalization (N, AP)'
              write(mystd,'(2X,54a1)') dash ! dashed line
              call atomic_s_driver()
 
