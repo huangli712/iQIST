@@ -137,6 +137,50 @@
      enddo
 
 
+     write(mystd,'(4X,a)') 'allocate memory for subspaces'
+     !
+     max_dim_sect = 0
+     ave_dim_sect = zero
+     nsectors = nsect ! do not forget to setup nsectors
+     !
+     call cat_alloc_sectors()
+     !
+     ! next we will build every subspace one by one
+     ibasis = 1
+     k = 0
+     do i=1,nsect_
+         if ( sector_size(i) > 0 ) then
+             sectors(i)%istart = ibasis
+             sectors(i)%ndim = ndims(i)
+             sectors(i)%nops = norbs
+             !
+             sectors(i)%nele = sect_ntot(i)
+             sectors(i)%sz   = sect_sz(i)
+             sectors(i)%jz   = sect_jz(i)
+             sectors(i)%ps   = sect_ps(i)
+             !
+             ibasis = ibasis + ndims(i)
+
+             ! allocate memory for the subspace
+             call cat_alloc_sector( sectors(i) )
+
+             ! setup basis for the subspace
+             do j=1,ndims(i)
+                 sectors(i)%basis(j) = sector_basis(j,i)
+             enddo ! over j={1,ndims(i)} loop
+
+             write(mystd,'(4X,a,i4)', advance = 'no') 'subspace:', i
+             write(mystd,'(2X,a,i4)', advance = 'no') 'size:', ndims(i)
+             write(mystd,'(2X,a,i4)') 'start:', sectors(i)%istart
+         endif
+     enddo ! over i={1,nsect_} loop
+
+
+
+
+
+
+
      STOP
 
      return
