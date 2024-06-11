@@ -472,8 +472,6 @@
 
 !! [body
 
-     print *, one_sector%ndim, one_sector%nops
-
      ! allocate memory
      allocate(one_sector%basis(one_sector%ndim),                stat=istat)
      allocate(one_sector%next(one_sector%nops,0:1),             stat=istat)

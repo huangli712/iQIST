@@ -184,8 +184,59 @@
          endif
      enddo ! over i={1,nsect_} loop
 
+     ! make index for next subspace
+     !--------------------------------------------------------------------
+     write(mystd,'(4X,a)') 'simulate fermion operator acts on subspaces'
+     do i=1,nsectors  ! loop over all the subspaces
+         do j=1,norbs ! loop over all the orbtials
+             do k=0,1 ! loop over creation and annihilation fermion operators
+
+                 which_sect = -1
+
+                 ! we should check each Fock state in this subspace
+                 can = .false.
+                 do l=1,sectors(i)%ndim
+                     ibasis = sectors(i)%basis(l)
+
+                     ! test creation fermion operator
+                     if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) then
+                         code = bin_basis(:,ibasis)
+                         can = .true.
+                         EXIT
+                     !
+                     ! test annihilation fermion operator
+                     else if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
+                         code = bin_basis(:,ibasis)
+                         can = .true.
+                         EXIT
+                     !
+                     endif ! back if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) block
+                 enddo ! over l={1,sectors(i)%ndim} loop
+
+                 ! if can == .true., it means that the fermion operator
+                 ! can act on the given subspace. next, we would like to
+                 ! figure out the resulting subspace.
+                 if ( can .eqv. .true. ) then
 
 
+                 endif  ! back if ( can == .true. ) block
+
+                 ! setup the next array
+                 sectors(i)%next(j,k) = which_sect
+
+                 if (k == 1) then
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
+                     write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
+                     write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
+                 else
+                     write(mystd,'(4X,a,i2,a)', advance = 'no') 'f  (alpha =', j, ')'
+                     write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
+                     write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
+                 endif ! back if (k == 1) block
+
+             enddo ! over k={0,1} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,nsectors} loop
 
 
 
