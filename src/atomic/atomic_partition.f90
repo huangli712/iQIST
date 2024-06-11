@@ -118,23 +118,23 @@
      enddo
      call s_assert(k == nsect)
 
-     k = 0
-     do i=1,nsect_
-         if ( sector_size(i) > 0 ) then
-             k = k + 1
-             write(mystd,'(a,i6)') 'subspace -> ', k
-             write(mystd,'(a,i6)') 'size :', sector_size(i)
-             write(mystd,'(a)') 'basis :'
-             do j=1,sector_size(i)
-                 write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(j,i))
-             enddo
-             write(mystd, '(a, i3)') 'N :', sect_ntot(i)
-             write(mystd, '(a, i3)') 'Sz:', sect_sz(i)
-             write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
-             write(mystd, '(a, i3)') 'AP:', sect_ap(i)
-             write(mystd, *)
-         endif 
-     enddo
+     !k = 0
+     !do i=1,nsect_
+     !    if ( sector_size(i) > 0 ) then
+     !        k = k + 1
+     !        write(mystd,'(a,i6)') 'subspace -> ', k
+     !        write(mystd,'(a,i6)') 'size :', sector_size(i)
+     !        write(mystd,'(a)') 'basis :'
+     !        do j=1,sector_size(i)
+     !            write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(j,i))
+     !        enddo
+     !        write(mystd, '(a, i3)') 'N :', sect_ntot(i)
+     !        write(mystd, '(a, i3)') 'Sz:', sect_sz(i)
+     !        write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
+     !        write(mystd, '(a, i3)') 'AP:', sect_ap(i)
+     !        write(mystd, *)
+     !    endif 
+     !enddo
 
 
      write(mystd,'(4X,a)') 'allocate memory for subspaces'
@@ -150,6 +150,7 @@
      k = 0
      do i=1,nsect_
          if ( sector_size(i) > 0 ) then
+             k = k + 1
              sectors(i)%istart = ibasis
              sectors(i)%ndim = ndims(i)
              sectors(i)%nops = norbs
