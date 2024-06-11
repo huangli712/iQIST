@@ -106,6 +106,10 @@
                  endif
              enddo
 
+             sect_ntot(i) = N
+             sect_sz(i) = Sz
+             sect_jz(i) = Jz
+             sect_ap(i) = Ap
          endif
      enddo
  
