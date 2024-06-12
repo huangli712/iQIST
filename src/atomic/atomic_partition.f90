@@ -87,8 +87,8 @@
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs(hmat(i,j)) > zero ) then
-                 call locate_sector(ia, i, ncfgs, ndims_, sector_basis_)
-                 call locate_sector(ib, j, ncfgs, ndims_, sector_basis_)
+                 call sector_locate(ia, i, ncfgs, ndims_, sector_basis_)
+                 call sector_locate(ib, j, ncfgs, ndims_, sector_basis_)
 
                  if ( ia /= ib ) then
                      call merge_sector(ia, ib, ncfgs, ndims_, sector_basis_)
@@ -341,7 +341,7 @@
      idn = 0
 
      do i=1,ncfgs
-         call locate_sector(ia, i, nsect, ndims, sector_basis)
+         call sector_locate(ia, i, nsect, ndims, sector_basis)
 
          ! c^+
          if ( bin_basis(iorb,i) == 0 ) then
@@ -349,7 +349,7 @@
              call atomic_make_cdagger(iorb, jold, jnew, isgn)
              j = ind_basis(jnew)
 
-             call locate_sector(ib, j, nsect, ndims, sector_basis)
+             call sector_locate(ib, j, nsect, ndims, sector_basis)
 
              iup = iup + 1
              Mup(iup,1) = ia
@@ -362,7 +362,7 @@
              call atomic_make_c(iorb, jold, jnew, isgn)
              j = ind_basis(jnew)
 
-             call locate_sector(ib, j, nsect, ndims, sector_basis)
+             call sector_locate(ib, j, nsect, ndims, sector_basis)
 
              idn = idn + 1
              Mdn(idn,1) = ia
@@ -394,7 +394,7 @@
      return
   end subroutine sector_refine
 
-  subroutine locate_sector(sind, find, nsect, ndims, sector_basis)
+  subroutine sector_locate(sind, find, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
      implicit none
@@ -422,7 +422,7 @@
      call s_assert(sind /= 0)
 
      return
-  end subroutine locate_sector
+  end subroutine sector_locate
 
   subroutine lookup_sector(sind, find)
      use m_sector, only : nsectors, sectors
