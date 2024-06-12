@@ -301,7 +301,6 @@
 !!     3. https://github.com/NSLS-II/edrixs/blob/master/edrixs/utils.py
 !!
 
-
 !!
 !! @sub atomic_make_slater3
 !!
