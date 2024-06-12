@@ -1,3 +1,30 @@
+!!!-----------------------------------------------------------------------
+!!! project : iqist @ jasmine
+!!! program : atomic_dump_fock
+!!!           atomic_dump_tmat
+!!!           atomic_dump_emat
+!!!           atomic_dump_umat
+!!!           atomic_dump_feigval
+!!!           atomic_dump_feigvec
+!!!           atomic_dump_fcix
+!!!           atomic_dump_seigval
+!!!           atomic_dump_seigvec
+!!!           atomic_dump_scix
+!!!           atomic_dump_sector
+!!! source  : atomic_dump.f90
+!!! type    : subroutines
+!!! author  : yilin wang (email:qhwyl2006@126.com)
+!!! history : 07/09/2014 by yilin wang (created)
+!!!           01/31/2024 by li huang (last modified)
+!!! purpose : write some essential arrays and data structures to files.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
+
+!!
+!! @sub automatic_partition
+!!
+!!
   subroutine automatic_partition()
      use constants, only : dp, mystd
      use constants, only : zero
@@ -259,7 +286,6 @@
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsectors} loop
-
 
      ! calculate the maximum and average dimensions of subspaces
      !--------------------------------------------------------------------
@@ -594,6 +620,10 @@ recursive &
      return
   end subroutine verify_connection
 
+!!
+!! @sub get_ntot
+!!
+!!
   subroutine get_ntot(GQN_N, ndims, sector_basis)
      use control, only : norbs, ncfgs
      use m_fock, only : bin_basis
@@ -624,6 +654,10 @@ recursive &
      return
   end subroutine get_ntot
 
+!!
+!! @sub get_sz
+!!
+!!
   subroutine get_sz(GQN_Sz, ndims, sector_basis)
      use control, only : isoc
      use control, only : nband, norbs, ncfgs
@@ -656,6 +690,10 @@ recursive &
      return
   end subroutine get_sz
 
+!!
+!! @sub get_jz
+!!
+!!
   subroutine get_jz(GQN_Jz, ndims, sector_basis)
      use control, only : isoc
      use control, only : norbs, ncfgs
@@ -697,6 +735,10 @@ recursive &
      return
   end subroutine get_jz
 
+!!
+!! @sub get_ap
+!!
+!!
   subroutine get_ap()
      implicit none
 
