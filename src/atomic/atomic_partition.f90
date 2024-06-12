@@ -68,7 +68,6 @@
      logical :: can
 
      integer, external :: get_nsect
-     integer, external :: get_nsize
 
      integer, allocatable :: ndims(:)
      integer, allocatable :: ndims_(:)
@@ -104,7 +103,7 @@
      enddo
 
      nsect_ = get_nsect(ncfgs, ndims_)
-     nsize_ = get_nsize(ncfgs, ndims_)
+     call get_capacity(nsize_, ncfgs, ndims_)
      print *, 'number of sectors: ', nsect_
      print *, 'maximum size of sectors: ', nsize_
 
@@ -131,7 +130,7 @@
      enddo
 
      nsect = get_nsect(nsect_, ndims)
-     nsize = get_nsize(nsect_, ndims)
+     call get_capacity(nsize, nsect_, ndims)
      print *, 'number of sectors: ', nsect
      print *, 'maximum size of sectors: ', nsize
 
@@ -770,15 +769,14 @@ recursive &
      return
   end function get_nsect
 
-  function get_nsize(nsect, ndims) result(val)
+  subroutine get_capacity(val, nsect, ndims)
      implicit none
 
+     integer, intent(out) :: val
      integer, intent(in) :: nsect
      integer, intent(in) :: ndims(nsect)
-
-     integer :: val
 
      val = maxval(ndims)
 
      return
-  end function get_nsize
+  end subroutine get_capacity
