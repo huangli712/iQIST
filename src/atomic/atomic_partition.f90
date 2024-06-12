@@ -143,16 +143,10 @@
      do i=1,nsect_
          if ( ndims(i) > 0 ) then
              k = k + 1
-             call get_ntot(N, ndims(i), sector_basis(:,i))
-             call get_sz(Sz, ndims(i), sector_basis(:,i))
-             call get_jz(Jz, ndims(i), sector_basis(:,i))
-
-             Ap = 1
-             do j=1,i-1
-                 if ( ( sect_ntot(j) == N ) .and. ( sect_sz(j) == Sz ) ) then
-                     Ap = Ap + 1
-                 endif
-             enddo
+             call get_sector_ntot(N, ndims(i), sector_basis(:,i))
+             call get_sector_sz(Sz, ndims(i), sector_basis(:,i))
+             call get_sector_jz(Jz, ndims(i), sector_basis(:,i))
+             call get_sector_ap(Ap, i, N, Sz, Jz, nsect_, sect_ntot, sect_sz, sect_jz)
 
              sect_ntot(i) = N
              sect_sz(i) = Sz
@@ -623,7 +617,7 @@ recursive &
 !! @sub get_ntot
 !!
 !!
-  subroutine get_ntot(GQN_N, ndims, sector_basis)
+  subroutine get_sector_ntot(GQN_N, ndims, sector_basis)
      use control, only : norbs, ncfgs
      use m_fock, only : bin_basis
 
@@ -651,13 +645,13 @@ recursive &
      enddo
 
      return
-  end subroutine get_ntot
+  end subroutine get_sector_ntot
 
 !!
 !! @sub get_sz
 !!
 !!
-  subroutine get_sz(GQN_Sz, ndims, sector_basis)
+  subroutine get_sector_sz(GQN_Sz, ndims, sector_basis)
      use control, only : isoc
      use control, only : nband, norbs, ncfgs
      use m_fock, only : bin_basis
@@ -687,13 +681,13 @@ recursive &
      enddo
 
      return
-  end subroutine get_sz
+  end subroutine get_sector_sz
 
 !!
 !! @sub get_jz
 !!
 !!
-  subroutine get_jz(GQN_Jz, ndims, sector_basis)
+  subroutine get_sector_jz(GQN_Jz, ndims, sector_basis)
      use control, only : isoc
      use control, only : norbs, ncfgs
      use m_fock, only : bin_basis
@@ -732,14 +726,57 @@ recursive &
      enddo
 
      return
-  end subroutine get_jz
+  end subroutine get_sector_jz
 
 !!
 !! @sub get_ap
 !!
 !!
-  subroutine get_ap()
+  subroutine get_sector_ap(Ap, i, N, Sz, Jz, nsect, sect_ntot, sect_sz, sect_jz)
+     use control, only : isoc, icf
+
      implicit none
 
+     integer, intent(out) :: Ap
+     integer, intent(in) :: i
+     integer, intent(in) :: N
+     integer, intent(in) :: Sz
+     integer, intent(in) :: Jz
+     integer, intent(in) :: nsect
+     integer, intent(in) :: sect_ntot(nsect)
+     integer, intent(in) :: sect_sz(nsect)
+     integer, intent(in) :: sect_jz(nsect)
+
+     integer :: j
+
+     Ap = 0
+
+     if ( isoc == 0 ) then
+         Ap = 1
+         do j=1,i-1
+             if ( ( sect_ntot(j) == N ) .and. ( sect_sz(j) == Sz ) ) then
+                 Ap = Ap + 1
+             endif
+         enddo
+     endif
+
+     if ( isoc == 1 .and. icf == 0 ) then
+         Ap = 1
+         do j=1,i-1
+             if ( ( sect_ntot(j) == N ) .and. ( sect_jz(j) == Jz ) ) then
+                 Ap = Ap + 1
+             endif
+         enddo
+     endif
+
+     if ( isoc == 1 .and. icf == 1 ) then
+         Ap = 1
+         do j=1,i-1
+             if ( sect_ntot(j) == N ) then
+                 Ap = Ap + 1
+             endif
+         enddo
+     endif
+
      return
-  end subroutine get_ap
+  end subroutine get_sector_ap
