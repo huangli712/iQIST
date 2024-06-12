@@ -67,8 +67,6 @@
      ! can point to next subspace (sector)
      logical :: can
 
-     integer, external :: get_nsect
-
      integer, allocatable :: ndims(:)
      integer, allocatable :: ndims_(:)
      integer, allocatable :: sector_basis(:,:)
@@ -102,7 +100,7 @@
          enddo
      enddo
 
-     nsect_ = get_nsect(ncfgs, ndims_)
+     call get_nsectors(nsect_, ncfgs, ndims_)
      call get_capacity(nsize_, ncfgs, ndims_)
      print *, 'number of sectors: ', nsect_
      print *, 'maximum size of sectors: ', nsize_
@@ -129,7 +127,7 @@
          call refine_sector(iorb, nsect_, ndims, sector_basis)
      enddo
 
-     nsect = get_nsect(nsect_, ndims)
+     call get_nsectors(nsect, nsect_, ndims)
      call get_capacity(nsize, nsect_, ndims)
      print *, 'number of sectors: ', nsect
      print *, 'maximum size of sectors: ', nsize
@@ -749,13 +747,12 @@ recursive &
      return
   end subroutine get_ap
 
-  function get_nsect(nsect, ndims) result(val)
+  subroutine get_nsectors(nsect, ndims)
      implicit none
 
+     integer, intent(out) :: val
      integer, intent(in) :: nsect
      integer, intent(in) :: ndims(nsect)
-
-     integer :: val
 
      integer :: i
 
@@ -767,7 +764,7 @@ recursive &
      enddo
 
      return
-  end function get_nsect
+  end subroutine get_nsectors
 
   subroutine get_capacity(val, nsect, ndims)
      implicit none
