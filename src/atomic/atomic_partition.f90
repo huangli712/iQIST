@@ -91,7 +91,7 @@
                  call sector_locate(ib, j, ncfgs, ndims_, sector_basis_)
 
                  if ( ia /= ib ) then
-                     call merge_sector(ia, ib, ncfgs, ndims_, sector_basis_)
+                     call sector_merge(ia, ib, ncfgs, ndims_, sector_basis_)
                  endif
              endif
          enddo
@@ -451,7 +451,7 @@
      return
   end subroutine sector_lookup
 
-  subroutine merge_sector(ia, ib, nsect, ndims, sector_basis)
+  subroutine sector_merge(ia, ib, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
      implicit none
@@ -476,7 +476,7 @@
      sector_basis(:,ib) = 0
 
      return
-  end subroutine merge_sector
+  end subroutine sector_merge
 
   subroutine print_sector(nsect, ndims, sector_basis)
      use constants, only : mystd
