@@ -13,7 +13,6 @@
 !!!           get_sector_sz
 !!!           get_sector_jz
 !!!           get_sector_ap
-!!!           get_nsectors
 !!!           get_capacity
 !!! source  : atomic_partition.f90
 !!! type    : subroutines
@@ -100,7 +99,7 @@
          enddo
      enddo
 
-     call get_nsectors(nsect_, ncfgs, ndims_)
+     nsect_ = count(ndims_ > 0)
      call get_capacity(nsize_, ncfgs, ndims_)
      print *, 'number of sectors: ', nsect_
      print *, 'maximum size of sectors: ', nsize_
@@ -127,7 +126,7 @@
          call refine_sector(iorb, nsect_, ndims, sector_basis)
      enddo
 
-     call get_nsectors(nsect, nsect_, ndims)
+     nsect = count(ndims > 0)
      call get_capacity(nsize, nsect_, ndims)
      print *, 'number of sectors: ', nsect
      print *, 'maximum size of sectors: ', nsize
@@ -746,25 +745,6 @@ recursive &
 
      return
   end subroutine get_ap
-
-  subroutine get_nsectors(nsect, ndims)
-     implicit none
-
-     integer, intent(out) :: val
-     integer, intent(in) :: nsect
-     integer, intent(in) :: ndims(nsect)
-
-     integer :: i
-
-     val = 0
-     do i=1,nsect
-         if ( ndims(i) > 0 ) then
-             val = val + 1
-         endif
-     enddo
-
-     return
-  end subroutine get_nsectors
 
   subroutine get_capacity(val, nsect, ndims)
      implicit none
