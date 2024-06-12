@@ -307,11 +307,11 @@
      return
   end subroutine automatic_partition
 
-  subroutine create_sector()
+  subroutine sector_create()
      implicit none
 
      return
-  end subroutine create_sector
+  end subroutine sector_create
 
   subroutine refine_sector(iorb, nsect, ndims, sector_basis)
      use control, only : ncfgs
