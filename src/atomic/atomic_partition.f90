@@ -77,25 +77,7 @@
      ! initialization
      allocate(ndims_(ncfgs))
      allocate(sector_basis_(ncfgs,ncfgs))
-     ndims_ = 1
-     sector_basis_ = 0
-     do i=1,ncfgs
-         sector_basis_(1,i) = i
-     enddo
-
-     ! phase 1
-     do i=1,ncfgs
-         do j=1,ncfgs
-             if ( abs(hmat(i,j)) > zero ) then
-                 call sector_locate(ia, i, ncfgs, ndims_, sector_basis_)
-                 call sector_locate(ib, j, ncfgs, ndims_, sector_basis_)
-
-                 if ( ia /= ib ) then
-                     call sector_merge(ia, ib, ncfgs, ndims_, sector_basis_)
-                 endif
-             endif
-         enddo
-     enddo
+     call sector_create(ncfgs, ndims_, sector_basis_)
 
      nsect_ = count(ndims_ > 0)
      nsize_ = maxval(ndims_)
@@ -300,8 +282,41 @@
      return
   end subroutine automatic_partition
 
-  subroutine sector_create()
+  subroutine sector_create(nsect, ndims_, sector_basis_)
+     use constants, only : zero
+
+     use control, only : ncfgs
+
+     use m_fock, only : hmat
+
      implicit none
+
+     integer, intent(in) :: nsect
+     integer, intent(inout) :: ndims_(nsect)
+     integer, intent(inout) :: sector_basis_(ncfgs,nsect)
+
+     integer :: i, j
+     integer :: ia, ib
+
+     ndims_ = 1
+     sector_basis_ = 0
+     do i=1,nsect
+         sector_basis_(1,i) = i
+     enddo
+
+     ! phase 1
+     do i=1,ncfgs
+         do j=1,ncfgs
+             if ( abs(hmat(i,j)) > zero ) then
+                 call sector_locate(ia, i, nsect, ndims_, sector_basis_)
+                 call sector_locate(ib, j, nsect, ndims_, sector_basis_)
+
+                 if ( ia /= ib ) then
+                     call sector_merge(ia, ib, nsect, ndims_, sector_basis_)
+                 endif
+             endif
+         enddo
+     enddo
 
      return
   end subroutine sector_create
