@@ -255,14 +255,14 @@
                          jold = dec_basis(ibasis)
                          call atomic_make_cdagger(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
-                         call lookup_sector(which_sect, m)
+                         call sector_lookup(which_sect, m)
                      endif
 
                      if ( k == 0 ) then
                          jold = dec_basis(ibasis)
                          call atomic_make_c(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
-                         call lookup_sector(which_sect, m)
+                         call sector_lookup(which_sect, m)
                      endif
 
                  endif  ! back if ( can == .true. ) block
@@ -424,7 +424,7 @@
      return
   end subroutine sector_locate
 
-  subroutine lookup_sector(sind, find)
+  subroutine sector_lookup(sind, find)
      use m_sector, only : nsectors, sectors
 
      implicit none
@@ -449,7 +449,7 @@
      call s_assert(sind /= 0)
 
      return
-  end subroutine lookup_sector
+  end subroutine sector_lookup
 
   subroutine merge_sector(ia, ib, nsect, ndims, sector_basis)
      use control, only : ncfgs
