@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/31/2024 by li huang (last modified)
+!!!           06/12/2024 by li huang (last modified)
 !!! purpose : try to implement the subspace diagonalization algorithm.
 !!!           it contains some subroutines to construct the atomic
 !!!           Hamiltonian subspace by subspace, diagonalize it, and then
@@ -138,7 +138,7 @@
      if ( nband == 3 .or. nband == 5 .or. nband == 7 ) then
          ! jz only valid for nband == 3, 5, 7
          call atomic_make_gjz(orb_jz)
-     endif ! back if ( nband == 3 .or. nband == 5 .or. nband == 7 ) block
+     endif ! back if block
      write(mystd,'(4X,a)') 'compute [Jz] for orbitals'
      !
      ! calculate orb_ps
@@ -149,6 +149,7 @@
      ! build good quantum numbers for each Fock state
      !--------------------------------------------------------------------
      ibasis = 0
+     !
      fock_ntot = 0
      fock_sz = 0
      fock_jz = 0
@@ -192,7 +193,7 @@
      !
      call s_assert( ibasis == ncfgs )
      !
-     write(mystd,'(4X,a)') 'compute [N Sz Jz PS] for Fock states'
+     write(mystd,'(4X,a)') 'compute [N] [Sz] [Jz] [PS] for Fock states'
 
      ! loop over all the Fock states to determine subspaces
      !--------------------------------------------------------------------
@@ -200,10 +201,12 @@
      !
      nsect = 0        ! number of subspaces, a counter
      ndims = 0        ! dimension of subspaces
+     !
      sect_ntot = 0    ! good quantum numbers
      sect_sz = 0      ! good quantum numbers
      sect_jz = 0      ! good quantum numbers
      sect_ps = 0      ! good quantum numbers
+     !
      sector_basis = 0 ! Fock states in subspaces
      !
      do i=1,ncfgs
@@ -373,6 +376,7 @@
          do j=1,norbs ! loop over all the orbtials
              do k=0,1 ! loop over creation and annihilation fermion operators
 
+                 ! init which_sect, here -1 means nothing to be pointed
                  which_sect = -1
 
                  ! we should check each Fock state in this subspace
@@ -385,14 +389,14 @@
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
+                     endif ! back if block
                      !
                      ! test annihilation fermion operator
-                     else if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
+                     if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
                          code = bin_basis(:,ibasis)
                          can = .true.
                          EXIT
-                     !
-                     endif ! back if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) block
+                     endif ! back if block
                  enddo ! over l={1,sectors(i)%ndim} loop
 
                  ! if can == .true., it means that the fermion operator
@@ -484,7 +488,7 @@
                              enddo ! over l={1,nsectors} loop
 
                      end select ! back select case (ictqmc) block
-                 endif  ! back if ( can == .true. ) block
+                 endif ! back if ( can == .true. ) block
 
                  ! setup the next array
                  sectors(i)%next(j,k) = which_sect
@@ -642,7 +646,7 @@
              write(mystd,'(4X,a,i2,a)', advance = 'no') 'f  (alpha = ', iorb, ')'
              write(mystd,'(2X,a)', advance = 'no') 'size: '
              write(mystd,'(i4,a,i4)') sectors(jsec)%ndim, ' X ', sectors(isec)%ndim
-         endif
+         endif ! back if (ityp == 1) block
 
              enddo ! over ityp={0,1} loop
          enddo ! over iorb={1,norbs} loop

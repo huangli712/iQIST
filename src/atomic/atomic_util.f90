@@ -33,7 +33,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/05/2024 by li huang (last modified)
+!!!           06/12/2024 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients, spin-orbit coupling matrix, Coulomb
@@ -290,6 +290,19 @@
 !!========================================================================
 
 !!
+!! the Slater parameters are taken from the following codes:
+!!
+!!     1. https://github.com/ru-ccmt/EDMFTF/blob/master/src/
+!!            impurity/atomd/gaunt.f90
+!!
+!!     2. https://github.com/TRIQS/triqs/blob/3.3.x/python/
+!!            triqs/operators/util/U_matrix.py
+!!
+!!     3. https://github.com/NSLS-II/edrixs/blob/master/edrixs/utils.py
+!!
+
+
+!!
 !! @sub atomic_make_slater3
 !!
 !! build Slater integrals (radial integrals) F_k for 3 band case (l = 1)
@@ -311,6 +324,7 @@
      Fk = zero
      !
      Fk(0) = Ud
+     !
      Fk(2) = Jh * 5.0_dp
 
 !! body]
@@ -340,7 +354,9 @@
      Fk = zero
      !
      Fk(0) = Ud
+     !
      Fk(2) = Jh * 14.0_dp / (1.0_dp + 0.625_dp)
+     !
      Fk(4) = 0.625_dp * Fk(2)
 
      ! the triqs code uses 0.63, insead of 0.625
@@ -372,11 +388,14 @@
      Fk = zero
      !
      Fk(0) = Ud
+     !
      Fk(2) = 286.0_dp
      Fk(2) = Fk(2) + 195.0_dp * 451.0_dp / 675.0_dp
      Fk(2) = Fk(2) + 250.0_dp * 1001.0_dp / 2025.0_dp
      Fk(2) = Jh * 6435.0_dp / Fk(2)
+     !
      Fk(4) = 451.0_dp / 675.0_dp * Fk(2)
+     !
      Fk(6) = 1001.0_dp / 2025.0_dp * Fk(2)
 
 !! body]
@@ -431,7 +450,8 @@
 !!
   function w3j(l1, l2, l3, m1, m2, m3) result(v)
      use constants, only : dp
-     use constants, only : zero, one, two, epst
+     use constants, only : zero, one, two
+     use constants, only : epst
 
      implicit none
 
@@ -601,6 +621,7 @@
      real(dp), intent(out) :: ck(-l:l,-l:l,0:2*l)
 
 !! external functions
+     ! to evaluate the Gaunt coefficients
      real(dp), external :: gaunt
 
 !! local variables
@@ -658,6 +679,7 @@
 !! @sub atomic_make_gaunt3
 !!
 !! build c^{k}_{l}(m_1,m_2) coefficients for 3 band case (l = 1)
+!! the following codes are generated using sympy
 !!
   subroutine atomic_make_gaunt3(ck)
      use constants, only : dp
@@ -698,6 +720,7 @@
 !! @sub atomic_make_gaunt5
 !!
 !! build c^{k}_{l}(m_1,m_2) coefficients for 5 band case (l = 2)
+!! the following codes are generated using sympy
 !!
   subroutine atomic_make_gaunt5(ck)
      use constants, only : dp
@@ -777,6 +800,7 @@
 !! @sub atomic_make_gaunt7
 !!
 !! build c^{k}_{l}(m_1,m_2) coefficients for 7 band case (l = 3)
+!! the following codes are generated using sympy
 !!
   subroutine atomic_make_gaunt7(ck)
      use constants, only : dp
@@ -1243,10 +1267,18 @@
 !!========================================================================
 
 !!
+!! please refer to the following codes:
+!!
+!! https://github.com/NSLS-II/edrixs/blob/master/edrixs/soc.py
+!!
+
+!!
 !! @sub atomic_make_smat3
 !!
 !! make spin-orbit coupling matrix for 3-band case. it is defined in the
 !! complex orbital basis: Y^{m}_{l}(\theta,\phi).
+!!
+!! the following codes are generated using julia script.
 !!
   subroutine atomic_make_smat3(smat)
      use constants, only : dp
@@ -1296,6 +1328,8 @@
 !!
 !! make spin-orbit coupling matrix for 5-band case. it is defined in the
 !! complex orbital basis: Y^{m}_{l}(\theta,\phi).
+!!
+!! the following codes are generated using julia script.
 !!
   subroutine atomic_make_smat5(smat)
      use constants, only : dp
@@ -1357,6 +1391,8 @@
 !!
 !! make spin-orbit coupling matrix for 7-band case, it is defined in the
 !! complex orbital basis: Y^{m}_{l}(\theta,\phi).
+!!
+!! the following codes are generated using julia script.
 !!
   subroutine atomic_make_smat7(smat)
      use constants, only : dp
@@ -1436,7 +1472,9 @@
 !! @sub atomic_make_tmat_c2r
 !!
 !! make transformation matrix from complex orbital basis Y^{m}_{l} to
-!! real orbital basis Y_{lm}
+!! real orbital basis Y_{lm}.
+!!
+!! the following codes are generated using julia script.
 !!
   subroutine atomic_make_tmat_c2r(tmat_c2r)
      use constants, only : dp
@@ -1618,7 +1656,7 @@
 !! @sub atomic_make_tmat_r2c
 !!
 !! make transformation matrix from real orbital basis Y_{lm} to
-!! complex orbital basis Y^{m}_{l}
+!! complex orbital basis Y^{m}_{l}.
 !!
   subroutine atomic_make_tmat_r2c(tmat_r2c)
      use constants, only : dp
@@ -1649,7 +1687,9 @@
 !! @sub atomic_make_tmat_c2j
 !!
 !! make transformation matrix from complex orbital basis Y^{m}_{l} to
-!! j^2-j_z orbital basis
+!! j^2-j_z orbital basis.
+!!
+!! the following codes are generated using julia script.
 !!
   subroutine atomic_make_tmat_c2j(tmat_c2j)
      use constants, only : dp
@@ -2085,7 +2125,7 @@
      enddo ! over i={1,norbs} loop
 
      ! for this case, the natural eigenbasis is the real orbital basis
-     ! so, the tmat is a unity matrix
+     ! so, the tmat is an unity matrix
      call s_identity_z(norbs, tmat)
 
 !! body]
@@ -2186,7 +2226,8 @@
 !! no crystal field splitting
 !! spin-orbit coupling
 !!
-!! for this special case, the natural eigenbasis is |j^2,j_z>
+!! for this special case, the natural eigenbasis is |j^2,j_z>. the spin-
+!! orbit coupling matrix must be diagonal in this basis.
 !!
   subroutine atomic_natural_basis3()
      use constants, only : dp
