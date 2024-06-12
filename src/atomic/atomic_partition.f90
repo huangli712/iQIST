@@ -1,22 +1,27 @@
 !!!-----------------------------------------------------------------------
 !!! project : iqist @ jasmine
-!!! program : atomic_dump_fock
-!!!           atomic_dump_tmat
-!!!           atomic_dump_emat
-!!!           atomic_dump_umat
-!!!           atomic_dump_feigval
-!!!           atomic_dump_feigvec
-!!!           atomic_dump_fcix
-!!!           atomic_dump_seigval
-!!!           atomic_dump_seigvec
-!!!           atomic_dump_scix
-!!!           atomic_dump_sector
-!!! source  : atomic_dump.f90
+!!! program : automatic_partition
+!!!           sector_create
+!!!           sector_refine
+!!!           sector_locate
+!!!           sector_lookup
+!!!           sector_merge
+!!!           sector_print
+!!!           zigzag
+!!!           try_next
+!!!           get_sector_ntot
+!!!           get_sector_sz
+!!!           get_sector_jz
+!!!           get_sector_ap
+!!!           get_nsectors
+!!!           get_capacity
+!!! source  : atomic_partition.f90
 !!! type    : subroutines
-!!! author  : yilin wang (email:qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang (created)
-!!!           01/31/2024 by li huang (last modified)
-!!! purpose : write some essential arrays and data structures to files.
+!!! author  : li huang (email:huangli@caep.cn)
+!!! history : 06/11/2024 by li huang (created)
+!!!           06/12/2024 by li huang (last modified)
+!!! purpose : implement the automatic partition algorithm to divide the
+!!!           atomic Hamiltonian into many blocks.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -270,7 +275,7 @@
 
                  ! setup the next array
                  sectors(i)%next(j,k) = which_sect
-                 call verify_connection(i, j, k, which_sect)
+                 call try_next(i, j, k, which_sect)
 
                  if (k == 1) then
                      write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
@@ -573,7 +578,7 @@ recursive &
      return
   end subroutine zigzag
 
-  subroutine verify_connection(i, j, k, which_sect)
+  subroutine try_next(i, j, k, which_sect)
      use m_fock, only : dec_basis, ind_basis, bin_basis
      use m_sector, only : sectors
 
@@ -618,7 +623,7 @@ recursive &
      endif
 
      return
-  end subroutine verify_connection
+  end subroutine try_next
 
 !!
 !! @sub get_ntot
