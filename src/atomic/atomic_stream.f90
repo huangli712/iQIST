@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/01/2024 by li huang (last modified)
+!!!           06/12/2024 by li huang (last modified)
 !!! purpose : read essential input data from the external files, build
 !!!           the Fock basis, construct single particle matrices and
 !!!           natural eigenbasis, etc.
@@ -52,7 +52,7 @@
      ! setup general control flags
      !--------------------------------------------------------------------
      ibasis = 1           ! source of the natural eigenbasis
-     ictqmc = 1           ! how to diagonalize atomic Hamiltonian
+     ictqmc = 1           ! how to diagonalize the atomic Hamiltonian
      icu    = 1           ! type of Coulomb interaction
      icf    = 0           ! type of crystal field splitting (CFS)
      isoc   = 0           ! type of spin-orbit coupling (SOC)
@@ -73,8 +73,8 @@
      Js     = 0.00_dp     ! spin-flip interaction
      Jp     = 0.00_dp     ! pair-hopping interaction
      !--------------------------------------------------------------------
-     Ud     = 2.00_dp     ! Coulomb interaction parameter
-     Jh     = 0.00_dp     ! Hund's exchange parameter
+     Ud     = 2.00_dp     ! Coulomb interaction parameter (Slater type)
+     Jh     = 0.00_dp     ! Hund's exchange parameter (Slater type)
      !--------------------------------------------------------------------
      mune   = 0.00_dp     ! chemical potential
      lambda = 0.00_dp     ! spin-orbit coupling strength
@@ -176,7 +176,7 @@
              & 2, 3, 4, 5, 6!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
+     endif ! back if ( ictqmc < 0 .or. ictqmc > 6 ) block
      !
      if ( ictqmc == 3 .and. isoc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
@@ -188,7 +188,7 @@
      !
      if ( ictqmc == 4 .and. isoc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
-             & algorithm using GQNs (N,Sz,Ps) is NOT supported  &
+             & algorithm using GQNs (N,Sz,PS) is NOT supported  &
              & for SOC case!'
          write(mystd,*)
          lpass = .false.
@@ -196,7 +196,7 @@
      !
      if ( ictqmc == 4 .and. icu == 2 ) then
          write(mystd,'(2X,a)') 'ERROR: subspace diagonalization &
-             & algorithm using GQNs (N,Sz,Ps) is NOT supported  &
+             & algorithm using GQNs (N,Sz,PS) is NOT supported  &
              & for Slater-Cordon type interaction U!'
          write(mystd,*)
          lpass = .false.
@@ -230,7 +230,7 @@
              & interaction is only suitable for 3-, 5- or 7-band system!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icu == 2 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
+     endif ! back if block
 
      ! check icf
      if ( icf < 0 .or. icf > 2 ) then
@@ -251,23 +251,23 @@
              & for 3-, 5-, or 7-band system!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
+     endif ! back if block
 
      ! check nband
-     if ( nband <= 0 .or. nband >= 8 ) then
+     if ( nband < 1 .or. nband > 7 ) then
          write(mystd,'(2X,a)') 'ERROR: number of bands should be a &
              & positive integer (1 <= nband <= 7)!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( nband <= 0 .or. nband >= 8 ) block
+     endif ! back if ( nband < 1 .or. nband > 7 ) block
      !
-     if ( nband > 7 .and. ictqmc == 1 ) then
+     if ( nband > 5 .and. ictqmc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: when number of bands is larger &
-             & than 4, the direct diagonalization algorithm is NOT    &
+             & than 5, the direct diagonalization algorithm is NOT    &
              & supported any more!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( nband >= 5 .and. ictqmc == 1 ) block
+     endif ! back if ( nband > 5 .and. ictqmc == 1 ) block
 
      ! check nspin
      if ( nspin /= 2 ) then
@@ -384,7 +384,7 @@
 
      ! we shall read crystal field splitting into matrix cmat from
      ! file atom.cmat.in. note that crystal field splitting could
-     ! be non-diagonal
+     ! be non-diagonal!
      !
      ! inquire file's status at first
      inquire( file = 'atom.cmat.in', exist = exists )
@@ -445,7 +445,7 @@
 
      ! we shall read onsite impurity level into matrix emat from
      ! file atomic.emat.in. note that emat is actually real and
-     ! diagonal in natural eigenbasis
+     ! diagonal in natural eigenbasis.
      !
      ! inquire file's status at first
      inquire( file = 'atom.emat.in', exist = exists )
@@ -458,6 +458,7 @@
      open(mytmp, file='atom.emat.in', form='formatted', status='unknown')
 
      ! read the data file
+     ! now emat is assumed to be diagonal
      do i=1,norbs
          read(mytmp,*) i1, raux, rtmp
          emat(i,i) = dcmplx(raux, zero)
@@ -503,7 +504,9 @@
 
      ! we shall read transformation matrix tmat from file atomic.tmat.in.
      ! it is used to transform the single particle matrices from original
-     ! basis to natural eigenbasis
+     ! basis to natural eigenbasis.
+     !
+     ! actually, it is the eigenvectors of the emat matrix.
      !
      ! inquire file's status at first
      inquire( file = 'atom.tmat.in', exist = exists )
@@ -655,7 +658,10 @@
 !! always defined in complex orbital basis. the Coulomb interaction U
 !! should be defined in real orbital basis or complex orbital basis,
 !! which depends on the form of Coulomb interaction. thus, we often
-!! need to transform them between two different basis sets
+!! need to transform them between two different basis sets.
+!!
+!! sometimes, real orbital basis is called cubic harmonics, while complex
+!! orbital basis is called spherical harmonics.
 !!
 
 !!
@@ -705,7 +711,8 @@
          write(mystd,'(4X,a)') 'make spin-orbit coupling term'
          !
          ! make an atomic spin-orbit coupling, $\lambda * L * S$
-         ! it is defined on the complex orbital basis
+         ! it is defined on the complex orbital basis. it will be
+         ! diagonal in the j^2-j_z basis.
          if ( isoc > 0 ) then
              select case (nband)
 
@@ -736,7 +743,12 @@
 
          ! read the matrix emat (CFS + SOC) on natural eigenbasis,
          ! this matrix must be a diagonal matrix, and the elements
-         ! must be real
+         ! must be real.
+         !
+         ! later we should build the transformation matrix (i.e.,
+         ! natural eigenbasis), which is eigenstates of original emat
+         ! matrix, in atomic_build_natural().
+         !
          write(mystd,'(4X,a)') 'make crystal field splitting + &
              & spin-orbiit coupling terms'
          !
@@ -873,7 +885,7 @@
      if ( isoc == 0 ) then
 
          write(mystd,'(4X,a)') 'transform Coulomb interaction to &
-             &real orbital basis'
+             & real orbital basis'
 
          ! for Slater-Cordon parameterized Coulomb interaction U,
          ! since it is defined at complex orbital basis, we first
