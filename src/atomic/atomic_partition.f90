@@ -51,7 +51,6 @@
      integer :: l
      integer :: m
      integer :: ia, ib
-     integer :: iorb
      integer :: nsect, nsize, nsect_, nsize_
      integer :: N, Sz, Jz, Ap
      integer :: jold, jnew, isgn
@@ -121,8 +120,8 @@
      deallocate(sector_basis_)
 
      ! phase 2
-     do iorb=1,norbs
-         call refine_sector(iorb, nsect_, ndims, sector_basis)
+     do i=1,norbs
+         call sector_refine(i, nsect_, ndims, sector_basis)
      enddo
 
      nsect = count(ndims > 0)
@@ -313,7 +312,7 @@
      return
   end subroutine sector_create
 
-  subroutine refine_sector(iorb, nsect, ndims, sector_basis)
+  subroutine sector_refine(iorb, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
      use m_fock, only : bin_basis, dec_basis, ind_basis
@@ -393,7 +392,7 @@
      deallocate(Mdn)
 
      return
-  end subroutine refine_sector
+  end subroutine sector_refine
 
   subroutine locate_sector(sind, find, nsect, ndims, sector_basis)
      use control, only : ncfgs
