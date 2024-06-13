@@ -323,8 +323,6 @@
   subroutine sector_refine(iorb, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
-     use m_fock, only : bin_basis, dec_basis, ind_basis
-
      implicit none
 
      integer, intent(in) :: iorb
@@ -333,57 +331,15 @@
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
      integer :: i
-     integer :: j
-     integer :: iup
-     integer :: idn
-     integer :: jnew, jold, isgn
-     integer :: ia, ib
      integer :: HA, HL, HU
 
      integer, allocatable :: Mup(:,:)
      integer, allocatable :: Mdn(:,:)
+
      allocate(Mup(ncfgs/2,2))
      allocate(Mdn(ncfgs/2,2))
 
-     iup = 0
-     idn = 0
-
-     do i=1,ncfgs
-         call sector_locate(ia, i, nsect, ndims, sector_basis)
-
-         ! c^+
-         if ( bin_basis(iorb,i) == 0 ) then
-             jold = dec_basis(i)
-             call atomic_make_cdagger(iorb, jold, jnew, isgn)
-             j = ind_basis(jnew)
-
-             call sector_locate(ib, j, nsect, ndims, sector_basis)
-
-             iup = iup + 1
-             Mup(iup,1) = ia
-             Mup(iup,2) = ib
-         endif
-
-         ! c
-         if ( bin_basis(iorb,i) == 1 ) then
-             jold = dec_basis(i)
-             call atomic_make_c(iorb, jold, jnew, isgn)
-             j = ind_basis(jnew)
-
-             call sector_locate(ib, j, nsect, ndims, sector_basis)
-
-             idn = idn + 1
-             Mdn(idn,1) = ia
-             Mdn(idn,2) = ib
-         endif
-     enddo
-
-     call s_assert(iup == ncfgs / 2)
-     call s_assert(idn == ncfgs / 2)
-
-     print *, '# orb: ', iorb
-     print *, 'number of Mup:', iup
-     print *, 'number of Mdn:', idn
+     call map_create(iorb, nsect, ndims, sector_basis, Mup, Mdn)
 
      do i=1,ncfgs/2
          HA = Mup(i,1)
@@ -485,8 +441,65 @@
      return
   end subroutine sector_lookup
 
-  subroutine map_create()
+  subroutine map_create(iorb, nsect, ndims, sector_basis, Mup, Mdn)
+     use control, only : ncfgs
+
+     use m_fock, only : bin_basis, dec_basis, ind_basis
+
      implicit none
+
+     integer, intent(in) :: iorb
+     integer, intent(in) :: nsect
+     integer, intent(in) :: ndims(nsect)
+     integer, intent(in) :: sector_basis(ncfgs,nsect)
+     integer, intent(out) :: Mup(ncfgs/2,2)
+     integer, intent(out) :: Mdn(ncfgs/2,2)
+
+     integer :: iup
+     integer :: idn
+     integer :: i, j
+     integer :: ia, ib
+     integer :: jnew, jold, isgn
+
+     iup = 0
+     idn = 0
+
+     do i=1,ncfgs
+         call sector_locate(ia, i, nsect, ndims, sector_basis)
+
+         ! c^+
+         if ( bin_basis(iorb,i) == 0 ) then
+             jold = dec_basis(i)
+             call atomic_make_cdagger(iorb, jold, jnew, isgn)
+             j = ind_basis(jnew)
+
+             call sector_locate(ib, j, nsect, ndims, sector_basis)
+
+             iup = iup + 1
+             Mup(iup,1) = ia
+             Mup(iup,2) = ib
+         endif
+
+         ! c
+         if ( bin_basis(iorb,i) == 1 ) then
+             jold = dec_basis(i)
+             call atomic_make_c(iorb, jold, jnew, isgn)
+             j = ind_basis(jnew)
+
+             call sector_locate(ib, j, nsect, ndims, sector_basis)
+
+             idn = idn + 1
+             Mdn(idn,1) = ia
+             Mdn(idn,2) = ib
+         endif
+     enddo
+
+     call s_assert(iup == ncfgs / 2)
+     call s_assert(idn == ncfgs / 2)
+
+     print *, '# orb: ', iorb
+     print *, 'number of Mup:', iup
+     print *, 'number of Mdn:', idn
 
      return
   end subroutine map_create
