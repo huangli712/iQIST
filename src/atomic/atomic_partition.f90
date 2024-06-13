@@ -3,12 +3,12 @@
 !!! program : automatic_partition
 !!!           sector_create
 !!!           sector_refine
+!!!           sector_copyto
 !!!           sector_locate
 !!!           sector_lookup
-!!!           sector_merge
-!!!           sector_print
-!!!           zigzag
-!!!           try_next
+!!!           map_create
+!!!           map_remove
+!!!           map_verify
 !!!           get_sector_ntot
 !!!           get_sector_sz
 !!!           get_sector_jz
@@ -17,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 06/11/2024 by li huang (created)
-!!!           06/12/2024 by li huang (last modified)
+!!!           06/13/2024 by li huang (last modified)
 !!! purpose : implement the automatic partition algorithm to divide the
 !!!           atomic Hamiltonian into many blocks.
 !!! status  : unstable
@@ -244,7 +244,7 @@
 
                  ! setup the next array
                  sectors(i)%next(j,k) = which_sect
-                 call try_next(i, j, k, which_sect)
+                 call map_verify(i, j, k, which_sect)
 
                  if (k == 1) then
                      write(mystd,'(4X,a,i2,a)', advance = 'no') 'f^+(alpha =', j, ')'
@@ -311,7 +311,7 @@
                  call sector_locate(ib, j, nsect, ndims_, sector_basis_)
 
                  if ( ia /= ib ) then
-                     call sector_merge(ia, ib, nsect, ndims_, sector_basis_)
+                     call sector_copyto(ia, ib, nsect, ndims_, sector_basis_)
                  endif
              endif
          enddo
@@ -385,14 +385,13 @@
      print *, 'number of Mup:', iup
      print *, 'number of Mdn:', idn
 
-
      do i=1,ncfgs/2
          HA = Mup(i,1)
          HL = Mup(i,1)
          HU = Mup(i,2)
 
          if ( HL /= 0 .and. HU /= 0 ) then
-             call zigzag(1, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+             call map_remove(1, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
          endif
      enddo
 
@@ -401,6 +400,33 @@
 
      return
   end subroutine sector_refine
+
+  subroutine sector_copyto(ia, ib, nsect, ndims, sector_basis)
+     use control, only : ncfgs
+
+     implicit none
+
+     integer, intent(in) :: ia
+     integer, intent(in) :: ib
+     integer, intent(in) :: nsect
+     integer, intent(inout) :: ndims(nsect)
+     integer, intent(inout) :: sector_basis(ncfgs,nsect)
+
+     integer :: m
+
+     call s_assert(ndims(ia) >= 1)
+     call s_assert(ndims(ib) >= 1)
+
+     do m=1,ndims(ib)
+           sector_basis(ndims(ia) + m, ia) = sector_basis(m, ib)
+     enddo
+     !
+     ndims(ia) = ndims(ia) + ndims(ib)
+     ndims(ib) = 0
+     sector_basis(:,ib) = 0
+
+     return
+  end subroutine sector_copyto
 
   subroutine sector_locate(sind, find, nsect, ndims, sector_basis)
      use control, only : ncfgs
@@ -459,69 +485,14 @@
      return
   end subroutine sector_lookup
 
-  subroutine sector_merge(ia, ib, nsect, ndims, sector_basis)
-     use control, only : ncfgs
-
+  subroutine map_create()
      implicit none
 
-     integer, intent(in) :: ia
-     integer, intent(in) :: ib
-     integer, intent(in) :: nsect
-     integer, intent(inout) :: ndims(nsect)
-     integer, intent(inout) :: sector_basis(ncfgs,nsect)
-
-     integer :: m
-
-     call s_assert(ndims(ia) >= 1)
-     call s_assert(ndims(ib) >= 1)
-
-     do m=1,ndims(ib)
-           sector_basis(ndims(ia) + m, ia) = sector_basis(m, ib)
-     enddo
-     !
-     ndims(ia) = ndims(ia) + ndims(ib)
-     ndims(ib) = 0
-     sector_basis(:,ib) = 0
-
      return
-  end subroutine sector_merge
-
-  subroutine print_sector(nsect, ndims, sector_basis)
-     use constants, only : mystd
-
-     use control, only : ncfgs
-
-     use m_fock, only : bin_basis
-
-     implicit none
-
-     integer, intent(in) :: nsect
-     integer, intent(in) :: ndims(nsect)
-     integer, intent(in) :: sector_basis(ncfgs,nsect)
-
-     integer :: i
-     integer :: j
-     integer :: m
-
-     m = 0
-     do i=1,nsect
-         if ( ndims(i) > 0 ) then
-             m = m + 1
-             write(mystd,'(a,i6)') 'subspace -> ', m
-             write(mystd,'(a,i6)') 'size :', ndims(i)
-             write(mystd,'(a)') 'basis :'
-             do j=1,ndims(i)
-                 write(mystd,'(14i1)') bin_basis(:,sector_basis(j,i))
-             enddo
-             write(mystd,*)
-         endif
-     enddo
-
-     return
-  end subroutine print_sector
+  end subroutine map_create
 
 recursive &
-  subroutine zigzag(up_or_down, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+  subroutine map_remove(up_or_down, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
      use control, only : ncfgs
 
      implicit none
@@ -554,7 +525,7 @@ recursive &
                      ndims(HB) = 0
                  endif
 
-                 call zigzag(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+                 call map_remove(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
              endif
          enddo
      else
@@ -572,15 +543,15 @@ recursive &
                      ndims(HB) = 0
                  endif
 
-                 call zigzag(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+                 call map_remove(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
              endif
          enddo
      endif
 
      return
-  end subroutine zigzag
+  end subroutine map_remove
 
-  subroutine try_next(i, j, k, which_sect)
+  subroutine map_verify(i, j, k, which_sect)
      use m_fock, only : dec_basis, ind_basis, bin_basis
      use m_sector, only : sectors
 
@@ -625,7 +596,7 @@ recursive &
      endif
 
      return
-  end subroutine try_next
+  end subroutine map_verify
 
 !!
 !! @sub get_ntot
