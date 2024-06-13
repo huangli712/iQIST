@@ -835,16 +835,16 @@ recursive &
      ! index for the given subspace
      integer, intent(in) :: ind
 
-     ! capacity for the given subspace
+     ! number of subspaces
      integer, intent(in) :: nsect
 
-     ! GQN N for the 1st to ind-th subspaces
+     ! GQN N from the 1st to ind-th subspaces
      integer, intent(in) :: sect_ntot(nsect)
 
-     ! GQN Sz for the 1st to ind-th subspaces
+     ! GQN Sz from the 1st to ind-th subspaces
      integer, intent(in) :: sect_sz(nsect)
 
-     ! GQN Jz for the 1st to ind-th subspaces
+     ! GQN Jz from the 1st to ind-th subspaces
      integer, intent(in) :: sect_jz(nsect)
 
 !! local variables
@@ -861,11 +861,16 @@ recursive &
      integer :: Jz
 
 !! [body
+
      AP = 0
-     N = sect_ntot(ind)
+
+     ! get N, Sz, and Jz for the ind-th subspace
+     N  = sect_ntot(ind)
      Sz = sect_sz(ind)
      Jz = sect_jz(ind)
 
+     ! spin-orbit coupling is disabled
+     ! the good quantum numbers are N, Sz, and AP
      if ( isoc == 0 ) then
          Ap = 1
          do j=1,ind-1
@@ -875,6 +880,9 @@ recursive &
          enddo
      endif
 
+     ! spin-orbit coupling is enabled
+     ! crystal field splitting is disabled
+     ! the good quantum numbers are N, Jz, and AP
      if ( isoc == 1 .and. icf == 0 ) then
          Ap = 1
          do j=1,ind-1
@@ -884,6 +892,9 @@ recursive &
          enddo
      endif
 
+     ! spin-orbit coupling is enabled
+     ! crystal field splitting is enabled
+     ! the good quantum numbers are N and AP
      if ( isoc == 1 .and. icf == 1 ) then
          Ap = 1
          do j=1,ind-1
