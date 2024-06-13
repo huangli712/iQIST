@@ -749,7 +749,7 @@ recursive &
 !! return good quantum number Jz for the given subspace (sector)
 !!
   subroutine get_sector_jz(Jz, nsize, sector_basis)
-     use control, only : isoc
+     use control, only : icf, isoc
      use control, only : norbs, ncfgs
 
      use m_fock, only : bin_basis
@@ -785,6 +785,7 @@ recursive &
      Jz = 999
      !
      if ( isoc == 0 ) return
+     if ( isoc == 1 .and. icf > 0 ) return
      !
      call atomic_make_gjz(good_jz)
      !
@@ -792,6 +793,7 @@ recursive &
          ! visit each Fock state in the subspace
          code = bin_basis(:,sector_basis(i))
 
+         ! get Jz for the current Fock state
          Jz_ = 0
          do k=1,norbs
              Jz_ = Jz_ + good_jz(k) * code(k)
