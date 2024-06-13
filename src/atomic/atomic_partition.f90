@@ -746,44 +746,70 @@ recursive &
 !!
 !! @sub get_sector_jz
 !!
+!! return good quantum number Jz for the given subspace (sector)
 !!
-  subroutine get_sector_jz(GQN_Jz, ndims, sector_basis)
+  subroutine get_sector_jz(Jz, nsize, sector_basis)
      use control, only : isoc
      use control, only : norbs, ncfgs
+
      use m_fock, only : bin_basis
 
      implicit none
 
-     integer, intent(in) :: ndims
-     integer, intent(in) :: sector_basis(ncfgs)
-     integer, intent(out) :: GQN_Jz
+!! external arguments
+     ! good quantum number Jz for the given subspace
+     integer, intent(out) :: Jz
 
-     integer :: i, k
-     integer :: basis(norbs)
-     integer :: Jz
+     ! capacity for the given subspace
+     integer, intent(in) :: nsize
+
+     ! basis for the given subspace
+     integer, intent(in) :: sector_basis(ncfgs)
+
+!! local variables
+     ! loop index
+     integer :: i
+     integer :: k
+
+     ! good quantum number Jz
+     integer :: Jz_
+
+     ! Fock state in the given subspace
+     integer :: code(norbs)
+
+     ! precalculate Jz quantum numbers
      integer :: good_jz(norbs)
 
-     call atomic_make_gjz(good_jz)
+!! [body
 
-     GQN_Jz = 999
+     Jz = 999
+     !
      if ( isoc == 0 ) return
+     !
+     call atomic_make_gjz(good_jz)
+     !
+     do i=1,nsize
+         ! visit each Fock state in the subspace
+         code = bin_basis(:,sector_basis(i))
 
-     do i=1,ndims
-         basis = bin_basis(:,sector_basis(i))
-
-         Jz = 0
+         Jz_ = 0
          do k=1,norbs
-             Jz = Jz + good_jz(k) * basis(k)
+             Jz_ = Jz_ + good_jz(k) * code(k)
          enddo ! over k={1,norbs} loop
 
+         ! record Jz for the first Fock state
          if ( i == 1 ) then
-             GQN_Jz = Jz
+             Jz = Jz_
+         ! all Fock states in the subspace should share the same Jz
          else
-             if ( Jz /= GQN_Jz ) then
-                 STOP "wrong in GQN(Jz)"
-             endif
-         endif
-     enddo
+             if ( Jz /= Jz_ ) then
+                 call s_print_error('get_sector_jz','wrong good &
+                     & quantum number Jz for this subspace!')
+             endif ! back if ( Jz /= Jz_ ) block
+         endif ! back if ( i == 1 ) block
+     enddo ! over i={1,nsize} loop
+
+!! body]
 
      return
   end subroutine get_sector_jz
