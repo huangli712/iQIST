@@ -621,27 +621,29 @@ recursive &
   end subroutine map_verify
 
 !!
-!! @sub get_ntot
+!! @sub get_sector_ntot
 !!
+!! return good quantum number N for the given subspace (sector)
 !!
-  subroutine get_sector_ntot(GQN_N, ndims, sector_basis)
+  subroutine get_sector_ntot(GQN_N, nsize, sector_basis)
      use control, only : norbs, ncfgs
+
      use m_fock, only : bin_basis
 
      implicit none
 
-     integer, intent(in) :: ndims
+     integer, intent(in) :: nsize
      integer, intent(in) :: sector_basis(ncfgs)
      integer, intent(out) :: GQN_N
 
      integer :: i
-     integer :: basis(norbs)
+     integer :: code(norbs)
      integer :: N
 
      GQN_N = 999
-     do i=1,ndims
-         basis = bin_basis(:,sector_basis(i))
-         N = sum(basis)
+     do i=1,nsize
+         code = bin_basis(:,sector_basis(i))
+         N = sum(code)
          if ( i == 1 ) then
              GQN_N = N
          else
@@ -655,7 +657,7 @@ recursive &
   end subroutine get_sector_ntot
 
 !!
-!! @sub get_sz
+!! @sub get_sector_sz
 !!
 !!
   subroutine get_sector_sz(GQN_Sz, ndims, sector_basis)
@@ -691,7 +693,7 @@ recursive &
   end subroutine get_sector_sz
 
 !!
-!! @sub get_jz
+!! @sub get_sector_jz
 !!
 !!
   subroutine get_sector_jz(GQN_Jz, ndims, sector_basis)
@@ -736,7 +738,7 @@ recursive &
   end subroutine get_sector_jz
 
 !!
-!! @sub get_ap
+!! @sub get_sector_ap
 !!
 !!
   subroutine get_sector_ap(Ap, i, N, Sz, Jz, nsect, sect_ntot, sect_sz, sect_jz)
