@@ -354,6 +354,8 @@
      deallocate(Mup)
      deallocate(Mdn)
 
+     !STOP
+
      return
   end subroutine sector_refine
 
@@ -501,6 +503,11 @@
      print *, 'number of Mup:', iup
      print *, 'number of Mdn:', idn
 
+     !do i=1,ncfgs/2
+     !    print *, i, Mdn(i,1), Mdn(i,2)
+     !enddo
+     !STOP
+
      return
   end subroutine map_create
 
@@ -529,13 +536,14 @@ recursive &
                  HB = Mup(i,2)
                  Mup(i,:) = 0
 
-                 if ( HB /= HU ) then
+                 if ( HB /= HU .and. ndims(HB) > 0 ) then
                      print *, 'merge up:', HA, HB, HU
-                     do j=1,ndims(HB)
-                         sector_basis(ndims(HU) + j, HU) = sector_basis(j,HB)
-                     enddo
-                     ndims(HU) = ndims(HU) + ndims(HB)
-                     ndims(HB) = 0
+                     !do j=1,ndims(HB)
+                     !    sector_basis(ndims(HU) + j, HU) = sector_basis(j,HB)
+                     !enddo
+                     !ndims(HU) = ndims(HU) + ndims(HB)
+                     !ndims(HB) = 0
+                     call sector_copyto(HU, HB, nsect, ndims, sector_basis)
                  endif
 
                  call map_remove(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
@@ -547,13 +555,14 @@ recursive &
                  HB = Mdn(i,2)
                  Mdn(i,:) = 0
 
-                 if ( HB /= HL ) then
-                     print *, 'merge dn:', HA, HB, HL
-                     do j=1,ndims(HB)
-                         sector_basis(ndims(HL) + j, HL) = sector_basis(j,HB)
-                     enddo
-                     ndims(HL) = ndims(HL) + ndims(HB)
-                     ndims(HB) = 0
+                 if ( HB /= HL .and. ndims(HB) > 0 ) then
+                     print *, 'merge dn:', HA, HB, HL!, ndims(HB), ndims(HL)
+                     !do j=1,ndims(HB)
+                     !    sector_basis(ndims(HL) + j, HL) = sector_basis(j,HB)
+                     !enddo
+                     !ndims(HL) = ndims(HL) + ndims(HB)
+                     !ndims(HB) = 0
+                     call sector_copyto(HL, HB, nsect, ndims, sector_basis)
                  endif
 
                  call map_remove(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
