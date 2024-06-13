@@ -873,37 +873,37 @@ recursive &
      ! crystal field splitting is disabled or enabled
      ! good quantum numbers are N, Sz, and AP
      if ( isoc == 0 ) then
-         Ap = 1
+         AP = 1
          do j=1,ind-1
              if ( ( sect_ntot(j) == N ) .and. ( sect_sz(j) == Sz ) ) then
-                 Ap = Ap + 1
+                 AP = AP + 1
              endif
-         enddo
-     endif
+         enddo ! over j={1,ind-1} loop
+     endif ! back if ( isoc == 0 ) block
 
      ! spin-orbit coupling is enabled
      ! crystal field splitting is disabled
      ! good quantum numbers are N, Jz, and AP
      if ( isoc == 1 .and. icf == 0 ) then
-         Ap = 1
+         AP = 1
          do j=1,ind-1
              if ( ( sect_ntot(j) == N ) .and. ( sect_jz(j) == Jz ) ) then
-                 Ap = Ap + 1
+                 AP = AP + 1
              endif
-         enddo
-     endif
+         enddo ! over j={1,ind-1} loop
+     endif ! back if ( isoc == 1 .and. icf == 0 ) block
 
      ! spin-orbit coupling is enabled
      ! crystal field splitting is enabled
      ! good quantum numbers are N and AP
      if ( isoc == 1 .and. icf == 1 ) then
-         Ap = 1
+         AP = 1
          do j=1,ind-1
              if ( sect_ntot(j) == N ) then
-                 Ap = Ap + 1
+                 AP = AP + 1
              endif
-         enddo
-     endif
+         enddo ! over j={1,ind-1} loop
+     endif ! back if ( isoc == 1 .and. icf == 1 ) block
 
 !! body]
 
