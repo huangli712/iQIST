@@ -125,13 +125,15 @@
          if ( ndims(i) > 0 ) then
              k = k + 1
              call get_sector_ntot(N, ndims(i), sector_basis(:,i))
-             call get_sector_sz(Sz, ndims(i), sector_basis(:,i))
-             call get_sector_jz(Jz, ndims(i), sector_basis(:,i))
-             call get_sector_ap(Ap, i, N, Sz, Jz, nsect_, sect_ntot, sect_sz, sect_jz)
-
              sect_ntot(i) = N
+             !
+             call get_sector_sz(Sz, ndims(i), sector_basis(:,i))
              sect_sz(i) = Sz
+             !
+             call get_sector_jz(Jz, ndims(i), sector_basis(:,i))
              sect_jz(i) = Jz
+             !
+             call get_sector_ap(Ap, i, nsect_, sect_ntot, sect_sz, sect_jz)
              sect_ap(i) = Ap
          endif
      enddo
@@ -819,29 +821,54 @@ recursive &
 !!
 !! @sub get_sector_ap
 !!
+!! return good quantum number AP for the given subspace (sector)
 !!
-  subroutine get_sector_ap(Ap, i, N, Sz, Jz, nsect, sect_ntot, sect_sz, sect_jz)
-     use control, only : isoc, icf
+  subroutine get_sector_ap(AP, ind, nsect, sect_ntot, sect_sz, sect_jz)
+     use control, only : icf, isoc
 
      implicit none
 
-     integer, intent(out) :: Ap
-     integer, intent(in) :: i
-     integer, intent(in) :: N
-     integer, intent(in) :: Sz
-     integer, intent(in) :: Jz
+!! external arguments
+     ! good quantum number AP for the given subspace
+     integer, intent(out) :: AP
+
+     ! index for the given subspace
+     integer, intent(in) :: ind
+
+     ! capacity for the given subspace
      integer, intent(in) :: nsect
+
+     ! GQN N for the 1st to ind-th subspaces
      integer, intent(in) :: sect_ntot(nsect)
+
+     ! GQN Sz for the 1st to ind-th subspaces
      integer, intent(in) :: sect_sz(nsect)
+
+     ! GQN Jz for the 1st to ind-th subspaces
      integer, intent(in) :: sect_jz(nsect)
 
+!! local variables
+     ! loop index
      integer :: j
 
-     Ap = 0
+     ! GQN N for the ind-th subspace
+     integer :: N
+
+     ! GQN Sz for the ind-th subspace
+     integer :: Sz
+
+     ! GQN Jz for the ind-th subspace
+     integer :: Jz
+
+!! [body
+     AP = 0
+     N = sect_ntot(ind)
+     Sz = sect_sz(ind)
+     Jz = sect_jz(ind)
 
      if ( isoc == 0 ) then
          Ap = 1
-         do j=1,i-1
+         do j=1,ind-1
              if ( ( sect_ntot(j) == N ) .and. ( sect_sz(j) == Sz ) ) then
                  Ap = Ap + 1
              endif
@@ -850,7 +877,7 @@ recursive &
 
      if ( isoc == 1 .and. icf == 0 ) then
          Ap = 1
-         do j=1,i-1
+         do j=1,ind-1
              if ( ( sect_ntot(j) == N ) .and. ( sect_jz(j) == Jz ) ) then
                  Ap = Ap + 1
              endif
@@ -859,12 +886,14 @@ recursive &
 
      if ( isoc == 1 .and. icf == 1 ) then
          Ap = 1
-         do j=1,i-1
+         do j=1,ind-1
              if ( sect_ntot(j) == N ) then
                  Ap = Ap + 1
              endif
          enddo
      endif
+
+!! body]
 
      return
   end subroutine get_sector_ap
