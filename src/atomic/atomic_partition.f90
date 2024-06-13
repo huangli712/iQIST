@@ -527,7 +527,7 @@ recursive &
      integer, intent(inout) :: Mup(ncfgs/2,2)
      integer, intent(inout) :: Mdn(ncfgs/2,2)
 
-     integer :: i, j
+     integer :: i
      integer :: HB
 
      if ( up_or_down == 1 ) then
@@ -625,33 +625,57 @@ recursive &
 !!
 !! return good quantum number N for the given subspace (sector)
 !!
-  subroutine get_sector_ntot(GQN_N, nsize, sector_basis)
+  subroutine get_sector_ntot(N, nsize, sector_basis)
      use control, only : norbs, ncfgs
 
      use m_fock, only : bin_basis
 
      implicit none
 
+!! external arguments
+     ! good quantum number N for the given subspace
+     integer, intent(out) :: N
+
+     ! capacity for the given subspace
      integer, intent(in) :: nsize
+
+     ! basis for the given subspace
      integer, intent(in) :: sector_basis(ncfgs)
-     integer, intent(out) :: GQN_N
 
+!! local variables
+     ! loop index
      integer :: i
-     integer :: code(norbs)
-     integer :: N
 
-     GQN_N = 999
+     ! good quantum number N
+     integer :: N_
+
+     ! Fock state in the given subspace
+     integer :: code(norbs)
+
+!! [body
+
+     N = 0
+     !
      do i=1,nsize
+         ! visit each Fock state in the subspace
          code = bin_basis(:,sector_basis(i))
-         N = sum(code)
+
+         ! get N for the current Fock state
+         N_ = sum(code)
+
+         ! record N for the first Fock state
          if ( i == 1 ) then
-             GQN_N = N
+             N = N_
+         ! all Fock states in the subspace should share the same N
          else
-             if ( N /= GQN_N ) then
-                 STOP "wrong in GQN(N)"
-             endif
-         endif
-     enddo
+             if ( N /= N_ ) then
+                 call s_print_error('get_sector_ntot','wrong good &
+                     & quantum number N for this subspace!')
+             endif ! back if ( N /= N_ ) block
+         endif ! back if ( i == 1 ) block
+     enddo ! over i={1,nsize} loop
+
+!! body]
 
      return
   end subroutine get_sector_ntot
