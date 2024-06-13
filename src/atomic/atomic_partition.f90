@@ -540,11 +540,6 @@ recursive &
 
                  if ( HB /= HU .and. ndims(HB) > 0 ) then
                      print *, 'merge up:', HA, HB, HU
-                     !do j=1,ndims(HB)
-                     !    sector_basis(ndims(HU) + j, HU) = sector_basis(j,HB)
-                     !enddo
-                     !ndims(HU) = ndims(HU) + ndims(HB)
-                     !ndims(HB) = 0
                      call sector_copyto(HU, HB, nsect, ndims, sector_basis)
                  endif
 
@@ -559,11 +554,6 @@ recursive &
 
                  if ( HB /= HL .and. ndims(HB) > 0 ) then
                      print *, 'merge dn:', HA, HB, HL!, ndims(HB), ndims(HL)
-                     !do j=1,ndims(HB)
-                     !    sector_basis(ndims(HL) + j, HL) = sector_basis(j,HB)
-                     !enddo
-                     !ndims(HL) = ndims(HL) + ndims(HB)
-                     !ndims(HB) = 0
                      call sector_copyto(HL, HB, nsect, ndims, sector_basis)
                  endif
 
@@ -575,6 +565,11 @@ recursive &
      return
   end subroutine map_remove
 
+!!
+!! @sub map_verify
+!!
+!!
+!!
   subroutine map_verify(i, j, k, which_sect)
      use m_fock, only : dec_basis, ind_basis, bin_basis
      use m_sector, only : sectors
@@ -599,10 +594,8 @@ recursive &
                  call atomic_make_cdagger(j, jold, jnew, isgn)
                  m = ind_basis(jnew)
                  call s_assert( count(sectors(which_sect)%basis == m) == 1 )
-                 !print *, n, m
              endif
          enddo
-         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
      endif
 
      if ( k == 0 ) then
@@ -613,10 +606,8 @@ recursive &
                  call atomic_make_c(j, jold, jnew, isgn)
                  m = ind_basis(jnew)
                  call s_assert( count(sectors(which_sect)%basis == m) == 1 )
-                 !print *, n, m
              endif
          enddo
-         !print *, 'which_sect:', which_sect, sectors(which_sect)%basis
      endif
 
      return
