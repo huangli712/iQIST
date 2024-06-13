@@ -782,7 +782,7 @@ recursive &
 
 !! [body
 
-     Jz = 999
+     Jz = 0
      !
      if ( isoc == 0 ) return
      if ( isoc == 1 .and. icf > 0 ) return
