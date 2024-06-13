@@ -683,35 +683,62 @@ recursive &
 !!
 !! @sub get_sector_sz
 !!
+!! return good quantum number Sz for the given subspace (sector)
 !!
-  subroutine get_sector_sz(GQN_Sz, ndims, sector_basis)
+  subroutine get_sector_sz(Sz, nsize, sector_basis)
      use control, only : isoc
      use control, only : nband, norbs, ncfgs
+
      use m_fock, only : bin_basis
 
      implicit none
 
-     integer, intent(in) :: ndims
+!! external arguments
+     ! good quantum number Sz for the given subspace
+     integer, intent(out) :: Sz
+
+     ! capacity for the given subspace
+     integer, intent(in) :: nsize
+
+     ! basis for the given subspace
      integer, intent(in) :: sector_basis(ncfgs)
-     integer, intent(out) :: GQN_Sz
 
+!! local variables
+     ! loop index
      integer :: i
-     integer :: basis(norbs)
-     integer :: Sz
 
-     GQN_Sz = 999
+     ! good quantum number Sz
+     integer :: Sz_
+
+     ! Fock state in the given subspace
+     integer :: code(norbs)
+
+!! [body
+
+     Sz = 0
+     !
      if ( isoc == 1 ) return
-     do i=1,ndims
-         basis = bin_basis(:,sector_basis(i))
-         Sz = sum(basis(1:nband)) - sum(basis(nband+1:norbs))
+     !
+     do i=1,nsize
+         ! visit each Fock state in the subspace
+         code = bin_basis(:,sector_basis(i))
+
+         ! get Sz for the current Fock state
+         Sz_ = sum(code(1:nband)) - sum(code(nband+1:norbs))
+
+         ! record Sz for the first Fock state
          if ( i == 1 ) then
-             GQN_Sz = Sz
+             Sz = Sz_
+         ! all Fock states in the subspace should share the same Sz
          else
-             if ( Sz /= GQN_Sz ) then
-                 STOP "wrong in GQN(Sz)"
-             endif
-         endif
-     enddo
+             if ( Sz /= Sz_ ) then
+                 call s_print_error('get_sector_sz','wrong good &
+                     & quantum number Sz for this subspace!')
+             endif ! back if ( Sz /= Sz_ ) block
+         endif ! back if ( i == 1 ) block
+     enddo ! over i={1,nsize} loop
+
+!! body]
 
      return
   end subroutine get_sector_sz
