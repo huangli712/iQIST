@@ -870,7 +870,8 @@ recursive &
      Jz = sect_jz(ind)
 
      ! spin-orbit coupling is disabled
-     ! the good quantum numbers are N, Sz, and AP
+     ! crystal field splitting is disabled or enabled
+     ! good quantum numbers are N, Sz, and AP
      if ( isoc == 0 ) then
          Ap = 1
          do j=1,ind-1
@@ -882,7 +883,7 @@ recursive &
 
      ! spin-orbit coupling is enabled
      ! crystal field splitting is disabled
-     ! the good quantum numbers are N, Jz, and AP
+     ! good quantum numbers are N, Jz, and AP
      if ( isoc == 1 .and. icf == 0 ) then
          Ap = 1
          do j=1,ind-1
@@ -894,7 +895,7 @@ recursive &
 
      ! spin-orbit coupling is enabled
      ! crystal field splitting is enabled
-     ! the good quantum numbers are N and AP
+     ! good quantum numbers are N and AP
      if ( isoc == 1 .and. icf == 1 ) then
          Ap = 1
          do j=1,ind-1
