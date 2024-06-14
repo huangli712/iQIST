@@ -356,23 +356,34 @@
      deallocate(Mup)
      deallocate(Mdn)
 
-     !STOP
-
      return
   end subroutine sector_refine
 
-  subroutine sector_copyto(ia, ib, nsect, ndims, sector_basis)
+!!
+!! @sub sector_copyto
+!!
+!! merge two subspaces (subspace src is at first merged with subspace
+!! dst, and then src is cleaned.)
+!!
+  subroutine sector_copyto(dst, ib, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
      implicit none
 
-     integer, intent(in) :: ia
+!! external arguments
+     ! index for the destination subspace
+     integer, intent(in) :: dst
+
+     ! index for the source subspace
      integer, intent(in) :: ib
      integer, intent(in) :: nsect
      integer, intent(inout) :: ndims(nsect)
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
+!! local variables
      integer :: m
+
+!! [body
 
      call s_assert(ndims(ia) >= 1)
      call s_assert(ndims(ib) >= 1)
@@ -384,6 +395,8 @@
      ndims(ia) = ndims(ia) + ndims(ib)
      ndims(ib) = 0
      sector_basis(:,ib) = 0
+
+!! body]
 
      return
   end subroutine sector_copyto
