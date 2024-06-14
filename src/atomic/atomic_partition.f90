@@ -505,15 +505,14 @@
      print *, 'number of Mup:', iup
      print *, 'number of Mdn:', idn
 
-     !do i=1,ncfgs/2
-     !    print *, i, Mdn(i,1), Mdn(i,2)
-     !enddo
-     !STOP
-
      return
   end subroutine map_create
 
-recursive &
+!!
+!! @sub map_remove
+!!
+!!
+  recursive &
   subroutine map_remove(up_or_down, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
      use control, only : ncfgs
 
