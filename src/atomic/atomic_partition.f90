@@ -418,29 +418,47 @@
      return
   end subroutine sector_locate
 
+!!
+!! @sub sector_lookup
+!!
+!! 
+!!
   subroutine sector_lookup(sind, find)
-     use m_sector, only : nsectors, sectors
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
 
      implicit none
 
+!! external arguments
+     ! index of subspace that contains the given Fock state
      integer, intent(out) :: sind
+
+     ! index of Fock state
      integer, intent(in) :: find
 
+!! local variables
+     ! loop index
      integer :: m
      integer :: n
 
-     sind = 0
+!! [body
 
-     SECTOR: do m=1,nsectors
-         do n=1,sectors(m)%ndim
+     sind = 0
+     !
+     SECTOR_LOOP: do m=1,nsectors ! loop over subspaces
+         do n=1,sectors(m)%ndim   ! loop over Fock states in m-th subspace
+             ! find the given Fock state
              if ( sectors(m)%basis(n) == find ) then
+                 ! record index of the current subspace
                  sind = m
-                 EXIT SECTOR
+                 EXIT SECTOR_LOOP
              endif
          enddo
-     enddo SECTOR
-
+     enddo SECTOR_LOOP
+     !
      call s_assert(sind /= 0)
+
+!! body]
 
      return
   end subroutine sector_lookup
