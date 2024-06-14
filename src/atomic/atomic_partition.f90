@@ -421,9 +421,11 @@
 !!
 !! @sub sector_lookup
 !!
-!! 
+!! figure out the subspace that contains the given Fock state
 !!
   subroutine sector_lookup(sind, find)
+     use m_fock, only : bin_basis
+
      use m_sector, only : nsectors
      use m_sector, only : sectors
 
@@ -441,12 +443,24 @@
      integer :: m
      integer :: n
 
+     ! occupancy of Fock state
+     integer :: ntot
+
 !! [body
+
+     ! get occupancy for the given Fock state
+     ntot = sum(bin_basis(:,find))
 
      sind = 0
      !
-     SECTOR_LOOP: do m=1,nsectors ! loop over subspaces
-         do n=1,sectors(m)%ndim   ! loop over Fock states in m-th subspace
+     ! loop over subspaces
+     SECTOR_LOOP: do m=1,nsectors
+         !
+         ! check occupancy of subspace
+         if ( sectors(m)%nele /= ntot ) CYCLE
+         !
+         ! loop over Fock states in m-th subspace
+         do n=1,sectors(m)%ndim
              ! find the given Fock state
              if ( sectors(m)%basis(n) == find ) then
                  ! record index of the current subspace
@@ -454,8 +468,10 @@
                  EXIT SECTOR_LOOP
              endif
          enddo
+         !
      enddo SECTOR_LOOP
      !
+     ! we can always find the required subspace
      call s_assert(sind /= 0)
 
 !! body]
