@@ -298,13 +298,20 @@
      implicit none
 
 !! external arguments
+     ! number of subspaces
      integer, intent(in) :: nsect
+
+     ! dimension for subspaces
      integer, intent(inout) :: ndims(nsect)
+
+     ! global indices of Fock states of subspaces
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
 !! local variables
      ! loop index
-     integer :: i, j
+     integer :: i
+     integer :: j
+
      integer :: ia, ib
 
 !! [body
@@ -315,7 +322,6 @@
          sector_basis(1,i) = i
      enddo
 
-     ! phase 1
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs(hmat(i,j)) > zero ) then
