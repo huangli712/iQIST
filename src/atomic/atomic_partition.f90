@@ -283,7 +283,12 @@
      return
   end subroutine automatic_partition
 
-  subroutine sector_create(nsect, ndims_, sector_basis_)
+!!
+!! @sub sector_create
+!!
+!! phase 1 of the automatic partition algorithm
+!!
+  subroutine sector_create(nsect, ndims, sector_basis)
      use constants, only : zero
 
      use control, only : ncfgs
@@ -292,36 +297,48 @@
 
      implicit none
 
+!! external arguments
      integer, intent(in) :: nsect
-     integer, intent(inout) :: ndims_(nsect)
-     integer, intent(inout) :: sector_basis_(ncfgs,nsect)
+     integer, intent(inout) :: ndims(nsect)
+     integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
+!! local variables
+     ! loop index
      integer :: i, j
      integer :: ia, ib
 
-     ndims_ = 1
-     sector_basis_ = 0
+!! [body
+
+     ndims = 1
+     sector_basis = 0
      do i=1,nsect
-         sector_basis_(1,i) = i
+         sector_basis(1,i) = i
      enddo
 
      ! phase 1
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs(hmat(i,j)) > zero ) then
-                 call sector_locate(ia, i, nsect, ndims_, sector_basis_)
-                 call sector_locate(ib, j, nsect, ndims_, sector_basis_)
+                 call sector_locate(ia, i, nsect, ndims, sector_basis)
+                 call sector_locate(ib, j, nsect, ndims, sector_basis)
 
                  if ( ia /= ib ) then
-                     call sector_copyto(ia, ib, nsect, ndims_, sector_basis_)
+                     call sector_copyto(ia, ib, nsect, ndims, sector_basis)
                  endif
              endif
          enddo
      enddo
 
+!! body]
+
      return
   end subroutine sector_create
 
+!!
+!! @sub sector_refine
+!!
+!! phase 2 of the automatic partition algorithm.
+!!
   subroutine sector_refine(iorb, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
