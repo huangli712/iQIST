@@ -399,10 +399,19 @@
      implicit none
 
 !! external arguments
+     ! index of subspace that contains the given Fock state
      integer, intent(out) :: sind
+
+     ! index of Fock state
      integer, intent(in) :: find
+
+     ! number of subspaces
      integer, intent(in) :: nsect
+
+     ! dimension for subspaces
      integer, intent(in) :: ndims(nsect)
+
+     ! global indices of Fock states of subspaces
      integer, intent(in) :: sector_basis(ncfgs,nsect)
 
 !! local variables
