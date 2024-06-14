@@ -365,7 +365,7 @@
 !! merge two subspaces (subspace src is at first merged with subspace
 !! dst, and then src is cleaned.)
 !!
-  subroutine sector_copyto(dst, ib, nsect, ndims, sector_basis)
+  subroutine sector_copyto(dst, src, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
      implicit none
@@ -375,26 +375,36 @@
      integer, intent(in) :: dst
 
      ! index for the source subspace
-     integer, intent(in) :: ib
+     integer, intent(in) :: src
+
+     ! number of subspaces
      integer, intent(in) :: nsect
+
+     ! dimension for subspaces
      integer, intent(inout) :: ndims(nsect)
+
+     ! global indices of Fock states of subspaces
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
 !! local variables
+     ! loop index
      integer :: m
 
 !! [body
 
-     call s_assert(ndims(ia) >= 1)
-     call s_assert(ndims(ib) >= 1)
+     ! check the two subspaces (dst and src). they should not be empty.
+     call s_assert(ndims(dst) >= 1)
+     call s_assert(ndims(src) >= 1)
 
-     do m=1,ndims(ib)
-           sector_basis(ndims(ia) + m, ia) = sector_basis(m, ib)
-     enddo
+     ! copy Fock states from src to dst
+     do m=1,ndims(src)
+           sector_basis(ndims(dst) + m, dst) = sector_basis(m, src)
+     enddo ! over m={1,ndims(src)} loop
+     ndims(dst) = ndims(dst) + ndims(src)
      !
-     ndims(ia) = ndims(ia) + ndims(ib)
-     ndims(ib) = 0
-     sector_basis(:,ib) = 0
+     ! clear Fock states in src
+     sector_basis(:,src) = 0
+     ndims(src) = 0
 
 !! body]
 
