@@ -388,32 +388,49 @@
      return
   end subroutine sector_copyto
 
+!!
+!! @sub sector_locate
+!!
+!! figure out the subspace that contains the given Fock state
+!!
   subroutine sector_locate(sind, find, nsect, ndims, sector_basis)
      use control, only : ncfgs
 
      implicit none
 
+!! external arguments
      integer, intent(out) :: sind
      integer, intent(in) :: find
      integer, intent(in) :: nsect
      integer, intent(in) :: ndims(nsect)
      integer, intent(in) :: sector_basis(ncfgs,nsect)
 
+!! local variables
+     ! loop index
      integer :: m
      integer :: n
 
-     sind = 0
+!! [body
 
-     SECTOR: do m=1,nsect
+     sind = 0
+     !
+     ! loop over subspaces
+     SECTOR_LOOP: do m=1,nsect
+         ! loop over Fock states in m-th subspace
          do n=1,ndims(m)
+             ! find the given Fock state
              if ( sector_basis(n,m) == find ) then
+                 ! record index of the current subspace
                  sind = m
-                 EXIT SECTOR
+                 EXIT SECTOR_LOOP
              endif
          enddo
-     enddo SECTOR
-
+     enddo SECTOR_LOOP
+     !
+     ! we can always find the required subspace
      call s_assert(sind /= 0)
+
+!! body]
 
      return
   end subroutine sector_locate
