@@ -101,9 +101,7 @@
      deallocate(sector_basis_)
 
      ! phase 2
-     do i=1,norbs
-         call sector_refine(i, nsect_, ndims, sector_basis)
-     enddo
+     call sector_refine(i, nsect_, ndims, sector_basis)
 
      nsect = count(ndims > 0)
      nsize = maxval(ndims)
@@ -345,16 +343,16 @@
 !!
 !! phase 2 of the automatic partition algorithm.
 !!
-  subroutine sector_refine(iorb, nsect, ndims, sector_basis)
-     use control, only : ncfgs
+  subroutine sector_refine(nsect, ndims, sector_basis)
+     use control, only : norbs, ncfgs
 
      implicit none
 
-     integer, intent(in) :: iorb
      integer, intent(in) :: nsect
      integer, intent(inout) :: ndims(nsect)
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
+     integer :: iorb
      integer :: i
      integer :: HA, HL, HU
 
@@ -364,6 +362,7 @@
      allocate(Mup(ncfgs/2,2))
      allocate(Mdn(ncfgs/2,2))
 
+     do iorb=1,norbs
      call map_create(iorb, nsect, ndims, sector_basis, Mup, Mdn)
 
      do i=1,ncfgs/2
@@ -374,6 +373,7 @@
          if ( HL /= 0 .and. HU /= 0 ) then
              call map_remove(1, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
          endif
+     enddo
      enddo
 
      deallocate(Mup)
