@@ -585,10 +585,10 @@
 
 !! local variables
      integer :: i, j
+     integer :: ia, ib
      integer :: iup
      integer :: idn
-     integer :: ia, ib
-     integer :: jnew, jold
+     integer :: knew!, jold
 
 !! [body
 
@@ -600,9 +600,8 @@
 
          ! c^+
          if ( bin_basis(iorb,i) == 0 ) then
-             jold = dec_basis(i)
-             jnew = jold + 2**(iorb-1)
-             j = ind_basis(jnew)
+             knew = dec_basis(i) + 2**(iorb-1)
+             j = ind_basis(knew)
 
              call sector_locate(ib, j, nsect, ndims, sector_basis)
 
@@ -613,9 +612,8 @@
 
          ! c
          if ( bin_basis(iorb,i) == 1 ) then
-             jold = dec_basis(i)
-             jnew = jold - 2**(iorb-1)
-             j = ind_basis(jnew)
+             knew = dec_basis(i) - 2**(iorb-1)
+             j = ind_basis(knew)
 
              call sector_locate(ib, j, nsect, ndims, sector_basis)
 
@@ -679,7 +677,10 @@
      integer, intent(inout) :: Mdn(ncfgs/2,2)
 
 !! local variables
+     ! loop index for connections
      integer :: i
+
+     ! index for subspace
      integer :: HB
 
 !! [body
