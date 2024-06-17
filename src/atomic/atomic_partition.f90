@@ -27,6 +27,23 @@
 !!
 !! @sub automatic_partition
 !!
+!! this subroutine implements the automatic partition algorithm.
+!!
+!! we wish to find a permutation of the basis vectors such that (1) the
+!! local Hamiltonian is block-diagonal, and (2) all f^{+} and f operators
+!! are block matrices with at most one non-zero block in each row and
+!! column. such a permutation would group the basis states belonging to
+!! the same subspace together.
+!!
+!! the automatic partitioning algorithm employs no additional a priori
+!! information about the symmetry of Hamiltonian H_{loc}. the only input
+!! data is the full set of basis Fock states and the Hamiltonian itself.
+!! the algorithm consists of two sequential phases. in the first phase,
+!! the finest possible partition, which satisfies condition (1) alone is
+!! constructed. and then in the second phase, this partition is adjusted
+!! to additionally satisfy condition (2) further.
+!!
+!! see: Computer Physics Communications 200, 274–284 (2016)
 !!
   subroutine automatic_partition()
      use constants, only : dp, mystd
