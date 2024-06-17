@@ -106,6 +106,7 @@
      integer, allocatable :: sector_basis(:,:)
      integer, allocatable :: sector_basis_(:,:)
 
+!! [body
 
      ! initialization
      allocate(ndims_(ncfgs))
