@@ -17,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 06/11/2024 by li huang (created)
-!!!           06/13/2024 by li huang (last modified)
+!!!           06/17/2024 by li huang (last modified)
 !!! purpose : implement the automatic partition algorithm to divide the
 !!!           atomic Hamiltonian into many blocks.
 !!! status  : unstable
@@ -673,31 +673,48 @@
 !!
 !! @sub map_verify
 !!
-!!
+!! an operator f^{+}_{j} or f_{j} is acted on a given subspace i. this
+!! subroutine will try to figure out the resulting subspace, and judge
+!! whether it coincides with which_sect. actually, this subroutine is
+!! used to check the mapping between two subspaces.
 !!
   subroutine map_verify(i, j, k, which_sect)
-     use m_fock, only : dec_basis, ind_basis, bin_basis
+     use m_fock, only : bin_basis, dec_basis, ind_basis
+
      use m_sector, only : sectors
 
      implicit none
 
+!! external arguments
+     ! index of initial subspace
      integer, intent(in) :: i
+
+     ! index of orbital
      integer, intent(in) :: j
+
+     ! type of operator, k = 1 for creator and k = 0 for destroyer
      integer, intent(in) :: k
+
+     ! index of final subspace
      integer, intent(in) :: which_sect
 
-     integer :: m
+!! local variables
+     ! loop index for Fock state
      integer :: n
-     integer :: jold, jnew, isgn
-     integer :: ibasis
+
+     ! index for resulting Fock state
+     integer :: m
+     integer :: sib
+     integer :: knew
+
+!! [body
 
      if ( k == 1 ) then
          do n=1,sectors(i)%ndim
-             ibasis = sectors(i)%basis(n)
-             if ( bin_basis(j,ibasis) == 0 ) then
-                 jold = dec_basis(ibasis)
-                 call atomic_make_cdagger(j, jold, jnew, isgn)
-                 m = ind_basis(jnew)
+             sib = sectors(i)%basis(n)
+             if ( bin_basis(j,sib) == 0 ) then
+                 knew = dec_basis(sib) + 2**(j-1)
+                 m = ind_basis(knew)
                  call s_assert( count(sectors(which_sect)%basis == m) == 1 )
              endif
          enddo
@@ -705,15 +722,16 @@
 
      if ( k == 0 ) then
          do n=1,sectors(i)%ndim
-             ibasis = sectors(i)%basis(n)
-             if ( bin_basis(j,ibasis) == 1 ) then
-                 jold = dec_basis(ibasis)
-                 call atomic_make_c(j, jold, jnew, isgn)
-                 m = ind_basis(jnew)
+             sib = sectors(i)%basis(n)
+             if ( bin_basis(j,sib) == 1 ) then
+                 knew = dec_basis(sib) - 2**(j-1)
+                 m = ind_basis(knew)
                  call s_assert( count(sectors(which_sect)%basis == m) == 1 )
              endif
          enddo
      endif
+
+!! body]
 
      return
   end subroutine map_verify
@@ -875,7 +893,7 @@
      ! Fock state in the given subspace
      integer :: code(norbs)
 
-     ! precalculate Jz quantum numbers
+     ! Jz quantum numbers for every orbitals
      integer :: good_jz(norbs)
 
 !! [body
@@ -973,7 +991,7 @@
          do j=1,ind-1
              if ( ( sect_ntot(j) == N ) .and. ( sect_sz(j) == Sz ) ) then
                  AP = AP + 1
-             endif
+             endif ! back if block
          enddo ! over j={1,ind-1} loop
      endif ! back if ( isoc == 0 ) block
 
@@ -985,7 +1003,7 @@
          do j=1,ind-1
              if ( ( sect_ntot(j) == N ) .and. ( sect_jz(j) == Jz ) ) then
                  AP = AP + 1
-             endif
+             endif ! back if block
          enddo ! over j={1,ind-1} loop
      endif ! back if ( isoc == 1 .and. icf == 0 ) block
 
@@ -997,7 +1015,7 @@
          do j=1,ind-1
              if ( sect_ntot(j) == N ) then
                  AP = AP + 1
-             endif
+             endif ! back if ( sect_ntot(j) == N ) block
          enddo ! over j={1,ind-1} loop
      endif ! back if ( isoc == 1 .and. icf == 1 ) block
 

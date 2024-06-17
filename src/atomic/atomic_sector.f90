@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/12/2024 by li huang (last modified)
+!!!           06/17/2024 by li huang (last modified)
 !!! purpose : try to implement the subspace diagonalization algorithm.
 !!!           it contains some subroutines to construct the atomic
 !!!           Hamiltonian subspace by subspace, diagonalize it, and then
@@ -68,7 +68,7 @@
      integer :: my_ps
 
      ! index of Fock state
-     integer :: ibasis
+     integer :: sib
 
      ! number of subspaces (sectors)
      integer :: nsect
@@ -148,7 +148,7 @@
 
      ! build good quantum numbers for each Fock state
      !--------------------------------------------------------------------
-     ibasis = 0
+     sib = 0
      !
      fock_ntot = 0
      fock_sz = 0
@@ -160,38 +160,38 @@
          ! loop over each Fock state for given N
          do j=1,dim_sub_n(i)
 
-             ! here ibasis denotes the index of Fock state
-             ibasis = ibasis + 1
+             ! here sib denotes the index of Fock state
+             sib = sib + 1
 
              ! build N
-             fock_ntot(ibasis) = i
+             fock_ntot(sib) = i
              !
              ! build Sz
              my_sz = 0
              do k=1,norbs
-                 my_sz = my_sz + orb_sz(k) * bin_basis(k,ibasis)
+                 my_sz = my_sz + orb_sz(k) * bin_basis(k,sib)
              enddo ! over k={1,norbs} loop
-             fock_sz(ibasis) = my_sz
+             fock_sz(sib) = my_sz
              !
              ! build Jz
              my_jz = 0
              do k=1,norbs
-                 my_jz = my_jz + orb_jz(k) * bin_basis(k,ibasis)
+                 my_jz = my_jz + orb_jz(k) * bin_basis(k,sib)
              enddo ! over k={1,norbs} loop
-             fock_jz(ibasis) = my_jz
+             fock_jz(sib) = my_jz
              !
              ! build PS
              my_ps = 0
              do k=1,nband
-                 val = bin_basis(k,ibasis) - bin_basis(k+nband,ibasis)
+                 val = bin_basis(k,sib) - bin_basis(k+nband,sib)
                  my_ps = my_ps + orb_ps(k) * val**2
              enddo ! over k={1,nband} loop
-             fock_ps(ibasis) = my_ps
+             fock_ps(sib) = my_ps
 
          enddo ! over j={1,dim_sub_n(i)} loop
      enddo ! over i={0,norbs} loop
      !
-     call s_assert( ibasis == ncfgs )
+     call s_assert( sib == ncfgs )
      !
      write(mystd,'(4X,a)') 'compute [N] [Sz] [Jz] [PS] for Fock states'
 
@@ -343,9 +343,9 @@
      call cat_alloc_sectors()
      !
      ! next we will build every subspace one by one
-     ibasis = 1
+     sib = 1
      do i=1,nsect
-         sectors(i)%istart = ibasis
+         sectors(i)%istart = sib
          sectors(i)%ndim = ndims(i)
          sectors(i)%nops = norbs
          !
@@ -354,7 +354,7 @@
          sectors(i)%jz   = sect_jz(i)
          sectors(i)%ps   = sect_ps(i)
          !
-         ibasis = ibasis + ndims(i)
+         sib = sib + ndims(i)
 
          ! allocate memory for the subspace
          call cat_alloc_sector( sectors(i) )
@@ -382,18 +382,18 @@
                  ! we should check each Fock state in this subspace
                  can = .false.
                  do l=1,sectors(i)%ndim
-                     ibasis = sectors(i)%basis(l)
+                     sib = sectors(i)%basis(l)
 
                      ! test creation fermion operator
-                     if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) then
-                         code = bin_basis(:,ibasis)
+                     if ( k == 1 .and. bin_basis(j,sib) == 0 ) then
+                         code = bin_basis(:,sib)
                          can = .true.
                          EXIT
                      endif ! back if block
                      !
                      ! test annihilation fermion operator
-                     if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
-                         code = bin_basis(:,ibasis)
+                     if ( k == 0 .and. bin_basis(j, sib) == 1 ) then
+                         code = bin_basis(:,sib)
                          can = .true.
                          EXIT
                      endif ! back if block
