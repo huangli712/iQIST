@@ -378,24 +378,34 @@
 
 !! [body
 
+     ! allocate memory for subspace-to-subspace connections
      allocate(Mup(ncfgs/2,2))
      allocate(Mdn(ncfgs/2,2))
 
      do i=1,norbs
+         ! build upward and downward subspace-to-subspace connections
          call map_create(i, nsect, ndims, sector_basis, Mup, Mdn)
 
+         ! scan all the connections, try to remove them and permute
+         ! the Fock states in different subspaces 
          do j=1,ncfgs/2
+             ! get connection
              HA = Mup(j,1)
              HL = Mup(j,1)
              HU = Mup(j,2)
              !
+             ! well, meet empty connection, just skip it
              if ( HL == 0 ) CYCLE
              if ( HU == 0 ) CYCLE
              !
-             call map_remove(1, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
-         enddo
-     enddo
+             ! remove connections and group the Fock states belonging
+             ! to the same subspace
+             call map_remove(1, HA, HL, HU, &
+                             & nsect, ndims, sector_basis, Mup, Mdn)
+         enddo ! over j={1,ncfgs/2} loop
+     enddo ! over i={1,norbs} loop
 
+     ! deallocate memory
      deallocate(Mup)
      deallocate(Mdn)
 
