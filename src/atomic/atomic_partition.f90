@@ -72,11 +72,10 @@
 
      integer :: q
 
-     integer :: nsect, nsize, nsect_, nsize_
-     integer :: jnew
-
      ! index of Fock state
      integer :: sib
+
+     integer :: nsect, nsect_
 
      ! index of selected subspace
      integer :: which_sect
@@ -100,9 +99,7 @@
      call sector_create(ncfgs, ndims_, sector_basis_)
 
      nsect_ = count(ndims_ > 0)
-     nsize_ = maxval(ndims_)
      print *, 'number of sectors: ', nsect_
-     print *, 'maximum size of sectors: ', nsize_
 
      ! filter sectors
      allocate(ndims(nsect_))
@@ -125,9 +122,7 @@
      call sector_refine(nsect_, ndims, sector_basis)
 
      nsect = count(ndims > 0)
-     nsize = maxval(ndims)
      print *, 'number of sectors: ', nsect
-     print *, 'maximum size of sectors: ', nsize
 
      ! setup subspaces
      allocate(sect_ntot(nsect_))
