@@ -17,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 06/11/2024 by li huang (created)
-!!!           06/17/2024 by li huang (last modified)
+!!!           06/18/2024 by li huang (last modified)
 !!! purpose : implement the automatic partition algorithm to divide the
 !!!           atomic Hamiltonian into many blocks.
 !!! status  : unstable
@@ -46,12 +46,12 @@
 !! see: Computer Physics Communications 200, 274–284 (2016)
 !!
   subroutine automatic_partition()
-     use constants, only : dp
      use constants, only : zero
      use constants, only : mystd
 
-     use control, only : norbs
-     use control, only : ncfgs
+     use control, only : ictqmc
+     use control, only : norbs, ncfgs
+     use control, only : nmini, nmaxi
 
      use m_fock, only : bin_basis, dec_basis, ind_basis
 
@@ -63,6 +63,7 @@
 
      implicit none
 
+!! local variables
      integer :: i
      integer :: j
      integer :: k
@@ -76,7 +77,7 @@
      integer :: which_sect
 
      ! index of Fock state
-     integer :: ibasis
+     integer :: sib
 
      ! can point to next subspace (sector)
      logical :: can
@@ -176,12 +177,12 @@
      call cat_alloc_sectors()
      !
      ! next we will build every subspace one by one
-     ibasis = 1
+     sib = 1
      k = 0
      do i=1,nsect_
          if ( ndims(i) > 0 ) then
              k = k + 1
-             sectors(k)%istart = ibasis
+             sectors(k)%istart = sib
              sectors(k)%ndim = ndims(i)
              sectors(k)%nops = norbs
              !
@@ -190,7 +191,7 @@
              sectors(k)%jz   = sect_jz(i)
              sectors(k)%ps   = sect_ap(i)
              !
-             ibasis = ibasis + ndims(i)
+             sib = sib + ndims(i)
 
              ! allocate memory for the subspace
              call cat_alloc_sector( sectors(k) )
@@ -218,19 +219,19 @@
                  ! we should check each Fock state in this subspace
                  can = .false.
                  do l=1,sectors(i)%ndim
-                     ibasis = sectors(i)%basis(l)
+                     sib = sectors(i)%basis(l)
 
                      ! test creation fermion operator
-                     if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) then
+                     if ( k == 1 .and. bin_basis(j,sib) == 0 ) then
                          can = .true.
                          EXIT
                      !
                      ! test annihilation fermion operator
-                     else if ( k == 0 .and. bin_basis(j, ibasis) == 1 ) then
+                     else if ( k == 0 .and. bin_basis(j, sib) == 1 ) then
                          can = .true.
                          EXIT
                      !
-                     endif ! back if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) block
+                     endif ! back if ( k == 1 .and. bin_basis(j,sib) == 0 ) block
                  enddo ! over l={1,sectors(i)%ndim} loop
 
                  ! if can == .true., it means that the fermion operator
@@ -239,14 +240,14 @@
                  if ( can .eqv. .true. ) then
 
                      if ( k == 1 ) then
-                         jold = dec_basis(ibasis)
+                         jold = dec_basis(sib)
                          call atomic_make_cdagger(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
                          call sector_lookup(which_sect, m)
                      endif
 
                      if ( k == 0 ) then
-                         jold = dec_basis(ibasis)
+                         jold = dec_basis(sib)
                          call atomic_make_c(j, jold, jnew, isgn)
                          m = ind_basis(jnew)
                          call sector_lookup(which_sect, m)
