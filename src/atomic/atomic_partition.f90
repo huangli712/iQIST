@@ -70,11 +70,13 @@
      integer :: k
      integer :: l
 
+     ! any good quantum number
      integer :: q
 
      ! index of Fock state
      integer :: sib
 
+     ! number of subspaces (sectors)
      integer :: nsect, nsect_
 
      ! index of selected subspace
@@ -83,15 +85,17 @@
      ! can point to next subspace (sector)
      logical :: can
 
+     ! N, Sz, Jz, and AP for all subspaces
+     integer, allocatable :: sect_ntot(:)
+     integer, allocatable :: sect_sz(:)
+     integer, allocatable :: sect_jz(:)
+     integer, allocatable :: sect_ap(:)
+
      integer, allocatable :: ndims(:)
      integer, allocatable :: ndims_(:)
      integer, allocatable :: sector_basis(:,:)
      integer, allocatable :: sector_basis_(:,:)
 
-     integer, allocatable :: sect_ntot(:)
-     integer, allocatable :: sect_sz(:)
-     integer, allocatable :: sect_jz(:)
-     integer, allocatable :: sect_ap(:)
 
      ! initialization
      allocate(ndims_(ncfgs))
