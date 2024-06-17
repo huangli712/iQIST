@@ -304,7 +304,7 @@
      ! dimension for subspaces
      integer, intent(inout) :: ndims(nsect)
 
-     ! global indices of Fock states of subspaces
+     ! global indices of Fock states in subspaces
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
 !! local variables
@@ -406,7 +406,7 @@
      ! dimension for subspaces
      integer, intent(inout) :: ndims(nsect)
 
-     ! global indices of Fock states of subspaces
+     ! global indices of Fock states in subspaces
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
 !! local variables
@@ -457,7 +457,7 @@
      ! dimension for subspaces
      integer, intent(in) :: ndims(nsect)
 
-     ! global indices of Fock states of subspaces
+     ! global indices of Fock states in subspaces
      integer, intent(in) :: sector_basis(ncfgs,nsect)
 
 !! local variables
@@ -617,55 +617,78 @@
 !!
 !! @sub map_remove
 !!
+!! remove the upward and downward subspace-to-subspace connections by
+!! using the zigzag algorithm.
+!!
+!! see: Computer Physics Communications 200, 274–284 (2016)
 !!
   recursive &
-  subroutine map_remove(up_or_down, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+  subroutine map_remove(dir, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
      use control, only : ncfgs
 
      implicit none
 
-     integer, intent(in) :: up_or_down
+!! external arguments
+     ! direction of the zigzag algorithm
+     ! dir = 1 means upward, and dir = 2 means downward
+     integer, intent(in) :: dir
+
+     ! indices for subspaces
+     !
+     ! here L and U stand for 'lower' and 'upper' respectively
+     ! f^{+} |H_L> = |H_U> and f |H_U> = |H_L>
      integer, intent(in) :: HA
      integer, intent(in) :: HL
      integer, intent(in) :: HU
+
+     ! number of subspaces
      integer, intent(in) :: nsect
+
+     ! dimension for subspaces
      integer, intent(inout) :: ndims(nsect)
+
+     ! global indices of Fock states in subspaces
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
+
+     ! upward subspace-to-subspace connection
      integer, intent(inout) :: Mup(ncfgs/2,2)
+
+     ! downward subspace-to-subspace connection
      integer, intent(inout) :: Mdn(ncfgs/2,2)
 
+!! local variables
      integer :: i
      integer :: HB
 
-     if ( up_or_down == 1 ) then
+!! [body
+
+     if ( dir == 1 ) then
          do i=1,ncfgs/2
-             if ( Mup(i,1) == HA ) then
-                 HB = Mup(i,2)
-                 Mup(i,:) = 0
+             if ( Mup(i,1) /= HA ) CYCLE
+             HB = Mup(i,2)
+             Mup(i,:) = 0
 
-                 if ( HB /= HU .and. ndims(HB) > 0 ) then
-                     print *, 'merge up:', HA, HB, HU
-                     call sector_copyto(HU, HB, nsect, ndims, sector_basis)
-                 endif
-
-                 call map_remove(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+             if ( HB /= HU .and. ndims(HB) > 0 ) then
+                 call sector_copyto(HU, HB, nsect, ndims, sector_basis)
              endif
+
+             call map_remove(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
          enddo
      else
          do i=1,ncfgs/2
-             if ( Mdn(i,1) == HA ) then
-                 HB = Mdn(i,2)
-                 Mdn(i,:) = 0
+             if ( Mdn(i,1) /= HA ) CYCLE
+             HB = Mdn(i,2)
+             Mdn(i,:) = 0
 
-                 if ( HB /= HL .and. ndims(HB) > 0 ) then
-                     print *, 'merge dn:', HA, HB, HL!, ndims(HB), ndims(HL)
-                     call sector_copyto(HL, HB, nsect, ndims, sector_basis)
-                 endif
-
-                 call map_remove(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
+             if ( HB /= HL .and. ndims(HB) > 0 ) then
+                 call sector_copyto(HL, HB, nsect, ndims, sector_basis)
              endif
+
+             call map_remove(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
          enddo
      endif
+
+!! body]
 
      return
   end subroutine map_remove
