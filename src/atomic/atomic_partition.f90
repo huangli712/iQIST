@@ -64,13 +64,15 @@
      implicit none
 
 !! local variables
+     ! loop index
      integer :: i
      integer :: j
      integer :: k
      integer :: l
 
+     integer :: q
+
      integer :: nsect, nsize, nsect_, nsize_
-     integer :: N, Sz, Jz, Ap
      integer :: jnew
 
      ! index of Fock state
@@ -141,17 +143,17 @@
      do i=1,nsect_
          if ( ndims(i) > 0 ) then
              k = k + 1
-             call get_sector_ntot(N, ndims(i), sector_basis(:,i))
-             sect_ntot(i) = N
+             call get_sector_ntot(q, ndims(i), sector_basis(:,i))
+             sect_ntot(i) = q
              !
-             call get_sector_sz(Sz, ndims(i), sector_basis(:,i))
-             sect_sz(i) = Sz
+             call get_sector_sz(q, ndims(i), sector_basis(:,i))
+             sect_sz(i) = q
              !
-             call get_sector_jz(Jz, ndims(i), sector_basis(:,i))
-             sect_jz(i) = Jz
+             call get_sector_jz(q, ndims(i), sector_basis(:,i))
+             sect_jz(i) = q
              !
-             call get_sector_ap(Ap, i, nsect_, sect_ntot, sect_sz, sect_jz)
-             sect_ap(i) = Ap
+             call get_sector_ap(q, i, nsect_, sect_ntot, sect_sz, sect_jz)
+             sect_ap(i) = q
 
              write(mystd,'(a,i6)') 'subspace -> ', k
              write(mystd,'(a,i6)') 'size :', ndims(i)
