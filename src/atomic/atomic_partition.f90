@@ -584,52 +584,69 @@
      integer, intent(out) :: Mdn(ncfgs/2,2)
 
 !! local variables
-     integer :: i, j
-     integer :: ia, ib
-     integer :: iup
-     integer :: idn
-     integer :: knew!, jold
+     ! loop index for Fock state
+     integer :: i
+
+     ! decimal form of the resulting Fock state
+     integer :: k
+
+     ! index for subspace
+     ! the connection is from ia to ib
+     integer :: ia
+     integer :: ib
+
+     ! counter for upward and downward subspace-to-subspace connection
+     integer :: cup
+     integer :: cdn
 
 !! [body
 
-     iup = 0
-     idn = 0
+     ! init the counters
+     cup = 0
+     cdn = 0
+
+     ! init the connections
+     Mup = 0
+     Mdn = 0
 
      do i=1,ncfgs
+         ! find the subspace ia that contains i-th Fock state
          call sector_locate(ia, i, nsect, ndims, sector_basis)
 
-         ! c^+
+         ! build connection for f^{+} operator
          if ( bin_basis(iorb,i) == 0 ) then
-             knew = dec_basis(i) + 2**(iorb-1)
-             j = ind_basis(knew)
+             ! get new Fock state k
+             k = dec_basis(i) + 2**(iorb-1)
 
-             call sector_locate(ib, j, nsect, ndims, sector_basis)
+             ! find the subspace ib that contains the new Fock state k
+             call sector_locate(ib, ind_basis(k), nsect, ndims, sector_basis)
 
-             iup = iup + 1
-             Mup(iup,1) = ia
-             Mup(iup,2) = ib
-         endif
+             ! store the connection
+             cup = cup + 1
+             Mup(cup,1) = ia
+             Mup(cup,2) = ib
+         endif ! back if ( bin_basis(iorb,i) == 0 ) block
 
-         ! c
+         ! build connection for f operator
          if ( bin_basis(iorb,i) == 1 ) then
-             knew = dec_basis(i) - 2**(iorb-1)
-             j = ind_basis(knew)
+             ! get new Fock state k
+             k = dec_basis(i) - 2**(iorb-1)
 
-             call sector_locate(ib, j, nsect, ndims, sector_basis)
+             ! find the subspace ib that contains the new Fock state k
+             call sector_locate(ib, ind_basis(k), nsect, ndims, sector_basis)
 
-             idn = idn + 1
-             Mdn(idn,1) = ia
-             Mdn(idn,2) = ib
-         endif
-     enddo
+             ! store the connection
+             cdn = cdn + 1
+             Mdn(cdn,1) = ia
+             Mdn(cdn,2) = ib
+         endif ! back if ( bin_basis(iorb,i) == 1 ) block
+     enddo ! over i={1,ncfgs} loop
 
-     call s_assert(iup == ncfgs / 2)
-     call s_assert(idn == ncfgs / 2)
+     ! verify the number of subspace-to-subspace connections
+     call s_assert(cup == ncfgs / 2)
+     call s_assert(cdn == ncfgs / 2)
 
 !! body]
-
-     print *, iup, idn
-     STOP
 
      return
   end subroutine map_create
