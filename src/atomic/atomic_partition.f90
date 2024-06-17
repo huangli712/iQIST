@@ -287,6 +287,8 @@
 !! phase 1 of the automatic partition algorithm. we just permute the Fock
 !! states such that the resulting local Hamiltonian is block-diagonal.
 !!
+!! see: Computer Physics Communications 200, 274–284 (2016)
+!!
   subroutine sector_create(nsect, ndims, sector_basis)
      use constants, only : zero
 
@@ -341,17 +343,17 @@
      do i=1,ncfgs     ! for initial states
          do j=1,ncfgs ! for final states
              if ( abs(hmat(i,j)) > zero ) then
-                 ! find related subspaces for the initial and final states
+                 ! get related subspaces for the initial and final states
                  call sector_locate(ia, i, nsect, ndims, sector_basis)
                  call sector_locate(ib, j, nsect, ndims, sector_basis)
 
                  ! merge the two subspaces if they are not the same
                  if ( ia /= ib ) then
                      call sector_copyto(ia, ib, nsect, ndims, sector_basis)
-                 endif
+                 endif ! back if ( ia /= ib ) block
              endif
-         enddo
-     enddo
+         enddo ! over j={1,ncfgs} loop
+     enddo ! over i={1,ncfgs} loop
 
 !! body]
 
@@ -364,6 +366,8 @@
 !! phase 2 of the automatic partition algorithm. in this stage, we should
 !! make sure all f^+ and f operators are block matrices with at most one
 !! non-zero block in each row and column.
+!!
+!! see: Computer Physics Communications 200, 274–284 (2016)
 !!
   subroutine sector_refine(nsect, ndims, sector_basis)
      use control, only : norbs, ncfgs
@@ -409,7 +413,7 @@
          ! scan all the connections, try to remove them and permute
          ! the Fock states in different subspaces 
          do j=1,ncfgs/2
-             ! get connection
+             ! get subspace-to-subspace connection
              HA = Mup(j,1)
              HL = Mup(j,1)
              HU = Mup(j,2)
