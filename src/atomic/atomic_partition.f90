@@ -284,7 +284,8 @@
 !!
 !! @sub sector_create
 !!
-!! phase 1 of the automatic partition algorithm
+!! phase 1 of the automatic partition algorithm. we just permute the Fock
+!! states such that the resulting local Hamiltonian is block-diagonal.
 !!
   subroutine sector_create(nsect, ndims, sector_basis)
      use constants, only : zero
@@ -306,26 +307,45 @@
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
 !! local variables
-     ! loop index
+     ! loop index for Fock states
      integer :: i
      integer :: j
 
-     integer :: ia, ib
+     ! index for subspaces
+     integer :: ia
+     integer :: ib
 
 !! [body
 
+     ! to start, one creates a data structure, which stores information
+     ! about the way N basis states (Fock states) are partitioned into
+     ! a number of subsets. initially each basis state resides alone in
+     ! its own subset.
      ndims = 1
      sector_basis = 0
      do i=1,nsect
          sector_basis(1,i) = i
      enddo
 
-     do i=1,ncfgs
-         do j=1,ncfgs
+     ! in the main loop of the algorithm, the Hamiltonian is sequentially
+     ! applied to each basis state (initial state). this typically gives
+     ! a linear combination of the basis states with only a few non-zero
+     ! coefficients, since H_{loc} is usually sparse.
+     !
+     ! the algorithm iterates in an inner loop over all basis vectors
+     ! with non-zero coefficients (final states).
+     !
+     ! if the initial and final states reside in different subsets, these
+     ! subsets are merged together. once the main loop is over, the
+     ! partition of the basis is done.
+     do i=1,ncfgs     ! for initial states
+         do j=1,ncfgs ! for final states
              if ( abs(hmat(i,j)) > zero ) then
+                 ! find related subspaces for the initial and final states
                  call sector_locate(ia, i, nsect, ndims, sector_basis)
                  call sector_locate(ib, j, nsect, ndims, sector_basis)
 
+                 ! merge the two subspaces if they are not the same
                  if ( ia /= ib ) then
                      call sector_copyto(ia, ib, nsect, ndims, sector_basis)
                  endif
