@@ -32,8 +32,8 @@
      use constants, only : dp, mystd
      use constants, only : zero
 
-     use control, only : ncfgs
      use control, only : norbs
+     use control, only : ncfgs
 
      use m_fock, only : bin_basis, dec_basis, ind_basis
 
@@ -101,7 +101,7 @@
      deallocate(sector_basis_)
 
      ! phase 2
-     call sector_refine(i, nsect_, ndims, sector_basis)
+     call sector_refine(nsect_, ndims, sector_basis)
 
      nsect = count(ndims > 0)
      nsize = maxval(ndims)
@@ -341,43 +341,65 @@
 !!
 !! @sub sector_refine
 !!
-!! phase 2 of the automatic partition algorithm.
+!! phase 2 of the automatic partition algorithm. in this stage, we should
+!! make sure all f^+ and f operators are block matrices with at most one
+!! non-zero block in each row and column.
 !!
   subroutine sector_refine(nsect, ndims, sector_basis)
      use control, only : norbs, ncfgs
 
      implicit none
 
+!! external arguments
+     ! number of subspaces
      integer, intent(in) :: nsect
+
+     ! dimension for subspaces
      integer, intent(inout) :: ndims(nsect)
+
+     ! global indices of Fock states in subspaces
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
-     integer :: iorb
+!! local variables
+     ! loop index for orbitals
      integer :: i
+
+     ! loop index for subspace-to-subspace connections
+     integer :: j
+
+     ! index for subspaces
      integer :: HA, HL, HU
 
+     ! upward subspace-to-subspace connections
      integer, allocatable :: Mup(:,:)
+
+     ! downward subspace-to-subspace connections
      integer, allocatable :: Mdn(:,:)
+
+!! [body
 
      allocate(Mup(ncfgs/2,2))
      allocate(Mdn(ncfgs/2,2))
 
-     do iorb=1,norbs
-     call map_create(iorb, nsect, ndims, sector_basis, Mup, Mdn)
+     do i=1,norbs
+         call map_create(i, nsect, ndims, sector_basis, Mup, Mdn)
 
-     do i=1,ncfgs/2
-         HA = Mup(i,1)
-         HL = Mup(i,1)
-         HU = Mup(i,2)
-
-         if ( HL /= 0 .and. HU /= 0 ) then
+         do j=1,ncfgs/2
+             HA = Mup(j,1)
+             HL = Mup(j,1)
+             HU = Mup(j,2)
+             !
+             if ( HL == 0 ) CYCLE
+             if ( HU == 0 ) CYCLE
+             !
              call map_remove(1, HA, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
-         endif
-     enddo
+         enddo
      enddo
 
      deallocate(Mup)
      deallocate(Mdn)
+
+!! body]
 
      return
   end subroutine sector_refine
@@ -577,10 +599,10 @@
      ! global indices of Fock states in subspaces
      integer, intent(in) :: sector_basis(ncfgs,nsect)
      
-     ! upward subspace-to-subspace connection
+     ! upward subspace-to-subspace connections
      integer, intent(out) :: Mup(ncfgs/2,2)
 
-     ! downward subspace-to-subspace connection
+     ! downward subspace-to-subspace connections
      integer, intent(out) :: Mdn(ncfgs/2,2)
 
 !! local variables
@@ -687,10 +709,10 @@
      ! global indices of Fock states in subspaces
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
-     ! upward subspace-to-subspace connection
+     ! upward subspace-to-subspace connections
      integer, intent(inout) :: Mup(ncfgs/2,2)
 
-     ! downward subspace-to-subspace connection
+     ! downward subspace-to-subspace connections
      integer, intent(inout) :: Mdn(ncfgs/2,2)
 
 !! local variables
