@@ -672,6 +672,7 @@
          do i=1,ncfgs/2
              if ( Mup(i,1) /= HA ) CYCLE
              HB = Mup(i,2)
+             call s_assert(HB /= 0)
              !
              Mup(i,:) = 0
              !
@@ -693,6 +694,7 @@
          do i=1,ncfgs/2
              if ( Mdn(i,1) /= HA ) CYCLE
              HB = Mdn(i,2)
+             call s_assert(HB /= 0)
              !
              Mdn(i,:) = 0
              !
