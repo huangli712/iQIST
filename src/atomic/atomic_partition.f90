@@ -77,7 +77,8 @@
      integer :: sib
 
      ! number of subspaces (sectors)
-     integer :: nsect, nsect_
+     integer :: nsect
+     integer :: nsect_
 
      ! index of selected subspace
      integer :: which_sect
@@ -91,8 +92,17 @@
      integer, allocatable :: sect_jz(:)
      integer, allocatable :: sect_ap(:)
 
+     ! dimension for subspaces
      integer, allocatable :: ndims(:)
      integer, allocatable :: ndims_(:)
+
+     ! global indices of Fock states of subspaces
+     !
+     ! the first index: local index of Fock state in the given subspace
+     ! the second index: index of subspace
+     !
+     ! for example, sector_basis(j,i) gives the global index of Fock
+     ! state for the j-th basis function in the i-th subspace
      integer, allocatable :: sector_basis(:,:)
      integer, allocatable :: sector_basis_(:,:)
 
