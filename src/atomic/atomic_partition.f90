@@ -46,8 +46,9 @@
 !! see: Computer Physics Communications 200, 274–284 (2016)
 !!
   subroutine automatic_partition()
-     use constants, only : dp, mystd
+     use constants, only : dp
      use constants, only : zero
+     use constants, only : mystd
 
      use control, only : norbs
      use control, only : ncfgs
