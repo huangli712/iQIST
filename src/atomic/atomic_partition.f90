@@ -151,14 +151,7 @@
              !
              call get_sector_ap(Ap, i, nsect_, sect_ntot, sect_sz, sect_jz)
              sect_ap(i) = Ap
-         endif
-     enddo
-     call s_assert(k == nsect)
 
-     k = 0
-     do i=1,nsect_
-         if ( ndims(i) > 0 ) then
-             k = k + 1
              write(mystd,'(a,i6)') 'subspace -> ', k
              write(mystd,'(a,i6)') 'size :', ndims(i)
              write(mystd,'(a)') 'basis :'
@@ -172,6 +165,7 @@
              write(mystd, *)
          endif
      enddo
+     call s_assert(k == nsect)
 
      write(mystd,'(4X,a)') 'allocate memory for subspaces'
      !
