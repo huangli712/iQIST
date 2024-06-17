@@ -68,16 +68,16 @@
      integer :: j
      integer :: k
      integer :: l
-     integer :: m
+
      integer :: nsect, nsize, nsect_, nsize_
      integer :: N, Sz, Jz, Ap
-     integer :: jold, jnew, isgn
-
-     ! index of selected subspace
-     integer :: which_sect
+     integer :: jnew
 
      ! index of Fock state
      integer :: sib
+
+     ! index of selected subspace
+     integer :: which_sect
 
      ! can point to next subspace (sector)
      logical :: can
@@ -240,17 +240,13 @@
                  if ( can .eqv. .true. ) then
 
                      if ( k == 1 ) then
-                         jold = dec_basis(sib)
-                         call atomic_make_cdagger(j, jold, jnew, isgn)
-                         m = ind_basis(jnew)
-                         call sector_lookup(which_sect, m)
+                         jnew = dec_basis(sib) + 2**(j-1)
+                         call sector_lookup(which_sect, ind_basis(jnew))
                      endif
 
                      if ( k == 0 ) then
-                         jold = dec_basis(sib)
-                         call atomic_make_c(j, jold, jnew, isgn)
-                         m = ind_basis(jnew)
-                         call sector_lookup(which_sect, m)
+                         jnew = dec_basis(sib) - 2**(j-1)
+                         call sector_lookup(which_sect, ind_basis(jnew))
                      endif
 
                  endif  ! back if ( can == .true. ) block
