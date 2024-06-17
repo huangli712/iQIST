@@ -242,13 +242,13 @@
                  if ( can .eqv. .true. ) then
 
                      if ( k == 1 ) then
-                         jnew = dec_basis(sib) + 2**(j-1)
-                         call sector_lookup(which_sect, ind_basis(jnew))
+                         q = dec_basis(sib) + 2**(j-1)
+                         call sector_lookup(which_sect, ind_basis(q))
                      endif
 
                      if ( k == 0 ) then
-                         jnew = dec_basis(sib) - 2**(j-1)
-                         call sector_lookup(which_sect, ind_basis(jnew))
+                         q = dec_basis(sib) - 2**(j-1)
+                         call sector_lookup(which_sect, ind_basis(q))
                      endif
 
                  endif  ! back if ( can == .true. ) block
