@@ -111,10 +111,10 @@
      ! initialization
      allocate(ndims_(ncfgs))
      allocate(sector_basis_(ncfgs,ncfgs))
+
      call sector_create(ncfgs, ndims_, sector_basis_)
 
      nsect_ = count(ndims_ > 0)
-     print *, 'number of sectors: ', nsect_
 
      ! filter sectors
      allocate(ndims(nsect_))
