@@ -704,32 +704,46 @@
 
      ! index for resulting Fock state
      integer :: m
+
+     ! index for the n-th Fock state in the i-th subspace
      integer :: sib
+
+     ! decimal form of the resulting Fock state
      integer :: knew
 
 !! [body
 
+     ! for f^{+}_j operator
      if ( k == 1 ) then
          do n=1,sectors(i)%ndim
+             ! go through each Fock state in the i-th subspace
              sib = sectors(i)%basis(n)
+             !
+             ! evaluate the resulting Fock state and then make sure it is
+             ! in a subspace that is specified by which_sect
              if ( bin_basis(j,sib) == 0 ) then
                  knew = dec_basis(sib) + 2**(j-1)
                  m = ind_basis(knew)
                  call s_assert( count(sectors(which_sect)%basis == m) == 1 )
              endif
-         enddo
-     endif
+         enddo ! over n={1,sectors(i)%ndim} loop
+     endif ! back if ( k == 1 ) block
 
+     ! for f_j operator
      if ( k == 0 ) then
          do n=1,sectors(i)%ndim
+             ! go through each Fock state in the i-th subspace
              sib = sectors(i)%basis(n)
+             !
+             ! evaluate the resulting Fock state and then make sure it is
+             ! in a subspace that is specified by which_sect
              if ( bin_basis(j,sib) == 1 ) then
                  knew = dec_basis(sib) - 2**(j-1)
                  m = ind_basis(knew)
                  call s_assert( count(sectors(which_sect)%basis == m) == 1 )
              endif
-         enddo
-     endif
+         enddo ! over n={1,sectors(i)%ndim} loop
+     endif ! back if ( k == 1 ) block
 
 !! body]
 
