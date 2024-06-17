@@ -662,31 +662,49 @@
 
 !! [body
 
+     ! for upward connection
+     !
+     ! search all upward connections starting at H_A.
+     ! each such connection H_A -> H_B is removed from Mup.
+     ! H_B is merged with H_U.
+     ! call map_remove(2, ...)
      if ( dir == 1 ) then
          do i=1,ncfgs/2
              if ( Mup(i,1) /= HA ) CYCLE
              HB = Mup(i,2)
+             !
              Mup(i,:) = 0
-
+             !
              if ( HB /= HU .and. ndims(HB) > 0 ) then
                  call sector_copyto(HU, HB, nsect, ndims, sector_basis)
              endif
+             !
+             call map_remove(2, HB, HL, HU, &
+                                 & nsect, ndims, sector_basis, Mup, Mdn)
+         enddo ! over i={1,ncfgs/2} loop
 
-             call map_remove(2, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
-         enddo
+     ! for downward connection
+     !
+     ! search all downward connections starting at H_A.
+     ! each such connection H_A -> H_B is removed from Mdn.
+     ! H_B is merged with H_L.
+     ! call map_remove(1, ...)
      else
          do i=1,ncfgs/2
              if ( Mdn(i,1) /= HA ) CYCLE
              HB = Mdn(i,2)
+             !
              Mdn(i,:) = 0
-
+             !
              if ( HB /= HL .and. ndims(HB) > 0 ) then
                  call sector_copyto(HL, HB, nsect, ndims, sector_basis)
              endif
+             !
+             call map_remove(1, HB, HL, HU, &
+                                 & nsect, ndims, sector_basis, Mup, Mdn)
+         enddo ! over i={1,ncfgs/2} loop
 
-             call map_remove(1, HB, HL, HU, nsect, ndims, sector_basis, Mup, Mdn)
-         enddo
-     endif
+     endif ! back if ( dir == 1 ) block
 
 !! body]
 
