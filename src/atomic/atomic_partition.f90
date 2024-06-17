@@ -551,6 +551,13 @@
      return
   end subroutine sector_lookup
 
+!!
+!! @sub map_create
+!!
+!! try to create upward and downward subspace-to-subspace connections.
+!!
+!! see: Computer Physics Communications 200, 274–284 (2016)
+!!
   subroutine map_create(iorb, nsect, ndims, sector_basis, Mup, Mdn)
      use control, only : ncfgs
 
@@ -558,18 +565,32 @@
 
      implicit none
 
+!! external arguments
      integer, intent(in) :: iorb
+
+     ! number of subspaces
      integer, intent(in) :: nsect
+
+     ! dimension for subspaces
      integer, intent(in) :: ndims(nsect)
+
+     ! global indices of Fock states in subspaces
      integer, intent(in) :: sector_basis(ncfgs,nsect)
+     
+     ! upward subspace-to-subspace connection
      integer, intent(out) :: Mup(ncfgs/2,2)
+
+     ! downward subspace-to-subspace connection
      integer, intent(out) :: Mdn(ncfgs/2,2)
 
+!! local variables
+     integer :: i, j
      integer :: iup
      integer :: idn
-     integer :: i, j
      integer :: ia, ib
-     integer :: jnew, jold, isgn
+     integer :: jnew, jold
+
+!! [body
 
      iup = 0
      idn = 0
@@ -580,7 +601,7 @@
          ! c^+
          if ( bin_basis(iorb,i) == 0 ) then
              jold = dec_basis(i)
-             call atomic_make_cdagger(iorb, jold, jnew, isgn)
+             jnew = jold + 2**(iorb-1)
              j = ind_basis(jnew)
 
              call sector_locate(ib, j, nsect, ndims, sector_basis)
@@ -593,7 +614,7 @@
          ! c
          if ( bin_basis(iorb,i) == 1 ) then
              jold = dec_basis(i)
-             call atomic_make_c(iorb, jold, jnew, isgn)
+             jnew = jold - 2**(iorb-1)
              j = ind_basis(jnew)
 
              call sector_locate(ib, j, nsect, ndims, sector_basis)
@@ -607,9 +628,10 @@
      call s_assert(iup == ncfgs / 2)
      call s_assert(idn == ncfgs / 2)
 
-     print *, '# orb: ', iorb
-     print *, 'number of Mup:', iup
-     print *, 'number of Mdn:', idn
+!! body]
+
+     print *, iup, idn
+     STOP
 
      return
   end subroutine map_create
