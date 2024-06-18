@@ -747,11 +747,9 @@
 
      use m_fock, only : bin_basis
 
-     use m_sector, only : nsectors
-     use m_sector, only : sectors
-
      use m_sector, only : max_dim_sect
      use m_sector, only : ave_dim_sect
+     use m_sector, only : nsectors, sectors
 
      implicit none
 
@@ -838,6 +836,26 @@
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                   enddo ! over j={1,sectors(i)%ndim} loop
               enddo ! over i={1,nsectors} loop
+
+         case(6)
+             write(mytmp,'(a)') '# i | Ntot | Sz | Jz | AP | Ndim | j | Fock'
+             write(mytmp,'(75a1)') dash ! dashed line
+             do i=1,nsectors
+                 do j=1,sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') i
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%nele
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%sz
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%jz
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ps
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)', advance='no') j
+                     write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
+                 enddo ! over j={1,sectors(i)%ndim} loop
+             enddo ! over i={1,nsectors} loop
+
+         case default
+             call s_print_error('atomic_dump_sector', &
+                 & 'this case is not implemented')
      end select ! back select case (ictqmc) block
 
      ! close data file
