@@ -127,15 +127,16 @@
      ! determine number of effective subspaces
      nsect = count(ndims_ > 0)
      write(mystd,'(4X,a,i4,a)') 'number of subspaces: ', nsect, ' (after phase 1)'
-     STOP 
 
-     ! filter sectors
-     allocate(ndims(nsect_))
-     allocate(sector_basis(ncfgs,nsect_))
-     call sector_filter(ncfgs, ndims_, sector_basis_, &
-                        & nsect_, ndims, sector_basis)
-     deallocate(ndims_)
-     deallocate(sector_basis_)
+     ! prepare arrays
+     allocate(ndims(nsect))
+     allocate(sector_basis(ncfgs,nsect))
+
+     ! filter subspaces
+     call sector_filter(nsect_, ndims_, sector_basis_, &
+                        & nsect, ndims, sector_basis)
+
+     STOP
 
      ! phase 2
      call sector_refine(nsect_, ndims, sector_basis)
@@ -301,6 +302,9 @@
 
      ! deallocate memory
      deallocate(sector_basis)
+
+     deallocate(ndims_)
+     deallocate(sector_basis_)
 
 !! body]
 
