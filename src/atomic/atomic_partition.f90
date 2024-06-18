@@ -3,6 +3,7 @@
 !!! program : automatic_partition
 !!!           sector_create
 !!!           sector_refine
+!!!           sector_filter
 !!!           sector_copyto
 !!!           sector_locate
 !!!           sector_lookup
@@ -458,6 +459,20 @@
 
      return
   end subroutine sector_refine
+
+!!
+!! @sub sector_filter
+!!
+!!
+  subroutine sector_filter()
+     implicit none
+
+!! [body
+
+!! body]
+
+     return
+  end subroutine sector_filter
 
 !!
 !! @sub sector_copyto
