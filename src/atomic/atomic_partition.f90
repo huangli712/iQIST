@@ -200,17 +200,11 @@
          call get_sector_ap(q, k, nsect_, sect_ntot, sect_sz, sect_jz)
          sect_ap(k) = q
 
-         write(mystd,'(a,i6)') 'subspace -> ', k
-         write(mystd,'(a,i6)') 'size :', ndims(i)
-         write(mystd,'(a)') 'basis :'
-         do j=1,ndims(i)
-             write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(j,i))
-         enddo
-         write(mystd, '(a, i3)') 'N :', sect_ntot(i)
-         write(mystd, '(a, i3)') 'Sz:', sect_sz(i)
-         write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
-         write(mystd, '(a, i3)') 'AP:', sect_ap(i)
-         write(mystd, *)
+         write(mystd,'(4X,a,i4)', advance = 'no') 'subspace: ', k
+         write(mystd,'(2X,a,i2)', advance = 'no') 'N  = ', sect_ntot(k)
+         write(mystd,'(2X,a,i2)', advance = 'no') 'Sz = ', sect_sz(k)
+         write(mystd,'(2X,a,i2)', advance = 'no') 'PS = ', sect_jz(k)
+         write(mystd,'(2X,a,i2)') 'AP = ', sect_ap(k)
      enddo
      STOP
      call s_assert(k == nsect)
