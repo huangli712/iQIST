@@ -109,29 +109,29 @@
 
 !! [body
 
-     ! initialization
-     allocate(ndims_(ncfgs))
-     allocate(sector_basis_(ncfgs,ncfgs))
+     ! check validity
+     call s_assert(ictqmc == 6)
+     write(mystd,'(4X,a,i4)') 'automatic partition algorithm is activated'
 
-     ! phase 1
-     call sector_create(ncfgs, ndims_, sector_basis_)
+     ! prepare arrays
+     nsect_ = ncfgs
+     allocate(ndims_(nsect_))
+     allocate(sector_basis_(ncfgs,nsect_))
 
-     nsect_ = count(ndims_ > 0)
+     ! phase 1 of the automatic partition algorithm
+     !
+     ! we try to group the basis sets, such that the local Hamiltonian
+     ! H_{loc} becomes block-diagonal
+     call sector_create(nsect_, ndims_, sector_basis_)
+     !
+     ! determine number of effective subspaces
+     nsect = count(ndims_ > 0)
+     write(mystd,'(4X,a,i4,a)') 'number of subspaces: ', nsect, ' (after phase 1)'
+     STOP 
 
      ! filter sectors
      allocate(ndims(nsect_))
      allocate(sector_basis(ncfgs,nsect_))
-     !
-     !j = 0
-     !do i=1,ncfgs
-     !    if ( ndims_(i) > 0 ) then
-     !        j = j + 1
-     !        ndims(j) = ndims_(i)
-     !        sector_basis(:,j) = sector_basis_(:,i)
-     !    endif
-     !enddo
-     !
-     !call s_assert(j == nsect_)
      call sector_filter(ncfgs, ndims_, sector_basis_, &
                         & nsect_, ndims, sector_basis)
      deallocate(ndims_)
@@ -152,6 +152,7 @@
      sect_sz = 0
      sect_jz = 0
      sect_ap = 0
+     STOP
 
      k = 0
      do i=1,nsect_
@@ -316,6 +317,7 @@
 !!
   subroutine sector_create(nsect, ndims, sector_basis)
      use constants, only : zero
+     use constants, only : mystd
 
      use control, only : ncfgs
 
@@ -343,6 +345,8 @@
      integer :: ib
 
 !! [body
+
+     write(mystd,'(4X,a)') 'automatic partition algorithm: phase 1'
 
      ! to start, one creates a data structure, which stores information
      ! about the way N basis states (Fock states) are partitioned into
@@ -375,6 +379,7 @@
                  ! merge the two subspaces if they are not the same
                  if ( ia /= ib ) then
                      call sector_copyto(ia, ib, nsect, ndims, sector_basis)
+                     write(mystd,'(4X,2(a,i6))') 'merge subspaces: ', ib, ' to ', ia
                  endif ! back if ( ia /= ib ) block
              endif
          enddo ! over j={1,ncfgs} loop
