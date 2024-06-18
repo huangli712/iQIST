@@ -122,16 +122,18 @@
      allocate(ndims(nsect_))
      allocate(sector_basis(ncfgs,nsect_))
      !
-     j = 0
-     do i=1,ncfgs
-         if ( ndims_(i) > 0 ) then
-             j = j + 1
-             ndims(j) = ndims_(i)
-             sector_basis(:,j) = sector_basis_(:,i)
-         endif
-     enddo
+     !j = 0
+     !do i=1,ncfgs
+     !    if ( ndims_(i) > 0 ) then
+     !        j = j + 1
+     !        ndims(j) = ndims_(i)
+     !        sector_basis(:,j) = sector_basis_(:,i)
+     !    endif
+     !enddo
      !
-     call s_assert(j == nsect_)
+     !call s_assert(j == nsect_)
+     call sector_filter(ncfgs, ndims_, sector_basis_, &
+                        & nsect_, ndims, sector_basis)
      deallocate(ndims_)
      deallocate(sector_basis_)
 
@@ -464,6 +466,7 @@
 !!
 !! @sub sector_filter
 !!
+!! compress the original subspaces (the empty subspaces are discarded)
 !!
   subroutine sector_filter(nsect_, ndims_, sector_basis_, nsect, ndims, sector_basis)
      use control, only : ncfgs
@@ -471,17 +474,29 @@
      implicit none
 
 !! external arguments
+     ! number of subspaces (old)
      integer, intent(in) :: nsect_
+
+     ! dimension for subspaces (old)
      integer, intent(in) :: ndims_(nsect_)
+
+     ! global indices of Fock states of subspaces (old)
      integer, intent(in) :: sector_basis_(ncfgs,nsect_)
+
+     ! number of subspaces (new)
      integer, intent(inout) :: nsect
+
+     ! dimension for subspaces (new)
      integer, intent(inout) :: ndims(nsect)
+
+     ! global indices of Fock states of subspaces (new)
      integer, intent(inout) :: sector_basis(ncfgs,nsect)
 
 !! local variables
      ! loop index
      integer :: i
 
+     ! counter
      integer :: c
 
 !! [body
