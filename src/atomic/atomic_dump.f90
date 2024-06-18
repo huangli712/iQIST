@@ -181,8 +181,7 @@
      use constants, only : epst
      use constants, only : mytmp
 
-     use control, only : icu
-     use control, only : nband, norbs
+     use control, only : norbs
 
      use m_spmat, only : umat
 
@@ -194,9 +193,6 @@
      integer  :: j
      integer  :: k
      integer  :: l
-
-     ! rank-2 Coulomb interaction tensor
-     real(dp) :: umat_t(norbs,norbs)
 
      ! used to draw a dashed line
      character (len=1) :: dash(75)
@@ -224,50 +220,6 @@
                      endif ! back if ( abs( umat(i,j,k,l) ) > epst ) block
                  enddo ! over l={1,norbs} loop
              enddo ! over k={1,norbs} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-     ! close data file
-     close(mytmp)
-
-     ! initialize rank-2 Coulomb interaction tensor
-     umat_t = zero
-
-     ! Kanamori type
-     if ( icu == 1 ) then
-         !
-         do i=1,norbs
-             do j=i+1,norbs
-                 umat_t(i,j) = real( umat(i,j,j,i) ) + real( umat(j,i,i,j))
-                 umat_t(j,i) = umat_t(i,j)
-             enddo ! over j={i+1,norbs} loop
-         enddo ! over i={1,norbs} loop
-         !
-     ! Slater type
-     else
-         !
-         do i=1,norbs
-             do j=i+1,norbs
-                 if ( (i <= nband .and. j <= nband) .or. &
-                      (i >  nband .and. j >  nband) ) then
-                     umat_t(i,j) = two * real(umat(i,j,j,i) - umat(i,j,i,j))
-                 else
-                     umat_t(i,j) = two * real(umat(i,j,j,i))
-                 endif ! back if block
-                 umat_t(j,i) = umat_t(i,j)
-             enddo ! over j={i+1,norbs} loop
-         enddo ! over i={1,norbs} loop
-         !
-     endif ! back if ( icu == 1 ) block
-
-     ! open file solver.umat.in to write
-     ! this file is used as input for the the other ctqmc code
-     open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
-
-     ! write the data, all of the elements are written
-     do i=1,norbs
-         do j=1,norbs
-             write(mytmp,'(2i6,f16.8)') i, j, umat_t(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
