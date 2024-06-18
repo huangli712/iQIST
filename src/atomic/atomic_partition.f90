@@ -423,6 +423,7 @@
      ! partition of the basis is done.
      do i=1,ncfgs     ! for initial states
          do j=1,ncfgs ! for final states
+             ! if <i| H_{loc} |j> /= 0, we just try to group |j> and |i>
              if ( abs(hmat(i,j)) > zero ) then
                  ! get related subspaces for the initial and final states
                  call sector_locate(ia, i, nsect, ndims, sector_basis)
@@ -492,7 +493,7 @@
          call map_create(i, nsect, ndims, sector_basis, Mup, Mdn)
 
          ! scan all the connections, try to remove them and permute
-         ! the Fock states in different subspaces
+         ! the Fock states in different subspaces if necessary
          do j=1,ncfgs/2
              ! get subspace-to-subspace connection
              HA = Mup(j,1)
@@ -524,7 +525,8 @@
 !!
 !! compress the original subspaces (the empty subspaces are discarded)
 !!
-  subroutine sector_filter(nsect_, ndims_, sector_basis_, nsect, ndims, sector_basis)
+  subroutine sector_filter(nsect_, ndims_, sector_basis_, &
+                           nsect , ndims , sector_basis )
      use control, only : ncfgs
 
      implicit none
@@ -565,7 +567,7 @@
              ndims(c) = ndims_(i)
              sector_basis(:,c) = sector_basis_(:,i)
          endif
-     enddo
+     enddo ! over i={1,nsect_} loop
      !
      call s_assert(c == nsect)
 
@@ -578,7 +580,7 @@
 !! @sub sector_copyto
 !!
 !! merge two subspaces (subspace src is at first merged with subspace
-!! dst, and then src is cleaned.)
+!! dst, and then src is cleaned)
 !!
   subroutine sector_copyto(dst, src, nsect, ndims, sector_basis)
      use constants, only : mystd
@@ -612,6 +614,7 @@
      write(mystd,'(4X,2(a,i6))') 'merge subspaces: ', src, ' to ', dst
 
      ! check the two subspaces (dst and src). they should not be empty.
+     call s_assert(dst /= src)
      call s_assert(ndims(dst) >= 1)
      call s_assert(ndims(src) >= 1)
 
@@ -675,7 +678,7 @@
                  sind = m
                  EXIT SECTOR_LOOP
              endif
-         enddo
+         enddo ! over n={1,ndims(m)} loop
      enddo SECTOR_LOOP
      !
      ! we can always find the required subspace
@@ -721,7 +724,8 @@
      ! get occupancy for the given Fock state
      ntot = sum(bin_basis(:,find))
 
-     ! check whether the given Fock state is truncated
+     ! check whether the given Fock state lies in a truncated subspace
+     ! if yes, set sind to -1 and return directly
      if ( ntot < nmini .or. ntot > nmaxi ) then
          sind = -1
          return
@@ -747,7 +751,7 @@
          !
      enddo SECTOR_LOOP
      !
-     ! we can always find the required subspace
+     ! we should always find the required subspace
      call s_assert(sind /= 0)
 
 !! body]
@@ -913,6 +917,7 @@
      ! H_B is merged with H_U.
      ! call map_remove(2, ...)
      if ( dir == 1 ) then
+
          do i=1,ncfgs/2
              if ( Mup(i,1) /= HA ) CYCLE
              HB = Mup(i,2)
@@ -925,7 +930,7 @@
              endif
              !
              call map_remove(2, HB, HL, HU, &
-                                 & nsect, ndims, sector_basis, Mup, Mdn)
+                           & nsect, ndims, sector_basis, Mup, Mdn)
          enddo ! over i={1,ncfgs/2} loop
 
      ! for downward connection
@@ -935,6 +940,7 @@
      ! H_B is merged with H_L.
      ! call map_remove(1, ...)
      else
+
          do i=1,ncfgs/2
              if ( Mdn(i,1) /= HA ) CYCLE
              HB = Mdn(i,2)
@@ -947,7 +953,7 @@
              endif
              !
              call map_remove(1, HB, HL, HU, &
-                                 & nsect, ndims, sector_basis, Mup, Mdn)
+                           & nsect, ndims, sector_basis, Mup, Mdn)
          enddo ! over i={1,ncfgs/2} loop
 
      endif ! back if ( dir == 1 ) block
@@ -963,7 +969,7 @@
 !! an operator f^{+}_{j} or f_{j} is acted on a given subspace i. this
 !! subroutine will try to figure out the resulting subspace, and judge
 !! whether it coincides with which_sect. actually, this subroutine is
-!! used to check the mapping between two subspaces.
+!! used to check the connections between two subspaces.
 !!
   subroutine map_verify(i, j, k, which_sect)
      use control, only : nmini, nmaxi
@@ -1010,7 +1016,7 @@
              call s_assert(which_sect == -1)
              return
          endif
-
+         !
          do n=1,sectors(i)%ndim
              ! go through each Fock state in the i-th subspace
              sib = sectors(i)%basis(n)
@@ -1033,7 +1039,7 @@
              call s_assert(which_sect == -1)
              return
          endif
-
+         !
          do n=1,sectors(i)%ndim
              ! go through each Fock state in the i-th subspace
              sib = sectors(i)%basis(n)
@@ -1294,6 +1300,7 @@
 !! [body
 
      AP = 0
+     call s_assert(ind >= 1)
 
      ! get N, Sz, and Jz for the ind-th subspace
      N  = sect_ntot(ind)
