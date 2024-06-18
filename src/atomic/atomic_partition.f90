@@ -434,7 +434,7 @@
          call map_create(i, nsect, ndims, sector_basis, Mup, Mdn)
 
          ! scan all the connections, try to remove them and permute
-         ! the Fock states in different subspaces 
+         ! the Fock states in different subspaces
          do j=1,ncfgs/2
              ! get subspace-to-subspace connection
              HA = Mup(j,1)
@@ -465,21 +465,38 @@
 !! @sub sector_filter
 !!
 !!
-  subroutine sector_filter()
+  subroutine sector_filter(nsect_, ndims_, sector_basis_, nsect, ndims, sector_basis)
+     use control, only : ncfgs
+
      implicit none
+
+!! external arguments
+     integer, intent(in) :: nsect_
+     integer, intent(in) :: ndims_(nsect_)
+     integer, intent(in) :: sector_basis_(ncfgs,nsect_)
+     integer, intent(inout) :: nsect
+     integer, intent(inout) :: ndims(nsect)
+     integer, intent(inout) :: sector_basis(ncfgs,nsect)
+
+!! local variables
+     ! loop index
+     integer :: i
+
+     integer :: c
 
 !! [body
 
-     j = 0
-     do i=1,ncfgs
+     c = 0
+     !
+     do i=1,nsect_
          if ( ndims_(i) > 0 ) then
-             j = j + 1
-             ndims(j) = ndims_(i)
-             sector_basis(:,j) = sector_basis_(:,i)
+             c = c + 1
+             ndims(c) = ndims_(i)
+             sector_basis(:,c) = sector_basis_(:,i)
          endif
      enddo
      !
-     call s_assert(j == nsect_)
+     call s_assert(c == nsect)
 
 !! body]
 
@@ -680,7 +697,7 @@
 
      ! global indices of Fock states in subspaces
      integer, intent(in) :: sector_basis(ncfgs,nsect)
-     
+
      ! upward subspace-to-subspace connections
      integer, intent(out) :: Mup(ncfgs/2,2)
 
