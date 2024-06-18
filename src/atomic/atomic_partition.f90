@@ -113,6 +113,7 @@
      allocate(ndims_(ncfgs))
      allocate(sector_basis_(ncfgs,ncfgs))
 
+     ! phase 1
      call sector_create(ncfgs, ndims_, sector_basis_)
 
      nsect_ = count(ndims_ > 0)
@@ -468,6 +469,17 @@
      implicit none
 
 !! [body
+
+     j = 0
+     do i=1,ncfgs
+         if ( ndims_(i) > 0 ) then
+             j = j + 1
+             ndims(j) = ndims_(i)
+             sector_basis(:,j) = sector_basis_(:,i)
+         endif
+     enddo
+     !
+     call s_assert(j == nsect_)
 
 !! body]
 
