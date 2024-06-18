@@ -646,7 +646,7 @@
      ! write header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v2.3, designed for MANJUSHAKA'
+     write(mytmp,'(a)') '# Format  : v2.4, designed for MANJUSHAKA'
      write(mytmp,'(a)') '# Built   : by '//cname//' code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: '//V_MAIL
      write(mytmp,*)
@@ -740,11 +740,10 @@
 !!
 !! write configurations of subspaces (sectors) to the file atom.sector.dat
 !!
-  subroutine atomic_dump_sector(sect_ntot, sect_sz, sect_ps, sect_jz)
+  subroutine atomic_dump_sector()
      use constants, only : mytmp
 
      use control, only : ictqmc
-     use control, only : ncfgs
 
      use m_fock, only : bin_basis
 
@@ -755,19 +754,6 @@
      use m_sector, only : ave_dim_sect
 
      implicit none
-
-!! external arguments
-     ! good quantum number: N
-     integer, intent(in) :: sect_ntot(ncfgs)
-
-     ! good quantum number: Sz
-     integer, intent(in) :: sect_sz(ncfgs)
-
-     ! good quantum number: PS
-     integer, intent(in) :: sect_ps(ncfgs)
-
-     ! good quantum number: Jz
-     integer, intent(in) :: sect_jz(ncfgs)
 
 !! local variables
      ! loop index
@@ -816,8 +802,8 @@
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') i
-                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_sz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%nele
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%sz
                      write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
@@ -830,9 +816,9 @@
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') i
-                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_sz(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_ps(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%nele
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%sz
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%ps
                      write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
@@ -845,8 +831,8 @@
               do i=1,nsectors
                   do j=1,sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') i
-                     write(mytmp,'(i4,2X)', advance='no') sect_ntot(i)
-                     write(mytmp,'(i4,2X)', advance='no') sect_jz(i)
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%nele
+                     write(mytmp,'(i4,2X)', advance='no') sectors(i)%jz
                      write(mytmp,'(i4,2X)', advance='no') sectors(i)%ndim
                      write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
