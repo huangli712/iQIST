@@ -803,6 +803,7 @@
                      write(mytmp,'(i4,2X)', advance='no') j
                      write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
+                 print *, 'sec:', i, sectors(i)%basis
              enddo ! over i={1,nsectors} loop
 
          case default

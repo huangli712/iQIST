@@ -10,6 +10,7 @@
 !!!           map_create
 !!!           map_remove
 !!!           map_verify
+!!!           basis_sort
 !!!           get_sector_ntot
 !!!           get_sector_sz
 !!!           get_sector_jz
@@ -1064,6 +1065,60 @@
 
      return
   end subroutine map_verify
+
+!!
+!! @sub basis_sort
+!!
+!! using bubble algorithm to sort an integer dataset.
+!!
+  subroutine basis_sort(nsize, list)
+     use constants, only : dp
+
+     implicit none
+
+!! external arguments
+     ! grab the number of values from the calling code
+     integer, intent(in)    :: nsize
+
+     ! dataset to be sorted
+     integer, intent(inout) :: list(nsize)
+
+!! local variables
+     ! dataset index
+     integer :: i = 0
+     integer :: j = 0
+
+     ! dummy variables
+     integer :: swap
+
+!! [body
+
+     !
+     ! remarks:
+     !
+     ! basically we just loop through every element to compare it
+     ! against every other element.
+     !
+
+     ! this loop increments i which is our starting point for the
+     ! comparison
+     sort_loop1: do i=nsize,1,-1
+         ! this loop increments j which is the ending point for
+         ! the comparison
+         sort_loop2: do j=1,i-1
+             ! swap the two elements here
+             exchange: if ( list(j) > list(j+1) ) then
+                 swap = list(j)
+                 list(j) = list(j+1)
+                 list(j+1) = swap
+             endif exchange ! back if ( list(j) > list(j+1) ) block
+         enddo sort_loop2 ! over j={1,i-1} loop
+     enddo sort_loop1 ! over i={nsize,1,-1} loop
+
+!! body]
+
+     return
+  end subroutine basis_sort
 
 !!
 !! @sub get_sector_ntot
