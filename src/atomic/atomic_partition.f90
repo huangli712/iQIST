@@ -297,12 +297,16 @@
                      ! for creation fermion operator
                      if ( k == 1 ) then
                          q = dec_basis(sib) + 2**(j-1)
+                         ! if q lies in the truncated subspaces,
+                         ! which_sect will be -1
                          call sector_lookup(which_sect, ind_basis(q))
                      endif
 
                      ! for annihilation fermion operator
                      if ( k == 0 ) then
                          q = dec_basis(sib) - 2**(j-1)
+                         ! if q lies in the truncated subspaces,
+                         ! which_sect will be -1
                          call sector_lookup(which_sect, ind_basis(q))
                      endif
 
@@ -312,6 +316,7 @@
                  sectors(i)%next(j,k) = which_sect
 
                  ! additional check for the pointer to the next subspace
+                 ! actually, it is optional
                  call map_verify(i, j, k, which_sect)
 
                  if (k == 1) then
@@ -341,9 +346,15 @@
      !call atomic_dump_sector(sect_ntot, sect_sz, sect_ap, sect_jz)
 
      ! deallocate memory
-     deallocate(sector_basis)
+     deallocate(sect_ntot)
+     deallocate(sect_sz)
+     deallocate(sect_jz)
+     deallocate(sect_ap)
 
+     deallocate(ndims )
      deallocate(ndims_)
+
+     deallocate(sector_basis )
      deallocate(sector_basis_)
 
 !! body]
