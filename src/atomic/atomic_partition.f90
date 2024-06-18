@@ -345,7 +345,7 @@
 
      ! dump subspace information for reference
      !--------------------------------------------------------------------
-     !call atomic_dump_sector(sect_ntot, sect_sz, sect_ap, sect_jz)
+     call atomic_dump_sector()
 
      ! deallocate memory
      deallocate(sect_ntot)
