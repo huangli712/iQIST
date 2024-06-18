@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           06/11/2024 by li huang (last modified)
+!!!           06/18/2024 by li huang (last modified)
 !!! purpose : define global control parameters for the atomic eigenvalue
 !!!           problem solver.
 !!! status  : unstable
@@ -288,21 +288,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.8.6 @ 2024.06.12D'
+     character(len=20), public, parameter :: V_FULL = 'v0.8.7 @ 2024.06.18D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.8.6'
+     character(len=06), public, parameter :: V_CURR = 'v0.8.7'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2024.06.12'
+     character(len=11), public, parameter :: V_DATE = '2024.06.18'
 
 !!
 !! @var V_STAT
