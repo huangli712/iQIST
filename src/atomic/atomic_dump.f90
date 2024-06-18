@@ -15,7 +15,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang (created)
-!!!           01/31/2024 by li huang (last modified)
+!!!           06/18/2024 by li huang (last modified)
 !!! purpose : write some essential arrays and data structures to files.
 !!! status  : unstable
 !!! comment :

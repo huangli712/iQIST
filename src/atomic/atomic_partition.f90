@@ -55,7 +55,9 @@
      use control, only : norbs, ncfgs
      use control, only : nmini, nmaxi
 
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
 
      use m_sector, only : max_dim_sect
      use m_sector, only : ave_dim_sect
@@ -769,7 +771,9 @@
   subroutine map_create(iorb, nsect, ndims, sector_basis, Mup, Mdn)
      use control, only : ncfgs
 
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
 
      implicit none
 
@@ -974,7 +978,9 @@
   subroutine map_verify(i, j, k, which_sect)
      use control, only : nmini, nmaxi
 
-     use m_fock, only : bin_basis, dec_basis, ind_basis
+     use m_fock, only : bin_basis
+     use m_fock, only : dec_basis
+     use m_fock, only : ind_basis
 
      use m_sector, only : sectors
 
