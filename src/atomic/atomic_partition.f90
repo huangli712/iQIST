@@ -19,8 +19,9 @@
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 06/11/2024 by li huang (created)
 !!!           06/18/2024 by li huang (last modified)
-!!! purpose : implement the automatic partition algorithm to divide the
-!!!           atomic Hamiltonian into many blocks.
+!!! purpose : implement the automatic partition algorithm, which will
+!!!           divide the atomic Hamiltonian into many blocks and make
+!!!           it block-diagonal.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -41,8 +42,8 @@
 !! data is the full set of basis Fock states and the Hamiltonian itself.
 !! the algorithm consists of two sequential phases. in the first phase,
 !! the finest possible partition, which satisfies condition (1) alone is
-!! constructed. and then in the second phase, this partition is adjusted
-!! to additionally satisfy condition (2) further.
+!! constructed. and then in the second phase, this partition is modified
+!! to satisfy condition (2) further.
 !!
 !! see: Computer Physics Communications 200, 274–284 (2016)
 !!
@@ -232,6 +233,8 @@
      do i=1,nsect
          ! check empty subspaces
          if ( ndims(i) == 0 ) CYCLE
+
+         ! increase the counter
          k = k + 1
 
          sectors(k)%istart = sib
