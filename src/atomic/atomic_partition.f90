@@ -258,6 +258,10 @@
          do j=1,ndims(i)
              sectors(k)%basis(j) = sector_basis(j,i)
          enddo ! over j={1,ndims(i)} loop
+         !
+         ! we should sort the basis sets in order to be compatible with
+         ! the other partition algorithms (such as ictqmc \in [2,5])
+         call basis_sort(ndims(i), sectors(k)%basis)
 
          write(mystd,'(4X,a,i4)', advance = 'no') 'subspace:', k
          write(mystd,'(2X,a,i4)', advance = 'no') 'size:', ndims(i)
