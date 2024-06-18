@@ -134,15 +134,16 @@
 
      ! filter subspaces
      call sector_filter(nsect_, ndims_, sector_basis_, &
-                        & nsect, ndims, sector_basis)
+                        nsect , ndims , sector_basis )
 
-     STOP
 
      ! phase 2
      call sector_refine(nsect_, ndims, sector_basis)
 
      nsect = count(ndims > 0)
      print *, 'number of sectors: ', nsect
+
+     STOP
 
      ! setup subspaces
      allocate(sect_ntot(nsect_))
