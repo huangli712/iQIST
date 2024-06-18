@@ -180,7 +180,10 @@
          call get_sector_ntot(q, ndims(i), sector_basis(:,i))
          !
          ! truncate the occupancy according to nmini and nmaxi
-         if ( q < nmini  .or. q > nmaxi ) then
+         if ( q < nmini .or. q > nmaxi ) then
+             ! these subspaces must be cleared
+             sector_basis(:,i) = 0
+             ndims(i) = 0
              CYCLE
          else
              k = k + 1
@@ -205,9 +208,11 @@
          write(mystd,'(2X,a,i2)', advance = 'no') 'Sz = ', sect_sz(k)
          write(mystd,'(2X,a,i2)', advance = 'no') 'PS = ', sect_jz(k)
          write(mystd,'(2X,a,i2)') 'AP = ', sect_ap(k)
-     enddo
-     STOP
-     call s_assert(k == nsect)
+     enddo ! over i={1,nsect} loop
+     !
+     ! now the number of subspaces is actually k
+     ! since the occupancy truncation, k must be smaller than nsect_
+     call s_assert(k <= nsect_)
 
      ! after we know the number of subspaces, and and the dimension (size)
      ! of each subspace, we can allocate memory for the variables that
@@ -217,40 +222,43 @@
      !
      max_dim_sect = 0
      ave_dim_sect = zero
-     nsectors = nsect ! do not forget to setup nsectors
+     nsectors = k ! do not forget to setup nsectors
      !
      call cat_alloc_sectors()
      !
      ! next we will build every subspace one by one
      sib = 1
      k = 0
-     do i=1,nsect_
-         if ( ndims(i) > 0 ) then
-             k = k + 1
-             sectors(k)%istart = sib
-             sectors(k)%ndim = ndims(i)
-             sectors(k)%nops = norbs
-             !
-             sectors(k)%nele = sect_ntot(i)
-             sectors(k)%sz   = sect_sz(i)
-             sectors(k)%jz   = sect_jz(i)
-             sectors(k)%ps   = sect_ap(i)
-             !
-             sib = sib + ndims(i)
+     do i=1,nsect
+         ! check empty subspaces
+         if ( ndims(i) == 0 ) CYCLE
+         k = k + 1
 
-             ! allocate memory for the subspace
-             call cat_alloc_sector( sectors(k) )
+         sectors(k)%istart = sib
+         sectors(k)%ndim = ndims(i)
+         sectors(k)%nops = norbs
+         !
+         sectors(k)%nele = sect_ntot(k)
+         sectors(k)%sz   = sect_sz(k)
+         sectors(k)%jz   = sect_jz(k)
+         sectors(k)%ps   = sect_ap(k)
+         !
+         sib = sib + ndims(i)
 
-             ! setup basis for the subspace
-             do j=1,ndims(i)
-                 sectors(k)%basis(j) = sector_basis(j,i)
-             enddo ! over j={1,ndims(i)} loop
+         ! allocate memory for the subspace
+         call cat_alloc_sector( sectors(k) )
 
-             write(mystd,'(4X,a,i4)', advance = 'no') 'subspace:', k
-             write(mystd,'(2X,a,i4)', advance = 'no') 'size:', ndims(i)
-             write(mystd,'(2X,a,i4)') 'start:', sectors(k)%istart
-         endif
-     enddo ! over i={1,nsect_} loop
+         ! setup basis for the subspace
+         do j=1,ndims(i)
+             sectors(k)%basis(j) = sector_basis(j,i)
+         enddo ! over j={1,ndims(i)} loop
+
+         write(mystd,'(4X,a,i4)', advance = 'no') 'subspace:', k
+         write(mystd,'(2X,a,i4)', advance = 'no') 'size:', ndims(i)
+         write(mystd,'(2X,a,i6)') 'start:', sectors(k)%istart
+     enddo ! over i={1,nsect} loop
+     call s_assert(k == nsectors)
+     STOP
 
      ! make index for next subspace
      !--------------------------------------------------------------------

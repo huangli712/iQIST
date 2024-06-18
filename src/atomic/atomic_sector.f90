@@ -213,7 +213,7 @@
          my_ntot = fock_ntot(i)
 
          ! truncate the occupancy according to nmini and nmaxi
-         if ( my_ntot < nmini  .or. my_ntot > nmaxi ) CYCLE
+         if ( my_ntot < nmini .or. my_ntot > nmaxi ) CYCLE
 
          if ( ictqmc == 3 .or. ictqmc == 4 ) then
              my_sz = fock_sz(i)
@@ -366,7 +366,7 @@
 
          write(mystd,'(4X,a,i4)', advance = 'no') 'subspace:', i
          write(mystd,'(2X,a,i4)', advance = 'no') 'size:', ndims(i)
-         write(mystd,'(2X,a,i4)') 'start:', sectors(i)%istart
+         write(mystd,'(2X,a,i6)') 'start:', sectors(i)%istart
      enddo ! over i={1,nsect} loop
 
      ! make index for next subspace
