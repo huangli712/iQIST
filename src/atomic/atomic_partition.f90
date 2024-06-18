@@ -258,7 +258,6 @@
          write(mystd,'(2X,a,i6)') 'start:', sectors(k)%istart
      enddo ! over i={1,nsect} loop
      call s_assert(k == nsectors)
-     STOP
 
      ! make index for next subspace
      !--------------------------------------------------------------------
@@ -292,11 +291,13 @@
                  ! figure out the resulting subspace.
                  if ( can .eqv. .true. ) then
 
+                     ! for creation fermion operator
                      if ( k == 1 ) then
                          q = dec_basis(sib) + 2**(j-1)
                          call sector_lookup(which_sect, ind_basis(q))
                      endif
 
+                     ! for annihilation fermion operator
                      if ( k == 0 ) then
                          q = dec_basis(sib) - 2**(j-1)
                          call sector_lookup(which_sect, ind_basis(q))
@@ -306,6 +307,8 @@
 
                  ! setup the next array
                  sectors(i)%next(j,k) = which_sect
+
+                 ! additional check for the pointer to the next subspace
                  call map_verify(i, j, k, which_sect)
 
                  if (k == 1) then
@@ -317,7 +320,6 @@
                      write(mystd,'(2X,a,i4)', advance = 'no') '|subspace>_i:', i
                      write(mystd,'(2X,a,i4)') '|subspace>_f:', which_sect
                  endif ! back if (k == 1) block
-                 !print *
 
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
@@ -676,6 +678,8 @@
 !! figure out the subspace that contains the given Fock state
 !!
   subroutine sector_lookup(sind, find)
+     use control, only : nmini, nmaxi
+
      use m_fock, only : bin_basis
 
      use m_sector, only : nsectors
@@ -695,7 +699,7 @@
      integer :: m
      integer :: n
 
-     ! occupancy of Fock state
+     ! occupancy of the given Fock state
      integer :: ntot
 
 !! [body
@@ -703,8 +707,14 @@
      ! get occupancy for the given Fock state
      ntot = sum(bin_basis(:,find))
 
-     sind = 0
-     !
+     ! check whether the given Fock state is truncated
+     if ( ntot < nmini .or. ntot > nmaxi ) then
+         sind = -1
+         return
+     else
+         sind = 0
+     endif
+
      ! loop over subspaces
      SECTOR_LOOP: do m=1,nsectors
          !
@@ -942,6 +952,8 @@
 !! used to check the mapping between two subspaces.
 !!
   subroutine map_verify(i, j, k, which_sect)
+     use control, only : nmini, nmaxi
+
      use m_fock, only : bin_basis, dec_basis, ind_basis
 
      use m_sector, only : sectors
@@ -978,6 +990,13 @@
 
      ! for f^{+}_j operator
      if ( k == 1 ) then
+         ! check if occupancy truncation is valid
+         if ( sectors(i)%nele + 1 < nmini .or. &
+            & sectors(i)%nele + 1 > nmaxi ) then
+             call s_assert(which_sect == -1)
+             return
+         endif
+
          do n=1,sectors(i)%ndim
              ! go through each Fock state in the i-th subspace
              sib = sectors(i)%basis(n)
@@ -994,6 +1013,13 @@
 
      ! for f_j operator
      if ( k == 0 ) then
+         ! check if occupancy truncation is valid
+         if ( sectors(i)%nele - 1 < nmini .or. &
+            & sectors(i)%nele - 1 > nmaxi ) then
+             call s_assert(which_sect == -1)
+             return
+         endif
+
          do n=1,sectors(i)%ndim
              ! go through each Fock state in the i-th subspace
              sib = sectors(i)%basis(n)
