@@ -109,6 +109,9 @@
 
 !! [body
 
+     ! implement automatic partition algorithm
+     !--------------------------------------------------------------------
+
      ! check validity
      call s_assert(ictqmc == 6)
      write(mystd,'(4X,a,i4)') 'automatic partition algorithm is activated'
@@ -133,65 +136,89 @@
      allocate(ndims(nsect))
      allocate(sector_basis(ncfgs,nsect))
 
-     ! filter subspaces
+     ! filter subspaces (discard empty subspaces)
+     !
+     ! ndims_ => ndims
+     ! sector_basis_ => sector_basis
      call sector_filter(nsect_, ndims_, sector_basis_, &
                         nsect , ndims , sector_basis )
 
      ! phase 2 of the automatic partition algorithm
      !
-     ! we try to group the basis sets, such that the f^{+} and f operator
-     ! matrices become block-diagonal
+     ! we try to group the basis sets further, such that the f^{+} and f
+     ! operator matrices become block-diagonal as well
      write(mystd,'(4X,a)') 'automatic partition algorithm: phase 2'
      call sector_refine(nsect, ndims, sector_basis)
      !
      ! determine number of effective subspaces
-     nsect = count(ndims > 0)
-     write(mystd,'(4X,a,i4,a)') 'number of subspaces: ', nsect, ' (after phase 2)'
+     nsect_ = count(ndims > 0)
+     write(mystd,'(4X,a,i4,a)') 'number of subspaces: ', nsect_, ' (after phase 2)'
 
-     STOP
-
-     ! setup subspaces
+     ! compute good quantum numbers for each subspace
+     !--------------------------------------------------------------------
+     write(mystd,'(4X,a)') 'compute good quantum numbers for subspaces'
+     !
+     ! prepare arrays
      allocate(sect_ntot(nsect_))
      allocate(sect_sz(nsect_))
      allocate(sect_jz(nsect_))
      allocate(sect_ap(nsect_))
-     sect_ntot = 0
-     sect_sz = 0
-     sect_jz = 0
-     sect_ap = 0
-     STOP
+     !
+     ! initialize arrays
+     sect_ntot = 0 ! good quantum number N
+     sect_sz = 0   ! good quantum number Sz
+     sect_jz = 0   ! good quantum number Jz
+     sect_ap = 0   ! good quantum number AP
+     !
+     ! loop over all the available subspaces
+     k = 0 ! a counter
+     do i=1,nsect
+         ! check empty subspaces
+         if ( ndims(i) == 0 ) CYCLE
 
-     k = 0
-     do i=1,nsect_
-         if ( ndims(i) > 0 ) then
+         ! get quantum number N
+         call get_sector_ntot(q, ndims(i), sector_basis(:,i))
+         !
+         ! truncate the occupancy according to nmini and nmaxi
+         if ( q < nmini  .or. q > nmaxi ) then
+             CYCLE
+         else
              k = k + 1
-             call get_sector_ntot(q, ndims(i), sector_basis(:,i))
-             sect_ntot(i) = q
-             !
-             call get_sector_sz(q, ndims(i), sector_basis(:,i))
-             sect_sz(i) = q
-             !
-             call get_sector_jz(q, ndims(i), sector_basis(:,i))
-             sect_jz(i) = q
-             !
-             call get_sector_ap(q, i, nsect_, sect_ntot, sect_sz, sect_jz)
-             sect_ap(i) = q
-
-             write(mystd,'(a,i6)') 'subspace -> ', k
-             write(mystd,'(a,i6)') 'size :', ndims(i)
-             write(mystd,'(a)') 'basis :'
-             do j=1,ndims(i)
-                 write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(j,i))
-             enddo
-             write(mystd, '(a, i3)') 'N :', sect_ntot(i)
-             write(mystd, '(a, i3)') 'Sz:', sect_sz(i)
-             write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
-             write(mystd, '(a, i3)') 'AP:', sect_ap(i)
-             write(mystd, *)
          endif
+         !
+         sect_ntot(k) = q
+
+         ! get quantum number Sz
+         call get_sector_sz(q, ndims(i), sector_basis(:,i))
+         sect_sz(k) = q
+
+         ! get quantum number Jz
+         call get_sector_jz(q, ndims(i), sector_basis(:,i))
+         sect_jz(k) = q
+
+         ! get quantum number AP
+         call get_sector_ap(q, k, nsect_, sect_ntot, sect_sz, sect_jz)
+         sect_ap(k) = q
+
+         write(mystd,'(a,i6)') 'subspace -> ', k
+         write(mystd,'(a,i6)') 'size :', ndims(i)
+         write(mystd,'(a)') 'basis :'
+         do j=1,ndims(i)
+             write(mystd,'(i,2X,14i1)') j, bin_basis(:,sector_basis(j,i))
+         enddo
+         write(mystd, '(a, i3)') 'N :', sect_ntot(i)
+         write(mystd, '(a, i3)') 'Sz:', sect_sz(i)
+         write(mystd, '(a, i3)') 'Jz:', sect_jz(i)
+         write(mystd, '(a, i3)') 'AP:', sect_ap(i)
+         write(mystd, *)
      enddo
+     STOP
      call s_assert(k == nsect)
 
+     ! after we know the number of subspaces, and and the dimension (size)
+     ! of each subspace, we can allocate memory for the variables that
+     ! related to the subspaces
+     !--------------------------------------------------------------------
      write(mystd,'(4X,a)') 'allocate memory for subspaces'
      !
      max_dim_sect = 0
