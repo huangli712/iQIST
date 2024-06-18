@@ -122,6 +122,7 @@
      !
      ! we try to group the basis sets, such that the local Hamiltonian
      ! H_{loc} becomes block-diagonal
+     write(mystd,'(4X,a)') 'automatic partition algorithm: phase 1'
      call sector_create(nsect_, ndims_, sector_basis_)
      !
      ! determine number of effective subspaces
@@ -136,12 +137,16 @@
      call sector_filter(nsect_, ndims_, sector_basis_, &
                         nsect , ndims , sector_basis )
 
-
-     ! phase 2
-     call sector_refine(nsect_, ndims, sector_basis)
-
+     ! phase 2 of the automatic partition algorithm
+     !
+     ! we try to group the basis sets, such that the f^{+} and f operator
+     ! matrices become block-diagonal
+     write(mystd,'(4X,a)') 'automatic partition algorithm: phase 2'
+     call sector_refine(nsect, ndims, sector_basis)
+     !
+     ! determine number of effective subspaces
      nsect = count(ndims > 0)
-     print *, 'number of sectors: ', nsect
+     write(mystd,'(4X,a,i4,a)') 'number of subspaces: ', nsect, ' (after phase 2)'
 
      STOP
 
@@ -322,7 +327,6 @@
 !!
   subroutine sector_create(nsect, ndims, sector_basis)
      use constants, only : zero
-     use constants, only : mystd
 
      use control, only : ncfgs
 
@@ -350,8 +354,6 @@
      integer :: ib
 
 !! [body
-
-     write(mystd,'(4X,a)') 'automatic partition algorithm: phase 1'
 
      ! to start, one creates a data structure, which stores information
      ! about the way N basis states (Fock states) are partitioned into
@@ -384,7 +386,6 @@
                  ! merge the two subspaces if they are not the same
                  if ( ia /= ib ) then
                      call sector_copyto(ia, ib, nsect, ndims, sector_basis)
-                     write(mystd,'(4X,2(a,i6))') 'merge subspaces: ', ib, ' to ', ia
                  endif ! back if ( ia /= ib ) block
              endif
          enddo ! over j={1,ncfgs} loop
@@ -535,6 +536,8 @@
 !! dst, and then src is cleaned.)
 !!
   subroutine sector_copyto(dst, src, nsect, ndims, sector_basis)
+     use constants, only : mystd
+
      use control, only : ncfgs
 
      implicit none
@@ -560,6 +563,8 @@
      integer :: m
 
 !! [body
+
+     write(mystd,'(4X,2(a,i6))') 'merge subspaces: ', src, ' to ', dst
 
      ! check the two subspaces (dst and src). they should not be empty.
      call s_assert(ndims(dst) >= 1)
