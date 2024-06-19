@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/manjushaka directory.
+## Makefile for iqist/src/ct_hyb2 directory.
 ##
 ## Usage
 ## =====
@@ -15,13 +15,13 @@
 ##
 ## This building system is designed, created, and maintained by
 ##
-## Li Huang // email: lihuang.dmft@gmail.com
+## Li Huang // email: huangli@caep.cn
 ##
 ## History
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 05/09/2017 by li huang (last modified)
+## 06/19/2024 by li huang (last modified)
 ##
 ##
 
@@ -32,7 +32,7 @@ include ../../build/make.inc
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
-lev1 = ctqmc_flavor.o ctqmc_hybmat.o ctqmc_update.o ctqmc_ztrace.o
+lev1 = ctqmc_flavor.o ctqmc_hybmat.o ctqmc_update.o ctqmc_trace.o
 lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o ctqmc_util.o
 lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
@@ -44,10 +44,12 @@ default: all
 
 all: exe
 
-cssl:
+flink: flink_lib flink_mod
+
+flink_lib:
 	cp $(FLINK)/libflink.a .
 
-csml:
+flink_mod:
 	cp $(FLINK)/constants.mod .
 	cp $(FLINK)/mmpi.mod .
 	cp $(FLINK)/spring.mod .
@@ -55,7 +57,7 @@ csml:
 	cp $(FLINK)/parser.mod .
 	cp $(FLINK)/linkedlist.mod .
 
-exe: cssl csml $(objects)
+exe: flink $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
 .f90.o:
@@ -65,7 +67,7 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f ctqmc
-	rm -f libMM.a
+	rm -f libflink.a
 
 clean-dat:
 	rm -f *.dat
