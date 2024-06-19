@@ -56,10 +56,12 @@
      ! effective chemical potential
      real(dp) :: qmune
 
-! dummy hybridization function in matsubara frequency axis
+     ! dummy hybridization function in matsubara frequency axis
      complex(dp), allocatable :: htmp(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(htmp(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
@@ -69,16 +71,16 @@
 !!>>> starting self-consistent engine                                  <<<
 !!========================================================================
 
-! print necessary self-consistent simulation information
+     ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine running'
          write(mystd,'(4X,2a)') 'interacting lattice model  / ', 'Hubbard model'
          write(mystd,'(4X,2a)') 'density of states          / ', 'semicircular'
      endif ! back if ( myid == master ) block
 
-! task 1: calculate new hybridization function
-!-------------------------------------------------------------------------
-! initialize htmp
+     ! task 1: calculate new hybridization function
+     !--------------------------------------------------------------------
+     ! initialize htmp
      htmp = hybf
 
 ! apply the self-consistent condition. here we consider a Hubbard model
