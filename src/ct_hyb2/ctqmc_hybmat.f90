@@ -897,37 +897,37 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! imaginary time \tau_s for new creation operator
+     ! imaginary time \tau_s for new creation operator
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for new annihilation operator
+     ! imaginary time \tau_e for new annihilation operator
      real(dp), intent(in)  :: tau_end
 
-! the desired determinant ratio
+     ! the desired determinant ratio
      real(dp), intent(out) :: deter_ratio
 
-! external arguments
-! used to interpolate the hybridization function
+!! external arguments
+     ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: sl
      real(dp) :: sr
 
-! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! real(dp) dummy arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
-! calculate lvec by cubic spline interpolation
+     ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end   ) then
              lvec(i) = -ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end + beta)
@@ -936,7 +936,7 @@
          endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end   ) block
      enddo ! over i={1,ckink} loop
 
-! calculate rvec by cubic spline interpolation
+     ! calculate rvec by cubic spline interpolation
      do j=1,ckink
          if ( tau_start < time_e(index_e(j, flvr), flvr) ) then
              rvec(j) = -ctqmc_eval_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr) + beta)
