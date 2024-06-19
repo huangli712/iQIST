@@ -94,12 +94,12 @@
      enddo ! over j={ckink,is,-1} loop
      rspace(is, flvr) = -one
 
-! scale lspace with p
+     ! scale lspace with p
      do i=1,ckink+1
          lspace(i, flvr) = lspace(i, flvr) * p
      enddo ! over i={1,ckink+1} loop
 
-! shift mmat matrix
+     ! shift mmat matrix
      do j=ckink,is,-1
          do i=ckink,ie,-1
              mmat(i+1, j+1, flvr) = mmat(i, j, flvr)
@@ -118,7 +118,7 @@
          enddo ! over i={ckink,ie,-1} loop
      enddo ! over j={1,is-1} loop
 
-! supplement mmat matrix with zero
+     ! supplement mmat matrix with zero
      do i=1,ckink+1
          mmat(i, is, flvr) = zero
      enddo ! over i={1,ckink+1} loop
@@ -127,17 +127,17 @@
          mmat(ie, j, flvr) = zero
      enddo ! over j={1,ckink+1} loop
 
-! finally evaluate mmat matrix
+     ! finally evaluate mmat matrix
      do j=1,ckink+1
          do i=1,ckink+1
              mmat(i, j, flvr) = mmat(i, j, flvr) + lspace(i, flvr) * rspace(j, flvr)
          enddo ! over i={1,ckink+1} loop
      enddo ! over j={1,ckink+1} loop
 
-! update the perturbation expansion series
+     ! update the perturbation expansion series
      call cat_insert_colour(flvr, is, ie, tau_start, tau_end)
 
-! update gmat matrix
+     ! update gmat matrix
      lsaves(:, flvr) = czero
      rsaves(:, flvr) = czero
 
