@@ -105,10 +105,12 @@
      ! used to record the time usage information
      real(dp) :: tot_time
 
+!! [body
+
      ! obtain time usage information
      call cpu_time(tot_time)
 
-! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
@@ -133,6 +135,8 @@
      use control ! ALL
 
      implicit none
+
+!! [body
 
      write(mystd,'(2X,a)') 'configuration parameters for global control'
      write(mystd,'(2X,a)') '----------------------------------------------------'
@@ -232,6 +236,8 @@
      character (len = 99) :: str_sus
      character (len = 99) :: str_vrt
 
+!! [body
+
 ! build str_obs according to isobs
      str_obs = ''
      do i=1,size(obs)
@@ -315,6 +321,8 @@
 ! real(dp) dummy variables
      real(dp) :: raux
 
+!! [body
+
 ! about iteration number
      write(mystd,'(4X,a,i3,2(a,i10))') '>>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
@@ -382,6 +390,8 @@
 ! external arguments
 ! current iteration number
      integer, intent(in) :: iter
+
+!! [body
 
 ! according to the value of isscf, we can judge the self-consistent scheme
 ! of the current simulation
