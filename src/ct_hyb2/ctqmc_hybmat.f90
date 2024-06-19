@@ -1250,8 +1250,9 @@
      ! evaluate kaux
      kaux = rank(up)
 
-! check the status of kaux, if there does not exist any operators in up
-! state ( kaux == 0 ), we need to return immediately and the ratio is one
+     ! check the status of kaux, if there does not exist any operators
+     ! in up state ( kaux == 0 ), we need to return immediately and the
+     ! ratio is one
      if ( kaux == 0 ) then
          ratio = one; RETURN
      endif ! back if ( kaux == 0 ) block
