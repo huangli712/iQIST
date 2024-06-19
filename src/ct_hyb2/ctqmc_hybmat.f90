@@ -155,17 +155,17 @@
          gmat(k, flvr, flvr) = gmat(k, flvr, flvr) - lsaves(k, flvr) * rsaves(k, flvr) * p
      enddo ! over k={1,nfreq} loop
 
-! only for debug
-!<     do i=1,ckink+1
-!<         do j=1,ckink+1
-!<             print *, 'M:', i, j, mmat(i, j, flvr)
-!<         enddo ! over j={1,ckink+1} loop
-!<     enddo ! over i={1,ckink+1} loop
+!<   ! only for debug
+!<   do i=1,ckink+1
+!<       do j=1,ckink+1
+!<           print *, 'M:', i, j, mmat(i, j, flvr)
+!<       enddo ! over j={1,ckink+1} loop
+!<   enddo ! over i={1,ckink+1} loop
 !<
-!<     print *, 'G1:', flvr, gmat(1, flvr, flvr)
-!<     print *, 'G2:', flvr, gmat(2, flvr, flvr)
-!<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
-!<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+!<   print *, 'G1:', flvr, gmat(1, flvr, flvr)
+!<   print *, 'G2:', flvr, gmat(2, flvr, flvr)
+!<   print *, 'G3:', flvr, gmat(3, flvr, flvr)
+!<   print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
 
 !! body]
 
@@ -261,17 +261,17 @@
      ! update the perturbation expansion series
      call cat_remove_colour(flvr, is, ie)
 
-! only for debug
-!<     do i=1,ckink
-!<         do j=1,ckink
-!<             print *, 'M:', i, j, mmat(i, j, flvr)
-!<         enddo ! over j={1,ckink} loop
-!<     enddo ! over i={1,ckink} loop
+!<   ! only for debug
+!<   do i=1,ckink
+!<       do j=1,ckink
+!<           print *, 'M:', i, j, mmat(i, j, flvr)
+!<       enddo ! over j={1,ckink} loop
+!<   enddo ! over i={1,ckink} loop
 !<
-!<     print *, 'G1:', flvr, gmat(1, flvr, flvr)
-!<     print *, 'G2:', flvr, gmat(2, flvr, flvr)
-!<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
-!<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+!<   print *, 'G1:', flvr, gmat(1, flvr, flvr)
+!<   print *, 'G2:', flvr, gmat(2, flvr, flvr)
+!<   print *, 'G3:', flvr, gmat(3, flvr, flvr)
+!<   print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
 
 !! body]
 
