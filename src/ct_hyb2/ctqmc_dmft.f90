@@ -125,7 +125,7 @@
          call ctqmc_dump_wssf(wssf)
      endif ! back if ( myid == master ) block
 
-! write out the new bath weiss's function in imaginary time axis
+     ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wtau(wtau)
      endif ! back if ( myid == master ) block
@@ -134,7 +134,7 @@
 !!>>> finishing self-consistent engine                                 <<<
 !!========================================================================
 
-! print necessary self-consistent simulation information
+     ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,2a)') 'new hybridization function / ', 'calculated'
          write(mystd,'(4X,2a)') 'new bath weiss'//"'s"//' function  / ', 'calculated'
@@ -142,8 +142,10 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! deallocate memory
+     ! deallocate memory
      deallocate(htmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dmft_selfer
