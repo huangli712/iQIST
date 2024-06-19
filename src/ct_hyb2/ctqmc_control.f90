@@ -343,6 +343,20 @@
 !!
      integer, public, save :: legrd  = 20001
 
+!!
+!! @var svmax
+!!
+!! maximum expansion order for svd orthogonal polynomial
+!!
+     integer, public, save :: svmax  = 32
+
+!!
+!! @var svgrd
+!!
+!! number of mesh points for svd orthogonal polynomial in [-1,1] range
+!!
+     integer, public, save :: svgrd  = 2001
+
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!
@@ -462,7 +476,9 @@
 !!
 !! @var nmonte
 !!
-!! how often to sample the physical observables
+!! how often to sample the physical observables. it would be adjusted in
+!! the ctqmc_try_warming() subroutine automatically via rough estimation
+!! of the integrated autocorrelation time for the total occupation number
 !!
      integer, public, save :: nmonte = 10
 
@@ -572,6 +588,9 @@
 
   end module control
 
+!!========================================================================
+!!>>> module version                                                   <<<
+!!========================================================================
 
 !!
 !! @mod version
@@ -628,7 +647,7 @@
 !!
 !! version string, email info.
 !!
-     character(len=22), public, parameter :: V_MAIL = 'lihuang.dmft@gmail.com'
+     character(len=22), public, parameter :: V_MAIL = 'huangli@caep.cn'
 
 !!
 !! @var V_GPL3
