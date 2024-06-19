@@ -201,9 +201,9 @@
          write(mystd,'(4X,a,e10.3)') 'maximum epsilon   / ', eps8
      endif ! back if ( myid == master ) block
 
-! try to calculate diff and norm
-! why not using the whole matrix? since sometimes the off-diagonal
-! elementes may be NaN!
+     ! try to calculate diff and norm
+     ! why not using the whole matrix? since sometimes the off-diagonal
+     ! elementes may be NaN!
      diff = zero
      do i=1,norbs
          diff = diff + abs( sum( sig2(:,i,i) - sig1(:,i,i) ) )
@@ -215,21 +215,21 @@
      enddo ! over i={1,norbs} loop
      norm = norm / two
 
-! calculate seps
+     ! calculate seps
      seps = (diff / norm) / real(mfreq * norbs)
 
-! judge convergence status
+     ! judge convergence status
      conv = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
 
-! update sig1
+     ! update sig1
      call s_mix_z(size(sig1), sig2, sig1, one - alpha)
 
-! write convergence information to screen
+     ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i03.2)') 'current iteration / ', iter
          write(mystd,'(4X,a,e10.3)') 'current epsilon   / ', seps
          write(mystd,'(4X,a,X,a11)') 'selected watchdog / ', 'self-energy'
-         write(mystd,'(4X,a,l2)')    'is it convergence / ', conv
+         write(mystd,'(4X,a,l2)')    'reach convergence / ', conv
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
