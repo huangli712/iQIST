@@ -192,6 +192,8 @@
      real(dp) :: norm
      real(dp) :: seps
 
+!! [body
+
      ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker running'
@@ -232,6 +234,8 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
+!! body]
+
      return
   end subroutine ctqmc_dmft_conver
 
@@ -257,6 +261,8 @@
 ! impurity green's function
      complex(dp), intent(in)  :: grnf(mfreq,norbs,norbs)
 
+!! [body
+
 ! self-consistent condition is
 !    Delta = t^2 G
      !hybf = part * part * grnf
@@ -264,6 +270,8 @@
      hybf(:,2,2) = grnf(:,2,2) * 2.0 * 2.0
      hybf(:,3,3) = grnf(:,3,3) * 1.0 * 1.0
      hybf(:,4,4) = grnf(:,4,4) * 2.0 * 2.0
+
+!! body]
 
      return
   end subroutine ctqmc_dmft_bethe
