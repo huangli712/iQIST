@@ -340,7 +340,7 @@
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
 
-! evaluate lexp
+     ! evaluate lexp
      lexp = czero
      do k=1,nfreq
          xs = tau_start2 * rmesh(k)
@@ -348,7 +348,7 @@
      enddo ! over k={1,nfreq} loop
      lexp = lexp / beta
 
-! evaluate gsum
+     ! evaluate gsum
      gsum = czero
      do i=1,ckink
          md = mmat(i, iso, flvr)
@@ -357,13 +357,13 @@
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,ckink} loop
 
-! evaluate gdel, \delta G for gmat matrix
+     ! evaluate gdel, \delta G for gmat matrix
      gdel = czero
      do k=1,nfreq
          gdel(k) = gsum(k) * lexp(k)
      enddo ! over k={1,nfreq} loop
 
-! calculate rvec by cubic spline interpolation
+     ! calculate rvec by cubic spline interpolation
      do i=1,ckink
          if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) then
              rvec(i) = -ctqmc_eval_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
@@ -372,7 +372,7 @@
          endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
-! calculate lvec by cubic spline interpolation
+     ! calculate lvec by cubic spline interpolation
      do j=1,ckink
          if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) then
              lvec(j) = -ctqmc_eval_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
@@ -381,7 +381,7 @@
          endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
-! adjust rvec
+     ! adjust rvec
      do i=1,ckink
          rvec(i) = lvec(i) - rvec(i)
      enddo ! over i={1,ckink} loop
