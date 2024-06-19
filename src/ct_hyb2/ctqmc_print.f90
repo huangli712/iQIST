@@ -214,11 +214,11 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! predefined strings for control parameters
+     ! predefined strings for control parameters
      character (len = 4) :: scf(2) = ['nscf', 'scf']
      character (len = 3) :: bnd(2) = ['no', 'yes']
      character (len = 3) :: spn(2) = ['no', 'yes']
@@ -231,14 +231,14 @@
      character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
      character (len = 4) :: vrt(3) = ['none', 'twop', 'pair']
 
-! predefined strings for control parameters
+     ! predefined strings for control parameters
      character (len = 99) :: str_obs
      character (len = 99) :: str_sus
      character (len = 99) :: str_vrt
 
 !! [body
 
-! build str_obs according to isobs
+     ! build str_obs according to isobs
      str_obs = ''
      do i=1,size(obs)
          if ( btest(isobs, i-1) ) then
@@ -247,7 +247,7 @@
      enddo ! over i={1,size(obs)} loop
      str_obs = adjustl(str_obs)
 
-! build str_sus according to issus
+     ! build str_sus according to issus
      str_sus = ''
      do i=1,size(sus)
          if ( btest(issus, i-1) ) then
@@ -256,7 +256,7 @@
      enddo ! over i={1,size(sus)} loop
      str_sus = adjustl(str_sus)
 
-! build str_vrt according to isvrt
+     ! build str_vrt according to isvrt
      str_vrt = ''
      do i=1,size(vrt)
          if ( btest(isvrt, i-1) ) then
@@ -265,7 +265,7 @@
      enddo ! over i={1,size(vrt)} loop
      str_vrt = adjustl(str_vrt)
 
-! write control parameters
+     ! write control parameters
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
 
      write(mystd,'(4X,a,i4,3X,2a)') 'self-consistent scheme  /', isscf, '/ ', scf(isscf)
