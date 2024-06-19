@@ -52,38 +52,38 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new creation and annihilation operators
+     ! index address to insert new creation and annihilation operators
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time \tau_s for new creation operator
+     ! imaginary time \tau_s for new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time \tau_e for new annihilation operator
+     ! imaginary time \tau_e for new annihilation operator
      real(dp), intent(in) :: tau_end
 
-! previous calculated determinant ratio
+     ! previous calculated determinant ratio
      real(dp), intent(in) :: deter_ratio
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: p
 
-! evaluate p at first
+     ! evaluate p at first
      p = one / deter_ratio
 
-! shift lspace and rspace, and then supplement them with -1 at the end
+     ! shift lspace and rspace, and then supplement them with -1 at the end
      do i=ckink,ie,-1
          lspace(i+1, flvr) = lspace(i, flvr)
      enddo ! over i={ckink,ie,-1} loop
