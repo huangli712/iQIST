@@ -1,13 +1,13 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
+!!! project : iqist @ manjushaka
 !!! program : ctqmc_dmft_selfer
 !!!           ctqmc_dmft_conver
 !!!           ctqmc_dmft_bethe
 !!! source  : ctqmc_dmft.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           06/19/2024 by li huang (last modified)
 !!! purpose : implement a hybridization expansion version continuous time
 !!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
 !!!           dynamical mean field theory (DMFT) self-consistent engine.
@@ -23,7 +23,9 @@
 !! quantum impurity solver plus dynamical mean field theory simulation
 !!
   subroutine ctqmc_dmft_selfer()
-     use constants, only : dp, one, half, czi, mystd
+     use constants, only : dp
+     use constants, only : one, half, czi
+     use constants, only : mystd
 
      use control, only : cname
      use control, only : nband, norbs
@@ -41,17 +43,17 @@
 
      implicit none
 
-! local variables
-! loop index over flavors
+!! local variables
+     ! loop index over flavors
      integer  :: i
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! effective chemical potential
+     ! effective chemical potential
      real(dp) :: qmune
 
 ! dummy hybridization function in matsubara frequency axis
