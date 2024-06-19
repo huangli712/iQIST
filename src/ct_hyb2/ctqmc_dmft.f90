@@ -83,20 +83,20 @@
      ! initialize htmp
      htmp = hybf
 
-! apply the self-consistent condition. here we consider a Hubbard model
-! on a bethe lattice. of course you can replace it with your implements
+     ! apply the self-consistent condition. here we consider a Hubbard model
+     ! on a bethe lattice. of course you can replace it with your implements
      call ctqmc_dmft_bethe(hybf, grnf)
 
-! task 2: mix old and new hybridization functions
-!-------------------------------------------------------------------------
-! mix htmp and hybf using linear mixer
+     ! task 2: mix old and new hybridization functions
+     !--------------------------------------------------------------------
+     ! mix htmp and hybf using linear mixer
      call s_mix_z(size(hybf), htmp, hybf, alpha)
 
-! task 3: calculate new bath weiss's function
-!-------------------------------------------------------------------------
-! determine effective chemical potential using
-!     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
-! where N is the number of bands
+     ! task 3: calculate new bath weiss's function
+     !--------------------------------------------------------------------
+     ! determine effective chemical potential using
+     !     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
+     ! where N is the number of bands
      qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
      qmune = mune - qmune
 
