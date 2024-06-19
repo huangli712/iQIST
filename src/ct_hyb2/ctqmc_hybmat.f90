@@ -809,21 +809,21 @@
 ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! dummy perturbation expansion order
+     ! dummy perturbation expansion order
      integer  :: kaux
 
-! used to store matrix element of mmat
+     ! used to store matrix element of mmat
      real(dp) :: maux
 
-! imaginary time for creation and annihilation operators
+     ! imaginary time for creation and annihilation operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
@@ -831,13 +831,13 @@
      complex(dp) :: x_start
      complex(dp) :: x_end
 
-! evaluate kaux
+     ! evaluate kaux
      kaux = rank(flvr)
 
-! reset mmat matrix
+     ! reset mmat matrix
      mmat(1:kaux, 1:kaux, flvr) = zero
 
-! recalculate mmat from scratch
+     ! recalculate mmat from scratch
      do j=1,kaux
          tau_end = time_e(index_e(j, flvr), flvr)
          do i=1,kaux
