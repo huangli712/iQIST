@@ -80,6 +80,8 @@
      ! real(dp) dummy variables
      real(dp) :: p
 
+!! [body
+
      ! evaluate p at first
      p = one / deter_ratio
 
@@ -209,6 +211,8 @@
 
      ! real(dp) dummy variables
      real(dp) :: p
+
+!! [body
 
      ! update gmat matrix
      lsaves(:, flvr) = czero
@@ -343,6 +347,8 @@
      complex(dp) :: lexp(nfreq)
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
+
+!! [body
 
      ! evaluate lexp
      lexp = czero
@@ -548,6 +554,8 @@
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
 
+!! [body
+
      ! evaluate rexp
      rexp = czero
      do k=1,nfreq
@@ -727,6 +735,8 @@
      type (istack) :: Tempty_s
      type (istack) :: Tempty_e
 
+!! [body
+
      ! allocate memory for Tempty_s and Tempty_e
      call istack_create(Tempty_s, mkink)
      call istack_create(Tempty_e, mkink)
@@ -831,6 +841,8 @@
      complex(dp) :: x_start
      complex(dp) :: x_end
 
+!! [body
+
      ! evaluate kaux
      kaux = rank(flvr)
 
@@ -927,6 +939,8 @@
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
+!! [body
+
      ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end   ) then
@@ -1001,6 +1015,8 @@
      ! the desired determinant ratio
      real(dp), intent(out) :: deter_ratio
 
+!! [body
+
      deter_ratio = mmat(ie, is, flvr)
 
 !! body]
@@ -1054,6 +1070,8 @@
      ! real(dp) dummy arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
+
+!! [body
 
      ! calculate rvec by cubic spline interpolation
      do i=1,ckink
@@ -1135,6 +1153,8 @@
      ! real(dp) dummy arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
+
+!! [body
 
      ! calculate lvec by cubic spline interpolation
      do i=1,ckink
@@ -1219,6 +1239,8 @@
      ! dummy mmat matrix
      real(dp), allocatable :: Dmm(:,:)
      real(dp), allocatable :: Tmm(:,:)
+
+!! [body
 
      ! evaluate kaux
      kaux = rank(up)
