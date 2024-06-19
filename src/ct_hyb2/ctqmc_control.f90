@@ -52,7 +52,7 @@
 !! if isscf == 1:
 !!     one-shot non-self-consistent scheme, usually used in the density
 !!     functional theory plus dynamical mean field theory case or used
-!!     to solve the quantum impurity model once
+!!     to solve the quantum impurity model separately
 !!
 !! if isscf == 2:
 !!     self-consistent scheme, used in the dynamical mean field theory
@@ -115,20 +115,6 @@
      integer, public, save :: iscut  = 1
 
 !!
-!! @var isbin
-!!
-!! control flag, define how to accumulate data for imaginary time
-!! impurity green's function G(\tau)
-!!
-!! if isbin == 1:
-!!     without data binning mode
-!!
-!! if isbin == 2:
-!!     with data binning mode
-!!
-     integer, public, save :: isbin  = 1
-
-!!
 !! @var iswor
 !!
 !! control flag, define which algorithm will be used to do the measurement
@@ -138,7 +124,7 @@
 !!
 !! if iswor == 2:
 !!     with worm algorithm, slow but more reliable. note that only some
-!!     selected physical observables support this algorithm
+!!     selected physical observables can be measured by this algorithm
 !!
      integer, public, save :: iswor  = 1
 
@@ -255,8 +241,9 @@
 !!     then we examine the bits one by one. if it is 1, then we try to do
 !!     the calculation. if it is 0, then we ignore the calculation. for
 !!     example, we just use the second bit (from right side to left side)
-!!     to represent the calculation of two-particle green's function. so,
-!!     if isvrt is 10_10 (1010_2), we will try to compute the two-particle
+!!     to represent the calculation of two-particle green's function for
+!!     the particle-hole channel in AABB block structure. so, if isvrt is
+!!     10_10 (1010_2), we will try to compute the specified two-particle
 !!     green's function. if isvrt is 13_10 (1101_2), we will not calculate
 !!     it since the second bit is 0
 !!
@@ -267,9 +254,31 @@
 !!
 !! if p == 2:
 !!     calculate two-particle green's function
+!!     block: AABB
+!!     channel: particle-hole
 !!
 !! if p == 3:
-!!     calculate particle-particle pairing susceptibility
+!!     calculate two-particle green's function
+!!     block: ABBA
+!!     channel: particle-hole
+!!
+!! if p == 4:
+!!     calculate two-particle green's function
+!!     block: AABB
+!!     channel: particle-particle
+!!
+!! if p == 5:
+!!     calculate two-particle green's function
+!!     block: ABBA
+!!     channel: particle-particle
+!!
+!! note 1:
+!!
+!!     p = 2 and p = 3 could not be enabled at the same time
+!!
+!! note 2:
+!!
+!!     p = 4 and p = 5 could not be enabled at the same time
 !!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
@@ -312,9 +321,9 @@
 !!
 !! @var niter
 !!
-!! number of self-consistent iterations for the continuous time quantum
-!! Monte Carlo quantum impurity solver plus dynamical mean field theory
-!! simulation
+!! number of self-consistent iterations for dynamical mean field theory
+!! simulation combined with continuous time quantum Monte Carlo quantum
+!! impurity solver
 !!
      integer, public, save :: niter  = 20
 
