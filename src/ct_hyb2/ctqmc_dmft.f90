@@ -97,29 +97,30 @@
      ! determine effective chemical potential using
      !     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
      ! where N is the number of bands
-     qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
-     qmune = mune - qmune
+     qmune = mune
+     qmune = qmune - ( real(nband) - half ) * Uc
+     qmune = qmune + ( real(nband) - one ) * 2.5_dp * Jz
 
-! apply dyson equation to get G^{-1}_0
-!     G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
+     ! apply dyson equation to get G^{-1}_0
+     !     G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
              wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
-! calculate inverse matrix
+     ! calculate inverse matrix
      do k=1,mfreq
          call s_inv_z(norbs, wssf(k,:,:))
      enddo ! over k={1,mfreq} loop
 
-! fourier transformation bath weiss's function from matsubara frequency
-! space to imaginary time space
+     ! fourier transformation bath weiss's function from matsubara frequency
+     ! space to imaginary time space
      call ctqmc_four_hybf(wssf, wtau)
 
-! task 4: dump the calculated results
-!-------------------------------------------------------------------------
-! write out the new bath weiss's function in matsubara frequency axis
+     ! task 4: dump the calculated results
+     !--------------------------------------------------------------------
+     ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wssf(wssf)
      endif ! back if ( myid == master ) block
