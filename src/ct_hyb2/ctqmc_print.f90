@@ -45,7 +45,7 @@
 
 !! [body
 
-! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
 # if defined (MPI)
