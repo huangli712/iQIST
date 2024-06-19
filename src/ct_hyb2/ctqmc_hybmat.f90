@@ -897,7 +897,8 @@
 !! annihilation operators
 !!
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : mkink
      use control, only : beta
@@ -1031,7 +1032,8 @@
 !! calculate the determinant ratio for shifting creation operator
 !!
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use control, only : mkink
      use control, only : beta
@@ -1114,7 +1116,8 @@
 !! calculate the determinant ratio for shifting annihilation operator
 !!
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants, only : dp, one
+     use constants, only : dp
+     use constants, only : one
 
      use control, only : mkink
      use control, only : beta
@@ -1197,7 +1200,8 @@
 !! calculate the determinant ratio for global spin flip
 !!
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use control, only : beta
 
@@ -1255,6 +1259,7 @@
      ! allocate memory
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('cat_reflip_detrat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -1282,7 +1287,7 @@
      ! calculate the determinant of Tmm, it is the desired ratio
      call s_det_d(kaux, Tmm, ratio)
 
-! deallocate memory
+     ! deallocate memory
      deallocate(Dmm)
      deallocate(Tmm)
 
