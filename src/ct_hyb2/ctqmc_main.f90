@@ -55,26 +55,26 @@
 
      CTQMC_START: BLOCK
 
-! print the welcome messages
+         ! print the welcome messages
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_header()
          endif ! back if ( myid == master ) block
 
-! setup the parameters
+         ! setup the parameters
          call ctqmc_setup_param()
 
-! allocate memory spaces
+         ! allocate memory spaces
          call ctqmc_alloc_array()
 
-! setup the quantum impurity model
+         ! setup the quantum impurity model
          call ctqmc_setup_model()
 
-! print the runtime parameters
+         ! print the runtime parameters
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_summary()
          endif ! back if ( myid == master ) block
 
-     END BLOCK CTQMC_WAKEUP
+     END BLOCK CTQMC_START
 
 !!========================================================================
 !!>>> DMFT ITERATION BEGIN                                             <<<
