@@ -699,31 +699,31 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: fup
      integer, intent(in) :: fdn
 
-! maximum rank order for current flavor channel
+     ! maximum rank order for current flavor channel
      integer, intent(in) :: kmax
 
-! local variables
-! maximum memory index accessed by index_s and index_e
+!! local variables
+     ! maximum memory index accessed by index_s and index_e
      integer :: ismax
      integer :: iemax
 
-! dummy copy for rank
+     ! dummy copy for rank
      integer :: Trank
 
-! dummy copy for empty_s and empty_e
+     ! dummy copy for empty_s and empty_e
      type (istack) :: Tempty_s
      type (istack) :: Tempty_e
 
-! allocate memory for Tempty_s and Tempty_e
+     ! allocate memory for Tempty_s and Tempty_e
      call istack_create(Tempty_s, mkink)
      call istack_create(Tempty_e, mkink)
 
-! swap empty_s and empty_e
+     ! swap empty_s and empty_e
      call istack_copyer(empty_s(fup), Tempty_s)
      call istack_copyer(empty_e(fup), Tempty_e)
 
@@ -733,16 +733,16 @@
      call istack_copyer(Tempty_s, empty_s(fdn))
      call istack_copyer(Tempty_e, empty_e(fdn))
 
-! deallocate memory for Tempty_s and Tempty_e
+     ! deallocate memory for Tempty_s and Tempty_e
      call istack_destroy(Tempty_s)
      call istack_destroy(Tempty_e)
 
-! swap rank
+     ! swap rank
      Trank = rank(fup)
      rank(fup) = rank(fdn)
      rank(fdn) = Trank
 
-! swap gmat matrix when needed
+     ! swap gmat matrix when needed
      call s_swap_z(nfreq, gmat(1:nfreq, fup, fup), gmat(1:nfreq, fdn, fdn))
 
      if ( kmax > 0 ) then
