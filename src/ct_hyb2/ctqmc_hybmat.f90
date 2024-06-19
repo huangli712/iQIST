@@ -276,7 +276,8 @@
 !! update the mmat matrix and gmat matrix for shifting creation operator
 !!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : mkink
      use control, only : nfreq
@@ -293,48 +294,48 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift creation operator
-! iso and isn are old and new indices, respectively
+     ! index address to shift creation operator
+     ! iso and isn are old and new indices, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
-! imaginary time \tau_s for creation operator (the old one)
+     ! imaginary time \tau_s for creation operator (the old one)
      real(dp), intent(in) :: tau_start1
 
-! imaginary time \tau_s for creation operator (the new one)
+     ! imaginary time \tau_s for creation operator (the new one)
      real(dp), intent(in) :: tau_start2
 
-! previous calculated determinant ratio
+     ! previous calculated determinant ratio
      real(dp), intent(in) :: deter_ratio
 
-! external arguments
-! used to interpolate the hybridization function
+!! external arguments
+     ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! used to store matrix element of mmat
+     ! used to store matrix element of mmat
      real(dp) :: md
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: xs
      real(dp) :: rs
 
-! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! real(dp) dummy arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
-! complex(dp) dummy arrays, used to calculate gmat matrix
+     ! complex(dp) dummy arrays, used to calculate gmat matrix
      complex(dp) :: lexp(nfreq)
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
