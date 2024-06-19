@@ -386,7 +386,7 @@
          rvec(i) = lvec(i) - rvec(i)
      enddo ! over i={1,ckink} loop
 
-! prepare rspace
+     ! prepare rspace
      do i=1,ckink
          rs = zero
          do j=1,ckink
@@ -395,19 +395,19 @@
          rspace(i, flvr) = rs / deter_ratio
      enddo ! over i={1,ckink} loop
 
-! prepare lspace
+     ! prepare lspace
      do i=1,ckink
          lspace(i, flvr) = -mmat(i, iso, flvr)
      enddo ! over i={1,ckink} loop
 
-! calculate mmat matrix
+     ! calculate mmat matrix
      do j=1,ckink
          do i=1,ckink
              mmat(i, j, flvr) = mmat(i, j, flvr) + lspace(i, flvr) * rspace(j, flvr)
          enddo ! over i={1,ckink} loop
      enddo ! over j={1,ckink} loop
 
-! shuffle rows if time order changed because of move
+     ! shuffle rows if time order changed because of move
      if ( isn /= iso ) then
          rs = rspace(iso, flvr)
          do i=1,ckink
@@ -439,10 +439,10 @@
          endif ! back if ( isn < iso ) block
      endif ! back if ( isn /= iso ) block
 
-! update the perturbation expansion series
+     ! update the perturbation expansion series
      call cat_lshift_colour(flvr, iso, isn, tau_start2)
 
-! update gmat matrix
+     ! update gmat matrix
      lsaves(:, flvr) = czero
      rsaves(:, flvr) = czero
 
