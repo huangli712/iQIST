@@ -478,7 +478,8 @@
 !! update the mmat matrix and gmat matrix for shifting annihilation operator
 !!
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : mkink
      use control, only : nfreq
@@ -495,8 +496,8 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
 ! index address to shift annihilation operator
