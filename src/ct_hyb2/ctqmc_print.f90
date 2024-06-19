@@ -295,7 +295,9 @@
 !! statistic data, only for reference
 !!
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants, only : dp, one, half, mystd
+     use constants, only : dp
+     use constants, only : one, half
+     use constants, only : mystd
 
      use control, only : nsweep
      use control, only : nmonte
@@ -310,23 +312,23 @@
 
      implicit none
 
-! external arguments
-! current self-consistent iteration number
+!! external arguments
+     ! current self-consistent iteration number
      integer, intent(in) :: iter
 
-! current QMC sweeping steps
+     ! current QMC sweeping steps
      integer, intent(in) :: cstep
 
-! local variables
-! real(dp) dummy variables
+!! local variables
+     ! real(dp) dummy variables
      real(dp) :: raux
 
 !! [body
 
-! about iteration number
+     ! about iteration number
      write(mystd,'(4X,a,i3,2(a,i10))') '>>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
-! about auxiliary physical observables
+     ! about auxiliary physical observables
      raux = real(caves) / nmonte
      write(mystd,'(4X,a)')        'auxiliary system observables:'
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / raux, 'epot :', paux(2) / raux
@@ -335,37 +337,37 @@
      write(mystd,'(2(4X,a,e10.3))') '<K2> :', paux(7) / raux, '<K3> :', paux(8) / raux
      write(mystd,'(1(4X,a,e10.3))') '<K4> :', paux(9) / raux
 
-! about insert action
+     ! about insert action
      if ( ins_t <= half ) ins_t = -one ! if insert is disable
      write(mystd,'(4X,a)')        'C_Z SPACE / insert kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( ins_t ), int( ins_a ), int( ins_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, ins_a / ins_t, ins_r / ins_t
 
-! about remove action
+     ! about remove action
      if ( rmv_t <= half ) rmv_t = -one ! if remove is disable
      write(mystd,'(4X,a)')        'C_Z SPACE / remove kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( rmv_t ), int( rmv_a ), int( rmv_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rmv_a / rmv_t, rmv_r / rmv_t
 
-! about lshift action
+     ! about lshift action
      if ( lsh_t <= half ) lsh_t = -one ! if lshift is disable
      write(mystd,'(4X,a)')        'C_Z SPACE / lshift kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( lsh_t ), int( lsh_a ), int( lsh_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, lsh_a / lsh_t, lsh_r / lsh_t
 
-! about rshift action
+     ! about rshift action
      if ( rsh_t <= half ) rsh_t = -one ! if rshift is disable
      write(mystd,'(4X,a)')        'C_Z SPACE / rshift kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( rsh_t ), int( rsh_a ), int( rsh_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rsh_a / rsh_t, rsh_r / rsh_t
 
-! about reflip action
+     ! about reflip action
      if ( rfl_t <= half ) rfl_t = -one ! if reflip is disable
      write(mystd,'(4X,a)')        'C_Z SPACE / global flip statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( rfl_t ), int( rfl_a ), int( rfl_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rfl_a / rfl_t, rfl_r / rfl_t
 
-! about negative sign
+     ! about negative sign
      write(mystd,'(4X,a,i10)')    'negative sign counter:', cnegs
      write(mystd,'(4X,a,f10.5)')  'averaged sign sampler:', caves / real(cstep)
 
