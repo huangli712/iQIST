@@ -993,8 +993,8 @@
      ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to remove old creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)   :: is
      integer, intent(in)   :: ie
 
