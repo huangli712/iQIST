@@ -127,13 +127,15 @@
 ! finalize mpi envirnoment
 # if defined (MPI)
 
-! blocks until all processes have reached this routine
+     ! blocks until all processes have reached this routine
      call mp_barrier()
 
-! terminates mpi execution environment
+     ! terminates mpi execution environment
      call mp_finalize()
 
 # endif  /* MPI */
+
+!! body]
 
 !!========================================================================
   END PROGRAM CTQMC_MAIN !                                             <<<
