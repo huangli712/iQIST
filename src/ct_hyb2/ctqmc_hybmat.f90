@@ -781,7 +781,7 @@
          call s_swap_z(nfreq*ismax, exp_s(1:nfreq, 1:ismax, fup), exp_s(1:nfreq, 1:ismax, fdn))
          call s_swap_z(nfreq*iemax, exp_e(1:nfreq, 1:iemax, fup), exp_e(1:nfreq, 1:iemax, fdn))
 
-! update mmat and gmat matrix when needed
+         ! update mmat and gmat matrix when needed
          if ( rank(fup) > 0 ) call cat_reload_matrix(fup)
          if ( rank(fdn) > 0 ) call cat_reload_matrix(fdn)
 
@@ -798,7 +798,8 @@
 !! global update the mmat matrix and gmat matrix from scratch
 !!
   subroutine cat_reload_matrix(flvr)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : nfreq
      use control, only : beta
@@ -811,12 +812,12 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! external functions
-! used to interpolate the hybridization function
+!! external functions
+     ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
 !! local variables
