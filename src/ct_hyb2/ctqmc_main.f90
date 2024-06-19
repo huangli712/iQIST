@@ -82,26 +82,26 @@
 
      DMFT_CYCLE: do iter=1,niter
 
-! write the iter to screen
+         ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
-! call the quantum impurity solver
+         ! call the quantum impurity solver
          call ctqmc_impurity_solver(iter)
 
-! check the self-consistent mode
+         ! check the self-consistent mode
          if ( isscf == 1 ) then
              EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( isscf == 1 ) block
 
-! call the built-in self-consistent engine
+         ! call the built-in self-consistent engine
          call ctqmc_dmft_selfer()
 
-! check whether the convergence is reached
+         ! check whether the convergence is reached
          call ctqmc_dmft_conver(iter, conv)
 
-! now the convergence is achieved
+         ! now the convergence is achieved
          if ( conv .eqv. .true. ) then
              EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( conv .eqv. .true. ) block
@@ -114,10 +114,10 @@
 
      CTQMC_SLEEP: BLOCK
 
-! deallocate memory spaces
+         ! deallocate memory spaces
          call ctqmc_final_array()
 
-! print the ending messages
+         ! print the ending messages
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_footer()
          endif ! back if ( myid == master ) block
