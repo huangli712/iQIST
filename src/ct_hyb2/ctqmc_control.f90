@@ -1,11 +1,12 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
-!!! program : control    module
+!!! project : iqist @ manjushaka
+!!! program : control module
+!!!           version module
 !!! source  : ctqmc_control.f90
 !!! type    : module
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           06/19/2024 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -14,6 +15,15 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> module control                                                   <<<
+!!========================================================================
+
+!!
+!! @mod control
+!!
+!! define the control parameters and dimensional parameters.
+!!
   module control
      use constants, only : dp
 
