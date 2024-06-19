@@ -500,44 +500,44 @@
      ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift annihilation operator
-! ieo and ien are old and new indices, respectively
+     ! index address to shift annihilation operator
+     ! ieo and ien are old and new indices, respectively
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time \tau_e for annihilation operator (the old one)
+     ! imaginary time \tau_e for annihilation operator (the old one)
      real(dp), intent(in) :: tau_end1
 
-! imaginary time \tau_e for annihilation operator (the new one)
+     ! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in) :: tau_end2
 
-! previous calculated determinant ratio
+     ! previous calculated determinant ratio
      real(dp), intent(in) :: deter_ratio
 
-! external arguments
-! used to interpolate the hybridization function
+!! external arguments
+     ! used to interpolate the hybridization function
      procedure( real(dp) ) :: ctqmc_eval_htau
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! used to store matrix element of mmat
+     ! used to store matrix element of mmat
      real(dp) :: md
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: xe
      real(dp) :: ls
 
-! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! real(dp) dummy arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
-! complex(dp) dummy arrays, used to calculate gmat matrix
+     ! complex(dp) dummy arrays, used to calculate gmat matrix
      complex(dp) :: rexp(nfreq)
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
