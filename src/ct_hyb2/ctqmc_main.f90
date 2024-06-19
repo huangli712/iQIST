@@ -1,15 +1,15 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! MANJUSHAKA @ iQIST                                                   !
+!!! iQIST @ MANJUSHAKA                                                   !
 !!!                                                                      !
 !!! A highly optimized hybridization expansion version continuous time   !
 !!! quantum Monte Carlo (CTQMC) quantum impurity solver plus a classic   !
 !!! dynamical mean field theory (DMFT) self-consistent engine            !
 !!!                                                                      !
-!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!!           Yilin Wang (at IOP/CAS)                                    !
+!!! author  : Li Huang (China Academy of Engineering Physics)            !
+!!!           Yilin Wang (University of Science and Technology of China) !
 !!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
 !!! comment : this impurity solver is based on general matrix formalism  !
-!!!           any question, please contact with lihuang.dmft@gmail.com   !
+!!!           any question, please contact with huangli@caep.cn          !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
 !!========================================================================
@@ -30,28 +30,30 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: iter = 1
 
-! convergence flag
+     ! convergence flag
      logical :: conv = .false.
+
+!! [body
 
 ! initialize mpi envirnoment
 # if defined (MPI)
 
-! initialize the mpi execution environment
+     ! initialize the mpi execution environment
      call mp_init()
 
-! determines the rank of the calling process in the communicator
+     ! determines the rank of the calling process in the communicator
      call mp_comm_rank(myid)
 
-! determines the size of the group associated with a communicator
+     ! determines the size of the group associated with a communicator
      call mp_comm_size(nprocs)
 
 # endif  /* MPI */
 
-     CTQMC_WAKEUP: BLOCK
+     CTQMC_START: BLOCK
 
 ! print the welcome messages
          if ( myid == master ) then ! only master node can do it
