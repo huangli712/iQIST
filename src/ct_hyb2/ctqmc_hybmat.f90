@@ -165,6 +165,8 @@
 !<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
 !<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
 
+!! body]
+
      return
   end subroutine cat_insert_matrix
 
@@ -266,6 +268,8 @@
 !<     print *, 'G2:', flvr, gmat(2, flvr, flvr)
 !<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
 !<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
+
+!! body]
 
      return
   end subroutine cat_remove_matrix
@@ -469,6 +473,8 @@
 !<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
 !<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
 
+!! body]
+
      return
   end subroutine cat_lshift_matrix
 
@@ -671,6 +677,8 @@
 !<     print *, 'G3:', flvr, gmat(3, flvr, flvr)
 !<     print *, 'Gn:', flvr, gmat(nfreq, flvr, flvr)
 
+!! body]
+
      return
   end subroutine cat_rshift_matrix
 
@@ -769,6 +777,8 @@
 
      endif ! back if ( kmax > 0 ) block
 
+!! body]
+
      return
   end subroutine cat_reflip_matrix
 
@@ -817,7 +827,7 @@
      real(dp) :: tau_start
      real(dp) :: tau_end
 
-! complex(dp) dummy variables
+     ! complex(dp) dummy variables
      complex(dp) :: x_start
      complex(dp) :: x_end
 
@@ -840,13 +850,13 @@
          enddo ! over i={1,kaux} loop
      enddo ! over j={1,kaux} loop
 
-! now we obtain dmat matrix, while what we need is its inversion
+     ! now we obtain dmat matrix, while what we need is its inversion
      call s_inv_d(kaux, mmat(1:kaux, 1:kaux, flvr))
 
-! reset gmat matrix
+     ! reset gmat matrix
      gmat(:, flvr, flvr) = czero
 
-! recalculate gmat from scratch
+     ! recalculate gmat from scratch
      do j=1,kaux
          do i=1,kaux
              maux = -mmat(i, j, flvr) / beta
@@ -857,6 +867,8 @@
              enddo ! over k={1,nfreq} loop
          enddo ! over i={1,kaux} loop
      enddo ! over j={1,kaux} loop
+
+!! body]
 
      return
   end subroutine cat_reload_matrix
@@ -933,14 +945,14 @@
          endif ! back if ( tau_start < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
-! calculate deter_ratio by cubic spline interpolation
+     ! calculate deter_ratio by cubic spline interpolation
      if ( tau_start > tau_end ) then
          deter_ratio =  ctqmc_eval_htau(flvr, tau_start - tau_end)
      else
          deter_ratio = -ctqmc_eval_htau(flvr, tau_start - tau_end + beta)
      endif ! back if ( tau_start > tau_end ) block
 
-! calculate lspace and rspace
+     ! calculate lspace and rspace
      do i=1,ckink
          sl = zero
          sr = zero
@@ -954,10 +966,12 @@
          rspace(i, flvr) = sr
      enddo ! over i={1,ckink} loop
 
-! calculate final determinant ratio
+     ! calculate final determinant ratio
      do i=1,ckink
          deter_ratio = deter_ratio - rvec(i) * lspace(i, flvr)
      enddo ! over i={1,ckink} loop
+
+!! body]
 
      return
   end subroutine cat_insert_detrat
@@ -975,8 +989,8 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
 ! index address to remove old creation and annihilation operators
@@ -984,10 +998,12 @@
      integer, intent(in)   :: is
      integer, intent(in)   :: ie
 
-! the desired determinant ratio
+     ! the desired determinant ratio
      real(dp), intent(out) :: deter_ratio
 
      deter_ratio = mmat(ie, is, flvr)
+
+!! body]
 
      return
   end subroutine cat_remove_detrat
@@ -1068,6 +1084,8 @@
          deter_ratio = deter_ratio + rvec(i) * mmat(i, addr, flvr)
      enddo ! over i={1,ckink} loop
 
+!! body]
+
      return
   end subroutine cat_lshift_detrat
 
@@ -1146,6 +1164,8 @@
      do i=1,ckink
          deter_ratio = deter_ratio + mmat(addr, i, flvr) * lvec(i)
      enddo ! over i={1,ckink} loop
+
+!! body]
 
      return
   end subroutine cat_rshift_detrat
@@ -1242,6 +1262,8 @@
 ! deallocate memory
      deallocate(Dmm)
      deallocate(Tmm)
+
+!! body]
 
      return
   end subroutine cat_reflip_detrat
