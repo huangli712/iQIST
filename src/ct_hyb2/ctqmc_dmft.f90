@@ -183,16 +183,16 @@
      ! required minimum iteration number to achieive convergence
      integer, parameter :: minit = 16
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
 
-! dummy variables
+     ! dummy variables
      real(dp) :: diff
      real(dp) :: norm
      real(dp) :: seps
 
-! write convergence information to screen
+     ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker running'
          write(mystd,'(4X,a,i03.2)') 'maximum iteration / ', niter
