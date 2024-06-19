@@ -755,19 +755,19 @@
 
      if ( kmax > 0 ) then
 
-! determine ismax and iemax
+         ! determine ismax and iemax
          ismax = max( maxval( index_s(1:kmax, fup) ), maxval( index_s(1:kmax, fdn) ) )
          iemax = max( maxval( index_e(1:kmax, fup) ), maxval( index_e(1:kmax, fdn) ) )
 
-! swap index_s and index_e
+         ! swap index_s and index_e
          call s_swap_i(kmax, index_s(1:kmax, fup), index_s(1:kmax, fdn))
          call s_swap_i(kmax, index_e(1:kmax, fup), index_e(1:kmax, fdn))
 
-! swap time_s and time_e
+         ! swap time_s and time_e
          call s_swap_d(ismax, time_s(1:ismax, fup), time_s(1:ismax, fdn))
          call s_swap_d(iemax, time_e(1:iemax, fup), time_e(1:iemax, fdn))
 
-! swap exp_s and exp_e
+         ! swap exp_s and exp_e
          call s_swap_z(nfreq*ismax, exp_s(1:nfreq, 1:ismax, fup), exp_s(1:nfreq, 1:ismax, fdn))
          call s_swap_z(nfreq*iemax, exp_e(1:nfreq, 1:iemax, fup), exp_e(1:nfreq, 1:iemax, fdn))
 
