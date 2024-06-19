@@ -254,17 +254,17 @@
 
      implicit none
 
-! external arguments
-! hybridization function
+!! external arguments
+     ! hybridization function
      complex(dp), intent(out) :: hybf(mfreq,norbs,norbs)
 
-! impurity green's function
+     ! impurity green's function
      complex(dp), intent(in)  :: grnf(mfreq,norbs,norbs)
 
 !! [body
 
-! self-consistent condition is
-!    Delta = t^2 G
+     ! self-consistent condition is
+     !    Delta = t^2 G
      !hybf = part * part * grnf
      hybf(:,1,1) = grnf(:,1,1) * 1.0 * 1.0
      hybf(:,2,2) = grnf(:,2,2) * 2.0 * 2.0
