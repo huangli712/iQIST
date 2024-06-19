@@ -175,7 +175,8 @@
 !! annihilation operators
 !!
   subroutine cat_remove_matrix(flvr, is, ie)
-     use constants, only : dp, one, czero
+     use constants, only : dp
+     use constants, only : one, czero
 
      use control, only : nfreq
      use control, only : beta
@@ -188,11 +189,11 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address to remove old creation and annihilation operators
+     ! index address to remove old creation and annihilation operators
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
