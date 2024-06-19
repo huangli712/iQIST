@@ -542,7 +542,7 @@
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
 
-! evaluate rexp
+     ! evaluate rexp
      rexp = czero
      do k=1,nfreq
          xe = tau_end2 * rmesh(k)
@@ -550,7 +550,7 @@
      enddo ! over k={1,nfreq} loop
      rexp = rexp / beta
 
-! evaluate gsum
+     ! evaluate gsum
      gsum = czero
      do i=1,ckink
          md = mmat(ieo, i, flvr)
@@ -559,13 +559,13 @@
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,ckink} loop
 
-! evaluate gdel, \delta G for gmat matrix
+     ! evaluate gdel, \delta G for gmat matrix
      gdel = czero
      do k=1,nfreq
          gdel(k) = gsum(k) * rexp(k)
      enddo ! over k={1,nfreq} loop
 
-! calculate lvec by cubic spline interpolation
+     ! calculate lvec by cubic spline interpolation
      do i=1,ckink
          if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) then
              lvec(i) = -ctqmc_eval_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
@@ -574,7 +574,7 @@
          endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
-! calculate rvec by cubic spline interpolation
+     ! calculate rvec by cubic spline interpolation
      do j=1,ckink
          if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) then
              rvec(j) = -ctqmc_eval_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
@@ -583,12 +583,12 @@
          endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
-! adjust lvec
+     ! adjust lvec
      do i=1,ckink
          lvec(i) = rvec(i) - lvec(i)
      enddo ! over i={1,ckink} loop
 
-! prepare lspace
+     ! prepare lspace
      do i=1,ckink
          ls = zero
          do j=1,ckink
@@ -597,19 +597,19 @@
          lspace(i, flvr) = ls / deter_ratio
      enddo ! over i={1,ckink} loop
 
-! prepare rspace
+     ! prepare rspace
      do i=1,ckink
          rspace(i, flvr) = -mmat(ieo, i, flvr)
      enddo ! over i={1,ckink} loop
 
-! calculate mmat matrix
+     ! calculate mmat matrix
      do j=1,ckink
          do i=1,ckink
              mmat(i, j, flvr) = mmat(i, j, flvr) + lspace(i, flvr) * rspace(j, flvr)
          enddo ! over i={1,ckink} loop
      enddo ! over j={1,ckink} loop
 
-! shuffle columns if time order changed because of move
+     ! shuffle columns if time order changed because of move
      if ( ien /= ieo ) then
          ls = lspace(ieo, flvr)
          do i=1,ckink
@@ -641,10 +641,10 @@
          endif ! back if ( ien < ieo ) block
      endif ! back if ( ien /= ieo ) block
 
-! update the perturbation expansion series
+     ! update the perturbation expansion series
      call cat_rshift_colour(flvr, ieo, ien, tau_end2)
 
-! update gmat matrix
+     ! update gmat matrix
      lsaves(:, flvr) = czero
      rsaves(:, flvr) = czero
 
