@@ -158,34 +158,36 @@
 
      write(mystd,'(2X,a)') '[configuration parameters] -> quantum impurity model'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nband  /', nband , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nspin  /', nspin , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'norbs  /', norbs , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ncfgs  /', ncfgs , '/', 'integer'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'Uc     /', Uc    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'Jz     /', Jz    , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'mune   /', mune  , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'beta   /', beta  , '/', ' double'
-     write(mystd,'(4X,a,f10.5,a4,a10)') 'part   /', part  , '/', ' double'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nband  / value :', nband , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nspin  / value :', nspin , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'norbs  / value :', norbs , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'ncfgs  / value :', ncfgs , 'type : i'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Uc     / value :', Uc    , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'Jz     / value :', Jz    , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'mune   / value :', mune  , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'beta   / value :', beta  , 'type : d'
+     write(mystd,'(4X,a16,f10.5,2X,a8)') 'part   / value :', part  , 'type : d'
 
-     write(mystd,'(2X,a)') 'configuration parameters for quantum impurity solver'
-     write(mystd,'(2X,a)') '----------------------------------------------------'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'lemax  /', lemax , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'legrd  /', legrd , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'mkink  /', mkink , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'mfreq  /', mfreq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nffrq  /', nffrq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nbfrq  /', nbfrq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nfreq  /', nfreq , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ntime  /', ntime , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'npart  /', npart , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nflip  /', nflip , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ntherm /', ntherm, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nsweep /', nsweep, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nwrite /', nwrite, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nclean /', nclean, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'nmonte /', nmonte, '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'ncarlo /', ncarlo, '/', 'integer'
+     write(mystd,'(2X,a)') '[configuration parameters] -> quantum impurity solver'
+     write(mystd,'(2X,a)') '-----------------------------------------------------'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'lemax  / value :', lemax , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'legrd  / value :', legrd , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'svmax  / value :', svmax , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'svgrd  / value :', svgrd , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'mkink  / value :', mkink , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'mfreq  / value :', mfreq , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nffrq  / value :', nffrq , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nbfrq  / value :', nbfrq , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nfreq  / value :', nfreq , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'ntime  / value :', ntime , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'npart  / value :', npart , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nflip  / value :', nflip , 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'ntherm / value :', ntherm, 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nsweep / value :', nsweep, 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nwrite / value :', nwrite, 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nclean / value :', nclean, 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'nmonte / value :', nmonte, 'type : i'
+     write(mystd,'(4X,a16,i10,  2X,a8)') 'ncarlo / value :', ncarlo, 'type : i'
 
      write(mystd,*)
 
@@ -207,8 +209,7 @@
      use control, only : isscf               ! control running scheme
      use control, only : isbnd, isspn        ! control symmetry
      use control, only : isopt, iscut        ! control optimized algorithms
-     !use control, only : isbin, iswor, isort ! control measurement tricks
-     use control, only : iswor, isort ! control measurement tricks
+     use control, only : iswor, isort        ! control measurement tricks
      use control, only : isobs, issus, isvrt ! control physical observables
 
      implicit none
@@ -218,17 +219,16 @@
      integer :: i
 
      ! predefined strings for control parameters
-     character (len = 4) :: scf(2) = ['nscf', 'scf']
-     character (len = 3) :: bnd(2) = ['no', 'yes']
-     character (len = 3) :: spn(2) = ['no', 'yes']
-     character (len = 4) :: opt(2) = ['lazy', 'tbd']
-     character (len = 3) :: cut(2) = ['no', 'yes']
-     character (len = 3) :: bin(2) = ['no', 'yes']
-     character (len = 3) :: wor(2) = ['no', 'yes']
+     character (len = 4) :: scf(2) = ['nscf', 'scf ']
+     character (len = 3) :: bnd(2) = ['no ', 'yes']
+     character (len = 3) :: spn(2) = ['no ', 'yes']
+     character (len = 4) :: opt(2) = ['lazy', 'tbd ']
+     character (len = 3) :: cut(2) = ['no ', 'yes']
+     character (len = 3) :: wor(2) = ['no ', 'yes']
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
-     character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
+     character (len = 8) :: obs(4) = ['none    ', 'kinetic ', 'fidelity', 'binder  ']
      character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
-     character (len = 4) :: vrt(3) = ['none', 'twop', 'pair']
+     character (len = 9) :: vrt(5) = ['none     ', 'g2ph_aabb', 'g2ph_abba', 'g2pp_aabb', 'g2pp_abba']
 
      ! predefined strings for control parameters
      character (len = 99) :: str_obs
