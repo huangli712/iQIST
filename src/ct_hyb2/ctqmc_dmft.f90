@@ -156,7 +156,10 @@
 !! check the convergence of matsubara self-energy function
 !!
   subroutine ctqmc_dmft_conver(iter, conv)
-     use constants, only : dp, zero, one, two, eps8, mystd
+     use constants, only : dp
+     use constants, only : zero, one, two
+     use constants, only : eps8
+     use constants, only : mystd
 
      use control, only : cname
      use control, only : norbs
@@ -169,15 +172,15 @@
 
      implicit none
 
-! external arguments
-! current iteration number
+!! external arguments
+     ! current iteration number
      integer, intent(in)    :: iter
 
-! convergence flag
+     ! convergence flag
      logical, intent(inout) :: conv
 
-! local parameters
-! required minimum iteration number to achieive convergence
+!! local parameters
+     ! required minimum iteration number to achieive convergence
      integer, parameter :: minit = 16
 
 ! local variables
