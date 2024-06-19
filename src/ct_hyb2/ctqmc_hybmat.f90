@@ -14,7 +14,7 @@
 !!!           cat_reload_detrat
 !!! source  : ctqmc_hybmat.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
 !!!           06/19/2024 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
@@ -37,7 +37,8 @@
 !! annihilation operators
 !!
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
-     use constants, only : dp, zero, one, czero
+     use constants, only : dp
+     use constants, only : zero, one, czero
 
      use control, only : nfreq
      use control, only : beta
