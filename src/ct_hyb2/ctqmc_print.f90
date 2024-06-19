@@ -117,6 +117,8 @@
      write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
      write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
 
+!! body]
+
      return
   end subroutine ctqmc_print_footer
 
@@ -183,6 +185,8 @@
      write(mystd,'(4X,a,i10,  a4,a10)') 'ncarlo /', ncarlo, '/', 'integer'
 
      write(mystd,*)
+
+!! body]
 
      return
   end subroutine ctqmc_print_summary
@@ -273,6 +277,8 @@
 
      write(mystd,*)
 
+!! body]
+
      return
   end subroutine ctqmc_print_control
 
@@ -355,6 +361,8 @@
      write(mystd,'(4X,a,i10)')    'negative sign counter:', cnegs
      write(mystd,'(4X,a,f10.5)')  'averaged sign sampler:', caves / real(cstep)
 
+!! body]
+
      return
   end subroutine ctqmc_print_runtime
 
@@ -382,6 +390,8 @@
      else
          write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< LOOPING'
      endif ! back if ( isscf /= 2 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_print_it_info
