@@ -197,18 +197,18 @@
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
      integer  :: j
 
-! loop index over frequencies
+     ! loop index over frequencies
      integer  :: k
 
-! real(dp) dummy variables
+     ! real(dp) dummy variables
      real(dp) :: p
 
-! update gmat matrix
+     ! update gmat matrix
      lsaves(:, flvr) = czero
      rsaves(:, flvr) = czero
 
@@ -224,7 +224,7 @@
          gmat(k, flvr, flvr) = gmat(k, flvr, flvr) + lsaves(k, flvr) * rsaves(k, flvr) * p
      enddo ! over k={1,nfreq} loop
 
-! update mmat matrix
+     ! update mmat matrix
      p = one / mmat(ie, is, flvr) ! we redefine p here
      do j=1,ckink
          do i=1,ckink
@@ -252,7 +252,7 @@
          enddo ! over i={ie,ckink-1} loop
      enddo ! over j={1,is-1} loop
 
-! update the perturbation expansion series
+     ! update the perturbation expansion series
      call cat_remove_colour(flvr, is, ie)
 
 ! only for debug
