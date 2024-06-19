@@ -91,20 +91,21 @@
 !! quantum impurity solver plus dynamical mean field theory engine
 !!
   subroutine ctqmc_print_footer()
-     use constants, only : dp, mystd
+     use constants, only : dp
+     use constants, only : mystd
 
      use control, only : cname
 
      implicit none
 
-! local variables
-! string for current date and time
+!! local variables
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! used to record the time usage information
+     ! used to record the time usage information
      real(dp) :: tot_time
 
-! obtain time usage information
+     ! obtain time usage information
      call cpu_time(tot_time)
 
 ! obtain current date and time
