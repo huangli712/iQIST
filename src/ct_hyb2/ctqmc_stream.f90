@@ -56,7 +56,7 @@
      isspn  = 1         ! symmetry (spin part)
      isopt  = 1         ! fast trace evaluation
      iscut  = 1         ! dynamic truncation
-     isbin  = 1         ! data binning
+     !isbin  = 1         ! data binning
      iswor  = 1         ! worm algorithm
      isort  = 1         ! advanced basis
      isobs  = 1         ! various physical observables
@@ -130,7 +130,7 @@
              call p_get('isspn' , isspn )
              call p_get('isopt' , isopt )
              call p_get('iscut' , iscut )
-             call p_get('isbin' , isbin )
+             !call p_get('isbin' , isbin )
              call p_get('iswor' , iswor )
              call p_get('isort' , isort )
              call p_get('isobs' , isobs )
@@ -187,7 +187,7 @@
      call mp_bcast( isspn , master )
      call mp_bcast( isopt , master )
      call mp_bcast( iscut , master )
-     call mp_bcast( isbin , master )
+     !call mp_bcast( isbin , master )
      call mp_bcast( iswor , master )
      call mp_bcast( isort , master )
      call mp_bcast( isobs , master )

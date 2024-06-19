@@ -314,7 +314,7 @@
   subroutine ctqmc_dump_gtau(gtau, gerr)
      use constants, only : dp, mytmp
 
-     use control, only : isbin
+     !use control, only : isbin
      use control, only : norbs
      use control, only : ntime
      use control, only : nsweep, nwrite
@@ -352,11 +352,11 @@
      endif ! back if ( nbins == nsweep / nwrite + 1 ) block
 
 ! open data file: solver.green.dat
-     if ( isbin == 1 .or. nbins == 1 ) then
+     !if ( isbin == 1 .or. nbins == 1 ) then
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
-     else
-         open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
-     endif ! back if ( isbin == 1 .or. nbins == 1 ) block
+     !else
+     !    open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
+     !endif ! back if ( isbin == 1 .or. nbins == 1 ) block
 
 ! write it
      do i=1,norbs

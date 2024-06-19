@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
+!!! project : iqist @ manjushaka
 !!! program : ctqmc_print_header
 !!!           ctqmc_print_footer
 !!!           ctqmc_print_summary
@@ -8,9 +8,9 @@
 !!!           ctqmc_print_it_info
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           06/20/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -30,6 +30,7 @@
 
      use version, only : V_FULL
      use version, only : V_AUTH
+     use version, only : V_INST
      use version, only : V_MAIL
      use version, only : V_GPL3
 
@@ -38,9 +39,11 @@
 
      implicit none
 
-! local variables
-! string for current date and time
+!! local variables
+     ! string for current date and time
      character (len = 20) :: date_time_string
+
+!! [body
 
 ! obtain current date and time
      call s_time_builder(date_time_string)
@@ -133,7 +136,7 @@
      write(mystd,'(4X,a,i10,  a4,a10)') 'isspn  /', isspn , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'isopt  /', isopt , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'iscut  /', iscut , '/', 'integer'
-     write(mystd,'(4X,a,i10,  a4,a10)') 'isbin  /', isbin , '/', 'integer'
+     !write(mystd,'(4X,a,i10,  a4,a10)') 'isbin  /', isbin , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'iswor  /', iswor , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'isort  /', isort , '/', 'integer'
      write(mystd,'(4X,a,i10,  a4,a10)') 'isobs  /', isobs , '/', 'integer'
@@ -194,7 +197,8 @@
      use control, only : isscf               ! control running scheme
      use control, only : isbnd, isspn        ! control symmetry
      use control, only : isopt, iscut        ! control optimized algorithms
-     use control, only : isbin, iswor, isort ! control measurement tricks
+     !use control, only : isbin, iswor, isort ! control measurement tricks
+     use control, only : iswor, isort ! control measurement tricks
      use control, only : isobs, issus, isvrt ! control physical observables
 
      implicit none
@@ -256,7 +260,7 @@
      write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (spin part)    /', isspn, '/ ', spn(isspn)
      write(mystd,'(4X,a,i4,3X,2a)') 'fast trace evaluation   /', isopt, '/ ', opt(isopt)
      write(mystd,'(4X,a,i4,3X,2a)') 'dynamic truncation      /', iscut, '/ ', cut(iscut)
-     write(mystd,'(4X,a,i4,3X,2a)') 'data binning            /', isbin, '/ ', bin(isbin)
+     !write(mystd,'(4X,a,i4,3X,2a)') 'data binning            /', isbin, '/ ', bin(isbin)
      write(mystd,'(4X,a,i4,3X,2a)') 'worm algorithm          /', iswor, '/ ', wor(iswor)
      write(mystd,'(4X,a,i4,3X,2a)') 'advanced basis          /', isort, '/ ', ort(isort)
 
