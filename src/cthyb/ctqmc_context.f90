@@ -1436,7 +1436,11 @@
      return
   end subroutine cat_free_clur
 
-!!>>> cat_free_flvr: deallocate memory for flvr-related variables
+!!
+!! @sub cat_free_flvr
+!!
+!! deallocate memory for flvr-related variables
+!!
   subroutine cat_free_flvr()
      implicit none
 
