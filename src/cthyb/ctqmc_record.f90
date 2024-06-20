@@ -2735,8 +2735,8 @@
 
      implicit none
 
-! external arguments
-! impurity green's function
+!! external arguments
+     ! impurity green's function
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
@@ -2803,7 +2803,7 @@
 
      implicit none
 
-! external arguments
+!! external arguments
      ! auxiliary correlation function, F(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ftau_err(ntime,norbs,norbs)
@@ -2841,10 +2841,12 @@
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_ftau
