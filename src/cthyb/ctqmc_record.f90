@@ -3249,12 +3249,12 @@
 ! build lnop_mpi, rnop_mpi, and lrmm_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(lnop, lnop_mpi)
      call mp_allreduce(rnop, rnop_mpi)
      call mp_allreduce(lrmm, lrmm_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3265,7 +3265,7 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      lnop_mpi = lnop_mpi / real(nprocs)
      rnop_mpi = rnop_mpi / real(nprocs)
      lrmm_mpi = lrmm_mpi / real(nprocs)
@@ -3273,22 +3273,24 @@
 ! build lnop_err, rnop_err, and lrmm_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((lnop - lnop_mpi)**2, lnop_err)
      call mp_allreduce((rnop - rnop_mpi)**2, rnop_err)
      call mp_allreduce((lrmm - lrmm_mpi)**2, lrmm_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
          rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
          lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_lrmm
