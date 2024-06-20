@@ -621,7 +621,7 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
-! start to collect data
+     ! start to collect data
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver reducing'
      endif ! back if ( myid == master ) block
