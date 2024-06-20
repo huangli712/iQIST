@@ -4,16 +4,18 @@
 !!!           ctqmc_four_hybf
 !!!           ctqmc_eval_htau
 !!!           ctqmc_eval_hsed
-!!!           ctqmc_symm_nimp
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf
-!!!           ctqmc_make_gtau
-!!!           ctqmc_make_ftau
-!!!           ctqmc_make_prod
+!!!           ctqmc_symm_nimp
+!!!           ctqmc_tran_gtau
+!!!           ctqmc_tran_grnf
+!!!           ctqmc_tran_twop
+!!!           ctqmc_make_fexp
+!!!           ctqmc_make_bexp
 !!!           ctqmc_make_hub2
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 10/01/2008 by li huang (created)
 !!!           05/18/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
@@ -42,7 +44,8 @@
 !! fourier htau to hybf, from imaginary time to matsubara frequency
 !!
   subroutine ctqmc_four_htau(htau, hybf)
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : norbs
      use control, only : mfreq
@@ -52,36 +55,36 @@
 
      implicit none
 
-! external arguments
-! hybridization function on imaginary time axis
+!! external arguments
+     ! hybridization function on imaginary time axis
      real(dp), intent(in) :: htau(ntime,norbs,norbs)
 
-! hybridization function on matsubara frequency axis
+     ! hybridization function on matsubara frequency axis
      complex(dp), intent(out) :: hybf(mfreq,norbs,norbs)
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
      integer  :: j
 
-! dummy arrays
+     ! dummy arrays
      real(dp) :: raux(ntime)
      complex(dp) :: caux(mfreq)
 
-! initialize them
+     ! initialize them
      raux = zero
      caux = czero
 
      do i=1,norbs
          do j=1,norbs
 
-! copy the imaginary time data to raux
+             ! copy the imaginary time data to raux
              raux = htau(:,j,i)
 
-! call the service layer
+             ! call the service layer
              call s_fft_forward(ntime, tmesh, raux, mfreq, rmesh, caux)
 
-! copy the matsubara frequency data to hybf
+             ! copy the matsubara frequency data to hybf
              hybf(:,j,i) = caux
 
          enddo ! over j={1,norbs} loop
