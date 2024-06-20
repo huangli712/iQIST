@@ -567,7 +567,8 @@
 !! write out impurity green's function in matsubara frequency space
 !!
   subroutine ctqmc_dump_grnf(grnf, gerr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -576,20 +577,20 @@
 
      implicit none
 
-! external arguments
-! impurity green's function
+!! external arguments
+     ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
      complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.grn.dat
+     ! open data file: solver.grn.dat
      open(mytmp, file='solver.grn.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), grnf(j,i,i), gerr(j,i,i)
@@ -598,8 +599,10 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_grnf
