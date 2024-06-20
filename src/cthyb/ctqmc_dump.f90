@@ -38,6 +38,49 @@
 !!!-----------------------------------------------------------------------
 
 !!========================================================================
+!!>>> dump data of autocorrelation time                                <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_dump_ac_f
+!!
+!! write out the autocorrelation function for the total occupation number
+!!
+  subroutine ctqmc_dump_ac_f(ac_f)
+     use constants, only : dp
+     use constants, only : mytmp
+
+     use control, only : ntime
+
+     implicit none
+
+!! external arguments
+     ! autocorrelation function
+     real(dp), intent(in) :: ac_f(ntime)
+
+!! local variables
+     ! loop index
+     integer :: i
+
+!! [body
+
+     ! open data file: solver.ac_f.dat
+     open(mytmp, file='solver.ac_f.dat', form='formatted', status='unknown')
+
+     ! write it
+     do i=1,ntime
+         write(mytmp,'(i6,f12.6)') i, ac_f(i)
+     enddo ! over i={1,ntime} loop
+
+     ! close data file
+     close(mytmp)
+
+!! body]
+
+     return
+  end subroutine ctqmc_dump_ac_f
+
+!!========================================================================
 !!>>> dump data of physical observables 1                              <<<
 !!========================================================================
 
