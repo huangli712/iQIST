@@ -628,7 +628,7 @@
 
      call cpu_time(time_begin) ! record starting time
 
-! calculate the average values
+     ! calculate the average values
      AVERAGE_DATA: BLOCK
 
          hist = hist * one
