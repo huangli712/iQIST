@@ -129,12 +129,13 @@
      real(dp), allocatable :: nmat_err(:,:)
 
      ! impurity green's function in imaginary time axis
-     real(dp), allocatable    :: gtau_mpi(:,:,:)
-     real(dp), allocatable    :: gtau_err(:,:,:)
+     real(dp), allocatable :: gtau_mpi(:,:,:)
+     real(dp), allocatable :: gtau_err(:,:,:)
 
      ! auxiliary correlation function in imaginary time axis
-     real(dp), allocatable    :: ftau_mpi(:,:,:)
-     real(dp), allocatable    :: ftau_err(:,:,:)
+     real(dp), allocatable :: ftau_mpi(:,:,:)
+     real(dp), allocatable :: ftau_err(:,:,:)
+     !--------------------------------------------------------------------
 
      ! number of operators, < k >
      real(dp), allocatable :: knop_mpi(:)
