@@ -197,10 +197,10 @@
      ! diagramm may be zero, so we don't retrieve it for iscut == 2
      if ( iscut == 2 ) RETURN
 
-! read solver.status.dat, only master node can do it
+     ! read solver.status.dat, only master node can do it
      if ( myid == master ) then
 
-! open the status file
+         ! open the status file
          open(mytmp, file='solver.status.dat', form='formatted', status='unknown')
 
 ! skip comment lines
