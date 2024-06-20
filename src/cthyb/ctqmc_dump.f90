@@ -754,6 +754,8 @@
      ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine ctqmc_dump_wssf
 
@@ -800,6 +802,8 @@
      ! close data file
      close(mytmp)
 
+!! body]
+
      return
   end subroutine ctqmc_dump_sig2
 
@@ -844,14 +848,14 @@
      f_val = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
      f_err = sum( kbar ) - sum( kerr ) * ( two * sum( knop ) + one )
 
-! check if we need to dump the < k > and < k^2 > data
-! to solver.kmat.dat
+     ! check if we need to dump the < k > and < k^2 > data
+     ! to solver.kmat.dat
      if ( .not. btest(isobs, 1) ) RETURN
 
-! open data file: solver.kmat.dat
+     ! open data file: solver.kmat.dat
      open(mytmp, file='solver.kmat.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '# <  k  > data:'
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, knop(i), kerr(i)
@@ -867,8 +871,10 @@
      write(mytmp,'(a6,2f12.6)') 'kksum', sum( kmat ), sum( kbar )
      write(mytmp,'(a6,2f12.6)') 'final', f_val, f_err
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_kmat
@@ -891,35 +897,35 @@
      real(dp), intent(in) :: lnop(norbs)
      real(dp), intent(in) :: lerr(norbs)
 
-! number of operators at right half axis, < k_r >
+     ! number of operators at right half axis, < k_r >
      real(dp), intent(in) :: rnop(norbs)
      real(dp), intent(in) :: rerr(norbs)
 
-! crossing product of k_l and k_r, < k_l k_r >
+     ! crossing product of k_l and k_r, < k_l k_r >
      real(dp), intent(in) :: lrmm(norbs,norbs)
      real(dp), intent(in) :: lree(norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! final value and corresponding error
+     ! final value and corresponding error
      real(dp) :: f_val
      real(dp) :: f_err
 
-! calculate f_val and f_err
+     ! calculate f_val and f_err
      f_val = sum( lrmm ) - sum( lnop ) * sum( rnop )
      f_err = sum( lree ) - sum( rnop ) * sum( lerr ) - sum( lnop ) * sum( rerr )
 
-! check if we need to dump the fidelity susceptibility data
-! to solver.lrmm.dat
+     ! check if we need to dump the fidelity susceptibility data
+     ! to solver.lrmm.dat
      if ( .not. btest(isobs, 2) ) RETURN
 
-! open data file: solver.lrmm.dat
+     ! open data file: solver.lrmm.dat
      open(mytmp, file='solver.lrmm.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
      do i=1,norbs
          write(mytmp,'(i6,4f12.6)') i, lnop(i), rnop(i), lerr(i), rerr(i)
@@ -936,8 +942,10 @@
      write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmm ), sum( lree )
      write(mytmp,'(a6,2f12.6)') 'fidel', f_val, f_err
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_lrmm
