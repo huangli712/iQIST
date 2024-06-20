@@ -3676,6 +3676,8 @@
      real(dp), intent(out) :: ch_w_mpi(nbfrq,norbs,norbs)
      real(dp), intent(out) :: ch_w_err(nbfrq,norbs,norbs)
 
+!! [body
+
      ! check whether this observable has been measured
      if ( .not. btest(issus, 4) ) RETURN
 
@@ -3765,6 +3767,8 @@
      ! used to store the real and imaginary parts of vertex function
      real(dp), allocatable :: h_re_err(:,:,:,:,:)
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
+
+!! [body
 
      ! check whether this observable has been measured
      if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
@@ -3888,6 +3892,8 @@
      ! used to store the real and imaginary parts of vertex function
      real(dp), allocatable :: h_re_err(:,:,:,:,:)
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
+
+!! [body
 
      ! check whether this observable has been measured
      if ( .not. ( btest(isvrt, 3) .or. btest(isvrt, 4) ) ) RETURN
