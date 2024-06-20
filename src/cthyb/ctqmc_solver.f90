@@ -821,7 +821,7 @@
          call ctqmc_dump_grnf(grnf, grnf_err)
          call ctqmc_dump_ftau(ftau, ftau_err)
          call ctqmc_dump_frnf(frnf, frnf_err)
-         call ctqmc_dump_sigf(sig2, sig2_err)
+         call ctqmc_dump_sig2(sig2, sig2_err)
 
          call ctqmc_dump_kmat(knop, kmat, knop_err, kmat_err)
          call ctqmc_dump_lrmm(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
@@ -838,7 +838,7 @@
 
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -848,21 +848,21 @@
 !!>>> saving quantum impurity solver                                   <<<
 !!========================================================================
 
-! start to save the diagrammatic information
+     ! start to save the diagrammatic information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver saving'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
 
-! save the perturbation expansion series information to the disk file
+     ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
@@ -872,14 +872,14 @@
 !!>>> finishing quantum impurity solver                                <<<
 !!========================================================================
 
-! print the footer of continuous time quantum Monte Carlo quantum impurity
-! solver. to tell the user it is over
+     ! print the footer of continuous time quantum Monte Carlo quantum
+     ! impurity solver. to tell the user it is over
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! deallocate memory
+     ! deallocate memory
      deallocate(hist_mpi)
      deallocate(hist_err)
      deallocate(prob_mpi)
@@ -897,6 +897,10 @@
      deallocate(ftau_err)
      deallocate(grnf_mpi)
      deallocate(grnf_err)
+     deallocate(frnf_mpi)
+     deallocate(frnf_err)
+     deallocate(sig2_mpi)
+     deallocate(sig2_err)
 
      deallocate(knop_mpi)
      deallocate(knop_err)
@@ -911,12 +915,29 @@
      deallocate(szpw_mpi)
      deallocate(szpw_err)
 
-     deallocate(g2pw_mpi)
-     deallocate(g2pw_err)
-     deallocate(h2pw_mpi)
-     deallocate(h2pw_err)
-     deallocate(p2pw_mpi)
-     deallocate(p2pw_err)
+     deallocate(schi_mpi)
+     deallocate(schi_err)
+     deallocate(sp_t_mpi)
+     deallocate(sp_t_err)
+     deallocate(sp_w_mpi)
+     deallocate(sp_w_err)
+     deallocate(cchi_mpi)
+     deallocate(cchi_err)
+     deallocate(ch_t_mpi)
+     deallocate(ch_t_err)
+     deallocate(ch_w_mpi)
+     deallocate(ch_w_err)
+
+     deallocate(g2ph_mpi)
+     deallocate(g2ph_err)
+     deallocate(h2ph_mpi)
+     deallocate(h2ph_err)
+     deallocate(g2pp_mpi)
+     deallocate(g2pp_err)
+     deallocate(h2pp_mpi)
+     deallocate(h2pp_err)
+
+!! body]
 
      return
   end subroutine ctqmc_impurity_solver
@@ -938,13 +959,17 @@
 
      implicit none
 
-!-------------------------------------------------------------------------
-! please insert your debug code here
-!-------------------------------------------------------------------------
+!! [body
+
+     !--------------------------------------------------------------------
+     ! please insert your debug code here
+     !--------------------------------------------------------------------
 
      call cat_disp_diagrams(1)
      call cat_disp_diagrams(2)
      call s_print_error('ctqmc_impurity_tester','in debug mode')
+
+!! body]
 
      return
   end subroutine ctqmc_impurity_tester
