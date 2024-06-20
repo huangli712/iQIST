@@ -1222,7 +1222,7 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(rank(norbs),       stat=istat)
 
      allocate(diag(ncfgs,  2  ), stat=istat)
@@ -1234,12 +1234,12 @@
      allocate(naux(ncfgs),       stat=istat)
      allocate(saux(ncfgs),       stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_umat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      rank = 0
 
      diag = zero
@@ -1266,7 +1266,7 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(lspace(mkink,norbs),     stat=istat)
      allocate(rspace(mkink,norbs),     stat=istat)
 
@@ -1277,12 +1277,12 @@
 
      allocate(gmat(nfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_mmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      lspace = zero
      rspace = zero
 
@@ -1308,19 +1308,19 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(gtau(ntime,norbs,norbs), stat=istat)
      allocate(ftau(ntime,norbs,norbs), stat=istat)
 
      allocate(grnf(mfreq,norbs,norbs), stat=istat)
      allocate(frnf(mfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_gmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      gtau = zero
      ftau = zero
 
