@@ -352,8 +352,8 @@
 !!>>> warming quantum impurity solver                                  <<<
 !!========================================================================
 
-! warmup the continuous time quantum Monte Carlo quantum impurity solver
-! in order to achieve equilibrium state
+     ! warmup the continuous time quantum Monte Carlo quantum impurity
+     ! solver in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
      endif ! back if ( myid == master ) block
