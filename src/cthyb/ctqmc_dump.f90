@@ -1,29 +1,30 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
-!!! program : ctqmc_dump_hist
+!!! project : iqist @ manjushaka
+!!! program : ctqmc_dump_ac_f
+!!!           ctqmc_dump_hist
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_paux
-!!!           ctqmc_dump_nmat <<<---
+!!!           ctqmc_dump_nmat
 !!!           ctqmc_dump_gtau
 !!!           ctqmc_dump_ftau
 !!!           ctqmc_dump_htau
-!!!           ctqmc_dump_wtau <<<---
+!!!           ctqmc_dump_wtau
 !!!           ctqmc_dump_grnf
 !!!           ctqmc_dump_frnf
 !!!           ctqmc_dump_hybf
 !!!           ctqmc_dump_wssf
-!!!           ctqmc_dump_sigf <<<---
+!!!           ctqmc_dump_sigf
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lrmm
-!!!           ctqmc_dump_szpw <<<---
+!!!           ctqmc_dump_szpw
 !!!           ctqmc_dump_twop
-!!!           ctqmc_dump_pair <<<---
-!!!           ctqmc_dump_diag <<<---
+!!!           ctqmc_dump_pair
+!!!           ctqmc_dump_diag
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/17/2017 by li huang (last modified)
+!!!           06/20/2024 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
