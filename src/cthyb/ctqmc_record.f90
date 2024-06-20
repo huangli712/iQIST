@@ -3702,21 +3702,21 @@
 
      implicit none
 
-! external arguments
-! two-particle green's function
+!! external arguments
+     ! two-particle green's function
      complex(dp), intent(out) :: g2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: g2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! two-particle vertex function
+     ! two-particle vertex function
      complex(dp), intent(out) :: h2ph_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: h2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! local variables
-! used to store the real and imaginary parts of green's function
+!! local variables
+     ! used to store the real and imaginary parts of green's function
      real(dp), allocatable :: g_re_err(:,:,:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:,:,:)
 
-! used to store the real and imaginary parts of vertex function
+     ! used to store the real and imaginary parts of vertex function
      real(dp), allocatable :: h_re_err(:,:,:,:,:)
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
 
