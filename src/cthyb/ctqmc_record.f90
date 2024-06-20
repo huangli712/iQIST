@@ -3729,26 +3729,26 @@
      allocate(h_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
      allocate(h_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
 
-! initialize g_re_err and g_im_err
+     ! initialize g_re_err and g_im_err
      g_re_err = zero
      g_im_err = zero
 
-! initialize h_re_err and h_im_err
+     ! initialize h_re_err and h_im_err
      h_re_err = zero
      h_im_err = zero
 
-! initialize g2ph_mpi and g2ph_err
+     ! initialize g2ph_mpi and g2ph_err
      g2ph_mpi = czero
      g2ph_err = czero
 
-! initialize h2ph_mpi and h2ph_err
+     ! initialize h2ph_mpi and h2ph_err
      h2ph_mpi = czero
      h2ph_err = czero
 
 ! build g2ph_mpi and h2ph_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(g2ph, g2ph_mpi)
      call mp_allreduce(h2ph, h2ph_mpi)
 
@@ -3788,11 +3788,11 @@
          h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final g2ph_err and h2ph_err
+     ! construct the final g2ph_err and h2ph_err
      g2ph_err = g_re_err + g_im_err * czi
      h2ph_err = h_re_err + h_im_err * czi
 
-! deallocate memory
+     ! deallocate memory
      deallocate(g_re_err)
      deallocate(g_im_err)
      deallocate(h_re_err)
@@ -3828,41 +3828,41 @@
      complex(dp), intent(out) :: g2pp_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: g2pp_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! two-particle vertex function
+     ! two-particle vertex function
      complex(dp), intent(out) :: h2pp_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: h2pp_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
-! used to store the real and imaginary parts of green's function
+     ! used to store the real and imaginary parts of green's function
      real(dp), allocatable :: g_re_err(:,:,:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:,:,:)
 
-! used to store the real and imaginary parts of vertex function
+     ! used to store the real and imaginary parts of vertex function
      real(dp), allocatable :: h_re_err(:,:,:,:,:)
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
 
-! check whether this observable has been measured
+     ! check whether this observable has been measured
      if ( .not. ( btest(isvrt, 3) .or. btest(isvrt, 4) ) ) RETURN
 
-! allocate memory
+     ! allocate memory
      allocate(g_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
      allocate(g_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
      allocate(h_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
      allocate(h_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
 
-! initialize g_re_err and g_im_err
+     ! initialize g_re_err and g_im_err
      g_re_err = zero
      g_im_err = zero
 
-! initialize h_re_err and h_im_err
+     ! initialize h_re_err and h_im_err
      h_re_err = zero
      h_im_err = zero
 
-! initialize g2pp_mpi and g2pp_err
+     ! initialize g2pp_mpi and g2pp_err
      g2pp_mpi = czero
      g2pp_err = czero
 
-! initialize h2pp_mpi and h2pp_err
+     ! initialize h2pp_mpi and h2pp_err
      h2pp_mpi = czero
      h2pp_err = czero
 
