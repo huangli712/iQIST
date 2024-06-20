@@ -1006,11 +1006,13 @@
   subroutine cat_alloc_clur()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(index_s(mkink,norbs),     stat=istat)
      allocate(index_e(mkink,norbs),     stat=istat)
 
@@ -1054,6 +1056,8 @@
   subroutine cat_alloc_flvr()
      implicit none
 
+!! [body
+
 ! allocate memory
      allocate(index_t(mkink),      stat=istat)
      allocate(index_v(mkink),      stat=istat)
@@ -1096,6 +1100,8 @@
   subroutine cat_alloc_mesh()
      implicit none
 
+!! [body
+
 ! allocate memory
      allocate(tmesh(ntime),       stat=istat)
      allocate(rmesh(mfreq),       stat=istat)
@@ -1125,6 +1131,8 @@
 !!
   subroutine cat_alloc_meat()
      implicit none
+
+!! [body
 
 ! allocate memory
      allocate(hist(mkink),       stat=istat)
@@ -1178,6 +1186,8 @@
   subroutine cat_alloc_umat()
      implicit none
 
+!! [body
+
 ! allocate memory
      allocate(rank(norbs),       stat=istat)
 
@@ -1218,6 +1228,8 @@
   subroutine cat_alloc_mmat()
      implicit none
 
+!! [body
+
 ! allocate memory
      allocate(lspace(mkink,norbs),     stat=istat)
      allocate(rspace(mkink,norbs),     stat=istat)
@@ -1256,6 +1268,8 @@
   subroutine cat_alloc_gmat()
      implicit none
 
+!! [body
+
 ! allocate memory
      allocate(gtau(ntime,norbs,norbs), stat=istat)
      allocate(ftau(ntime,norbs,norbs), stat=istat)
@@ -1285,6 +1299,8 @@
 !!
   subroutine cat_alloc_wmat()
      implicit none
+
+!! [body
 
 ! allocate memory
      allocate(wtau(ntime,norbs,norbs), stat=istat)
@@ -1318,6 +1334,8 @@
   subroutine cat_alloc_smat()
      implicit none
 
+!! [body
+
 ! allocate memory
      allocate(sig1(mfreq,norbs,norbs), stat=istat)
      allocate(sig2(mfreq,norbs,norbs), stat=istat)
@@ -1350,6 +1368,8 @@
 ! loop index
      integer :: i
 
+!! [body
+
      do i=1,norbs
          call istack_destroy(empty_s(i))
          call istack_destroy(empty_e(i))
@@ -1373,6 +1393,8 @@
 !!>>> cat_free_flvr: deallocate memory for flvr-related variables
   subroutine cat_free_flvr()
      implicit none
+
+!! [body
 
      call istack_destroy(empty_v)
 
@@ -1398,6 +1420,8 @@
   subroutine cat_free_mesh()
      implicit none
 
+!! [body
+
      if ( allocated(tmesh) )   deallocate(tmesh)
      if ( allocated(rmesh) )   deallocate(rmesh)
 
@@ -1414,6 +1438,8 @@
 !!
   subroutine cat_free_meat()
      implicit none
+
+!! [body
 
      if ( allocated(hist) )    deallocate(hist)
      if ( allocated(prob) )    deallocate(prob)
@@ -1443,6 +1469,8 @@
   subroutine cat_free_umat()
      implicit none
 
+!! [body
+
      if ( allocated(rank) )    deallocate(rank)
 
      if ( allocated(diag) )    deallocate(diag)
@@ -1465,6 +1493,8 @@
   subroutine cat_free_mmat()
      implicit none
 
+!! [body
+
      if ( allocated(lspace) )  deallocate(lspace)
      if ( allocated(rspace) )  deallocate(rspace)
 
@@ -1486,6 +1516,8 @@
   subroutine cat_free_gmat()
      implicit none
 
+!! [body
+
      if ( allocated(gtau) )    deallocate(gtau)
      if ( allocated(ftau) )    deallocate(ftau)
 
@@ -1502,6 +1534,8 @@
 !!
   subroutine cat_free_wmat()
      implicit none
+
+!! [body
 
      if ( allocated(wtau) )    deallocate(wtau)
      if ( allocated(htau) )    deallocate(htau)
@@ -1520,6 +1554,8 @@
 !!
   subroutine cat_free_smat()
      implicit none
+
+!! [body
 
      if ( allocated(sig1) )    deallocate(sig1)
      if ( allocated(sig2) )    deallocate(sig2)
