@@ -493,6 +493,8 @@
      integer :: i
      integer :: j
 
+!! [body
+
      ! open data file: solver.hybri.dat
      open(mytmp, file='solver.hybri.dat', form='formatted', status='unknown')
 
@@ -519,7 +521,9 @@
 !! write out bath weiss's function in imaginary time space
 !!
   subroutine ctqmc_dump_wtau(wtau)
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : ntime
@@ -580,7 +584,7 @@
      implicit none
 
 !! external arguments
-     ! impurity green's function
+     ! impurity green's function and its error bar
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
      complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
 
@@ -713,7 +717,9 @@
 !! write out bath weiss's function in matsubara frequency space
 !!
   subroutine ctqmc_dump_wssf(wssf)
-     use constants, only : dp, czero, mytmp
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -722,12 +728,12 @@
 
      implicit none
 
-! external arguments
-! bath weiss's function
+!! external arguments
+     ! bath weiss's function
      complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
@@ -756,8 +762,9 @@
 !!
 !! write out self-energy function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_sig2(sigf)
-     use constants, only : dp, czero, mytmp
+  subroutine ctqmc_dump_sig2(sig2, serr)
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -767,8 +774,9 @@
      implicit none
 
 !! external arguments
-     ! self-energy function
-     complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
+     ! self-energy function and its error bar
+     complex(dp), intent(in) :: sig2(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: serr(mfreq,norbs,norbs)
 
 !! local variables
      ! loop index
@@ -783,7 +791,7 @@
      ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), sigf(j,i,i), czero
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), sig2(j,i,i), serr(j,i,i)
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
