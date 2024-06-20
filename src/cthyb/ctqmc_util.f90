@@ -1,16 +1,16 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
+!!! project : iqist @ manjushaka
 !!! program : ctqmc_four_htau
-!!!           ctqmc_four_hybf <<<---
+!!!           ctqmc_four_hybf
 !!!           ctqmc_eval_htau
-!!!           ctqmc_eval_hsed <<<---
+!!!           ctqmc_eval_hsed
 !!!           ctqmc_symm_nimp
 !!!           ctqmc_symm_gtau
-!!!           ctqmc_symm_grnf <<<---
+!!!           ctqmc_symm_grnf
 !!!           ctqmc_make_gtau
-!!!           ctqmc_make_ftau <<<---
-!!!           ctqmc_make_prod <<<---
-!!!           ctqmc_make_hub2 <<<---
+!!!           ctqmc_make_ftau
+!!!           ctqmc_make_prod
+!!!           ctqmc_make_hub2
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
