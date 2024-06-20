@@ -803,14 +803,14 @@
 !!>>> writing final results                                            <<<
 !!========================================================================
 
-! start to write data
+     ! start to write data
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver writing'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
 
-! write out the final data to external files
+     ! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
          call ctqmc_dump_prob(prob, prob_err)
