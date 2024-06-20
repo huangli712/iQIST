@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ct_hyb1 directory.
+## Makefile for iqist/src/ctseg directory.
 ##
 ## Usage
 ## =====
@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 01/02/2024 by li huang (last modified)
+## 06/20/2024 by li huang (last modified)
 ##
 ##
 
