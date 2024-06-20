@@ -517,25 +517,25 @@
 ! occupation number
      real(dp), intent(inout) :: nimp(norbs)
 
-! local variables
-! loop index over bands
+!! local variables
+     ! loop index over bands
      integer  :: ibnd
      integer  :: jbnd
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! histogram vector
-! note: it is NOT the global one
+     ! histogram vector
+     ! note: it is NOT the global one
      integer  :: hist(norbs)
 
-! build histogram
+     ! build histogram
      hist = 0
      do ibnd=1,norbs
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals with the same symmetry
+     ! perform symmetrization for those orbitals with the same symmetry
      if ( isbnd == 2 ) then
          do ibnd=1,norbs
              if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
