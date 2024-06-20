@@ -137,6 +137,23 @@
      real(dp), allocatable :: ftau_err(:,:,:)
      !--------------------------------------------------------------------
 
+     ! the following observables are always measured: complex(dp)
+     !--------------------------------------------------------------------
+     ! impurity green's function in matsubara frequency axis
+     complex(dp), allocatable :: grnf_mpi(:,:,:)
+     complex(dp), allocatable :: grnf_err(:,:,:)
+
+     ! auxiliary correlation function in matsubara frequency axis
+     complex(dp), allocatable :: frnf_mpi(:,:,:)
+     complex(dp), allocatable :: frnf_err(:,:,:)
+
+     ! self-energy function in matsubara frequency axis
+     complex(dp), allocatable :: sig2_mpi(:,:,:)
+     complex(dp), allocatable :: sig2_err(:,:,:)
+     !--------------------------------------------------------------------
+
+     ! the following observables are measured optionally: real(dp)
+     !--------------------------------------------------------------------
      ! number of operators, < k >
      real(dp), allocatable :: knop_mpi(:)
      real(dp), allocatable :: knop_err(:)
