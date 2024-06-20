@@ -935,10 +935,12 @@
 !! global variables and arrays
 !!
   module context
-     use constants, only : dp, zero, czero
+     use constants, only : dp
+     use constants, only : zero, czero
 
      use control, only : nband, norbs, ncfgs
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq
      use control, only : nfreq
@@ -958,10 +960,10 @@
      implicit none
 
 !!========================================================================
-!!>>> declare global variables                                         <<<
+!!>>> declare private variables                                        <<<
 !!========================================================================
 
-! status flag
+     ! status flag
      integer, private :: istat
 
 !!========================================================================
