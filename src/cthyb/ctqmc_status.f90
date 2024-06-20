@@ -78,13 +78,13 @@
      FLVR_CYCLE: do i=1,norbs
          write(mytmp,'(a9,i4)') '# flavor:', i
 
-! write out the creation operators
+         ! write out the creation operators
          write(mytmp,'(a9,i4)') '# time_s:', rank(i)
          do j=1,rank(i)
              write(mytmp,'(2i4,f12.6)') i, j, time_s( index_s(j, i), i )
          enddo ! over j={1,rank(i)} loop
 
-! write out the annihilation operators
+         ! write out the annihilation operators
          write(mytmp,'(a9,i4)') '# time_e:', rank(i)
          do j=1,rank(i)
              write(mytmp,'(2i4,f12.6)') i, j, time_e( index_e(j, i), i )
@@ -94,7 +94,7 @@
          write(mytmp,*)
      enddo FLVR_CYCLE ! over i={1,norbs} loop
 
-! dump the flavor part, not be used at all, just for reference
+     ! dump the flavor part, not be used at all, just for reference
      write(mytmp,'(a9,i4)') '# time_v:', nsize
      do j=1,nsize
          write(mytmp,'(3X,a,i4)',advance='no') '>>>', j
@@ -103,7 +103,7 @@
          write(mytmp,'(3X,a,f12.6)')           'time:', time_v( index_v(j) )
      enddo ! over j={1,nsize} loop
 
-! close the file handler
+     ! close the file handler
      close(mytmp)
 
      return
