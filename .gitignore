@@ -16,6 +16,6 @@ atom.cix
 test.py
 test.f90
 docs/build
-src/ct_hyb1/ctqmc
-src/ct_hyb2/ctqmc
+src/ctseg/ctqmc
+src/cthyb/ctqmc
 src/atomic/atomic
