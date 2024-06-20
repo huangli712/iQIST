@@ -620,9 +620,8 @@
 !!
 !! write out auxiliary correlation function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_frnf(frnf)
+  subroutine ctqmc_dump_frnf(frnf, ferr)
      use constants, only : dp
-     use constants, only : czero
      use constants, only : mytmp
 
      use control, only : norbs
@@ -633,8 +632,9 @@
      implicit none
 
 !! external arguments
-     ! auxiliary correlation function
+     ! auxiliary correlation function and its error bar
      complex(dp), intent(in) :: frnf(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: ferr(mfreq,norbs,norbs)
 
 !! local variables
      ! loop index
@@ -649,7 +649,7 @@
      ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), frnf(j,i,i), czero
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), frnf(j,i,i), ferr(j,i,i)
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
