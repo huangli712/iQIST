@@ -589,25 +589,74 @@
      real(dp), public, save, allocatable :: szpw(:,:)
 
 !!
-!! @var g2pw
+!! @var schi
 !!
-!! two-particle green's function
+!! spin-spin correlation function, \chi_{sp}(\tau), totally-averaged
 !!
-     complex(dp), public, save, allocatable :: g2pw(:,:,:,:,:)
+     real(dp), public, save, allocatable :: schi(:)
 
 !!
-!! @var h2pw
+!! @var sp_t
 !!
-!! used to calculate irreducible vertex function
+!! spin-spin correlation function, \chi_{sp}(\tau), orbital-resolved
 !!
-     complex(dp), public, save, allocatable :: h2pw(:,:,:,:,:)
+     real(dp), public, save, allocatable :: sp_t(:,:)
 
 !!
-!! @var p2pw
+!! @var sp_w
 !!
-!! particle-particle pairing susceptibility
+!! spin-spin correlation function, \chi_{sp}(i\omega), orbital-resolved
 !!
-     complex(dp), public, save, allocatable :: p2pw(:,:,:,:,:)
+     real(dp), public, save, allocatable :: sp_w(:,:)
+
+!!
+!! @var cchi
+!!
+!! charge-charge correlation function, \chi_{ch}(\tau), totally-averaged
+!!
+     real(dp), public, save, allocatable :: cchi(:)
+
+!!
+!! @var ch_t
+!!
+!! charge-charge correlation function, \chi_{ch}(\tau), orbital-resolved
+!!
+     real(dp), public, save, allocatable :: ch_t(:,:,:)
+
+!!
+!! @var ch_w
+!!
+!! charge-charge correlation function, \chi_{ch}(i\omega), orbital-resolved
+!!
+     real(dp), public, save, allocatable :: ch_w(:,:,:)
+
+!!
+!! @var g2ph
+!!
+!! two-particle green's function, particle-hole channel
+!!
+     complex(dp), public, save, allocatable :: g2ph(:,:,:,:,:)
+
+!!
+!! @var h2ph
+!!
+!! used to calculate two-particle vertex function, particle-hole channel
+!!
+     complex(dp), public, save, allocatable :: h2ph(:,:,:,:,:)
+
+!!
+!! @var g2pp
+!!
+!! two-particle green's function, particle-particle channel
+!!
+     complex(dp), public, save, allocatable :: g2pp(:,:,:,:,:)
+
+!!
+!! @var h2pp
+!!
+!! used to calculate two-particle vertex function, particle-particle channel
+!!
+     complex(dp), public, save, allocatable :: h2pp(:,:,:,:,:)
 
   end module ctqmc_meat
 
