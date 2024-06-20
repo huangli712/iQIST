@@ -2630,7 +2630,7 @@
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          paux_err = sqrt( paux_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
@@ -2680,7 +2680,7 @@
 ! build nimp_mpi and nmat_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(nimp, nimp_mpi)
      call mp_allreduce(nmat, nmat_mpi)
 
