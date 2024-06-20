@@ -552,14 +552,6 @@
          call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 !!========================================================================
-!!>>> symmetrizing immediate results                                   <<<
-!!========================================================================
-
-! symmetrize the impurity green's function over spin or over bands
-         call ctqmc_symm_gtau(symm, gtau_mpi)
-         call ctqmc_symm_gtau(symm, gtau_err)
-
-!!========================================================================
 !!>>> writing immediate results                                        <<<
 !!========================================================================
 
