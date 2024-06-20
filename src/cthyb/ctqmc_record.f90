@@ -496,7 +496,11 @@
   subroutine ctqmc_record_frnf()
      implicit none
 
+!! [body
+
      CONTINUE
+
+!! body]
 
      return
   end subroutine ctqmc_record_frnf
@@ -510,7 +514,11 @@
   subroutine ctqmc_record_sig2()
      implicit none
 
+!! [body
+
      CONTINUE
+
+!! body]
 
      return
   end subroutine ctqmc_record_sig2
