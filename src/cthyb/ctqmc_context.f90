@@ -1342,7 +1342,7 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(wtau(ntime,norbs,norbs), stat=istat)
      allocate(htau(ntime,norbs,norbs), stat=istat)
      allocate(hsed(ntime,norbs,norbs), stat=istat)
@@ -1350,12 +1350,12 @@
      allocate(wssf(mfreq,norbs,norbs), stat=istat)
      allocate(hybf(mfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_wmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      wtau = zero
      htau = zero
      hsed = zero
@@ -1378,16 +1378,16 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(sig1(mfreq,norbs,norbs), stat=istat)
      allocate(sig2(mfreq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_smat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      sig1 = czero
      sig2 = czero
 
