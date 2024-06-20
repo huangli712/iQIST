@@ -3500,24 +3500,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      sp_w_mpi = sp_w_mpi / real(nprocs)
 
 ! build sp_w_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((sp_w - sp_w_mpi)**2, sp_w_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_sp_w
@@ -3543,8 +3545,8 @@
 
      implicit none
 
-! external arguments
-! charge-charge correlation function, totally-averaged
+!! external arguments
+     ! charge-charge correlation function, totally-averaged
      real(dp), intent(out) :: cchi_mpi(ntime)
      real(dp), intent(out) :: cchi_err(ntime)
 
