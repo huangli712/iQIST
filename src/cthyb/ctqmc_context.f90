@@ -1161,9 +1161,17 @@
      allocate(lrmm(norbs,norbs), stat=istat)
      allocate(szpw(  4  ,norbs), stat=istat)
 
-     allocate(g2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(h2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     allocate(p2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(schi(ntime),       stat=istat)
+     allocate(sp_t(ntime,nband), stat=istat)
+     allocate(sp_w(nbfrq,nband), stat=istat)
+     allocate(cchi(ntime),       stat=istat)
+     allocate(ch_t(ntime,norbs,norbs), stat=istat)
+     allocate(ch_w(nbfrq,norbs,norbs), stat=istat)
+
+     allocate(g2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2ph(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2pp(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
      ! check the status
      if ( istat /= 0 ) then
@@ -1187,9 +1195,17 @@
      lrmm = zero
      szpw = zero
 
-     g2pw = czero
-     h2pw = czero
-     p2pw = czero
+     schi = zero
+     sp_t = zero
+     sp_w = zero
+     cchi = zero
+     ch_t = zero
+     ch_w = zero
+
+     g2ph = czero
+     h2ph = czero
+     g2pp = czero
+     h2pp = czero
 
 !! body]
 
