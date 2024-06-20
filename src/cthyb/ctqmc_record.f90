@@ -2879,25 +2879,25 @@
      real(dp), allocatable :: g_re_err(:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:)
 
-! allocate memory
+     ! allocate memory
      allocate(g_re_err(mfreq,norbs,norbs))
      allocate(g_im_err(mfreq,norbs,norbs))
 
-! initialize g_re_err and g_im_err
+     ! initialize g_re_err and g_im_err
      g_re_err = zero
      g_im_err = zero
 
-! initialize grnf_mpi and grnf_err
+     ! initialize grnf_mpi and grnf_err
      grnf_mpi = czero
      grnf_err = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(grnf, grnf_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -2906,13 +2906,13 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      grnf_mpi = grnf_mpi / real(nprocs)
 
 ! build grnf_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(( real(grnf - grnf_mpi))**2, g_re_err)
      call mp_allreduce((aimag(grnf - grnf_mpi))**2, g_im_err)
 
@@ -2959,8 +2959,8 @@
 
      implicit none
 
-! external arguments
-! auxiliary correlation function
+!! external arguments
+     ! auxiliary correlation function
      complex(dp), intent(out) :: frnf_mpi(mfreq,norbs,norbs)
      complex(dp), intent(out) :: frnf_err(mfreq,norbs,norbs)
 
@@ -3017,10 +3017,10 @@
          f_im_err = sqrt( f_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final frnf_err
+     ! construct the final frnf_err
      frnf_err = f_re_err + f_im_err * czi
 
-! deallocate memory
+     ! deallocate memory
      deallocate( f_re_err )
      deallocate( f_im_err )
 
