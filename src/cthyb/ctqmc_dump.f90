@@ -752,11 +752,11 @@
   end subroutine ctqmc_dump_wssf
 
 !!
-!! @sub ctqmc_dump_sigf
+!! @sub ctqmc_dump_sig2
 !!
 !! write out self-energy function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_sigf(sigf)
+  subroutine ctqmc_dump_sig2(sigf)
      use constants, only : dp, czero, mytmp
 
      use control, only : norbs
@@ -766,12 +766,12 @@
 
      implicit none
 
-! external arguments
-! self-energy function
+!! external arguments
+     ! self-energy function
      complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
@@ -780,7 +780,7 @@
      ! open data file: solver.sgm.dat
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), sigf(j,i,i), czero
@@ -789,11 +789,11 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_sigf
+  end subroutine ctqmc_dump_sig2
 
 !!========================================================================
 !!>>> dump data of physical observables 3                              <<<
@@ -812,25 +812,27 @@
 
      implicit none
 
-! external arguments
-! number of operators, < k >
+!! external arguments
+     ! number of operators, < k >
      real(dp), intent(in) :: knop(norbs)
      real(dp), intent(in) :: kerr(norbs)
 
-! crossing product of k_i and k_j, < k_i k_j >
+     ! crossing product of k_i and k_j, < k_i k_j >
      real(dp), intent(in) :: kmat(norbs,norbs)
      real(dp), intent(in) :: kbar(norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! final value and corresponding error
+     ! final value and corresponding error
      real(dp) :: f_val
      real(dp) :: f_err
 
-! calculate f_val and f_err
+!! body]
+
+     ! calculate f_val and f_err
      f_val = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
      f_err = sum( kbar ) - sum( kerr ) * ( two * sum( knop ) + one )
 
