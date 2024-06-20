@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 01/02/2024 by li huang (last modified)
+## 06/20/2024 by li huang (last modified)
 ##
 ##
 
@@ -64,21 +64,21 @@ help:
 	@echo
 	@echo
 	@echo '  targets:'
-	@echo '     help              print full usage information          '
+	@echo '     help              print full usage information        '
 	@echo
-	@echo '     all               build all components and tools        '
-	@echo '     clean             clean all directories                 '
+	@echo '     all               build all components and tools      '
+	@echo '     clean             clean all directories               '
 	@echo
-	@echo '     solver            build all quantum impurity solvers    '
-	@echo '     clean-solver      clean all quantum impurity solvers    '
+	@echo '     solver            build all quantum impurity solvers  '
+	@echo '     clean-solver      clean all quantum impurity solvers  '
 	@echo
-	@echo '     atomic            build atomic eigenvalue solver        '
-	@echo '     clean-atomic      clean atomic eigenvalue solver        '
+	@echo '     atomic            build atomic eigenvalue solver      '
+	@echo '     clean-atomic      clean atomic eigenvalue solver      '
 	@echo
-	@echo '     ct-hyb1           build ct-hyb1 quantum impurity solver '
-	@echo '     clean-ct-hyb1     clean ct-hyb1 quantum impurity solver '
-	@echo '     ct-hyb2           build ct-hyb2 quantum impurity solver '
-	@echo '     clean-ct-hyb2     clean ct-hyb2 quantum impurity solver '
+	@echo '     ctseg             build ctseg quantum impurity solver '
+	@echo '     clean-ctseg       clean ctseg quantum impurity solver '
+	@echo '     cthyb             build cthyb quantum impurity solver '
+	@echo '     clean-cthyb       clean cthyb quantum impurity solver '
 
 # all-in-one building target
 all: solver atomic
@@ -87,10 +87,10 @@ all: solver atomic
 clean: clean-solver clean-atomic
 
 # targets for solver
-solver: ct-hyb1 ct-hyb2
-clean-solver: clean-ct-hyb1 clean-ct-hyb2
+solver: ctseg cthyb
+clean-solver: clean-ctseg clean-cthyb
 
-# targets for atomic eigenvalue solver: jasmine
+# targets for atomic eigenvalue problem solver: jasmine
 atomic:
 	cd ../src/atomic/; pwd; make
 
@@ -98,15 +98,15 @@ clean-atomic:
 	cd ../src/atomic/; pwd; make clean
 
 # targets for ct-hyb quantum impurity solver: segment version (narcissus)
-ct-hyb1:
-	cd ../src/ct_hyb1/; pwd; make
+ctseg:
+	cd ../src/ctseg/; pwd; make
 
-clean-ct-hyb1:
-	cd ../src/ct_hyb1/; pwd; make clean
+clean-ctseg:
+	cd ../src/ctseg/; pwd; make clean
 
 # targets for ct-hyb quantum impurity solver: general version (manjushaka)
-ct-hyb2:
-	cd ../src/ct_hyb2/; pwd; make
+cthyb:
+	cd ../src/cthyb/; pwd; make
 
-clean-ct-hyb2:
-	cd ../src/ct_hyb2/; pwd; make clean
+clean-cthyb:
+	cd ../src/cthyb/; pwd; make clean
