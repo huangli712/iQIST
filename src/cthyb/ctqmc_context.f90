@@ -1144,7 +1144,10 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
+     allocate(ac_v(ntime + 2),   stat=istat)
+     allocate(ac_f(ntime + 2),   stat=istat)
+
      allocate(hist(mkink),       stat=istat)
      allocate(prob(ncfgs),       stat=istat)
      allocate(paux(  9  ),       stat=istat)
@@ -1162,12 +1165,15 @@
      allocate(h2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(p2pw(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_meat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
+     ac_v = zero
+     ac_f = zero
+
      hist = zero
      prob = zero
      paux = zero
