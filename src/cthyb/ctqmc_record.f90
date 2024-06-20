@@ -211,19 +211,19 @@
 
      CALC_PAUX: BLOCK
 
-         ! evaluate <K^4>
+         ! evaluate < K^4 >
          paux(9) = paux(9) + ( ckink * two )**4
 
-         ! evaluate <K^3>
+         ! evaluate < K^3 >
          paux(8) = paux(8) + ( ckink * two )**3
 
-         ! evaluate <K^2>
+         ! evaluate < K^2 >
          paux(7) = paux(7) + ( ckink * two )**2
 
-         ! evaluate <N^2>
+         ! evaluate < N^2 >
          paux(6) = paux(6) + csign * nele ** 2
 
-         ! evaluate <N^1>
+         ! evaluate < N^1 >
          paux(5) = paux(5) + csign * nele
 
          ! evaluate spin magnetization: < Sz >
