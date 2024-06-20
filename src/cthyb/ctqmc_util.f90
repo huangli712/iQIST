@@ -136,6 +136,8 @@
      real(dp) :: raux(ntime)
      complex(dp) :: caux(mfreq)
 
+!! [body
+
      ! initialize them
      raux = zero
      caux = czero
@@ -239,6 +241,8 @@
      ! return value
      real(dp) :: val
 
+!! [body
+
      val = s_spl_funct(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
 
 !! body]
@@ -288,6 +292,8 @@
      ! second-order derivates
      real(dp) :: d2y(ntime)
 
+!! [body
+
      ! calculate deltau
      deltau = beta / real(ntime - 1)
 
@@ -336,8 +342,8 @@
 !!
 !! @sub ctqmc_symm_gtau
 !!
-!! symmetrize the gtau according to symm vector. only the diagonal
-!! elements are taken into considerations
+!! symmetrize the gtau according to symm vector. only the diagonal terms
+!! are taken into considerations
 !!
   subroutine ctqmc_symm_gtau(symm, gtau)
      use constants, only : dp
@@ -370,6 +376,8 @@
      ! histogram vector
      ! note: it is NOT the global one
      integer  :: hist(norbs)
+
+!! [body
 
      ! build histogram
      hist = 0
@@ -423,7 +431,8 @@
 !! elements are taken into considerations
 !!
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants, only : dp, two, czero
+     use constants, only : dp
+     use constants, only : two, czero
 
      use control, only : isbnd, isspn
      use control, only : nband, norbs
@@ -431,7 +440,7 @@
 
      implicit none
 
-! external arguments
+!! external arguments
      ! symmetry vector
      integer, intent(in) :: symm(norbs)
 
@@ -452,6 +461,8 @@
      ! histogram vector
      ! note: it is NOT the global one
      integer :: hist(norbs)
+
+!! [body
 
      ! build histogram
      hist = 0
@@ -495,6 +506,8 @@
          enddo ! over kfrq={1,mfreq} loop
      endif ! back if ( isspn == 2 ) block
 
+!! body]
+
      return
   end subroutine ctqmc_symm_grnf
 
@@ -504,7 +517,8 @@
 !! symmetrize the occupation number array, nimp, according to symm vector
 !!
   subroutine ctqmc_symm_nimp(symm, nimp)
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : isbnd, isspn
      use control, only : nband, norbs
@@ -529,6 +543,8 @@
      ! histogram vector
      ! note: it is NOT the global one
      integer  :: hist(norbs)
+
+!! [body
 
      ! build histogram
      hist = 0
@@ -576,12 +592,13 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_make_gtau
+!! @sub ctqmc_tran_gtau
 !!
 !! build imaginary time green's function using different representation
 !!
-  subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants, only : dp, zero, two
+  subroutine ctqmc_tran_gtau(tmesh, gtau, gaux)
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : isort
      use control, only : norbs
