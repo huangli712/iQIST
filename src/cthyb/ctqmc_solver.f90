@@ -97,20 +97,20 @@
      ! starting time
      real(dp) :: time_begin
 
-! ending time
+     ! ending time
      real(dp) :: time_end
 
-! time consuming by current iteration
+     ! time consuming by current iteration
      real(dp) :: time_cur
 
-! time consuming by total iteration
+     ! time consuming by total iteration
      real(dp) :: time_sum
 
-! histogram for perturbation expansion series
+     ! histogram for perturbation expansion series
      real(dp), allocatable :: hist_mpi(:)
      real(dp), allocatable :: hist_err(:)
 
-! probability of atomic eigenstates
+     ! probability of atomic eigenstates
      real(dp), allocatable :: prob_mpi(:)
      real(dp), allocatable :: prob_err(:)
 
