@@ -166,13 +166,15 @@
      real(dp) :: tau_s(mkink,norbs)
      real(dp) :: tau_e(mkink,norbs)
 
-! initialize variables
+!! [body
+
+     ! initialize variables
      exists = .false.
 
      tau_s = zero
      tau_e = zero
 
-! inquire file status: solver.status.dat, only master node can do it
+     ! inquire file status: solver.status.dat, only master node can do it
      if ( myid == master ) then
          inquire (file = 'solver.status.dat', exist = exists)
      endif ! back if ( myid == master ) block
