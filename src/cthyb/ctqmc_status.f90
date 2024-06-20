@@ -146,23 +146,23 @@
      integer  :: m
      integer  :: n
 
-! index address for create and destroy operators in flavor part, respectively
+     ! index address for create and destroy operators in flavor part
      integer  :: fis
      integer  :: fie
 
-! whether it is valid to update the configuration
+     ! whether it is valid to update the configuration
      logical  :: ladd
 
-! used to check whether the input file (solver.status.dat) exists
+     ! used to check whether the input file (solver.status.dat) exists
      logical  :: exists
 
-! dummy character variables
+     ! dummy character variables
      character (len = 9) :: chr
 
-! determinant ratio for insert operators
+     ! determinant ratio for insert operators
      real(dp) :: deter_ratio
 
-! dummy variables, used to store imaginary time points
+     ! dummy variables, used to store imaginary time points
      real(dp) :: tau_s(mkink,norbs)
      real(dp) :: tau_e(mkink,norbs)
 
