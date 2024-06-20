@@ -106,6 +106,8 @@
      ! time consuming by total iteration
      real(dp) :: time_sum
 
+     ! the following observables are always measured: real(dp)
+     !--------------------------------------------------------------------
      ! histogram for perturbation expansion series
      real(dp), allocatable :: hist_mpi(:)
      real(dp), allocatable :: hist_err(:)
@@ -114,27 +116,35 @@
      real(dp), allocatable :: prob_mpi(:)
      real(dp), allocatable :: prob_err(:)
 
-! auxiliary physical observables
+     ! auxiliary physical observables
      real(dp), allocatable :: paux_mpi(:)
      real(dp), allocatable :: paux_err(:)
 
-! impurity occupation number, < n_i >
+     ! impurity occupation number, < n_i >
      real(dp), allocatable :: nimp_mpi(:)
      real(dp), allocatable :: nimp_err(:)
 
-! impurity double occupation number matrix, < n_i n_j >
+     ! impurity double occupation number matrix, < n_i n_j >
      real(dp), allocatable :: nmat_mpi(:,:)
      real(dp), allocatable :: nmat_err(:,:)
 
-! number of operators, < k >
+     ! impurity green's function in imaginary time axis
+     real(dp), allocatable    :: gtau_mpi(:,:,:)
+     real(dp), allocatable    :: gtau_err(:,:,:)
+
+     ! auxiliary correlation function in imaginary time axis
+     real(dp), allocatable    :: ftau_mpi(:,:,:)
+     real(dp), allocatable    :: ftau_err(:,:,:)
+
+     ! number of operators, < k >
      real(dp), allocatable :: knop_mpi(:)
      real(dp), allocatable :: knop_err(:)
 
-! crossing product of k_i and k_j, < k_i k_j >
+     ! crossing product of k_i and k_j, < k_i k_j >
      real(dp), allocatable :: kmat_mpi(:,:)
      real(dp), allocatable :: kmat_err(:,:)
 
-! number of operators at left half axis, < k_l >
+     ! number of operators at left half axis, < k_l >
      real(dp), allocatable :: lnop_mpi(:)
      real(dp), allocatable :: lnop_err(:)
 
@@ -161,14 +171,6 @@
 ! particle-particle pairing susceptibility
      complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
-
-! impurity green's function in imaginary time axis
-     real(dp), allocatable    :: gtau_mpi(:,:,:)
-     real(dp), allocatable    :: gtau_err(:,:,:)
-
-! auxiliary correlation function in imaginary time axis
-     real(dp), allocatable    :: ftau_mpi(:,:,:)
-     real(dp), allocatable    :: ftau_err(:,:,:)
 
 ! impurity green's function in matsubara frequency axis
      complex(dp), allocatable :: grnf_mpi(:,:,:)
