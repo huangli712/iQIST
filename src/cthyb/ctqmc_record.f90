@@ -1566,6 +1566,8 @@
 
      end select
 
+!! body]
+
      return
   end subroutine ctqmc_record_g2pp
 
