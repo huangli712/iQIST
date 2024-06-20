@@ -817,7 +817,9 @@
 !! write out the kinetic energy fluctuation
 !!
   subroutine ctqmc_dump_kmat(knop, kmat, kerr, kbar)
-     use constants, only : dp, one, two, mytmp
+     use constants, only : dp
+     use constants, only : one, two
+     use constants, only : mytmp
 
      use control, only : isobs
      use control, only : norbs
@@ -825,11 +827,11 @@
      implicit none
 
 !! external arguments
-     ! number of operators, < k >
+     ! number of operators, < k >, and its error bar
      real(dp), intent(in) :: knop(norbs)
      real(dp), intent(in) :: kerr(norbs)
 
-     ! crossing product of k_i and k_j, < k_i k_j >
+     ! crossing product of k_i and k_j, < k_i k_j >, and its error bar
      real(dp), intent(in) :: kmat(norbs,norbs)
      real(dp), intent(in) :: kbar(norbs,norbs)
 
@@ -842,7 +844,7 @@
      real(dp) :: f_val
      real(dp) :: f_err
 
-!! body]
+!! [body
 
      ! calculate f_val and f_err
      f_val = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
@@ -885,23 +887,24 @@
 !! write out the fidelity susceptibility
 !!
   subroutine ctqmc_dump_lrmm(lnop, rnop, lrmm, lerr, rerr, lree)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : isobs
      use control, only : norbs
 
      implicit none
 
-! external arguments
-! number of operators at left half axis, < k_l >
+!! external arguments
+     ! number of operators at left half axis, < k_l >, and its error bar
      real(dp), intent(in) :: lnop(norbs)
      real(dp), intent(in) :: lerr(norbs)
 
-     ! number of operators at right half axis, < k_r >
+     ! number of operators at right half axis, < k_r >, and its error bar
      real(dp), intent(in) :: rnop(norbs)
      real(dp), intent(in) :: rerr(norbs)
 
-     ! crossing product of k_l and k_r, < k_l k_r >
+     ! crossing product of k_l and k_r, < k_l k_r >, and its error bar
      real(dp), intent(in) :: lrmm(norbs,norbs)
      real(dp), intent(in) :: lree(norbs,norbs)
 
@@ -913,6 +916,8 @@
      ! final value and corresponding error
      real(dp) :: f_val
      real(dp) :: f_err
+
+!! [body
 
      ! calculate f_val and f_err
      f_val = sum( lrmm ) - sum( lnop ) * sum( rnop )
@@ -957,7 +962,8 @@
 !! calculate the binder cumulant
 !!
   subroutine ctqmc_dump_szpw(szpw, serr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : isobs
      use control, only : nband, norbs
@@ -965,7 +971,7 @@
      implicit none
 
 !! external arguments
-     ! powers of local magnetization
+     ! powers of local magnetization and its error bar
      real(dp), intent(in) :: szpw(4,norbs)
      real(dp), intent(in) :: serr(4,norbs)
 
@@ -974,8 +980,10 @@
      integer :: i
      integer :: j
 
-! check if we need to dump the powers of local magnetization data
-! to solver.szpw.dat
+!! [body
+
+     ! check if we need to dump the powers of local magnetization data
+     ! to solver.szpw.dat
      if ( .not. btest(isobs, 3) ) RETURN
 
      ! open data file: solver.szpw.dat
