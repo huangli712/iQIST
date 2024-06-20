@@ -157,12 +157,12 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! checks for diagonal htau to be causal. htau should be concave. hence,
-! if it becomes very small at two points, it should remain zero in all
-! points between the two points. this is very important in insulators,
-! because htau can overshoot to positive values multiple times and kinks
-! can be trapped in the range between the two crossing points, where htau
-! is causal, but should be zero.
+     ! checks for diagonal htau to be causal. htau should be concave.
+     ! hence, if it becomes very small at two points, it should remain
+     ! zero in all points between the two points. this is very important
+     ! in insulators, because htau can overshoot to positive values
+     ! multiple times and kinks can be trapped in the range between the
+     ! two crossing points, where htau is causal, but should be zero.
      start = 1
      last = 1
      do i=1,norbs
@@ -178,13 +178,13 @@
              endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={ntime,1,-1} loop
 
-!-------------------------------------------------------------------------
-!<         if ( start > 1 .and. last > 1 ) then
-!<             do j=start,last
-!<                 htau(j,i,i) = -eps6
-!<             enddo ! over j={start,last} loop
-!<         endif ! back if ( start > 1 .and. last > 1 ) block
-!-------------------------------------------------------------------------
+!<!-----------------------------------------------------------------------
+!<       if ( start > 1 .and. last > 1 ) then
+!<           do j=start,last
+!<               htau(j,i,i) = -eps6
+!<           enddo ! over j={start,last} loop
+!<       endif ! back if ( start > 1 .and. last > 1 ) block
+!<!-----------------------------------------------------------------------
      enddo ! over i={1,norbs} loop
 
      ! enforce hybridization function less than zero to ensure the causality
@@ -200,7 +200,7 @@
   end subroutine ctqmc_four_hybf
 
 !!========================================================================
-!!>>> cubic spline interpolation                                       <<<
+!!>>> cubic spline interpolation 1                                     <<<
 !!========================================================================
 
 !!
@@ -305,17 +305,17 @@
          do i=1,norbs
 
              ! calculate first-order derivate of \Delta(0): startu
-             startu = (-25.0_dp*htau(1,       i, j) +                    &
-                        48.0_dp*htau(2,       i, j) -                    &
-                        36.0_dp*htau(3,       i, j) +                    &
-                        16.0_dp*htau(4,       i, j) -                    &
+             startu = (-25.0_dp*htau(1,       i, j) + &
+                        48.0_dp*htau(2,       i, j) - &
+                        36.0_dp*htau(3,       i, j) + &
+                        16.0_dp*htau(4,       i, j) - &
                          3.0_dp*htau(5,       i, j)) / 12.0_dp / deltau
 
              ! calculate first-order derivate of \Delta(\beta): startd
-             startd = ( 25.0_dp*htau(ntime-0, i, j) -                    &
-                        48.0_dp*htau(ntime-1, i, j) +                    &
-                        36.0_dp*htau(ntime-2, i, j) -                    &
-                        16.0_dp*htau(ntime-3, i, j) +                    &
+             startd = ( 25.0_dp*htau(ntime-0, i, j) - &
+                        48.0_dp*htau(ntime-1, i, j) + &
+                        36.0_dp*htau(ntime-2, i, j) - &
+                        16.0_dp*htau(ntime-3, i, j) + &
                          3.0_dp*htau(ntime-4, i, j)) / 12.0_dp / deltau
 
              ! reinitialize d2y to zero
