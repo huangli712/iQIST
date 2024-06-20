@@ -283,7 +283,7 @@
      implicit none
 
 !! external arguments
-     ! auxiliary physical observables
+     ! auxiliary physical observables and its error bar
      real(dp), intent(in) :: paux(9)
      real(dp), intent(in) :: perr(9)
 
@@ -293,15 +293,15 @@
      open(mytmp, file='solver.paux.dat', form='formatted', status='unknown')
 
      ! write it
-     write(mytmp,'(a,2f12.6)') 'etot :', paux(1), perr(1)
-     write(mytmp,'(a,2f12.6)') 'epot :', paux(2), perr(2)
-     write(mytmp,'(a,2f12.6)') 'ekin :', paux(3), perr(3)
-     write(mytmp,'(a,2f12.6)') '<Sz> :', paux(4), perr(4)
-     write(mytmp,'(a,2f12.6)') '<N1> :', paux(5), perr(5)
-     write(mytmp,'(a,2f12.6)') '<N2> :', paux(6), perr(6)
-     write(mytmp,'(a,2e12.4)') '<K2> :', paux(7), perr(7)
-     write(mytmp,'(a,2e12.4)') '<K3> :', paux(8), perr(8)
-     write(mytmp,'(a,2e12.4)') '<K4> :', paux(9), perr(9)
+     write(mytmp,'(a,2f12.6)') 'etot:', paux(1), perr(1)
+     write(mytmp,'(a,2f12.6)') 'epot:', paux(2), perr(2)
+     write(mytmp,'(a,2f12.6)') 'ekin:', paux(3), perr(3)
+     write(mytmp,'(a,2f12.6)') '<Sz>:', paux(4), perr(4)
+     write(mytmp,'(a,2f12.6)') '<N1>:', paux(5), perr(5)
+     write(mytmp,'(a,2f12.6)') '<N2>:', paux(6), perr(6)
+     write(mytmp,'(a,2e12.4)') '<K2>:', paux(7), perr(7)
+     write(mytmp,'(a,2e12.4)') '<K3>:', paux(8), perr(8)
+     write(mytmp,'(a,2e12.4)') '<K4>:', paux(9), perr(9)
 
      ! close data file
      close(mytmp)
@@ -323,24 +323,26 @@
 
      implicit none
 
-! external arguments
-! occupation number data
+!! external arguments
+     ! occupation number data
      real(dp), intent(in) :: nimp(norbs)
      real(dp), intent(in) :: nerr(norbs)
 
-! double occupation matrix data
+     ! double occupation matrix data
      real(dp), intent(in) :: nmat(norbs,norbs)
      real(dp), intent(in) :: nbar(norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.nmat.dat
+!! [body
+
+     ! open data file: solver.nmat.dat
      open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, nimp(i), nerr(i)
@@ -356,8 +358,10 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_nmat
@@ -372,7 +376,8 @@
 !! write out impurity green's function in imaginary time space
 !!
   subroutine ctqmc_dump_gtau(gtau, gerr)
-     use constants, only : dp, mytmp
+     use constants, only : dp
+     use constants, only : mytmp
 
      !use control, only : isbin
      use control, only : norbs
