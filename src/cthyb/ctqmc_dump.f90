@@ -145,7 +145,9 @@
 !! write out the probability of atomic eigenstates of local hamiltonian
 !!
   subroutine ctqmc_dump_prob(prob, perr)
-     use constants, only : dp, zero, eps6, mytmp
+     use constants, only : dp
+     use constants, only : zero, eps6
+     use constants, only : mytmp
 
      use control, only : norbs, ncfgs
 
@@ -157,7 +159,7 @@
      implicit none
 
 !! external arguments
-     ! probability data of eigenstates
+     ! probability data of eigenstates and its error bar
      real(dp), intent(in) :: prob(ncfgs)
      real(dp), intent(in) :: perr(ncfgs)
 
