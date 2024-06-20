@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           06/20/2017 by li huang (last modified)
+!!!           06/20/2024 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -267,18 +267,17 @@
      ! write control parameters
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
 
-     write(mystd,'(4X,a,i4,3X,2a)') 'self-consistent scheme  /', isscf, '/ ', scf(isscf)
-     write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (band part)    /', isbnd, '/ ', bnd(isbnd)
-     write(mystd,'(4X,a,i4,3X,2a)') 'symmetry (spin part)    /', isspn, '/ ', spn(isspn)
-     write(mystd,'(4X,a,i4,3X,2a)') 'fast trace evaluation   /', isopt, '/ ', opt(isopt)
-     write(mystd,'(4X,a,i4,3X,2a)') 'dynamic truncation      /', iscut, '/ ', cut(iscut)
-     !write(mystd,'(4X,a,i4,3X,2a)') 'data binning            /', isbin, '/ ', bin(isbin)
-     write(mystd,'(4X,a,i4,3X,2a)') 'worm algorithm          /', iswor, '/ ', wor(iswor)
-     write(mystd,'(4X,a,i4,3X,2a)') 'advanced basis          /', isort, '/ ', ort(isort)
+     write(mystd,'(4X,2a)') 'self-consistent scheme   / ', scf(isscf)
+     write(mystd,'(4X,2a)') 'symmetry (band part)     / ', bnd(isbnd)
+     write(mystd,'(4X,2a)') 'symmetry (spin part)     / ', spn(isspn)
+     write(mystd,'(4X,2a)') 'fast trace evaluation    / ', opt(isopt)
+     write(mystd,'(4X,2a)') 'dynamic truncation       / ', cut(iscut)
+     write(mystd,'(4X,2a)') 'worm algorithm           / ', wor(iswor)
+     write(mystd,'(4X,2a)') 'advanced representation  / ', ort(isort)
 
-     write(mystd,'(4X,a,i4,3X,2a)') 'fidelity susceptibility /', isobs, '/ ', trim(str_obs)
-     write(mystd,'(4X,a,i4,3X,2a)') 'sp/ch susceptibility    /', issus, '/ ', trim(str_sus)
-     write(mystd,'(4X,a,i4,3X,2a)') 'two-particle quantities /', isvrt, '/ ', trim(str_vrt)
+     write(mystd,'(4X,2a)') 'fidelity susceptibility  / ', trim(str_obs)
+     write(mystd,'(4X,2a)') 'sp/ch susceptibility     / ', trim(str_sus)
+     write(mystd,'(4X,2a)') 'two-particle quantities  / ', trim(str_vrt)
 
      write(mystd,*)
 
