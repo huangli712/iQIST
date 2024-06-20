@@ -156,43 +156,45 @@
 
      implicit none
 
-! external arguments
-! probability data of eigenstates
+!! external arguments
+     ! probability data of eigenstates
      real(dp), intent(in) :: prob(ncfgs)
      real(dp), intent(in) :: perr(ncfgs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! number of individual spin values
+     ! number of individual spin values
      integer  :: ns
 
-! start index of sectors
+     ! start index of sectors
      integer  :: indx
 
-! dummy arrays, used to store spin of eigenstates
+     ! dummy arrays, used to store spin of eigenstates
      real(dp) :: stmp1(ncfgs)
      real(dp) :: stmp2(ncfgs)
 
-! probability of sectors
+     ! probability of sectors
      real(dp) :: psect(nsect)
      real(dp) :: pserr(nsect)
 
-! probability of occupation number distribution
+     ! probability of occupation number distribution
      real(dp) :: oprob(0:norbs)
      real(dp) :: operr(0:norbs) ! error bar
 
-! probability of net spin distribution
+     ! probability of net spin distribution
      real(dp) :: sprob(ncfgs)
      real(dp) :: sperr(ncfgs) ! error bar
 
-! sort all the spin values
+!! [body
+
+     ! sort all the spin values
      stmp1 = saux
      call s_sorter(ncfgs, stmp1)
 
-! find out individual spin values, and store them into stmp2
+     ! find out individual spin values, and store them into stmp2
      ns = 1
      stmp2 = zero
      stmp2(1) = stmp1(1)
@@ -203,7 +205,7 @@
          endif ! back if ( stmp2(ns) < stmp1(i) ) block
      enddo ! over i={2,ncfgs} loop
 
-! evaluate psect
+     ! evaluate psect
      psect = zero
      pserr = zero
      do i=1,nsect
@@ -214,7 +216,7 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
-! evaluate oprob
+     ! evaluate oprob
      oprob = zero
      operr = zero
      do i=1,ncfgs
@@ -223,7 +225,7 @@
          operr(j) = operr(j) + perr(i)
      enddo ! over i={1,ncfgs} loop
 
-! evaluate sprob
+     ! evaluate sprob
      sprob = zero
      sperr = zero
      do i=1,ncfgs
@@ -236,10 +238,10 @@
          enddo SCAN_CYCLE ! over j={1,ns} loop
      enddo ! over i={1,ncfgs} loop
 
-! open data file: solver.prob.dat
+     ! open data file: solver.prob.dat
      open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
          write(mytmp,'(i6,4f12.6)') i, prob(i), naux(i), saux(i), perr(i)
