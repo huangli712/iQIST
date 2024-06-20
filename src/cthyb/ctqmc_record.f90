@@ -148,25 +148,27 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! start index of sectors
+     ! start index of sectors
      integer  :: indx
 
-! current occupation number and Sz
+     ! current occupation number and Sz
      real(dp) :: nele
      real(dp) :: sz
 
-! current probability for eigenstates
+     ! current probability for eigenstates
      real(dp) :: cprob(ncfgs)
 
-! current probability for sectors
+     ! current probability for sectors
      real(dp) :: sprob(nsect)
 
-! evaluate cprob at first, it is current atomic probability
+!! [body
+
+     ! evaluate cprob at first, it is current atomic probability
      do i=1,ncfgs
          cprob(i) = diag(i,2) / c_mtr
      enddo ! over i={1,ncfgs} loop
