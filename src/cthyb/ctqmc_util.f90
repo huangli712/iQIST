@@ -677,6 +677,26 @@
      endif LEG_BLOCK ! back if ( isort == 2 ) block
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+     !--------------------------------------------------------------------
+     ! using svd orthogonal polynomial representation
+     !--------------------------------------------------------------------
+     SVD_BLOCK: if ( isort == 3 ) then
+         step = real(svgrd - 1) / two
+         do i=1,norbs
+             do j=1,ntime
+                 raux = two * tmesh(j) / beta - one ! map tmesh to [-1,1]
+                 call s_svd_point(raux, step, curr)
+                 do fsvd=1,svmax
+                     raux = two / (beta * beta) * rep_s(curr,fsvd)
+                     gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fsvd,i,i)
+                 enddo ! over fsvd={1,svmax} loop
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
+     endif SVD_BLOCK ! back if ( isort == 3 ) block
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!! body]
+
      return
   end subroutine ctqmc_make_gtau
 
