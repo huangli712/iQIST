@@ -820,15 +820,20 @@
          call ctqmc_dump_gtau(gtau, gtau_err)
          call ctqmc_dump_grnf(grnf, grnf_err)
          call ctqmc_dump_ftau(ftau, ftau_err)
-         call ctqmc_dump_frnf(frnf)
-         call ctqmc_dump_sigf(sig2)
+         call ctqmc_dump_frnf(frnf, frnf_err)
+         call ctqmc_dump_sigf(sig2, sig2_err)
 
          call ctqmc_dump_kmat(knop, kmat, knop_err, kmat_err)
          call ctqmc_dump_lrmm(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
          call ctqmc_dump_szpw(szpw, szpw_err)
 
-         call ctqmc_dump_twop(g2pw, h2pw, g2pw_err, h2pw_err)
-         call ctqmc_dump_pair(p2pw, p2pw_err)
+         call ctqmc_dump_sp_t(schi, sp_t, schi_err, sp_t_err)
+         call ctqmc_dump_sp_w(sp_w, sp_w_err)
+         call ctqmc_dump_ch_t(cchi, ch_t, cchi_err, ch_t_err)
+         call ctqmc_dump_ch_w(ch_w, ch_w_err)
+
+         call ctqmc_dump_g2ph(g2ph, h2ph, g2ph_err, h2ph_err)
+         call ctqmc_dump_g2pp(g2pp, h2pp, g2pp_err, h2pp_err)
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_end) ! record ending time
