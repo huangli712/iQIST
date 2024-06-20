@@ -103,7 +103,9 @@
 !! fourier hybf to htau, from matsubara frequency to imaginary time
 !!
   subroutine ctqmc_four_hybf(hybf, htau)
-     use constants, only : dp, zero, czero, eps6
+     use constants, only : dp
+     use constants, only : zero, czero
+     use constants, only : eps6
 
      use control, only : norbs
      use control, only : mfreq
@@ -114,40 +116,40 @@
 
      implicit none
 
-! external arguments
-! hybridization function on imaginary time axis
+!! external arguments
+     ! hybridization function on imaginary time axis
      real(dp), intent(out) :: htau(ntime,norbs,norbs)
 
-! hybridization function on matsubara frequency axis
+     ! hybridization function on matsubara frequency axis
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer  :: i
      integer  :: j
 
-! used to determine the bottom region of hybridiaztion function
+     ! used to determine the bottom region of hybridiaztion function
      integer  :: start
      integer  :: last
 
-! dummy arrays
+     ! dummy arrays
      real(dp) :: raux(ntime)
      complex(dp) :: caux(mfreq)
 
-! initialize them
+     ! initialize them
      raux = zero
      caux = czero
 
      do i=1,norbs
          do j=1,norbs
 
-! copy matsubara frequency data to caux
+             ! copy matsubara frequency data to caux
              caux = hybf(:,j,i)
 
-! call the service layer
+             ! call the service layer
              call s_fft_backward(mfreq, rmesh, caux, ntime, tmesh, raux, beta)
 
-! copy imaginary time data to htau
+             ! copy imaginary time data to htau
              htau(:,j,i) = raux
 
          enddo ! over j={1,norbs} loop
@@ -183,12 +185,14 @@
 !-------------------------------------------------------------------------
      enddo ! over i={1,norbs} loop
 
-! enforce hybridization function less than zero to ensure the causality
+     ! enforce hybridization function less than zero to ensure the causality
      do i=1,norbs
          do j=1,ntime
              if ( htau(j,i,i) > zero ) htau(j,i,i) = -eps6
          enddo ! over j={1,ntime} loop
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_four_hybf
@@ -220,22 +224,24 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! delta imaginary time
+     ! delta imaginary time
      real(dp), intent(in) :: dtau
 
-! external functions
-! internal interpolation engine
+!! external functions
+     ! internal interpolation engine
      procedure( real(dp) ) :: s_spl_funct
 
-! local variables
-! return value
+!! local variables
+     ! return value
      real(dp) :: val
 
      val = s_spl_funct(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
+
+!! body]
 
      return
   end function ctqmc_eval_htau
