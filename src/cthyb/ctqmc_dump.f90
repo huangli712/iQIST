@@ -379,61 +379,41 @@
      use constants, only : dp
      use constants, only : mytmp
 
-     !use control, only : isbin
      use control, only : norbs
      use control, only : ntime
-     use control, only : nsweep, nwrite
 
      use context, only : tmesh
 
      implicit none
 
-! external arguments
-! impurity green's function
+!! external arguments
+     ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
      real(dp), intent(in) :: gerr(ntime,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! counter for data bins
-     integer, save :: nbins = 0
+!! [body
 
-! scaled impurity green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-     real(dp) :: gbar(ntime,norbs,norbs)
+     ! open data file: solver.green.dat
+     open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
-! evaluate gaux and gbar at first
-     call ctqmc_make_gtau(tmesh, gtau, gaux)
-     call ctqmc_make_gtau(tmesh, gerr, gbar)
-
-! determine reset and nbins
-     if ( nbins == nsweep / nwrite + 1 ) then
-         nbins = 1 ! reset the counter to 1
-     else
-         nbins = nbins + 1
-     endif ! back if ( nbins == nsweep / nwrite + 1 ) block
-
-! open data file: solver.green.dat
-     !if ( isbin == 1 .or. nbins == 1 ) then
-         open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
-     !else
-     !    open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
-     !endif ! back if ( isbin == 1 .or. nbins == 1 ) block
-
-! write it
+     ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gbar(j,i,i)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gtau(j,i,i), gerr(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_gtau
