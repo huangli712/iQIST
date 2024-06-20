@@ -3550,14 +3550,14 @@
      real(dp), intent(out) :: cchi_mpi(ntime)
      real(dp), intent(out) :: cchi_err(ntime)
 
-! charge-charge correlation function, orbital-resolved
+     ! charge-charge correlation function, orbital-resolved
      real(dp), intent(out) :: ch_t_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ch_t_err(ntime,norbs,norbs)
 
-! check whether this observable has been measured
+     ! check whether this observable has been measured
      if ( .not. btest(issus, 2) ) RETURN
 
-! initialize cchi_mpi and ch_t_mpi, cchi_err and ch_t_err
+     ! initialize cchi_mpi and ch_t_mpi, cchi_err and ch_t_err
      cchi_mpi = zero
      ch_t_mpi = zero
 
@@ -3567,11 +3567,11 @@
 ! build cchi_mpi and ch_t_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(cchi, cchi_mpi)
      call mp_allreduce(ch_t, ch_t_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3581,23 +3581,23 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      cchi_mpi = cchi_mpi / real(nprocs)
      ch_t_mpi = ch_t_mpi / real(nprocs)
 
 ! build cchi_err and ch_t_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((cchi - cchi_mpi)**2, cchi_err)
      call mp_allreduce((ch_t - ch_t_mpi)**2, ch_t_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
          ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
