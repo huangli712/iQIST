@@ -2458,6 +2458,8 @@
      real(dp), intent(out) :: hist_mpi(mkink)
      real(dp), intent(out) :: hist_err(mkink)
 
+!! [body
+
      ! initialize hist_mpi and hist_err
      hist_mpi = zero
      hist_err = zero
@@ -2525,6 +2527,8 @@
      real(dp), intent(out) :: prob_mpi(ncfgs)
      real(dp), intent(out) :: prob_err(ncfgs)
 
+!! [body
+
      ! initialize prob_mpi and prob_err
      prob_mpi = zero
      prob_err = zero
@@ -2590,6 +2594,8 @@
      ! auxiliary physical observables
      real(dp), intent(out) :: paux_mpi(  9  )
      real(dp), intent(out) :: paux_err(  9  )
+
+!! [body
 
      ! initialize paux_mpi and paux_err
      paux_mpi = zero
@@ -2661,6 +2667,8 @@
      ! double occupation number matrix
      real(dp), intent(out) :: nmat_mpi(norbs,norbs)
      real(dp), intent(out) :: nmat_err(norbs,norbs)
+
+!! [body
 
      ! initialize nimp_mpi and nmat_mpi, nimp_err and nmat_err
      nimp_mpi = zero
@@ -2742,6 +2750,8 @@
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
+!! [body
+
      ! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
      gtau_err = zero
@@ -2809,6 +2819,8 @@
      ! auxiliary correlation function, F(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ftau_err(ntime,norbs,norbs)
+
+!! [body
 
      ! initialize ftau_mpi and ftau_err
      ftau_mpi = zero
@@ -2882,6 +2894,8 @@
      ! used to store the real and imaginary parts of impurity green's function
      real(dp), allocatable :: g_re_err(:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:)
+
+!! [body
 
      ! allocate memory
      allocate(g_re_err(mfreq,norbs,norbs))
@@ -2973,6 +2987,8 @@
      real(dp), allocatable :: f_re_err(:,:,:)
      real(dp), allocatable :: f_im_err(:,:,:)
 
+!! [body
+
      ! allocate memory
      allocate(f_re_err(mfreq,norbs,norbs))
      allocate(f_im_err(mfreq,norbs,norbs))
@@ -3062,6 +3078,8 @@
      ! used to store the real and imaginary parts of self-energy function
      real(dp), allocatable :: s_re_err(:,:,:)
      real(dp), allocatable :: s_im_err(:,:,:)
+
+!! [body
 
      ! allocate memory
      allocate(s_re_err(mfreq,norbs,norbs))
