@@ -1025,12 +1025,12 @@
      allocate(empty_s(norbs),           stat=istat)
      allocate(empty_e(norbs),           stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_clur','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      index_s = 0
      index_e = 0
 
@@ -1044,6 +1044,8 @@
          call istack_create(empty_s(i), mkink)
          call istack_create(empty_e(i), mkink)
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine cat_alloc_clur
@@ -1089,6 +1091,8 @@
 
      call istack_create(empty_v, mkink)
 
+!! body]
+
      return
   end subroutine cat_alloc_flvr
 
@@ -1120,6 +1124,8 @@
 
      lmesh = zero
      rep_l = zero
+
+!! body]
 
      return
   end subroutine cat_alloc_mesh
@@ -1175,6 +1181,8 @@
      h2pw = czero
      p2pw = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_meat
 
@@ -1217,6 +1225,8 @@
      naux = zero
      saux = zero
 
+!! body]
+
      return
   end subroutine cat_alloc_umat
 
@@ -1257,6 +1267,8 @@
 
      gmat   = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_mmat
 
@@ -1288,6 +1300,8 @@
 
      grnf = czero
      frnf = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_gmat
@@ -1323,6 +1337,8 @@
      wssf = czero
      hybf = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_wmat
 
@@ -1348,6 +1364,8 @@
 ! initialize them
      sig1 = czero
      sig2 = czero
+
+!! body]
 
      return
   end subroutine cat_alloc_smat
@@ -1387,6 +1405,8 @@
      if ( allocated(empty_s) ) deallocate(empty_s)
      if ( allocated(empty_e) ) deallocate(empty_e)
 
+!! body]
+
      return
   end subroutine cat_free_clur
 
@@ -1409,6 +1429,8 @@
      if ( allocated(expt_t)  ) deallocate(expt_t )
      if ( allocated(expt_v)  ) deallocate(expt_v )
 
+!! body]
+
      return
   end subroutine cat_free_flvr
 
@@ -1427,6 +1449,8 @@
 
      if ( allocated(lmesh) )   deallocate(lmesh)
      if ( allocated(rep_l) )   deallocate(rep_l)
+
+!! body]
 
      return
   end subroutine cat_free_mesh
@@ -1458,6 +1482,8 @@
      if ( allocated(h2pw) )    deallocate(h2pw)
      if ( allocated(p2pw) )    deallocate(p2pw)
 
+!! body]
+
      return
   end subroutine cat_free_meat
 
@@ -1482,6 +1508,8 @@
      if ( allocated(naux) )    deallocate(naux)
      if ( allocated(saux) )    deallocate(saux)
 
+!! body]
+
      return
   end subroutine cat_free_umat
 
@@ -1505,6 +1533,8 @@
 
      if ( allocated(gmat)   )  deallocate(gmat  )
 
+!! body]
+
      return
   end subroutine cat_free_mmat
 
@@ -1523,6 +1553,8 @@
 
      if ( allocated(grnf) )    deallocate(grnf)
      if ( allocated(frnf) )    deallocate(frnf)
+
+!! body]
 
      return
   end subroutine cat_free_gmat
@@ -1544,6 +1576,8 @@
      if ( allocated(wssf) )    deallocate(wssf)
      if ( allocated(hybf) )    deallocate(hybf)
 
+!! body]
+
      return
   end subroutine cat_free_wmat
 
@@ -1559,6 +1593,8 @@
 
      if ( allocated(sig1) )    deallocate(sig1)
      if ( allocated(sig2) )    deallocate(sig2)
+
+!! body]
 
      return
   end subroutine cat_free_smat
