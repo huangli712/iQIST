@@ -970,7 +970,7 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-! declaration of module procedures: allocate memory
+     ! declaration of module procedures: allocate memory
      public :: cat_alloc_clur
      public :: cat_alloc_flvr
      public :: cat_alloc_mesh
@@ -981,7 +981,7 @@
      public :: cat_alloc_wmat
      public :: cat_alloc_smat
 
-! declaration of module procedures: deallocate memory
+     ! declaration of module procedures: deallocate memory
      public :: cat_free_clur
      public :: cat_free_flvr
      public :: cat_free_mesh
