@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
+!!! project : iqist @ manjushaka
 !!! program : ctqmc_core module
 !!!           ctqmc_clur module
 !!!           ctqmc_flvr module
@@ -13,9 +13,9 @@
 !!!           context    module
 !!! source  : ctqmc_context.f90
 !!! type    : modules
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/17/2017 by li huang (last modified)
+!!!           06/20/2024 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -35,7 +35,8 @@
 !! Monte Carlo quantum impurity solver
 !!
   module ctqmc_core
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      implicit none
 
@@ -70,7 +71,7 @@
 !!
 !! @var cssoc
 !!
-!! current status of spin-orbital coupling
+!! current status of spin-orbit coupling
 !!
 !! if cssoc == 0:
 !!     no spin-orbital coupling
@@ -277,14 +278,14 @@
 !!
 !! @var exp_s
 !!
-!! exp(i\omega t), s means creation operators
+!! exp(i\omega \tau_s), s means creation operators
 !!
      complex(dp), public, save, allocatable :: exp_s(:,:,:)
 
 !!
 !! @var exp_e
 !!
-!! exp(i\omega t), e means annihilation operators
+!! exp(i\omega \tau_e), e means annihilation operators
 !!
      complex(dp), public, save, allocatable :: exp_e(:,:,:)
 
@@ -425,11 +426,25 @@
      real(dp), public, save, allocatable :: lmesh(:)
 
 !!
+!! @var smesh
+!!
+!! uniform mesh on interval [-1,1] for svd-type orthogonal polynomial
+!!
+     real(dp), public, save, allocatable :: smesh(:)
+
+!!
 !! @var rep_l
 !!
 !! legendre orthogonal polynomial defined on [-1,1]
 !!
      real(dp), public, save, allocatable :: rep_l(:,:)
+
+!!
+!! @var rep_s
+!!
+!! svd-type orthogonal polynomial defined on [-1,1]
+!!
+     real(dp), public, save, allocatable :: rep_s(:,:)
 
   end module ctqmc_mesh
 
