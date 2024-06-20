@@ -13,12 +13,16 @@
 !!!           ctqmc_dump_frnf
 !!!           ctqmc_dump_hybf
 !!!           ctqmc_dump_wssf
-!!!           ctqmc_dump_sigf
+!!!           ctqmc_dump_sig2
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lrmm
 !!!           ctqmc_dump_szpw
-!!!           ctqmc_dump_twop
-!!!           ctqmc_dump_pair
+!!!           ctqmc_dump_sp_t
+!!!           ctqmc_dump_sp_w
+!!!           ctqmc_dump_ch_t
+!!!           ctqmc_dump_ch_w
+!!!           ctqmc_dump_g2ph
+!!!           ctqmc_dump_g2pp
 !!!           ctqmc_dump_diag
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
