@@ -270,7 +270,11 @@
   subroutine ctqmc_record_nmat()
      implicit none
 
+!! [body
+
      CONTINUE
+
+!! body]
 
      return
   end subroutine ctqmc_record_nmat
@@ -333,6 +337,8 @@
 
      ! interval for imaginary time slice
      real(dp) :: step
+
+!! [body
 
      ! evaluate step at first
      select case ( isort )
