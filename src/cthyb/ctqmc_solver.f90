@@ -372,11 +372,11 @@
 !!>>> beginning main iteration                                         <<<
 !!========================================================================
 
-! start simulation
+     ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
          write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING BEGINS'
-         select case (iswor)
+         select case ( iswor )
 
              case (1)
                  write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z)'
@@ -394,15 +394,15 @@
 
      MC_SWEEP: do i=1,nsweep,nwrite
 
-! record start time
+         ! record start time
          call cpu_time(time_begin)
 
          MC_WRITE: do j=1,nwrite
 
-! increase cstep by 1
+             ! increase cstep by 1
              cstep = cstep + 1
 
-! sampling the perturbation expansion feynman diagrams randomly
+             ! sampling the perturbation expansion feynman diagrams randomly
              call ctqmc_try_walking(cstep)
 
 !!========================================================================
