@@ -2520,22 +2520,22 @@
 
      implicit none
 
-! external arguments
-! probability of atomic eigenstates
+!! external arguments
+     ! probability of atomic eigenstates
      real(dp), intent(out) :: prob_mpi(ncfgs)
      real(dp), intent(out) :: prob_err(ncfgs)
 
-! initialize prob_mpi and prob_err
+     ! initialize prob_mpi and prob_err
      prob_mpi = zero
      prob_err = zero
 
 ! build prob_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(prob, prob_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -2544,24 +2544,26 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      prob_mpi = prob_mpi / real(nprocs)
 
 ! build prob_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((prob - prob_mpi)**2, prob_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_prob
@@ -2689,20 +2691,22 @@
 ! build nimp_err and nmat_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((nimp - nimp_mpi)**2, nimp_err)
      call mp_allreduce((nmat - nmat_mpi)**2, nmat_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          nimp_err = sqrt( nimp_err / real( nprocs * ( nprocs - 1 ) ) )
          nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_nmat
@@ -2736,17 +2740,17 @@
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
-! initialize gtau_mpi and gtau_err
+     ! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
      gtau_err = zero
 
 ! build gtau_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(gtau, gtau_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -2755,16 +2759,16 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      gtau_mpi = gtau_mpi / real(nprocs)
 
 ! build gtau_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
