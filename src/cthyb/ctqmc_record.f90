@@ -1567,6 +1567,792 @@
      return
   end subroutine ctqmc_record_g2pp
 
+!!
+!! @sub cat_record_g2pp_std
+!!
+!! record the two-particle green's and vertex functions in the pp channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-particle channel and matsubara frequency representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
+!!     G^{(2)}_{abcd,AABB,pp} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!         \langle
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             exp [ i (\omega - \nu') \tau'_i ]
+!!             exp [ -i \nu \tau_j ]
+!!             exp [ i \nu' \tau'_k ]
+!!             exp [ -i (\omega - \nu) \tau_l ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA,pp} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!         \langle
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             exp [ i (\omega - \nu') \tau'_i ]
+!!             exp [ -i \nu \tau_j ]
+!!             exp [ i \nu' \tau'_k ]
+!!             exp [ -i (\omega - \nu) \tau_l ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operator
+!!     \tau_j and \tau_l: imaginary time for creation operator
+!!     \nu and \nu': fermionic matsubara frequency
+!!     \omega: bosonic matsubara frequency
+!!
+  subroutine cat_record_g2pp_std()
+     use constants, only : dp
+     use constants, only : czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+
+     use context, only : g2pp
+     use context, only : h2pp
+     use context, only : rank, pref
+     use context, only : mmat
+
+     implicit none
+
+!! local variables
+     ! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+     ! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+     ! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+     ! used to store the element of mmat matrix
+     real(dp) :: maux
+     real(dp) :: naux
+
+     ! dummy complex(dp) variables, used to calculate the g2pp and h2pp
+     complex(dp) :: zg
+     complex(dp) :: zh
+
+     ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
+
+     ! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ i \omega_n \tau_j ]
+     ! where m and n are the first two frequency indices for g2aux and h2aux
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: h2aux(:,:,:)
+
+!! [body
+
+     ! evaluate nfaux, determine the size of g2aux and h2aux
+     nfaux = nffrq + nbfrq - 1
+
+     ! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
+
+     ! allocate memory for g2aux and h2aux, and then initialize them
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+     allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
+
+     ! calculate prefactor: pref
+     call ctqmc_make_pref()
+
+! calculate g2aux and h2aux
+! see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP DO PRIVATE (flvr, is, ie, w2n, w1n, maux, naux, caux1, caux2)
+     FLVR_CYCLE: do flvr=1,norbs
+         call ctqmc_make_fexp(flvr, nfaux, maxval(rank), caux1, caux2)
+
+         do is=1,rank(flvr)
+             do ie=1,rank(flvr)
+
+                 maux = mmat(ie, is, flvr)
+                 naux = mmat(ie, is, flvr) * pref(ie,flvr)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
+                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w2n,is) * caux2(w1n,ie)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo FLVR_CYCLE ! over flvr={1,norbs} loop
+!$OMP END DO
+
+! calculate g2pp and h2pp
+!
+! note (for G2_PP_AABB component):
+!
+!     g2aux(w1n,w2n,f1) ->
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i \nu \tau_j ]
+!
+!     g2aux(w3n,w4n,f2) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i (\omega - \nu) \tau_l ]
+!
+!     g2aux(w1n,w4n,f1) ->
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i (\omega - nu) \tau_l ]
+!
+!     g2aux(w3n,w2n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!
+! note (for G2_PP_ABBA component):
+!
+!     g2aux(w1n,w2n,f1) ->
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i \nu \tau_j ]
+!
+!     g2aux(w3n,w4n,f1) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i (\omega - \nu) \tau_l ]
+!
+!     g2aux(w1n,w4n,f1) ->
+!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i (\omega - nu) \tau_l ]
+!
+!     g2aux(w3n,w2n,f2) ->
+!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!
+!$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
+     ORB1_CYCLE: do f1=1,norbs                 ! block index: A
+         ORB2_CYCLE: do f2=1,f1                ! block index: B
+                                               !
+             WB_CYCLE: do wbn=1,nbfrq          ! bosonic matsubara frequency: w
+                                               !
+                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic matsubara frequency: v
+                     WF2_CYCLE: do w3n=1,nffrq ! fermionic matsubara frequency: v'
+                         w1n = wbn - w3n + nffrq ! think it carefully
+                         w4n = wbn - w2n + nffrq
+
+                         zg = czero; zh = czero
+
+                     ! G2_PP_AABB component
+                     !----------------------------------------------------
+                     CALC_G2_PP_AABB: BLOCK
+
+                         if ( btest(isvrt,3) ) then
+                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+
+                             if ( f1 == f2 ) then
+                                 zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                                 zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                             endif ! back if ( f1 == f2 ) block
+                         endif ! back if ( btest(isvrt,3) ) block
+
+                     END BLOCK CALC_G2_PP_AABB
+
+                     ! G2_PP_ABBA component
+                     !----------------------------------------------------
+                     CALC_G2_PP_ABBA: BLOCK
+
+                         if ( btest(isvrt,4) ) then
+                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+
+                             if ( f1 == f2 ) then
+                                 zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                                 zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                             endif ! back if ( f1 == f2 ) block
+                         endif ! back if ( btest(isvrt,4) ) block
+
+                     END BLOCK CALC_G2_PP_ABBA
+
+                         g2pp(w3n,w2n,wbn,f2,f1) = g2pp(w3n,w2n,wbn,f2,f1) + zg / beta
+                         h2pp(w3n,w2n,wbn,f2,f1) = h2pp(w3n,w2n,wbn,f2,f1) + zh / beta
+                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
+                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
+
+             enddo WB_CYCLE ! over wbn={1,nbfrq} loop
+
+         enddo ORB2_CYCLE ! over f2={1,f1} loop
+     enddo ORB1_CYCLE ! over f1={1,norbs} loop
+!$OMP END DO
+!$OMP END PARALLEL
+
+     ! deallocate memory
+     deallocate( caux1 )
+     deallocate( caux2 )
+     deallocate( g2aux )
+     deallocate( h2aux )
+
+!! body]
+
+     return
+  end subroutine cat_record_g2pp_std
+
+!!
+!! @sub cat_record_g2pp_leg
+!!
+!! record the two-particle green's and vertex functions in the pp channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-particle channel and legendre/matsubara representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
+!!     G^{(2)}_{abcd,AABB,pp} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             p_l( x(\tau_l - \tau_j) ) p_l'( x(\tau'_k - \tau'_i) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA,pp} (l, l', \omega) =  (-1)^l'
+!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             p_l( x(\tau_l - \tau_j) ) p_l'( x(\tau'_k - \tau'_i) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
+!!     p_l and p_l': legendre polynomial
+!!     \omega: bosonic matsubara frequency
+!!
+  subroutine cat_record_g2pp_leg()
+     use constants, only : dp
+     use constants, only : zero, one, two, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : lemax, legrd
+     use control, only : nbfrq
+     use control, only : beta
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rep_l
+     use context, only : g2pp, h2pp
+     use context, only : rank, pref
+     use context, only : mmat
+
+     implicit none
+
+!! local variables
+     ! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+     ! loop index for frequency
+     integer  :: wbn
+     integer  :: l1
+     integer  :: l2
+
+     ! loop indices for start and end points
+     integer  :: is1
+     integer  :: is2
+     integer  :: ie1
+     integer  :: ie2
+
+     ! index for imaginary time \tau
+     integer  :: curr
+
+     ! interval for imaginary time slice
+     real(dp) :: step
+
+     ! distance betweem \tau_s and \tau_e
+     real(dp) :: dt
+
+     ! sign for p_l(x(\tau))
+     real(dp) :: ms
+
+     ! real(dp) dummy variables
+     real(dp) :: mm
+     real(dp) :: pp
+
+     ! complex(dp) dummy variables
+     complex(dp) :: ee
+
+     ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
+     real(dp), allocatable :: lfun(:,:)
+
+     ! p_l(x(\tau_s2 - \tau_s1))
+     real(dp), allocatable :: pl_s(:,:,:,:,:)
+
+     ! p_l(x(\tau_e2 - \tau_e1))
+     real(dp), allocatable :: pl_e(:,:,:,:,:)
+
+     ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+     ! note here \omega_n is bosonic
+     complex(dp), allocatable :: caux1(:,:,:)
+     complex(dp), allocatable :: caux2(:,:,:)
+
+!! [body
+
+     ! allocate memory
+     allocate( lfun(lemax,lemax) ); lfun = zero
+     allocate( pl_s(lemax, maxval(rank), maxval(rank), norbs, norbs)); pl_s = zero
+     allocate( pl_e(lemax, maxval(rank), maxval(rank), norbs, norbs)); pl_e = zero
+
+     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
+
+     ! calculate prefactor: pref
+     call ctqmc_make_pref()
+
+     ! prepare some important arrays: lfun
+     do l1=1,lemax     ! legendre polynomial index: l
+         do l2=1,lemax ! legendre polynomial index: l'
+             lfun(l1,l2) = sqrt(two * l1 - one) * sqrt(two * l2 - one) * ( (-one)**l2 )
+         enddo ! over l2={1,lemax} loop
+     enddo ! over l1={1,lemax} loop
+
+     ! prepare some important arrays: pl_s
+     step = real(legrd - 1) / two
+     do f1=1,norbs
+         do is1=1,rank(f1)
+             do f2=1,norbs
+                 do is2=1,rank(f2)
+                     ! determine dt (distance) and ms (sign)
+                     dt = time_s( index_s(is2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+                     ms = sign(one, dt)
+
+                     ! adjust dt, keep it stay in (zero, beta)
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
+
+                     ! determine index for imaginary time
+                     curr = nint( ( two * dt / beta ) * step ) + 1
+
+                     ! special tricks for the first point and the last point
+                     if ( curr == 1 .or. curr == legrd ) then
+                         ms = two * ms
+                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+                     ! fill pl_s
+                     do l1=1,lemax
+                         pl_s(l1,is2,is1,f2,f1) = ms * rep_l(curr,l1)
+                     enddo ! over l1={1,lemax} loop
+                 enddo ! over is2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over is1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
+
+     ! prepare some important arrays: pl_e
+     step = real(legrd - 1) / two
+     do f1=1,norbs
+         do ie1=1,rank(f1)
+             do f2=1,norbs
+                 do ie2=1,rank(f2)
+                     ! determine dt (distance) and ms (sign)
+                     dt = time_e( index_e(ie2, f2), f2 ) - time_e( index_e(ie1, f1), f1 )
+                     ms = sign(one, dt)
+
+                     ! adjust dt, keep it stay in (zero, beta)
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
+
+                     ! determine index for imaginary time
+                     curr = nint( ( two * dt / beta ) * step ) + 1
+
+                     ! special tricks for the first point and the last point
+                     if ( curr == 1 .or. curr == legrd ) then
+                         ms = two * ms
+                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+                     ! fill pl_e
+                     do l1=1,lemax
+                         pl_e(l1,ie2,ie1,f2,f1) = ms * rep_l(curr,l1)
+                     enddo ! over l1={1,lemax} loop
+                 enddo ! over ie2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over ie1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
+
+     ! prepare some important arrays: caux1 and caux2
+     do f1=1,norbs
+         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
+     enddo ! over f1={1,norbs} loop
+
+     ! calculate g2pp and h2pp
+     !
+     ! G2_PP_AABB component
+     !--------------------------------------------------------------------
+     CALC_G2_PP_AABB: BLOCK
+
+         if ( btest(isvrt,3) ) then
+
+             do f1=1,norbs                         ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \delta -> l: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
+             !-------------------!
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
+                 do l1=1,lemax                     ! legendre polynomial index: l
+                     do l2=1,lemax                 ! legendre polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
+                         pp = pl_s(l1,is2,is1,f2,f1) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
+                         mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                         if ( f1 == f2 ) then
+                             mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+
+                         g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
+                     enddo ! over l2={1,lemax} loop
+                 enddo ! over l1={1,lemax} loop
+             enddo ! over wbn={1,nbfrq} loop
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
+         endif ! back if ( btest(isvrt,3) ) block
+
+     END BLOCK CALC_G2_PP_AABB
+
+     ! G2_PP_ABBA component
+     !--------------------------------------------------------------------
+     CALC_G2_PP_ABBA: BLOCK
+
+         if ( btest(isvrt,4) ) then
+
+             do f1=1,norbs                         ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \delta -> l: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
+             !-------------------!
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
+                 do l1=1,lemax                     ! legendre polynomial index: l
+                     do l2=1,lemax                 ! legendre polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
+                         pp = pl_s(l1,is1,is2,f1,f2) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
+                         mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                         if ( f1 == f2 ) then
+                             mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+
+                         g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
+                     enddo ! over l2={1,lemax} loop
+                 enddo ! over l1={1,lemax} loop
+             enddo ! over wbn={1,nbfrq} loop
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
+         endif ! back if ( btest(isvrt,4) ) block
+
+     END BLOCK CALC_G2_PP_ABBA
+
+     ! deallocate memory
+     deallocate( lfun  )
+     deallocate( pl_s  )
+     deallocate( pl_e  )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
+!! body]
+
+     return
+  end subroutine cat_record_g2pp_leg
+
+!!
+!! @sub cat_record_g2pp_svd
+!!
+!! record the two-particle green's and vertex functions in the pp channel.
+!! here improved estimator is used to improve the accuracy
+!!
+!! note:
+!!
+!!     we try to measure the two-particle green's and vertex functions in
+!!     the particle-particle channel and intermediate/matsubara representation
+!!     in this subroutine. in order to simplify the calculations, we just
+!!     consider the block structure of G^{(2)}
+!!
+!!     G^{(2)}_{abcd,AABB,pp} (l, l', \omega) =  (-1)^l'
+!!         \frac{ 1 }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
+!!             u_l( x(\tau_l - \tau_j) ) u_l'( x(\tau'_k - \tau'_i) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     G^{(2)}_{abcd,ABBA,pp} (l, l', \omega) =  (-1)^l'
+!!         \frac{ 1 }{ \beta }
+!!         \langle
+!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
+!!             u_l( x(\tau_l - \tau_j) ) u_l'( x(\tau'_k - \tau'_i) )
+!!             exp [ i \omega (\tau'_i - \tau_l) ]
+!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!         \rangle
+!!
+!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
+!!     u_l and u_l': svd polynomial
+!!     \omega: bosonic matsubara frequency
+!!
+  subroutine cat_record_g2pp_svd()
+     use constants, only : dp
+     use constants, only : zero, one, two, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : svmax, svgrd
+     use control, only : nbfrq
+     use control, only : beta
+
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : rep_s
+     use context, only : g2pp, h2pp
+     use context, only : rank, pref
+     use context, only : mmat
+
+     implicit none
+
+!! local variables
+     ! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+     ! loop index for frequency
+     integer  :: wbn
+     integer  :: l1
+     integer  :: l2
+
+     ! loop indices for start and end points
+     integer  :: is1
+     integer  :: is2
+     integer  :: ie1
+     integer  :: ie2
+
+     ! index for imaginary time \tau
+     integer  :: curr
+
+     ! interval for imaginary time slice
+     real(dp) :: step
+
+     ! distance betweem \tau_s and \tau_e
+     real(dp) :: dt
+
+     ! sign for u_l(x(\tau))
+     real(dp) :: ms
+
+     ! real(dp) dummy variables
+     real(dp) :: mm
+     real(dp) :: uu
+
+     ! complex(dp) dummy variables
+     complex(dp) :: ee
+
+     ! u_l(x(\tau_s2 - \tau_s1))
+     real(dp), allocatable :: ul_s(:,:,:,:,:)
+
+     ! u_l(x(\tau_e2 - \tau_e1))
+     real(dp), allocatable :: ul_e(:,:,:,:,:)
+
+     ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
+     ! note here \omega_n is bosonic
+     complex(dp), allocatable :: caux1(:,:,:)
+     complex(dp), allocatable :: caux2(:,:,:)
+
+!! [body
+
+     ! allocate memory
+     allocate( ul_s(svmax, maxval(rank), maxval(rank), norbs, norbs)); ul_s = zero
+     allocate( ul_e(svmax, maxval(rank), maxval(rank), norbs, norbs)); ul_e = zero
+
+     allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
+     allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
+
+     ! calculate prefactor: pref
+     call ctqmc_make_pref()
+
+     ! prepare some important arrays: ul_s
+     step = real(svgrd - 1) / two
+     do f1=1,norbs
+         do is1=1,rank(f1)
+             do f2=1,norbs
+                 do is2=1,rank(f2)
+                     ! determine dt (distance) and ms (sign)
+                     dt = time_s( index_s(is2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+                     ms = sign(one, dt)
+
+                     ! adjust dt, keep it stay in (zero, beta)
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
+
+                     ! determine index for imaginary time
+                     call s_svd_point(two * dt / beta - one, step, curr)
+
+                     ! fill ul_s
+                     do l1=1,svmax
+                         ul_s(l1,is2,is1,f2,f1) = ms * rep_s(curr,l1)
+                     enddo ! over l1={1,svmax} loop
+                 enddo ! over is2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over is1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
+
+     ! prepare some important arrays: ul_e
+     step = real(svgrd - 1) / two
+     do f1=1,norbs
+         do ie1=1,rank(f1)
+             do f2=1,norbs
+                 do ie2=1,rank(f2)
+                     ! determine dt (distance) and ms (sign)
+                     dt = time_e( index_e(ie2, f2), f2 ) - time_e( index_e(ie1, f1), f1 )
+                     ms = sign(one, dt)
+
+                     ! adjust dt, keep it stay in (zero, beta)
+                     if ( dt < zero ) then
+                         dt = dt + beta
+                     endif ! back if ( dt < zero ) block
+
+                     ! determine index for imaginary time
+                     call s_svd_point(two * dt / beta - one, step, curr)
+
+                     ! fill ul_e
+                     do l1=1,svmax
+                         ul_e(l1,ie2,ie1,f2,f1) = ms * rep_s(curr,l1)
+                     enddo ! over l1={1,svmax} loop
+                 enddo ! over ie2={1,rank(f2)} loop
+             enddo ! over f2={1,norbs} loop
+         enddo ! over ie1={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
+
+     ! prepare some important arrays: caux1 and caux2
+     do f1=1,norbs
+         call ctqmc_make_bexp(f1, nbfrq, maxval(rank), caux1(:,:,f1), caux2(:,:,f1))
+     enddo ! over f1={1,norbs} loop
+
+     ! calculate g2pp and h2pp
+     !
+     ! G2_PP_AABB component
+     !--------------------------------------------------------------------
+     CALC_G2_PP_AABB: BLOCK
+
+         if ( btest(isvrt,3) ) then
+
+             do f1=1,norbs                         ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \delta -> l: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
+             !-------------------!
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
+                 do l1=1,svmax                     ! svd polynomial index: l
+                     do l2=1,svmax                 ! svd polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
+                         uu = ul_s(l1,is2,is1,f2,f1) * ul_e(l2,ie2,ie1,f2,f1)
+                         mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                         if ( f1 == f2 ) then
+                             mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+
+                         g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * uu * ee / beta
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * uu * ee / beta * pref(ie1,f1)
+                     enddo ! over l2={1,svmax} loop
+                 enddo ! over l1={1,svmax} loop
+             enddo ! over wbn={1,nbfrq} loop
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
+         endif ! back if ( btest(isvrt,3) ) block
+
+     END BLOCK CALC_G2_PP_AABB
+
+     ! G2_PP_ABBA component
+     !--------------------------------------------------------------------
+     CALC_G2_PP_ABBA: BLOCK
+
+         if ( btest(isvrt,4) ) then
+
+             do f1=1,norbs                         ! block index: A
+                 do f2=1,f1                        ! block index: B
+                     do is1=1,rank(f1)             ! \delta -> l: creation operator
+                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
+                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
+                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
+             !-------------------!
+             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
+                 do l1=1,svmax                     ! svd polynomial index: l
+                     do l2=1,svmax                 ! svd polynomial index: l'
+                         ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
+                         uu = ul_s(l1,is1,is2,f1,f2) * ul_e(l2,ie2,ie1,f2,f1)
+                         mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
+                         if ( f1 == f2 ) then
+                             mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
+                         endif ! back if ( f1 == f2 ) block
+
+                         g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * uu * ee / beta
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * uu * ee / beta * pref(ie1,f1)
+                     enddo ! over l2={1,svmax} loop
+                 enddo ! over l1={1,svmax} loop
+             enddo ! over wbn={1,nbfrq} loop
+             !-------------------!
+                                 enddo ! over ie2={1,rank(f2)} loop
+                             enddo ! over is2={1,rank(f2)} loop
+                         enddo ! over ie1={1,rank(f1)} loop
+                     enddo ! is1={1,rank(f1)} loop
+                 enddo ! over f2={1,f1} loop
+             enddo ! over f1={1,norbs} loop
+
+         endif ! back if ( btest(isvrt,4) ) block
+
+     END BLOCK CALC_G2_PP_ABBA
+
+     ! deallocate memory
+     deallocate( ul_s  )
+     deallocate( ul_e  )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
+!! body]
+
+     return
+  end subroutine cat_record_g2pp_svd
+
 !!========================================================================
 !!>>> reduce autocorrelation function                                  <<<
 !!========================================================================
