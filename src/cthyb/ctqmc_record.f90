@@ -3197,6 +3197,8 @@
          kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
+!! body]
+
      return
   end subroutine ctqmc_reduce_kmat
 
@@ -3220,24 +3222,24 @@
 
      implicit none
 
-! external arguments
-! number of operators at left half axis
+!! external arguments
+     ! number of operators at left half axis
      real(dp), intent(out) :: lnop_mpi(norbs)
      real(dp), intent(out) :: lnop_err(norbs)
 
-! number of operators at right half axis
+     ! number of operators at right half axis
      real(dp), intent(out) :: rnop_mpi(norbs)
      real(dp), intent(out) :: rnop_err(norbs)
 
-! crossing product of k_l and k_r
+     ! crossing product of k_l and k_r
      real(dp), intent(out) :: lrmm_mpi(norbs,norbs)
      real(dp), intent(out) :: lrmm_err(norbs,norbs)
 
-! check whether this observable has been measured
+     ! check whether this observable has been measured
      if ( .not. btest(isobs, 2) ) RETURN
 
-! initialize lnop_mpi, rnop_mpi, and lrmm_mpi
-! initialize lnop_err, rnop_err, and lrmm_err
+     ! initialize lnop_mpi, rnop_mpi, and lrmm_mpi
+     ! initialize lnop_err, rnop_err, and lrmm_err
      lnop_mpi = zero
      rnop_mpi = zero
      lrmm_mpi = zero
@@ -3356,10 +3358,12 @@
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_szpw
