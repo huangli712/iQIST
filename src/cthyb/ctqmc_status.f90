@@ -182,19 +182,19 @@
 ! broadcast exists from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( exists, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
 
-! if solver.status.dat does not exist, return parent subroutine immediately
+     ! if solver.status.dat does not exist, return parent subroutine immediately
      if ( exists .eqv. .false. ) RETURN
 
-! if high energy states are dynamically truncated, the trace of saved
-! diagramm may be zero, so we don't retrieve it for iscut == 2
+     ! if high energy states are dynamically truncated, the trace of saved
+     ! diagramm may be zero, so we don't retrieve it for iscut == 2
      if ( iscut == 2 ) RETURN
 
 ! read solver.status.dat, only master node can do it
