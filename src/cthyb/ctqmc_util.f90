@@ -698,7 +698,7 @@
 !! body]
 
      return
-  end subroutine ctqmc_make_gtau
+  end subroutine ctqmc_tran_gtau
 
 !!
 !! @sub ctqmc_make_ftau
