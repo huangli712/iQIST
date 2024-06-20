@@ -166,35 +166,20 @@
      real(dp), allocatable :: lnop_mpi(:)
      real(dp), allocatable :: lnop_err(:)
 
-! number of operators at right half axis, < k_r >
+     ! number of operators at right half axis, < k_r >
      real(dp), allocatable :: rnop_mpi(:)
      real(dp), allocatable :: rnop_err(:)
 
-! crossing product of k_l and k_r, < k_l k_r >
+     ! crossing product of k_l and k_r, < k_l k_r >
      real(dp), allocatable :: lrmm_mpi(:,:)
      real(dp), allocatable :: lrmm_err(:,:)
 
-! powers of local magnetization, < S^n_z>
+     ! powers of local magnetization, < S^n_z>
      real(dp), allocatable :: szpw_mpi(:,:)
      real(dp), allocatable :: szpw_err(:,:)
 
-! two-particle green's function
-     complex(dp), allocatable :: g2pw_mpi(:,:,:,:,:)
-     complex(dp), allocatable :: g2pw_err(:,:,:,:,:)
 
-! irreducible vertex function
-     complex(dp), allocatable :: h2pw_mpi(:,:,:,:,:)
-     complex(dp), allocatable :: h2pw_err(:,:,:,:,:)
-
-! particle-particle pairing susceptibility
-     complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
-     complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
-
-! impurity green's function in matsubara frequency axis
-     complex(dp), allocatable :: grnf_mpi(:,:,:)
-     complex(dp), allocatable :: grnf_err(:,:,:)
-
-! allocate memory
+     ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      allocate(hist_err(mkink),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
