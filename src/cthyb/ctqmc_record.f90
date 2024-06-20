@@ -755,11 +755,13 @@
 
      implicit none
 
-! check whether there is conflict
-! this subroutine is only designed for the particle-hole channel
+!! [body
+
+     ! check whether there is conflict
+     ! this subroutine is only designed for the particle-hole channel
      call s_assert2( btest(isvrt, 1) .or. btest(isvrt, 2), 'in ctqmc_record_g2ph' )
 
-! you can not calculate the AABB and ABBA components at the same time
+     ! you can not calculate the AABB and ABBA components at the same time
      call s_assert2( .not. ( btest(isvrt, 1) .and. btest(isvrt, 2) ), 'in ctqmc_record_g2ph' )
 
      select case ( isort )
@@ -777,6 +779,8 @@
              call s_print_error('ctqmc_record_g2ph','this feature is not implemented')
 
      end select
+
+!! body]
 
      return
   end subroutine ctqmc_record_g2ph
