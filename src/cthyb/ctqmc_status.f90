@@ -118,7 +118,9 @@
 !! the continuous time quantum Monte Carlo quantum impurity solver
 !!
   subroutine ctqmc_retrieve_status()
-     use constants, only : dp, zero, epss, mytmp
+     use constants, only : dp
+     use constants, only : zero, epss
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
@@ -129,17 +131,18 @@
      use control, only : beta
      use control, only : myid, master
 
-     use context, only : ckink, csign, cnegs, n_mtr
+     use context, only : ckink, csign, cnegs
+     use context, only : n_mtr
      use context, only : rank
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! dummy integer variables
+     ! dummy integer variables
      integer  :: m
      integer  :: n
 
