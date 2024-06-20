@@ -507,16 +507,26 @@
 !!>>> sampling the physical observables 5 (optional)                   <<<
 !!========================================================================
 
-! the following physical observables are measured optionally (by isvrt)
-! record the two-particle green's function
+             ! the following physical observables are measured optionally (by isvrt)
+             ! record the two-particle green's function, particle-hole channel, AABB
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
-                 call ctqmc_record_twop()
+                 call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
-! record the particle-particle pairing susceptibility
+             ! record the two-particle green's function, particle-hole channel, ABBA
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
-                 call ctqmc_record_pair()
+                 call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
+
+             ! record the two-particle green's function, particle-particle channel, AABB
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+                 call ctqmc_record_g2pp()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+
+             ! record the two-particle green's function, particle-particle channel, ABBA
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
+                 call ctqmc_record_g2pp()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
 
          enddo MC_WRITE ! over j={1,nwrite} loop
 
@@ -524,12 +534,12 @@
 !!>>> reporting quantum impurity solver                                <<<
 !!========================================================================
 
-! it is time to write out the statistics results
+         ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_runtime(iter, cstep)
          endif ! back if ( myid == master ) block
 
-! write out the snapshot for the current configuration if necessary
+         ! write out the snapshot for the current configuration if necessary
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_diag(iter, cstep)
          endif ! back if ( myid == master ) block
