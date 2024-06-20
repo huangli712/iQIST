@@ -664,7 +664,31 @@
 
      END BLOCK AVERAGE_DATA
 
-! collect data from all children processes
+     ! calculate some essential observables which are not measured directly
+     COMPUTE_DATA: BLOCK
+
+         ! try to evaluate the self-energy function
+         call ctqmc_make_hub2()
+
+         ! try to evaluate the imaginary time green's function
+         call ctqmc_tran_gtau(gtau, gtau_mpi); gtau = gtau_mpi
+         call ctqmc_tran_gtau(ftau, ftau_mpi); ftau = ftau_mpi
+
+         ! try to evaluate the two-particle green's function (ph channel)
+         if ( btest(isvrt, 1) .or. btest(isvrt, 2) ) then
+             call ctqmc_tran_twop(g2ph, g2ph_mpi); g2ph = g2ph_mpi
+             call ctqmc_tran_twop(h2ph, h2ph_mpi); h2ph = h2ph_mpi
+         endif ! back if ( btest(isvrt, 1) .or. btest(isvrt, 2) ) block
+
+         ! try to evaluate the two-particle green's function (pp channel)
+         if ( btest(isvrt, 3) .or. btest(isvrt, 4) ) then
+             call ctqmc_tran_twop(g2pp, g2pp_mpi); g2pp = g2pp_mpi
+             call ctqmc_tran_twop(h2pp, h2pp_mpi); h2pp = h2pp_mpi
+         endif ! back if ( btest(isvrt, 3) .or. btest(isvrt, 4) ) block
+
+     END BLOCK COMPUTE_DATA
+
+     ! collect data from all children processes
      COLLECT_DATA: BLOCK
 
          call ctqmc_reduce_hist(hist_mpi, hist_err)
