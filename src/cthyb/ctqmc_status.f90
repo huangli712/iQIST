@@ -1,12 +1,12 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
+!!! project : iqist @ manjushaka
 !!! program : ctqmc_save_status
 !!!           ctqmc_retrieve_status
 !!! source  : ctqmc_status.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/19/2017 by li huang (last modified)
+!!!           06/20/2024 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
@@ -44,17 +44,17 @@
 
      implicit none
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer :: i
 
-! loop index over operators
+     ! loop index over operators
      integer :: j
 
-! total number of operators
+     ! total number of operators
      integer :: nsize
 
-! string for current date and time
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
