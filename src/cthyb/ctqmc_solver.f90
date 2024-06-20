@@ -716,8 +716,8 @@
 
      END BLOCK COLLECT_DATA
 
-! update original data
-     UPDATE_DATA: BLOCK
+     ! update original data
+     REPLACE_DATA: BLOCK
 
          hist = hist_mpi
          prob = prob_mpi
@@ -728,6 +728,8 @@
          gtau = gtau_mpi
          ftau = ftau_mpi
          grnf = grnf_mpi
+         frnf = frnf_mpi
+         sig2 = sig2_mpi
 
          knop = knop_mpi
          kmat = kmat_mpi
@@ -736,11 +738,19 @@
          lrmm = lrmm_mpi
          szpw = szpw_mpi
 
-         g2pw = g2pw_mpi
-         h2pw = h2pw_mpi
-         p2pw = p2pw_mpi
+         schi = schi_mpi
+         sp_t = sp_t_mpi
+         sp_w = sp_w_mpi
+         cchi = cchi_mpi
+         ch_t = ch_t_mpi
+         ch_w = ch_w_mpi
 
-     END BLOCK UPDATE_DATA
+         g2ph = g2ph_mpi
+         h2ph = h2ph_mpi
+         g2pp = g2pp_mpi
+         h2pp = h2pp_mpi
+
+     END BLOCK REPLACE_DATA
 
 ! try to evaluate the impurity green's function and self-energy function
 ! grnf, frnf, and sig2 would be updated there
