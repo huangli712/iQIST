@@ -3007,7 +3007,7 @@
      ! collect data
      call mp_allreduce(frnf, frnf_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3173,6 +3173,8 @@
      ! crossing product of k_i and k_j
      real(dp), intent(out) :: kmat_mpi(norbs,norbs)
      real(dp), intent(out) :: kmat_err(norbs,norbs)
+
+!! [body
 
      ! check whether this observable has been measured
      if ( .not. btest(isobs, 1) ) RETURN
