@@ -895,6 +895,231 @@
      return
   end subroutine ctqmc_tran_grnf
 
+!!
+!! @sub ctqmc_tran_twop
+!!
+!! build two-particle green's function using different representation
+!!
+  subroutine ctqmc_tran_twop(gaux, grnf)
+     use constants, only : dp
+     use constants, only : one, two, czero
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd
+     use control, only : svmax, svgrd
+     use control, only : nffrq, nbfrq
+     use control, only : ntime
+     use control, only : beta
+     use control, only : myid, nprocs
+
+     use context, only : tmesh, rmesh
+     use context, only : rep_l, rep_s
+
+     implicit none
+
+!! external arguments
+     ! orthogonal polynomial coefficients for two-particle green's function
+     complex(dp), intent(in)  :: gaux(nffrq,nffrq,nbfrq,norbs,norbs)
+
+     ! calculated two-particle green's function
+     complex(dp), intent(out) :: grnf(nffrq,nffrq,nbfrq,norbs,norbs)
+
+!! local variables
+     ! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: l
+
+     ! index for imaginary time \tau
+     integer  :: curr
+
+     ! status flag
+     integer  :: istat
+
+     ! dummy real(dp) variable
+     real(dp) :: raux
+
+     ! step for the linear frequency mesh
+     real(dp) :: step
+
+     ! symmetric fermionic matsubara frequency mesh
+     real(dp), allocatable :: fmesh(:)
+
+     ! p_l(x(\tau)), for legendre orthogonal polynomial representation
+     real(dp), allocatable :: pfun(:,:)
+
+     ! u_l(x(\tau)), for svd orthogonal polynomial representation
+     real(dp), allocatable :: ufun(:,:)
+
+     ! unitary transformation matrix for orthogonal polynomials
+     complex(dp), allocatable :: tleg(:,:)
+     complex(dp), allocatable :: tsvd(:,:)
+     complex(dp), allocatable :: tmpi(:,:)
+
+!! [body
+
+     ! allocate memory
+     allocate(fmesh(nffrq),      stat=istat)
+     allocate(pfun(ntime,lemax), stat=istat)
+     allocate(ufun(ntime,svmax), stat=istat)
+     allocate(tleg(nffrq,lemax), stat=istat)
+     allocate(tsvd(nffrq,svmax), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_tran_twop','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     ! build symmetric fermionic matsubara frequency mesh
+     do i=nffrq/2+1,nffrq
+         fmesh(i) = rmesh(i-nffrq/2)  ! > 0
+         fmesh(nffrq-i+1) = -fmesh(i) ! < 0
+     enddo ! over i={nffrq/2+1,nffrq} loop
+
+     !--------------------------------------------------------------------
+     ! using normal representation
+     !--------------------------------------------------------------------
+     STD_BLOCK: if ( isort == 1 ) then
+         allocate(tmpi(  1  ,  1  ), stat=istat); tmpi = czero
+         grnf = gaux
+     endif STD_BLOCK ! back if ( isort == 1 ) block
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     !--------------------------------------------------------------------
+     ! using legendre orthogonal polynomial representation
+     !--------------------------------------------------------------------
+     LEG_BLOCK: if ( isort == 2 ) then
+
+         ! copy rep_l to pfun, prepare p_l(x(\tau))
+         step = real(legrd - 1) / two
+         do i=1,ntime
+             raux = two * tmesh(i) / beta
+             curr = nint( raux * step ) + 1
+             pfun(i,:) = rep_l(curr,:)
+         enddo ! over i={1,ntime} loop
+
+         ! build unitary transformation matrix: tleg
+         ! we do the fourier transformation directly using Eq. (E1) in
+         ! Phys. Rev. B 84, 075145 (2011). the advantage is that it
+         ! doesn't depend on the spherical Bessel functions any more
+         allocate(tmpi(nffrq,lemax), stat=istat); tmpi = czero
+         do i=1+myid,lemax,nprocs
+             call s_fft_forward(ntime, tmesh, pfun(:,i), nffrq, fmesh, tmpi(:,i))
+             tmpi(:,i) = tmpi(:,i) * sqrt(two * i - one)
+         enddo ! over i={1+myid,lemax} loop
+
+! build tleg, collect data from children processes
+# if defined (MPI)
+
+         ! collect data
+         call mp_allreduce(tmpi, tleg)
+
+         ! block until all processes have reached here
+         call mp_barrier()
+
+# else  /* MPI */
+
+         tleg = tmpi
+
+# endif /* MPI */
+
+         ! normalize tleg
+         ! note: the beta is from Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
+         tleg = tleg / beta
+
+         ! build two-particle green's function on matsubara frequency
+         ! using orthogonal polynomial representation: grnf
+         grnf = czero
+         do i=1,nffrq             ! for v' index
+             do j=1,nffrq         ! for v  index
+                 do k=1,lemax     ! for l' index
+                     do l=1,lemax ! for l  index
+                         associate ( val => grnf(i,j,:,:,:), &
+                                     gkl => gaux(k,l,:,:,:) )
+                             val = val + tleg(j,l) * gkl * conjg( tleg(i,k) )
+                         end associate
+                     enddo ! over l={1,lemax} loop
+                 enddo ! over k={1,lemax} loop
+             enddo ! over j={1,nffrq} loop
+         enddo ! over i={1,nffrq} loop
+
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     !--------------------------------------------------------------------
+     ! using svd orthogonal polynomial representation
+     !--------------------------------------------------------------------
+     SVD_BLOCK: if ( isort == 3 ) then
+
+         ! copy rep_s to ufun, prepare u_l(x(\tau))
+         step = real(svgrd - 1) / two
+         do i=1,ntime
+             raux = two * tmesh(i) / beta - one
+             call s_svd_point(raux, step, curr)
+             ufun(i,:) = rep_s(curr,:)
+         enddo ! over i={1,ntime} loop
+
+         ! build unitary transformation matrix: tsvd
+         ! actually, we do the fourier transformation
+         allocate(tmpi(nffrq,svmax), stat=istat); tmpi = czero
+         do i=1+myid,svmax,nprocs
+             call s_fft_forward(ntime, tmesh, ufun(:,i), nffrq, fmesh, tmpi(:,i))
+         enddo ! over i={1+myid,svmax} loop
+
+! build tsvd, collect data from children processes
+# if defined (MPI)
+
+         ! collect data
+         call mp_allreduce(tmpi, tsvd)
+
+         ! block until all processes have reached here
+         call mp_barrier()
+
+# else  /* MPI */
+
+         tsvd = tmpi
+
+# endif /* MPI */
+
+         ! normalize tsvd
+         tsvd = tsvd * (two / beta)
+
+         ! build two-particle green's function on matsubara frequency
+         ! using svd orthogonal polynomial representation: grnf
+         grnf = czero
+         do i=1,nffrq             ! for v' index
+             do j=1,nffrq         ! for v  index
+                 do k=1,svmax     ! for l' index
+                     do l=1,svmax ! for l  index
+                         associate ( val => grnf(nffrq-i+1,j,:,:,:), &
+                                     gkl => gaux(k,l,:,:,:) )
+                             val = val + tsvd(j,l) * gkl * conjg( tsvd(i,k) )
+                         end associate
+                     enddo ! over l={1,svmax} loop
+                 enddo ! over k={1,svmax} loop
+             enddo ! over j={1,nffrq} loop
+         enddo ! over i={1,nffrq} loop
+
+     endif SVD_BLOCK ! back if ( isort == 3 ) block
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     ! deallocate memory
+     deallocate(fmesh)
+     deallocate(pfun)
+     deallocate(ufun)
+     deallocate(tleg)
+     deallocate(tsvd)
+     deallocate(tmpi)
+
+!! body]
+
+     return
+  end subroutine ctqmc_tran_twop
+
 !!========================================================================
 !!>>> two-particle green's function                                    <<<
 !!========================================================================
