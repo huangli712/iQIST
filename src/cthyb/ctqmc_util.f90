@@ -17,7 +17,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/18/2017 by li huang (last modified)
+!!!           06/20/2024 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -1125,14 +1125,224 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_make_prod
+!! @sub ctqmc_make_fexp
 !!
 !! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
 !!
-  subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
-     use constants, only : dp, two, pi, czi
+!! note:
+!!
+!!     here, we provide two versions of ctqmc_make_fexp subroutines. the
+!!     difference lies in how to evaluate exp(i \omega_n \tau). one just
+!!     copies data from exp_s and exp_e, which is fast. but nfreq must be
+!!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
+!!     calculate the quantity directly, which is a bit slow, but safe. we
+!!     generally prefer to use the first one. but if you want to use the
+!!     second one, you have to comment out the codes and recompile them
+!!
+!! version 1
+!!
+  subroutine ctqmc_make_fexp(flvr, nfaux, mrank, caux1, caux2)
+     use constants, only : dp
 
+     use control, only : nfreq
      use control, only : nffrq
+
+     use context, only : index_s, index_e
+     use context, only : exp_s, exp_e
+     use context, only : rank
+
+     implicit none
+
+!! external arguments
+     ! current flavor channel
+     integer, intent(in) :: flvr
+
+     ! combination of nffrq and nbfrq
+     integer, intent(in) :: nfaux
+
+     ! maximum number of operators in different flavor channels
+     integer, intent(in) :: mrank
+
+     ! matsubara frequency exponents for creation operators
+     complex(dp), intent(out) :: caux1(nfaux,mrank)
+
+     ! matsubara frequency exponents for annihilation operators
+     complex(dp), intent(out) :: caux2(nfaux,mrank)
+
+!! local variables
+     ! loop indices for start and end points
+     integer :: is
+     integer :: ie
+
+     ! loop index for frequency
+     integer :: ix
+
+     ! index for frequency
+     integer :: ir
+
+!! [body
+
+     ! make sure nfreq is larger than nfaux, or else this subroutine will fail
+     call s_assert2( nfreq > nfaux, 'in ctqmc_make_fexp' )
+
+     ! creation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_s, we try to calculate
+     !     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+     !     \omega_n = -(v + w), v: -v ---> +v, w: -0 ---> +w
+     ! so,
+     !     \omega_n = +v,   when n = 1
+     !     \omega_n = -v-w, when n = nfaux
+     !
+     do is=1,rank(flvr)
+         do ix=1,nffrq/2
+             ir = nffrq / 2 + 1 - ix
+             caux1(ix,is) = exp_s(ir, index_s(is, flvr), flvr)
+         enddo ! over ix={1,nffrq/2} loop
+         do ix=nffrq/2+1,nfaux
+             ir = nffrq / 2 + 1 - ix
+             ir = abs(ir) + 1
+             caux1(ix,is) = dconjg( exp_s(ir, index_s(is, flvr), flvr) )
+         enddo ! over ix={nffrq/2+1,nfaux} loop
+     enddo ! over is={1,rank(flvr)} loop
+
+     ! annihilation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_e, we try to calculate
+     !     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+     !     \omega_n = +(v + w), v: -v ---> +v, w: -0 ---> +w
+     ! so,
+     !     \omega_n = -v,   when n = 1
+     !     \omega_n = +v+w, when n = nfaux
+     !
+     do ie=1,rank(flvr)
+         do ix=1,nffrq/2
+             ir = -nffrq/2 + ix
+             ir = abs(ir) + 1
+             caux2(ix,ie) = dconjg( exp_e(ir, index_e(ie, flvr), flvr) )
+         enddo ! over ix={1,nffrq/2} loop
+         do ix=nffrq/2+1,nfaux
+             ir = -nffrq/2 + ix
+             caux2(ix,ie) = exp_e(ir, index_e(ie, flvr), flvr)
+         enddo ! over ix={nffrq/2+1,nfaux} loop
+     enddo ! over ie={1,rank(flvr)} loop
+
+!! body]
+
+     return
+  end subroutine ctqmc_make_fexp
+
+!!
+!! @sub ctqmc_make_fexp
+!!
+!! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
+!!
+!! note:
+!!
+!!     here, we provide two versions of ctqmc_make_fexp subroutines. the
+!!     difference lies in how to evaluate exp(i \omega_n \tau). one just
+!!     copies data from exp_s and exp_e, which is fast. but nfreq must be
+!!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
+!!     calculate the quantity directly, which is a bit slow, but safe. we
+!!     generally prefer to use the first one. but if you want to use the
+!!     second one, you have to comment out the codes and recompile them
+!!
+!! version 2
+!!
+!<  subroutine ctqmc_make_fexp(flvr, nfaux, mrank, caux1, caux2)
+!<     use constants, only : dp
+!<     use constants, only : pi, two, czi
+!<
+!<     use control, only : nffrq
+!<     use control, only : beta
+!<
+!<     use context, only : index_s, index_e
+!<     use context, only : time_s, time_e
+!<     use context, only : rank
+!<
+!<     implicit none
+!<
+!<!! external arguments
+!<     ! current flavor channel
+!<     integer, intent(in) :: flvr
+!<
+!<     ! combination of nffrq and nbfrq
+!<     integer, intent(in) :: nfaux
+!<
+!<     ! maximum number of operators in different flavor channels
+!<     integer, intent(in) :: mrank
+!<
+!<     ! matsubara frequency exponents for creation operators
+!<     complex(dp), intent(out) :: caux1(nfaux,mrank)
+!<
+!<     ! matsubara frequency exponents for annihilation operators
+!<     complex(dp), intent(out) :: caux2(nfaux,mrank)
+!<
+!<!! local variables
+!<     ! loop indices for start and end points
+!<     integer :: is
+!<     integer :: ie
+!<
+!<     ! imaginary time for start and end points
+!<     ! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
+!<     complex(dp) :: zs
+!<     complex(dp) :: ze
+!<
+!<!! [body
+!<
+!<     ! creation operators
+!<     !------------------------------------------------------------------
+!<     ! for each \tau_s, we try to calculate
+!<     !     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+!<     !     \omega_n = -(v + w), v: -v ---> +v, w: -0 ---> +w
+!<     ! so,
+!<     !     \omega_n = +v,   when n = 1
+!<     !     \omega_n = -v-w, when n = nfaux
+!<     !
+!<     do is=1,rank(flvr)
+!<         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
+!<         caux1(:,is) = exp(-two * zs)
+!<         call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
+!<         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * zs)
+!<     enddo ! over is={1,rank(flvr)} loop
+!<
+!<     ! annihilation operators
+!<     !------------------------------------------------------------------
+!<     ! for each \tau_e, we try to calculate
+!<     !     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+!<     !     \omega_n = +(v + w), v: -v ---> +v, w: -0 ---> +w
+!<     ! so,
+!<     !     \omega_n = -v,   when n = 1
+!<     !     \omega_n = +v+w, when n = nfaux
+!<     !
+!<     do ie=1,rank(flvr)
+!<         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
+!<         caux2(:,ie) = exp(+two * ze)
+!<         call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
+!<         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * ze)
+!<     enddo ! over ie={1,rank(flvr)} loop
+!<
+!<!! body]
+!<
+!<     return
+!<  end subroutine ctqmc_make_fexp
+
+!!
+!! @sub ctqmc_make_bexp
+!!
+!! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
+!!
+!! note:
+!!
+!!     unlike the above ctqmc_make_fexp(), here the matsubara frequency
+!!     mesh is bosonic. since the number of bosonic frequency points is
+!!     usually very small (that is nbfrq << nffrq), so the calculation is
+!!     very efficient
+!!
+  subroutine ctqmc_make_bexp(flvr, nfaux, mrank, caux1, caux2)
+     use constants, only : dp
+     use constants, only : pi, two, czi
+
      use control, only : beta
 
      use context, only : index_s, index_e
@@ -1141,49 +1351,67 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! combination of nffrq and nbfrq
+     ! number of frequency points, usually it is equal to nbfrq
      integer, intent(in) :: nfaux
 
-! maximum number of operators in different flavor channels
+     ! maximum number of operators in different flavor channels
      integer, intent(in) :: mrank
 
-! matsubara frequency exponents for creation operators
+     ! matsubara frequency exponents for creation operators
      complex(dp), intent(out) :: caux1(nfaux,mrank)
 
-! matsubara frequency exponents for annihilation operators
+     ! matsubara frequency exponents for annihilation operators
      complex(dp), intent(out) :: caux2(nfaux,mrank)
 
-! local variables
-! loop indices for start and end points
-     integer  :: is
-     integer  :: ie
+!! local variables
+     ! loop indices for start and end points
+     integer :: is
+     integer :: ie
 
-! imaginary time for start and end points
-     real(dp) :: taus
-     real(dp) :: taue
+     ! loop index for matsubara frequency
+     integer :: iw
 
-! for creation operators
+     ! imaginary time for start and end points
+     ! actually, they are i\pi\tau_s/\beta and i\pi\tau_e/\beta
+     complex(dp) :: zs
+     complex(dp) :: ze
+
+!! [body
+
+     ! creation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_s, we try to calculate
+     !     exp ( i \omega_n \tau_s ) where n \in [1,nfaux]
+     !     \omega_n = - 2 (n - 1) \pi / beta
+     !
      do is=1,rank(flvr)
-         taus = time_s( index_s(is, flvr), flvr )
-         caux1(:,is) = exp(-two * czi * pi * taus / beta)
-         call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
-         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * czi * pi * taus / beta)
+         zs = czi * pi * time_s( index_s(is, flvr), flvr ) / beta
+         do iw=1,nfaux
+             caux1(iw,is) = exp( -two * float(iw - 1) * zs )
+         enddo ! over iw={1,nfaux} loop
      enddo ! over is={1,rank(flvr)} loop
 
-! for annihilation operators
+     ! annihilation operators
+     !--------------------------------------------------------------------
+     ! for each \tau_e, we try to calculate
+     !     exp ( i \omega_n \tau_e ) where n \in [1,nfaux]
+     !     \omega_n = + 2 (n - 1) \pi / beta
+     !
      do ie=1,rank(flvr)
-         taue = time_e( index_e(ie, flvr), flvr )
-         caux2(:,ie) = exp(+two * czi * pi * taue / beta)
-         call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
-         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * czi * pi * taue / beta)
+         ze = czi * pi * time_e( index_e(ie, flvr), flvr ) / beta
+         do iw=1,nfaux
+             caux2(iw,ie) = exp( +two * float(iw - 1) * ze )
+         enddo ! over iw={1,nfaux} loop
      enddo ! over ie={1,rank(flvr)} loop
 
+!! body]
+
      return
-  end subroutine ctqmc_make_prod
+  end subroutine ctqmc_make_bexp
 
 !!========================================================================
 !!>>> self-energy function                                             <<<
@@ -1194,120 +1422,59 @@
 !!
 !! first of all, build impurity green's function and auxiliary correlation
 !! function via fast fourier transformation (if isort == 1) or analytical
-!! formula (if isort == 2). and then, the self-energy function is obtained
-!! by using the improved estimator trick
+!! formula (if isort == 2 or isort == 3). and then, self-energy function
+!! is obtained by using the improved estimator trick
 !!
   subroutine ctqmc_make_hub2()
-     use constants, only : dp, zero, one, two, pi, czi, czero
+     use constants, only : dp
 
-     use control, only : isort
      use control, only : norbs
-     use control, only : lemax
      use control, only : mfreq
      use control, only : nfreq
-     use control, only : ntime
-     use control, only : beta
 
-     use context, only : tmesh
      use context, only : gtau, ftau
      use context, only : grnf, frnf
      use context, only : sig2
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
-     integer  :: j
      integer  :: k
 
-! dummy real variables
-     real(dp) :: ob
+     ! status flag
+     integer  :: istat
 
-! spherical Bessel functions
-     real(dp) :: jaux(mfreq,lemax)
+     ! it is used to backup the sampled impurity green's function
+     complex(dp), allocatable :: gtmp(:,:,:)
 
-! imaginary time green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
+!! [body
 
-! imaginary time auxiliary correlation function
-     real(dp) :: faux(ntime,norbs,norbs)
+     ! allocate memory
+     allocate(gtmp(nfreq,norbs,norbs), stat=istat)
 
-! unitary transformation matrix for legendre orthogonal polynomial
-     complex(dp) :: taux(mfreq,lemax)
-
-! used to backup the sampled impurity green's function
-     complex(dp) :: gtmp(nfreq,norbs,norbs)
-
-! task 1: backup the sampled impurity green's function
-!-------------------------------------------------------------------------
+     ! backup the sampled impurity green's function
      gtmp = grnf(1:nfreq,:,:)
 
-! task 2: build impurity green's function and auxiliary correlation function
-!-------------------------------------------------------------------------
-! using fast fourier transformation
-     STD_BLOCK: if ( isort == 1 ) then
+     ! build impurity green's function and auxiliary correlation function
+     call ctqmc_tran_grnf(gtau, grnf)
+     call ctqmc_tran_grnf(ftau, frnf)
 
-         call ctqmc_make_gtau(tmesh, gtau, gaux)
-         call ctqmc_four_htau(gaux, grnf)
-         call ctqmc_make_ftau(tmesh, ftau, faux)
-         call ctqmc_four_htau(faux, frnf)
-
-     endif STD_BLOCK ! back if ( isort == 1 ) block
-
-! task 3: build impurity green's function and auxiliary correlation function
-!-------------------------------------------------------------------------
-! special consideration must be taken for legendre representation, we can
-! calculate grnf and frnf directly by using legendre coefficients, instead
-! of performing fourier transformation
-     LEG_BLOCK: if ( isort == 2 ) then
-
-! 3.1 build spherical Bessel functions: jaux
-         jaux = zero
-         do k=1,mfreq
-             ob = (two * k - one) * pi / two
-             call s_sph_jl(lemax-1, ob, jaux(k,:))
-         enddo ! over k={1,mfreq} loop
-
-! 3.2 build unitary transformation matrix: taux
-         taux = czero
-         do i=1,lemax
-             do k=1,mfreq
-                 ob = (-one)**(k - 1) * sqrt(two * i - one)
-                 taux(k,i) = jaux(k,i) * ob * ( czi**i )
-             enddo ! over k={1,mfreq} loop
-         enddo ! over i={1,lemax} loop
-         taux = taux / beta
-
-! 3.3 rebuild impurity green's function on matsubara frequency
-!     using orthogonal polynomial representation, G(i\omega)
-!
-! 3.4 rebuild auxiliary correlation function on matsubara frequency
-!     using orthogonal polynomial representation, F(i\omega)
-         grnf = czero
-         frnf = czero
-         do i=1,norbs
-             do j=1,lemax
-                 do k=1,mfreq
-                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i)
-                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i)
-                 enddo ! over k={1,mfreq} loop
-             enddo ! over j={1,lemax} loop
-         enddo ! over i={1,norbs} loop
-
-     endif LEG_BLOCK ! back if ( isort == 2 ) block
-
-! task 4: build final self-energy function by using improved estimator
-!-------------------------------------------------------------------------
+     ! build final self-energy function by using improved estimator
      do i=1,norbs
          do k=1,mfreq
              sig2(k,i,i) = frnf(k,i,i) / grnf(k,i,i)
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
 
-! task 5: restore the sampled impurity green's function
-!-------------------------------------------------------------------------
+     ! restore the sampled impurity green's function
      grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
+
+     ! deallocate memory
+     deallocate(gtmp)
+
+!! body]
 
      return
   end subroutine ctqmc_make_hub2
