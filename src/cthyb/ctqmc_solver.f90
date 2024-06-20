@@ -4,9 +4,9 @@
 !!!           ctqmc_impurity_tester
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/16/2017 by li huang (last modified)
+!!!           06/20/2024 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -26,7 +26,9 @@
 !! Monte Carlo quantum impurity solver
 !!
   subroutine ctqmc_impurity_solver(iter)
-     use constants, only : dp, zero, one, mystd
+     use constants, only : dp
+     use constants, only : zero, one
+     use constants, only : mystd
 
      use control, only : cname               ! code name
                                              !
@@ -41,7 +43,7 @@
      use control, only : nffrq, nbfrq        ! fermionic and bosonic frequencies
      use control, only : ntime               ! imaginary time slice
      use control, only : nsweep, nwrite      ! monte carlo sampling
-     use control, only : nmonte              ! interval for measurement
+     use control, only : nmonte              ! interval between successive measurements
      use control, only : myid, master        ! mpi environment
                                              !
      use context, only : caves               ! averaged sign values
@@ -55,11 +57,16 @@
      use context, only : lnop, rnop, lrmm    ! fidelity susceptibility
      use context, only : szpw                ! binder cumulant
                                              !
-     use context, only : g2pw                ! two-particle green's function
-     use context, only : h2pw                ! irreducible vertex function
-     use context, only : p2pw                ! pairing susceptibility
+     use context, only : schi, sp_t, sp_w    ! spin susceptibility
+     use context, only : cchi, ch_t, ch_w    ! charge susceptibility
                                              !
-     use context, only : symm                ! symmetry vector
+     use context, only : g2ph                ! two-particle green's function (ph)
+     use context, only : h2ph                ! two-particle vertex function (ph)
+     use context, only : g2pp                ! two-particle green's function (pp)
+     use context, only : h2pp                ! two-particle vertex function (pp)
+                                             !
+     use context, only : symm                ! symmetry indicator
+                                             !
      use context, only : gtau, ftau          ! imaginary time green's function
      use context, only : grnf, frnf          ! matsubara green's function
      use context, only : sig2                ! matsubara self-energy function
