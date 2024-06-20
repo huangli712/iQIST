@@ -485,7 +485,7 @@
      implicit none
 
 !! external arguments
-     ! hybridization function and its error bar
+     ! hybridization function
      real(dp), intent(in) :: htau(ntime,norbs,norbs)
 
 !! local variables
@@ -537,6 +537,8 @@
      integer :: i
      integer :: j
 
+!! [body
+
      ! open data file: solver.weiss.dat
      open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
 
@@ -587,6 +589,8 @@
      integer :: i
      integer :: j
 
+!! [body
+
      ! open data file: solver.grn.dat
      open(mytmp, file='solver.grn.dat', form='formatted', status='unknown')
 
@@ -632,6 +636,8 @@
      ! loop index
      integer :: i
      integer :: j
+
+!! [body
 
      ! open data file: solver.frn.dat
      open(mytmp, file='solver.frn.dat', form='formatted', status='unknown')
@@ -679,6 +685,8 @@
      integer :: i
      integer :: j
 
+!! [body
+
      ! open data file: solver.hyb.dat
      open(mytmp, file='solver.hyb.dat', form='formatted', status='unknown')
 
@@ -723,10 +731,12 @@
      integer :: i
      integer :: j
 
-! open data file: solver.wss.dat
+!! [body
+
+     ! open data file: solver.wss.dat
      open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), wssf(j,i,i), czero
@@ -735,7 +745,7 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
@@ -765,7 +775,9 @@
      integer :: i
      integer :: j
 
-! open data file: solver.sgm.dat
+!! [body
+
+     ! open data file: solver.sgm.dat
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
 ! write it
