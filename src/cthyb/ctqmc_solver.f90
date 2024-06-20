@@ -699,13 +699,20 @@
          call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
          call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
          call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+         call ctqmc_reduce_frnf(frnf_mpi, frnf_err)
+         call ctqmc_reduce_sig2(sig2_mpi, sig2_err)
 
          call ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
          call ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
          call ctqmc_reduce_szpw(szpw_mpi, szpw_err)
 
-         call ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
-         call ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
+         call ctqmc_reduce_sp_t(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
+         call ctqmc_reduce_sp_w(sp_w_mpi, sp_w_err)
+         call ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
+         call ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
+
+         call ctqmc_reduce_g2ph(g2ph_mpi, h2ph_mpi, g2ph_err, h2ph_err)
+         call ctqmc_reduce_g2pp(g2pp_mpi, h2pp_mpi, g2pp_err, h2pp_err)
 
      END BLOCK COLLECT_DATA
 
