@@ -464,6 +464,22 @@
      implicit none
 
 !!
+!! @var ac_v
+!!
+!! a sequence of specified observable which will be used to measure the
+!! autocorrelation function. here the total occupation number is the
+!! chosen observable
+!!
+     real(dp), public, save, allocatable :: ac_v(:)
+
+!!
+!! @var ac_f
+!!
+!! autocorrelation function
+!!
+     real(dp), public, save, allocatable :: ac_f(:)
+
+!!
 !! @var hist
 !!
 !! histogram for perturbation expansion series
