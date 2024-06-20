@@ -71,6 +71,8 @@
      real(dp) :: raux(ntime)
      complex(dp) :: caux(mfreq)
 
+!! [body
+
      ! initialize them
      raux = zero
      caux = czero
@@ -89,6 +91,8 @@
 
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_four_htau
