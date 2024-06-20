@@ -1017,265 +1017,288 @@
 !!>>> dump data of physical observables 4                              <<<
 !!========================================================================
 
+!!
+!! @sub ctqmc_dump_sp_t
+!!
+!! write out the spin-spin correlation function
+!! in imaginary time space
+!!
+  subroutine ctqmc_dump_sp_t(schi, sp_t, serr, sbar)
+     use constants, only : dp
+     use constants, only : mytmp
+
+     use control, only : issus
+     use control, only : nband
+     use control, only : ntime
+
+     use context, only : tmesh
+
+     implicit none
+
+!! external arguments
+     ! totally-averaged spin-spin correlation function and its error bar
+     real(dp), intent(in) :: schi(ntime)
+     real(dp), intent(in) :: serr(ntime)
+
+     ! orbital-resolved spin-spin correlation function and its error bar
+     real(dp), intent(in) :: sp_t(ntime,nband)
+     real(dp), intent(in) :: sbar(ntime,nband)
+
+!! local variables
+     ! loop index
+     integer :: i
+     integer :: j
+
+!! [body
+
+     ! check if we need to dump the spin-spin correlation function data
+     ! to solver.sp_t.dat
+     if ( .not. btest(issus, 1) ) RETURN
+
+     ! open data file: solver.sp_t.dat
+     open(mytmp, file='solver.sp_t.dat', form='formatted', status='unknown')
+
+     ! write it
+     do j=1,nband
+         write(mytmp,'(a,i6)') '# flvr:', j
+         do i=1,ntime
+             write(mytmp,'(3f12.6)') tmesh(i), sp_t(i,j), sbar(i,j)
+         enddo ! over i={1,ntime} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over j={1,nband} loop
+
+     write(mytmp,'(a,i6)') '# flvr:', 8888
+     do i=1,ntime
+         write(mytmp,'(3f12.6)') tmesh(i), schi(i), serr(i)
+     enddo ! over i={1,ntime} loop
+     write(mytmp,*) ! write empty lines
+     write(mytmp,*)
+
+     write(mytmp,'(a,i6)') '# flvr:', 9999
+     do i=1,ntime
+         write(mytmp,'(3f12.6)') tmesh(i), sum( sp_t(i,:) ), sum( sbar(i,:) )
+     enddo ! over i={1,ntime} loop
+     write(mytmp,*) ! write empty lines
+     write(mytmp,*)
+
+     ! close data file
+     close(mytmp)
+
+!! body]
+
+     return
+  end subroutine ctqmc_dump_sp_t
+
+!!
+!! @sub ctqmc_dump_sp_w
+!!
+!! write out the spin-spin correlation function
+!! in matsubara frequency space
+!!
+  subroutine ctqmc_dump_sp_w(sp_w, serr)
+     use constants, only : dp
+     use constants, only : pi, two
+     use constants, only : mytmp
+
+     use control, only : issus
+     use control, only : nband
+     use control, only : nbfrq
+     use control, only : beta
+
+     implicit none
+
+!! external arguments
+     ! orbital-resolved spin-spin correlation function and its error bar
+     real(dp), intent(in) :: sp_w(nbfrq,nband)
+     real(dp), intent(in) :: serr(nbfrq,nband)
+
+!! local variables
+     ! loop index
+     integer  :: i
+     integer  :: j
+
+     ! bosonic frequency mesh
+     real(dp) :: bmesh(nbfrq)
+
+!! [body
+
+     ! build bmesh
+     do i=1,nbfrq
+         bmesh(i) = two * pi * float( i - 1 ) / beta
+     enddo ! over i={1,nbfrq} loop
+
+     ! check if we need to dump the spin-spin correlation function data
+     ! to solver.sp_w.dat
+     if ( .not. btest(issus, 3) ) RETURN
+
+     ! open data file: solver.sp_w.dat
+     open(mytmp, file='solver.sp_w.dat', form='formatted', status='unknown')
+
+     ! write it
+     do j=1,nband
+         write(mytmp,'(a,i6)') '# flvr:', j
+         do i=1,nbfrq
+             write(mytmp,'(3f12.6)') bmesh(i), sp_w(i,j), serr(i,j)
+         enddo ! over i={1,nbfrq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over j={1,nband} loop
+
+     ! close data file
+     close(mytmp)
+
+!! body]
+
+     return
+  end subroutine ctqmc_dump_sp_w
+
+!!
+!! @sub ctqmc_dump_ch_t
+!!
+!! write out the charge-charge correlation function
+!! in imaginary time space
+!!
+  subroutine ctqmc_dump_ch_t(cchi, ch_t, cerr, cbar)
+     use constants, only : dp
+     use constants, only : mytmp
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : ntime
+
+     use context, only : tmesh
+
+     implicit none
+
+!! external arguments
+     ! totally-averaged charge-charge correlation function and its error bar
+     real(dp), intent(in) :: cchi(ntime)
+     real(dp), intent(in) :: cerr(ntime)
+
+     ! orbital-resolved charge-charge correlation function and its error bar
+     real(dp), intent(in) :: ch_t(ntime,norbs,norbs)
+     real(dp), intent(in) :: cbar(ntime,norbs,norbs)
+
+!! local variables
+     ! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+!! [body
+
+     ! check if we need to dump the charge-charge correlation function data
+     ! to solver.ch_t.dat
+     if ( .not. btest(issus, 2) ) RETURN
+
+     ! open data file: solver.ch_t.dat
+     open(mytmp, file='solver.ch_t.dat', form='formatted', status='unknown')
+
+     ! write it
+     do k=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
+             do i=1,ntime
+                 write(mytmp,'(3f12.6)') tmesh(i), ch_t(i,j,k), cbar(i,j,k)
+             enddo ! over i={1,ntime} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,norbs} loop
+
+     write(mytmp,'(a,i6)') '# flvr:', 8888
+     do i=1,ntime
+         write(mytmp,'(3f12.6)') tmesh(i), cchi(i), cerr(i)
+     enddo ! over i={1,ntime} loop
+     write(mytmp,*) ! write empty lines
+     write(mytmp,*)
+
+     write(mytmp,'(a,i6)') '# flvr:', 9999
+     do i=1,ntime
+         write(mytmp,'(3f12.6)') tmesh(i), sum( ch_t(i,:,:) ), sum( cbar(i,:,:) )
+     enddo ! over i={1,ntime} loop
+     write(mytmp,*) ! write empty lines
+     write(mytmp,*)
+
+     ! close data file
+     close(mytmp)
+
+!! body]
+
+     return
+  end subroutine ctqmc_dump_ch_t
+
+!!
+!! @sub ctqmc_dump_ch_w
+!!
+!! write out the charge-charge correlation function
+!! in matsubara frequency space
+!!
+  subroutine ctqmc_dump_ch_w(ch_w, cerr)
+     use constants, only : dp
+     use constants, only : pi, two
+     use constants, only : mytmp
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : nbfrq
+     use control, only : beta
+
+     implicit none
+
+!! external arguments
+     ! orbital-resolved charge-charge correlation function and its error bar
+     real(dp), intent(in) :: ch_w(nbfrq,norbs,norbs)
+     real(dp), intent(in) :: cerr(nbfrq,norbs,norbs)
+
+!! local variables
+     ! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+
+     ! bosonic frequency mesh
+     real(dp) :: bmesh(nbfrq)
+
+!! [body
+
+     ! build bmesh
+     do i=1,nbfrq
+         bmesh(i) = two * pi * float( i - 1 ) / beta
+     enddo ! over i={1,nbfrq} loop
+
+     ! check if we need to dump the charge-charge correlation function data
+     ! to solver.ch_w.dat
+     if ( .not. btest(issus, 4) ) RETURN
+
+     ! open data file: solver.ch_w.dat
+     open(mytmp, file='solver.ch_w.dat', form='formatted', status='unknown')
+
+     ! write it
+     do k=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
+             do i=1,nbfrq
+                 write(mytmp,'(3f12.6)') bmesh(i), ch_w(i,j,k), cerr(i,j,k)
+             enddo ! over i={1,nbfrq} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,norbs} loop
+
+     ! close data file
+     close(mytmp)
+
+!! body]
+
+     return
+  end subroutine ctqmc_dump_ch_w
+
 !!========================================================================
 !!>>> dump data of physical observables 5                              <<<
 !!========================================================================
 
-!!
-!! @sub ctqmc_dump_twop
-!!
-!! write out the two-particle green's function and full (reducible) vertex
-!! function, the improved estimator was used to improve the accuracy
-!!
-  subroutine ctqmc_dump_twop(g2pw, h2pw, gerr, herr)
-     use constants, only : dp, czero, mytmp
-
-     use control, only : isvrt
-     use control, only : norbs
-     use control, only : nffrq, nbfrq
-
-     use context, only : grnf, frnf
-
-     implicit none
-
-! external arguments
-! two-particle green's functions
-     complex(dp), intent(in) :: g2pw(nffrq,nffrq,nbfrq,norbs,norbs)
-     complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! irreducible vertex functions
-     complex(dp), intent(in) :: h2pw(nffrq,nffrq,nbfrq,norbs,norbs)
-     complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! local variables
-! loop index for frequencies
-     integer :: i
-     integer :: j
-     integer :: k
-     integer :: p
-     integer :: q
-
-! loop index for orbitals
-     integer :: m
-     integer :: n
-
-! dummy integer variables
-! jt: \omega, unit is \pi/\beta
-! it: \omega', unit is \pi/\beta
-     integer :: it
-     integer :: jt
-
-! dummy complex(dp) variables
-! they are used to store the impurity green's function
-     complex(dp) :: fw
-     complex(dp) :: g1
-     complex(dp) :: g2
-     complex(dp) :: g3
-     complex(dp) :: g4
-
-! two-particle green's function, connected part, \chi_{irr}
-     complex(dp) :: chic
-
-! full vertex function, \gamma
-     complex(dp) :: chig
-
-! check whether we need to dump the two-particle green's function and
-! irreducible vertex function data to solver.g2pw.dat and solver.h2pw.dat
-     if ( .not. btest(isvrt, 1) ) RETURN
-
-! task 1: dump two-particle green's function
-!-------------------------------------------------------------------------
-
-! open data file: solver.g2pw.dat
-     open(mytmp, file='solver.g2pw.dat', form='formatted', status='unknown')
-
-! write it
-     do m=1,norbs
-         do n=1,m
-             do k=1,nbfrq
-                 write(mytmp,'(a,i6)') '# flvr1:', m
-                 write(mytmp,'(a,i6)') '# flvr2:', n
-                 write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
-                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, g2pw(i,j,k,n,m), gerr(i,j,k,n,m)
-                     enddo ! over i={1,nffrq} loop
-                 enddo ! over j={1,nffrq} loop
-                 write(mytmp,*) ! write empty lines
-                 write(mytmp,*)
-             enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,m} loop
-     enddo ! over m={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-! task 2: dump irreducible vertex function
-!-------------------------------------------------------------------------
-
-! open data file: solver.h2pw.dat
-     open(mytmp, file='solver.h2pw.dat', form='formatted', status='unknown')
-
-! write it
-     do m=1,norbs
-         do n=1,m
-             do k=1,nbfrq
-                 write(mytmp,'(a,i6)') '# flvr1:', m
-                 write(mytmp,'(a,i6)') '# flvr2:', n
-                 write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
-                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, h2pw(i,j,k,n,m), herr(i,j,k,n,m)
-                     enddo ! over i={1,nffrq} loop
-                 enddo ! over j={1,nffrq} loop
-                 write(mytmp,*) ! write empty lines
-                 write(mytmp,*)
-             enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,m} loop
-     enddo ! over m={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-! task 3: dump irreducible vertex function
-!-------------------------------------------------------------------------
-
-! open data file: solver.twop.dat
-     open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
-
-! write it
-     do m=1,norbs
-         do n=1,m
-             do k=1,nbfrq
-                 write(mytmp,'(a,i6)') '# flvr1:', m
-                 write(mytmp,'(a,i6)') '# flvr2:', n
-                 write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-
-! evaluate g2
-                     if ( j <= nffrq/2 ) then
-                         g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
-                     else
-                         g2 = grnf(j-nffrq/2,m,m)
-                     endif ! back if ( j <= nffrq/2 ) block
-
-! evaluate g1 and fw
-                     p = j + k - 1
-                     if ( p <= nffrq/2 ) then
-                         g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
-                         fw = dconjg( frnf(nffrq/2-p+1,m,m) )
-                     else
-                         g1 = grnf(p-nffrq/2,m,m)
-                         fw = frnf(p-nffrq/2,m,m)
-                     endif ! back if ( p <= nffrq/2 ) block
-
-                     do i=1,nffrq
-
-! evaluate g3
-                         if ( i <= nffrq/2 ) then
-                             g3 = dconjg( grnf(nffrq/2-i+1,n,n) )
-                         else
-                             g3 = grnf(i-nffrq/2,n,n)
-                         endif ! back if ( i <= nffrq/2 ) block
-
-! evaluate g4
-                         q = i + k - 1
-                         if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
-                         else
-                             g4 = grnf(q-nffrq/2,n,n)
-                         endif ! back if ( q <= nffrq/2 ) block
-
-! evaluate chic
-                         chic = g1 * h2pw(i,j,k,n,m) - fw * g2pw(i,j,k,n,m)
-
-! evaluate chig
-                         chig = chic / (g1 * g2 * g3 * g4)
-
-                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, chic, chig
-                     enddo ! over i={1,nffrq} loop
-                 enddo ! over j={1,nffrq} loop
-                 write(mytmp,*) ! write empty lines
-                 write(mytmp,*)
-             enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,m} loop
-     enddo ! over m={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_twop
-
-!!
-!! @sub ctqmc_dump_pair
-!!
-!! write out the particle-particle pairing susceptibility
-!!
-  subroutine ctqmc_dump_pair(p2pw, perr)
-     use constants, only : dp, mytmp
-
-     use control, only : isvrt
-     use control, only : norbs
-     use control, only : nffrq, nbfrq
-
-     implicit none
-
-! external arguments
-! particle-particle pairing susceptibility
-     complex(dp), intent(in) :: p2pw(nffrq,nffrq,nbfrq,norbs,norbs)
-     complex(dp), intent(in) :: perr(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! local variables
-! loop index for frequencies
-     integer :: i
-     integer :: j
-     integer :: k
-
-! loop index for orbitals
-     integer :: m
-     integer :: n
-
-! dummy integer variables
-! jt: \omega, unit is \pi/\beta
-! it: \omega', unit is \pi/\beta
-     integer :: it
-     integer :: jt
-
-! check if we need to dump the particle-particle pairing susceptibility
-! to solver.pair.dat
-     if ( .not. btest(isvrt, 2) ) RETURN
-
-! open data file: solver.pair.dat
-     open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
-
-! write it
-     do m=1,norbs
-         do n=1,m
-             do k=1,nbfrq
-                 write(mytmp,'(a,i6)') '# flvr1:', m
-                 write(mytmp,'(a,i6)') '# flvr2:', n
-                 write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
-                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, p2pw(i,j,k,n,m), perr(i,j,k,n,m)
-                     enddo ! over i={1,nffrq} loop
-                 enddo ! over j={1,nffrq} loop
-                 write(mytmp,*) ! write empty lines
-                 write(mytmp,*)
-             enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,m} loop
-     enddo ! over m={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_pair
 
 !!========================================================================
 !!>>> dump data of diagrammatic configuration                          <<<
