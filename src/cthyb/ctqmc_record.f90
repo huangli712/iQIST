@@ -3823,8 +3823,8 @@
 
      implicit none
 
-! external arguments
-! two-particle green's function
+!! external arguments
+     ! two-particle green's function
      complex(dp), intent(out) :: g2pp_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: g2pp_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
@@ -3832,7 +3832,7 @@
      complex(dp), intent(out) :: h2pp_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: h2pp_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! local variables
+!! local variables
      ! used to store the real and imaginary parts of green's function
      real(dp), allocatable :: g_re_err(:,:,:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:,:,:)
@@ -3873,7 +3873,7 @@
      call mp_allreduce(g2pp, g2pp_mpi)
      call mp_allreduce(h2pp, h2pp_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
