@@ -496,21 +496,38 @@
 !!
 !! @var paux
 !!
-!! auxiliary physical observables, it is a vector with size = 9
+!! auxiliary physical observables, it is a vector with fixed size = 9
 !!
-!! paux(01) : total energy, Etot
-!! paux(02) : potential engrgy, Epot
-!! paux(03) : kinetic energy, Ekin
-!! paux(04) : local magnetic moment, < Sz >
-!! paux(05) : occupation number, < N > = < N^1 > = < N1 >
-!! paux(06) : square of occupation number, < N^2 > = < N2 >
-!! paux(07) : high order of K, < K^2 > = < K2 >
-!! paux(08) : high order of K, < K^3 > = < K3 >
-!! paux(09) : high order of K, < K^4 > = < K4 >
+!! if p == 01:
+!!     paux(p) -> total energy, Etot
+!!
+!! if p == 02:
+!!     paux(p) -> potential engrgy, Epot
+!!
+!! if p == 03:
+!!     paux(p) -> kinetic energy, Ekin
+!!
+!! if p == 04:
+!!     paux(p) -> local magnetic moment, < Sz >
+!!
+!! if p == 05:
+!!     paux(p) -> occupation number, < N > = < N^1 > = < N1 >
+!!
+!! if p == 06:
+!!     paux(p) -> square of occupation number, < N^2 > = < N2 >
+!!
+!! if p == 07:
+!!     paux(p) -> high order of K, < K^2 > = < K2 >
+!!
+!! if p == 08:
+!!     paux(p) -> high order of K, < K^3 > = < K3 >
+!!
+!! if p == 09:
+!!     paux(p) -> high order of K, < K^4 > = < K4 >
 !!
 !! K = current perturbation expansion order * 2. the < K^2 >, < K^3 >,
 !! and < K^4 > can be used to calculate the skewness and kurtosis of the
-!! perturbation expansion order. of course, < K^1 > is essential. It can
+!! perturbation expansion order. of course, < K^1 > is essential. it can
 !! be evaluated from Ekin
 !!
      real(dp), public, save, allocatable :: paux(:)
@@ -532,7 +549,7 @@
 !!
 !! @var knop
 !!
-!! number of operators, < k >
+!! number of operators, < k_i >
 !!
      real(dp), public, save, allocatable :: knop(:)
 
