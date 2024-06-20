@@ -421,14 +421,16 @@
          enddo ! over ktau={1,ntime} loop
      endif ! back if ( isspn == 2 ) block
 
+!! body]
+
      return
   end subroutine ctqmc_symm_gtau
 
 !!
 !! @sub ctqmc_symm_grnf
 !!
-!! symmetrize the grnf according to symm vector. only the diagonal
-!! elements are taken into considerations
+!! symmetrize the grnf according to symm vector. only the diagonal terms
+!! are taken into considerations
 !!
   subroutine ctqmc_symm_grnf(symm, grnf)
      use constants, only : dp
@@ -584,6 +586,8 @@
          enddo ! over jbnd={1,nband} loop
      endif ! back if ( isspn == 2 ) block
 
+!! body]
+
      return
   end subroutine ctqmc_symm_nimp
 
@@ -596,49 +600,51 @@
 !!
 !! build imaginary time green's function using different representation
 !!
-  subroutine ctqmc_tran_gtau(tmesh, gtau, gaux)
+  subroutine ctqmc_tran_gtau(gaux, gtau)
      use constants, only : dp
-     use constants, only : zero, two
+     use constants, only : zero, one, two
 
      use control, only : isort
      use control, only : norbs
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : ntime
      use control, only : beta
 
-     use context, only : rep_l
+     use context, only : tmesh
+     use context, only : rep_l, rep_s
 
      implicit none
 
-! external arguments
-! imaginary time mesh
-     real(dp), intent(in)  :: tmesh(ntime)
+!! external arguments
+     ! impurity green's function/orthogonal polynomial coefficients
+     real(dp), intent(in)  :: gaux(ntime,norbs,norbs)
 
-! impurity green's function/orthogonal polynomial coefficients
-     real(dp), intent(in)  :: gtau(ntime,norbs,norbs)
+     ! calculated impurity green's function
+     real(dp), intent(out) :: gtau(ntime,norbs,norbs)
 
-! calculated impurity green's function
-     real(dp), intent(out) :: gaux(ntime,norbs,norbs)
-
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! loop index for legendre polynomial
+     ! loop index for orthogonal polynomial
      integer  :: fleg
+     integer  :: fsvd
 
-! index for imaginary time \tau
+     ! index for imaginary time \tau
      integer  :: curr
 
-! interval for imaginary time slice
+     ! interval for imaginary time slice
      real(dp) :: step
 
-! dummy variables
+     ! dummy variables
      real(dp) :: raux
 
-! initialize gaux
-     gaux = zero
+!! [body
+
+     ! initialize gtau
+     gtau = zero
 
 !-------------------------------------------------------------------------
 ! using normal representation
