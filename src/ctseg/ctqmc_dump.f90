@@ -927,7 +927,7 @@
 
      implicit none
 
-! external arguments
+!! external arguments
      ! number of operators at left half axis, < k_l >, and its error bar
      real(dp), intent(in) :: lnop(norbs)
      real(dp), intent(in) :: lerr(norbs)
