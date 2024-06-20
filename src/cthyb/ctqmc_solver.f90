@@ -628,7 +628,7 @@
 
      call cpu_time(time_begin) ! record starting time
 
-     ! calculate the average values
+     ! calculate the averaged values
      AVERAGE_DATA: BLOCK
 
          hist = hist * one
@@ -640,6 +640,8 @@
          gtau = gtau * real(nmonte) / real(caves)
          ftau = ftau * real(nmonte) / real(caves)
          grnf = grnf * real(nmonte) / real(caves)
+         frnf = frnf * real(nmonte) / real(caves)
+         sig2 = sig2 * real(nmonte) / real(caves)
 
          knop = knop * real(nmonte) / real(caves)
          kmat = kmat * real(nmonte) / real(caves)
@@ -648,9 +650,17 @@
          lrmm = lrmm * real(nmonte) / real(caves)
          szpw = szpw * real(nmonte) / real(caves)
 
-         g2pw = g2pw * real(nmonte) / real(caves)
-         h2pw = h2pw * real(nmonte) / real(caves)
-         p2pw = p2pw * real(nmonte) / real(caves)
+         schi = schi * real(nmonte) / real(caves)
+         sp_t = sp_t * real(nmonte) / real(caves)
+         sp_w = sp_w * real(nmonte) / real(caves)
+         cchi = cchi * real(nmonte) / real(caves)
+         ch_t = ch_t * real(nmonte) / real(caves)
+         ch_w = ch_w * real(nmonte) / real(caves)
+
+         g2ph = g2ph * real(nmonte) / real(caves)
+         h2ph = h2ph * real(nmonte) / real(caves)
+         g2pp = g2pp * real(nmonte) / real(caves)
+         h2pp = h2pp * real(nmonte) / real(caves)
 
      END BLOCK AVERAGE_DATA
 
