@@ -252,17 +252,17 @@
 
 # endif  /* MPI */
 
-! check the validity of tau_s
+     ! check the validity of tau_s
      if ( maxval(tau_s) > beta ) then
          call s_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
      endif ! back if ( maxval(tau_s) > beta ) block
 
-! check the validity of tau_e
+     ! check the validity of tau_e
      if ( maxval(tau_e) > beta ) then
          call s_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
      endif ! back if ( maxval(tau_e) > beta ) block
 
-! restore all the operators for colour part
+     ! restore all the operators for colour part
      do i=1,norbs
          do j=1,rank(i)
              ckink = j - 1 ! update ckink simultaneously
@@ -271,7 +271,7 @@
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
 
-! restore all the operators for flavor part
+     ! restore all the operators for flavor part
      do i=1,norbs
          do j=1,rank(i)
              call try_insert_flavor(i, fis, fie, tau_s(j, i), tau_e(j, i), ladd)
@@ -279,21 +279,23 @@
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
 
-! update the matrix trace for product of F matrix and time evolution operators
+     ! update the matrix trace for product of F matrix and time evolution operators
      i = 2 * sum(rank) ! get total number of operators
      call ctqmc_retrieve_ztrace(i, n_mtr)
 
-! update the operators trace
+     ! update the operators trace
      call ctqmc_make_evolve()
 
-! reset csign and cnegs
+     ! reset csign and cnegs
      csign = 1
      cnegs = 0
 
-! finally, it is essential to check the validity of n_mtr
+     ! finally, it is essential to check the validity of n_mtr
      if ( abs( n_mtr - zero ) < epss ) then
          call s_print_exception('ctqmc_retrieve_status','very dangerous! ztrace maybe too small')
      endif ! back if ( abs( n_mtr - zero ) < epss ) block
+
+!! body]
 
      return
   end subroutine ctqmc_retrieve_status
