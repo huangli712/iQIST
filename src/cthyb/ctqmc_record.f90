@@ -3024,6 +3024,8 @@
      deallocate( f_re_err )
      deallocate( f_im_err )
 
+!! body]
+
      return
   end subroutine ctqmc_reduce_frnf
 
@@ -3047,35 +3049,35 @@
 
      implicit none
 
-! external arguments
-! self-energy function
+!! external arguments
+     ! self-energy function
      complex(dp), intent(out) :: sig2_mpi(mfreq,norbs,norbs)
      complex(dp), intent(out) :: sig2_err(mfreq,norbs,norbs)
 
-! local variables
-! used to store the real and imaginary parts of self-energy function
+!! local variables
+     ! used to store the real and imaginary parts of self-energy function
      real(dp), allocatable :: s_re_err(:,:,:)
      real(dp), allocatable :: s_im_err(:,:,:)
 
-! allocate memory
+     ! allocate memory
      allocate(s_re_err(mfreq,norbs,norbs))
      allocate(s_im_err(mfreq,norbs,norbs))
 
-! initialize s_re_err and s_im_err
+     ! initialize s_re_err and s_im_err
      s_re_err = zero
      s_im_err = zero
 
-! initialize sig2_mpi and sig2_err
+     ! initialize sig2_mpi and sig2_err
      sig2_mpi = czero
      sig2_err = czero
 
 ! build sig2_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(sig2, sig2_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3084,33 +3086,35 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      sig2_mpi = sig2_mpi / real(nprocs)
 
 ! build sig2_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(( real(sig2 - sig2_mpi))**2, s_re_err)
      call mp_allreduce((aimag(sig2 - sig2_mpi))**2, s_im_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          s_re_err = sqrt( s_re_err / real( nprocs * ( nprocs - 1 ) ) )
          s_im_err = sqrt( s_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final sig2_err
+     ! construct the final sig2_err
      sig2_err = s_re_err + s_im_err * czi
 
-! deallocate memory
+     ! deallocate memory
      deallocate( s_re_err )
      deallocate( s_im_err )
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_sig2
@@ -3139,19 +3143,19 @@
 
      implicit none
 
-! external arguments
-! number of operators
+!! external arguments
+     ! number of operators
      real(dp), intent(out) :: knop_mpi(norbs)
      real(dp), intent(out) :: knop_err(norbs)
 
-! crossing product of k_i and k_j
+     ! crossing product of k_i and k_j
      real(dp), intent(out) :: kmat_mpi(norbs,norbs)
      real(dp), intent(out) :: kmat_err(norbs,norbs)
 
-! check whether this observable has been measured
+     ! check whether this observable has been measured
      if ( .not. btest(isobs, 1) ) RETURN
 
-! initialize knop_mpi and kmat_mpi, knop_err and kmat_err
+     ! initialize knop_mpi and kmat_mpi, knop_err and kmat_err
      knop_mpi = zero
      kmat_mpi = zero
 
@@ -3161,11 +3165,11 @@
 ! build knop_mpi and kmat_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(knop, knop_mpi)
      call mp_allreduce(kmat, kmat_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3175,23 +3179,23 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      knop_mpi = knop_mpi / real(nprocs)
      kmat_mpi = kmat_mpi / real(nprocs)
 
 ! build knop_err and kmat_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((knop - knop_mpi)**2, knop_err)
      call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          knop_err = sqrt( knop_err / real( nprocs * ( nprocs - 1 ) ) )
          kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
