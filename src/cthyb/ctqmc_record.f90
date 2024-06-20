@@ -3263,6 +3263,8 @@
      real(dp), intent(out) :: lrmm_mpi(norbs,norbs)
      real(dp), intent(out) :: lrmm_err(norbs,norbs)
 
+!! [body
+
      ! check whether this observable has been measured
      if ( .not. btest(isobs, 2) ) RETURN
 
@@ -3350,6 +3352,8 @@
      real(dp), intent(out) :: szpw_mpi(4,norbs)
      real(dp), intent(out) :: szpw_err(4,norbs)
 
+!! [body
+
      ! check whether this observable has been measured
      if ( .not. btest(isobs, 3) ) RETURN
 
@@ -3429,6 +3433,8 @@
      ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: sp_t_mpi(ntime,nband)
      real(dp), intent(out) :: sp_t_err(ntime,nband)
+
+!! [body
 
      ! check whether this observable has been measured
      if ( .not. btest(issus, 1) ) RETURN
