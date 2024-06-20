@@ -3320,20 +3320,20 @@
      real(dp), intent(out) :: szpw_mpi(4,norbs)
      real(dp), intent(out) :: szpw_err(4,norbs)
 
-! check whether this observable has been measured
+     ! check whether this observable has been measured
      if ( .not. btest(isobs, 3) ) RETURN
 
-! initialize szpw_mpi and szpw_err
+     ! initialize szpw_mpi and szpw_err
      szpw_mpi = zero
      szpw_err = zero
 
 ! build szpw_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(szpw, szpw_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3342,16 +3342,16 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      szpw_mpi = szpw_mpi / real(nprocs)
 
 ! build szpw_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((szpw - szpw_mpi)**2, szpw_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
@@ -3394,14 +3394,14 @@
      real(dp), intent(out) :: schi_mpi(ntime)
      real(dp), intent(out) :: schi_err(ntime)
 
-! spin-spin correlation function, orbital-resolved
+     ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: sp_t_mpi(ntime,nband)
      real(dp), intent(out) :: sp_t_err(ntime,nband)
 
-! check whether this observable has been measured
+     ! check whether this observable has been measured
      if ( .not. btest(issus, 1) ) RETURN
 
-! initialize schi_mpi and sp_t_mpi, schi_err and sp_t_err
+     ! initialize schi_mpi and sp_t_mpi, schi_err and sp_t_err
      schi_mpi = zero
      sp_t_mpi = zero
 
@@ -3411,11 +3411,11 @@
 ! build schi_mpi and sp_t_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(schi, schi_mpi)
      call mp_allreduce(sp_t, sp_t_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3425,18 +3425,18 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      schi_mpi = schi_mpi / real(nprocs)
      sp_t_mpi = sp_t_mpi / real(nprocs)
 
 ! build schi_err and sp_t_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce((schi - schi_mpi)**2, schi_err)
      call mp_allreduce((sp_t - sp_t_mpi)**2, sp_t_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
