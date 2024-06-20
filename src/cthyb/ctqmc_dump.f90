@@ -964,13 +964,13 @@
 
      implicit none
 
-! external arguments
-! powers of local magnetization
+!! external arguments
+     ! powers of local magnetization
      real(dp), intent(in) :: szpw(4,norbs)
      real(dp), intent(in) :: serr(4,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
@@ -978,10 +978,10 @@
 ! to solver.szpw.dat
      if ( .not. btest(isobs, 3) ) RETURN
 
-! open data file: solver.szpw.dat
+     ! open data file: solver.szpw.dat
      open(mytmp, file='solver.szpw.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,4
@@ -997,8 +997,10 @@
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_szpw
