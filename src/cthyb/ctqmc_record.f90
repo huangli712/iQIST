@@ -3869,7 +3869,7 @@
 ! build g2pp_mpi and h2pp_mpi, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(g2pp, g2pp_mpi)
      call mp_allreduce(h2pp, h2pp_mpi)
 
@@ -3883,25 +3883,25 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      g2pp_mpi = g2pp_mpi / real(nprocs)
      h2pp_mpi = h2pp_mpi / real(nprocs)
 
 ! build g2pp_err and h2pp_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(( real(g2pp - g2pp_mpi))**2, g_re_err)
      call mp_allreduce((aimag(g2pp - g2pp_mpi))**2, g_im_err)
      call mp_allreduce(( real(h2pp - h2pp_mpi))**2, h_re_err)
      call mp_allreduce((aimag(h2pp - h2pp_mpi))**2, h_im_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
          g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
@@ -3909,15 +3909,17 @@
          h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
-! construct the final g2pp_err and h2pp_err
+     ! construct the final g2pp_err and h2pp_err
      g2pp_err = g_re_err + g_im_err * czi
      h2pp_err = h_re_err + h_im_err * czi
 
-! deallocate memory
+     ! deallocate memory
      deallocate(g_re_err)
      deallocate(g_im_err)
      deallocate(h_re_err)
      deallocate(h_im_err)
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_g2pp
