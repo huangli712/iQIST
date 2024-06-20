@@ -752,13 +752,9 @@
 
      END BLOCK REPLACE_DATA
 
-! try to evaluate the impurity green's function and self-energy function
-! grnf, frnf, and sig2 would be updated there
-     call ctqmc_make_hub2()
-
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
