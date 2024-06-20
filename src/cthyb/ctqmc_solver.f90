@@ -178,6 +178,51 @@
      real(dp), allocatable :: szpw_mpi(:,:)
      real(dp), allocatable :: szpw_err(:,:)
 
+     ! totally-averaged spin-spin correlation function
+     real(dp), allocatable :: schi_mpi(:)
+     real(dp), allocatable :: schi_err(:)
+
+     ! orbital-resolved spin-spin correlation function
+     real(dp), allocatable :: sp_t_mpi(:,:)
+     real(dp), allocatable :: sp_t_err(:,:)
+
+     ! orbital-resolved spin-spin correlation function
+     real(dp), allocatable :: sp_w_mpi(:,:)
+     real(dp), allocatable :: sp_w_err(:,:)
+
+     ! totally-averaged charge-charge correlation function
+     real(dp), allocatable :: cchi_mpi(:)
+     real(dp), allocatable :: cchi_err(:)
+
+     ! orbital-resolved charge-charge correlation function
+     real(dp), allocatable :: ch_t_mpi(:,:,:)
+     real(dp), allocatable :: ch_t_err(:,:,:)
+
+     ! orbital-resolved charge-charge correlation function
+     real(dp), allocatable :: ch_w_mpi(:,:,:)
+     real(dp), allocatable :: ch_w_err(:,:,:)
+     !--------------------------------------------------------------------
+
+     ! the following observables are measured optionally: complex(dp)
+     !--------------------------------------------------------------------
+     ! two-particle green's function (ph channel)
+     complex(dp), allocatable :: g2ph_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: g2ph_err(:,:,:,:,:)
+
+     ! two-particle vertex function (ph channel)
+     complex(dp), allocatable :: h2ph_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: h2ph_err(:,:,:,:,:)
+
+     ! two-particle green's function (pp channel)
+     complex(dp), allocatable :: g2pp_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: g2pp_err(:,:,:,:,:)
+
+     ! two-particle vertex function (pp channel)
+     complex(dp), allocatable :: h2pp_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: h2pp_err(:,:,:,:,:)
+     !--------------------------------------------------------------------
+
+!! [body
 
      ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
