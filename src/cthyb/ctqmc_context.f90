@@ -1408,8 +1408,8 @@
   subroutine cat_free_clur()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
 !! [body
@@ -1474,7 +1474,9 @@
      if ( allocated(rmesh) )   deallocate(rmesh)
 
      if ( allocated(lmesh) )   deallocate(lmesh)
+     if ( allocated(smesh) )   deallocate(smesh)
      if ( allocated(rep_l) )   deallocate(rep_l)
+     if ( allocated(rep_s) )   deallocate(rep_s)
 
 !! body]
 
@@ -1491,6 +1493,9 @@
 
 !! [body
 
+     if ( allocated(ac_v) )    deallocate(ac_v)
+     if ( allocated(ac_f) )    deallocate(ac_f)
+
      if ( allocated(hist) )    deallocate(hist)
      if ( allocated(prob) )    deallocate(prob)
      if ( allocated(paux) )    deallocate(paux)
@@ -1504,9 +1509,17 @@
      if ( allocated(lrmm) )    deallocate(lrmm)
      if ( allocated(szpw) )    deallocate(szpw)
 
-     if ( allocated(g2pw) )    deallocate(g2pw)
-     if ( allocated(h2pw) )    deallocate(h2pw)
-     if ( allocated(p2pw) )    deallocate(p2pw)
+     if ( allocated(schi) )    deallocate(schi)
+     if ( allocated(sp_t) )    deallocate(sp_t)
+     if ( allocated(sp_w) )    deallocate(sp_w)
+     if ( allocated(cchi) )    deallocate(cchi)
+     if ( allocated(ch_t) )    deallocate(ch_t)
+     if ( allocated(ch_w) )    deallocate(ch_w)
+
+     if ( allocated(g2ph) )    deallocate(g2ph)
+     if ( allocated(h2ph) )    deallocate(h2ph)
+     if ( allocated(g2pp) )    deallocate(g2pp)
+     if ( allocated(h2pp) )    deallocate(h2pp)
 
 !! body]
 
