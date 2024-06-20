@@ -3347,8 +3347,8 @@
 
      implicit none
 
-! external arguments
-! powers of local magnetization, orbital-resolved
+!! external arguments
+     ! powers of local magnetization, orbital-resolved
      real(dp), intent(out) :: szpw_mpi(4,norbs)
      real(dp), intent(out) :: szpw_err(4,norbs)
 
@@ -3425,8 +3425,8 @@
 
      implicit none
 
-! external arguments
-! spin-spin correlation function, totally-averaged
+!! external arguments
+     ! spin-spin correlation function, totally-averaged
      real(dp), intent(out) :: schi_mpi(ntime)
      real(dp), intent(out) :: schi_err(ntime)
 
@@ -3516,6 +3516,8 @@
      real(dp), intent(out) :: sp_w_mpi(nbfrq,nband)
      real(dp), intent(out) :: sp_w_err(nbfrq,nband)
 
+!! [body
+
      ! check whether this observable has been measured
      if ( .not. btest(issus, 3) ) RETURN
 
@@ -3592,6 +3594,8 @@
      real(dp), intent(out) :: ch_t_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ch_t_err(ntime,norbs,norbs)
 
+!! [body
+
      ! check whether this observable has been measured
      if ( .not. btest(issus, 2) ) RETURN
 
@@ -3640,6 +3644,8 @@
          cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
          ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_ch_t
