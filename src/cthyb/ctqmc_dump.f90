@@ -388,7 +388,7 @@
      implicit none
 
 !! external arguments
-     ! impurity green's function
+     ! impurity green's function and its error bar
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
      real(dp), intent(in) :: gerr(ntime,norbs,norbs)
 
@@ -436,7 +436,7 @@
      implicit none
 
 !! external arguments
-     ! auxiliary correlation function
+     ! auxiliary correlation function and its error bar
      real(dp), intent(in) :: ftau(ntime,norbs,norbs)
      real(dp), intent(in) :: ferr(ntime,norbs,norbs)
 
@@ -483,7 +483,7 @@
      implicit none
 
 ! external arguments
-! hybridization function
+     ! hybridization function and its error bar
      real(dp), intent(in) :: htau(ntime,norbs,norbs)
 
 ! local variables
