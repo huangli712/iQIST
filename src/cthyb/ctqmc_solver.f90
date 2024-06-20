@@ -548,19 +548,8 @@
 !!>>> reducing immediate results                                       <<<
 !!========================================================================
 
-! collect the histogram data from hist to hist_mpi
+         ! collect the histogram data from hist to hist_mpi
          call ctqmc_reduce_hist(hist_mpi, hist_err)
-
-! collect the impurity green's function data from gtau to gtau_mpi
-         gtau = gtau / real(caves)
-         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
-         gtau = gtau * real(caves)
-
-! the data need to be scaled properly before written
-         hist_mpi = hist_mpi * one
-         hist_err = hist_err * one
-         gtau_mpi = gtau_mpi * real(nmonte)
-         gtau_err = gtau_err * real(nmonte)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
