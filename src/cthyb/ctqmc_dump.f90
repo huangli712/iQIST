@@ -659,7 +659,9 @@
 !! write out hybridization function in matsubara frequency space
 !!
   subroutine ctqmc_dump_hybf(hybf)
-     use constants, only : dp, czero, mytmp
+     use constants, only : dp
+     use constants, only : czero
+     use constants, only : mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -668,19 +670,19 @@
 
      implicit none
 
-! external arguments
-! hybridization function
+!! external arguments
+     ! hybridization function
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.hyb.dat
+     ! open data file: solver.hyb.dat
      open(mytmp, file='solver.hyb.dat', form='formatted', status='unknown')
 
-! write it
+     ! write it
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), hybf(j,i,i), czero
@@ -689,8 +691,10 @@
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine ctqmc_dump_hybf
