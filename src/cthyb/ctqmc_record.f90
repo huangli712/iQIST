@@ -369,24 +369,24 @@
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
 
-!-------------------------------------------------------------------------
-! using standard representation
-!-------------------------------------------------------------------------
+                 !--------------------------------------------------------
+                 ! using standard representation
+                 !--------------------------------------------------------
                  STD_BLOCK: if ( isort == 1 ) then
 
-! determine index for imaginary time
+                     ! determine index for imaginary time
                      curr = nint( dtau * step ) + 1
 
-! special tricks for the first point and the last point
+                     ! special tricks for the first point and the last point
                      if ( curr == 1 .or. curr == ntime ) then
                          maux = two * maux
                      endif ! back if ( curr == 1 .or. curr == ntime ) block
 
-! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
+                     ! record gtau, we normalize gtau in ctqmc_tran_gtau() subroutine
                      gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
                  endif STD_BLOCK ! back if ( isort == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
                  !--------------------------------------------------------
                  ! using legendre orthogonal polynomial representation
