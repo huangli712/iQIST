@@ -286,13 +286,13 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! setup cstep
+     ! setup cstep
      cstep = 0
 
-! setup cflag, check the status of quantum impurity solver periodically
+     ! setup cflag, check the status of quantum impurity solver periodically
      cflag = 1
 
-! setup timer
+     ! setup timer
      time_cur = zero
      time_sum = zero
 
