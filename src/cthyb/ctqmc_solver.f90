@@ -555,21 +555,16 @@
 !!>>> writing immediate results                                        <<<
 !!========================================================================
 
-! write out the histogram data, hist_mpi
+         ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_hist(hist_mpi, hist_err)
-         endif ! back if ( myid == master ) block
-
-! write out the impurity green's function, gtau_mpi
-         if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_gtau(gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> checking quantum impurity solver                                 <<<
 !!========================================================================
 
-! check the status at first
+         ! check the status at first
          call ctqmc_try_warning(cflag)
 
 !!========================================================================
