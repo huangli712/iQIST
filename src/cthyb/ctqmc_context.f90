@@ -1060,7 +1060,7 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(index_t(mkink),      stat=istat)
      allocate(index_v(mkink),      stat=istat)
 
@@ -1072,12 +1072,12 @@
      allocate(expt_t(ncfgs,  4  ), stat=istat)
      allocate(expt_v(ncfgs,mkink), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_flvr','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      index_t = 0
      index_v = 0
 
@@ -1106,24 +1106,28 @@
 
 !! [body
 
-! allocate memory
+     ! allocate memory
      allocate(tmesh(ntime),       stat=istat)
      allocate(rmesh(mfreq),       stat=istat)
 
      allocate(lmesh(legrd),       stat=istat)
+     allocate(smesh(svgrd),       stat=istat)
      allocate(rep_l(legrd,lemax), stat=istat)
+     allocate(rep_s(svgrd,svmax), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_mesh','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      tmesh = zero
      rmesh = zero
 
      lmesh = zero
+     smesh = zero
      rep_l = zero
+     rep_s = zero
 
 !! body]
 
