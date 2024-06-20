@@ -700,6 +700,200 @@
      return
   end subroutine ctqmc_tran_gtau
 
+!!
+!! @sub ctqmc_tran_grnf
+!!
+!! build matsubara green's function using different representation
+!!
+  subroutine ctqmc_tran_grnf(gaux, grnf)
+     use constants, only : dp
+     use constants, only : zero, one, two, czero, czi
+
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax
+     use control, only : svmax, svgrd
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta
+     use control, only : myid, nprocs
+
+     use context, only : tmesh, rmesh
+     use context, only : rep_s
+
+     implicit none
+
+!! external arguments
+     ! orthogonal polynomial coefficients for impurity green's function
+     real(dp), intent(in) :: gaux(ntime,norbs,norbs)
+
+     ! calculated impurity green's function
+     complex(dp), intent(out) :: grnf(mfreq,norbs,norbs)
+
+!! local variables
+     ! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+
+     ! index for imaginary time \tau
+     integer  :: curr
+
+     ! status flag
+     integer  :: istat
+
+     ! dummy real(dp) variable
+     real(dp) :: raux
+
+     ! step for the linear frequency mesh
+     real(dp) :: step
+
+     ! j_n(x), for legendre orthogonal polynomial representation
+     real(dp), allocatable :: pfun(:,:)
+
+     ! u_l(x(\tau)), for svd orthogonal polynomial representation
+     real(dp), allocatable :: ufun(:,:)
+
+     ! calculated impurity green's function, imaginary time axis
+     real(dp), allocatable :: gtau(:,:,:)
+
+     ! unitary transformation matrix for orthogonal polynomials
+     complex(dp), allocatable :: tleg(:,:)
+     complex(dp), allocatable :: tsvd(:,:)
+     complex(dp), allocatable :: tmpi(:,:)
+
+!! [body
+
+     ! allocate memory
+     allocate(pfun(mfreq,lemax), stat=istat)
+     allocate(ufun(ntime,svmax), stat=istat)
+
+     allocate(gtau(ntime,norbs,norbs), stat=istat)
+
+     allocate(tleg(mfreq,lemax), stat=istat)
+     allocate(tsvd(mfreq,svmax), stat=istat)
+     allocate(tmpi(mfreq,svmax), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_tran_grnf','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     !--------------------------------------------------------------------
+     ! using normal representation
+     !--------------------------------------------------------------------
+     STD_BLOCK: if ( isort == 1 ) then
+         call ctqmc_tran_gtau(gaux, gtau)
+         call ctqmc_four_htau(gtau, grnf)
+     endif STD_BLOCK ! back if ( isort == 1 ) block
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     !--------------------------------------------------------------------
+     ! using legendre orthogonal polynomial representation
+     !--------------------------------------------------------------------
+     LEG_BLOCK: if ( isort == 2 ) then
+
+         ! calculate spherical Bessel functions at first
+         pfun = zero
+         do k=1,mfreq
+             call s_sph_jl(lemax-1, rmesh(k) * beta / two, pfun(k,:))
+         enddo ! over k={1,mfreq} loop
+
+         ! build unitary transformation matrix: tleg
+         tleg = czero
+         do i=1,lemax
+             raux = sqrt(two * i - one)
+             do k=1,mfreq
+                 tleg(k,i) = pfun(k,i) * (-one)**(k - 1) * raux * czi**i
+             enddo ! over k={1,mfreq} loop
+         enddo ! over i={1,lemax} loop
+
+         ! normalize tleg
+         ! note: the beta is from Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
+         tleg = tleg / beta
+
+         ! build impurity green's function on matsubara frequency using
+         ! orthogonal polynomial representation: grnf
+         grnf = czero
+         do i=1,norbs
+             do j=1,lemax
+                 do k=1,mfreq
+                     grnf(k,i,i) = grnf(k,i,i) + tleg(k,j) * gaux(j,i,i)
+                 enddo ! over k={1,mfreq} loop
+             enddo ! over j={1,lemax} loop
+         enddo ! over i={1,norbs} loop
+
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     !--------------------------------------------------------------------
+     ! using svd orthogonal polynomial representation
+     !--------------------------------------------------------------------
+     SVD_BLOCK: if ( isort == 3 ) then
+
+         ! copy rep_s to ufun, prepare u_l(x(\tau))
+         step = real(svgrd - 1) / two
+         do i=1,ntime
+             raux = two * tmesh(i) / beta - one
+             call s_svd_point(raux, step, curr)
+             ufun(i,:) = rep_s(curr,:)
+         enddo ! over i={1,ntime} loop
+
+         ! build unitary transformation matrix: tsvd
+         ! actually, we do the fourier transformation
+         tmpi = czero
+         do i=1+myid,svmax,nprocs
+             call s_fft_forward(ntime, tmesh, ufun(:,i), mfreq, rmesh, tmpi(:,i))
+         enddo ! over i={1+myid,svmax} loop
+
+! build tsvd, collect data from children processes
+# if defined (MPI)
+
+         ! collect data
+         call mp_allreduce(tmpi, tsvd)
+
+         ! block until all processes have reached here
+         call mp_barrier()
+
+# else  /* MPI */
+
+         tsvd = tmpi
+
+# endif /* MPI */
+
+         ! normalize tsvd
+         ! note: the first beta is from Eq. (C19), while the second beta
+         ! is from Eq. (E1) in Phys. Rev. B 84, 075145 (2011)
+         tsvd = tsvd * (two / beta / beta)
+
+         ! build impurity green's function on matsubara frequency using
+         ! orthogonal polynomial representation: grnf
+         grnf = czero
+         do i=1,norbs
+             do j=1,svmax
+                 do k=1,mfreq
+                     grnf(k,i,i) = grnf(k,i,i) + tsvd(k,j) * gaux(j,i,i)
+                 enddo ! over k={1,mfreq} loop
+             enddo ! over j={1,svmax} loop
+         enddo ! over i={1,norbs} loop
+
+     endif SVD_BLOCK ! back if ( isort == 3 ) block
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!! body]
+
+     ! deallocate memory
+     deallocate(pfun)
+     deallocate(ufun)
+     deallocate(gtau)
+     deallocate(tleg)
+     deallocate(tsvd)
+     deallocate(tmpi)
+
+     return
+  end subroutine ctqmc_tran_grnf
 
 !!========================================================================
 !!>>> two-particle green's function                                    <<<
