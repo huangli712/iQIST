@@ -3720,10 +3720,10 @@
      real(dp), allocatable :: h_re_err(:,:,:,:,:)
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
 
-! check whether this observable has been measured
+     ! check whether this observable has been measured
      if ( .not. ( btest(isvrt, 1) .or. btest(isvrt, 2) ) ) RETURN
 
-! allocate memory
+     ! allocate memory
      allocate(g_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
      allocate(g_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
      allocate(h_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
@@ -3752,7 +3752,7 @@
      call mp_allreduce(g2ph, g2ph_mpi)
      call mp_allreduce(h2ph, h2ph_mpi)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
@@ -3762,25 +3762,25 @@
 
 # endif /* MPI */
 
-! calculate the average
+     ! calculate the average
      g2ph_mpi = g2ph_mpi / real(nprocs)
      h2ph_mpi = h2ph_mpi / real(nprocs)
 
 ! build g2ph_err and h2ph_err, collect data from all children processes
 # if defined (MPI)
 
-! collect data
+     ! collect data
      call mp_allreduce(( real(g2ph - g2ph_mpi))**2, g_re_err)
      call mp_allreduce((aimag(g2ph - g2ph_mpi))**2, g_im_err)
      call mp_allreduce(( real(h2ph - h2ph_mpi))**2, h_re_err)
      call mp_allreduce((aimag(h2ph - h2ph_mpi))**2, h_im_err)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
 
-! calculate standard deviation
+     ! calculate standard deviation
      if ( nprocs > 1 ) then
          g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
          g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
@@ -3797,6 +3797,8 @@
      deallocate(g_im_err)
      deallocate(h_re_err)
      deallocate(h_im_err)
+
+!! body]
 
      return
   end subroutine ctqmc_reduce_g2ph
