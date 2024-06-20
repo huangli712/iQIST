@@ -203,13 +203,13 @@
          ! open the status file
          open(mytmp, file='solver.status.dat', form='formatted', status='unknown')
 
-! skip comment lines
+         ! skip comment lines
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*)
 
-! read in key data
+         ! read in key data
          FLVR_CYCLE: do i=1,norbs
              read(mytmp,'(a9,i4)') chr, m
 
@@ -229,7 +229,7 @@
              rank(i) = ckink
          enddo FLVR_CYCLE ! over i={1,norbs} loop
 
-! close the status file
+         ! close the status file
          close(mytmp)
 
      endif ! back if ( myid == master ) block
@@ -237,17 +237,17 @@
 ! broadcast rank, tau_s, and tau_e from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( rank,  master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( tau_s, master )
      call mp_bcast( tau_e, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
