@@ -764,34 +764,36 @@
 !!>>> symmetrizing final results                                       <<<
 !!========================================================================
 
-! start to symmetrize data
+     ! start to symmetrize data
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver symmetrizing'
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
 
-! symmetrize the occupation number matrix over spin or over bands
+     ! symmetrize the occupation number matrix over spin or over bands
      call ctqmc_symm_nimp(symm, nimp)
      call ctqmc_symm_nimp(symm, nimp_err)
 
-! symmetrize the impurity green's function over spin or over bands
+     ! symmetrize the impurity green's function over spin or over bands
      call ctqmc_symm_gtau(symm, gtau)
      call ctqmc_symm_gtau(symm, gtau_err)
      call ctqmc_symm_grnf(symm, grnf)
      call ctqmc_symm_grnf(symm, grnf_err)
 
-! symmetrize the auxiliary correlation function over spin or over bands
+     ! symmetrize the auxiliary correlation function over spin or over bands
      call ctqmc_symm_gtau(symm, ftau)
      call ctqmc_symm_gtau(symm, ftau_err)
      call ctqmc_symm_grnf(symm, frnf)
+     call ctqmc_symm_grnf(symm, frnf_err)
 
-! symmetrize the self-energy function over spin or over bands
+     ! symmetrize the self-energy function over spin or over bands
      call ctqmc_symm_grnf(symm, sig2)
+     call ctqmc_symm_grnf(symm, sig2_err)
 
      call cpu_time(time_end) ! record ending time
 
-! print the time information
+     ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
