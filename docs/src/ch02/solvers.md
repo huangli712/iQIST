@@ -33,7 +33,7 @@ Supposed that what you need is the **NARCISSUS** component:
 ```
 $ cd iqist/build
 $ editor make.inc
-$ make ct-hyb1
+$ make ctseg
 ```
 
 !!! note
@@ -41,7 +41,7 @@ $ make ct-hyb1
     1. Here **editor** means any ascii text editor you prefer.
     2. If the user want to compile the **MANJUSHAKA** component, please execute
     ```shell
-    $ make ct-hyb2
+    $ make cthyb
     ```
 
 
@@ -52,7 +52,7 @@ After a few minutes, you will find an *ctqmc* file in the *iqist/src/ct_hyb1* di
 In this approach, we go to the directory of the **NARCISSUS** component at first. Then 'make' it as usual.
 
 ```
-$ cd iqist/src/ct_hyb1
+$ cd iqist/src/ctseg
 $ make
 ```
 
