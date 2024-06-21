@@ -23,8 +23,8 @@ iqist/src
 * For CT-QMC quantum impurity solvers
 
 ```
-iqist/src/ct_hyb1
-iqist/src/ct_hyb2
+iqist/src/ctseg
+iqist/src/cthyb
 ```
 
 **Where is the atomic eigenvalue problem solver?**
