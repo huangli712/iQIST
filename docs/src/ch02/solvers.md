@@ -45,7 +45,7 @@ $ make ctseg
     ```
 
 
-After a few minutes, you will find an *ctqmc* file in the *iqist/src/ct_hyb1* directory. That is what you need, the executable program for the **NARCISSUS** component. Then you can add it to the system path, and do your great research.
+After a few minutes, you will find an *ctqmc* file in the *iqist/src/ctseg* directory. That is what you need, the executable program for the **NARCISSUS** component. Then you can add it to the system path, and do your great research.
 
 **Method 2**:
 

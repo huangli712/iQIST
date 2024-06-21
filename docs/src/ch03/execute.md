@@ -5,13 +5,13 @@ There are also several ways to execute the quantum impurity solvers in the iQIST
 **Parallelism mode**
 
 ```shell
-$ mpiexec -n num_of_cores iqist/src/ct_hyb1/ctqmc
+$ mpiexec -n num_of_cores iqist/src/ctseg/ctqmc
 ```
 
 **Sequential mode**
 
 ```shell
-$ ./iqist/src/ct_hyb1/ctqmc
+$ ./iqist/src/ctseg/ctqmc
 ```
 
 !!! tip
