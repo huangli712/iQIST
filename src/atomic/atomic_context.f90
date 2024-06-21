@@ -385,10 +385,12 @@
          integer :: jz
 
          ! SU(2) good quantum number: PS (only for ictqmc = 4)
+         ! see: Phys. Rev. B 86, 155158 (2012)
          !
          ! or
          !
          ! auxiliary good quantum number: AP (only for ictqmc = 6)
+         ! see: Comput. Phys. Commun. 200, 274 (2016)
          integer :: ps
 
          ! collection of global indices of Fock states for this subspace
@@ -707,7 +709,7 @@
 !! @mod m_spmat
 !!
 !! it contains some physical quantities that defined in single particle
-!! basis, including
+!! basis, including:
 !!     crystal field splitting,
 !!     spin-orbit coupling,
 !!     Coulomb interaction U tensor, etc
