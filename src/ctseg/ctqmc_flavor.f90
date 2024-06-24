@@ -25,7 +25,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
-!!!           07/06/2023 by li huang (last modified)
+!!!           06/24/2024 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -2555,7 +2555,7 @@
      time = time * beta
 
      ! sort time series
-     call s_sorter(2*kink, time)
+     call s_sorter1_d(2*kink, time)
 
      ! build segments or anti-segments
      if ( anti .eqv. .false. ) then
