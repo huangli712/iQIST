@@ -299,7 +299,7 @@
      use control, only : ntime
      use control, only : beta
 
-     use context, only : c_sgn
+     use context, only : csign
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : rep_l, rep_s
@@ -369,7 +369,7 @@
 
                  ! get matrix element from mmat, pay special attention to
                  ! the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * c_sgn
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
                  ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -477,7 +477,7 @@
      use control, only : norbs
      use control, only : nfreq
 
-     use context, only : c_sgn
+     use context, only : csign
      use context, only : gmat
      use context, only : grnf
 
@@ -495,7 +495,7 @@
      ! only the first nfreq points of grnf are modified
      do flvr=1,norbs
          do ifrq=1,nfreq
-             grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + c_sgn * gmat(ifrq, flvr, flvr)
+             grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + csign * gmat(ifrq, flvr, flvr)
          enddo ! over ifrq={1,nfreq} loop
      enddo ! over flvr={1,norbs} loop
 
@@ -555,7 +555,7 @@
      use control, only : isobs
      use control, only : norbs
 
-     use context, only : c_sgn
+     use context, only : csign
      use context, only : knop, kmat
      use context, only : rank
 
@@ -574,12 +574,12 @@
      ! since rank means the number of operator pairs, so we have to
      ! multiply it with two
      do i=1,norbs
-         knop(i) = knop(i) + rank(i) * 2.0_dp * c_sgn
+         knop(i) = knop(i) + rank(i) * 2.0_dp * csign
      enddo ! over i={1,norbs} loop
 
      do j=1,norbs
          do i=1,norbs
-             kmat(i,j) = kmat(i,j) + rank(i) * rank(j) * 4.0_dp * c_sgn
+             kmat(i,j) = kmat(i,j) + rank(i) * rank(j) * 4.0_dp * csign
          enddo ! over i={1,norbs} loop
      enddo ! over j={1,norbs} loop
 
@@ -601,7 +601,7 @@
      use control, only : norbs
      use control, only : beta
 
-     use context, only : c_sgn
+     use context, only : csign
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : lnop, rnop, lrmm
@@ -655,13 +655,13 @@
      enddo ! over flvr={1,norbs} loop
 
      ! add contribution to < k_l > and < k_r >
-     lnop = lnop + kl * c_sgn
-     rnop = rnop + kr * c_sgn
+     lnop = lnop + kl * csign
+     rnop = rnop + kr * csign
 
      ! add contribution to < k_l k_r >
      do flvr=1,norbs
          do i=1,norbs
-             lrmm(i,flvr) = lrmm(i,flvr) + kl(i) * kr(flvr) * c_sgn
+             lrmm(i,flvr) = lrmm(i,flvr) + kl(i) * kr(flvr) * csign
          enddo ! over i={1,norbs} loop
      enddo ! over flvr={1,norbs} loop
 
@@ -889,7 +889,7 @@
 
      use context, only : g2ph
      use context, only : h2ph
-     use context, only : rank, pref
+     use context, only : rank!, pref
      use context, only : mmat
 
      implicit none
@@ -943,7 +943,7 @@
      allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
 
      ! calculate prefactor: pref
-     call ctqmc_make_pref()
+     !call ctqmc_make_pref()
 
 ! calculate g2aux and h2aux
 ! see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
@@ -956,7 +956,7 @@
              do ie=1,rank(flvr)
 
                  maux = mmat(ie, is, flvr)
-                 naux = mmat(ie, is, flvr) * pref(ie,flvr)
+                 naux = mmat(ie, is, flvr) !* pref(ie,flvr)
                  do w2n=1,nfaux
                      do w1n=1,nfaux
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
@@ -1120,7 +1120,7 @@
      use context, only : time_s, time_e
      use context, only : rep_l
      use context, only : g2ph, h2ph
-     use context, only : rank, pref
+     use context, only : rank!, pref
      use context, only : mmat
 
      implicit none
@@ -1181,7 +1181,7 @@
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
      ! calculate prefactor: pref
-     call ctqmc_make_pref()
+     !call ctqmc_make_pref()
 
      ! prepare some important arrays: lfun
      do l1=1,lemax     ! legendre polynomial index: l
@@ -1253,7 +1253,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
+                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
                  enddo ! over l1={1,lemax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -1293,7 +1293,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
+                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
                  enddo ! over l1={1,lemax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -1372,7 +1372,7 @@
      use context, only : time_s, time_e
      use context, only : rep_s
      use context, only : g2ph, h2ph
-     use context, only : rank, pref
+     use context, only : rank!, pref
      use context, only : mmat
 
      implicit none
@@ -1429,7 +1429,7 @@
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
      ! calculate prefactor: pref
-     call ctqmc_make_pref()
+     !call ctqmc_make_pref()
 
      ! prepare some important arrays: ufun
      step = real(svgrd - 1) / two
@@ -1489,7 +1489,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta * pref(ie1,f1)
+                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
                  enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -1529,7 +1529,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta * pref(ie1,f1)
+                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
                  enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -1679,7 +1679,7 @@
 
      use context, only : g2pp
      use context, only : h2pp
-     use context, only : rank, pref
+     use context, only : rank!, pref
      use context, only : mmat
 
      implicit none
@@ -1733,7 +1733,7 @@
      allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
 
      ! calculate prefactor: pref
-     call ctqmc_make_pref()
+     !call ctqmc_make_pref()
 
 ! calculate g2aux and h2aux
 ! see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
@@ -1746,7 +1746,7 @@
              do ie=1,rank(flvr)
 
                  maux = mmat(ie, is, flvr)
-                 naux = mmat(ie, is, flvr) * pref(ie,flvr)
+                 naux = mmat(ie, is, flvr) !* pref(ie,flvr)
                  do w2n=1,nfaux
                      do w1n=1,nfaux
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
@@ -1910,7 +1910,7 @@
      use context, only : time_s, time_e
      use context, only : rep_l
      use context, only : g2pp, h2pp
-     use context, only : rank, pref
+     use context, only : rank!, pref
      use context, only : mmat
 
      implicit none
@@ -1975,7 +1975,7 @@
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
      ! calculate prefactor: pref
-     call ctqmc_make_pref()
+     !call ctqmc_make_pref()
 
      ! prepare some important arrays: lfun
      do l1=1,lemax     ! legendre polynomial index: l
@@ -2079,7 +2079,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
-                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
                  enddo ! over l1={1,lemax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -2119,7 +2119,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
-                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
                  enddo ! over l1={1,lemax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -2199,7 +2199,7 @@
      use context, only : time_s, time_e
      use context, only : rep_s
      use context, only : g2pp, h2pp
-     use context, only : rank, pref
+     use context, only : rank!, pref
      use context, only : mmat
 
      implicit none
@@ -2260,7 +2260,7 @@
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
      ! calculate prefactor: pref
-     call ctqmc_make_pref()
+     !call ctqmc_make_pref()
 
      ! prepare some important arrays: ul_s
      step = real(svgrd - 1) / two
@@ -2347,7 +2347,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * uu * ee / beta
-                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * uu * ee / beta * pref(ie1,f1)
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * uu * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
                  enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop
@@ -2387,7 +2387,7 @@
                          endif ! back if ( f1 == f2 ) block
 
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * uu * ee / beta
-                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * uu * ee / beta * pref(ie1,f1)
+                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * uu * ee / beta !* pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
                  enddo ! over l1={1,svmax} loop
              enddo ! over wbn={1,nbfrq} loop

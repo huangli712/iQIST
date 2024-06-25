@@ -194,7 +194,7 @@
 
      ! sort all the spin values
      stmp1 = saux
-     call s_sorter(ncfgs, stmp1)
+     call s_sorter1_d(ncfgs, stmp1)
 
      ! find out individual spin values, and store them into stmp2
      ns = 1

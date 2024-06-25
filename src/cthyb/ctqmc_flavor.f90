@@ -2834,7 +2834,7 @@
      time = time * beta
 
 ! sort time series
-     call s_sorter(2*kink, time)
+     call s_sorter1_d(2*kink, time)
 
 ! insert new operators into the colour part
      do i=1,kink

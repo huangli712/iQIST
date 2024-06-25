@@ -1158,7 +1158,7 @@
 
 ! sort the btrace to speed up the refining process. here, we use simple
 ! bubble sort algorithm, because nalive_sect is usually small
-     call s_sorter2( nlive, btrace(1:nlive), living(1:nlive) )
+     call s_sorter2_d( nlive, btrace(1:nlive), living(1:nlive) )
 
 ! begin to refine the trace bounds
      pass = .false.

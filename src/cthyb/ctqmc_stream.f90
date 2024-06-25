@@ -913,11 +913,11 @@
      szpw = zero
 
 ! init two-particle green's function
-     g2pw = czero
-     h2pw = czero
+     !g2pw = czero
+     !h2pw = czero
 
 ! init particle-particle pairing susceptibility
-     p2pw = czero
+     !p2pw = czero
 
 !>>> ctqmc_umat module
 !-------------------------------------------------------------------------
