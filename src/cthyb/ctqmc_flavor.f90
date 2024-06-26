@@ -964,27 +964,30 @@
      ! init lrmv
      lrmv = .false.
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
 ! stage 1: determine is and ie, where are they?
 !-------------------------------------------------------------------------
-! determine is
+
+     ! determine is
+     call cat_search_flavor( is, nsize, tau_start )
+     !
 !<     i = 1
 !<     do while ( i <= nsize .and. abs( time_v( index_v(i) ) - tau_start ) > eps6 )
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     is = i
-     call cat_search_flavor( is, nsize, tau_start )
 
-! determine ie
+     ! determine ie
+     call cat_search_flavor( ie, nsize, tau_end   )
+     !
 !<     i = 1
 !<     do while ( i <= nsize .and. abs( time_v( index_v(i) ) - tau_end   ) > eps6 )
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     ie = i
-     call cat_search_flavor( ie, nsize, tau_end   )
 
 ! adjust ie further, since we remove creation operator firstly, and then
 ! remove annihilation operator
