@@ -86,6 +86,8 @@
      ! existing operators
      integer :: have
 
+!! [body
+
      ! initialize is and ie
      is = 1
      ie = 1
@@ -125,7 +127,7 @@
          endif ! back if block
      endif CREATION_BLOCK ! back if ( ckink > 0 ) block
 
-! determine the new position (index address, ie) of tau_end in time_e
+     ! determine the new position (index address, ie) of tau_end in time_e
      ANNIHILATION_BLOCK: if ( ckink > 0 ) then
          if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) then
              ie = 1
@@ -137,8 +139,10 @@
                  i = i + 1
              enddo ! over do while loop
              ie = i
-         endif ! back if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) block
+         endif ! back if block
      endif ANNIHILATION_BLOCK ! back if ( ckink > 0 ) block
+
+!! body]
 
      return
   end subroutine try_insert_colour
@@ -151,7 +155,8 @@
 !! colour (determinant) part
 !!
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
-     use constants, only : dp, epss
+     use constants, only : dp
+     use constants, only : epss
 
      use spring, only : spring_sfmt_stream
 
@@ -161,19 +166,19 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to remove old creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
-! imaginary time point of the old creation operator
+     ! imaginary time point of the old creation operator
      real(dp), intent(out) :: tau_start
 
-! imaginary time point of the old annihilation operator
+     ! imaginary time point of the old annihilation operator
      real(dp), intent(out) :: tau_end
 
 ! randomly select index address, which is used to access the creation
