@@ -1,13 +1,13 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
+!!! project : iqist @ manjushaka
 !!! program : try_insert_colour
 !!!           try_remove_colour
 !!!           try_lshift_colour
-!!!           try_rshift_colour <<<---
+!!!           try_rshift_colour
 !!!           cat_insert_colour
 !!!           cat_remove_colour
 !!!           cat_lshift_colour
-!!!           cat_rshift_colour <<<---
+!!!           cat_rshift_colour
 !!!           try_insert_flavor
 !!!           try_remove_flavor
 !!!           try_lshift_flavor
@@ -27,9 +27,9 @@
 !!!           cat_disp_diagrams <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/18/2017 by li huang (last modified)
+!!!           06/26/2024 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
