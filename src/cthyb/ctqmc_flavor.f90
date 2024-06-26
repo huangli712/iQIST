@@ -11,20 +11,20 @@
 !!!           try_insert_flavor
 !!!           try_remove_flavor
 !!!           try_lshift_flavor
-!!!           try_rshift_flavor <<<---
+!!!           try_rshift_flavor
 !!!           cat_insert_flavor
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
-!!!           cat_rshift_flavor <<<---
+!!!           cat_rshift_flavor
 !!!           cat_insert_ztrace
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
-!!!           cat_rshift_ztrace <<<---
+!!!           cat_rshift_ztrace
 !!!           cat_search_colour
-!!!           cat_search_flavor <<<---
+!!!           cat_search_flavor
 !!!           cat_create_colour
-!!!           cat_create_flavor <<<---
-!!!           cat_disp_diagrams <<<---
+!!!           cat_create_flavor
+!!!           cat_disp_diagrams
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
@@ -50,7 +50,8 @@
 !! colour (determinant) part
 !!
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants, only : dp, epss
+     use constants, only : dp
+     use constants, only : epss
 
      use spring, only : spring_sfmt_stream
 
@@ -62,53 +63,54 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to insert new creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to insert new creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(out)  :: is
      integer, intent(out)  :: ie
 
-! imaginary time point of the new creation operator
+     ! imaginary time point of the new creation operator
      real(dp), intent(out) :: tau_start
 
-! imaginary time point of the new annihilation operator
+     ! imaginary time point of the new annihilation operator
      real(dp), intent(out) :: tau_end
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer :: i
 
-! determine if tau_start or tau_end is collided with existing operators
+     ! determine if tau_start or tau_end is collided with the
+     ! existing operators
      integer :: have
 
-! initialize is and ie
+     ! initialize is and ie
      is = 1
      ie = 1
 
-! select imaginary time of the new creation operator randomly
-! check tau_start is necessary
+     ! select imaginary time of the new creation operator randomly
+     ! check tau_start is necessary
      have = 99
      CREATION_CYCLE: do while ( have > 0 )
          tau_start = spring_sfmt_stream() * beta
          call cat_search_colour(flvr, tau_start, have)
      enddo CREATION_CYCLE ! over do while loop
 
-! select imaginary time of the new annihilation operator randomly
-! check tau_end is necessary
+     ! select imaginary time of the new annihilation operator randomly
+     ! check tau_end is necessary
      have = 99
      ANNIHILATION_CYCLE: do while ( have > 0 )
          tau_end = spring_sfmt_stream() * beta
          call cat_search_colour(flvr, tau_end, have)
-! we need to ensure tau_start is not equal to tau_end
+         ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
          endif ! back if ( abs( tau_start - tau_end ) < epss ) block
      enddo ANNIHILATION_CYCLE ! over do while loop
 
-! determine the new position (index address, is) of tau_start in time_s
+     ! determine the new position (index address, is) of tau_start in time_s
      CREATION_BLOCK: if ( ckink > 0 ) then
          if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) then
              is = 1
@@ -120,7 +122,7 @@
                  i = i + 1
              enddo ! over do while loop
              is = i
-         endif ! back if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) block
+         endif ! back if block
      endif CREATION_BLOCK ! back if ( ckink > 0 ) block
 
 ! determine the new position (index address, ie) of tau_end in time_e
