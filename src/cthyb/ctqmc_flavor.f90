@@ -1148,7 +1148,7 @@
 !<     enddo ! over do while loop
 !<     iso = i
 
-! determine isn
+     ! determine isn
      isn = 1
      CREATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_start2 < time_v( index_v(1)     ) ) then
@@ -1164,7 +1164,7 @@
          endif ! back if ( tau_start2 < time_v( index_v(1) ) ) block
      endif CREATION_BLOCK ! back if ( nsize > 0 ) block
 
-! adjust isn further
+     ! adjust isn further
      if ( tau_start1 < tau_start2 ) then
          isn = isn - 1
      endif ! back if ( tau_start1 < tau_start2 ) block
@@ -1172,34 +1172,37 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it?
 !-------------------------------------------------------------------------
-! for the spin-orbital coupling case, we can not lookup the operators
-! series quickly. return immediately
+
+     ! for the spin-orbit coupling case, we can not lookup the
+     ! operators series quickly. return immediately
      if ( cssoc == 1 ) then
          lshf = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
 
-! evaluate piso and pisn
+     ! evaluate piso and pisn
      piso = iso
      pisn = isn
+     !
      if ( tau_start1 < tau_start2 ) then
          pisn = pisn + 1
      else
          piso = piso + 1
      endif ! back if ( tau_start1 < tau_start2 ) block
 
-! loop over all the subspace
+     ! loop over all the subspace
      FLVR1_CYCLE: do m=0,nband
          FLVR2_CYCLE: do n=0,nband
 
-! construct current subspace
+             ! construct current subspace
              nupdn(1) = m
              nupdn(2) = n
 
-! init key variables
+             ! init key variables
              idead = 0
              counter = 0
 
-! loop over all the operators, simulate their actions on subspace
+             ! loop over all the creation and annihilation operators,
+             ! simulate their actions on subspace
              OPERATOR_LOOP: do i=1,nsize+1
                  counter = counter + 1
 

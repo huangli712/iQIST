@@ -74,10 +74,10 @@
 !! current status of spin-orbit coupling
 !!
 !! if cssoc == 0:
-!!     no spin-orbital coupling
+!!     no spin-orbit coupling
 !!
 !! if cssoc == 1:
-!!     atomic spin-orbital coupling
+!!     atomic spin-orbit coupling
 !!
 !! this variable is determined by atom.cix, do not setup it manually
 !!

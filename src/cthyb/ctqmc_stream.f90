@@ -515,7 +515,7 @@
              read(mytmp,*)
          enddo ! over i={1,10} loop
 
-! determine whether the spin-orbital coupling effect should be considered
+! determine whether the spin-orbit coupling effect should be considered
 ! and check the version of atom.cix
          read(mytmp,*) ver, i, j, cssoc
          if ( ver /= 2 ) then
