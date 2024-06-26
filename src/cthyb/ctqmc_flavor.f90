@@ -258,7 +258,8 @@
      ! evaluate tau_start1
      tau_start1 = time_s( index_s(iso, flvr), flvr )
 
-     ! determine imaginary time and index address for new creation operator
+     ! determine imaginary time and index address
+     ! for new creation operator
      have = 99
      CREATION_BLOCK: do while ( have > 0 )
          if ( ckink == 1 ) then
@@ -328,38 +329,40 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift old annihilation operator
-! ieo and ien are for old and new indices, respectively
+     ! index address to shift old annihilation operator
+     ! ieo and ien are for old and new indices, respectively
      integer, intent(out)  :: ieo
      integer, intent(out)  :: ien
 
-! imaginary time point of the selected annihilation operator (the old one)
+     ! imaginary time point of the selected annihilation operator (the old one)
      real(dp), intent(out) :: tau_end1
 
-! imaginary time point of the selected annihilation operator (the new one)
+     ! imaginary time point of the selected annihilation operator (the new one)
      real(dp), intent(out) :: tau_end2
 
-! local variables
-! determine if tau_end2 is collided with existing operators
+!! local variables
+     ! determine if tau_end2 is collided with existing operators
      integer  :: have
 
-! imaginary time of previous annihilation operator
+     ! imaginary time of previous annihilation operator
      real(dp) :: tau_prev
 
-! imaginary time of next annihilation operator
+     ! imaginary time of next annihilation operator
      real(dp) :: tau_next
 
-! randomly select index address, which is used to access the annihilation operators
+     ! randomly select index address,
+     ! which is used to access the annihilation operators
      ieo = ceiling( spring_sfmt_stream() * ckink )
 
-! evaluate tau_end1
+     ! evaluate tau_end1
      tau_end1 = time_e( index_e(ieo, flvr), flvr )
 
-! determine imaginary time and index address for new annihilation operator
+     ! determine imaginary time and index address
+     ! for new annihilation operator
      have = 99
      ANNIHILATION_BLOCK: do while ( have > 0 )
          if ( ckink == 1 ) then
@@ -394,7 +397,7 @@
              endif ! back if ( ieo == 1 ) block
          endif ! back if ( ckink == 1 ) block
 
-! check tau_end2 is necessary
+         ! check tau_end2 is necessary
          call cat_search_colour(flvr, tau_end2, have)
      enddo ANNIHILATION_BLOCK ! over do while loop
 
