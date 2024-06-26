@@ -1530,30 +1530,33 @@
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize,is,-1} loop
 
-! store the memory address for creation operator
+     ! store the memory address for creation operator
      index_v(is) = as
 
-! evaluate previous imaginary time interval
-     if ( is ==         1 ) then ! the imaginary time of creation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( is ==         1 ) then
+         ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_v(is) ) - zero
      else
          t_prev = time_v( index_v(is) ) - time_v( index_v(is-1) )
      endif ! back if ( is == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( is == nsize + 1 ) then ! the imaginary time of creation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( is == nsize + 1 ) then
+         ! the imaginary time of creation operator is the largest
          t_next = beta - time_v( index_v(is) )
      else
          t_next = time_v( index_v(is+1) ) - time_v( index_v(is) )
      endif ! back if ( is == nsize + 1 ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
-! if is == nsize + 1, index_v(is+1) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! update the expt_v and expt_t, matrix of time evolution operator
+     ! if is == nsize + 1, index_v(is+1) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( is == nsize + 1 ) then
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
+         !
          do i=1,ncfgs
              expt_t( i, 2  ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
@@ -1561,7 +1564,9 @@
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
+         !
          as = index_v(is+1)
+         !
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
@@ -1570,6 +1575,7 @@
 !-------------------------------------------------------------------------
 ! stage 2: insert annihilation operator
 !-------------------------------------------------------------------------
+
 ! determine nsize
      nsize = istack_getrest( empty_v )
 
