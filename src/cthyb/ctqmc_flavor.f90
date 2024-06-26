@@ -721,62 +721,68 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to insert new creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(out) :: is
      integer, intent(out) :: ie
 
-! whether the new creation and annihilation operators can be inserted
+     ! whether the new creation and annihilation operators can be inserted
      logical, intent(out) :: ladd
 
-! imaginary time point of the new creation operator
+     ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the new annihilation operator
+     ! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer :: i
 
-! loop index over orbitals
+     ! loop index over orbitals
      integer :: m
      integer :: n
 
-! pseudo-index address for creation and annihilation operators, respectively
+     ! pseudo-index address for
+     ! creation and annihilation operators, respectively
      integer :: pis
      integer :: pie
 
-! total number of operators in the flavor part
+     ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether the current subspace can survive
+     ! dummy variables, used to check
+     ! whether the current subspace can survive
      integer :: idead
 
-! dummy variables, used to resolve spin up and spin down states
+     ! dummy variables, used to resolve spin up and spin down states
      integer :: iupdn
 
-! dummy variables, operator index, used to loop over the flavor part
+     ! dummy variables, operator index, used to loop over the flavor part
      integer :: counter
 
-! subspace constructed by nup and ndn
+     ! subspace constructed by nup and ndn
      integer :: nupdn(2)
 
-! init ladd
+!! [body
+
+     ! init ladd
      ladd = .false.
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
 ! stage 1: determine is and ie, where are they?
 !-------------------------------------------------------------------------
-! determine is
+
+     ! determine is
      is = 1
+     !
      CREATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_start < time_v( index_v(1)     ) ) then
              is = 1         ! it is the first operator
@@ -791,8 +797,9 @@
          endif ! back if ( tau_start < time_v( index_v(1) ) ) block
      endif CREATION_BLOCK ! back if ( nsize > 0 ) block
 
-! determine ie
+     ! determine ie
      ie = 1
+     !
      ANNIHILATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_end < time_v( index_v(1)     ) ) then
              ie = 1         ! it is the first operator
@@ -807,8 +814,8 @@
          endif ! back if ( tau_end < time_v( index_v(1) ) ) block
      endif ANNIHILATION_BLOCK ! back if ( nsize > 0 ) block
 
-! adjust ie further, since we insert creation operator firstly, and then
-! insert annihilation operator
+     ! adjust ie further, since we insert creation operator firstly,
+     ! and then insert annihilation operator
      if ( tau_start < tau_end ) then
          ie = ie + 1
      endif ! back if ( tau_start < tau_end ) block
@@ -816,66 +823,75 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them?
 !-------------------------------------------------------------------------
-! for the spin-orbital coupling case, we can not lookup the operators
-! series quickly. return immediately
+
+     ! for the spin-orbital coupling case, we can not lookup the
+     ! operators series quickly. return immediately
      if ( cssoc == 1 ) then
          ladd = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
 
-! evaluate pis and pie
+     ! evaluate pis and pie
      pis = is
      pie = ie
      if ( tau_start > tau_end ) then
          pis = pis + 1
      endif ! back if ( tau_start > tau_end ) block
 
-! loop over all the subspace
+     ! loop over all the subspace
      FLVR1_CYCLE: do m=0,nband
          FLVR2_CYCLE: do n=0,nband
 
-! construct current subspace
+             ! construct current subspace
              nupdn(1) = m
              nupdn(2) = n
 
-! init key variables
+             ! init key variables
              idead = 0
              counter = 0
 
-! loop over all the operators, simulate their actions on subspace
+             ! loop over all the creation and annihilation operators,
+             ! simulate their actions on subspace
              OPERATOR_LOOP: do i=1,nsize+2
                  counter = counter + 1
 
-! meet the new creation operator
+                 ! meet the new creation operator
                  if      ( i == pis ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 1
-! meet the new annihilation operator
+                 !
+                 ! meet the new annihilation operator
                  else if ( i == pie ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) - 1
-! meet other existing operators
+                 !
+                 ! meet other existing operators
                  else
                      iupdn = ( flvr_v( index_v(counter) ) - 1 ) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 2 * type_v( index_v(counter) ) - 1
+                 !
                  endif ! back if ( i == pis ) block
 
-! determine whether the final subspace is valid yet
+                 ! determine whether the final subspace is valid yet
                  if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
                      EXIT OPERATOR_LOOP ! this subspace is dead
-                 endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
+                 endif ! back if block
+
                  idead = idead + 1
              enddo OPERATOR_LOOP ! over i={1,nsize+2} loop
 
-! once current subspace can survive, in order to save computational time,
-! we return immediately, no need to deal with the rest subspaces
+             ! once the current subspace can survive, in order to save
+             ! the computational time, we return immediately, no need to
+             ! deal with the rest subspaces
              if ( idead == nsize + 2 ) then
                  ladd = .true.; RETURN
              endif ! back if ( idead == nsize + 2 ) block
 
          enddo FLVR2_CYCLE ! over n={0,nband} loop
      enddo FLVR1_CYCLE ! over m={0,nband} loop
+
+!! body]
 
      return
   end subroutine try_insert_flavor
