@@ -998,8 +998,9 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them?
 !-------------------------------------------------------------------------
-! for the spin-orbital coupling case, we can not lookup the operators
-! series quickly. return immediately
+
+     ! for the spin-orbital coupling case, we can not lookup the
+     ! operators series quickly. return immediately
      if ( cssoc == 1 ) then
          lrmv = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
