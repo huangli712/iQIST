@@ -1236,14 +1236,17 @@
                  endif ! back if ( i == piso ) block
              enddo OPERATOR_LOOP ! over i={1,nsize+1} loop
 
-! once current subspace can survive, in order to save computational time,
-! we return immediately, no need to deal with the rest subspaces
+             ! once the current subspace can survive, in order to save
+             ! the computational time, we return immediately, no need to
+             ! deal with the rest subspaces
              if ( idead == nsize + 1 ) then
                  lshf = .true.; RETURN
              endif ! back if ( idead == nsize + 1 ) block
 
          enddo FLVR2_CYCLE ! over n={0,nband} loop
      enddo FLVR1_CYCLE ! over m={0,nband} loop
+
+!! body]
 
      return
   end subroutine try_lshift_flavor
