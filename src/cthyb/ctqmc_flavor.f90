@@ -1052,6 +1052,8 @@
          enddo FLVR2_CYCLE ! over n={0,nband} loop
      enddo FLVR1_CYCLE ! over m={0,nband} loop
 
+!! body]
+
      return
   end subroutine try_remove_flavor
 
