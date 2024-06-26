@@ -1080,67 +1080,73 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing creation operator
-! iso and isn are for old and new creation operators, respectively
+     ! index address to shift existing creation operator
+     ! iso and isn are for old and new creation operators, respectively
      integer, intent(out) :: iso
      integer, intent(out) :: isn
 
-! whether the old creation operator can be shifted diagrammatically
+     ! whether the old creation operator can be shifted diagrammatically
      logical, intent(out) :: lshf
 
-! imaginary time point of the old creation operator
+     ! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start1
 
-! imaginary time point of the new creation operator
+     ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start2
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer :: i
 
-! loop index over orbitals
+     ! loop index over orbitals
      integer :: m
      integer :: n
 
-! pseudo-index address for old and new creation operators, respectively
+     ! pseudo-index address for
+     ! old and new creation operators, respectively
      integer :: piso
      integer :: pisn
 
-! total number of operators in the flavor part
+     ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether the current subspace can survive
+     ! dummy variables, used to check
+     ! whether the current subspace can survive
      integer :: idead
 
-! dummy variables, used to resolve spin up and spin down states
+     ! dummy variables, used to resolve spin up and spin down states
      integer :: iupdn
 
-! dummy variables, operator index, used to loop over the flavor part
+     ! dummy variables, operator index, used to loop over the flavor part
      integer :: counter
 
-! subspace constructed by nup and ndn
+     ! subspace constructed by nup and ndn
      integer :: nupdn(2)
 
-! init lshf
+!! [body
+
+     ! init lshf
      lshf = .false.
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
 ! stage 1: determine iso and isn, where are they?
 !-------------------------------------------------------------------------
-! determine iso
+
+     ! determine iso
+     call cat_search_flavor( iso, nsize, tau_start1 )
+     !
 !<     i = 1
 !<     do while ( i <= nsize .and. abs( time_v( index_v(i) ) - tau_start1 ) > eps6 )
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     iso = i
-     call cat_search_flavor( iso, nsize, tau_start1 )
 
 ! determine isn
      isn = 1
