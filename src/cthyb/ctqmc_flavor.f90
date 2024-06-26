@@ -1150,6 +1150,7 @@
 
      ! determine isn
      isn = 1
+     !
      CREATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_start2 < time_v( index_v(1)     ) ) then
              isn = 1          ! it is the first operator
@@ -1275,70 +1276,77 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing annihilation operator
-! ieo and ien are for old and new annihilation operators, respectively
+     ! index address to shift existing annihilation operator
+     ! ieo and ien are for old and new annihilation operators, respectively
      integer, intent(out) :: ieo
      integer, intent(out) :: ien
 
-! whether the old annihilation operator can be shifted diagrammatically
+     ! whether the old annihilation operator can be shifted diagrammatically
      logical, intent(out) :: rshf
 
-! imaginary time point of the old annihilation operator
+     ! imaginary time point of the old annihilation operator
      real(dp), intent(in) :: tau_end1
 
-! imaginary time point of the new annihilation operator
+     ! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end2
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer :: i
 
-! loop index over orbitals
+     ! loop index over orbitals
      integer :: m
      integer :: n
 
-! pseudo-index address for old and new annihilation operators, respectively
+     ! pseudo-index address for
+     ! old and new annihilation operators, respectively
      integer :: pieo
      integer :: pien
 
-! total number of operators in the flavor part
+     ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether the current subspace can survive
+     ! dummy variables, used to check
+     ! whether the current subspace can survive
      integer :: idead
 
-! dummy variables, used to resolve spin up and spin down states
+     ! dummy variables, used to resolve spin up and spin down states
      integer :: iupdn
 
-! dummy variables, operator index, used to loop over the flavor part
+     ! dummy variables, operator index, used to loop over the flavor part
      integer :: counter
 
-! subspace constructed by nup and ndn
+     ! subspace constructed by nup and ndn
      integer :: nupdn(2)
 
-! init rshf
+!! [body
+
+     ! init rshf
      rshf = .false.
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
 ! stage 1: determine ieo and ien, where are they?
 !-------------------------------------------------------------------------
-! determine ieo
+
+     ! determine ieo
+     call cat_search_flavor( ieo, nsize, tau_end1 )
+     !
 !<     i = 1
 !<     do while ( i <= nsize .and. abs( time_v( index_v(i) ) - tau_end1 ) > eps6 )
 !<         i = i + 1
 !<     enddo ! over do while loop
 !<     ieo = i
-     call cat_search_flavor( ieo, nsize, tau_end1 )
 
-! determine ien
+     ! determine ien
      ien = 1
+     !
      ANNIHILATION_BLOCK: if ( nsize > 0 ) then
          if      ( tau_end2 < time_v( index_v(1)     ) ) then
              ien = 1          ! it is the first operator
@@ -1353,7 +1361,7 @@
          endif ! back if ( tau_end2 < time_v( index_v(1) ) ) block
      endif ANNIHILATION_BLOCK ! back if ( nsize > 0 ) block
 
-! adjust ien further
+     ! adjust ien further
      if ( tau_end1 < tau_end2 ) then
          ien = ien - 1
      endif ! back if ( tau_end1 < tau_end2 ) block
@@ -1361,8 +1369,9 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it?
 !-------------------------------------------------------------------------
-! for the spin-orbital coupling case, we can not lookup the operators
-! series quickly. return immediately
+
+     ! for the spin-orbit coupling case, we can not lookup the
+     ! operators series quickly. return immediately
      if ( cssoc == 1 ) then
          rshf = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
