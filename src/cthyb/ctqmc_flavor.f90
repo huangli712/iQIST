@@ -181,19 +181,24 @@
      ! imaginary time point of the old annihilation operator
      real(dp), intent(out) :: tau_end
 
-! randomly select index address, which is used to access the creation
-! and annihilation operators
+!! [body
+
+     ! randomly select index address, which is used to access the creation
+     ! and annihilation operators
      is = ceiling( spring_sfmt_stream() * ckink )
      ie = ceiling( spring_sfmt_stream() * ckink )
 
-! evaluate tau_start and tau_end respectively
+     ! evaluate tau_start and tau_end respectively
      tau_start = time_s( index_s(is, flvr), flvr )
      tau_end   = time_e( index_e(ie, flvr), flvr )
 
-! check the validity of tau_start and tau_end
+     ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call s_print_error('try_remove_colour','tau_start is equal to tau_end')
+         call s_print_error('try_remove_colour', &
+             & 'tau_start is equal to tau_end')
      endif ! back if ( abs( tau_start - tau_end ) < epss ) block
+
+!! body]
 
      return
   end subroutine try_remove_colour
@@ -206,7 +211,8 @@
 !! then evaluate its final index address for the colour (determinant) part
 !!
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use spring, only : spring_sfmt_stream
 
@@ -218,8 +224,8 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
 ! index address to shift old creation operator
