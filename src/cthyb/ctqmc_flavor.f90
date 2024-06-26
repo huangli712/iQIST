@@ -1376,51 +1376,60 @@
          rshf = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
 
-! evaluate pieo and pien
+     ! evaluate pieo and pien
      pieo = ieo
      pien = ien
+     !
      if ( tau_end1 < tau_end2 ) then
          pien = pien + 1
      else
          pieo = pieo + 1
      endif ! back if ( tau_end1 < tau_end2 ) block
 
-! loop over all the subspace
+     ! loop over all the subspace
      FLVR1_CYCLE: do m=0,nband
          FLVR2_CYCLE: do n=0,nband
 
-! construct current subspace
+             ! construct current subspace
              nupdn(1) = m
              nupdn(2) = n
 
-! init key variables
+             ! init key variables
              idead = 0
              counter = 0
 
-! loop over all the operators, simulate their actions on subspace
+             ! loop over all the creation and annihilation operators,
+             ! simulate their actions on subspace
              OPERATOR_LOOP: do i=1,nsize+1
                  counter = counter + 1
 
-! meet the old annihilation operator
+                 ! meet the old annihilation operator
                  if      ( i == pieo ) then
                      idead = idead + 1
-! meet the new annihilation operator
+                 !
+                 ! meet the new annihilation operator
                  else if ( i == pien ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) - 1
+                     !
                      if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
                          EXIT OPERATOR_LOOP ! this subspace is dead
-                     endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
+                     endif ! back if block
+                     !
                      idead = idead + 1
-! meet other existing operators
+                 !
+                 ! meet other existing operators
                  else
                      iupdn = ( flvr_v( index_v(counter) ) - 1 ) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 2 * type_v( index_v(counter) ) - 1
+                     !
                      if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
                          EXIT OPERATOR_LOOP ! this subspace is dead
-                     endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
+                     endif ! back if block
+                     !
                      idead = idead + 1
+                 !
                  endif ! back if ( i == pieo ) block
              enddo OPERATOR_LOOP ! over i={1,nsize+1} loop
 
