@@ -1433,8 +1433,9 @@
                  endif ! back if ( i == pieo ) block
              enddo OPERATOR_LOOP ! over i={1,nsize+1} loop
 
-! once current subspace can survive, in order to save computational time,
-! we return immediately, no need to deal with the rest subspaces
+             ! once the current subspace can survive, in order to save
+             ! the computational time, we return immediately, no need to
+             ! deal with the rest subspaces
              if ( idead == nsize + 1 ) then
                  rshf = .true.; RETURN
              endif ! back if ( idead == nsize + 1 ) block
