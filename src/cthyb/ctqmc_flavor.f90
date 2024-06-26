@@ -487,7 +487,7 @@
      do i=1,nfreq
          xs = rmesh(i) * tau_start
          exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
-
+         !
          xe = rmesh(i) * tau_end
          exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
      enddo ! over i={1,nfreq} loop
