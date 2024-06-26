@@ -1443,6 +1443,8 @@
          enddo FLVR2_CYCLE ! over n={0,nband} loop
      enddo FLVR1_CYCLE ! over m={0,nband} loop
 
+!! body]
+
      return
   end subroutine try_rshift_flavor
 
@@ -1456,7 +1458,8 @@
 !! insert new creation and annihilation operators in the flavor part
 !!
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
      use stack, only : istack_pop
@@ -1475,52 +1478,54 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to insert new creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time point of the new creation operator
+     ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the new annihilation operator
+     ! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for new creation and annihilation operators
+     ! memory address for new creation and annihilation operators
      integer  :: as
      integer  :: ae
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
 
 !-------------------------------------------------------------------------
 ! stage 1: insert creation operator
 !-------------------------------------------------------------------------
-! determine nsize
+
+     ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for creation operator
+     ! get memory address for creation operator
      call istack_pop( empty_v, as )
 
-! store basic data for new creation operator
+     ! store basic data for new creation operator
      time_v(as) = tau_start
      flvr_v(as) = flvr
      type_v(as) = 1
 
-! shift index_v to make an empty room
+     ! shift index_v to make an empty room
      do i=nsize,is,-1
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize,is,-1} loop
