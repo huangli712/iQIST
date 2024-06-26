@@ -918,46 +918,50 @@
 
      implicit none
 
-! external arguments
-! index address to remove old creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+!! external arguments
+     ! index address to remove old creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(out) :: is
      integer, intent(out) :: ie
 
-! whether the old creation and annihilation operators can be removed
+     ! whether the old creation and annihilation operators can be removed
      logical, intent(out) :: lrmv
 
-! imaginary time point of the old creation operator
+     ! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the old annihilation operator
+     ! imaginary time point of the old annihilation operator
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer :: i
 
-! loop index over orbitals
+     ! loop index over orbitals
      integer :: m
      integer :: n
 
-! pseudo-index address for creation and annihilation operators, respectively
+     ! pseudo-index address for
+     ! creation and annihilation operators, respectively
      integer :: pis
      integer :: pie
 
-! total number of operators in the flavor part
+     ! total number of operators in the flavor part
      integer :: nsize
 
-! dummy variables, used to check whether the current subspace can survive
+     ! dummy variables, used to check
+     ! whether the current subspace can survive
      integer :: idead
 
-! dummy variables, used to resolve spin up and spin down states
+     ! dummy variables, used to resolve spin up and spin down states
      integer :: iupdn
 
-! subspace constructed by nup and ndn
+     ! subspace constructed by nup and ndn
      integer :: nupdn(2)
 
-! init lrmv
+!! [body
+
+     ! init lrmv
      lrmv = .false.
 
 ! determine nsize at first, get total number of operators
