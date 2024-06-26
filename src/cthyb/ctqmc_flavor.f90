@@ -824,7 +824,7 @@
 ! stage 2: determine ladd, whether we can get them?
 !-------------------------------------------------------------------------
 
-     ! for the spin-orbital coupling case, we can not lookup the
+     ! for the spin-orbit coupling case, we can not lookup the
      ! operators series quickly. return immediately
      if ( cssoc == 1 ) then
          ladd = .true.; RETURN
@@ -833,6 +833,7 @@
      ! evaluate pis and pie
      pis = is
      pie = ie
+     !
      if ( tau_start > tau_end ) then
          pis = pis + 1
      endif ! back if ( tau_start > tau_end ) block
@@ -999,46 +1000,51 @@
 ! stage 2: determine lrmv, whether we can kick off them?
 !-------------------------------------------------------------------------
 
-     ! for the spin-orbital coupling case, we can not lookup the
+     ! for the spin-orbit coupling case, we can not lookup the
      ! operators series quickly. return immediately
      if ( cssoc == 1 ) then
          lrmv = .true.; RETURN
      endif ! back if ( cssoc == 1 ) block
 
-! evaluate pis and pie
+     ! evaluate pis and pie
      pis = is
      pie = ie
+     !
      if ( tau_start < tau_end ) then
          pie = pie + 1
      endif ! back if ( tau_start < tau_end ) block
 
-! loop over all the subspace
+     ! loop over all the subspace
      FLVR1_CYCLE: do m=0,nband
          FLVR2_CYCLE: do n=0,nband
 
-! construct current subspace
+             ! construct current subspace
              nupdn(1) = m
              nupdn(2) = n
 
-! init key variables
+             ! init key variables
              idead = 0
 
-! loop over all the operators, simulate their actions on subspace
+             ! loop over all the creation and annihilation operators,
+             ! simulate their actions on subspace
              OPERATOR_LOOP: do i=1,nsize
                  if ( i == pis .or. i == pie ) then
                      idead = idead + 1
                  else
                      iupdn = ( flvr_v( index_v(i) ) - 1 ) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 2 * type_v( index_v(i) ) - 1
+                     !
                      if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
                          EXIT OPERATOR_LOOP ! this subspace is dead
-                     endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
+                     endif ! back if block
+                     !
                      idead = idead + 1
                  endif ! back if ( i == pis .or. i == pie ) block
              enddo OPERATOR_LOOP ! over i={1,nsize} loop
 
-! once current subspace can survive, in order to save computational time,
-! we return immediately, no need to deal with the rest subspaces
+             ! once the current subspace can survive, in order to save
+             ! the computational time, we return immediately, no need to
+             ! deal with the rest subspaces
              if ( idead == nsize ) then
                  lrmv = .true.; RETURN
              endif ! back if ( idead == nsize ) block
