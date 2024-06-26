@@ -228,34 +228,37 @@
      ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift old creation operator
-! iso and isn are for old and new indices, respectively
+     ! index address to shift old creation operator
+     ! iso and isn are for old and new indices, respectively
      integer, intent(out)  :: iso
      integer, intent(out)  :: isn
 
-! imaginary time point of the selected creation operator (the old one)
+     ! imaginary time point of the selected creation operator (the old one)
      real(dp), intent(out) :: tau_start1
 
-! imaginary time point of the selected creation operator (the new one)
+     ! imaginary time point of the selected creation operator (the new one)
      real(dp), intent(out) :: tau_start2
 
-! local variables
-! determine if tau_start2 is collided with existing operators
+!! local variables
+     ! determine if tau_start2 is collided with existing operators
      integer  :: have
 
-! imaginary time of previous creation operator
+     ! imaginary time of previous creation operator
      real(dp) :: tau_prev
 
-! imaginary time of next creation operator
+     ! imaginary time of next creation operator
      real(dp) :: tau_next
 
-! randomly select index address, which is used to access the creation operators
+!! [body
+
+     ! randomly select index address,
+     ! which is used to access the creation operators
      iso = ceiling( spring_sfmt_stream() * ckink )
 
-! evaluate tau_start1
+     ! evaluate tau_start1
      tau_start1 = time_s( index_s(iso, flvr), flvr )
 
-! determine imaginary time and index address for new creation operator
+     ! determine imaginary time and index address for new creation operator
      have = 99
      CREATION_BLOCK: do while ( have > 0 )
          if ( ckink == 1 ) then
@@ -266,33 +269,40 @@
                  tau_prev = time_s( index_s(ckink, flvr), flvr )
                  tau_next = time_s( index_s(iso+1, flvr), flvr )
                  tau_start2 = tau_prev + ( tau_next - zero + beta - tau_prev ) * spring_sfmt_stream()
+                 !
                  if ( tau_start2 > beta ) then
                      isn = 1
                      tau_start2 = tau_start2 - beta
                  else
                      isn = ckink
                  endif ! back if ( tau_start2 > beta ) block
+             !
              else if ( iso == ckink ) then
                  tau_prev = time_s( index_s(iso-1, flvr), flvr )
                  tau_next = time_s( index_s(1,     flvr), flvr )
                  tau_start2 = tau_prev + ( tau_next - zero + beta - tau_prev ) * spring_sfmt_stream()
+                 !
                  if ( tau_start2 > beta ) then
                      isn = 1
                      tau_start2 = tau_start2 - beta
                  else
                      isn = ckink
                  endif ! back if ( tau_start2 > beta ) block
+             !
              else
                  tau_prev = time_s( index_s(iso-1, flvr), flvr )
                  tau_next = time_s( index_s(iso+1, flvr), flvr )
                  tau_start2 = tau_prev + ( tau_next - tau_prev ) * spring_sfmt_stream()
                  isn = iso
+             !
              endif ! back if ( iso == 1 ) block
          endif ! back if ( ckink == 1 ) block
 
-! check tau_start2 is necessary
+         ! check tau_start2 is necessary
          call cat_search_colour(flvr, tau_start2, have)
      enddo CREATION_BLOCK ! over do while loop
+
+!! body]
 
      return
   end subroutine try_lshift_colour
