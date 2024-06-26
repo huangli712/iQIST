@@ -1637,8 +1637,11 @@
 !-------------------------------------------------------------------------
 ! stage 3: deal with sign problem
 !-------------------------------------------------------------------------
-! evaluate csign, TO BE CHECKED
+
+     ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( nsize - ie + nsize - is + 1, 2 ) )
+
+!! body]
 
      return
   end subroutine cat_insert_flavor
