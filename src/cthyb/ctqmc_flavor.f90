@@ -315,7 +315,8 @@
 !! then evaluate its final index address for the colour (determinant) part
 !!
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use spring, only : spring_sfmt_stream
 
