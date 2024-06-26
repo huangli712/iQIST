@@ -1576,46 +1576,49 @@
 ! stage 2: insert annihilation operator
 !-------------------------------------------------------------------------
 
-! determine nsize
+     ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for annihilation operator
+     ! get memory address for annihilation operator
      call istack_pop( empty_v, ae )
 
-! store basic data for new annihilation operator
+     ! store basic data for new annihilation operator
      time_v(ae) = tau_end
      flvr_v(ae) = flvr
      type_v(ae) = 0
 
-! shift index_v to make an empty room
+     ! shift index_v to make an empty room
      do i=nsize,ie,-1
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize,ie,-1} loop
 
-! store the memory address for annihilation operator
+     ! store the memory address for annihilation operator
      index_v(ie) = ae
 
-! evaluate previous imaginary time interval
-     if ( ie ==         1 ) then ! the imaginary time of annihilation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( ie ==         1 ) then
+         ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_v(ie) ) - zero
      else
          t_prev = time_v( index_v(ie) ) - time_v( index_v(ie-1) )
      endif ! back if ( ie == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( ie == nsize + 1 ) then ! the imaginary time of annihilation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( ie == nsize + 1 ) then
+         ! the imaginary time of annihilation operator is the largest
          t_next = beta - time_v( index_v(ie) )
      else
          t_next = time_v( index_v(ie+1) ) - time_v( index_v(ie) )
      endif ! back if ( ie == nsize + 1 ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
-! if ie == nsize + 1, index_v(ie+1) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! update the expt_v and expt_t, matrix of time evolution operator
+     ! if ie == nsize + 1, index_v(ie+1) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( ie == nsize + 1 ) then
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
+         !
          do i=1,ncfgs
              expt_t( i, 2  ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
@@ -1623,7 +1626,9 @@
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
+         !
          ae = index_v(ie+1)
+         !
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
