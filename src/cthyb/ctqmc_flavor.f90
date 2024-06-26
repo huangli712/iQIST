@@ -989,8 +989,8 @@
 !<     enddo ! over do while loop
 !<     ie = i
 
-! adjust ie further, since we remove creation operator firstly, and then
-! remove annihilation operator
+     ! adjust ie further, since we remove creation operator firstly,
+     ! and then remove annihilation operator
      if ( tau_start < tau_end ) then
          ie = ie - 1
      endif ! back if ( tau_start < tau_end ) block
