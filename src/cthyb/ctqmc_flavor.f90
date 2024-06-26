@@ -354,6 +354,8 @@
      ! imaginary time of next annihilation operator
      real(dp) :: tau_next
 
+!! [body
+
      ! randomly select index address,
      ! which is used to access the annihilation operators
      ieo = ceiling( spring_sfmt_stream() * ckink )
@@ -400,6 +402,8 @@
          ! check tau_end2 is necessary
          call cat_search_colour(flvr, tau_end2, have)
      enddo ANNIHILATION_BLOCK ! over do while loop
+
+!! body]
 
      return
   end subroutine try_rshift_colour
