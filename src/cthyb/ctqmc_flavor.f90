@@ -434,37 +434,39 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for inserting new creation and annihilation operators
+     ! index address for inserting new creation and annihilation operators
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time \tau_s for creation operator
+     ! imaginary time \tau_s for creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time \tau_e for annihilation operator
+     ! imaginary time \tau_e for annihilation operator
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators and frequencies
+!! local variables
+     ! loop index over operators and frequencies
      integer  :: i
 
-! memory address for new creation and annihilation operators
+     ! memory address for new creation and annihilation operators
      integer  :: as
      integer  :: ae
 
-! dummy variables, \tau_s * \omega and \tau_e * \omega
+     ! dummy variables, \tau_s * \omega and \tau_e * \omega
      real(dp) :: xs
      real(dp) :: xe
 
-! get memory address for is and ie
+!! [body
+
+     ! get memory address for is and ie
      call istack_pop( empty_s(flvr), as )
      call istack_pop( empty_e(flvr), ae )
 
-! shift index_s and index_e to create two empty rooms for as and ae
+     ! shift index_s and index_e to create two empty rooms for as and ae
      do i=ckink,is,-1
          index_s(i+1, flvr) = index_s(i, flvr)
      enddo ! over i={ckink,is,-1} loop
@@ -473,15 +475,15 @@
          index_e(i+1, flvr) = index_e(i, flvr)
      enddo ! over i={ckink,ie,-1} loop
 
-! update index_s and index_e at is and ie by as and ae, respectively
+     ! update index_s and index_e at is and ie by as and ae, respectively
      index_s(is, flvr) = as
      index_e(ie, flvr) = ae
 
-! update time_s and time_e, record new imaginary time points
+     ! update time_s and time_e, record new imaginary time points
      time_s(as, flvr) = tau_start
      time_e(ae, flvr) = tau_end
 
-! update exp_s and exp_e, record new exponent values
+     ! update exp_s and exp_e, record new exponent values
      do i=1,nfreq
          xs = rmesh(i) * tau_start
          exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
@@ -489,6 +491,8 @@
          xe = rmesh(i) * tau_end
          exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
      enddo ! over i={1,nfreq} loop
+
+!! body]
 
      return
   end subroutine cat_insert_colour
