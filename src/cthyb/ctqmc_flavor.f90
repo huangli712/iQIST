@@ -1206,26 +1206,33 @@
              OPERATOR_LOOP: do i=1,nsize+1
                  counter = counter + 1
 
-! meet the old creation operator
+                 ! meet the old creation operator
                  if      ( i == piso ) then
                      idead = idead + 1
-! meet the new creation operator
+                 !
+                 ! meet the new creation operator
                  else if ( i == pisn ) then
                      counter = counter - 1
                      iupdn = (flvr - 1) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 1
+                     !
                      if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
                          EXIT OPERATOR_LOOP ! this subspace is dead
-                     endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
+                     endif ! back if block
+                     !
                      idead = idead + 1
-! meet other existing operators
+                 !
+                 ! meet other existing operators
                  else
                      iupdn = ( flvr_v( index_v(counter) ) - 1 ) / nband + 1
                      nupdn(iupdn) = nupdn(iupdn) + 2 * type_v( index_v(counter) ) - 1
+                     !
                      if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) then
                          EXIT OPERATOR_LOOP ! this subspace is dead
-                     endif ! back if ( nupdn(iupdn) < 0 .or. nupdn(iupdn) > nband ) block
+                     endif ! back if block
+                     !
                      idead = idead + 1
+                 !
                  endif ! back if ( i == piso ) block
              enddo OPERATOR_LOOP ! over i={1,nsize+1} loop
 
