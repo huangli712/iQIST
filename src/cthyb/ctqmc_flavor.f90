@@ -643,49 +643,53 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for shifting old annihilation operator
+     ! index address for shifting old annihilation operator
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time \tau_e for annihilation operator (the new one)
+     ! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators and frequencies
+!! local variables
+     ! loop index over operators and frequencies
      integer  :: i
 
-! memory address for new annihilation operator
+     ! memory address for new annihilation operator
      integer  :: ae
 
-! dummy variables, \tau_e * \omega
+     ! dummy variables, \tau_e * \omega
      real(dp) :: xe
 
-! get memory address for ieo
+!! [body
+
+     ! get memory address for ieo
      ae = index_e(ieo, flvr)
 
-! update index_e
+     ! update index_e
      do i=ieo,ckink-1
          index_e(i, flvr) = index_e(i+1, flvr)
      enddo ! over i={ieo,ckink-1} loop
      index_e(ckink, flvr) = 0
-
+     !
      do i=ckink-1,ien,-1
          index_e(i+1, flvr) = index_e(i, flvr)
      enddo ! over i={ckink-1,ien,-1} loop
      index_e(ien, flvr) = ae
 
-! update time_e, record new imaginary time point
+     ! update time_e, record new imaginary time point
      time_e(ae, flvr) = tau_end
 
-! update exp_e, record new exponent values
+     ! update exp_e, record new exponent values
      do i=1,nfreq
          xe = rmesh(i) * tau_end
          exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
      enddo ! over i={1,nfreq} loop
+
+!! body]
 
      return
   end subroutine cat_rshift_colour
