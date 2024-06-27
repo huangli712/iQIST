@@ -809,13 +809,25 @@
 !!
      integer, public, save, allocatable  :: is_cp(:,:)
 
-! number of columns to be copied, in order to save copy time
+!!
+!! @var nc_cp
+!!
+!! number of columns to be copied, in order to save copy time
+!!
      integer, public, save, allocatable  :: nc_cp(:,:)
 
-! saved parts of matrices product, for previous accepted configuration
+!!
+!! @var saved_p
+!!
+!! saved parts of matrices product, for previous accepted configuration
+!!
      real(dp), public, save, allocatable :: saved_p(:,:,:,:)
 
-! saved parts of matrices product, for new proposed configuration
+!!
+!! @var saved_n
+!!
+!! saved parts of matrices product, for new proposed configuration
+!!
      real(dp), public, save, allocatable :: saved_n(:,:,:,:)
 
 !!========================================================================
