@@ -617,7 +617,7 @@
          ! memory for sectors
          !
          ! be careful, this step is only for master node. so next we
-         ! should do the same jobs in the children nodes 
+         ! should do the same jobs in the children nodes
          call cat_alloc_sectors()
          call cat_alloc_part()
 
@@ -1127,12 +1127,12 @@
      !>>> m_part module
      !--------------------------------------------------------------------
 
-     ! init split scheme for operators 
+     ! init split scheme for operators
      nop     = 0
      ops     = 0
      ope     = 0
 
-     ! init flags for divide and conquer algorithm 
+     ! init flags for divide and conquer algorithm
      renew   = 0
      async   = 0
      is_cp   = 0

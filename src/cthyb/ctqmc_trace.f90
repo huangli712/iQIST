@@ -485,7 +485,7 @@
      ! we try to build a string from left to right, that is, 0 -> \beta
      ! we assume the sectors are S1, S2, S3, ..., SM, and the fermion
      ! operators are F1, F2, F3, F4, .... FN. here, F1 is in \tau_1, F2
-     ! is in \tau_2, F3 is in \tau_3, and so on, and 
+     ! is in \tau_2, F3 is in \tau_3, and so on, and
      !     0 < \tau_1 < \tau_2 < \tau_3 < ... < \beta
      ! is always guaranteed. then a typical (and also valid) string must
      ! look like this:
