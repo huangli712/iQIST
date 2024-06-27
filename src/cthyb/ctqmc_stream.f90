@@ -1074,30 +1074,36 @@
      saved_p = zero
      saved_n = zero
 
-!>>> postprocess hybridization function
-!-------------------------------------------------------------------------
-! fourier hybridization function from frequency space to time space
+     !>>> postprocess hybridization function
+     !--------------------------------------------------------------------
+
+     ! fourier hybridization function from frequency space to time space
      call ctqmc_four_hybf(hybf, htau)
 
-! symmetrize the hybridization function on imaginary time axis if needed
+     ! symmetrize the hybridization function on imaginary time
+     ! axis if needed
      call ctqmc_symm_gtau(symm, htau)
 
-! calculate the 2nd-derivates of htau, which is used in spline subroutines
+     ! calculate the 2nd-derivates of htau, which is used
+     ! in spline subroutines
      call ctqmc_eval_hsed(htau, hsed)
 
-!>>> dump the necessary files
-!-------------------------------------------------------------------------
-! write out the hybridization function
+     !>>> dump the necessary files
+     !--------------------------------------------------------------------
+
+     ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(hybf)
          call ctqmc_dump_htau(htau)
      endif ! back if ( myid == master ) block
 
-! write out the seed for random number stream, it is useful to reproduce
-! the calculation process once fatal error occurs.
+     ! write out the seed for random number stream, it is useful to
+     ! reproduce the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine ctqmc_reset_array
