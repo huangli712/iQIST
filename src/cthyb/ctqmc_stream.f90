@@ -328,6 +328,12 @@
          call s_leg_basis(lemax, legrd, lmesh, rep_l)
      endif ! back if ( isort == 2 ) block
 
+     ! build svd orthogonal polynomial in [-1,1]
+     ! .false. means fermionic kernel, and .true. means bosonic kernel
+     if ( isort == 3 ) then
+         call s_svd_basis(svmax, svgrd, smesh, rep_s, .false., beta)
+     endif ! back if ( isort == 3 ) block
+
 !! body]
 
      return
