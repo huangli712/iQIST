@@ -45,8 +45,8 @@
 
      implicit none
 
-! local variables
-! used to check whether the input file (solver.ctqmc.in) exists
+!! local variables
+     ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
 ! setup general control flags
