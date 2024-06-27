@@ -952,34 +952,29 @@
      ! init histogram
      hist = zero
 
-! init probability for atomic eigenstates
+     ! init probability for atomic eigenstates
      prob = zero
 
-! init auxiliary physical observables
+     ! init auxiliary physical observables
      paux = zero
 
-! init occupation number
+     ! init occupation number
      nimp = zero
      nmat = zero
 
-! init kinetic energy fluctuation
+     ! init kinetic energy fluctuation
      knop = zero
      kmat = zero
 
-! init fidelity susceptibility
+     ! init fidelity susceptibility
      lnop = zero
      rnop = zero
      lrmm = zero
 
-! init powers of local magnetization
+     ! init powers of local magnetization
      szpw = zero
 
-! init two-particle green's function
-     !g2pw = czero
-     !h2pw = czero
-
-! init particle-particle pairing susceptibility
-     !p2pw = czero
+     ! init two-particle green's function
 
 !>>> ctqmc_umat module
 !-------------------------------------------------------------------------
