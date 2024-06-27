@@ -1027,22 +1027,24 @@
      grnf = czero
      frnf = czero
 
-!>>> ctqmc_wmat module
-!-------------------------------------------------------------------------
-! some variables have been initialized at ctqmc_setup_model()
+     !>>> ctqmc_wmat module
+     !--------------------------------------------------------------------
 
-! init imaginary time bath weiss's function
+     ! some variables have been initialized at ctqmc_setup_model()
+
+     ! init imaginary time bath weiss's function
      wtau = zero
 
-! init matsubara bath weiss's function
+     ! init matsubara bath weiss's function
      wssf = czero
 
-!>>> ctqmc_smat module
-!-------------------------------------------------------------------------
-! sig1 should not be reinitialized here, since it is used to keep the
-! persistency of self-energy function
+     !>>> ctqmc_smat module
+     !--------------------------------------------------------------------
 
-! init self-energy function
+     ! sig1 should not be reinitialized here, since it is used to keep the
+     ! persistency of self-energy function
+
+     ! init self-energy function
 !<     sig1 = czero
      sig2 = czero
 
