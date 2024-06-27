@@ -417,19 +417,21 @@
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(hybf, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_input_hybf_
