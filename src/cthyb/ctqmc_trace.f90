@@ -1371,50 +1371,52 @@
      ! whether accept this move
      logical, intent(out)  :: pass
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! start index of a sector
+     ! start index of a sector
      integer  :: indx
 
-! number of alive sectors
+     ! number of alive sectors
      integer  :: nlive
 
-! maximum and minimum bounds of acceptance ratio
+     ! maximum and minimum bounds of acceptance ratio
      real(dp) :: pmax
      real(dp) :: pmin
 
-! sum of btrace (trace boundary)
+     ! sum of btrace (trace boundary)
      real(dp) :: sbound
 
-! sum of absolute value of trace
+     ! sum of absolute value of trace
      real(dp) :: cumsum
 
-! index of the living sector
+     ! index of the living sector
      integer  :: living(nsect)
 
-! minimum dimension of the sectors in valid strings
+     ! minimum dimension of the sectors in valid strings
      integer  :: mindim(nsect)
 
-! sector index of a string
+     ! sector index of a string
      integer  :: string(csize+1,nsect)
 
-! local version of index_t
+     ! local version of index_t
      integer  :: index_loc(mkink)
 
-! local version of expt_t
+     ! local version of expt_t
      real(dp) :: expt_loc(ncfgs)
 
-! trace boundary for sectors
+     ! trace boundary for sectors
      real(dp) :: btrace(nsect)
 
-! trace for each sector
+     ! trace for each sector
      real(dp) :: strace(nsect)
 
-! copy data from index_t or index_v to index_loc
-! copy data from expt_t to expt_loc
+!! [body
+
+     ! copy data from index_t or index_v to index_loc
+     ! copy data from expt_t to expt_loc
      select case (cmode)
 
          case (1)
@@ -1435,55 +1437,59 @@
 
      end select
 
-! build all possible strings for all the sectors. if one string may be
-! invalid, then all of its elements must be -1
+     ! build all possible strings for all the sectors.
+     ! if one string may be invalid, then all of its elements must be -1
      call cat_make_string(csize, index_loc, string)
 
-! determine which part should be recalculated (global variables renew
-! and is_cp will be updated in this subroutine)
+     ! determine which part should be recalculated (global variables
+     ! renew and is_cp will be updated in this subroutine)
      call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
 
-! we can verify string here to see whether this diagram can survive?
-! if not, return immediately.
+     ! we can verify string here to see whether this diagram can survive?
+     ! if not, we should return immediately and don't wast time here.
      pass = .true.
      if ( all( string == -1 ) ) then
          pass = .false.; p = zero; RETURN
      endif ! back if ( all( string == -1 ) ) block
 
-! calculate the trace bounds for each sector and determine the
-! number of sectors which actually contribute to the total trace
+     ! next the lazy trace evaluation algorithm is used
+
+     ! calculate the trace bounds for each sector and determine the
+     ! number of sectors which actually contribute to the total trace
      nlive  = 0
      living = -1
      mindim = 0
      btrace = zero
+     !
      do i=1,nsect
-! if the string is invalid, we just skip it
-         if ( string(1,i) == -1 ) then
-             CYCLE
-! find valid string which may contribute to the total trace
-         else
-! increase the counter
-             nlive = nlive + 1
 
-! record its index
-             living(nlive) = i
+         ! if the string is invalid, we just skip it
+         if ( string(1,i) == -1 ) CYCLE
 
-! calculate its trace bound and determine the minimal dimension for
-! each alive string
-             mindim(i) = sectors(i)%ndim
-             btrace(nlive) = one
-             do j=1,csize
-                 if ( mindim(i) > sectors( string(j,i) )%ndim ) then
-                     mindim(i) = sectors( string(j,i) )%ndim
-                 endif ! back if ( mindim(i) > sectors( string(j,i) )%ndim ) block
-                 indx = sectors(string(j,i))%istart
-                 btrace(nlive) = btrace(nlive) * expt_v(indx, index_loc(j))
-             enddo ! over j={1,csize} loop
+         ! find valid string which may contribute to the total trace
 
-! special treatment for the last time evolution operator
-             indx = sectors(string(1,i))%istart
-             btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
-         endif ! back if ( string(1,i) == -1 ) block
+         ! increase the counter
+         nlive = nlive + 1
+
+         ! record its index
+         living(nlive) = i
+
+         ! calculate its trace bound and determine the minimal dimension
+         ! for each alive string
+         mindim(i) = sectors(i)%ndim
+         btrace(nlive) = one
+         do j=1,csize
+             if ( mindim(i) > sectors( string(j,i) )%ndim ) then
+                 mindim(i) = sectors( string(j,i) )%ndim
+             endif ! back if block
+             indx = sectors(string(j,i))%istart
+             btrace(nlive) = btrace(nlive) * expt_v(indx, index_loc(j))
+         enddo ! over j={1,csize} loop
+
+         ! special treatment for the last time evolution operator
+         indx = sectors(string(1,i))%istart
+         btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
+
      enddo ! over i={1,nsect} loop
 
 ! calculate the summmation of trace bounds and the maximum bound of the
