@@ -762,7 +762,7 @@
 
 # endif  /* MPI */
 
-! allocate memory for sectors, only for children nodes
+     ! allocate memory for sectors, only for children nodes
      if ( myid /= master ) then
          call cat_alloc_sect()
          call cat_alloc_part()
@@ -771,10 +771,10 @@
 ! broadcast sectors from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data (basic data for sectors)
      do i=1,nsect
 
-! broadcast sector's information
+         ! broadcast sector's information
          call mp_bcast(sectors(i)%ndim,   master)
          call mp_bcast(sectors(i)%nops,   master)
          call mp_bcast(sectors(i)%istart, master)
@@ -783,62 +783,65 @@
          call mp_bcast(sectors(i)%jz,     master)
          call mp_bcast(sectors(i)%ps,     master)
 
-! setup barrier
+         ! setup barrier
          call mp_barrier()
 
-! allocate memory for t_sector structure, only for children nodes
+         ! allocate memory for t_sector structure, only for children nodes
          if ( myid /= master ) then
              call cat_alloc_one_sect(sectors(i))
          endif ! back if ( myid /= master ) block
 
-! setup barrier
+         ! setup barrier
          call mp_barrier()
 
-! broadcast sector's data
+         ! broadcast sector's data
          call mp_bcast(sectors(i)%next,   master)
          call mp_bcast(sectors(i)%eval,   master)
 
-! setup barrier
+         ! setup barrier
          call mp_barrier()
 
      enddo ! over i={1,nsect} loop
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data again (f-matrix data)
      do i=1,nsect
          do j=1,sectors(i)%nops
              do k=0,1
-
-! determine whether next sector is valid
+                 !
+                 ! examine the existance of the given f-matrix
                  m = sectors(i)%next(j,k)
                  if ( m == -1 ) CYCLE
-
-! setup the dimension for F-matrix and allocate memory, only for children nodes
+                 !
+                 ! setup the dimension for f-matrix and allocate memory,
+                 ! only for children nodes
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(m)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
                      call cat_alloc_one_fmat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
-
-! setup barrier
+                 !
+                 ! setup barrier
                  call mp_barrier()
-
-! broadcast sector's F-matrix
+                 !
+                 ! broadcast sector's f-matrix
                  call mp_bcast(sectors(i)%fmat(j,k)%val, master)
-
-! setup barrier
+                 !
+                 ! setup barrier
                  call mp_barrier()
-
+                 !
              enddo ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo ! over i={1,nsect} loop
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_input_atom_
