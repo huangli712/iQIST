@@ -1290,18 +1290,28 @@
 !!>>> service layer: utility subroutines to calculate trace            <<<
 !!========================================================================
 
-!!>>> ctqmc_lazy_ztrace: core subroutine of manjushaka
-!!>>> (1) use good quantum numbers (GQNs) algorithm, split the total
-!!>>>     Hibert space to small subspace, the dimension of F-matrix will
-!!>>>     be smaller.
-!!>>> (2) use divide and conqure algorithm, split the imaginary time axis
-!!>>>     into several parts, save the matrices products of each part,
-!!>>>     which may be used by next Monte Carlo move.
-!!>>> (3) use lazy trace algorithm to reject some proposed moves immediately.
-!!>>> (4) truncate the Hilbert space according to the total occupancy and
-!!>>>     the probability of atomic eigenstates.
-!!>>> note: you should carefully choose npart in order to obtain the
-!!>>> best speedup.
+!!
+!! @sub ctqmc_lazy_ztrace
+!!
+!! core subroutine of this quantum impurity solver. it try to employ the
+!! following algorithms to evaluate the trace of matrix product.
+!!
+!! (1) use good quantum numbers (GQNs) algorithm, split the total
+!!     Hibert space to small subspace, the dimension of f-matrix will
+!!     be smaller.
+!!
+!! (2) use divide and conqure algorithm, split the imaginary time axis
+!!     into several parts, save the matrices products of each part,
+!!     which may be used by next Monte Carlo move.
+!!
+!! (3) use lazy trace algorithm to reject some proposed moves immediately.
+!!
+!! (4) truncate the Hilbert space according to the total occupancy and
+!!     the probability of atomic eigenstates.
+!!
+!! the users should carefully choose npart in order to obtain the
+!! best speedup.
+!!
   subroutine ctqmc_lazy_ztrace(cmode, csize, ratio, tau_s, tau_e, r, p, pass)
      use constants, only : dp, zero, one
 
