@@ -604,13 +604,13 @@
                  & 'file format of atom.cix is not correct')
          endif ! back if ( ver /= 2 ) block
 
-! skip nine comment lines
+         ! skip nine comment lines
          do i=1,9
              read(mytmp,*)
          enddo ! over i={1,9} loop
 
-! read the total number of sectors, maximum dimension of sectors,
-! and average dimension of sectors
+         ! read the total number of sectors, maximum dimension of
+         ! sectors, and average dimension of sectors
          read(mytmp,*) nsect, max_dim_sect, ave_dim_sect
 
 ! after we know the total number of sectors, we can allocate memory
