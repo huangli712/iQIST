@@ -1090,66 +1090,68 @@
   subroutine cat_make_trace(csize, string, index_loc, expt_loc, trace)
      implicit none
 
-! external arguments
-! number of total fermion operators
+!! external arguments
+     ! number of total fermion operators
      integer, intent(in)   :: csize
 
-! evolution string for this sector
+     ! evolution string for this sector
      integer, intent(in)   :: string(csize+1)
 
-! memory address index of fermion operators
+     ! memory address index of fermion operators
      integer, intent(in)   :: index_loc(mkink)
 
-! diagonal elements of last time-evolution matrices
+     ! diagonal elements of last time-evolution matrices
      real(dp), intent(in)  :: expt_loc(ncfgs)
 
-! the calculated trace of this sector
+     ! the calculated trace of this sector
      real(dp), intent(out) :: trace
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
      integer  :: l
 
-! type for current operator
+     ! type for current operator
      integer  :: vt
 
-! flavor channel for current operator
+     ! flavor channel for current operator
      integer  :: vf
 
-! start index of this sector
+     ! start index of this sector
      integer  :: indx
 
-! dimension for the sectors
-     integer  :: dim1
-     integer  :: dim2
-     integer  :: dim3
-     integer  :: dim4
+     ! dimension for the sectors
+     integer  :: dim_1
+     integer  :: dim_2
+     integer  :: dim_3
+     integer  :: dim_4
 
-! index for sectors
+     ! index for sectors
      integer  :: isect
      integer  :: sect1
      integer  :: sect2
 
-! the first part with non-zero fermion operators
+     ! the first part with non-zero fermion operators
      integer  :: fpart
 
-! counter for fermion operators
+     ! counter for fermion operators
      integer  :: counter
 
-! dummy real(dp) matrices
+     ! dummy real(dp) matrices
      real(dp) :: mat_r(max_dim_sect,max_dim_sect)
      real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
-! initialize dummy arrays
+!! [body
+
+     ! initialize dummy arrays
      mat_r = zero
      mat_t = zero
 
-! select the first sector in the string
+     ! select the first sector in the string
      isect = string(1)
-     dim1  = sectors( string(1) )%ndim
+     dim_1  = sectors( string(1) )%ndim
 
 ! determine fpart
      fpart = 0
@@ -1170,42 +1172,42 @@
          if ( renew(i) == 1 .or. async(i,isect) == 1 ) then
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
-             dim4 = sectors(sect2)%ndim
+             dim_4 = sectors(sect2)%ndim
              saved_n(:,:,i,isect) = zero
 
 ! set its copy status
              is_cp(i,isect) = 1
-             nc_cp(i,isect) = dim4
+             nc_cp(i,isect) = dim_4
 
 ! loop over all the fermion operators in this part
              counter = 0
              do j=ops(i),ope(i)
                  counter = counter + 1
                  indx = sectors( string(j)   )%istart
-                 dim2 = sectors( string(j+1) )%ndim
-                 dim3 = sectors( string(j)   )%ndim
+                 dim_2 = sectors( string(j+1) )%ndim
+                 dim_3 = sectors( string(j)   )%ndim
 
 ! multiply the diagonal matrix of time evolution operator
                  if ( counter > 1 ) then
-                     do l=1,dim4
-                         do k=1,dim3
+                     do l=1,dim_4
+                         do k=1,dim_3
                              mat_t(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_loc(j))
-                         enddo ! over k={1,dim3} loop
-                     enddo ! over l={1,dim4} loop
+                         enddo ! over k={1,dim_3} loop
+                     enddo ! over l={1,dim_4} loop
                  else
                      mat_t = zero
-                     do k=1,dim3
+                     do k=1,dim_3
                          mat_t(k,k) = expt_v(indx+k-1,index_loc(j))
-                     enddo ! over k={1,dim3} loop
+                     enddo ! over k={1,dim_3} loop
                  endif ! back if ( counter > 1 ) block
 
 ! multiply the matrix of fermion operator
                  vt = type_v( index_loc(j) )
                  vf = flvr_v( index_loc(j) )
-                 call dgemm( 'N', 'N', dim2, dim4, dim3, &
+                 call dgemm( 'N', 'N', dim_2, dim_4, dim_3, &
                                                     one, &
                    sectors( string(j) )%fmat(vf,vt)%val, &
-                                            dim2, mat_t, &
+                                            dim_2, mat_t, &
                                            max_dim_sect, &
                              zero, saved_n(:,:,i,isect), &
                                            max_dim_sect )
@@ -1213,34 +1215,34 @@
 
 ! multiply this part with the rest parts
              if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim4, &
+                 call dgemm( 'N', 'N', dim_2, dim_1, dim_4, &
                               one, saved_n(:,:,i,isect), &
                                            max_dim_sect, &
                                                   mat_r, &
                                            max_dim_sect, &
                                             zero, mat_t, &
                                            max_dim_sect )
-                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
+                 mat_r(:,1:dim_1) = mat_t(:,1:dim_1)
              else
-                 mat_r(:,1:dim1) = saved_n(:,1:dim1,i,isect)
+                 mat_r(:,1:dim_1) = saved_n(:,1:dim_1,i,isect)
              endif ! back if ( i > fpart ) block
 
 ! this part has been calculated previously, just use its results
          else
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
-             dim2 = sectors(sect1)%ndim
-             dim3 = sectors(sect2)%ndim
+             dim_2 = sectors(sect1)%ndim
+             dim_3 = sectors(sect2)%ndim
              if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim3, &
+                 call dgemm( 'N', 'N', dim_2, dim_1, dim_3, &
                               one, saved_p(:,:,i,isect), &
                                            max_dim_sect, &
                                                   mat_r, &
                                            max_dim_sect, &
                               zero, mat_t, max_dim_sect )
-                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
+                 mat_r(:,1:dim_1) = mat_t(:,1:dim_1)
              else
-                 mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
+                 mat_r(:,1:dim_1) = saved_p(:,1:dim_1,i,isect)
              endif ! back if ( i > fpart ) block
 
          endif ! back if ( renew(i) == 1 .or. async(i,isect) == 1 )  block
@@ -1254,16 +1256,16 @@
 
 ! no fermion operators
      if ( csize == 0 ) then
-         do k=1,dim1
+         do k=1,dim_1
              mat_r(k,k) = expt_loc(indx+k-1)
-         enddo ! over k={1,dim1} loop
+         enddo ! over k={1,dim_1} loop
 ! multiply the last time evolution operator
      else
-         do l=1,dim1
-             do k=1,dim1
+         do l=1,dim_1
+             do k=1,dim_1
                  mat_r(k,l) = mat_r(k,l) * expt_loc(indx+k-1)
-             enddo ! over k={1,dim1} loop
-         enddo ! over l={1,dim1} loop
+             enddo ! over k={1,dim_1} loop
+         enddo ! over l={1,dim_1} loop
      endif ! back if ( csize == 0 ) block
 
 ! calculate the trace and store the final product
