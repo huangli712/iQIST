@@ -150,19 +150,39 @@
 !!>>> declare global variables                                         <<<
 !!========================================================================
 
-! total number of sectors
+!!
+!! @var nsectors
+!!
+!! number of subspaces (sectors)
+!!
      integer, public, save  :: nsect
 
-! maximal dimension of the sectors
+!!
+!! @var max_dim_sect
+!!
+!! maximum dimension of subspaces (sectors)
+!!
      integer, public, save  :: max_dim_sect
 
-! average dimension of the sectors
+!!
+!! @var ave_dim_sect
+!!
+!! average dimension of subspaces (sectors)
+!!
      real(dp), public, save :: ave_dim_sect
 
-! which sectors should be truncated?
+!!
+!! @var sectoff
+!!
+!! to signal which sectors should be truncated?
+!!
      logical, public, save, allocatable :: sectoff(:)
 
-! array of Ts contains all the sectors
+!!
+!! @var sectors
+!!
+!! an array of structs that stores all the subspaces (sectors)
+!!
      type (Ts), public, save, allocatable :: sectors(:)
 
 !!========================================================================
