@@ -2305,42 +2305,46 @@
 !-------------------------------------------------------------------------
 ! stage 2: insert annihilation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for annihilation operator
+
+     ! get memory address for annihilation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
 
-! store basic data for new annihilation operator
+     ! store basic data for new annihilation operator
      time_v(ae) = tau_end
      flvr_v(ae) = flvr
      type_v(ae) = 0
 
-! shift index_t to make an empty room
+     ! shift index_t to make an empty room
      do i=nsize,ie,-1
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize,ie,-1} loop
 
-! store the memory address for annihilation operator
+     ! store the memory address for annihilation operator
      index_t(ie) = ae
 
-! evaluate previous imaginary time interval
-     if ( ie ==         1 ) then ! the imaginary time of annihilation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( ie ==         1 ) then
+         ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_t(ie) ) - zero
      else
          t_prev = time_v( index_t(ie) ) - time_v( index_t(ie-1) )
      endif ! back if ( ie == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( ie == nsize + 1 ) then ! the imaginary time of annihilation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( ie == nsize + 1 ) then
+         ! the imaginary time of annihilation operator is the largest
          t_next = beta - time_v( index_t(ie) )
      else
          t_next = time_v( index_t(ie+1) ) - time_v( index_t(ie) )
      endif ! back if ( ie == nsize + 1 ) block
 
-! evaluate ilast
-! if ie == nsize + 1, index_t(ie+1) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! evaluate ilast
+     !
+     ! if ie == nsize + 1, index_t(ie+1) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( ie == nsize + 1 ) then
          ilast = 1
-! the closest operator need to be modified as well
+     ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 3, ilast )
          time_v( ilast ) = time_v( index_t(ie+1) )
@@ -2349,11 +2353,11 @@
          index_t(ie+1) = ilast
      endif ! back if ( ie == nsize + 1 ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
+     ! update the expt_v and expt_t, matrix of time evolution operator
      do i=1,ncfgs
          expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
      enddo ! over i={1,ncfgs} loop
-
+     !
      if ( ie == nsize + 1 ) then
          do i=1,ncfgs
              expt_t( i, ilast ) = exp ( -eigs(i) * t_next )
@@ -2363,6 +2367,8 @@
              expt_v( i, ilast ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ie == nsize + 1 ) block
+
+!! body]
 
      return
   end subroutine cat_insert_ztrace
