@@ -1811,11 +1811,11 @@
      ! sign for p_l(x(\tau))
      real(dp) :: ms
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: mm
      real(dp) :: pp
 
-     ! complex(dp) dummy variables
+     ! dummy complex(dp) variables
      complex(dp) :: ee
 
      ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
@@ -2063,11 +2063,11 @@
      ! sign for u_l(x(\tau))
      real(dp) :: ms
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: mm
      real(dp) :: uu
 
-     ! complex(dp) dummy variables
+     ! dummy complex(dp) variables
      complex(dp) :: ee
 
      ! u_l(x(\tau_e - \tau_s))
@@ -2601,11 +2601,11 @@
      ! sign for p_l(x(\tau))
      real(dp) :: ms
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: mm
      real(dp) :: pp
 
-     ! complex(dp) dummy variables
+     ! dummy complex(dp) variables
      complex(dp) :: ee
 
      ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
@@ -2890,11 +2890,11 @@
      ! sign for u_l(x(\tau))
      real(dp) :: ms
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: mm
      real(dp) :: uu
 
-     ! complex(dp) dummy variables
+     ! dummy complex(dp) variables
      complex(dp) :: ee
 
      ! u_l(x(\tau_s2 - \tau_s1))

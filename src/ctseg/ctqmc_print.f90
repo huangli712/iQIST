@@ -314,7 +314,7 @@
      integer, intent(in) :: cstep
 
 !! local variables
-     ! integer dummy variables
+     ! dummy integer variables
      integer :: iaux
 
 !! [body
