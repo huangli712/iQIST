@@ -314,7 +314,14 @@
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
      ! build mesh for legendre orthogonal polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, lmesh)
+     if ( isort == 2 ) then
+         call s_linspace_d(-one, one, legrd, lmesh)
+     endif ! back if ( isort == 2 ) block
+
+    ! build mesh for svd orthogonal polynomial in [-1,1]
+     if ( isort == 3 ) then
+         call s_linspace_d(-one, one, svgrd, smesh)
+     endif ! back if ( isort == 3 ) block
 
      ! build legendre orthogonal polynomial in [-1,1]
      call s_leg_basis(lemax, legrd, lmesh, rep_l)
