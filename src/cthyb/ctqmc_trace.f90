@@ -298,34 +298,44 @@
      return
   end subroutine cat_alloc_sector
 
-!!>>> cat_alloc_sectors: allocate memory for sector related variables
+!!
+!! @sub cat_alloc_sectors
+!!
+!! allocate memory for subspaces
+!!
   subroutine cat_alloc_sectors()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(sectors(nsect), stat=istat)
      allocate(sectoff(nsect), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_sectors','can not allocate enough memory')
+         call s_print_error('cat_alloc_sectors', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      do i=1,nsect
+         sectors(i)%istart = 0
          sectors(i)%ndim   = 0
          sectors(i)%nops   = norbs
-         sectors(i)%istart = 0
          sectors(i)%nele   = 0
          sectors(i)%sz     = 0
          sectors(i)%jz     = 0
          sectors(i)%ps     = 0
      enddo ! over i={1,nsect} loop
+     !
      sectoff = .false.
+
+!! body]
 
      return
   end subroutine cat_alloc_sectors
