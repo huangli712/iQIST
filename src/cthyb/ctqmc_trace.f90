@@ -481,46 +481,66 @@
      ! init return array, we assume all of strings are invalid
      string = -1
 
-! we try to build a string from left to right, that is, 0 -> \beta
-! we assume the sectors are S1, S2, S3, ..., SM, and the fermion
-! operators are F1, F2, F3, F4, .... FN. here, F1 is in \tau_1, F2
-! is in \tau_2, F3 is in \tau_3, and so on, and 
-!     0 < \tau_1 < \tau_2 < \tau_3 < ... < \beta
-! is always guaranteed. then a typical (and also valid) string must
-! look like this:
-!     F1       F2       F3       F4       F5        FN
-! S1 ----> S2 ----> S3 ----> S4 ----> S5 ----> ... ----> S1
-! then the sequence of sector indices is the so-called string. if some
-! Si are -1 (null sector), this string is invalid. we will enforce all
-! elements in it to be -1. it is easy to speculate that if the number
-! of fermion operators is csize, the length of string must be csize + 1
+     !
+     ! we try to build a string from left to right, that is, 0 -> \beta
+     ! we assume the sectors are S1, S2, S3, ..., SM, and the fermion
+     ! operators are F1, F2, F3, F4, .... FN. here, F1 is in \tau_1, F2
+     ! is in \tau_2, F3 is in \tau_3, and so on, and 
+     !     0 < \tau_1 < \tau_2 < \tau_3 < ... < \beta
+     ! is always guaranteed. then a typical (and also valid) string must
+     ! look like this:
+     !     F1       F2       F3       F4       F5        FN
+     ! S1 ----> S2 ----> S3 ----> S4 ----> S5 ----> ... ----> S1
+     ! then the sequence of sector indices is the so-called string. if
+     ! some Si are -1 (null sector), and the related string is invalid.
+     ! we will enforce all elements in it to be -1. it is quite easy to
+     ! speculate that if the number of fermion operators is csize, the
+     ! length of string must be csize + 1.
+     !
+
+     ! there are at most nsect strings, so we examine them one by one.
      SECTOR_SCAN_LOOP: do i=1,nsect
-! setup starting sector
+
+         ! setup starting sector
          curr_sect = i
          string(1,i) = curr_sect
+
+         ! well, we try to go through this string to see whether
+         ! it can survive
          OPERATOR_SCAN_LOOP: do j=1,csize
-! determine the type and flavor of current operator
+
+             ! determine the type and flavor of current operator
              vt = type_v( vindex(j) )
              vf = flvr_v( vindex(j) )
-! get the next sector
+
+             ! probe the next sector
              next_sect = sectors(curr_sect)%next(vf,vt)
-! meet null sector, it is an invalid string. we will try another
-! new string
+
+             ! oops, meet null sector, it is an invalid string.
+             ! we will quite the inner loop and try another new string
              if ( next_sect == -1 ) then
-                 string(:,i) = -1; EXIT OPERATOR_SCAN_LOOP
-! the string is still alive, we record the sector, and set it to
-! the current sector
+                 string(:,i) = -1
+                 EXIT OPERATOR_SCAN_LOOP
+             !
+             ! congratulation. the string is still alive, we have to
+             ! record the sector, and set it to the current sector
              else
                  string(j+1,i) = next_sect
                  curr_sect = next_sect
+             !
              endif ! back if ( next_sect == -1 ) block
+
          enddo OPERATOR_SCAN_LOOP ! over j={1,csize} loop
-! we have to ensure that the first sector is the same with the last
-! sector in this string, or else it is invalid
+
+         ! we have to ensure that the first sector is the same with
+         ! the last sector in this string, or else it is invalid
          if ( string(1,i) /= string(csize+1,i) ) then
              string(:,i) = -1
          endif ! back if ( string(1,i) /= string(csize+1,i) ) block
+
      enddo SECTOR_SCAN_LOOP ! over i={1,nsect} loop
+
+!! body]
 
      return
   end subroutine cat_make_string
