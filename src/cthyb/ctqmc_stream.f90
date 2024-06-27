@@ -221,6 +221,8 @@
 
      call mp_bcast( lemax , master )
      call mp_bcast( legrd , master )
+     call mp_bcast( svmax , master )
+     call mp_bcast( svgrd , master )
      call mp_barrier()
 
      call mp_bcast( mkink , master )
@@ -244,6 +246,8 @@
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_setup_param
