@@ -516,7 +516,7 @@
 !! @sub ctqmc_input_atom_
 !!
 !! try to read essential information from atom.cix. the key arrays and
-!! structures in m_sect module should be initialized here.
+!! structures in m_sect and m_part modules should be initialized here
 !!
   subroutine ctqmc_input_atom_()
      use constants, only : dp
@@ -537,6 +537,11 @@
      use m_sect, only : max_dim_sect
      use m_sect, only : ave_dim_sect
      use m_sect, only : sectors
+     use m_sect, only : cat_alloc_one_fmat
+     use m_sect, only : cat_alloc_one_sect
+     use m_sect, only : cat_alloc_sect
+
+     use m_part, only : cat_alloc_part
 
      implicit none
 
