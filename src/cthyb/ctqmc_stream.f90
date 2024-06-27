@@ -719,12 +719,13 @@
              eigs(i) = eigs(i) - Uc
          enddo ! over i={1,ncfgs} loop
 
-! check validity of eigs
-! note: \infity - \infity is undefined, which return NaN
+         ! check validity of eigs
+         ! note: \infity - \infity is undefined, which return NaN
          do i=1,ncfgs
              if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-                 call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
-             endif ! back if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) block
+                 call s_print_error('ctqmc_input_atom_', &
+                     & 'NaN error, please adjust the zero base of eigs')
+             endif ! back if block
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( myid == master ) block
 
