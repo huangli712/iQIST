@@ -760,10 +760,16 @@
 !!
      integer, public, save, allocatable  :: ope(:)
 
-! how to treat each part when calculating trace
-! 0: matrices product for this part has been calculated previously
-! 1: this part should be recalculated, and the result must be
-!    stored in saved_p, if this Monte Caro move has been accepted
+!!
+!! @var renew
+!!
+!! how to treat each part when calculating trace
+!!
+!! 0 -> matrices product for this part has been calculated previously
+!!
+!! 1 -> this part should be recalculated, and the result must be
+!!      stored in saved_p, if this Monte Caro move has been accepted
+!!
      integer, public, save, allocatable  :: renew(:)
 
 ! determine which parts of saved_p are unsafe or invalid (we just call
