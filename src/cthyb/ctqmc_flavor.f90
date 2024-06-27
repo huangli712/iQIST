@@ -2019,42 +2019,44 @@
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time point of the new annihilation operator
+     ! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end2
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for old and new annihilation operators
+     ! memory address for old and new annihilation operators
      integer  :: ae
 
-! index address for old annihilation operator
+     ! index address for old annihilation operator
      integer  :: ieo_t
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
 ! stage 1: shift old annihilation operator
 !-------------------------------------------------------------------------
-! get memory address for annihilation operator
+
+     ! get memory address for annihilation operator
      ae = index_v(ieo)
 
-! store basic data for new annihilation operator
+     ! store basic data for new annihilation operator
      time_v(ae) = tau_end2
      flvr_v(ae) = flvr
      type_v(ae) = 0
 
-! remove the unused index address from index_v
+     ! remove the unused index address from index_v
      do i=ieo,nsize-1
          index_v(i) = index_v(i+1)
      enddo ! over i={ieo,nsize-1} loop
