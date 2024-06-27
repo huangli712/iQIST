@@ -992,14 +992,15 @@
      h2ph = czero
      h2pp = czero
 
-!>>> ctqmc_umat module
-!-------------------------------------------------------------------------
-! some variables have been initialized at ctqmc_setup_model()
+     !>>> ctqmc_umat module
+     !--------------------------------------------------------------------
 
-! init rank
+     ! some variables have been initialized at ctqmc_setup_model()
+
+     ! init rank
      rank = 0
 
-! init diag
+     ! init diag
      diag = zero
 
 !>>> ctqmc_mmat module
