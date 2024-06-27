@@ -407,25 +407,32 @@
      return
   end subroutine cat_free_sector
 
-!!>>> cat_free_sectors: deallocate memory for sector
-!!>>> related variables
+!!
+!! @sub cat_free_sectors
+!!
+!! deallocate memory for subspaces
+!!
   subroutine cat_free_sectors()
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! first, loop over all the sectors and deallocate their component's memory
-! then, deallocate memory of the sectors itself
+!! [body
+
+     ! deallocate memory for an array of Ts
      if ( allocated(sectors) ) then
          do i=1,nsect
              call cat_free_sector(sectors(i))
          enddo ! over i={1,nsect} loop
+         !
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
 
      if ( allocated(sectoff) )  deallocate(sectoff)
+
+!! body]
 
      return
   end subroutine cat_free_sectors
