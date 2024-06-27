@@ -537,9 +537,9 @@
      use m_sect, only : max_dim_sect
      use m_sect, only : ave_dim_sect
      use m_sect, only : sectors
-     use m_sect, only : cat_alloc_one_fmat
-     use m_sect, only : cat_alloc_one_sect
-     use m_sect, only : cat_alloc_sect
+     use m_sect, only : cat_alloc_fmat
+     use m_sect, only : cat_alloc_sector
+     use m_sect, only : cat_alloc_sectors
 
      use m_part, only : cat_alloc_part
 
@@ -618,7 +618,7 @@
          !
          ! be careful, this step is only for master node. so next we
          ! should do the same jobs in the children nodes 
-         call cat_alloc_sect()
+         call cat_alloc_sectors()
          call cat_alloc_part()
 
          ! read each sector's information
@@ -644,7 +644,7 @@
                               sectors(i)%ps
 
              ! allocate the memory for sectors(i), only for master node
-             call cat_alloc_one_sect(sectors(i))
+             call cat_alloc_sector(sectors(i))
 
              ! read the next indices
              read(mytmp,*) ! skip the header
@@ -684,7 +684,7 @@
                      sectors(i)%fmat(j,k)%m = j5
                      !
                      ! allocate memory for f-matrix, only for master node
-                     call cat_alloc_one_fmat(sectors(i)%fmat(j,k))
+                     call cat_alloc_fmat(sectors(i)%fmat(j,k))
                      !
                      ! read non-zero elements of f-matrix
                      sectors(i)%fmat(j,k)%val = zero
@@ -764,7 +764,7 @@
 
      ! allocate memory for sectors, only for children nodes
      if ( myid /= master ) then
-         call cat_alloc_sect()
+         call cat_alloc_sectors()
          call cat_alloc_part()
      endif ! back if ( myid /= master ) block
 
@@ -788,7 +788,7 @@
 
          ! allocate memory for Ts structure, only for children nodes
          if ( myid /= master ) then
-             call cat_alloc_one_sect(sectors(i))
+             call cat_alloc_sector(sectors(i))
          endif ! back if ( myid /= master ) block
 
          ! setup barrier
@@ -820,7 +820,7 @@
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(m)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                     call cat_alloc_one_fmat(sectors(i)%fmat(j,k))
+                     call cat_alloc_fmat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
                  !
                  ! setup barrier

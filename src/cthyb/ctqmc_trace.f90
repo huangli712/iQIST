@@ -151,7 +151,7 @@
 !!========================================================================
 
 !!
-!! @var nsectors
+!! @var nsect
 !!
 !! number of subspaces (sectors)
 !!
@@ -174,7 +174,7 @@
 !!
 !! @var sectoff
 !!
-!! to signal which sectors should be truncated?
+!! to signal which subspaces (sectors) should be truncated?
 !!
      logical, public, save, allocatable :: sectoff(:)
 
@@ -189,21 +189,24 @@
 !!>>> declare private variables                                        <<<
 !!========================================================================
 
-! status flag
+     ! status flag
      integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: cat_alloc_one_fmat
-     public :: cat_alloc_one_sect
-     public :: cat_alloc_sect
+     ! declaration of module procedures: allocate memory
+     public :: cat_alloc_fmat
+     public :: cat_alloc_sector
+     public :: cat_alloc_sectors
 
+     ! declaration of module procedures: deallocate memory
      public :: cat_free_one_fmat
      public :: cat_free_one_sect
      public :: cat_free_sect
 
+     ! declaration of module procedures: helper utility
      public :: cat_make_string
      public :: cat_trun_sector
 
@@ -213,61 +216,76 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> cat_alloc_one_fmat: allocate memory for one F-matrix
-  subroutine cat_alloc_one_fmat(mat)
+!!
+!! @sub cat_alloc_fmat
+!!
+!! allocate memory for annihilation operator f or creation operator f^+
+!!
+  subroutine cat_alloc_fmat(mat)
      implicit none
 
-! external variables
-! F-matrix structure
+!! external variables
+     ! struct for annihilation operator f or creation operator f^+
+     ! we have to make sure mat%n and mat%m are valid
      type (Tf), intent(inout) :: mat
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(mat%val(mat%n,mat%m), stat=istat)
 
-! check the status
+     ! check status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_one_fmat','can not allocate enough memory')
+         call s_print_error('cat_alloc_fmat', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize it
      mat%val = zero
 
-     return
-  end subroutine cat_alloc_one_fmat
+!! body]
 
-!!>>> cat_alloc_one_sect: allocate memory for one sector
-  subroutine cat_alloc_one_sect(sect)
+     return
+  end subroutine cat_alloc_fmat
+
+!!
+!! @sub cat_alloc_sector
+!!
+!! allocate memory for a subspace
+!!
+  subroutine cat_alloc_sector(sect)
      implicit none
 
-! external variables
-! sector structure
+!! external variables
+     ! this subspace
      type (Ts), intent(inout) :: sect
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! allocate memory
-     allocate(sect%next(sect%nops,0:1), stat=istat)
+!! [body
 
+     ! allocate memory
+     allocate(sect%next(sect%nops,0:1), stat=istat)
      allocate(sect%eval(sect%ndim),     stat=istat)
      allocate(sect%prod(sect%ndim),     stat=istat)
-
      allocate(sect%fmat(sect%nops,0:1), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_one_sect','can not allocate enough memory')
+         call s_print_error('cat_alloc_sector', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      sect%next = 0
-
      sect%eval = zero
      sect%prod = zero
 
-! initialize fmat one by one
+     ! initialize fmat one by one
+     ! memory of sect%fmat%val should be allocated elsewhere
      do i=1,sect%nops
          do j=0,1
              sect%fmat(i,j)%n = 0
@@ -275,11 +293,13 @@
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
-     return
-  end subroutine cat_alloc_one_sect
+!! body]
 
-!!>>> cat_alloc_sect: allocate memory for sector related variables
-  subroutine cat_alloc_sect()
+     return
+  end subroutine cat_alloc_sector
+
+!!>>> cat_alloc_sectors: allocate memory for sector related variables
+  subroutine cat_alloc_sectors()
      implicit none
 
 ! local variables
@@ -292,7 +312,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_sect','can not allocate enough memory')
+         call s_print_error('cat_alloc_sectors','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -308,7 +328,7 @@
      sectoff = .false.
 
      return
-  end subroutine cat_alloc_sect
+  end subroutine cat_alloc_sectors
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
