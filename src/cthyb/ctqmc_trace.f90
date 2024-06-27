@@ -772,19 +772,27 @@
 !!
      integer, public, save, allocatable  :: renew(:)
 
-! determine which parts of saved_p are unsafe or invalid (we just call
-! it asynchronization), and have to be updated (or synchronized) for
-! future trace calculations
-! 0: synchronous, this part of saved_p is OK
-! 1: asynchronous, this part of saved_p is invalid
-! Q: why is renew not enough? why do we need async and is_cp?
-! A: because string is not always valid. string broken is possible. at
-! that time, even renew(j) is 1, some sectors in this part will be not
-! updated successfully. of course, saved_p for them will be not updated
-! as well. so we have to mark the corresponding saved_p as wrong value.
-! this is the role of async. due to the same reason, we cann't use renew
-! to control which parts of saved_p should be updated with saved_n only.
-! so we need is_cp as well.
+!!
+!! @var async
+!!
+!! determine which parts of saved_p are unsafe or invalid (we just call
+!! it asynchronization), and have to be updated (or synchronized) for
+!! future trace calculations
+!!
+!! 0 -> synchronous, this part of saved_p is OK
+!!
+!! 1 -> asynchronous, this part of saved_p is invalid
+!!
+!! Q: why is renew not enough? why do we need async and is_cp?
+!!
+!! A: because string is not always valid. string broken is possible. at
+!! that time, even renew(j) is 1, some sectors in this part will be not
+!! updated successfully. of course, saved_p for them will be not updated
+!! as well. so we have to mark the corresponding saved_p as wrong value.
+!! this is the role of async. due to the same reason, we cann't use renew
+!! to control which parts of saved_p should be updated with saved_n only.
+!! so we need is_cp as well.
+!!
      integer, public, save, allocatable  :: async(:,:)
 
 ! determine which parts of saved_p should be updated by the corresponding
