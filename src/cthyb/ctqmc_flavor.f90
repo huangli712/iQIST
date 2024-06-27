@@ -2157,7 +2157,8 @@
 !! operators on perturbation expansion series
 !!
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
      use stack, only : istack_gettop
@@ -2176,39 +2177,42 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+     ! index address to insert new creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time point of the new creation operator
+     ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the new annihilation operator
+     ! imaginary time point of the new annihilation operator
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for new creation and annihilation operators
+     ! memory address for new creation and annihilation operators
      integer  :: as
      integer  :: ae
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! memory address for the rightmost time evolution operator
+     ! memory address for the rightmost time evolution operator
      integer  :: ilast
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
+
+!! [body
 
 ! check tau_start and tau_end, to eliminate the warning from compiler
      call s_assert( tau_start > zero )
