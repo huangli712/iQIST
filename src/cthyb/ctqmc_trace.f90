@@ -739,13 +739,25 @@
 !!>>> declare global variables                                         <<<
 !!========================================================================
 
-! number of operators for each part
+!!
+!! @var nop
+!!
+!! number of operators for each part
+!!
      integer, public, save, allocatable  :: nop(:)
 
-! start index of operators for each part
+!!
+!! @var ops
+!!
+!! start index of operators for each part
+!!
      integer, public, save, allocatable  :: ops(:)
 
-! end index of operators for each part
+!!
+!! @var ope
+!!
+!! end index of operators for each part
+!!
      integer, public, save, allocatable  :: ope(:)
 
 ! how to treat each part when calculating trace
