@@ -640,7 +640,15 @@
 
 # endif  /* MPI */
 
-! make truncation for the sectors whose sector probabilities are too low
+     ! make truncation for the sectors whose sector probabilities
+     ! are too low. what we have to do is just to modify the next
+     ! array. the truncated sectors are marked as unavailable.  
+     !
+     ! be careful, no need to update the global variables
+     !     max_dim_sect,
+     !     ave_dim_sect,
+     !     nsect
+     ! here, we just tell the users how many sectors are discarded.
      max_dim_sect_t = -1
      nsect_t = 0
      sum_dim = 0
@@ -648,11 +656,16 @@
          if ( sectoff(i) .eqv. .true. ) then
              sectors(i)%next = -1
          else
+             ! try to update max_dim_sect_t and nsect_t.
+             ! they are deduced from the available sectors.
              if ( max_dim_sect_t < sectors(i)%ndim ) then
                  max_dim_sect_t = sectors(i)%ndim
              endif ! back if ( max_dim_sect_t < sectors(i)%ndim ) block
              sum_dim = sum_dim + sectors(i)%ndim
              nsect_t = nsect_t + 1
+             !
+             ! update the next array further. the truncated sectors
+             ! are no longer visitable. 
              do j=1,sectors(i)%nops
                  do k=0,1
                      m = sectors(i)%next(j,k)
@@ -665,10 +678,10 @@
          endif ! back if ( sectoff(i) .eqv. .true. ) block
      enddo ! over i={1,nsect} loop
 
-! calculate ave_dim_sect_t
+     ! calculate ave_dim_sect_t
      ave_dim_sect_t = real(sum_dim) / real(nsect_t)
 
-! print summary of sectors after truncation
+     ! print summary of sectors after truncation
      if ( myid == master ) then
          write(mystd,'(4X,a)') 'WARNING: TRUNCATION APPROXIMATION IS USED...'
          write(mystd,'(4X,a)') 'BEFORE TRUNCATION:'
@@ -680,9 +693,11 @@
          write(mystd,'(4X,a,i8)')    'max_dim_sect: ', max_dim_sect_t
          write(mystd,'(4X,a,f8.1)')  'ave_dim_sect: ', ave_dim_sect_t
          write(mystd,'(4X,a)') 'TRUNCATED SECTORS:'
+         !
          do i=1,nsect
              write(mystd,'(4X,a,i4,2X,a,L2)') 'index: ', i, 'status:', .not. sectoff(i)
          enddo ! over i={1,nsect} loop
+         !
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
