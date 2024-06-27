@@ -1991,7 +1991,8 @@
 !! shift old annihilation operator in the flavor part
 !!
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
 
@@ -2009,12 +2010,12 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing annihilation operator
-! iso and isn are for old and new annihilation operators, respectively
+     ! index address to shift existing annihilation operator
+     ! iso and isn are for old and new annihilation operators, respectively
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
