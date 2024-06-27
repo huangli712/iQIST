@@ -1,10 +1,33 @@
-
+!!!-----------------------------------------------------------------------
+!!! project : iqist @ manjushaka
+!!! program : m_sect module
+!!!           m_part module
+!!!           ctqmc_lazy_ztrace
+!!!           ctqmc_retrieve_ztrace
+!!!           ctqmc_make_evolve
+!!! source  : ctqmc_trace.f90
+!!! type    : modules
+!!! author  : li huang (email:huangli@caep.cn)
+!!! history : 09/16/2009 by li huang (created)
+!!!           06/27/2024 by li huang (last modified)
+!!! purpose : implement various algorithm to calculate the trace part,
+!!!           including the lazy trace evaluation algorithm, the divide
+!!!           and conquer algorithm, the good quantum number algorithm,
+!!!           and the subspace truncation algorithm, etc.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !!========================================================================
 !!>>> module m_sect                                                    <<<
 !!========================================================================
 
-!!>>> define the data structure for good quantum numbers (GQNs) algorithm
+!!
+!! @mod m_sect
+!!
+!! containing key data structures and subroutines for the good quantum
+!! numbers (GQNs) algorithm
+!!
   module m_sect
      use constants, only : dp, zero, eps6, mystd, mytmp
      use mmpi, only : mp_bcast, mp_barrier
