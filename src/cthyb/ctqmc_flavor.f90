@@ -2999,31 +2999,33 @@
 
      implicit none
 
-! external arguments
-! index address of operator
+!! external arguments
+     ! index address of operator
      integer, intent(out) :: addr
 
-! total number of operators
+     ! total number of operators
      integer, intent(in)  :: ndim
 
-! imaginary time of operator
+     ! imaginary time of operator
      real(dp), intent(in) :: time
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: k
 
-! lower boundary
+     ! lower boundary
      integer :: klo
 
-! upper boundary
+     ! upper boundary
      integer :: khi
 
-! init the boundaries
+!! [body
+
+     ! init the boundaries
      klo = 1
      khi = ndim
 
-! look up the ordered table using bisection algorithm
+     ! look up the ordered table using bisection algorithm
      do while ( khi - klo > 1 )
          k = (khi + klo) / 2
          if ( time_v( index_v(k) ) > time ) then
@@ -3033,12 +3035,15 @@
          endif ! back if ( time_v( index_v(k) ) > time ) block
      enddo ! over do while loop
 
-! test the left and right boundary, determine which point is our desired
+     ! test the left and right boundary,
+     ! determine which point is our desired
      if ( time_v( index_v(khi) ) == time ) then
          addr = khi
      else
          addr = klo
      endif ! back if ( time_v( index_v(khi) ) == time ) block
+
+!! body]
 
      return
   end subroutine cat_search_flavor
