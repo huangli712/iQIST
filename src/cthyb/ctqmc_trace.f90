@@ -429,7 +429,7 @@
          !
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
-
+     !
      if ( allocated(sectoff) )  deallocate(sectoff)
 
 !! body]
