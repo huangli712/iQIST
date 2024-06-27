@@ -697,10 +697,10 @@
              enddo ! over j={1,sectors(i)%nops} loop
          enddo ! over i={1,nsect} loop
 
-! close data file
+         ! close data file
          close(mytmp)
 
-! add the contribution from chemical potential to eigenvalues
+         ! add the contribution from chemical potential to eigenvalues
          k = 0
          do i=1,nsect
              do j=1,sectors(i)%ndim
@@ -710,8 +710,8 @@
              enddo ! over j={1,sectors(i)%ndim} loop
          enddo ! over i={1,nsect} loop
 
-! substract the eigenvalues zero point, here we store the eigen energy
-! zero point in U
+         ! substract the eigenvalues zero point, here we store the
+         ! eigen energy zero point in Uc
          r1 = minval(eigs)
          r2 = maxval(eigs)
          Uc = r1 + one ! here we choose the minimum as zero point
