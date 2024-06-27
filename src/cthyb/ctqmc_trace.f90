@@ -224,7 +224,7 @@
   subroutine cat_alloc_fmat(mat)
      implicit none
 
-!! external variables
+!! external arguments
      ! struct for annihilation operator f or creation operator f^+
      ! we have to make sure mat%n and mat%m are valid
      type (Tf), intent(inout) :: mat
@@ -256,7 +256,7 @@
   subroutine cat_alloc_sector(sect)
      implicit none
 
-!! external variables
+!! external arguments
      ! this subspace
      type (Ts), intent(inout) :: sect
 
@@ -344,12 +344,15 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> cat_free_fmat: deallocate memory for one F-matrix
+!!
+!! @sub cat_free_fmat
+!!
+!! deallocate memory for annihilation operator f or creation operator f^+
+!!
   subroutine cat_free_fmat(mat)
      implicit none
 
-! external variables
-! F-matrix structure
+!! external arguments
      type (Tf), intent(inout) :: mat
 
      if ( allocated(mat%val) ) deallocate(mat%val)
@@ -361,7 +364,7 @@
   subroutine cat_free_sector(sect)
      implicit none
 
-! external variables
+! external arguments
 ! sector structure
      type (Ts), intent(inout) :: sect
 
@@ -419,7 +422,7 @@
   subroutine cat_make_string(csize, vindex, string)
      implicit none
 
-! external variables
+! external arguments
 ! number of fermion operators for the current diagram
      integer, intent(in)  :: csize
 
@@ -903,7 +906,7 @@
   subroutine cat_make_trace(csize, string, index_loc, expt_loc, trace)
      implicit none
 
-! external variables
+! external arguments
 ! number of total fermion operators
      integer, intent(in)   :: csize
 
