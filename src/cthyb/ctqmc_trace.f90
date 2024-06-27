@@ -234,7 +234,7 @@
      ! allocate memory
      allocate(mat%val(mat%n,mat%m), stat=istat)
 
-     ! check status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_fmat', &
              & 'can not allocate enough memory')
@@ -857,11 +857,17 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> cat_alloc_part: allocate memory for part related variables
+!!
+!! @sub cat_alloc_part
+!!
+!! allocate memory for part related variables
+!!
   subroutine cat_alloc_part()
      implicit none
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(nop(npart),         stat=istat)
      allocate(ops(npart),         stat=istat)
      allocate(ope(npart),         stat=istat)
@@ -874,12 +880,13 @@
      allocate(saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
      allocate(saved_n(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_part','can not allocate enough memory')
+         call s_print_error('cat_alloc_part', &
+             & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      nop   = 0
      ops   = 0
      ope   = 0
@@ -891,6 +898,8 @@
 
      saved_p = zero
      saved_n = zero
+
+!! body]
 
      return
   end subroutine cat_alloc_part
