@@ -1462,18 +1462,18 @@
      btrace = zero
      !
      do i=1,nsect
-
+         !
          ! if the string is invalid, we just skip it
          if ( string(1,i) == -1 ) CYCLE
-
+         !
          ! find valid string which may contribute to the total trace
-
+         !
          ! increase the counter
          nlive = nlive + 1
-
+         !
          ! record its index
          living(nlive) = i
-
+         !
          ! calculate its trace bound and determine the minimal dimension
          ! for each alive string
          mindim(i) = sectors(i)%ndim
@@ -1485,11 +1485,11 @@
              indx = sectors(string(j,i))%istart
              btrace(nlive) = btrace(nlive) * expt_v(indx, index_loc(j))
          enddo ! over j={1,csize} loop
-
+         !
          ! special treatment for the last time evolution operator
          indx = sectors(string(1,i))%istart
          btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
-
+         !
      enddo ! over i={1,nsect} loop
 
      ! calculate the summmation of trace bounds and the maximum bound
@@ -1505,33 +1505,44 @@
      ! simple bubble sort algorithm, because nalive_sect is usually small
      call s_sorter2_d( nlive, btrace(1:nlive), living(1:nlive) )
 
-! begin to refine the trace bounds
+     ! begin to refine the trace bounds
      pass = .false.
      cumsum = zero
      strace = zero
+     !
      do i=1,nlive
-! calculate the trace for one sector, this call will consume a lot of
-! time if the dimension of fmat and expansion order is large, so we
-! should carefully optimize it.
+         !
+         ! calculate the trace for one sector, this call will consume
+         ! lots of time if the dimension of f-matrix and expansion order
+         ! is large, so we should carefully optimize it.
          call cat_make_trace(csize, string(:,living(i)), index_loc, expt_loc, strace(i))
-! if this move is not accepted, refine the trace bound to see whether
-! we can reject it before calculating the trace of all of the sectors
+         !
+         ! if this move is not accepted, refine the trace bound to see
+         ! whether we can reject it before calculating the trace of all
+         ! of the sectors
          if ( .not. pass ) then
+             !
              cumsum = cumsum + abs( strace(i) )
              sbound = sbound - btrace(i)
-! calculate pmax and pmin
+             !
+             ! calculate pmax and pmin
              pmax = abs(ratio) * abs( (cumsum + sbound) / c_mtr )
              pmin = abs(ratio) * abs( (cumsum - sbound) / c_mtr )
-! check whether pmax < r
+             !
+             ! check whether pmax < r. if yes, return immediately
              if ( pmax < r ) then
                  pass = .false.; p = zero; RETURN
              endif ! back if ( pmax < r ) block
-! this move is accepted, stop refining process, calculate the trace of
-! remaining sectors to get the final result of trace.
+             !
+             ! if this move is accepted, stop refining process, calculate
+             ! the trace of remaining sectors to get the final result of
+             ! trace of matrix product.
              if ( pmin > r ) then
                  pass = .true.
              endif ! back if ( pmin > r ) block
+             !
          endif ! back if ( .not. pass ) block
+         !
      enddo ! over i={1,nlive} loop
 
 ! if we arrive here, two cases
