@@ -629,12 +629,13 @@
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
+! broadcast sectoff from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(sectoff, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
