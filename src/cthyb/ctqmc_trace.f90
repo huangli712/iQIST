@@ -353,9 +353,17 @@
      implicit none
 
 !! external arguments
+     ! annihilation operator f or creation operator f^+
      type (Tf), intent(inout) :: mat
 
+!! [body
+
      if ( allocated(mat%val) ) deallocate(mat%val)
+     !
+     mat%n = 0
+     mat%m = 0
+
+!! body]
 
      return
   end subroutine cat_free_fmat
