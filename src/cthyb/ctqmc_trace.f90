@@ -1526,18 +1526,26 @@
      return
   end subroutine ctqmc_lazy_ztrace
 
-!!>>> ctqmc_retrieve_ztrace: calculate the trace for retrieve status
+!!
+!! @sub ctqmc_retrieve_ztrace
+!!
+!! calculate the trace for retrieve previous status that stored in the
+!! solver.status.dat file
+!!
   subroutine ctqmc_retrieve_ztrace(csize, trace)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use control, only : ncfgs
      use control, only : mkink
+
      use context, only : index_v, expt_t
      use context, only : diag
 
      use m_sect, only : nsect
      use m_sect, only : sectors
      use m_sect, only : cat_make_string
+
      use m_part, only : cat_make_npart
      use m_part, only : cat_make_trace
 
