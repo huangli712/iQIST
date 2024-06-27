@@ -795,11 +795,18 @@
 !!
      integer, public, save, allocatable  :: async(:,:)
 
-! determine which parts of saved_p should be updated by the corresponding
-! parts of saved_n
-! 0: do nothing, saved_n and saved_p have the same values, or saved_n is
-!    unavailable, we can not use it to update saved_p
-! 1: saved_n will be copied to saved_p in ctqmc_make_evolve() subroutine
+!!
+!! @var is_cp
+!!
+!! it is used to determine which parts of saved_p should be updated by
+!! the corresponding parts of saved_n
+!!
+!! 0 -> do nothing, saved_n and saved_p have the same values, or else
+!!      saved_n is unavailable, we can not use it to update saved_p
+!!
+!! 1 -> saved_n will be copied to saved_p
+!!      please refer to ctqmc_make_evolve() subroutine
+!!
      integer, public, save, allocatable  :: is_cp(:,:)
 
 ! number of columns to be copied, in order to save copy time
