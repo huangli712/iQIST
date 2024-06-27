@@ -1669,37 +1669,39 @@
 
      implicit none
 
-! external arguments
-! index address to remove old creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+!! external arguments
+     ! index address to remove old creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time point of the old creation operator
+     ! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the old annihilation operator
+     ! imaginary time point of the old annihilation operator
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for old creation and annihilation operators
+     ! memory address for old creation and annihilation operators
      integer  :: as
      integer  :: ae
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
 
 !-------------------------------------------------------------------------
 ! stage 1: remove creation operator
 !-------------------------------------------------------------------------
+
 ! determine nsize
      nsize = istack_getrest( empty_v )
 
