@@ -441,35 +441,44 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> cat_make_string: it is used to build a time evolution string
+!!
+!! @sub cat_make_string
+!!
+!! it is used to build time evolution strings, which record all the
+!! valid (possible) visiting paths for subspaces (sectors)
+!!
   subroutine cat_make_string(csize, vindex, string)
      implicit none
 
-! external arguments
-! number of fermion operators for the current diagram
+!! external arguments
+     ! number of fermion operators for the current diagram
      integer, intent(in)  :: csize
 
-! memory address index of fermion operators
+     ! memory address index of fermion operators
      integer, intent(in)  :: vindex(mkink)
 
-! time evolution string, i.e., sequence of sector index
-! if it is not a valid string, then all of its values should be -1
+     ! time evolution string, i.e., sequence of sector index
+     ! there are nsect strings, and each string contains csize + 1 steps
+     !
+     ! if it is not a valid string, then all of its values should be -1
      integer, intent(out) :: string(csize+1,nsect)
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! flavor and type of fermion operators
+     ! flavor and type of fermion operators
      integer :: vf
      integer :: vt
 
-! current sector index and next sector index
+     ! current sector index and next sector index
      integer :: curr_sect
      integer :: next_sect
 
-! init return array, we assume all of strings are invalid
+!! [body
+
+     ! init return array, we assume all of strings are invalid
      string = -1
 
 ! we try to build a string from left to right, that is, 0 -> \beta
