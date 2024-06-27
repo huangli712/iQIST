@@ -799,18 +799,22 @@
 
      implicit none
 
-! allocate memory for context module
+!! [body
+
+     ! allocate memory for context module
      call cat_alloc_clur()
      call cat_alloc_flvr()
-
+     !
      call cat_alloc_mesh()
      call cat_alloc_meat()
      call cat_alloc_umat()
      call cat_alloc_mmat()
-
+     !
      call cat_alloc_gmat()
      call cat_alloc_wmat()
      call cat_alloc_smat()
+
+!! body]
 
      return
   end subroutine ctqmc_alloc_array
@@ -822,13 +826,15 @@
 !! impurity solver
 !!
   subroutine ctqmc_reset_array()
-     use constants, only : zero, czero, mystd
+     use constants, only : zero, czero
+     use constants, only : mystd
 
      use spring, only : spring_sfmt_init
      use stack, only : istack_clean
      use stack, only : istack_push
 
-     use control, only : iscut, myid, master
+     use control, only : iscut
+     use control, only : myid, master
 
      use context ! ALL
 
@@ -837,15 +843,16 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! system time since 1970, Jan 1, used to generate the random number seed
+     ! system time since 1970, Jan 1, used to generate the random
+     ! number seed
      integer :: system_time
 
-! random number seed for twist generator
+     ! random number seed for twist generator
      integer :: stream_seed
 
 ! init random number generator
