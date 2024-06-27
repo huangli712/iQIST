@@ -368,33 +368,41 @@
      return
   end subroutine cat_free_fmat
 
-!!>>> cat_free_sector: deallocate memory for one sector
+!!
+!! @sub cat_free_sector
+!!
+!! deallocate memory for a subspace
+!!
   subroutine cat_free_sector(sect)
      implicit none
 
-! external arguments
-! sector structure
+!! external arguments
+     ! this subspace
      type (Ts), intent(inout) :: sect
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-     if ( allocated(sect%next) ) deallocate(sect%next)
+!! [body
 
+     if ( allocated(sect%next) ) deallocate(sect%next)
      if ( allocated(sect%eval) ) deallocate(sect%eval)
      if ( allocated(sect%prod) ) deallocate(sect%prod)
 
-! deallocate fmat one by one
+     ! deallocate fmat one by one
      if ( allocated(sect%fmat) ) then
          do i=1,sect%nops
              do j=0,1
                  call cat_free_fmat(sect%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,sect%nops} loop
+         !
          deallocate(sect%fmat)
      endif ! back if ( allocated(sect%fmat) ) block
+
+!! body]
 
      return
   end subroutine cat_free_sector
