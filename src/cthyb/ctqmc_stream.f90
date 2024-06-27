@@ -512,6 +512,12 @@
      return
   end subroutine ctqmc_input_eimp_
 
+!!
+!! @sub ctqmc_input_atom_
+!!
+!! try to read essential information from atom.cix. the key arrays and
+!! structures in m_sect module should be initialized here.
+!!
   subroutine ctqmc_input_atom_()
      use constants, only : dp
 
