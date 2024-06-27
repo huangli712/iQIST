@@ -112,11 +112,11 @@
      ncarlo = 10        ! how often to sample the observables
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! read in input file if possible, only master node can do it
+     ! read in input file if possible, only master node can do it
      if ( myid == master ) then
          exists = .false.
 
-! inquire file status: solver.ctqmc.in
+         ! inquire file status: solver.ctqmc.in
          inquire (file = 'solver.ctqmc.in', exist = exists)
 
 ! read in parameters, default setting should be overrided
