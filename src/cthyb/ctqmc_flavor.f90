@@ -2452,35 +2452,39 @@
 !-------------------------------------------------------------------------
 ! stage 1: remove creation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for old creation operator
+
+     ! get memory address for old creation operator
      as = index_t(is)
 
-! remove the unused index address from index_t
+     ! remove the unused index address from index_t
      do i=is,nsize-1
          index_t(i) = index_t(i+1)
      enddo ! over i={is,nsize-1} loop
      index_t(nsize) = 0
 
-! evaluate previous imaginary time interval
-     if ( is == 1     ) then ! the imaginary time of creation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( is == 1     ) then
+         ! the imaginary time of creation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_t(is-1) )
      endif ! back if ( is == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( is == nsize ) then ! the imaginary time of creation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( is == nsize ) then
+         ! the imaginary time of creation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_t(is)   )
      endif ! back if ( is == nsize ) block
 
-! evaluate ilast
-! if is == nsize, index_t(is) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! evaluate ilast
+     !
+     ! if is == nsize, index_t(is) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( is == nsize ) then
          ilast = 1
-! the closest operator need to be modified as well
+     ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ilast )
          time_v( ilast ) = time_v( index_t(is) )
@@ -2489,7 +2493,7 @@
          index_t(is) = ilast
      endif ! back if ( is == nsize ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
+     ! update the expt_v and expt_t, matrix of time evolution operator
      if ( is == nsize ) then
          do i=1,ncfgs
              expt_t( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
@@ -2498,12 +2502,13 @@
          do i=1,ncfgs
              expt_v( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
          enddo ! over i={1,ncfgs} loop
+         !
          do i=1,ncfgs
              expt_t( i, 1 ) = expt_t( i, 2 )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( is == nsize ) block
 
-! update nsize
+     ! update nsize
      nsize = nsize - 1
 
 !-------------------------------------------------------------------------
