@@ -2756,7 +2756,8 @@
 !! perturbation expansion series
 !!
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
      use stack, only : istack_gettop
@@ -2775,49 +2776,54 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to shift existing annihilation operator
-! ieo and ien are for old and new annihilation operators, respectively
+     ! index address to shift existing annihilation operator
+     ! ieo and ien are for old and new annihilation operators, respectively
      integer, intent(in)   :: ieo
      integer, intent(in)   :: ien
 
-! imaginary time point of the old annihilation operator
+     ! imaginary time point of the old annihilation operator
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time point of the new annihilation operator
+     ! imaginary time point of the new annihilation operator
      real(dp), intent(in)  :: tau_end2
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for old and new annihilation operators
+     ! memory address for old and new annihilation operators
      integer  :: ae
 
-! index address for old annihilation operator
+     ! index address for old annihilation operator
      integer  :: ieo_t
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
 
-! check tau_end1 and tau_end2, to eliminate the warning from compiler
+!! [body
+
+     ! check tau_end1 and tau_end2,
+     ! to eliminate the warning from compiler
      call s_assert( tau_end1 > zero )
      call s_assert( tau_end2 > zero )
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
-! copy index_v to index_t
-! since we do not shift the annihilation operator actually at this stage, so
-! index_v can not be overwritten here
+     ! copy index_v to index_t
+     !
+     ! since we do not shift the annihilation operator actually at this
+     ! stage, so index_v can not be overwritten here
      do i=1,nsize
          index_t(i) = index_v(i)
      enddo ! over i={1,nsize} loop
