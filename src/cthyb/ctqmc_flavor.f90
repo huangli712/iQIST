@@ -2840,28 +2840,29 @@
      flvr_v(ae) = flvr
      type_v(ae) = 0
 
-! remove the unused index address from index_t
+     ! remove the unused index address from index_t
      do i=ieo,nsize-1
          index_t(i) = index_t(i+1)
      enddo ! over i={ieo,nsize-1} loop
      index_t(nsize) = 0
 
-! shift index_t to make an empty room
+     ! shift index_t to make an empty room
      do i=nsize-1,ien,-1
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize-1,ien,-1} loop
 
-! store the memory address for annihilation operator
+     ! store the memory address for annihilation operator
      index_t(ien) = ae
 
-! evaluate previous imaginary time interval
-     if ( ien == 1 ) then ! the imaginary time of annihilation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( ien == 1 ) then
+         ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_t(ien) ) - zero
      else
          t_prev = time_v( index_t(ien) ) - time_v( index_t(ien-1) )
      endif ! back if ( ien == 1 ) block
 
-! update the expt_v, matrix of time evolution operator
+     ! update the expt_v, matrix of time evolution operator
      do i=1,ncfgs
          expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
      enddo ! over i={1,ncfgs} loop
@@ -2869,47 +2870,57 @@
 !-------------------------------------------------------------------------
 ! stage 2: auxiliary tasks
 !-------------------------------------------------------------------------
-! its neighbor needs to be changes as well.
-! makes a copy of time and type, and changes time evolution operator
+
+     ! its neighbor needs to be changes as well.
+     ! makes a copy of time and type, and changes time evolution operator
      if ( ien < nsize ) then
          t_next = time_v( index_t(ien+1) ) - time_v( index_t(ien) )
+         !
          call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ae )
+         !
          time_v(ae) = time_v( index_t(ien+1) )
          flvr_v(ae) = flvr_v( index_t(ien+1) )
          type_v(ae) = type_v( index_t(ien+1) )
          index_t(ien+1) = ae
+         !
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ien < nsize ) block
 
-! the operator closest to the old place needs to be changed as well
+     ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
          if ( ieo > ien ) then
              ieo_t = ieo + 1
          else
              ieo_t = ieo
          endif ! back if ( ieo > ien ) block
+         !
          if ( ieo_t == 1 ) then
              t_prev = time_v( index_t(ieo_t) ) - zero
          else
              t_prev = time_v( index_t(ieo_t) ) - time_v( index_t(ieo_t-1) )
          endif ! back if ( ieo_t == 1 ) block
+         !
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
+         !
          time_v(ae) = time_v( index_t(ieo_t) )
          flvr_v(ae) = flvr_v( index_t(ieo_t) )
          type_v(ae) = type_v( index_t(ieo_t) )
          index_t(ieo_t) = ae
+         !
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ieo < nsize .and. ieo /= ien ) block
 
-! update the final time evolution operator
+     ! update the final time evolution operator
      t_next = time_v( index_t(nsize) )
      do i=1,ncfgs
          expt_t( i, 1 ) = exp ( -eigs(i) * (beta - t_next) )
      enddo ! over i={1,ncfgs} loop
+
+!! body]
 
      return
   end subroutine cat_rshift_ztrace
