@@ -374,28 +374,37 @@
              if      ( ieo == 1     ) then
                  tau_prev = time_e( index_e(ckink, flvr), flvr )
                  tau_next = time_e( index_e(ieo+1, flvr), flvr )
-                 tau_end2 = tau_prev + ( tau_next - zero + beta - tau_prev ) * spring_sfmt_stream()
+                 tau_end2 = tau_next - zero + beta - tau_prev
+                 tau_end2 = tau_end2 * spring_sfmt_stream() + tau_prev
+                 !
                  if ( tau_end2 > beta ) then
                      ien = 1
                      tau_end2 = tau_end2 - beta
                  else
                      ien = ckink
                  endif ! back if ( tau_end2 > beta ) block
+             !
              else if ( ieo == ckink ) then
                  tau_prev = time_e( index_e(ieo-1, flvr), flvr )
                  tau_next = time_e( index_e(1,     flvr), flvr )
-                 tau_end2 = tau_prev + ( tau_next - zero + beta - tau_prev ) * spring_sfmt_stream()
+                 tau_end2 = tau_next - zero + beta - tau_prev
+                 tau_end2 = tau_end2 * spring_sfmt_stream() + tau_prev
+                 !
                  if ( tau_end2 > beta ) then
                      ien = 1
                      tau_end2 = tau_end2 - beta
                  else
                      ien = ckink
                  endif ! back if ( tau_end2 > beta ) block
+             !
              else
                  tau_prev = time_e( index_e(ieo-1, flvr), flvr )
                  tau_next = time_e( index_e(ieo+1, flvr), flvr )
-                 tau_end2 = tau_prev + ( tau_next - tau_prev ) * spring_sfmt_stream()
+                 tau_end2 = tau_next - tau_prev
+                 tau_end2 = tau_end2 * spring_sfmt_stream() + tau_prev
+                 !
                  ien = ieo
+             !
              endif ! back if ( ieo == 1 ) block
          endif ! back if ( ckink == 1 ) block
 
@@ -2275,6 +2284,7 @@
      ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
+         !
          time_v( ilast ) = time_v( index_t(is+1) )
          flvr_v( ilast ) = flvr_v( index_t(is+1) )
          type_v( ilast ) = type_v( index_t(is+1) )
@@ -2348,6 +2358,7 @@
      ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 3, ilast )
+         !
          time_v( ilast ) = time_v( index_t(ie+1) )
          flvr_v( ilast ) = flvr_v( index_t(ie+1) )
          type_v( ilast ) = type_v( index_t(ie+1) )
@@ -2489,6 +2500,7 @@
      ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ilast )
+         !
          time_v( ilast ) = time_v( index_t(is) )
          flvr_v( ilast ) = flvr_v( index_t(is) )
          type_v( ilast ) = type_v( index_t(is) )
@@ -2551,6 +2563,7 @@
      ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
+         !
          time_v( ilast ) = time_v( index_t(ie) )
          flvr_v( ilast ) = flvr_v( index_t(ie) )
          type_v( ilast ) = type_v( index_t(ie) )
@@ -3220,17 +3233,17 @@
      if ( show_type == 1 ) then
          do i=1,norbs
              write(mystd,'(4X,a,i4)') '# flavor:', i
-
+             !
              write(mystd,'(4X,a,i4)') '# time_s data:', rank(i)
              do j=1,rank(i)
                  write(mystd,'(4X,2i4,f12.6)') i, j, time_s( index_s(j, i), i )
              enddo ! over j={1,rank(i)} loop
-
+             !
              write(mystd,'(4X,a,i4)') '# time_e data:', rank(i)
              do j=1,rank(i)
                  write(mystd,'(4X,2i4,f12.6)') i, j, time_e( index_e(j, i), i )
              enddo ! over j={1,rank(i)} loop
-
+             !
              write(mystd,*) ! write empty lines
              write(mystd,*)
          enddo ! over i={1,norbs} loop
@@ -3243,14 +3256,14 @@
                  write(mystd,'(4X,2i4,G16.8)') j, i, expt_v( i, index_v(j) )
              enddo ! over i={1,ncfgs} loop
              write(mystd,*) ! write empty line
-
+             !
              write(mystd,'(4X,a,i4)',advance='no') '>>>', j
              write(mystd,'(2X,a,i4)',advance='no') 'flvr:', flvr_v( index_v(j) )
              write(mystd,'(2X,a,i4)',advance='no') 'type:', type_v( index_v(j) )
              write(mystd,'(2X,a,f12.6)')           'time:', time_v( index_v(j) )
              write(mystd,*) ! write empty line
          enddo ! over j={1,nsize} loop
-
+         !
          write(mystd,'(4X,a)') '< diag >'
          do i=1,ncfgs
              write(mystd,'(4X,2i4,G16.8)') 9999, i, expt_t(i, 2)
