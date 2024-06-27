@@ -732,32 +732,32 @@
 ! broadcast U, eigs, naux, and saux from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(Uc,    master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(eigs,  master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(naux,  master)
      call mp_bcast(saux,  master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(cssoc, master)
      call mp_bcast(nsect, master)
      call mp_bcast(max_dim_sect, master)
      call mp_bcast(ave_dim_sect, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
