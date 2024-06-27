@@ -2214,16 +2214,17 @@
 
 !! [body
 
-! check tau_start and tau_end, to eliminate the warning from compiler
+     ! check tau_start and tau_end, to eliminate the warning from compiler
      call s_assert( tau_start > zero )
      call s_assert( tau_end   > zero )
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
-! copy index_v to index_t
-! since we do not insert the two operators actually at this stage, so
-! index_v can not be overwritten here
+     ! copy index_v to index_t
+     !
+     ! since we do not insert the two operators actually at this stage,
+     ! so index_v can not be overwritten here
      do i=1,nsize
          index_t(i) = index_v(i)
      enddo ! over i={1,nsize} loop
@@ -2231,42 +2232,46 @@
 !-------------------------------------------------------------------------
 ! stage 1: insert creation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for creation operator
+
+     ! get memory address for creation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
 
-! store basic data for new creation operator
+     ! store basic data for new creation operator
      time_v(as) = tau_start
      flvr_v(as) = flvr
      type_v(as) = 1
 
-! shift index_t to make an empty room
+     ! shift index_t to make an empty room
      do i=nsize,is,-1
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize,is,-1} loop
 
-! store the memory address for creation operator
+     ! store the memory address for creation operator
      index_t(is) = as
 
-! evaluate previous imaginary time interval
-     if ( is ==         1 ) then ! the imaginary time of creation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( is ==         1 ) then
+         ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_t(is) ) - zero
      else
          t_prev = time_v( index_t(is) ) - time_v( index_t(is-1) )
      endif ! back if ( is == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( is == nsize + 1 ) then ! the imaginary time of creation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( is == nsize + 1 ) then
+         ! the imaginary time of creation operator is the largest
          t_next = beta - time_v( index_t(is) )
      else
          t_next = time_v( index_t(is+1) ) - time_v( index_t(is) )
      endif ! back if ( is == nsize + 1 ) block
 
-! evaluate ilast
-! if is == nsize + 1, index_t(is+1) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! evaluate ilast
+     !
+     ! if is == nsize + 1, index_t(is+1) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( is == nsize + 1 ) then
          ilast = 1
-! the closest operator need to be modified as well
+     ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
          time_v( ilast ) = time_v( index_t(is+1) )
@@ -2275,11 +2280,11 @@
          index_t(is+1) = ilast
      endif ! back if ( is == nsize + 1 ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
+     ! update the expt_v and expt_t, matrix of time evolution operator
      do i=1,ncfgs
          expt_v( i, as ) = exp ( -eigs(i) * t_prev )
      enddo ! over i={1,ncfgs} loop
-
+     !
      if ( is == nsize + 1 ) then
          do i=1,ncfgs
              expt_t( i, ilast ) = exp ( -eigs(i) * t_next )
@@ -2288,12 +2293,13 @@
          do i=1,ncfgs
              expt_v( i, ilast ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
+         !
          do i=1,ncfgs
              expt_t( i,   1   ) = expt_t( i,   2   )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( is == nsize + 1 ) block
 
-! update nsize
+     ! update nsize
      nsize = nsize + 1
 
 !-------------------------------------------------------------------------
