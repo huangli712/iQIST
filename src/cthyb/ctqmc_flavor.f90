@@ -1805,26 +1805,29 @@
 !-------------------------------------------------------------------------
 ! stage 3: deal with sign problem
 !-------------------------------------------------------------------------
-! copy is and ie to as and ae respectively
+
+     ! copy is and ie to as and ae respectively
      as = is
      ae = ie
 
-! in principle, annihilation operator should be removed at first, but in
-! fact, we remove creation operator at first. in order to treat csign
-! correctly, we need to recover the original scheme, so ae is restored at
-! first. please refer to try_remove_flavor()
+     ! in principle, annihilation operator should be removed at first,
+     ! but in fact, we remove creation operator at first. in order to
+     ! treat csign correctly, we need to recover the original scheme,
+     ! so ae is restored at first. please refer to try_remove_flavor()
      if ( tau_start < tau_end ) then
          ae = ae + 1
      endif ! back if ( tau_start < tau_end ) block
 
-! it is assumed that annihilation operator is removed at first, so as
-! should be adjusted if needed
+     ! it is assumed that annihilation operator is removed at first,
+     ! so as should be adjusted if needed
      if ( tau_start > tau_end ) then
          as = as - 1
      endif ! back if ( tau_start > tau_end ) block
 
-! evaluate csign, TO BE CHECKED
+     ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( nsize - ae + nsize - as + 1, 2 ) )
+
+!! body]
 
      return
   end subroutine cat_remove_flavor
