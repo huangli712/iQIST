@@ -660,32 +660,39 @@
 
          enddo ! over i={1,nsect} loop
 
-! skip three comment lines
+         ! skip three comment lines
          do i=1,3
              read(mytmp,*)
          enddo ! over i={1,3} loop
 
-! read F-matrix from atom.cix
+         ! read f-matrix from atom.cix
          do i=1,nsect
              do j=1,sectors(i)%nops
                  do k=0,1
+                     !
+                     ! examine the existance of the given f-matrix
                      m = sectors(i)%next(j,k)
                      if ( m == -1 ) CYCLE
+                     !
+                     ! determine the dimension (size) of f-matrix, and
+                     ! number of non-zero elements
                      read(mytmp,*) ! skip one header line
-! determine the dimension of F-matrix, number of non-zero elements
                      read(mytmp,*) j1, j2, j3, j4, j5, n
                      call s_assert(j4 == sectors(m)%ndim)
                      call s_assert(j5 == sectors(i)%ndim)
                      sectors(i)%fmat(j,k)%n = j4
                      sectors(i)%fmat(j,k)%m = j5
-! allocate memory for F-matrix, only for master node
+                     !
+                     ! allocate memory for f-matrix, only for master node
                      call cat_alloc_one_fmat(sectors(i)%fmat(j,k))
-! read non-zero elements of F-matrix
+                     !
+                     ! read non-zero elements of f-matrix
                      sectors(i)%fmat(j,k)%val = zero
                      do m=1,n
                          read(mytmp,*) j1, j2, r1
                          sectors(i)%fmat(j,k)%val(j1,j2) = r1
                      enddo ! over m={1,n} loop
+                     !
                  enddo ! over k={0,1} loop
              enddo ! over j={1,sectors(i)%nops} loop
          enddo ! over i={1,nsect} loop
