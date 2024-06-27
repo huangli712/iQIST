@@ -1551,69 +1551,81 @@
 
      implicit none
 
-! external arguments
-! total number of operators for current diagram
+!! external arguments
+     ! total number of operators for current diagram
      integer,  intent(in)  :: csize
 
-! the calculated trace
+     ! the calculated trace
      real(dp), intent(out) :: trace
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! start index of a sector
+     ! start index of a sector
      integer  :: indx
 
-! sector index of a string
+     ! sector index of a string
      integer  :: string(csize+1,nsect)
 
-! local version of index_v
+     ! local version of index_v
      integer  :: index_loc(mkink)
 
-! local version of expt_t
+     ! local version of expt_t
      real(dp) :: expt_loc(ncfgs)
 
-! trace for each sector
+     ! trace for each sector
      real(dp) :: strace(nsect)
 
-! copy data from index_v to index_loc
-! copy data from expt_t to expt_loc
+!! [body
+
+     ! copy data from index_v to index_loc
+     ! copy data from expt_t to expt_loc
      index_loc = index_v
      expt_loc = expt_t(:,2)
 
-! build all possible strings for all the sectors. if one string may be
-! invalid, then all of its elements must be -1
+     ! build all possible strings for all the sectors. if one string
+     ! may be invalid, then all of its elements must be -1
      call cat_make_string(csize, index_loc, string)
 
-! determine which part should be recalculated (global variables renew
-! and is_cp will be updated in this subroutine)
+     ! determine which part should be recalculated (global variables
+     ! renew and is_cp will be updated in this subroutine)
      call cat_make_npart(4, csize, index_loc, zero, zero)
 
-! calculate the trace of each sector one by one
+     ! calculate the trace of each sector one by one
      strace = zero
+     !
      do i=1,nsect
-! invalid string, its contribution is neglected
-! note: here we only check the first element of this string. it is enough
+         !
+         ! invalid string, its contribution is neglected.
+         !
+         ! here we only check the first element of this string.
+         ! that is enough.
          if ( string(1,i) == -1 ) then
              strace(i) = zero
              sectors(i)%prod = zero
-! valid string, we have to calculate its contribution to trace
+         !
+         ! valid string, we have to calculate its contribution to trace
          else
-             call cat_make_trace(csize, string(:,i), index_loc, expt_loc, strace(i))
+             call cat_make_trace( csize, string(:,i), index_loc, &
+                 & expt_loc, strace(i) )
+         !
          endif ! back if ( string(1,i) == -1 ) block
      enddo ! over i={1,nsect} loop
+     !
      trace = sum(strace)
 
-! store the diagonal elements of final product in diag(:,1), which can be
-! used to calculate the atomic probability
+     ! store the diagonal elements of final product in diag(:,1), which
+     ! can be used to calculate the atomic probability
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
              diag(indx+j-1,1) = sectors(i)%prod(j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
+
+!! body]
 
      return
   end subroutine ctqmc_retrieve_ztrace
