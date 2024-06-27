@@ -586,20 +586,22 @@
                  & 'file atom.cix does not exist')
          endif ! back if ( exists .eqv. .false. ) block
 
-! find input file: atom.cix, read it
-! open data file
+         ! find input file: atom.cix, read it
+
+         ! open data file
          open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
-! skip ten comment lines
+         ! skip ten comment lines
          do i=1,10
              read(mytmp,*)
          enddo ! over i={1,10} loop
 
-! determine whether the spin-orbit coupling effect should be considered
-! and check the version of atom.cix
+         ! determine whether the spin-orbit coupling effect should be
+         ! considered and check the version of atom.cix
          read(mytmp,*) ver, i, j, cssoc
          if ( ver /= 2 ) then
-             call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
+             call s_print_error('ctqmc_input_atom_', &
+                 & 'file format of atom.cix is not correct')
          endif ! back if ( ver /= 2 ) block
 
 ! skip nine comment lines
