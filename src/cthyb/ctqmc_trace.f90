@@ -545,8 +545,12 @@
      return
   end subroutine cat_make_string
 
-!!>>> cat_trun_sector: it is used to truncate the Hilbert space
-!!>>> of H_{loc} according to the probatility of atomic states
+!!
+!! @sub cat_trun_sector
+!!
+!! it is used to truncate the Hilbert space of H_{loc} according to
+!! the probatility of atomic states
+!!
   subroutine cat_trun_sector()
      use control, only : iscut
 
