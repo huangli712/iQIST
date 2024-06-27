@@ -408,7 +408,7 @@
 ! probability for sector, used to do truncation
      real(dp) :: sprob(nsect)
 
-     if ( iscut == 2 ) RETURN
+     if ( iscut == 1 ) RETURN
 
 ! read file solver.prob.dat, only master node can do it
      if ( myid == master ) then
