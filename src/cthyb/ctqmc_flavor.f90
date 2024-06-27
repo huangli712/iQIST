@@ -3070,39 +3070,43 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! number of operator pairs
+     ! number of operator pairs
      integer, intent(in) :: kink
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! data for imaginary time \tau
+     ! data for imaginary time \tau
      real(dp) :: time(2*kink)
 
-! generate 2*kink random numbers range from 0 to 1
+!! [body
+
+     ! generate 2*kink random numbers range from 0 to 1
      do i=1,2*kink
          time(i) = spring_sfmt_stream()
      enddo ! over i={1,2*kink} loop
 
-! scale time from [0,1] to [0, beta]
+     ! scale time from [0,1] to [0, beta]
      time = time * beta
 
-! sort time series
+     ! sort time series
      call s_sorter1_d(2*kink, time)
 
-! insert new operators into the colour part
+     ! insert new operators into the colour part
      do i=1,kink
          call cat_insert_colour( flvr, i, i, time(2*i-1), time(2*i) )
          ckink = i
      enddo ! over i={1,kink} loop
 
-! update the rank
+     ! update the rank
      rank(flvr) = ckink
+
+!! body]
 
      return
   end subroutine cat_create_colour
@@ -3122,38 +3126,42 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in) :: flvr
 
-! number of operator pairs
+     ! number of operator pairs
      integer, intent(in) :: kink
 
-! local variables
-! loop index for operator pair
+!! local variables
+     ! loop index for operator pair
      integer  :: i
 
-! index address for creation and annihilation operators
+     ! index address for creation and annihilation operators
      integer  :: is, ie
 
-! \tau_s and \tau_e for creation and annihilation operators
+     ! \tau_s and \tau_e for creation and annihilation operators
      real(dp) :: ts, te
+
+!! [body
 
      do i=1,kink
 
-! try to determine index address, the creation operator first, and then
-! the annihilation operator
+         ! try to determine index address,
+         ! the creation operator first, and then the annihilation operator
          is = 2 * i -1
          ie = 2 * i
 
-! get imaginary time from the colour part
+         ! get imaginary time from the colour part
          ts = time_s( index_s(i, flvr), flvr )
          te = time_e( index_e(i, flvr), flvr )
 
-! insert new operators into the flavor part
+         ! insert new operators into the flavor part
          call cat_insert_flavor(flvr, is, ie, ts, te)
 
      enddo ! over i={1,kink} loop
+
+!! body]
 
      return
   end subroutine cat_create_flavor
