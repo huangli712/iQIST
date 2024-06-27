@@ -376,6 +376,8 @@
 !!>>> cat_trun_sector: it is used to truncate the Hilbert space
 !!>>> of H_{loc} according to the probatility of atomic states
   subroutine cat_trun_sector()
+     use control, only : iscut
+
      implicit none
 
 ! local variables
@@ -405,6 +407,8 @@
 
 ! probability for sector, used to do truncation
      real(dp) :: sprob(nsect)
+
+     if ( iscut == 2 ) RETURN
 
 ! read file solver.prob.dat, only master node can do it
      if ( myid == master ) then

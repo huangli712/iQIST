@@ -833,7 +833,6 @@
      use stack, only : istack_clean
      use stack, only : istack_push
 
-     use control, only : iscut
      use control, only : myid, master
 
      use context ! ALL
@@ -870,6 +869,9 @@
      csign = 1
      cnegs = 0
      caves = 0
+
+     ! cssoc should not be initialized here. it is just initialized in
+     ! the ctqmc_input_atom_() subroutine.
 
      ! init statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
@@ -936,6 +938,13 @@
      do j=mkink,1,-1
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
+
+     ! init n_mtr and c_mtr
+     !
+     ! they are defined in the ctqmc_core module, but they depend on
+     ! expt_t, so we initialize them here
+     n_mtr = sum( expt_t(:, 1) )
+     c_mtr = sum( expt_t(:, 2) )
 
      !>>> ctqmc_mesh module
      !--------------------------------------------------------------------
@@ -1048,29 +1057,27 @@
 !<   sig1 = czero
      sig2 = czero
 
+     !>>> m_sect module
+     !--------------------------------------------------------------------
 
+     ! truncate the Hilbert space if necessary
+     call cat_trun_sector()
 
-! init n_mtr and c_mtr
-     n_mtr = sum( expt_t(:, 1) )
-     c_mtr = sum( expt_t(:, 2) )
+     !>>> m_part module
+     !--------------------------------------------------------------------
 
-! for the other variables/arrays
-!-------------------------------------------------------------------------
-! truncate the Hilbert space here
-     if ( iscut == 2 ) then
-         call cat_trun_sector()
-     endif ! back if ( iscut == 2 ) block
-
-! init m_part module
+     ! init split scheme for operators 
      nop     = 0
      ops     = 0
      ope     = 0
 
+     ! init flags for divide and conquer algorithm 
      renew   = 0
      async   = 0
      is_cp   = 0
      nc_cp   = 0
 
+     ! init matrices product
      saved_p = zero
      saved_n = zero
 
