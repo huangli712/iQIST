@@ -290,15 +290,18 @@
 !! try to create various meshes, including time mesh, frequency mesh etc
 !!
   subroutine ctqmc_input_mesh_()
-     use constants, only : zero, one, two, pi
+     use constants, only : pi, zero, one, two
 
+     use control, only : isort
      use control, only : lemax, legrd
+     use control, only : svmax, svgrd
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
 
      use context, only : tmesh, rmesh
      use context, only : lmesh, rep_l
+     use context, only : smesh, rep_s
 
      implicit none
 
