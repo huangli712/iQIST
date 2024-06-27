@@ -65,41 +65,43 @@
      isvrt  = 1         ! two-particle green's functions
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! setup common variables for dynamical mean field theory
-!-------------------------------------------------------------------------
+     ! setup common variables for dynamical mean field theory
+     !--------------------------------------------------------------------
      niter  = 20        ! maximum number of self-consistent iterations
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      alpha  = 0.70_dp   ! mixing parameter for self-consistent iterations
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! setup common variables for quantum impurity model
-!-------------------------------------------------------------------------
+     ! setup common variables for quantum impurity model
+     !--------------------------------------------------------------------
      nband  = 1         ! number of correlated bands
      nspin  = 2         ! number of spin projections
      norbs  = 2         ! number of correlated orbitals
      ncfgs  = 4         ! number of atomic eigenstates
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      Uc     = 4.00_dp   ! intra-orbital Coulomb interaction
      Jz     = 0.00_dp   ! Hund's exchange interaction in z axis
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      mune   = 2.00_dp   ! chemical potential or fermi level
      beta   = 8.00_dp   ! inversion of temperature
      part   = 0.50_dp   ! hopping parameter t for Hubbard model
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! setup common variables for quantum impurity solver
-!-------------------------------------------------------------------------
+     ! setup common variables for quantum impurity solver
+     !--------------------------------------------------------------------
      lemax  = 32        ! maximum expansion order for legendre polynomial
      legrd  = 20001     ! number of mesh points for legendre polynomial
-!-------------------------------------------------------------------------
+     svmax  = 32        ! maximum expansion order for svd polynomial
+     svgrd  = 2001      ! number of mesh points for svd polynomial
+     !--------------------------------------------------------------------
      mkink  = 1024      ! maximum perturbation expansion order
      mfreq  = 8193      ! maximum number of matsubara frequency points
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      nffrq  = 32        ! number of fermionic frequency
      nbfrq  = 8         ! number of bosonic frequncy
      nfreq  = 128       ! number of sampled matsubara frequency points
      ntime  = 1024      ! number of time slices
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      npart  = 4         ! number of parts that the time axis is split
      nflip  = 20000     ! flip period for spin up and spin down states
      ntherm = 200000    ! number of thermalization steps
@@ -108,7 +110,7 @@
      nclean = 100000    ! clean update period
      nmonte = 10        ! how often to sample the observables
      ncarlo = 10        ! how often to sample the observables
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in input file if possible, only master node can do it
      if ( myid == master ) then
