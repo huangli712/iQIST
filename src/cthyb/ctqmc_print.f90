@@ -318,7 +318,7 @@
      integer, intent(in) :: cstep
 
 !! local variables
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: raux
 
 !! [body

@@ -547,16 +547,23 @@
 
 !! local variables
      ! loop index
-     integer :: i,j,k,m,n
+     integer :: i
+     integer :: j
+     integer :: k
+     integer :: m
+     integer :: n
 
+     ! dummy integer variables
      integer :: j1, j2, j3, j4, j5
 
+     ! format version of atom.cix file
      integer :: ver
-
-     real(dp) :: r1, r2
 
      ! used to check whether the input file (atom.cix) exists
      logical :: exists
+
+     ! dummy real(dp) variables
+     real(dp) :: r1, r2
 
 ! setup initial eigs, naux, and saux
      eigs = zero

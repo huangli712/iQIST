@@ -402,7 +402,7 @@
 ! averaged dimension of sectors after truncation
      real(dp) :: ave_dim_sect_t
 
-! real(dp) dummy variable
+! dummy real(dp) variable
      real(dp) :: rt
 
 ! probability for sector, used to do truncation
@@ -835,7 +835,7 @@
 ! counter for fermion operators
      integer  :: counter
 
-! real(dp) dummy matrices
+! dummy real(dp) matrices
      real(dp) :: mat_r(max_dim_sect,max_dim_sect)
      real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 

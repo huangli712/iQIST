@@ -77,7 +77,7 @@
      ! loop index over frequencies
      integer  :: k
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: p
 
 !! [body
@@ -209,7 +209,7 @@
      ! loop index over frequencies
      integer  :: k
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: p
 
 !! [body
@@ -335,15 +335,15 @@
      ! used to store matrix element of mmat
      real(dp) :: md
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: xs
      real(dp) :: rs
 
-     ! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! dummy real(dp) arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
-     ! complex(dp) dummy arrays, used to calculate gmat matrix
+     ! dummy complex(dp) arrays, used to calculate gmat matrix
      complex(dp) :: lexp(nfreq)
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
@@ -541,15 +541,15 @@
      ! used to store matrix element of mmat
      real(dp) :: md
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: xe
      real(dp) :: ls
 
-     ! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! dummy real(dp) arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
-     ! complex(dp) dummy arrays, used to calculate gmat matrix
+     ! dummy complex(dp) arrays, used to calculate gmat matrix
      complex(dp) :: rexp(nfreq)
      complex(dp) :: gsum(nfreq)
      complex(dp) :: gdel(nfreq)
@@ -838,7 +838,7 @@
      real(dp) :: tau_start
      real(dp) :: tau_end
 
-     ! complex(dp) dummy variables
+     ! dummy complex(dp) variables
      complex(dp) :: x_start
      complex(dp) :: x_end
 
@@ -933,11 +933,11 @@
      integer  :: i
      integer  :: j
 
-     ! real(dp) dummy variables
+     ! dummy real(dp) variables
      real(dp) :: sl
      real(dp) :: sr
 
-     ! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! dummy real(dp) arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
@@ -1070,7 +1070,7 @@
      integer  :: i
      integer  :: j
 
-     ! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! dummy real(dp) arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
@@ -1154,7 +1154,7 @@
      integer  :: i
      integer  :: j
 
-     ! real(dp) dummy arrays, used to interpolate the hybridization function
+     ! dummy real(dp) arrays, used to interpolate the hybridization function
      real(dp) :: lvec(mkink)
      real(dp) :: rvec(mkink)
 
