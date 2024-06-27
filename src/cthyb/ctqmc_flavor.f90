@@ -2831,10 +2831,11 @@
 !-------------------------------------------------------------------------
 ! stage 1: shift old annihilation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for annihilation operator
+
+     ! get memory address for annihilation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ae )
 
-! store basic data for new annihilation operator
+     ! store basic data for new annihilation operator
      time_v(ae) = tau_end2
      flvr_v(ae) = flvr
      type_v(ae) = 0
