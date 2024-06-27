@@ -1003,25 +1003,27 @@
      ! init diag
      diag = zero
 
-!>>> ctqmc_mmat module
-!-------------------------------------------------------------------------
-! init M-matrix related array
+     !>>> ctqmc_mmat module
+     !--------------------------------------------------------------------
+
+     ! init M-matrix related array
      mmat   = zero
      lspace = zero
      rspace = zero
 
-! init G-matrix related array
+     ! init G-matrix related array
      gmat   = czero
      lsaves = czero
      rsaves = czero
 
-!>>> ctqmc_gmat module
-!-------------------------------------------------------------------------
-! init imaginary time impurity green's function
+     !>>> ctqmc_gmat module
+     !--------------------------------------------------------------------
+
+     ! init imaginary time impurity green's function
      gtau = zero
      ftau = zero
 
-! init matsubara impurity green's function
+     ! init matsubara impurity green's function
      grnf = czero
      frnf = czero
 
