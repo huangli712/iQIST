@@ -707,12 +707,12 @@
 
      ! allocate memory for context module
      call cat_alloc_clur()
-
+     !
      call cat_alloc_mesh()
      call cat_alloc_meat()
      call cat_alloc_umat()
      call cat_alloc_mmat()
-
+     !
      call cat_alloc_gmat()
      call cat_alloc_wmat()
      call cat_alloc_smat()
@@ -763,6 +763,7 @@
 
      !>>> ctqmc_core module
      !--------------------------------------------------------------------
+
      ! init global variables
      ckink = 0
      cstat = 0
@@ -776,6 +777,7 @@
 
      !>>> ctqmc_clur module
      !--------------------------------------------------------------------
+
      ! init index
      index_s = 0
      index_e = 0
@@ -803,6 +805,7 @@
 
      !>>> ctqmc_mesh module
      !--------------------------------------------------------------------
+
      ! the variables have been initialized at ctqmc_setup_model()
 
      !>>> ctqmc_meat module
@@ -857,6 +860,7 @@
 
      !>>> ctqmc_umat module
      !--------------------------------------------------------------------
+
      ! some variables have been initialized at ctqmc_setup_model()
 
      ! init rank
@@ -870,6 +874,7 @@
 
      !>>> ctqmc_mmat module
      !--------------------------------------------------------------------
+
      ! init M-matrix related array
      mmat   = zero
      lspace = zero
@@ -882,6 +887,7 @@
 
      !>>> ctqmc_gmat module
      !--------------------------------------------------------------------
+
      ! init imaginary time impurity green's function
      gtau = zero
      ftau = zero
@@ -892,6 +898,7 @@
 
      !>>> ctqmc_wmat module
      !--------------------------------------------------------------------
+
      ! some variables have been initialized at ctqmc_setup_model()
 
      ! init imaginary time bath weiss's function
@@ -902,6 +909,7 @@
 
      !>>> ctqmc_smat module
      !--------------------------------------------------------------------
+
      ! sig1 should not be reinitialized here, since it is used to keep
      ! the persistency of self-energy function
 
@@ -911,6 +919,7 @@
 
      !>>> postprocess hybridization function
      !--------------------------------------------------------------------
+
      ! fourier hybridization function from frequency space to time space
      call ctqmc_four_hybf(hybf, htau)
 
@@ -924,6 +933,7 @@
 
      !>>> postprocess dynamic interaction
      !--------------------------------------------------------------------
+
      ! calculate the 2nd-derivates of ktau, which is used
      ! in spline subroutines
      call ctqmc_eval_ksed(ktau, ksed)
@@ -934,6 +944,7 @@
 
      !>>> dump the necessary files
      !--------------------------------------------------------------------
+
      ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(hybf)
@@ -970,12 +981,12 @@
 
      ! deallocate memory for context module
      call cat_free_clur()
-
+     !
      call cat_free_mesh()
      call cat_free_meat()
      call cat_free_umat()
      call cat_free_mmat()
-
+     !
      call cat_free_gmat()
      call cat_free_wmat()
      call cat_free_smat()
