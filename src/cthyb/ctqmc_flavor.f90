@@ -269,7 +269,8 @@
              if      ( iso == 1     ) then
                  tau_prev = time_s( index_s(ckink, flvr), flvr )
                  tau_next = time_s( index_s(iso+1, flvr), flvr )
-                 tau_start2 = tau_prev + ( tau_next - zero + beta - tau_prev ) * spring_sfmt_stream()
+                 tau_start2 = tau_next - zero + beta - tau_prev
+                 tau_start2 = tau_start2 * spring_sfmt_stream() + tau_prev
                  !
                  if ( tau_start2 > beta ) then
                      isn = 1
@@ -281,7 +282,8 @@
              else if ( iso == ckink ) then
                  tau_prev = time_s( index_s(iso-1, flvr), flvr )
                  tau_next = time_s( index_s(1,     flvr), flvr )
-                 tau_start2 = tau_prev + ( tau_next - zero + beta - tau_prev ) * spring_sfmt_stream()
+                 tau_start2 = tau_next - zero + beta - tau_prev
+                 tau_start2 = tau_start2 * spring_sfmt_stream() + tau_prev
                  !
                  if ( tau_start2 > beta ) then
                      isn = 1
@@ -293,7 +295,9 @@
              else
                  tau_prev = time_s( index_s(iso-1, flvr), flvr )
                  tau_next = time_s( index_s(iso+1, flvr), flvr )
-                 tau_start2 = tau_prev + ( tau_next - tau_prev ) * spring_sfmt_stream()
+                 tau_start2 = tau_next - tau_prev
+                 tau_start2 = tau_start2 * spring_sfmt_stream() + tau_prev
+                 !
                  isn = iso
              !
              endif ! back if ( iso == 1 ) block
