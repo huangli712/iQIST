@@ -2214,7 +2214,8 @@
 
 !! [body
 
-     ! check tau_start and tau_end, to eliminate the warning from compiler
+     ! check tau_start and tau_end,
+     ! to eliminate the warning from compiler
      call s_assert( tau_start > zero )
      call s_assert( tau_end   > zero )
 
@@ -2434,7 +2435,8 @@
 
 !! [body
 
-     ! check tau_start and tau_end, to eliminate the warning from compiler
+     ! check tau_start and tau_end,
+     ! to eliminate the warning from compiler
      call s_assert( tau_start > zero )
      call s_assert( tau_end   > zero )
 
@@ -2578,7 +2580,8 @@
 !! perturbation expansion series
 !!
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
      use stack, only : istack_gettop
@@ -2597,49 +2600,54 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing creation operator
-! iso and isn are for old and new creation operators, respectively
+     ! index address to shift existing creation operator
+     ! iso and isn are for old and new creation operators, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
-! imaginary time point of the old creation operator
+     ! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start1
 
-! imaginary time point of the new creation operator
+     ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start2
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for old and new creation operators
+     ! memory address for old and new creation operators
      integer  :: as
 
-! index address for old creation operator
+     ! index address for old creation operator
      integer  :: iso_t
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
 
-! check tau_start1 and tau_start2, to eliminate the warning from compiler
+!! [body
+
+     ! check tau_start1 and tau_start2,
+     ! to eliminate the warning from compiler
      call s_assert( tau_start1 > zero )
      call s_assert( tau_start2 > zero )
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
-! copy index_v to index_t
-! since we do not shift the creation operator actually at this stage, so
-! index_v can not be overwritten here
+     ! copy index_v to index_t
+     !
+     ! since we do not shift the creation operator actually at this
+     ! stage, so index_v can not be overwritten here
      do i=1,nsize
          index_t(i) = index_v(i)
      enddo ! over i={1,nsize} loop
