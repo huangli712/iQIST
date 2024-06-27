@@ -1546,23 +1546,28 @@
          !
      enddo ! over i={1,nlive} loop
 
-! if we arrive here, two cases
-! case 1: pass == .false., we haven't determined the pass
-! case 2: pass == .true. we have determined the pass
-! anyway, we have to calculate the final transition probability (p), and
-! update n_mtr and pass.
+     ! if we arrive here, two cases should be considered
+     !
+     ! case 1: pass == .false., we haven't determined the pass
+     ! case 2: pass == .true. we have determined the pass
+     !
+     ! anyway, we have to calculate the final transition probability (p),
+     ! and update n_mtr and pass finally.
      n_mtr = sum(strace(1:nlive))
      p = ratio * (n_mtr / c_mtr)
      pass = ( min(one, abs(p)) > r )
 
-! store the diagonal elements of final product in diag(:,1)
+     ! store the diagonal elements of final product in diag(:,1)
      diag(:,1) = zero
+     !
      do i=1,nlive
          indx = sectors( living(i) )%istart
          do j=1,sectors( living(i) )%ndim
              diag(indx+j-1,1) = sectors( living(i) )%prod(j)
          enddo ! over j={1,sectors( living(i) )%ndim} loop
      enddo ! over i={1,nlive} loop
+
+!! body]
 
      return
   end subroutine ctqmc_lazy_ztrace
