@@ -398,12 +398,12 @@
          ! inquire about file's existence
          inquire (file = 'solver.hyb.in', exist = exists)
 
-! find input file: solver.hyb.in, read it
+         ! find input file: solver.hyb.in, read it
          if ( exists .eqv. .true. ) then
 
              hybf = czero ! reset it to zero
 
-! read in hybridization function from solver.hyb.in
+             ! read in hybridization function from solver.hyb.in
              open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
              do i=1,norbs
                  do j=1,mfreq
