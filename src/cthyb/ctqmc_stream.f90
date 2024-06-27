@@ -345,7 +345,9 @@
 !! try to build initial hybridization function from solver.hyb.in
 !!
   subroutine ctqmc_input_hybf_()
-     use constants, only : dp, one, two, czi, czero, mytmp
+     use constants, only : dp
+     use constants, only : one, two, czi, czero
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
@@ -360,38 +362,40 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
 
-! used to check whether the input file (solver.hyb.in) exists
+     ! used to check whether the input file (solver.hyb.in) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: rtmp
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build initial green's function using the analytical expression at
-! non-interaction limit:
-!     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
-! and then build initial hybridization function using self-consistent
-! condition for bethe lattice:
-!     \Delta = t^2 * G
+!! [body
+
+     ! build initial green's function using the analytical expression at
+     ! non-interaction limit:
+     !     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
+     ! and then build initial hybridization function using self-consistent
+     ! condition for bethe lattice:
+     !     \Delta = t^2 * G
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
          hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
          hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
-! read in initial hybridization function if available
-!-------------------------------------------------------------------------
+     ! read in initial hybridization function if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'solver.hyb.in', exist = exists)
 
 ! find input file: solver.hyb.in, read it
