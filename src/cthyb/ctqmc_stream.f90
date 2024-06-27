@@ -565,21 +565,25 @@
      ! dummy real(dp) variables
      real(dp) :: r1, r2
 
-! setup initial eigs, naux, and saux
+!! [body
+
+     ! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
      saux = zero
 
-! read in initial F matrix if available
-!-------------------------------------------------------------------------
+     ! read in initial F matrix if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
-! file atom.cix is necessary, the code can not run without it
+         ! inquire about file's existence
+         ! file atom.cix is necessary, the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
+         !
          if ( exists .eqv. .false. ) then
-             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+             call s_print_error('ctqmc_input_atom_', &
+                 & 'file atom.cix does not exist')
          endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: atom.cix, read it
