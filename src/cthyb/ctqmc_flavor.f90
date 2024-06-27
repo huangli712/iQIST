@@ -2514,35 +2514,39 @@
 !-------------------------------------------------------------------------
 ! stage 2: remove annihilation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for old annihilation operator
+
+     ! get memory address for old annihilation operator
      ae = index_t(ie)
 
-! remove the unused index address from index_t
+     ! remove the unused index address from index_t
      do i=ie,nsize-1
          index_t(i) = index_t(i+1)
      enddo ! over i={ie,nsize-1} loop
      index_t(nsize) = 0
 
-! evaluate previous imaginary time interval
-     if ( ie == 1     ) then ! the imaginary time of annihilation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( ie == 1     ) then
+         ! the imaginary time of annihilation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_t(ie-1) )
      endif ! back if ( ie == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( ie == nsize ) then ! the imaginary time of annihilation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( ie == nsize ) then
+         ! the imaginary time of annihilation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_t(ie)   )
      endif ! back if ( ie == nsize ) block
 
-! evaluate ilast
-! if ie == nsize, index_t(ie) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! evaluate ilast
+     !
+     ! if ie == nsize, index_t(ie) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( ie == nsize ) then
          ilast = 1
-! the closest operator need to be modified as well
+     ! the closest operator need to be modified as well
      else
          call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
          time_v( ilast ) = time_v( index_t(ie) )
@@ -2551,7 +2555,7 @@
          index_t(ie) = ilast
      endif ! back if ( ie == nsize ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
+     ! update the expt_v and expt_t, matrix of time evolution operator
      if ( ie == nsize ) then
          do i=1,ncfgs
              expt_t( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
@@ -2561,6 +2565,8 @@
              expt_v( i, ilast ) = exp ( -eigs(i) * (t_next - t_prev) )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ie == nsize ) block
+
+!! body]
 
      return
   end subroutine cat_remove_ztrace
