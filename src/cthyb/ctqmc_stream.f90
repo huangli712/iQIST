@@ -157,6 +157,8 @@
 
              call p_get('lemax' , lemax )
              call p_get('legrd' , legrd )
+             call p_get('svmax' , svmax )
+             call p_get('svgrd' , svgrd )
 
              call p_get('mkink' , mkink )
              call p_get('mfreq' , mfreq )
@@ -175,7 +177,7 @@
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
 
-! destroy the parser
+             ! destroy the parser
              call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
@@ -189,7 +191,6 @@
      call mp_bcast( isspn , master )
      call mp_bcast( isopt , master )
      call mp_bcast( iscut , master )
-     !call mp_bcast( isbin , master )
      call mp_bcast( iswor , master )
      call mp_bcast( isort , master )
      call mp_bcast( isobs , master )
