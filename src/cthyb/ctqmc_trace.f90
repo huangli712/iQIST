@@ -557,40 +557,45 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
      integer  :: m
 
-! used to calculate the averaged dimension of sectors
+     ! used to calculate the averaged dimension of sectors
      integer  :: sum_dim
 
-! file status
+     ! file status
      logical  :: exists
 
-! number of sectors after truncation
+     ! number of sectors after truncation
      integer  :: nsect_t
 
-! maximal dimension of sectors after truncation
+     ! maximal dimension of sectors after truncation
      integer  :: max_dim_sect_t
 
-! averaged dimension of sectors after truncation
+     ! averaged dimension of sectors after truncation
      real(dp) :: ave_dim_sect_t
 
-! dummy real(dp) variable
+     ! dummy real(dp) variable
      real(dp) :: rt
 
-! probability for sector, used to do truncation
+     ! probability for sector, used to perform truncation
      real(dp) :: sprob(nsect)
 
+!! [body
+
+     ! only when iscut = 2, this feature is employed
      if ( iscut == 1 ) RETURN
 
-! read file solver.prob.dat, only master node can do it
+     ! init global and local arrays 
+     sectoff = .false.
+     sprob = zero
+
+     ! read file solver.prob.dat, only master node can do it
      if ( myid == master ) then
-         sectoff = .false.
-         sprob = zero
          inquire (file = 'solver.prob.dat', exist = exists)
 ! solver.prob.dat is available, we read the sector probability data
          if ( exists .eqv. .true.) then
@@ -667,6 +672,8 @@
          enddo ! over i={1,nsect} loop
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine cat_trun_sector
