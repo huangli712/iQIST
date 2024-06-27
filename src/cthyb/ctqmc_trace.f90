@@ -834,16 +834,20 @@
 !!>>> declare private variables                                        <<<
 !!========================================================================
 
-! status flag
+     ! status flag
      integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
+     ! declaration of module procedures: allocate memory
      public :: cat_alloc_part
+
+     ! declaration of module procedures: deallocate memory
      public :: cat_free_part
 
+     ! declaration of module procedures: helper utility
      public :: cat_make_npart
      public :: cat_make_trace
 
