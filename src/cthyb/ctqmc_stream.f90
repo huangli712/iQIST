@@ -613,8 +613,11 @@
          ! sectors, and average dimension of sectors
          read(mytmp,*) nsect, max_dim_sect, ave_dim_sect
 
-! after we know the total number of sectors, we can allocate memory
-! for sectors, only for master node
+         ! after we know the total number of sectors, we can allocate
+         ! memory for sectors
+         !
+         ! be careful, this step is only for master node. so next we
+         ! should do the same jobs in the children nodes 
          call cat_alloc_sect()
          call cat_alloc_part()
 
