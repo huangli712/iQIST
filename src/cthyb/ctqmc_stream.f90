@@ -119,21 +119,20 @@
          ! inquire file status: solver.ctqmc.in
          inquire (file = 'solver.ctqmc.in', exist = exists)
 
-! read in parameters, default setting should be overrided
+         ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-! create the file parser
+             ! create the file parser
              call p_create()
 
-! parse the config file
+             ! parse the config file
              call p_parse('solver.ctqmc.in')
 
-! extract parameters
+             ! extract parameters
              call p_get('isscf' , isscf )
              call p_get('isbnd' , isbnd )
              call p_get('isspn' , isspn )
              call p_get('isopt' , isopt )
              call p_get('iscut' , iscut )
-             !call p_get('isbin' , isbin )
              call p_get('iswor' , iswor )
              call p_get('isort' , isort )
              call p_get('isobs' , isobs )
