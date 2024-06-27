@@ -974,7 +974,23 @@
      ! init powers of local magnetization
      szpw = zero
 
+     ! init spin-spin correlation function
+     schi = zero
+     sp_t = zero
+     sp_w = zero
+
+     ! init charge-charge correlation function
+     cchi = zero
+     ch_t = zero
+     ch_w = zero
+
      ! init two-particle green's function
+     g2ph = czero
+     g2pp = czero
+
+     ! init two-particle vertex function
+     h2ph = czero
+     h2pp = czero
 
 !>>> ctqmc_umat module
 !-------------------------------------------------------------------------
