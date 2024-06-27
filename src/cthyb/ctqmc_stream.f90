@@ -937,13 +937,19 @@
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
 
-!>>> ctqmc_mesh module
-!-------------------------------------------------------------------------
-! the variables have been initialized at ctqmc_setup_model()
+     !>>> ctqmc_mesh module
+     !--------------------------------------------------------------------
 
-!>>> ctqmc_meat module
-!-------------------------------------------------------------------------
-! init histogram
+     ! the variables have been initialized at ctqmc_setup_model()
+
+     !>>> ctqmc_meat module
+     !--------------------------------------------------------------------
+
+     ! init autocorrelation function
+     ac_v = zero
+     ac_f = zero
+
+     ! init histogram
      hist = zero
 
 ! init probability for atomic eigenstates
