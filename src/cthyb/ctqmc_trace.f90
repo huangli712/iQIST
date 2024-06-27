@@ -908,9 +908,15 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> cat_free_part: deallocate memory for part related variables
+!!
+!! @sub cat_free_part
+!!
+!! deallocate memory for part related variables
+!!
   subroutine cat_free_part()
      implicit none
+
+!! [body
 
      if ( allocated(nop)     ) deallocate(nop    )
      if ( allocated(ops)     ) deallocate(ops    )
@@ -923,6 +929,8 @@
 
      if ( allocated(saved_p) ) deallocate(saved_p)
      if ( allocated(saved_n) ) deallocate(saved_n)
+
+!! body]
 
      return
   end subroutine cat_free_part
