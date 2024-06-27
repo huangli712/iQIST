@@ -1492,17 +1492,17 @@
 
      enddo ! over i={1,nsect} loop
 
-! calculate the summmation of trace bounds and the maximum bound of the
-! acceptance ratio, and then we check whether pmax < r. if it is true,
-! reject this move immediately
+     ! calculate the summmation of trace bounds and the maximum bound
+     ! of the acceptance ratio, and then we check whether pmax < r.
+     ! if it is true, reject this move immediately
      sbound = sum( btrace(1:nlive) )
      pmax = abs(ratio) * abs(sbound / c_mtr)
      if ( pmax < r ) then
          pass = .false.; p = zero; RETURN
      endif ! back if ( pmax < r ) block
 
-! sort the btrace to speed up the refining process. here, we use simple
-! bubble sort algorithm, because nalive_sect is usually small
+     ! sort the btrace to speed up the refining process. here, we use
+     ! simple bubble sort algorithm, because nalive_sect is usually small
      call s_sorter2_d( nlive, btrace(1:nlive), living(1:nlive) )
 
 ! begin to refine the trace bounds
