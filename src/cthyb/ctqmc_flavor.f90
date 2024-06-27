@@ -2937,7 +2937,8 @@
 !! in the colour part
 !!
   subroutine cat_search_colour(flvr, time, have)
-     use constants, only : dp, epss
+     use constants, only : dp
+     use constants, only : epss
 
      use context, only : ckink
      use context, only : index_s, index_e
@@ -2945,37 +2946,41 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! the answer what we need
+     ! the answer what we need
      integer, intent(out) :: have
 
-! imaginary time value
+     ! imaginary time value
      real(dp), intent(in) :: time
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! init have
+!! [body
+
+     ! init have
      have = 0
 
-! loop over all the operators belongs to current flavor
+     ! loop over all the operators belongs to current flavor
      OPERATOR_LOOP: do i=1,ckink
 
-! check creation operators, if meet it, return 1
+         ! check creation operators, if meet it, return 1
          if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) then
              have = 1; EXIT OPERATOR_LOOP
-         endif ! back if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) block
+         endif ! back if block
 
-! check annihilation operators, if meet it, return 2
+         ! check annihilation operators, if meet it, return 2
          if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) then
              have = 2; EXIT OPERATOR_LOOP
-         endif ! back if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) block
+         endif ! back if block
 
      enddo OPERATOR_LOOP ! over i={1,ckink} loop
+
+!! body]
 
      return
   end subroutine cat_search_colour
