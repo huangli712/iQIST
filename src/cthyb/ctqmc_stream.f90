@@ -572,7 +572,7 @@
      naux = zero
      saux = zero
 
-     ! read in initial F matrix if available
+     ! parse the atom.cix file if available
      !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -643,20 +643,21 @@
                               sectors(i)%jz,     &
                               sectors(i)%ps
 
-! allocate the memory for sectors(i), only for master node
+             ! allocate the memory for sectors(i), only for master node
              call cat_alloc_one_sect(sectors(i))
 
-! read the next index
+             ! read the next indices
              read(mytmp,*) ! skip the header
              do j=1,sectors(i)%nops
                  read(mytmp,*) k, sectors(i)%next(j,0), sectors(i)%next(j,1)
              enddo ! over do j={1,sectors(i)%nops} loop
 
-! read the eigenvalue of this sector
+             ! read the eigenvalues of this sector
              read(mytmp,*) ! skip the header
              do j=1,sectors(i)%ndim
                  read(mytmp,*) k, sectors(i)%eval(j)
              enddo ! over j={1,sectors(i)%ndim} loop
+
          enddo ! over i={1,nsect} loop
 
 ! skip three comment lines
