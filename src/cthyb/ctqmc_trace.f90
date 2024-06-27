@@ -1610,34 +1610,45 @@
      return
   end subroutine ctqmc_retrieve_ztrace
 
-!!>>> ctqmc_make_evolve: used to update the operator traces of the
-!!>>> modified part
+!!
+!! @sub ctqmc_make_evolve
+!!
+!! it is used to update the operator traces of the modified part
+!!
   subroutine ctqmc_make_evolve()
      use control, only : npart
+
      use context, only : c_mtr, n_mtr
      use context, only : diag
 
      use m_sect, only : nsect
-     use m_part, only : renew, async, is_cp, nc_cp, saved_p, saved_n
+
+     use m_part, only : renew, async
+     use m_part, only : is_cp, nc_cp
+     use m_part, only : saved_p
+     use m_part, only : saved_n
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
-! update the operator traces
+!! [body
+
+     ! update the operator traces
      c_mtr = n_mtr
 
-! update diag for the calculation of atomic state probability
+     ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
 
-! even if renew(j) is 1, not all of the sectors in this part (the j-th
-! part) will be renewed. there are many reasons. one of them is the
-! broken string. anyway, at this time, we have to remind the solver that
-! the matrix products for these sectors in j-th part is unsafe. so it is
-! necessary to update async here
+     ! special attention: even if renew(j) is 1, not all of the sectors
+     ! in this part (the j-th part) will be renewed. there are many
+     ! reasons. one of them is the broken string. anyway, at this time,
+     ! we have to remind the solver that the matrix products for these
+     ! sectors in j-th part is unsafe. so it is necessary to update
+     ! async here
      do i=1,nsect
          do j=1,npart
              if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) then
@@ -1646,10 +1657,11 @@
          enddo ! over j={1,npart} loop
      enddo ! over i={1,nsect} loop
 
-! if we used the divide-and-conquer algorithm, then we had to save the
-! change matrices products when proposed moves were accepted. and sine
-! the matrices products are updated, we also update the corresponding
-! async variable to tell the impurity solver that these saved_p is OK
+     ! if we used the divide and conquer algorithm, then we had to
+     ! save the change matrices products when proposed moves were
+     ! accepted. and since the matrices products are updated, we also
+     ! update the corresponding async variable to tell the impurity
+     ! solver that these saved_p is OK
      do i=1,nsect
          do j=1,npart
              if ( is_cp(j,i) == 1 ) then
@@ -1658,6 +1670,8 @@
              endif ! back if ( is_cp(j,i) == 1 ) block
          enddo ! over j={1,npart} loop
      enddo ! over i={1,nsect} loop
+
+!! body]
 
      return
   end subroutine ctqmc_make_evolve
