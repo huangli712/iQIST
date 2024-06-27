@@ -1510,6 +1510,8 @@
      real(dp) :: t_prev
      real(dp) :: t_next
 
+!! [body
+
 !-------------------------------------------------------------------------
 ! stage 1: insert creation operator
 !-------------------------------------------------------------------------
@@ -1698,48 +1700,53 @@
      real(dp) :: t_prev
      real(dp) :: t_next
 
+!! [body
+
 !-------------------------------------------------------------------------
 ! stage 1: remove creation operator
 !-------------------------------------------------------------------------
 
-! determine nsize
+     ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for old creation operator
+     ! get memory address for old creation operator
      as = index_v(is)
 
-! push the memory address back to the empty_v stack
+     ! push the memory address back to the empty_v stack
      call istack_push( empty_v, as )
 
-! remove the unused index address from index_v
+     ! remove the unused index address from index_v
      do i=is,nsize-1
          index_v(i) = index_v(i+1)
      enddo ! over i={is,nsize-1} loop
      index_v(nsize) = 0
 
-! evaluate previous imaginary time interval
-     if ( is == 1     ) then ! the imaginary time of creation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( is == 1     ) then
+         ! the imaginary time of creation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_v(is-1) )
      endif ! back if ( is == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( is == nsize ) then ! the imaginary time of creation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( is == nsize ) then
+         ! the imaginary time of creation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_v(is)   )
      endif ! back if ( is == nsize ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
-! if is == nsize, index_v(is) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! update the expt_v and expt_t, matrix of time evolution operator
+     ! if is == nsize, index_v(is) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( is == nsize ) then
          do i=1,ncfgs
              expt_t( i, 2  ) = exp ( -eigs(i) * (t_next - t_prev) )
          enddo ! over i={1,ncfgs} loop
      else
          as = index_v(is)
+         !
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * (t_next - t_prev) )
          enddo ! over i={1,ncfgs} loop
@@ -1748,44 +1755,48 @@
 !-------------------------------------------------------------------------
 ! stage 2: remove annihilation operator
 !-------------------------------------------------------------------------
-! determine nsize
+
+     ! determine nsize
      nsize = istack_getrest( empty_v )
 
-! get memory address for old annihilation operator
+     ! get memory address for old annihilation operator
      ae = index_v(ie)
 
-! push the memory address back to the empty_v stack
+     ! push the memory address back to the empty_v stack
      call istack_push( empty_v, ae )
 
-! remove the unused index address from index_v
+     ! remove the unused index address from index_v
      do i=ie,nsize-1
          index_v(i) = index_v(i+1)
      enddo ! over i={ie,nsize-1} loop
      index_v(nsize) = 0
 
-! evaluate previous imaginary time interval
-     if ( ie == 1     ) then ! the imaginary time of annihilation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( ie == 1     ) then
+         ! the imaginary time of annihilation operator is the smallest
          t_prev = zero
      else
          t_prev = time_v( index_v(ie-1) )
      endif ! back if ( ie == 1 ) block
 
-! evaluate next imaginary time interval
-     if ( ie == nsize ) then ! the imaginary time of annihilation operator is the largest
+     ! evaluate next imaginary time interval
+     if ( ie == nsize ) then
+         ! the imaginary time of annihilation operator is the largest
          t_next = beta
      else
          t_next = time_v( index_v(ie)   )
      endif ! back if ( ie == nsize ) block
 
-! update the expt_v and expt_t, matrix of time evolution operator
-! if ie == nsize, index_v(ie) is not indexed (i.e, equal to 0),
-! so we store the rightmost time evolution operator at expt_t
+     ! update the expt_v and expt_t, matrix of time evolution operator
+     ! if ie == nsize, index_v(ie) is not indexed (i.e, equal to 0),
+     ! so we store the rightmost time evolution operator at expt_t
      if ( ie == nsize ) then
          do i=1,ncfgs
              expt_t( i, 2  ) = exp ( -eigs(i) * (t_next - t_prev) )
          enddo ! over i={1,ncfgs} loop
      else
          ae = index_v(ie)
+         !
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * (t_next - t_prev) )
          enddo ! over i={1,ncfgs} loop
