@@ -67,50 +67,80 @@
 
      end type Tf
 
-! data structure for one sector
-!-------------------------------------------------------------------------
-     public :: t_sector
-     type t_sector
+!!
+!! @struct Ts
+!!
+!! data structure for subspace of atomic Hamiltonian. sometimes we
+!! call subspace as sector.
+!!
+!! be careful, this Ts is different from the one in the atomic code.
+!!
+     private :: Ts
+     type Ts
 
-! number of states in this sector
-         integer :: ndim
-
-! number of fermion operators, it should be equal to norbs
-         integer :: nops
-
-! start index of this sector
+         ! global index of the first Fock state in this subspace
          integer :: istart
 
-! total number of electrons
+         ! dimension of this subspace
+         ! how many Fock states are there in this subspace
+         integer :: ndim
+
+         ! number of fermion operators
+         ! it is actually equal to norbs
+         integer :: nops
+
+         ! we just use N, Sz, Jz, and PS (AP) to label the subspaces.
+         ! they are the so-called good quantum numbers. the good quantum
+         ! number AP is only used in the automatic partition algorithm.
+
+         ! total number of electrons: N
          integer :: nele
 
-! z component of spin: Sz
+         ! z component of spin: Sz
          integer :: sz
 
-! z component of spin-orbit momentum: Jz
+         ! z component of spin-orbit momentum: Jz
          integer :: jz
 
-! PS good quantum number
+         ! SU(2) good quantum number: PS (only for ictqmc = 4)
+         ! see: Phys. Rev. B 86, 155158 (2012)
+         !
+         ! or
+         !
+         ! auxiliary good quantum number: AP (only for ictqmc = 6)
+         ! see: Comput. Phys. Commun. 200, 274 (2016)
          integer :: ps
 
-! the next sector when a fermion operator acts on the sector
-! next(nops,0) for annihilation and next(nops,1) for creation operators
-! -1 means it is outside the Hilbert space,
-! otherwise, it is the index of next sector
+         ! pointer to (or index of) the next subspace after a fermion
+         ! operator acts on this subspace
+         !
+         !     next(nops,0) for annihilation
+         !     next(nops,1) for creation operators
+         !
+         ! if it is -1, it means the next subspace is null (outside of
+         ! the Hilbert space). otherwise, it is the index of next subspace
          integer, allocatable  :: next(:,:)
 
-! the eigenvalues
+         ! eigenvalues of atomic Hamiltonian in this subspace
          real(dp), allocatable :: eval(:)
 
-! final products of matrices
+         ! final products of matrices
          real(dp), allocatable :: prod(:)
 
-! the F-matrix between this sector and all other sectors
-! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
-! if this sector doesn't point to some other sectors, it is not allocated
+         ! annihilation operator f or creation operator f^+ matrix
+         !
+         !     < alpha | f | beta > or < alpha | f^+ | beta >
+         !
+         ! where | alpha > and | beta > are the atomic eigenstates.
+         !
+         !     fmat(nops,0) for annihilation
+         !     fmat(nops,1) for creation operators
+         !
+         ! if the corresponding matrix element of next(:,:) is -1, then
+         ! the Tf is invalid (not allocated)
          type (Tf), allocatable :: fmat(:,:)
 
-     end type t_sector
+     end type Ts
 
 !!========================================================================
 !!>>> declare global variables                                         <<<
@@ -128,8 +158,8 @@
 ! which sectors should be truncated?
      logical, public, save, allocatable :: sectoff(:)
 
-! array of t_sector contains all the sectors
-     type (t_sector), public, save, allocatable :: sectors(:)
+! array of Ts contains all the sectors
+     type (Ts), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare private variables                                        <<<
@@ -187,7 +217,7 @@
 
 ! external variables
 ! sector structure
-     type (t_sector), intent(inout) :: sect
+     type (Ts), intent(inout) :: sect
 
 ! local variables
 ! loop index
@@ -279,7 +309,7 @@
 
 ! external variables
 ! sector structure
-     type (t_sector), intent(inout) :: sect
+     type (Ts), intent(inout) :: sect
 
 ! local variables
 ! loop index

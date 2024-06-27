@@ -786,7 +786,7 @@
          ! setup barrier
          call mp_barrier()
 
-         ! allocate memory for t_sector structure, only for children nodes
+         ! allocate memory for Ts structure, only for children nodes
          if ( myid /= master ) then
              call cat_alloc_one_sect(sectors(i))
          endif ! back if ( myid /= master ) block
