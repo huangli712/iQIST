@@ -29,12 +29,18 @@
 !! numbers (GQNs) algorithm
 !!
   module m_sect
-     use constants, only : dp, zero, eps6, mystd, mytmp
-     use mmpi, only : mp_bcast, mp_barrier
+     use constants, only : dp
+     use constants, only : zero
+     use constants, only : eps6
+     use constants, only : mystd, mytmp
+
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
 
      use control, only : norbs, ncfgs
      use control, only : mkink
      use control, only : myid, master
+
      use context, only : type_v, flvr_v
 
      implicit none
