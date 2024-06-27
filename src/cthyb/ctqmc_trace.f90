@@ -1082,8 +1082,11 @@
      return
   end subroutine cat_make_npart
 
-!!>>> cat_make_trace: calculate the contribution to final trace for
-!!>>> a given string
+!!
+!! @sub cat_make_trace
+!!
+!! calculate the contribution to final trace for a given string
+!!
   subroutine cat_make_trace(csize, string, index_loc, expt_loc, trace)
      implicit none
 
