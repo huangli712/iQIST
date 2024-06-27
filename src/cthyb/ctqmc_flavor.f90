@@ -29,7 +29,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
-!!!           06/26/2024 by li huang (last modified)
+!!!           06/27/2024 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -95,6 +95,7 @@
      ! select imaginary time of the new creation operator randomly
      ! check tau_start is necessary
      have = 99
+     !
      CREATION_CYCLE: do while ( have > 0 )
          tau_start = spring_sfmt_stream() * beta
          call cat_search_colour(flvr, tau_start, have)
@@ -103,6 +104,7 @@
      ! select imaginary time of the new annihilation operator randomly
      ! check tau_end is necessary
      have = 99
+     !
      ANNIHILATION_CYCLE: do while ( have > 0 )
          tau_end = spring_sfmt_stream() * beta
          call cat_search_colour(flvr, tau_end, have)
