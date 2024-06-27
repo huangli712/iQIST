@@ -1654,7 +1654,8 @@
 !! remove old creation and annihilation operators in the flavor part
 !!
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
      use stack, only : istack_push
@@ -1838,7 +1839,8 @@
 !! shift old creation operator in the flavor part
 !!
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
 
