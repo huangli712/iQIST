@@ -1143,7 +1143,7 @@
      do i=1,nfreq
          xs = rmesh(i) * tau_start
          exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
-
+         !
          xe = rmesh(i) * tau_end
          exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
      enddo ! over i={1,nfreq} loop
@@ -1199,7 +1199,7 @@
          index_s(i, flvr) = index_s(i+1, flvr)
      enddo ! over i={is,ckink-1} loop
      index_s(ckink, flvr) = 0
-
+     !
      do i=ie,ckink-1
          index_e(i, flvr) = index_e(i+1, flvr)
      enddo ! over i={ie,ckink-1} loop
@@ -1260,7 +1260,7 @@
          index_s(i, flvr) = index_s(i+1, flvr)
      enddo ! over i={iso,ckink-1} loop
      index_s(ckink, flvr) = 0
-
+     !
      do i=ckink-1,isn,-1
          index_s(i+1, flvr) = index_s(i, flvr)
      enddo ! over i={ckink-1,isn,-1} loop
@@ -1330,7 +1330,7 @@
          index_e(i, flvr) = index_e(i+1, flvr)
      enddo ! over i={ieo,ckink-1} loop
      index_e(ckink, flvr) = 0
-
+     !
      do i=ckink-1,ien,-1
          index_e(i+1, flvr) = index_e(i, flvr)
      enddo ! over i={ckink-1,ien,-1} loop
