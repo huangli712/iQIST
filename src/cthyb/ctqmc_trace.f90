@@ -1515,7 +1515,8 @@
          ! calculate the trace for one sector, this call will consume
          ! lots of time if the dimension of f-matrix and expansion order
          ! is large, so we should carefully optimize it.
-         call cat_make_trace(csize, string(:,living(i)), index_loc, expt_loc, strace(i))
+         call cat_make_trace(csize, string(:,living(i)), &
+             & index_loc, expt_loc, strace(i))
          !
          ! if this move is not accepted, refine the trace bound to see
          ! whether we can reject it before calculating the trace of all
