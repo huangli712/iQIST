@@ -2442,8 +2442,9 @@
      nsize = istack_getrest( empty_v )
 
      ! copy index_v to index_t
-     ! since we do not remove the two operators actually at this stage, so
-     ! index_v can not be overwritten here
+     !
+     ! since we do not remove the two operators actually at this stage,
+     ! so index_v can not be overwritten here
      do i=1,nsize
          index_t(i) = index_v(i)
      enddo ! over i={1,nsize} loop
