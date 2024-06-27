@@ -549,7 +549,8 @@
 !! @sub cat_trun_sector
 !!
 !! it is used to truncate the Hilbert space of H_{loc} according to
-!! the probatility of atomic states
+!! the probatility of atomic states. actually, it will try to discard
+!! some sectors whose contributions are lower than the threshold
 !!
   subroutine cat_trun_sector()
      use control, only : iscut
