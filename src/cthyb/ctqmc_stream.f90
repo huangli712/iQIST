@@ -878,21 +878,22 @@
      rsh_t = zero; rsh_a = zero; rsh_r = zero
      rfl_t = zero; rfl_a = zero; rfl_r = zero
 
-!>>> ctqmc_clur module
-!-------------------------------------------------------------------------
-! init index
+     !>>> ctqmc_clur module
+     !--------------------------------------------------------------------
+
+     ! init index
      index_s = 0
      index_e = 0
 
-! init time
+     ! init time
      time_s  = zero
      time_e  = zero
 
-! init exponent
+     ! init exponent
      exp_s   = czero
      exp_e   = czero
 
-! init stack
+     ! init stack
      do i=1,norbs
          call istack_clean( empty_s(i) )
          call istack_clean( empty_e(i) )
