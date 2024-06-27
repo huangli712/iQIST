@@ -442,7 +442,8 @@
 !! try to build orbital symmetry and impurity level from solver.eimp.in
 !!
   subroutine ctqmc_input_eimp_()
-     use constants, only : zero, mytmp
+     use constants, only : zero
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
@@ -454,32 +455,34 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! used to check whether the input file (solver.eimp.in) exists
+     ! used to check whether the input file (solver.eimp.in) exists
      logical  :: exists
 
-! setup initial symm
+!! [body
+
+     ! setup initial symm
      symm = 1
 
-! setup initial eimp
+     ! setup initial eimp
      eimp = zero
 
-! read in impurity level and orbital symmetry if available
-!-------------------------------------------------------------------------
+     ! read in impurity level and orbital symmetry if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'solver.eimp.in', exist = exists)
 
-! find input file: solver.eimp.in, read it
+         ! find input file: solver.eimp.in, read it
          if ( exists .eqv. .true. ) then
 
-! read in impurity level from solver.eimp.in
+             ! read in impurity level from solver.eimp.in
              open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
              do i=1,norbs
                  read(mytmp,*) j, eimp(i), symm(i)
@@ -488,21 +491,23 @@
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast eimp and symm from master node to all children nodes
 # if defined (MPI)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(eimp, master)
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(symm, master)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine ctqmc_input_eimp_
