@@ -240,7 +240,7 @@
              & 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize it
+     ! initialize it
      mat%val = zero
 
 !! body]
@@ -587,7 +587,7 @@
 
 !! [body
 
-     ! only when iscut = 2, this feature is employed
+     ! only when iscut = 2, this feature is applicable
      if ( iscut == 1 ) RETURN
 
      ! init global and local arrays 
@@ -712,18 +712,25 @@
 !!>>> module m_part                                                    <<<
 !!========================================================================
 
-!!>>> contains some key global variables and subroutines for divide and
-!!>>> conquer algorithm to speed up the trace evaluation
+!!
+!! @mod m_part
+!!
+!! contains key global variables and subroutines for divide and conquer
+!! algorithm to speed up the trace evaluation
+!!
   module m_part
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use control, only : ncfgs
      use control, only : mkink
      use control, only : npart
      use control, only : beta
+
      use context, only : type_v, flvr_v, time_v, expt_v
 
-     use m_sect, only : nsect, max_dim_sect
+     use m_sect, only : nsect
+     use m_sect, only : max_dim_sect
      use m_sect, only : sectors
 
      implicit none
