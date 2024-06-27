@@ -948,76 +948,82 @@
   subroutine cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
      implicit none
 
-! external arguments
-! mode for different Monte Carlo moves
+!! external arguments
+     ! mode for different Monte Carlo moves
      integer, intent(in)  :: cmode
 
-! total number of operators for current diagram
+     ! total number of operators for current diagram
      integer, intent(in)  :: csize
 
-! local version of index_t
+     ! local version of index_t
      integer, intent(in)  :: index_loc(mkink)
 
-! imaginary time value of operator A, only valid in cmode = 1 or 2
+     ! imaginary time value of operator A, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_s
 
-! imaginary time value of operator B, only valid in cmode = 1 or 2
+     ! imaginary time value of operator B, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_e
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
 
-! position of the operator A and operator B, index of part
+     ! position of the operator A and operator B, index of part
      integer  :: tis
      integer  :: tie
      integer  :: tip
 
-! length in imaginary time axis for each part
+     ! length in imaginary time axis for each part
      real(dp) :: interval
 
-! evaluate interval at first
+!! [body
+
+     ! evaluate interval at first
      interval = beta / real(npart)
 
-! init key arrays
+     ! init key arrays
      nop = 0
      ops = 0
      ope = 0
 
-! init global arrays (renew and is_cp)
+     ! init global arrays (renew and is_cp)
      renew = 0
      is_cp = 0
 
-! calculate number of operators for each part
+     ! calculate number of operators for each part
      do i=1,csize
          j = ceiling( time_v( index_loc(i) ) / interval )
          nop(j) = nop(j) + 1
      enddo ! over i={1,csize} loop
 
-! calculate the start and end index of operators for each part
+     ! calculate the start and end index of operators for each part
      do i=1,npart
          if ( nop(i) > 0 ) then
              ops(i) = 1
              do j=1,i-1
                  ops(i) = ops(i) + nop(j)
              enddo ! over j={1,i-1} loop
+             !
              ope(i) = ops(i) + nop(i) - 1
          endif ! back if ( nop(i) > 0 ) block
      enddo ! over i={1,npart} loop
 
-! next we have to figure out which parts should be updated
-! case 1: only some parts need to be updated
+     ! next we have to figure out which parts should be updated
+     !
+     ! case 1: only some parts need to be updated
      if ( cmode == 1 .or. cmode == 2 ) then
 
-! get the position of operator A and operator B
+         ! get the positions of operator A and operator B
          tis = ceiling( tau_s / interval )
          tie = ceiling( tau_e / interval )
 
-! determine the influence of operator A, which part should be recalculated
+         ! determine the influence of operator A,
+         ! which part should be recalculated
          renew(tis) = 1
-! special attention: if operator A is on the left or right boundary, then
-! the neighbour part should be recalculated as well
+         !
+         ! special attention: if operator A is on the left or right
+         ! boundary, then the neighbour part should be recalculated as well
          if ( nop(tis) > 0 ) then
              if ( tau_s >= time_v( index_loc( ope(tis) ) ) ) then
                  tip = tis + 1
@@ -1027,7 +1033,7 @@
                      endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while loop
-             endif ! back if ( tau_s >= time_v( index_t( ope(tis) ) ) ) block
+             endif ! back if block
          else
              tip = tis + 1
              do while ( tip <= npart )
@@ -1038,10 +1044,12 @@
              enddo ! over do while loop
          endif ! back if ( nop(tis) > 0 ) block
 
-! determine the influence of operator B, which part should be recalculated
+         ! determine the influence of operator B,
+         ! which part should be recalculated
          renew(tie) = 1
-! special attention: if operator B is on the left or right boundary, then
-! the neighbour part should be recalculated as well
+         !
+         ! special attention: if operator B is on the left or right
+         ! boundary, then the neighbour part should be recalculated as well
          if ( nop(tie) > 0 ) then
              if ( tau_e >= time_v( index_loc( ope(tie) ) ) ) then
                  tip = tie + 1
@@ -1051,7 +1059,7 @@
                      endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while loop
-             endif ! back if ( tau_e >= time_v( index_t( ope(tie) ) ) ) block
+             endif ! back if block
          else
              tip = tie + 1
              do while ( tip <= npart )
@@ -1062,10 +1070,14 @@
              enddo ! over do while loop
          endif ! back if ( nop(tie) > 0 ) block
 
-! case 2: all parts should be updated
+     ! case 2: all parts should be updated
      else
+
          renew = 1
+
      endif
+
+!! body]
 
      return
   end subroutine cat_make_npart
