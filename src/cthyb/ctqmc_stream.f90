@@ -855,20 +855,23 @@
      ! random number seed for twist generator
      integer :: stream_seed
 
-! init random number generator
+!! [body
+
+     ! init random number generator
      call system_clock(system_time)
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
-!>>> ctqmc_core module
-!-------------------------------------------------------------------------
-! init global variables
+     !>>> ctqmc_core module
+     !--------------------------------------------------------------------
+
+     ! init global variables
      ckink = 0
      csign = 1
      cnegs = 0
      caves = 0
 
-! init statistics variables
+     ! init statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
      rmv_t = zero; rmv_a = zero; rmv_r = zero
      lsh_t = zero; lsh_a = zero; lsh_r = zero
