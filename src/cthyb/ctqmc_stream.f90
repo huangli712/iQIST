@@ -621,11 +621,19 @@
          call cat_alloc_sect()
          call cat_alloc_part()
 
-! read each sector's information
+         ! read each sector's information
          do i=1,nsect
-! read the dimension, number of fermion operators, start index of this sector,
-! total number of electrons, z component of spin momentum, z component of
-! spin-orbit momentum, and PS good quantum number
+
+             ! read the dimension of this sector,
+             !          number of fermion operators,
+             !          start index of this sector,
+             !          total number of electrons (Ntot, GQN),
+             !          z component of spin momentum (Sz, GQN),
+             !          z component of spin-orbit momentum (Jz, GQN),
+             !      and SU(2) good quantum number (PS, GQN)
+             !
+             ! be careful, if the automatic partition algorithm is used,
+             ! then PS is replaced with AP.
              read(mytmp,*) ! skip the header
              read(mytmp,*) k, sectors(i)%ndim,   &
                               sectors(i)%nops,   &
