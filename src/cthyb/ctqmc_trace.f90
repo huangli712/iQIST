@@ -939,8 +939,12 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> cat_make_npart: it is used to determine renew, which parts should
-!!>>> be recalculated, is_cp is also reseted in this subroutine
+!!
+!! @sub cat_make_npart
+!!
+!! it is used to determine renew, which parts should be recalculated.
+!! is_cp is also evaluated in this subroutine
+!!
   subroutine cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
      implicit none
 
