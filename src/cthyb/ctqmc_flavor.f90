@@ -3195,26 +3195,28 @@
 
      implicit none
 
-! external arguments
-! control flag, output style
-! if show_type = 1, display the colour part
-! if show_type = 2, display the flavor part
+!! external arguments
+     ! control flag, output style
+     ! if show_type = 1, display the colour part
+     ! if show_type = 2, display the flavor part
      integer, intent(in) :: show_type
 
-! local variables
-! loop index over orbitals
+!! local variables
+     ! loop index over orbitals
      integer :: i
 
-! loop index over operators
+     ! loop index over operators
      integer :: j
 
-! total number of operators in the flavor part
+     ! total number of operators in the flavor part
      integer :: nsize
 
-! evaluate nsize at first
+!! [body
+
+     ! evaluate nsize at first
      nsize = istack_getrest( empty_v )
 
-! display the operators (colour part)
+     ! display the operators (colour part)
      if ( show_type == 1 ) then
          do i=1,norbs
              write(mystd,'(4X,a,i4)') '# flavor:', i
@@ -3233,7 +3235,7 @@
              write(mystd,*)
          enddo ! over i={1,norbs} loop
 
-! display the operators (flavor part)
+     ! display the operators (flavor part)
      else
          do j=1,nsize
              write(mystd,'(4X,a)') '< diag >'
@@ -3256,6 +3258,8 @@
          write(mystd,*) ! write empty line
 
      endif ! back if ( show_type == 1 ) block
+
+!! body]
 
      return
   end subroutine cat_disp_diagrams
