@@ -2655,36 +2655,38 @@
 !-------------------------------------------------------------------------
 ! stage 1: shift old creation operator, trial step
 !-------------------------------------------------------------------------
-! get memory address for creation operator
+
+     ! get memory address for creation operator
      call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
 
-! store basic data for new creation operator
+     ! store basic data for new creation operator
      time_v(as) = tau_start2
      flvr_v(as) = flvr
      type_v(as) = 1
 
-! remove the unused index address from index_t
+     ! remove the unused index address from index_t
      do i=iso,nsize-1
          index_t(i) = index_t(i+1)
      enddo ! over i={iso,nsize-1} loop
      index_t(nsize) = 0
 
-! shift index_t to make an empty room
+     ! shift index_t to make an empty room
      do i=nsize-1,isn,-1
          index_t(i+1) = index_t(i)
      enddo ! over i={nsize-1,isn,-1} loop
 
-! store the memory address for creation operator
+     ! store the memory address for creation operator
      index_t(isn) = as
 
-! evaluate previous imaginary time interval
-     if ( isn == 1 ) then ! the imaginary time of creation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( isn == 1 ) then
+         ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_t(isn) ) - zero
      else
          t_prev = time_v( index_t(isn) ) - time_v( index_t(isn-1) )
      endif ! back if ( isn == 1 ) block
 
-! update the expt_v, matrix of time evolution operator
+     ! update the expt_v, matrix of time evolution operator
      do i=1,ncfgs
          expt_v( i, as ) = exp ( -eigs(i) * t_prev )
      enddo ! over i={1,ncfgs} loop
@@ -2692,47 +2694,57 @@
 !-------------------------------------------------------------------------
 ! stage 2: auxiliary tasks
 !-------------------------------------------------------------------------
-! its neighbor needs to be changes as well.
-! makes a copy of time and type, and changes time evolution operator
+
+     ! its neighbor needs to be changes as well.
+     ! makes a copy of time and type, and changes time evolution operator
      if ( isn < nsize ) then
          t_next = time_v( index_t(isn+1) ) - time_v( index_t(isn) )
+         !
          call istack_getter( empty_v, istack_gettop( empty_v ) - 1, as )
+         !
          time_v(as) = time_v( index_t(isn+1) )
          flvr_v(as) = flvr_v( index_t(isn+1) )
          type_v(as) = type_v( index_t(isn+1) )
          index_t(isn+1) = as
+         !
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_next )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( isn < nsize ) block
 
-! the operator closest to the old place needs to be changed as well
+     ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
          if ( iso > isn ) then
              iso_t = iso + 1
          else
              iso_t = iso
          endif ! back if ( iso > isn ) block
+         !
          if ( iso_t == 1 ) then
              t_prev = time_v( index_t(iso_t) ) - zero
          else
              t_prev = time_v( index_t(iso_t) ) - time_v( index_t(iso_t-1) )
          endif ! back if ( iso_t == 1 ) block
+         !
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, as )
+         !
          time_v(as) = time_v( index_t(iso_t) )
          flvr_v(as) = flvr_v( index_t(iso_t) )
          type_v(as) = type_v( index_t(iso_t) )
          index_t(iso_t) = as
+         !
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( iso < nsize .and. iso /= isn ) block
 
-! update the final time evolution operator
+     ! update the final time evolution operator
      t_next = time_v( index_t(nsize) )
      do i=1,ncfgs
          expt_t( i, 1 ) = exp ( -eigs(i) * ( beta - t_next ) )
      enddo ! over i={1,ncfgs} loop
+
+!! body]
 
      return
   end subroutine cat_lshift_ztrace
