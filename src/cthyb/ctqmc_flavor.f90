@@ -1858,72 +1858,77 @@
 
      implicit none
 
-! external arguments
-! current flavor channel
+!! external arguments
+     ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift existing creation operator
-! iso and isn are for old and new creation operators, respectively
+     ! index address to shift existing creation operator
+     ! iso and isn are for old and new creation operators, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
-! imaginary time point of the new creation operator
+     ! imaginary time point of the new creation operator
      real(dp), intent(in) :: tau_start2
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for old and new creation operators
+     ! memory address for old and new creation operators
      integer  :: as
 
-! index address for old creation operator
+     ! index address for old creation operator
      integer  :: iso_t
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
 
-! determine nsize at first, get total number of operators
+!! [body
+
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
 !-------------------------------------------------------------------------
 ! stage 1: shift old creation operator
 !-------------------------------------------------------------------------
-! get memory address for creation operator
+
+     ! get memory address for creation operator
      as = index_v(iso)
 
-! store basic data for new creation operator
+     ! store basic data for new creation operator
      time_v(as) = tau_start2
      flvr_v(as) = flvr
      type_v(as) = 1
 
-! remove the unused index address from index_v
+     ! remove the unused index address from index_v
      do i=iso,nsize-1
          index_v(i) = index_v(i+1)
      enddo ! over i={iso,nsize-1} loop
      index_v(nsize) = 0
 
-! shift index_v to make an empty room
+     ! shift index_v to make an empty room
      do i=nsize-1,isn,-1
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize-1,isn,-1} loop
 
-! store the memory address for creation operator
+     ! store the memory address for creation operator
      index_v(isn) = as
 
-! evaluate previous imaginary time interval
-     if ( isn == 1 ) then ! the imaginary time of creation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( isn == 1 ) then
+         ! the imaginary time of creation operator is the smallest
          t_prev = time_v( index_v(isn) ) - zero
      else
          t_prev = time_v( index_v(isn) ) - time_v( index_v(isn-1) )
      endif ! back if ( isn == 1 ) block
 
-! update the expt_v, matrix of time evolution operator
+     ! update the expt_v, matrix of time evolution operator
      do i=1,ncfgs
          expt_v( i, as ) = exp ( -eigs(i) * t_prev )
      enddo ! over i={1,ncfgs} loop
@@ -1931,7 +1936,9 @@
 !-------------------------------------------------------------------------
 ! stage 2: auxiliary tasks
 !-------------------------------------------------------------------------
-! its neighbor needs to be changes as well. change time evolution operator
+
+     ! its neighbor needs to be changes as well.
+     ! change time evolution operator
      if ( isn < nsize ) then
          t_next = time_v( index_v(isn+1) ) - time_v( index_v(isn) )
          as = index_v(isn+1)
@@ -1940,25 +1947,27 @@
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( isn < nsize ) block
 
-! the operator closest to the old place needs to be changed as well
+     ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
          if ( iso > isn ) then
              iso_t = iso + 1
          else
              iso_t = iso
          endif ! back if ( iso > isn ) block
+         !
          if ( iso_t == 1 ) then
              t_prev = time_v( index_v(iso_t) ) - zero
          else
              t_prev = time_v( index_v(iso_t) ) - time_v( index_v(iso_t-1) )
          endif ! back if ( iso_t == 1 ) block
+         !
          as = index_v(iso_t)
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( iso < nsize .and. iso /= isn ) block
 
-! update the final time evolution operator
+     ! update the final time evolution operator
      t_next = time_v( index_v(nsize) )
      do i=1,ncfgs
          expt_t( i, 2 ) = exp ( -eigs(i) * (beta - t_next) )
@@ -1967,8 +1976,11 @@
 !-------------------------------------------------------------------------
 ! stage 3: deal with sign problem
 !-------------------------------------------------------------------------
-! evaluate csign, TO BE CHECKED
+
+     ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( iso + isn, 2 ) )
+
+!! body]
 
      return
   end subroutine cat_lshift_flavor
