@@ -1204,7 +1204,7 @@
      call cat_free_wmat()
      call cat_free_smat()
      !
-     call cat_free_sect()
+     call cat_free_sectors()
      call cat_free_part()
 
 !! body]

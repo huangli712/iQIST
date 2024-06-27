@@ -202,9 +202,9 @@
      public :: cat_alloc_sectors
 
      ! declaration of module procedures: deallocate memory
-     public :: cat_free_one_fmat
-     public :: cat_free_one_sect
-     public :: cat_free_sect
+     public :: cat_free_fmat
+     public :: cat_free_sector
+     public :: cat_free_sectors
 
      ! declaration of module procedures: helper utility
      public :: cat_make_string
@@ -344,8 +344,8 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> cat_free_one_fmat: deallocate memory for one F-matrix
-  subroutine cat_free_one_fmat(mat)
+!!>>> cat_free_fmat: deallocate memory for one F-matrix
+  subroutine cat_free_fmat(mat)
      implicit none
 
 ! external variables
@@ -355,10 +355,10 @@
      if ( allocated(mat%val) ) deallocate(mat%val)
 
      return
-  end subroutine cat_free_one_fmat
+  end subroutine cat_free_fmat
 
-!!>>> cat_free_one_sect: deallocate memory for one sector
-  subroutine cat_free_one_sect(sect)
+!!>>> cat_free_sector: deallocate memory for one sector
+  subroutine cat_free_sector(sect)
      implicit none
 
 ! external variables
@@ -379,18 +379,18 @@
      if ( allocated(sect%fmat) ) then
          do i=1,sect%nops
              do j=0,1
-                 call cat_free_one_fmat(sect%fmat(i,j))
+                 call cat_free_fmat(sect%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,sect%nops} loop
          deallocate(sect%fmat)
      endif ! back if ( allocated(sect%fmat) ) block
 
      return
-  end subroutine cat_free_one_sect
+  end subroutine cat_free_sector
 
-!!>>> cat_free_sect: deallocate memory for sector
+!!>>> cat_free_sectors: deallocate memory for sector
 !!>>> related variables
-  subroutine cat_free_sect()
+  subroutine cat_free_sectors()
      implicit none
 
 ! local variables
@@ -401,7 +401,7 @@
 ! then, deallocate memory of the sectors itself
      if ( allocated(sectors) ) then
          do i=1,nsect
-             call cat_free_one_sect(sectors(i))
+             call cat_free_sector(sectors(i))
          enddo ! over i={1,nsect} loop
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
@@ -409,7 +409,7 @@
      if ( allocated(sectoff) )  deallocate(sectoff)
 
      return
-  end subroutine cat_free_sect
+  end subroutine cat_free_sectors
 
 !!========================================================================
 !!>>> core service subroutines                                         <<<
