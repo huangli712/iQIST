@@ -1313,10 +1313,12 @@
 !! best speedup.
 !!
   subroutine ctqmc_lazy_ztrace(cmode, csize, ratio, tau_s, tau_e, r, p, pass)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use control, only : ncfgs
      use control, only : mkink
+
      use context, only : c_mtr, n_mtr
      use context, only : index_t, index_v, expt_t, expt_v
      use context, only : diag
@@ -1324,38 +1326,49 @@
      use m_sect, only : nsect
      use m_sect, only : sectors
      use m_sect, only : cat_make_string
+
      use m_part, only : cat_make_npart
      use m_part, only : cat_make_trace
 
      implicit none
 
-! external arguments
-! different type of Monte Carlo moves
-! if cmode = 1, partly-trial calculation, useful for ctqmc_insert_ztrace() etc
-! if cmode = 2, partly-normal calculation, not used by now
-! if cmode = 3, fully-trial calculation, useful for ctqmc_reflip_kink()
-! if cmode = 4, fully-normal calculation, useful for ctqmc_retrieve_status()
+!! external arguments
+     ! different type of Monte Carlo moves
+     !
+     ! if cmode = 1
+     !     partly-trial calculation, useful for ctqmc_insert_ztrace() etc
+     !
+     ! if cmode = 2
+     !     partly-normal calculation, not used by now
+     !
+     ! if cmode = 3
+     !     fully-trial calculation, useful for ctqmc_reflip_kink()
+     !
+     ! if cmode = 4
+     !     fully-normal calculation, useful for ctqmc_retrieve_status()
+     !
+     ! please refer to ctqmc_update.f90
      integer,  intent(in)  :: cmode
 
-! total number of operators for current diagram
+     ! total number of operators for current diagram
      integer,  intent(in)  :: csize
 
-! the calculated determinant ratio and prefactor
+     ! the calculated determinant ratio and prefactor
      real(dp), intent(in)  :: ratio
 
-! imaginary time value of operator A, only needed in cmode = 1 or 2
+     ! imaginary time value of operator A, only needed in cmode = 1 or 2
      real(dp), intent(in)  :: tau_s
 
-! imaginary time value of operator B, only needed in cmode = 1 or 2
+     ! imaginary time value of operator B, only needed in cmode = 1 or 2
      real(dp), intent(in)  :: tau_e
 
-! random number
+     ! random number
      real(dp), intent(in)  :: r
 
-! the final transition probability
+     ! the final transition probability
      real(dp), intent(out) :: p
 
-! whether accept this move
+     ! whether accept this move
      logical, intent(out)  :: pass
 
 ! local variables
