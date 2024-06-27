@@ -2041,6 +2041,8 @@
      real(dp) :: t_prev
      real(dp) :: t_next
 
+!! [body
+
      ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
@@ -2062,22 +2064,23 @@
      enddo ! over i={ieo,nsize-1} loop
      index_v(nsize) = 0
 
-! shift index_v to make an empty room
+     ! shift index_v to make an empty room
      do i=nsize-1,ien,-1
          index_v(i+1) = index_v(i)
      enddo ! over i={nsize-1,ien,-1} loop
 
-! store the memory address for annihilation operator
+     ! store the memory address for annihilation operator
      index_v(ien) = ae
 
-! evaluate previous imaginary time interval
-     if ( ien == 1 ) then ! the imaginary time of annihilation operator is the smallest
+     ! evaluate previous imaginary time interval
+     if ( ien == 1 ) then
+         ! the imaginary time of annihilation operator is the smallest
          t_prev = time_v( index_v(ien) ) - zero
      else
          t_prev = time_v( index_v(ien) ) - time_v( index_v(ien-1) )
      endif ! back if ( ien == 1 ) block
 
-! update the expt_v, matrix of time evolution operator
+     ! update the expt_v, matrix of time evolution operator
      do i=1,ncfgs
          expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
      enddo ! over i={1,ncfgs} loop
@@ -2085,7 +2088,9 @@
 !-------------------------------------------------------------------------
 ! stage 2: auxiliary tasks
 !-------------------------------------------------------------------------
-! its neighbor needs to be changes as well. change time evolution operator
+
+     ! its neighbor needs to be changes as well.
+     ! change time evolution operator
      if ( ien < nsize ) then
          t_next = time_v( index_v(ien+1) ) - time_v( index_v(ien) )
          ae = index_v(ien+1)
@@ -2094,25 +2099,27 @@
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ien < nsize ) block
 
-! the operator closest to the old place needs to be changed as well
+     ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
          if ( ieo > ien ) then
              ieo_t = ieo + 1
          else
              ieo_t = ieo
          endif ! back if ( ieo > ien ) block
+         !
          if ( ieo_t == 1 ) then
              t_prev = time_v( index_v(ieo_t) ) - zero
          else
              t_prev = time_v( index_v(ieo_t) ) - time_v( index_v(ieo_t-1) )
          endif ! back if ( ieo_t == 1 ) block
+         !
          ae = index_v(ieo_t)
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ieo < nsize .and. ieo /= ien ) block
 
-! update the final time evolution operator
+     ! update the final time evolution operator
      t_next = time_v( index_v(nsize) )
      do i=1,ncfgs
          expt_t( i, 2 ) = exp ( -eigs(i) * (beta - t_next) )
@@ -2121,8 +2128,11 @@
 !-------------------------------------------------------------------------
 ! stage 3: deal with sign problem
 !-------------------------------------------------------------------------
-! evaluate csign, TO BE CHECKED
+
+     ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( ieo + ien, 2 ) )
+
+!! body]
 
      return
   end subroutine cat_rshift_flavor
