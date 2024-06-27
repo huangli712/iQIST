@@ -524,19 +524,25 @@
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
-     use control
-     use context
+     !use control
+     !use context
 
-     use m_sect
-     use m_part
+     !use m_sect
+     !use m_part
 
      implicit none
 
+!! local variables
+     ! loop index
      integer :: i,j,k,m,n
+
      integer :: j1, j2, j3, j4, j5
+
      integer :: ver
 
      real(dp) :: r1, r2
+
+     ! used to check whether the input file (atom.cix) exists
      logical :: exists
 
 ! setup initial eigs, naux, and saux
