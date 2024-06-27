@@ -906,22 +906,23 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
-!>>> ctqmc_flvr module
-!-------------------------------------------------------------------------
-! init index
+     !>>> ctqmc_flvr module
+     !--------------------------------------------------------------------
+
+     ! init index
      index_t = 0
      index_v = 0
 
-! init type
+     ! init type
      type_v  = 1
 
-! init flvr
+     ! init flvr
      flvr_v  = 1
 
-! init time
+     ! init time
      time_v  = zero
 
-! init expt
+     ! init expt
      expt_v  = zero
      do i=1,ncfgs
          expt_t(i, 1) = exp( - eigs(i) * beta )
@@ -930,7 +931,7 @@
          expt_t(i, 4) = exp( - eigs(i) * beta )
      enddo ! over i={1,ncfgs} loop
 
-! init stack
+     ! init stack
      call istack_clean( empty_v )
      do j=mkink,1,-1
          call istack_push( empty_v, j )
