@@ -2380,7 +2380,8 @@
 !! operators on perturbation expansion series
 !!
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end)
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
 
      use stack, only : istack_getrest
      use stack, only : istack_gettop
@@ -2399,47 +2400,50 @@
 
      implicit none
 
-! external arguments
-! index address to remove old creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
+!! external arguments
+     ! index address to remove old creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time point of the old creation operator
+     ! imaginary time point of the old creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time point of the old annihilation operator
+     ! imaginary time point of the old annihilation operator
      real(dp), intent(in) :: tau_end
 
-! local variables
-! loop index over operators
+!! local variables
+     ! loop index over operators
      integer  :: i
 
-! memory address for old creation and annihilation operators
+     ! memory address for old creation and annihilation operators
      integer  :: as
      integer  :: ae
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! memory address for the rightmost time evolution operator
+     ! memory address for the rightmost time evolution operator
      integer  :: ilast
 
-! imaginary time interval for two successive operators
-! t_prev stands for t_{i} - t_{i-1), and t_next stands for t_{i+1} - t_{i}
+     ! imaginary time interval for two successive operators
+     ! t_prev stands for t_{i} - t_{i-1), and
+     ! t_next stands for t_{i+1} - t_{i}
      real(dp) :: t_prev
      real(dp) :: t_next
 
-! check tau_start and tau_end, to eliminate the warning from compiler
+!! [body
+
+     ! check tau_start and tau_end, to eliminate the warning from compiler
      call s_assert( tau_start > zero )
      call s_assert( tau_end   > zero )
 
-! determine nsize at first, get total number of operators
+     ! determine nsize at first, get total number of operators
      nsize = istack_getrest( empty_v )
 
-! copy index_v to index_t
-! since we do not remove the two operators actually at this stage, so
-! index_v can not be overwritten here
+     ! copy index_v to index_t
+     ! since we do not remove the two operators actually at this stage, so
+     ! index_v can not be overwritten here
      do i=1,nsize
          index_t(i) = index_v(i)
      enddo ! over i={1,nsize} loop
