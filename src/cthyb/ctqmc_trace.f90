@@ -596,24 +596,36 @@
 
      ! read file solver.prob.dat, only master node can do it
      if ( myid == master ) then
+
+         ! inquire file status: solver.prob.dat
          inquire (file = 'solver.prob.dat', exist = exists)
-! solver.prob.dat is available, we read the sector probability data
+
+         ! if file solver.prob.dat is available,
+         ! we try to read the probability data and make a decision
          if ( exists .eqv. .true.) then
+
+             ! read sector probability data
              open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
+             !
              do i=1,ncfgs+2
                  read(mytmp,*) ! skip header
              enddo ! over i={1,ncfgs+2} loop
+             !
              do i=1,nsect
                  read(mytmp,*) m, rt, sprob(i)
              enddo ! over i={1,nsect} loop
+             !
              close(mytmp)
-! determine which sector should be truncated
+
+             ! determine which sector should be truncated
              do i=1,nsect
                  if ( sprob(i) < eps6 ) sectoff(i) = .true.
              enddo ! over i={1,nsect} loop
-! solver.prob.dat is not available, we can not do truncation
+
+        ! solver.prob.dat is not available, we can not do truncation
          else
-             call s_print_exception('cat_trun_sector','sector probability data are unavailable')
+             call s_print_exception('cat_trun_sector', &
+                 & 'sector probability data are unavailable')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
