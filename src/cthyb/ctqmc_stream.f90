@@ -520,15 +520,23 @@
 !!
   subroutine ctqmc_input_atom_()
      use constants, only : dp
+     use constants, only : zero, one
+     use constants, only : mytmp
 
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
-     !use control
-     !use context
+     use control, only : ncfgs
+     use control, only : Uc, mune, beta
+     use control, only : myid, master
 
-     !use m_sect
-     !use m_part
+     use context, only : cssoc
+     use context, only : eigs, naux, saux
+
+     use m_sect, only : nsect
+     use m_sect, only : max_dim_sect
+     use m_sect, only : ave_dim_sect
+     use m_sect, only : sectors
 
      implicit none
 
