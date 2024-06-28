@@ -255,24 +255,24 @@
          paux(4) = paux(4) + csign * sz
 
          ! evaluate kinetic energy: ekin
+         !
          ! equation : -T < k >
          paux(3) = paux(3) - csign * real(ckink * norbs) / beta
 
-! evaluate potential energy: epot
-! it is < H_{loc} > in fact, not equal to the definition in azalea project
-! equation : \sum_m P_m E_m
-! note: here U denotes as energy zero point
-!-------------------------------------------------------------------------
-     do i=1,ncfgs
-         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + Uc )
-     enddo ! over i={1,ncfgs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         ! evaluate potential energy: epot
+         !
+         ! it is < H_{loc} > in fact, not equal to the definition in
+         ! azalea project. here Uc denotes as energy zero point
+         !
+         ! equation : \sum_m P_m E_m
+         do i=1,ncfgs
+             paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + Uc )
+         enddo ! over i={1,ncfgs} loop
 
-! evaluate total energy: etot
-! equation : E_{tot} = < H_{loc} > - T < k > + \mu N
-!-------------------------------------------------------------------------
-     paux(1) = paux(2) + paux(3) + mune * nele
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         ! evaluate total energy: etot
+         !
+         ! equation : E_{tot} = < H_{loc} > - T < k > + \mu N
+         paux(1) = paux(2) + paux(3) + mune * nele
 
      END BLOCK CALC_PAUX
 
