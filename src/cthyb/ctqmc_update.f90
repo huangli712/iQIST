@@ -182,8 +182,8 @@
 
      END BLOCK C_Z_SPACE
 
-! numerical trick: perform global spin flip periodically
-!-------------------------------------------------------------------------
+     ! numerical trick: perform global spin flip periodically
+     !--------------------------------------------------------------------
      GLOBAL_REFLIP: BLOCK
 
          if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) then
@@ -204,8 +204,8 @@
 
      END BLOCK GLOBAL_REFLIP
 
-! numerical trick: perform global update periodically
-!-------------------------------------------------------------------------
+     ! numerical trick: perform global update periodically
+     !--------------------------------------------------------------------
      GLOBAL_RELOAD: BLOCK
 
          if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
@@ -213,6 +213,8 @@
          endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      END BLOCK GLOBAL_RELOAD
+
+!! body]
 
      return
   end subroutine ctqmc_try_walking
