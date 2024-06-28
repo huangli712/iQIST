@@ -412,26 +412,26 @@
          pass = .false.
      endif ! back if ( ladd .eqv. .true. ) block
 
-! if the update action is accepted
+     ! if the update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively
-! the perturbation expansion series (colour part) are updated as well
+         ! update the mmat matrix and gmat matrix, respectively
+         ! the perturbation expansion series (colour part) are updated as well
          call cat_insert_matrix(flvr, cis, cie, tau_start, tau_end, deter_ratio)
 
-! update the flavor part of perturbation expansion series
+         ! update the flavor part of perturbation expansion series
          call cat_insert_flavor(flvr, fis, fie, tau_start, tau_end)
 
-! update the operators trace
+         ! update the operators trace
          call ctqmc_make_evolve()
 
-! update ckink for current flavor channel
+         ! update ckink for current flavor channel
          ckink = ckink + 1
 
-! update rank for current flavor channel
+         ! update rank for current flavor channel
          rank(flvr) = rank(flvr) + 1
 
-! determine the sign, TO BE CHECKED
+         ! determine the sign, TO BE CHECKED
          csign = csign * int ( sign(one, p) )
 
      endif ! back if ( pass .eqv. .true. ) block
