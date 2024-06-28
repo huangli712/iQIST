@@ -722,36 +722,38 @@
          pass = .false.
      endif ! back if ( lshf .eqv. .true. ) block
 
-! if update action is accepted
+     ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the flavor part of perturbation expansion series
+         ! update the flavor part of perturbation expansion series
          call cat_lshift_flavor(flvr, fiso, fisn, tau_start2)
 
-! update the mmat matrix and gmat matrix, respectively
-! the perturbation expansion series (colour part) are updated as well
+         ! update the mmat matrix and gmat matrix, respectively
+         ! the perturbation expansion series (colour part) are updated as well
          call cat_lshift_matrix(flvr, ciso, cisn, tau_start1, tau_start2, deter_ratio)
 
-! update the operators trace
+         ! update the operators trace
          call ctqmc_make_evolve()
 
-! determine the sign, TO BE CHECKED
+         ! determine the sign, TO BE CHECKED
          csign = csign * int ( sign(one, p) )
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! record negative sign
+     ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
      endif ! back if ( csign < 0 ) block
 
-! update monte carlo statistics
+     ! update monte carlo statistics
      lsh_t = lsh_t + one
      if ( pass .eqv. .true. ) then
          lsh_a = lsh_a + one
      else
          lsh_r = lsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine ctqmc_lshift_kink
