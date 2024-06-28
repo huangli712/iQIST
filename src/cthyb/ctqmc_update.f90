@@ -837,10 +837,11 @@
      ! and related index cien
      call try_rshift_colour(flvr, cieo, cien, tau_end1, tau_end2)
 
-! try to generate new configuration (flavor part)
-! fast look up the flavor part of perturbation expansion series, determine
-! corresponding fieo and fien, and determine whether the operators trace is
-! not equal to zero
+     ! try to generate new configuration (flavor part)
+     !
+     ! fast look up the flavor part of perturbation expansion series,
+     ! determine corresponding fieo and fien, and determine whether
+     ! the operators trace is not equal to zero
      call try_rshift_flavor(flvr, fieo, fien, tau_end1, tau_end2, rshf)
 
 ! calculate the transition ratio for the local trace part
