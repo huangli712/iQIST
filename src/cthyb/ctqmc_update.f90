@@ -475,39 +475,42 @@
 
      implicit none
 
-! local variables
-! whether the old creation and annihilation operators can be removed
+!! local variables
+     ! whether the old creation and annihilation operators can be removed
      logical  :: lrmv
 
-! whether the update operation is accepted
+     ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel
+     ! current flavor channel
      integer  :: flvr
 
-! index address to remove old creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
-! cis (cie) is for the colour part, while fis (fie) is for the flavor part
+     ! index address to remove old creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
+     ! cis (cie) is for the colour part
+     ! fis (fie) is for the flavor part
      integer  :: cis, cie
      integer  :: fis, fie
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! random number
+     ! random number
      real(dp) :: r
 
-! \tau_s, imaginary time point of the creation operator
+     ! \tau_s, imaginary time point of the creation operator
      real(dp) :: tau_start
 
-! \tau_e, imaginary time point of the annihilation operator
+     ! \tau_e, imaginary time point of the annihilation operator
      real(dp) :: tau_end
 
-! ratio between old and new configurations, the local trace part
+     ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part
+     ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
+
+!! [body
 
 ! initialize logical variables
      lrmv = .false.
