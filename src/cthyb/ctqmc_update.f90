@@ -534,10 +534,11 @@
      ! and then determine tau_start and tau_end for them
      call try_remove_colour(flvr, cis, cie, tau_start, tau_end)
 
-! try to generate new configuration (flavor part)
-! fast look up the flavor part of perturbation expansion series, determine
-! corresponding fis and fie, and determine whether the operators trace is
-! not equal to zero
+     ! try to generate new configuration (flavor part)
+     !
+     ! fast look up the flavor part of perturbation expansion series,
+     ! determine corresponding fis and fie, and determine whether the
+     ! operators trace is not equal to zero
      call try_remove_flavor(fis, fie, tau_start, tau_end, lrmv)
 
 ! calculate the transition ratio for the local trace part
