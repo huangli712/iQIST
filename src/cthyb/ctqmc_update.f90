@@ -344,26 +344,28 @@
      ! random number
      real(dp) :: r
 
-! \tau_s, imaginary time point of the creation operator
+     ! \tau_s, imaginary time point of the creation operator
      real(dp) :: tau_start
 
-! \tau_e, imaginary time point of the annihilation operator
+     ! \tau_e, imaginary time point of the annihilation operator
      real(dp) :: tau_end
 
-! ratio between old and new configurations, the local trace part
+     ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part
+     ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      ladd = .false.
      pass = .false.
 
-! select the flavor channel randomly among 1 ~ norbs
+     ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order for current flavor channel
+     ! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
          ins_t = ins_t + one
@@ -372,25 +374,27 @@
          RETURN
      endif ! back if ( ckink == mkink ) block
 
-! try to generate new configuration (colour part)
-! randomly generate tau_start and tau_end at selected flvr channel, and
-! then determine index address cis and cie for them
+     ! try to generate new configuration (colour part)
+     !
+     ! randomly generate tau_start and tau_end at selected flvr channel,
+     ! and then determine index address cis and cie for them
      call try_insert_colour(flvr, cis, cie, tau_start, tau_end)
 
-! try to generate new configuration (flavor part)
-! fast look up the flavor part of perturbation expansion series, determine
-! corresponding fis and fie, and determine whether the operators trace is
-! not equal to zero
+     ! try to generate new configuration (flavor part)
+     !
+     ! fast look up the flavor part of perturbation expansion series,
+     ! determine corresponding fis and fie, and determine whether the
+     ! operators trace is not equal to zero
      call try_insert_flavor(flvr, fis, fie, tau_start, tau_end, ladd)
 
-! calculate the transition ratio for the local trace part
+     ! calculate the transition ratio for the local trace part
      if ( ladd .eqv. .true. ) then
          call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end)
      else
          trace_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! calculate the transition ratio for the determinant part
+     ! calculate the transition ratio for the determinant part
      if ( ladd .eqv. .true. ) then
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
