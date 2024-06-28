@@ -858,46 +858,50 @@
          deter_ratio = zero
      endif ! back if ( rshf .eqv. .true. ) block
 
-! we will determine the pass by lazy trace evaluation
-! if rshf is false, we set the pass as false immediately
+     ! we will determine the pass by lazy trace evaluation
+     ! if rshf is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * one
+     !
      if ( rshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 1, 2*sum(rank), trace_ratio, tau_end1, tau_end2, r, p, pass )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank), &
+             & trace_ratio, tau_end1, tau_end2, r, p, pass )
      else
          rshf = .false.
      endif ! back if ( rshf .eqv. .true. ) block
 
-! if update action is accepted
+     ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the flavor part of perturbation expansion series
+         ! update the flavor part of perturbation expansion series
          call cat_rshift_flavor(flvr, fieo, fien, tau_end2)
 
-! update the mmat matrix and gmat matrix, respectively
-! the perturbation expansion series (colour part) are updated as well
+         ! update the mmat matrix and gmat matrix, respectively
+         ! the perturbation expansion series (colour part) are updated as well
          call cat_rshift_matrix(flvr, cieo, cien, tau_end1, tau_end2, deter_ratio)
 
-! update the operators trace
+         ! update the operators trace
          call ctqmc_make_evolve()
 
-! determine the sign, TO BE CHECKED
+         ! determine the sign, TO BE CHECKED
          csign = csign * int ( sign(one, p) )
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! record negative sign
+     ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
      endif ! back if ( csign < 0 ) block
 
-! update monte carlo statistics
+     ! update monte carlo statistics
      rsh_t = rsh_t + one
      if ( pass .eqv. .true. ) then
          rsh_a = rsh_a + one
      else
          rsh_r = rsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine ctqmc_rshift_kink
