@@ -541,26 +541,28 @@
      ! operators trace is not equal to zero
      call try_remove_flavor(fis, fie, tau_start, tau_end, lrmv)
 
-! calculate the transition ratio for the local trace part
+     ! calculate the transition ratio for the local trace part
      if ( lrmv .eqv. .true. ) then
          call cat_remove_ztrace(fis, fie, tau_start, tau_end)
      else
          trace_ratio = zero
      endif ! back if ( lrmv .eqv. .true. ) block
 
-! calculate the transition ratio for the determinant part
+     ! calculate the transition ratio for the determinant part
      if ( lrmv .eqv. .true. ) then
          call cat_remove_detrat(flvr, cis, cie, deter_ratio)
      else
          deter_ratio = zero
      endif ! back if ( lrmv .eqv. .true. ) block
 
-! we will determine the pass by lazy trace evaluation
-! if lrmv is false, we set the pass as false immediately
+     ! we will determine the pass by lazy trace evaluation
+     ! if lrmv is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * ( real( ckink ) / beta ) ** 2
+     !
      if ( lrmv .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 1, 2*sum(rank) - 2, trace_ratio, tau_start, tau_end, r, p, pass )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank) - 2, &
+             & trace_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( lrmv .eqv. .true. ) block
