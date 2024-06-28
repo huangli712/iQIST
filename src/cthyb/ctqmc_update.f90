@@ -331,16 +331,17 @@
      ! current flavor channel
      integer  :: flvr
 
-! index address to insert new creation and annihilation operators
-! is and ie are for creation and annihilation operators, respectively
-! cis (cie) is for the colour part, while fis (fie) is for the flavor part
+     ! index address to insert new creation and annihilation operators
+     ! is and ie are for creation and annihilation operators, respectively
+     ! cis (cie) is for the colour part
+     ! fis (fie) is for the flavor part
      integer  :: cis, cie
      integer  :: fis, fie
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! random number
+     ! random number
      real(dp) :: r
 
 ! \tau_s, imaginary time point of the creation operator
