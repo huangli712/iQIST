@@ -1082,14 +1082,15 @@
              ! for spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
-! calculate the transition probability
+             ! calculate the transition probability
              p = p * ( ratup * ratdn )
 
          enddo ! over flvr={1,nband} loop
 
-! make a trial swap for flvr_v
+         ! make a trial swap for flvr_v
          do i=1,nsize
              flvr = flvr_v( index_v(i) )
+             !
              if ( flvr <= nband ) then
                  flvr_v ( index_v(i) ) = flvr + nband
              else
@@ -1097,14 +1098,16 @@
              endif ! back if ( flvr <= nband ) block
          enddo ! over i={1,nsize} loop
 
-! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
+         ! make a copy of index_v,
+         ! index_t is need by ctqmc_make_ztrace()
          do i=1,nsize
              index_t(i) = index_v(i)
          enddo ! over i={1,nsize} loop
 
-! calculate the transition ratio for the local trace part
+         ! calculate the transition ratio for the local trace part
          r = spring_sfmt_stream()
          ratup = p
+         !
          call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
