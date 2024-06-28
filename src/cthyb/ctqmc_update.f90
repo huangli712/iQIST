@@ -154,22 +154,24 @@
 
      implicit none
 
-! external arguments
-! current QMC sweep steps
+!! external arguments
+     ! current QMC sweep steps
      integer, intent(in) :: cstep
 
-! random walking in C_Z space
-!-------------------------------------------------------------------------
+!! [body
+
+     ! random walking in C_Z space
+     !--------------------------------------------------------------------
      C_Z_SPACE: BLOCK
 
-! change the order of perturbation expansion series
+         ! change the order of perturbation expansion series
          if ( spring_sfmt_stream() < 0.9_dp ) then
              if ( spring_sfmt_stream() > 0.5_dp ) then
                  call ctqmc_insert_kink()  ! insert one new kink
              else
                  call ctqmc_remove_kink()  ! remove one old kink
              endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
-! do not change the order of perturbation expansion series
+         ! do not change the order of perturbation expansion series
          else
              if ( spring_sfmt_stream() > 0.5_dp ) then
                  call ctqmc_lshift_kink()  ! shift the creation operators
