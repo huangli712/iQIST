@@ -578,32 +578,34 @@
          ! the perturbation expansion series (colour part) are updated as well
          call cat_remove_matrix(flvr, cis, cie)
 
-! update the operators trace
+         ! update the operators trace
          call ctqmc_make_evolve()
 
-! decrease ckink for current flavor channel
+         ! decrease ckink for current flavor channel
          ckink = ckink - 1
 
-! update rank for current flavor channel
+         ! update rank for current flavor channel
          rank(flvr) = rank(flvr) - 1
 
-! determine the sign, TO BE CHECKED
+         ! determine the sign, TO BE CHECKED
          csign = csign * int ( sign(one, p) )
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! record negative sign
+     ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
      endif ! back if ( csign < 0 ) block
 
-! update monte carlo statistics
+     ! update monte carlo statistics
      rmv_t = rmv_t + one
      if ( pass .eqv. .true. ) then
          rmv_a = rmv_a + one
      else
          rmv_r = rmv_r + one
      endif ! back if ( pass .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine ctqmc_remove_kink
