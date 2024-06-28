@@ -948,26 +948,28 @@
      integer  :: fup
      integer  :: fdn
 
-! loop index for flavor channel
+     ! loop index for flavor channel
      integer  :: flvr
 
-! maximum rank order
+     ! maximum rank order
      integer  :: kmax
 
-! total number of operators
+     ! total number of operators
      integer  :: nsize
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! random number
+     ! random number
      real(dp) :: r
 
-! global flip determinant ratio
+     ! global flip determinant ratio
      real(dp) :: ratup
      real(dp) :: ratdn
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      pass = .false.
 
 ! initialize transition probability
