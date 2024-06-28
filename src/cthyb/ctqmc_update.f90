@@ -306,7 +306,8 @@
 !! expansion series
 !!
   subroutine ctqmc_insert_kink()
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use spring, only : spring_sfmt_stream
 
@@ -320,14 +321,14 @@
 
      implicit none
 
-! local variables
-! whether the new creation and annihilation operators can be inserted
+!! local variables
+     ! whether the new creation and annihilation operators can be inserted
      logical  :: ladd
 
-! whether the update operation is accepted
+     ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel
+     ! current flavor channel
      integer  :: flvr
 
 ! index address to insert new creation and annihilation operators
