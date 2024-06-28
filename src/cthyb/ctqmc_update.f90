@@ -1064,10 +1064,11 @@
              endif ! back if ( pass .eqv. .true. ) block
 
          enddo ! over flvr={1,nband} loop
+     endif ! back if ( cflip == 1 ) block
 
      ! case 2: cflip = 2, global flip
      !--------------------------------------------------------------------
-     else
+     if ( cflip == 2 ) then
          do flvr=1,nband
 
              ! get fup and fdn
@@ -1077,7 +1078,8 @@
              ! for spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
-! calculate the transition ratio for the determinant part, spin dn case
+             ! calculate the transition ratio for the determinant part,
+             ! for spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
 ! calculate the transition probability
