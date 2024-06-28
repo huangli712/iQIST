@@ -1039,14 +1039,15 @@
                  ! update the operators trace
                  call ctqmc_make_evolve()
 
-! if this update action can not be accepted, reset it
+             ! if this update action can not be accepted, reset it
              else
 
-! recover the original status of flvr_v
+                 ! recover the original status of flvr_v
                  do i=1,nsize
                      if ( flvr_v ( index_v(i) ) == fup ) then
                          flvr_v ( index_v(i) ) = fdn; CYCLE
                      endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
+                     !
                      if ( flvr_v ( index_v(i) ) == fdn ) then
                          flvr_v ( index_v(i) ) = fup; CYCLE
                      endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
@@ -1054,7 +1055,7 @@
 
              endif ! back if ( pass .eqv. .true. ) block
 
-! update monte carlo statistics
+             ! update monte carlo statistics
              rfl_t = rfl_t + one
              if ( pass .eqv. .true. ) then
                  rfl_a = rfl_a + one
