@@ -777,48 +777,51 @@
 
      implicit none
 
-! local variables
-! whether the old annihilation operators can be shifted diagrammatically
+!! local variables
+     ! whether the old annihilation operators can be shifted diagrammatically
      logical  :: rshf
 
-! whether the update operation is accepted
+     ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel
+     ! current flavor channel
      integer  :: flvr
 
-! index address to shift old annihilation operator
-! ieo and ien are for old and new indices, respectively
-! cieo (cien) is for the colour part, while fieo (fien) is for the flavor part
+     ! index address to shift old annihilation operator
+     ! ieo and ien are for old and new indices, respectively
+     ! cieo (cien) is for the colour part
+     ! fieo (fien) is for the flavor part
      integer  :: cieo, cien
      integer  :: fieo, fien
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! random number
+     ! random number
      real(dp) :: r
 
-! \tau_e, imaginary time point of the old annihilation operator
+     ! \tau_e, imaginary time point of the old annihilation operator
      real(dp) :: tau_end1
 
-! \tau_e, imaginary time point of the new annihilation operator
+     ! \tau_e, imaginary time point of the new annihilation operator
      real(dp) :: tau_end2
 
-! ratio between old and new configurations, the local trace part
+     ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part
+     ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      rshf = .false.
      pass = .false.
 
-! select the flavor channel randomly among 1 ~ norbs
+     ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order for current flavor channel
+     ! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
          rsh_t = rsh_t + one
@@ -827,9 +830,11 @@
          RETURN
      endif ! back if ( ckink == 0 ) block
 
-! try to generate new configuration (colour part)
-! at first, we select cieo randomly, and then obtain tau_end1. according
-! to the existing operators, we determine tau_end2 and related index cien
+     ! try to generate new configuration (colour part)
+     !
+     ! at first, we select cieo randomly, and then obtain tau_end1.
+     ! according to the existing operators, we determine tau_end2
+     ! and related index cien
      call try_rshift_colour(flvr, cieo, cien, tau_end1, tau_end2)
 
 ! try to generate new configuration (flavor part)
