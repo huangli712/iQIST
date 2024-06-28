@@ -764,7 +764,8 @@
 !! shift old annihilation operator in the perturbation expansion series
 !!
   subroutine ctqmc_rshift_kink()
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use spring, only : spring_sfmt_stream
 
