@@ -254,11 +254,9 @@
          ! evaluate spin magnetization: < Sz >
          paux(4) = paux(4) + csign * sz
 
-! evaluate kinetic energy: ekin
-! equation : -T < k >
-!-------------------------------------------------------------------------
-     paux(3) = paux(3) - csign * real(ckink * norbs) / beta
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         ! evaluate kinetic energy: ekin
+         ! equation : -T < k >
+         paux(3) = paux(3) - csign * real(ckink * norbs) / beta
 
 ! evaluate potential energy: epot
 ! it is < H_{loc} > in fact, not equal to the definition in azalea project
