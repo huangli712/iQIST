@@ -210,19 +210,29 @@
          sz = sz + sectors(i)%sz * sprob(i)
      enddo ! over i={1,nsect} loop
 
-! evaluate occupation matrix: < n_i >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
-!-------------------------------------------------------------------------
+     ! evaluate occupation matrix: < n_i >
+     !
+     ! equation :
+     !
+     ! Tr ( e^{- \beta H} c^{\dag}_i c_i )
+     !     / Tr ( e^{- \beta H} )
+     !
+     !--------------------------------------------------------------------
      nimp = zero
-! this feature will not be implemented for majushaka code
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     ! this feature will not be implemented for majushaka code
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! evaluate double occupation matrix: < n_i n_j >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
-!-------------------------------------------------------------------------
+     ! evaluate double occupation matrix: < n_i n_j >
+     !
+     ! equation :
+     !
+     ! Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j )
+     !     / Tr ( e^{- \beta H} )
+     !
+     !--------------------------------------------------------------------
      nmat = zero
-! this feature will not be implemented for manjushaka code
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     ! this feature will not be implemented for manjushaka code
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      CALC_PAUX: BLOCK
 
