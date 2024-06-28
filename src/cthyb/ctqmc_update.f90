@@ -405,6 +405,7 @@
      ! if ladd is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * ( beta / real( ckink + 1 ) ) ** 2
+     !
      if ( ladd .eqv. .true. ) then
          call ctqmc_lazy_ztrace( 1, 2*sum(rank) + 2, &
              & trace_ratio, tau_start, tau_end, r, p, pass )
@@ -567,14 +568,14 @@
          pass = .false.
      endif ! back if ( lrmv .eqv. .true. ) block
 
-! if update action is accepted
+     ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the flavor part of perturbation expansion series
+         ! update the flavor part of perturbation expansion series
          call cat_remove_flavor(fis, fie, tau_start, tau_end)
 
-! update the mmat matrix and gmat matrix, respectively
-! the perturbation expansion series (colour part) are updated as well
+         ! update the mmat matrix and gmat matrix, respectively
+         ! the perturbation expansion series (colour part) are updated as well
          call cat_remove_matrix(flvr, cis, cie)
 
 ! update the operators trace
