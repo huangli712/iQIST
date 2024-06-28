@@ -11,9 +11,9 @@
 !!!           ctqmc_reload_kink
 !!! source  : ctqmc_update.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/19/2017 by li huang (last modified)
+!!!           06/28/2024 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver().
