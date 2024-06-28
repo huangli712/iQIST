@@ -62,7 +62,11 @@
   subroutine ctqmc_record_ac_f()
      implicit none
 
+!! [body
+
      CONTINUE
+
+!! body]
 
      return
   end subroutine ctqmc_record_ac_f
@@ -110,19 +114,24 @@
 !!
   subroutine ctqmc_record_prob()
      use control, only : ncfgs
+
      use context, only : csign, c_mtr
      use context, only : prob
      use context, only : diag
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
+
+!! [body
 
      do i=1,ncfgs
          prob(i) = prob(i) + csign * diag(i,2) / c_mtr
      enddo ! over i={1,ncfgs} loop
+
+!! body]
 
      return
   end subroutine ctqmc_record_prob
@@ -135,10 +144,12 @@
 !! to save the computational time
 !!
   subroutine ctqmc_record_paux()
-     use constants, only : dp, zero, two
+     use constants, only : dp
+     use constants, only : zero, two
 
      use control, only : norbs, ncfgs
      use control, only : Uc, mune, beta
+
      use context, only : ckink, csign, c_mtr
      use context, only : paux, nimp, nmat
      use context, only : diag, eigs
