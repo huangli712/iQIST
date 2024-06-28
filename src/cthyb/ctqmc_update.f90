@@ -1065,15 +1065,16 @@
 
          enddo ! over flvr={1,nband} loop
 
-! case 2: cflip = 2, global flip
-!-------------------------------------------------------------------------
+     ! case 2: cflip = 2, global flip
+     !--------------------------------------------------------------------
      else
          do flvr=1,nband
 
-! get fup and fdn
+             ! get fup and fdn
              fup = flvr; fdn = flvr + nband
 
-! calculate the transition ratio for the determinant part, spin up case
+             ! calculate the transition ratio for the determinant part,
+             ! for spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
 ! calculate the transition ratio for the determinant part, spin dn case
