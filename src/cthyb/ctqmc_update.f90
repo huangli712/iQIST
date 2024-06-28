@@ -972,21 +972,21 @@
      ! initialize logical variables
      pass = .false.
 
-! initialize transition probability
+     ! initialize transition probability
      p = one
 
-! get total number of operators
+     ! get total number of operators
      nsize = istack_getrest( empty_v )
 
-! not need to perform global flip if there are no operators at all
+     ! not need to perform global flip if there are no operators at all
      if ( nsize == 0 ) then
          rfl_t = rfl_t + one
          rfl_r = rfl_r + one
          RETURN
      endif ! back if ( nsize == 0 ) block
 
-! case 1: cflip = 1, local flip
-!-------------------------------------------------------------------------
+     ! case 1: cflip = 1, local flip
+     !--------------------------------------------------------------------
      if ( cflip == 1 ) then
          do flvr=1,nband
 
