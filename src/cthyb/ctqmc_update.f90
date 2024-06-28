@@ -616,7 +616,8 @@
 !! shift old creation operator in the perturbation expansion series
 !!
   subroutine ctqmc_lshift_kink()
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use spring, only : spring_sfmt_stream
 
@@ -628,41 +629,44 @@
 
      implicit none
 
-! local variables
-! whether the old creation operators can be shifted diagrammatically
+!! local variables
+     ! whether the old creation operators can be shifted diagrammatically
      logical  :: lshf
 
-! whether the update operation is accepted
+     ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel
+     ! current flavor channel
      integer  :: flvr
 
-! index address to shift old creation operator
-! iso and isn are for old and new indices, respectively
-! ciso (cisn) is for the colour part, while fiso (fisn) is for the flavor part
+     ! index address to shift old creation operator
+     ! iso and isn are for old and new indices, respectively
+     ! ciso (cisn) is for the colour part
+     ! fiso (fisn) is for the flavor part
      integer  :: ciso, cisn
      integer  :: fiso, fisn
 
-! transition probability
+     ! transition probability
      real(dp) :: p
 
-! random number
+     ! random number
      real(dp) :: r
 
-! \tau_s, imaginary time point of the old creation operator
+     ! \tau_s, imaginary time point of the old creation operator
      real(dp) :: tau_start1
 
-! \tau_s, imaginary time point of the new creation operator
+     ! \tau_s, imaginary time point of the new creation operator
      real(dp) :: tau_start2
 
-! ratio between old and new configurations, the local trace part
+     ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part
+     ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
-! initialize logical variables
+!! [body
+
+     ! initialize logical variables
      lshf = .false.
      pass = .false.
 
