@@ -844,14 +844,14 @@
      ! the operators trace is not equal to zero
      call try_rshift_flavor(flvr, fieo, fien, tau_end1, tau_end2, rshf)
 
-! calculate the transition ratio for the local trace part
+     ! calculate the transition ratio for the local trace part
      if ( rshf .eqv. .true. ) then
          call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2)
      else
          trace_ratio = zero
      endif ! back if ( rshf .eqv. .true. ) block
 
-! calculate the transition ratio for the determinant part
+     ! calculate the transition ratio for the determinant part
      if ( rshf .eqv. .true. ) then
          call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
      else
