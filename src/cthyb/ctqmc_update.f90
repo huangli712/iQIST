@@ -401,12 +401,13 @@
          deter_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! we will determine the pass by lazy trace evaluation
-! if ladd is false, we set the pass as false immediately
+     ! we will determine the pass by lazy trace evaluation
+     ! if ladd is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      trace_ratio = deter_ratio * ( beta / real( ckink + 1 ) ) ** 2
      if ( ladd .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 1, 2*sum(rank) + 2, trace_ratio, tau_start, tau_end, r, p, pass )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank) + 2, &
+             & trace_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( ladd .eqv. .true. ) block
