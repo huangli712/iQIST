@@ -1,14 +1,14 @@
 !!!-----------------------------------------------------------------------
-!!! project : manjushaka
+!!! project : iqist @ manjushaka
 !!! program : ctqmc_try_warming
 !!!           ctqmc_try_walking
-!!!           ctqmc_try_warning <<<---
+!!!           ctqmc_try_warning
 !!!           ctqmc_insert_kink
 !!!           ctqmc_remove_kink
 !!!           ctqmc_lshift_kink
 !!!           ctqmc_rshift_kink
 !!!           ctqmc_reflip_kink
-!!!           ctqmc_reload_kink <<<---
+!!!           ctqmc_reload_kink
 !!! source  : ctqmc_update.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
