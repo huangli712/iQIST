@@ -217,10 +217,9 @@
      ! Tr ( e^{- \beta H} c^{\dag}_i c_i )
      !     / Tr ( e^{- \beta H} )
      !
+     ! this feature will not be implemented for majushaka code
      !--------------------------------------------------------------------
      nimp = zero
-     ! this feature will not be implemented for majushaka code
-     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      ! evaluate double occupation matrix: < n_i n_j >
      !
@@ -229,10 +228,9 @@
      ! Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j )
      !     / Tr ( e^{- \beta H} )
      !
+     ! this feature will not be implemented for manjushaka code
      !--------------------------------------------------------------------
      nmat = zero
-     ! this feature will not be implemented for manjushaka code
-     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      CALC_PAUX: BLOCK
 
