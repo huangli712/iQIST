@@ -811,6 +811,7 @@
 
 !! external arguments
      ! control flag
+     !
      ! if cflip = 1, flip intra-orbital spins one by one
      ! if cflip = 2, flip intra-orbital spins globally
      integer, intent(in) :: cflip
@@ -872,7 +873,8 @@
                  ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-                 ! exchange global variables between spin up and spin down states
+                 ! exchange global variables between
+                 ! spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              endif ! back if ( pass .eqv. .true. ) block
@@ -923,7 +925,8 @@
                  ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-                 ! exchange global variables between spin up and spin down states
+                 ! exchange global variables between
+                 ! spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              enddo ! over flvr={1,nband} loop
@@ -965,7 +968,8 @@
 
      do flvr=1,norbs
 
-         ! check the perturbation expansion order for current flavor channel
+         ! check the perturbation expansion order for
+         ! current flavor channel
          if ( rank(flvr) == 0 ) CYCLE
 
          ! generate the mmat matrix and gmat matrix from scratch
