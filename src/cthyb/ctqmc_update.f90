@@ -29,12 +29,19 @@
 !! @sub ctqmc_try_warming
 !!
 !! perform thermalization or warmup on the perturbation expansion series
-!! to achieve thermodynamics stable equilibrium state
+!! to achieve thermodynamics stable equilibrium state. we also calculate
+!! the autocorrelation function (for the total occupation number), and
+!! then adjust the nmonte parameter here
 !!
   subroutine ctqmc_try_warming()
+     use constants, only : dp
      use constants, only : zero
+     use constants, only : mystd
 
+     use control, only : ntime
      use control, only : ntherm
+     use control, only : nmonte
+     use control, only : myid, master
 
      use context, only : cnegs, caves
      use context, only : ins_t, ins_a, ins_r
@@ -42,11 +49,12 @@
      use context, only : lsh_t, lsh_a, lsh_r
      use context, only : rsh_t, rsh_a, rsh_r
      use context, only : rfl_t, rfl_a, rfl_r
+     use context, only : ac_f
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
 ! warm up the diagram series
