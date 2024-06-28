@@ -436,18 +436,20 @@
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! record negative sign
+     ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
      endif ! back if ( csign < 0 ) block
 
-! update monte carlo statistics
+     ! update monte carlo statistics
      ins_t = ins_t + one
      if ( pass .eqv. .true. ) then
          ins_a = ins_a + one
      else
          ins_r = ins_r + one
      endif ! back if ( pass .eqv. .true. ) block
+
+!! body]
 
      return
   end subroutine ctqmc_insert_kink
@@ -459,7 +461,8 @@
 !! expansion series
 !!
   subroutine ctqmc_remove_kink()
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use spring, only : spring_sfmt_stream
 
