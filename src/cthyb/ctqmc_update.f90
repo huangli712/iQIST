@@ -237,43 +237,46 @@
 
      implicit none
 
-! external arguments
-! control flag
+!! external arguments
+     ! control flag
      integer, intent(inout) :: cflag
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: j
 
+!! [body
+
      if ( cflag == 1 ) then ! if cflag /= 1, nothing to do
 
-! check time order of operators in colour part
+         ! check time order of operators in colour part
          do i=1,norbs
              do j=1,rank(i)-1
                  if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) then
                      cflag = 99
-                 endif ! back if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) block
+                 endif ! back if block
+                 !
                  if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) then
                      cflag = 99
-                 endif ! back if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) block
+                 endif ! back if block
              enddo ! over j={1,rank(i)-1} loop
          enddo ! over i={1,norbs} loop
 
-! check time order of operators in flavor part
+         ! check time order of operators in flavor part
          do j=1,2*sum(rank)-1
              if ( index_v(j) <= 0 .or. index_v(j+1) <= 0 ) then
                  cflag = 99
-             endif ! back if ( index_v(j) <= 0 .or. index_v(j+1) <= 0 ) block
+             endif ! back if block
          enddo ! over j={1,2*sum(rank)-1} loop
-
+         !
          do j=1,2*sum(rank)-1
              if ( time_v( index_v(j) ) > time_v( index_v(j+1) ) ) then
                  cflag = 99
-             endif ! back if ( time_v( index_v(j) ) > time_v( index_v(j+1) ) ) block
+             endif ! back if block
          enddo ! over j={1,2*sum(rank)-1} loop
 
-! write the results, only master node can do it
+         ! write the results, only master node can do it
          if ( myid == master ) then
              if ( cflag == 99 ) then
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: fatal error'
@@ -286,6 +289,8 @@
          endif ! back if ( myid == master ) block
 
      endif ! back if ( cflag == 1 ) block
+
+!! body]
 
      return
   end subroutine ctqmc_try_warning
