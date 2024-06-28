@@ -1033,7 +1033,8 @@
                  ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-                 ! exchange global variables between spin up and spin down states
+                 ! exchange global variables between
+                 ! spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
                  ! update the operators trace
@@ -1110,18 +1111,19 @@
          !
          call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
-! if update action is accepted
+         ! if update action is accepted
          if ( pass .eqv. .true. ) then
 
              do flvr=1,nband
 
-! get fup and fdn
+                 ! get fup and fdn
                  fup = flvr; fdn = flvr + nband
 
-! get maximum rank order in spin up and spin down states
+                 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! exchange global variables between spin up and spin down states
+                 ! exchange global variables between
+                 ! spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              enddo ! over flvr={1,nband} loop
