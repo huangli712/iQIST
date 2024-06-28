@@ -913,7 +913,8 @@
 !! down, it maybe useful for magnetic systems
 !!
   subroutine ctqmc_reflip_kink(cflip)
-     use constants, only : dp, zero, one
+     use constants, only : dp
+     use constants, only : zero, one
 
      use spring, only : spring_sfmt_stream
 
@@ -929,20 +930,21 @@
 
      implicit none
 
-! external arguments
-! control flag
-! if cflip = 1, flip intra-orbital spins one by one
-! if cflip = 2, flip intra-orbital spins globally
+!! external arguments
+     ! control flag
+     !
+     ! if cflip = 1, flip intra-orbital spins one by one
+     ! if cflip = 2, flip intra-orbital spins globally
      integer, intent(in) :: cflip
 
-! local variables
-! whether the update operation is accepted
+!! local variables
+     ! whether the update operation is accepted
      logical  :: pass
 
-! loop index
+     ! loop index
      integer  :: i
 
-! selected flavor pairs
+     ! selected flavor pairs
      integer  :: fup
      integer  :: fdn
 
