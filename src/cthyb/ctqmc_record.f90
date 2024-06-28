@@ -184,8 +184,9 @@
          cprob(i) = diag(i,2) / c_mtr
      enddo ! over i={1,ncfgs} loop
 
-! evaluate sprob, it is current sector prob
+     ! evaluate sprob, it is current sector prob
      sprob = zero
+     !
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
@@ -193,16 +194,17 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
-! evaluate the total occupation number
-! this algorithm is somewhat rough, not very accurate
+     ! evaluate the total occupation number
+     ! this algorithm is somewhat rough, not very accurate
      nele = zero
      do i=1,nsect
          nele = nele + sectors(i)%nele * sprob(i)
      enddo ! over i={1,nsect} loop
 
-! evaluate the total Sz
-! this algorithm is somewhat rough, and only useful when the Sz quantum
-! number is used to generate the atom.cix
+     ! evaluate the total Sz
+     !
+     ! this algorithm is somewhat rough, and only useful when the Sz
+     ! quantum number is used to generate the atom.cix
      sz = zero
      do i=1,nsect
          sz = sz + sectors(i)%sz * sprob(i)
