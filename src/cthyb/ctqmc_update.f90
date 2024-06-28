@@ -1128,15 +1128,16 @@
 
              enddo ! over flvr={1,nband} loop
 
-! update the operators trace
+             ! update the operators trace
              call ctqmc_make_evolve()
 
-! if this update action can not be accepted, reset it
+         ! if this update action can not be accepted, reset it
          else
 
-! recover the original status of flvr_v
+             ! recover the original status of flvr_v
              do i=1,nsize
                  flvr = flvr_v( index_v(i) )
+                 !
                  if ( flvr <= nband ) then
                      flvr_v ( index_v(i) ) = flvr + nband
                  else
@@ -1146,15 +1147,16 @@
 
          endif ! back if ( pass .eqv. .true. ) block
 
-! update monte carlo statistics
+         ! update monte carlo statistics
          rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
              rfl_a = rfl_a + one
          else
              rfl_r = rfl_r + one
          endif ! back if ( pass .eqv. .true. ) block
+     endif ! back if ( cflip == 2 ) block
 
-     endif ! back if ( cflip == 1 ) block
+!! body]
 
      return
   end subroutine ctqmc_reflip_kink
