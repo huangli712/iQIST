@@ -994,46 +994,49 @@
              fup = flvr; fdn = flvr + nband
 
              ! calculate the transition ratio for the determinant part,
-             ! spin up case
+             ! for spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
              ! calculate the transition ratio for the determinant part,
-             ! spin dn case
+             ! for spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
-! calculate the transition probability
+             ! calculate the transition probability
              p = ratup * ratdn
 
-! make a trial swap for flvr_v
+             ! make a trial swap for flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
                      flvr_v ( index_v(i) ) = fdn; CYCLE
                  endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
+                 !
                  if ( flvr_v ( index_v(i) ) == fdn ) then
                      flvr_v ( index_v(i) ) = fup; CYCLE
                  endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
-! make a copy of index_v, index_t is need by ctqmc_lazy_ztrace()
+             ! make a copy of index_v,
+             ! index_t is need by ctqmc_lazy_ztrace()
              do i=1,nsize
                  index_t(i) = index_v(i)
              enddo ! over i={1,nsize} loop
 
-! calculate the transition ratio for the local trace part
+             ! calculate the transition ratio for the local trace part
              r = spring_sfmt_stream()
              ratup = p
+             !
              call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
-! if update action is accepted
+             ! if update action is accepted
              if ( pass .eqv. .true. ) then
 
-! get maximum rank order in spin up and spin down states
+                 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! exchange global variables between spin up and spin down states
+                 ! exchange global variables between spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
-! update the operators trace
+                 ! update the operators trace
                  call ctqmc_make_evolve()
 
 ! if this update action can not be accepted, reset it
