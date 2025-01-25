@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           01/24/2024 by li huang (last modified)
+!!!           01/25/2025 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -27,6 +27,7 @@
 !!
   subroutine ctqmc_print_header()
      use constants, only : mystd
+     use face, only : pcs
 
      use version, only : V_FULL
      use version, only : V_AUTH
@@ -50,15 +51,15 @@
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a)') cname//' (Parallelized Edition)'
+     write(mystd,'(2X,a)') pcs(cname,'red')//pcs(' (Parallelized Edition)','magenta')
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a)') cname//' (Sequential Edition)'
+     write(mystd,'(2X,a)') pcs(cname,'red')//pcs(' (Sequential Edition)','magenta')
 
 # endif  /* MPI */
 
-     write(mystd,'(2X,a)') 'A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
+     write(mystd,'(2X,a)') pcs('A Modern Continuous Time Quantum Monte Carlo Impurity Solver','blue')
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//' '//__DATE__//')'
@@ -80,6 +81,8 @@
 # endif  /* MPI */
 
 !! body]
+
+     STOP
 
      return
   end subroutine ctqmc_print_header
