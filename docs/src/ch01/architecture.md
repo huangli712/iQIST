@@ -4,6 +4,8 @@ To solve a quantum impurity model is not a straightforward job. Besides the nece
 
 The software architecture of iQIST is slightly involved. We just use a layer model to illustrate it. Next, we will explain these layers one by one.
 
+---
+
 ## Operating system layer
 
 The bottom layer is the operating system (OS). In principle, the iQIST is OS-independent. It can run properly on top of Unix/Linux, Mac OS X, FreeBSD, and Windows. 

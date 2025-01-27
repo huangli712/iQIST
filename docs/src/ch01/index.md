@@ -10,7 +10,7 @@ Are you ready? Let's go!
 * [Motivation](motivation.md) // Why do we need the iQIST software package?
 * [Components](components.md) // What does the iQIST software package include?
 * [Features] // What can we do by using the iQIST software package?
-* [Software architecture] // A bird's eye view of the iQIST software package.
+* [Software architecture](archiecture.md) // A bird's eye view of the iQIST software package.
 * [Policy](policy.md) // Some basic rules and tips.
 
 If you are already familiar with the iQIST software package, perhaps you will be interested in the following advanced topics:
