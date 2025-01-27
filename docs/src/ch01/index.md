@@ -9,7 +9,7 @@ Are you ready? Let's go!
 * [What's iQIST?](what.md) // Is it a food or an animal?
 * [Motivation](motivation.md) // Why do we need the iQIST software package?
 * [Components](components.md) // What does the iQIST software package include?
-* [Features] // What can we do by using the iQIST software package?
+* [Features](feature.md) // What can we do by using the iQIST software package?
 * [Software architecture](architecture.md) // A bird's eye view of the iQIST software package.
 * [Policy](policy.md) // Some basic rules and tips.
 
