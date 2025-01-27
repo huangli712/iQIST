@@ -1,16 +1,20 @@
-![header image](assets/logo.png)
-
 ```@raw html
+<div align="center">
+<img src="assets/logo.png"/>
 <h1>
-Reference Manual <font face = 'times'><i>for</i></font> <br/> <font color = 'purple'>I</font>nteracting <font color = 'orange'>Q</font>uantum <font color = 'orange'>I</font>mpurity <font color = 'orange'>S</font>olver <font color = 'orange'>T</font>oolkit
+Reference Manual <font face = 'times'><i>for</i></font> <br/> 
+<font color = 'purple'>I</font>nteracting 
+<font color = 'orange'>Q</font>uantum 
+<font color = 'orange'>I</font>mpurity 
+<font color = 'orange'>S</font>olver 
+<font color = 'orange'>T</font>oolkit
 </h1>
+
+Draft Version: Jan 27, 2025 (in progress)
+</div>
+<br/>
+<br/>
 ```
-
-Draft Version Jan 27, 2025 (in progress)
-
-Written by:
-
-**Li Huang**
 
 ```text
 Obi-Wan Kenobi:
