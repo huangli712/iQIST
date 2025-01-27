@@ -1,6 +1,6 @@
 # Policy
 
-## License
+### License
 
 The iQIST software package is released under the General Public Licence 3.0 (GPL) or later version.
 
