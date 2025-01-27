@@ -1,59 +1,60 @@
 # Features
 
-The main features of the core components (i.e., quantum impurity solvers) of the iQIST software package are as follows:
+The main features of the core components (i.e., quantum impurity solvers) of the iQIST software package are summarized as follows:
+
+---
 
 * **Model**
-    * Density-density interaction
-    * General interaction (Slater or Kanamori scheme)
-    * Spin-orbital coupling and crystal field splitting
-    * Hubbard-Holstein model
-    * Frequency-dependent Coulomb interaction
+    1. Density-density interaction
+    2. General interaction (Slater or Kanamori scheme)
+    3. Spin-orbital coupling and crystal field splitting
+    4. Hubbard-Holstein model
+    5. Frequency-dependent Coulomb interaction
 
 ---
 
 * **Measurement tricks**
-    * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
-    * Improved estimator for self-energy function
+    1. Orthogonal polynomial representation (Legendre polynomials)
+    2. Improved estimator for self-energy function
 
 ---
 
 * **Observables**
-    * Single-particle Green's function in imaginary time space
-    * Single-particle Green's function in matsubara frequency space
-    * Two-particle correlation function in matsubara frequency space (*experimental*)
-    * Local irreducible vertex function in matsubara frequency space (*experimental*)
-    * Self-energy function in matsubara frequency space
-    * Histogram of perturbation expansion order
-    * Kurtosis and skewness of perturbation expansion order
-    * Kinetic and potential energies
-    * Orbital occupation numbers
-    * Double occupation numbers
-    * Magnetic moment
-    * Atomic state probability
-    * Spin-spin correlation function in imaginary time space
-    * Spin-spin correlation function in matsubara frequency space
-    * Orbital-orbital correlation function in imaginary time space
-    * Orbital-orbital correlation function in matsubara frequency space
-    * Fidelity susceptibility
-    * Kinetic energy fluctuation ``\langle k^2\rangle - \langle k\rangle^2 - \langle k\rangle``
+    1. Single-particle Green's function in imaginary time space
+    2. Single-particle Green's function in matsubara frequency space
+    3. Two-particle correlation function in matsubara frequency space (*experimental*)
+    4. Self-energy function in matsubara frequency space
+    5. Histogram of perturbation expansion order
+    6. Kurtosis and skewness of perturbation expansion order
+    7. Kinetic and potential energies
+    8. Orbital occupation numbers
+    9. Double occupation numbers
+    10. Magnetic moment
+    11. Atomic state probability
+    12. Spin-spin correlation function in imaginary time space
+    13. Spin-spin correlation function in matsubara frequency space
+    14. Orbital-orbital correlation function in imaginary time space
+    15. Orbital-orbital correlation function in matsubara frequency space
+    16. Fidelity susceptibility
+    17. Kinetic energy fluctuation ``\langle k^2\rangle - \langle k\rangle^2 - \langle k\rangle``
 
 ---
 
 * **Fast algorithms**
-    * Segment algorithm for density-density interaction
-    * Divide-and-conquer algorithm
-    * Sparse matrix multiplication
-    * Good quantum numbers (``N, S_z, J_z``, PS)
-    * Lazy trace evaluation
-    * Dynamical truncation approximation
+    1. Segment algorithm for density-density interaction
+    2. Divide-and-conquer algorithm
+    3. Sparse matrix multiplication
+    4. Good quantum numbers (``N, S_z, J_z``, PS)
+    5. Lazy trace evaluation
+    6. Dynamical truncation approximation
 
 ---
 
 * **Parallelism**
-    * MPI
-    * OpenMP
+    1. MPI
+    2. OpenMP
 
 ---
 
 * **Preprocessing**
-    * Atomic eigenvalue problem solver
+    1. Atomic eigenvalue problem solver
