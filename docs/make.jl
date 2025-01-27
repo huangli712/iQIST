@@ -288,11 +288,13 @@ ch08 = Any[
 makedocs(
     sitename="iQIST",
     clean = false,
-    authors = "Li Huang",
+    authors = "Li Huang <huangli@caep.cn> and contributors",
     format = Documenter.HTML(
         prettyurls = false,
         ansicolor = true,
         repolink = "https://github.com/huangli712/iQIST",
+        size_threshold = 409600, # 400kb
+        assets = ["assets/iqist.css"],
     ),
     remotes = nothing,
     pages = [
