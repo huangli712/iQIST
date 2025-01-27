@@ -26,5 +26,4 @@ Directors and Supervisors:
 
 **``^✶``** *Department of Physics, University of Fribourg, 1700 Fribourg, Switzerland*
 
-**``^\lceil``** *Department of Physics, The Hongkong University of Science and Technology,
-Clear Water Bay, Kowloon 999077, Hong Kong, China*
+**``^\lceil``** *Department of Physics, The Hongkong University of Science and Technology, Clear Water Bay, Kowloon 999077, Hong Kong, China*

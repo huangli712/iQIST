@@ -2,11 +2,12 @@
 <div align="center">
 <img src="assets/logo.png"/>
 <h1>
-Reference Manual <font face = 'times'><i>for</i></font> <br/> 
-<font color = 'purple'>I</font>nteracting 
-<font color = 'orange'>Q</font>uantum 
-<font color = 'orange'>I</font>mpurity 
-<font color = 'orange'>S</font>olver 
+Reference Manual
+<font face = 'times'><i>for</i></font><br/>
+<font color = 'purple'>I</font>nteracting
+<font color = 'orange'>Q</font>uantum
+<font color = 'orange'>I</font>mpurity
+<font color = 'orange'>S</font>olver
 <font color = 'orange'>T</font>oolkit
 </h1>
 
