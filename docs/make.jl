@@ -295,6 +295,7 @@ makedocs(
         repolink = "https://github.com/huangli712/iQIST",
         size_threshold = 409600, # 400kb
         assets = ["assets/iqist.css"],
+        inventory_version = "0.8.2",
     ),
     remotes = nothing,
     pages = [
