@@ -53,7 +53,7 @@ iqist/docs
     ```
     or you can read the official reference manual in the following website:
     ```
-    https://huangli712.github.io/projects/acflow/index.html
+    https://huangli712.github.io/projects/iqist/index.html
     ```
 
 **Where are the tutorials?**

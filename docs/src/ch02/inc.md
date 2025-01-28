@@ -128,10 +128,10 @@ Here we provide three typical choices. (1) In the macOS system, we can use the A
 
 ### FLINK
 
-Specify where the FLINK is. Now the iQIST software package depends on FLINK heavily.
+Specify where the Flink is. Now the iQIST software package depends on Flink heavily.
 
 **Possible options**:
 
 > * /Users/lihuang/Working/dmft/flink/src
 
-Please download the latest version of [FLINK](https://github.com/huangli712/Flink). And then install it on your favourite directory.
+Please download the latest version of [Flink](https://github.com/huangli712/Flink). And then install it on your favourite directory.

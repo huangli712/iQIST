@@ -22,7 +22,7 @@ The newest release of iQIST software package is **v0.8.2-devel.230706**.
 
 Write a letter to one of the core members of the **iQIST Developer Team (iQDT)**, i.e.,
 
-* Dr. Li HUANG
+* Dr. Li HUANG (email: huangli at caep.cn)
 
 and
 
