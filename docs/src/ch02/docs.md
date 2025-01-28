@@ -8,7 +8,7 @@ $ rm -fr build
 $ julia make.jl
 ```
 
-or you can read the official reference manual in the following website:
+Then the HTML-version documentation is generated in the *iqist/docs/build* directory. Or you can read the official reference manual in the following website:
     
 ```text
 https://huangli712.github.io/projects/iqist/index.html
