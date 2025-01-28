@@ -1,6 +1,6 @@
 # Installation
 
-Are you interested in the iQIST software package? 
+Are you interested in the iQIST software package?
 
 Yes?
 Do you have passion for iQIST and want to have a try?
