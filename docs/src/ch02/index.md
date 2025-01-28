@@ -19,13 +19,9 @@ Basic recipes:
 
 Advanced recipes:
 * [Build base library](base.md) // Many common modules and subroutines.
-* [Build application programming interfaces](apis.md) // APIs.
 * [Build quantum impurity solvers](solvers.md) // Core components.
-* [Build applications](apps.md) // *not ready now!*, 🙀
 * [Build atomic eigenvalues solver](atomic.md) // Companion of the quantum impurity solvers.
 * [Build auxiliary tools](tools.md) // Post- and prep-processing tools.
-* [Build libraries for Fortran](fortran.md) // Get binary library used by your own Fortran codes.
-* [Build modules for Python](python.md) // Get Python modules.
 
 !!! note
 
