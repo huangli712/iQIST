@@ -4,7 +4,7 @@ Using the iQIST software package is quite easy. Next we will show you the standa
 
 ### Choose suitable component
 
-At first, there are several CT-HYB quantum impurity solvers in the package. Their features and efficiency are somewhat different. Thus, it is the user's responsibility to choose suitable CT-HYB components to deal with the impurity problem at hand. 
+At first, there are several CT-HYB quantum impurity solvers in the package. Their features and efficiency are somewhat different. Thus, it is the user's responsibility to choose suitable CT-HYB components to deal with the impurity problem at hand.
 
 **See also**:
 
@@ -24,7 +24,7 @@ There is a bonus. When the users want to study the Hubbard model on Bethe/cubic 
 
 ### Prepare the input files
 
-Third, an important task is to prepare proper input data for the selected CT-HYB impurity solver. The optional inputs for the CT-HYB impurity solver are the hybridization function [``\Delta(i\omega_n)``], impurity energy level (``E_{\alpha\beta}``), interaction parameters (``U``, ``J``, ``\lambda``, and ``\mu``), etc. If users do not provide them to the impurity solver, it will use the default settings automatically. Specifically, if the Coulomb interaction matrix is general or the spin-orbital coupling is considered, users should use the **JASMINE** component to solve the local atomic Hamiltonian problem at first to generate the necessary eigenvalues and eigenvectors. 
+Third, an important task is to prepare proper input data for the selected CT-HYB impurity solver. The optional inputs for the CT-HYB impurity solver are the hybridization function [``\Delta(i\omega_n)``], impurity energy level (``E_{\alpha\beta}``), interaction parameters (``U``, ``J``, ``\lambda``, and ``\mu``), etc. If users do not provide them to the impurity solver, it will use the default settings automatically. Specifically, if the Coulomb interaction matrix is general or the spin-orbital coupling is considered, users should use the **JASMINE** component to solve the local atomic Hamiltonian problem at first to generate the necessary eigenvalues and eigenvectors.
 
 **See also**:
 
@@ -47,6 +47,6 @@ Finally, when the calculations are finished, users can use the tools contained i
 
 **See also**:
 
-* [Auxiliary tools](../ch07/README.md) // Full descriptions about the auxiliary toolbox.
+* [Auxiliary tools] // Full descriptions about the auxiliary toolbox.
 
 Good luck to you.
