@@ -3,6 +3,8 @@
 The documentations for the iQIST software package are written by using the *Markdown* language and the *Julia's Documenter.jl* package. You can type the following command in the terminal to build the documentations:
 
 ```shell
+$ cd iqist/docs
+$ rm -fr build
 $ julia make.jl
 ```
 
