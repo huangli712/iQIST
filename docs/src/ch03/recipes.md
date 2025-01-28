@@ -1,4 +1,4 @@
-## iQIST recipes
+# iQIST recipes
 
 Using the iQIST software package is quite easy. Next we will show you the standard workflow for using the iQIST software package.
 

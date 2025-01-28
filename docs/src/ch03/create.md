@@ -1,4 +1,4 @@
-## Prepare input files
+# Prepare input files
 
 There are two ways to generate the necessary inpute files for the quantum impurity solvers in the iQIST software package. 
 
