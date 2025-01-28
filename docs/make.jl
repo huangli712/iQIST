@@ -1,12 +1,12 @@
 using Documenter
 
 ch01 = Any[
-        #    "README" => "ch01/README.md",
+            "Contents" => "ch01/index.md",
             "What's iQIST?" => "ch01/what.md",
             "Motivation" => "ch01/motivation.md",
             "Components" => "ch01/components.md",
-        #    "Features" => "ch01/feature.md",
-        #    "Software architecture" => "ch01/architecture.md",
+            "Software architecture" => "ch01/architecture.md",
+            "Features" => "ch01/feature.md",
             "Policy" => "ch01/policy.md",
        ]
 

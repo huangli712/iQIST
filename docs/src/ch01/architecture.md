@@ -26,4 +26,4 @@ The core part of iQIST software package is in the fourth layer -- the component 
 * **MANJUSHAKA**
 * **JASMINE**
 
-Here, **NARCISSUS** and **MANJUSHAKA** are CT-HYB components, and **JASMINE** is an atomic eigenvalue solver. For more details about these components, please consult the following chapters. 
+Here, **NARCISSUS** and **MANJUSHAKA** are CT-HYB quantum impurity solvers, and **JASMINE** is an atomic eigenvalue solver. For more details about these components, please consult the following chapters. 
