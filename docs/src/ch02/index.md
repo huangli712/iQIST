@@ -20,6 +20,7 @@ Basic recipes:
 Advanced recipes:
 * [Build quantum impurity solvers](solvers.md) // Core components.
 * [Build atomic eigenvalues solver](atomic.md) // Companion of the quantum impurity solvers.
+* [Build documentation](docs.md) // User manual.
 
 !!! note
 
