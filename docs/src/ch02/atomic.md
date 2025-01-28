@@ -1,6 +1,6 @@
 # Build atomic eigenvalue problem solver
 
-The **JASMINE** component is the built-in atomic eigenvalues solver. If you want to use the **MANJUSHAKA**component, the **JASMINE** component is the necessary pre-processing tool. You can employ the following commands to compile it.
+The **JASMINE** component is the built-in atomic eigenvalues solver. If you want to use the **MANJUSHAKA** component, the **JASMINE** component is the necessary pre-processing tool. You can employ the following commands to compile it.
 
 ---
 
