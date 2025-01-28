@@ -18,10 +18,8 @@ Basic recipes:
 * [Build iQIST at one step](full.md) // Quickly build.
 
 Advanced recipes:
-* [Build base library](base.md) // Many common modules and subroutines.
 * [Build quantum impurity solvers](solvers.md) // Core components.
 * [Build atomic eigenvalues solver](atomic.md) // Companion of the quantum impurity solvers.
-* [Build auxiliary tools](tools.md) // Post- and prep-processing tools.
 
 !!! note
 
