@@ -1,6 +1,6 @@
 # Contents
 
-Hi, welcome to the world of continuous-time quantum impurity solvers. 
+Hi, welcome to the world of continuous-time quantum impurity solvers.
 
 This is the official user manual for the iQIST software package which implements several state-of-the-art continuous-time quantum impurity solvers. In this chapter, you will learn something you have to know about the continuous-time quantum impurity solvers, and of course the iQIST software package.
 

@@ -1,6 +1,6 @@
 # Software architecture
 
-To solve a quantum impurity model is not a straightforward job. Besides the necessary quantum impurity solvers, we need several auxiliary programs or tools. The iQIST is an *all-in-one* software package, which can be used to solve a broad range of quantum impurity problems. Thus, it is not surprising that iQIST is a collection of various codes and scripts. The core components contain about 50000 lines of code. 
+To solve a quantum impurity model is not a straightforward job. Besides the necessary quantum impurity solvers, we need several auxiliary programs or tools. The iQIST is an *all-in-one* software package, which can be used to solve a broad range of quantum impurity problems. Thus, it is not surprising that iQIST is a collection of various codes and scripts. The core components contain about 50000 lines of code.
 
 The software architecture of iQIST is slightly involved. We just use a layer model to illustrate it. Next, we will explain these layers one by one.
 
@@ -8,11 +8,11 @@ The software architecture of iQIST is slightly involved. We just use a layer mod
 
 ## Operating system layer
 
-The bottom layer is the operating system (OS). In principle, the iQIST is OS-independent. It can run properly on top of Unix/Linux, Mac OS X, FreeBSD, and Windows. 
+The bottom layer is the operating system (OS). In principle, the iQIST is OS-independent. It can run properly on top of Unix/Linux, Mac OS X, FreeBSD, and Windows.
 
 ## System layer
 
-The second layer is the system layer, which contains highly optimized linear algebra math libraries (such as BLAS and LAPACK) and parallelism supports (such as MPI and OpenMP). 
+The second layer is the system layer, which contains highly optimized linear algebra math libraries (such as BLAS and LAPACK) and parallelism supports (such as MPI and OpenMP).
 
 ## Service layer
 
@@ -20,10 +20,10 @@ The third layer is the service layer. In this layer, we implemented some commonl
 
 ## Component layer
 
-The core part of iQIST software package is in the fourth layer -- the component layer -- which contains various quantum impurity solvers as shown before. At present, iQIST contains three different components, including 
+The core part of iQIST software package is in the fourth layer -- the component layer -- which contains various quantum impurity solvers as shown before. At present, iQIST contains three different components, including
 
 * **NARCISSUS**
 * **MANJUSHAKA**
 * **JASMINE**
 
-Here, **NARCISSUS** and **MANJUSHAKA** are CT-HYB quantum impurity solvers, and **JASMINE** is an atomic eigenvalue solver. For more details about these components, please consult the following chapters. 
+Here, **NARCISSUS** and **MANJUSHAKA** are CT-HYB quantum impurity solvers, and **JASMINE** is an atomic eigenvalue solver. For more details about these components, please consult the following chapters.
