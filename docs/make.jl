@@ -11,7 +11,7 @@ ch01 = Any[
        ]
 
 ch02 = Any[
-        #    "README" => "ch02/README.md",
+            "Contents" => "ch02/index.md",
             "Obtain" => "ch02/obtain.md",
             "Uncompress" => "ch02/uncompress.md",
             "Directory structures" => "ch02/directory.md",
