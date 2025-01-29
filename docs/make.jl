@@ -38,7 +38,7 @@ ch03 = Any[
        ]
 
 ch04 = Any[
-        #    "README" => "ch04/README.md",
+            "Contents" => "ch04/index.md",
         #    "How to choose suitable quantum impurity solvers?" => "ch04/choose.md",
             "Standard input files" => Any[
         #        "README" => "ch04/input.md",
