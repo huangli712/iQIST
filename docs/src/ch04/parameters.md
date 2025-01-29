@@ -1,6 +1,6 @@
 ## Parameters
 
-In this section, we will introduce all of the valid parameters which can be used in the *solver.ctqmc.in* (for **AZALEA**, **GARDENIA**, **NARCISSUS**, **BEGONIA**, **LAVENDER**, **CAMELLIA**, **PANSY**, and **MANJUSHAKA** components) and *solver.hfqmc.in* (for **DAISY** component) files. For more information, the users can also refer to the comments in corresponding *ctqmc\_control.f90* file.
+In this section, we will introduce all of the valid parameters which can be used in the *solver.ctqmc.in* (for **NARCISSUS** and **MANJUSHAKA** components) file. For more information, the users can also refer to the comments in corresponding *ctqmc\_control.f90* file.
 
 ### Classification of the parameters
 
@@ -87,12 +87,10 @@ The following parameters will affect the computational accuracy.
 * [nclean](p_nclean.md)
 * [ncarlo](p_ncarlo.md)
 * [nmonte](p_nmonte.md)
-* [isort](p_isort.md)
-* [isvrt](p_isvrt.md)
-* [lemax](p_lemax.md)
-* [legrd](p_legrd.md)
-* [chmax](p_chmax.md)
-* [chgrd](p_chgrd.md)
+* [isort]
+* [isvrt]
+* [lemax]
+* [legrd]
 
 ---
 
@@ -105,4 +103,3 @@ The following parameters will affect the computational accuracy.
 **See also**:
 
 * [solver.ctqmc.in](in_ctqmc.md) // File format for *solver.ctqmc.in*
-* [solver.hfqmc.in](in_hfqmc.md) // File format for *solver.hfqmc.in*
