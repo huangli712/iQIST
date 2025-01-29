@@ -4,7 +4,7 @@ Using the iQIST software package is quite easy. Next we will show you the standa
 
 ### Choose suitable component
 
-At first, there are several CT-HYB quantum impurity solvers in the package. Their features and efficiency are somewhat different. Thus, it is the user's responsibility to choose suitable CT-HYB components to deal with the impurity problem at hand.
+At first, there are several CT-HYB quantum impurity solvers in the package. Their features and efficiency are somewhat different. Thus, it is the user's responsibility to choose suitable CT-HYB components to deal with the quantum impurity problem at hand.
 
 **See also**:
 
@@ -14,13 +14,13 @@ At first, there are several CT-HYB quantum impurity solvers in the package. Thei
 
 ### Design the programs and scripts
 
-Second, the iQIST software package is in essence a computational engine, so users have to write scripts or programs to execute the selected CT-HYB impurity solver directly or to call it using the application programming interface. For example, if the users want to conduct CT-HYB/DMFT calculations, in principle they must implement the DMFT self-consistent equation by themselves.
+Second, the iQIST software package is in essence a computational engine, so users have to write scripts or programs to execute the selected CT-HYB quantum impurity solver. For example, if the users want to conduct CT-HYB/DMFT calculations, in principle they must implement the DMFT self-consistent equation by themselves.
 
-There is a bonus. When the users want to study the Hubbard model on Bethe/cubic lattice using the single-site dynamical mean-field theory, or solve the Anderson impurity models in one-shot mode, it is possible to execute the quantum impurity solvers directly without any additional scripts or programs.
+There is a bonus. When the users want to study the Hubbard model on bethe lattice using the single-site dynamical mean-field theory, or solve the Anderson impurity models in one-shot mode, it is possible to execute the quantum impurity solvers directly without any additional scripts or programs.
 
 ### Prepare the input files
 
-Third, an important task is to prepare proper input data for the selected CT-HYB impurity solver. The optional inputs for the CT-HYB impurity solver are the hybridization function [``\Delta(i\omega_n)``], impurity energy level (``E_{\alpha\beta}``), interaction parameters (``U``, ``J``, ``\lambda``, and ``\mu``), etc. If users do not provide them to the impurity solver, it will use the default settings automatically. Specifically, if the Coulomb interaction matrix is general or the spin-orbital coupling is considered, users should use the **JASMINE** component to solve the local atomic Hamiltonian problem at first to generate the necessary eigenvalues and eigenvectors.
+Third, an important task is to prepare proper input data for the selected CT-HYB quantum impurity solver. The optional inputs for the CT-HYB quantum impurity solver are the hybridization function [``\Delta(i\omega_n)``], impurity energy level (``E_{\alpha\beta}``), interaction parameters (``U``, ``J``, ``\lambda``, and ``\mu``), etc. If users do not provide them to the quantum impurity solver, it will use the default settings automatically. Specifically, if the Coulomb interaction matrix is general or the spin-orbit coupling is considered, users should use the **JASMINE** component to solve the local atomic Hamiltonian problem at first to generate the necessary eigenvalues and eigenvectors.
 
 **See also**:
 
@@ -30,7 +30,7 @@ Third, an important task is to prepare proper input data for the selected CT-HYB
 
 ### Let's go.
 
-Fourth, execute the CT-HYB impurity solver directly or via some external scripts/programs.
+Fourth, execute the CT-HYB quantum impurity solver directly or via some external scripts/programs.
 
 **See also**:
 
@@ -39,10 +39,10 @@ Fourth, execute the CT-HYB impurity solver directly or via some external scripts
 
 ### Post-processing
 
-Finally, when the calculations are finished, users can use the tools contained in the **HIBISCUS** component to post-process the output data, such as the imaginary-time Green's function ``G(\tau)``, Matsubara self-energy function ``\Sigma(i\omega_n)``, and other physical observables.
+Finally, when the calculations are finished, users can use the tools contained in the *iqist/src/tools* directory to post-process the output data, such as the imaginary-time Green's function ``G(\tau)``, Matsubara self-energy function ``\Sigma(i\omega_n)``, and other physical observables.
 
 **See also**:
 
-* [Auxiliary tools] // Full descriptions about the auxiliary toolbox.
+* [Auxiliary tools] // Full descriptions about the auxiliary tools.
 
 Good luck to you.
