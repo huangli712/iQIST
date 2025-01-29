@@ -6,14 +6,18 @@ Relax! In the following we will uncover the secrets.
 
 ### How many quantum Monte Carlo impurity solvers are there?
 
-Hmm, let me think. **Nine**. **Eight** CT-HYB and **one** HF-QMC quantum impurity solvers. These are the newest data. We are not sure whether there is new quantum impurity solver in the future.
+Hmm, let me think. **Two**. Now the answer is two. These are the newest data. We are not sure whether there is new quantum impurity solver in the future.
 
-The eight CT-HYB quantum impurity solvers are as follows:
+The two CT-HYB quantum impurity solvers are as follows:
 
 * **NARCISSUS**
 * **MANJUSHAKA**
 
-You probably have found that we always used the flowers to name the quantum impurity solvers. Well, so many flowers. I think at least you will like one of them. Next we will show two of them (lavender and manjushaka).
+You probably have found that we always used the flowers to name the quantum impurity solvers (and the other projects). Well, so many flowers. I think at least you will like one of them.
+
+![narcissus image](../assets/narcissus.jpg)
+
+**Figure** | Narcissus (source: internet).
 
 ![manjushaka image](../assets/manjushaka.jpg)
 
@@ -25,7 +29,7 @@ This problem is a bit complicated and equivalent to why we had designed and impl
 
 The answer is "Yes".
 
-First, the state-of-the-art continuous-time quantum impurity solvers turn more and more complex. In order to achieve high performance, many tricky algorithms, numerical methods are invented. Some of them conflict with each other. It is almost impossible to implement all of them in a single program. Second, the quantum impurity models in strongly correlated systems are extremely complicated and polytropic. It is also impossible to design such a perfect impurity solver which can solve all of the impurity problems. Third, each quantum impurity solver in the iQIST software package is designed for a specific impurity problem. These quantum impurity solvers share similar computational kernel, but they are highly optimized for the given impurity model. For example, the **BEGONIA** component is only suitable for a three-band Hubbard model with general Coulomb interaction, while the **PANSY** component is suitable for general five-band Hubbard model.
+First, the state-of-the-art continuous-time quantum impurity solvers become more and more complex. In order to achieve high performance, many tricky algorithms, numerical methods are invented. Some of them conflict with each other. It is almost impossible to implement all of them in a single program. Second, the quantum impurity models in strongly correlated systems are extremely complicated and polytropic. It is also impossible to design such a perfect impurity solver which can solve all of the impurity problems. Third, each quantum impurity solver in the iQIST software package is designed for a specific impurity problem. These quantum impurity solvers share similar computational kernel, but they are highly optimized for the given impurity model.
 
 The price for maintaining nine quantum impurity solvers is high, but it is worth it.
 
@@ -47,7 +51,7 @@ The price for maintaining nine quantum impurity solvers is high, but it is worth
 
 **See also**:
 
-* [Features](../ch01/feature.md) // Exact features for the quantum impurity solvers. 
+* [Features](../ch01/feature.md) // Exact features for the quantum impurity solvers.
 
 ### How to choose suitable quantum impurity solvers for a given impurity problem?
 
