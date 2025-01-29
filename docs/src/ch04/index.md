@@ -9,7 +9,7 @@ The contents in this chapter are related with the following components:
 
 The main topics are as follows:
 
-* [How to choose suitable quantum impurity solvers?] // So many CT-HYB quantum impurity solvers!?
+* [How to choose suitable quantum impurity solvers?](choose.md) // So many CT-HYB quantum impurity solvers!?
 * [Standard input files](input.md) // Input stuffs.
 * [Standard output files](output.md) // Output stuffs.
 * [Parameters](parameters.md) // Really a reference manual.
