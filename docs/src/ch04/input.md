@@ -1,4 +1,4 @@
-## Standard input files
+# Contents
 
 The quantum impurity solvers requires a few input files to setup the impurity models, configure the impurity solvers, and control the DMFT iterations, etc. In principle, the quantum impurity solvers can run without any input files. But if the input files are available, the parameters read from the input files will **override** the default ones.
 

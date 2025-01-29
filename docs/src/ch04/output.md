@@ -1,4 +1,4 @@
-## Standard output files
+# Contents
 
 The quantum impurity solvers will generate a lot of data files at run time. In this section, we will depict their formats and usages in detail.
 

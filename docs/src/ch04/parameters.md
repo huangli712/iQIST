@@ -1,4 +1,4 @@
-## Parameters
+# Contents
 
 In this section, we will introduce all of the valid parameters which can be used in the *solver.ctqmc.in* (for **NARCISSUS** and **MANJUSHAKA** components) file. For more information, the users can also refer to the comments in corresponding *ctqmc\_control.f90* file.
 
