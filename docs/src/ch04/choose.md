@@ -1,4 +1,4 @@
-## How to choose suitable quantum impurity solvers?
+# How to choose suitable quantum impurity solvers?
 
 At a first glance, you may feel puzzled why there are so many continuous-time quantum impurity solvers in the iQIST software package. What are the differences between them? Do we really need them? How to choose a suitable quantum impurity solvers for a given strongly correlated electron problem?
 
@@ -10,26 +10,12 @@ Hmm, let me think. **Nine**. **Eight** CT-HYB and **one** HF-QMC quantum impurit
 
 The eight CT-HYB quantum impurity solvers are as follows:
 
-* **AZALEA**
-* **GARDENIA**
 * **NARCISSUS**
-* **BEGONIA**
-* **LAVENDER**
-* **CAMELLIA**
 * **MANJUSHAKA**
-* **PANSY**
-
-The only HF-QMC quantum impurity solver is:
-
-* **DAISY**
 
 You probably have found that we always used the flowers to name the quantum impurity solvers. Well, so many flowers. I think at least you will like one of them. Next we will show two of them (lavender and manjushaka).
 
-![lavender image](../figure/lavender.png)
-
-**Figure** | Lavender fields in Provence. Photo by **Li**.
-
-![manjushaka image](../figure/manjushaka.jpg)
+![manjushaka image](../assets/manjushaka.jpg)
 
 **Figure** | Manjushaka (source: internet).
 
@@ -45,54 +31,12 @@ The price for maintaining nine quantum impurity solvers is high, but it is worth
 
 ### What are the differences between these quantum impurity solvers?
 
-**AZALEA** component
-
-* Model: Density-density interaction, no SOC.
-* Algorithm: Segment representation.
-* Feature: Very limited.
-* Scenario: Used to develop new features and experiment new ideas.
-
-**GARDENIA** component
-
-* Model: Density-density interaction, no SOC.
-* Algorithm: Segment representation.
-* Feature: Full-fledged.
-* Scenario: Used in real research.
-
 **NARCISSUS** component
 
 * Model: Density-density interaction, retarded interaction, no SOC.
 * Algorithm: Segment representation.
 * Feature: Full-fledged.
 * Scenario: Used in real research, especially in E-DMFT calculations.
-
-**BEGONIA** component
-
-* Model: General interaction, SOC.
-* Algorithm: General matrix representation + sparse matrix + divide-and-conquer algorithm.
-* Feature: Very limited.
-* Scenario: Used to develop new features and experiment new ideas.
-
-**LAVENDER** component
-
-* Model: General interaction, SOC.
-* Algorithm: General matrix representation + sparse matrix + divide-and-conquer algorithm.
-* Feature: Full-fledged.
-* Scenario: Used in real research.
-
-**CAMELLIA** component
-
-* Model: General interaction, no SOC.
-* Algorithm: General matrix representation + sparse matrix + Newton-Leja algorithm.
-* Feature: Full-fledged.
-* Scenario: Experimental, not ready for used.
-
-**PANSY** component
-
-* Model: General interaction, SOC.
-* Algorithm: General matrix representation + subspace + divide-and-conquer algorithm.
-* Feature: Very limited.
-* Scenario: Used to develop new features and experiment new ideas.
 
 **MANJUSHAKA** component
 
@@ -108,6 +52,3 @@ The price for maintaining nine quantum impurity solvers is high, but it is worth
 ### How to choose suitable quantum impurity solvers for a given impurity problem?
 
 OK, now let's return to the original problem. How to choose a suitable quantum impurity solver? It depends on the problems what you face. In the following, we will provide some guidelines.
-
-![select image](../figure/select.png)
-**Figure** | How to select suitable quantum impurity solvers.
