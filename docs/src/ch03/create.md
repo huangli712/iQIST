@@ -2,6 +2,8 @@
 
 There are two ways to generate the necessary inpute files for the quantum impurity solvers in the iQIST software package.
 
+----
+
 **Method 1**:
 
 One is to prepare the input files manually.
@@ -14,11 +16,13 @@ Besides the *solver.ctqmc.in* file, some quantum impurity solvers also require t
 
 * [atom.config.in](../ch05/in_atom.md) // Configuration file for the **JASMINE** component.
 
+---
+
 **Method 2**:
 
-Another approach is to use the *u\_ctqmc.py*, *u\_hfqmc.py*, and *u\_atomic.py* to generate *solver.ctqmc.in*, *solver.hfqmc.in*, and *atom.config.in* files, respectively. In this approach, you have to write some python scripts. Don't worry about it. It is a trivial task. Please see
+Another approach is to use the *u\_ctqmc.py* and *u\_atomic.py* to generate the *solver.ctqmc.in* and *atom.config.in* files, respectively. In this approach, you have to write some python scripts. Don't worry about it. It is a trivial task. Please see
 
-* [Scripts] // **HIBISCUS**/scripts codes.
+* [Scripts] // Python scripts.
 
 for more details.
 
@@ -26,5 +30,5 @@ for more details.
 
 As for the other input files not mentioned here, please try to generate them by yourself. The detailed format descriptions can be seen in the following sections:
 
-* [Standard input files] // Input stuffs for CT-HYB/HF-QMC impurity solvers.
+* [Standard input files] // Input stuffs for CT-HYB impurity solvers.
 * [Standard input files] // Input stuffs for atomic eigenvalue problem solver.
