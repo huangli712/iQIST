@@ -37,9 +37,7 @@ In this section, we will introduce all of the valid parameters which can be used
     * [mfreq](p_mfreq.md)
     * [nsing](p_nsing.md)
     * [ntime](p_ntime.md)
-    * [nvect](p_nvect.md)
-    * [nleja](p_nleja.md)
-    * [npart](p_npart.md)
+    * [npart]
     * [nflip](p_nflip.md)
     * [ntherm](p_ntherm.md)
     * [nsweep](p_nsweep.md)
@@ -48,13 +46,11 @@ In this section, we will introduce all of the valid parameters which can be used
     * [ncarlo](p_ncarlo.md)
     * [nmonte](p_nmonte.md)
 * **Parameters for the Monte Carlo sampling**
-    * [isort](p_isort.md)
-    * [issus](p_issus.md)
-    * [isvrt](p_isvrt.md)
-    * [lemax](p_lemax.md)
-    * [legrd](p_legrd.md)
-    * [chmax](p_chmax.md)
-    * [chgrd](p_chgrd.md)
+    * [isort]
+    * [issus]
+    * [isvrt]
+    * [lemax]
+    * [legrd]
     * [nffrq](p_nffrq.md)
     * [nbfrq](p_nbfrq.md)
     * [nfreq](p_nfreq.md)
@@ -65,12 +61,11 @@ In this section, we will introduce all of the valid parameters which can be used
 
 The following parameters have big influences on the computational efficiency of the quantum impurity solvers.
 
-* [ifast](p_ifast.md)
-* [itrun](p_itrun.md)
-* [mstep](p_mstep.md)
-* [nvect](p_nvect.md)
-* [nleja](p_nleja.md)
-* [npart](p_npart.md)
+* [ifast]
+* [itrun]
+* [mstep]
+* [nvect]
+* [npart]
 
 ---
 
@@ -78,10 +73,10 @@ The following parameters have big influences on the computational efficiency of 
 
 The following parameters will affect the computational accuracy.
 
-* [ifast](p_ifast.md)
-* [itrun](p_itrun.md)
+* [ifast]
+* [itrun]
 * [ntime](p_ntime.md)
-* [nvect](p_nvect.md)
+* [nvect]
 * [ntherm](p_ntherm.md)
 * [nsweep](p_nsweep.md)
 * [nclean](p_nclean.md)
