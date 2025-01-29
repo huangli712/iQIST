@@ -20,21 +20,20 @@ ch02 = Any[
             "Explanation of make.inc" => "ch02/inc.md",
             "Build iQIST at one step" => "ch02/full.md",
             "Build iQIST at multiple steps" => Any[
-                "README" => "ch02/multi.md",
+                "Contents" => "ch02/multi.md",
                 "Build quantum impurity solvers" => "ch02/solvers.md",
                 "Build atomic eigenvalue problem solver" => "ch02/atomic.md",
-        #        "Build auxiliary tools" => "ch02/tools.md",
-                "Build documentations" => "ch02/docs.md",
+                "Build documentation" => "ch02/docs.md",
             ],
        ]
 
 ch03 = Any[
-        #    "README" => "ch03/README.md",
+            "Contents" => "ch03/index.md",
             "Configure your system" => "ch03/config.md",
-        #    "iQIST recipes" => "ch03/recipes.md",
-        #    "Prepare input files" => "ch03/create.md",
+            "iQIST recipes" => "ch03/recipes.md",
+            "Prepare input files" => "ch03/create.md",
             "Execute the codes" => "ch03/execute.md",
-        #    "Monitor the codes" => "ch03/monitor.md",
+            "Monitor the codes" => "ch03/monitor.md",
             "Profile the codes" => "ch03/profile.md",
        ]
 
