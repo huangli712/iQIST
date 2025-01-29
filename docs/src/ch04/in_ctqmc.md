@@ -27,21 +27,21 @@ NORBS = 8
 NspiN = 2
 ```
 
-3. The key and value pair is separated by "=" or ":" character.
+(3) The key and value pair is separated by "=" or ":" character.
 ```
 example:
 nband = 4 ! you can use nband : 4
 norbs : 8 ! you can use norbs = 8
 ```
 
-4. Any space will be ignored. Any blank lines will be skipped as well.
+(4) Any space will be ignored. Any blank lines will be skipped as well.
 ```
 example:
 n b a n d = 4 ! it is valid
 no   rb s = 8 ! it is valid
 ```
 
-5. You can only use one line to define one key-value pair.
+(5) You can only use one line to define one key-value pair.
 ```
 example
 nband = 4 norbs = 8  ! it is not valid
@@ -51,7 +51,7 @@ nband =              !
 4                    ! it is not valid
 ```
 
-6. In the value part, now only integer, real(dp), logical, and character data type are supported.
+(6) In the value part, now only integer, real(dp), logical, and character data type are supported.
 ```
 example:
 nband = 4        ! integer type
@@ -60,7 +60,7 @@ isscf = .true.   ! logical type, you can also use .false., T, F
 model = anderson ! character type, do not use "" or '' characters to quote it
 ```
 
-7. In the value part, a vector is also support. The items in the vector  should be separated by "," character.
+(7) In the value part, a vector is also support. The items in the vector  should be separated by "," character.
 ```
 example:
 nband = 1, 2, 3, 4                   ! 4 items
@@ -69,9 +69,9 @@ isscf = .true., .true., F, T, .true. ! 5 items
 model = anderson, hubbard            ! 2 items
 ```
 
-8. An empty input file is acceptable.
+(8) An empty input file is acceptable.
 
-9. If one key occurs in the input file for more than 1 times, only the last occurrence is recognized.
+(9) If one key occurs in the input file for more than 1 times, only the last occurrence is recognized.
 
 !!! warning
 
@@ -80,3 +80,7 @@ model = anderson, hubbard            ! 2 items
 **Code**
 
 N/A
+
+!!! Tip
+
+    In the [Flink](https://github.com/huangli712/Flink) library, we implement a parser to parse the *solver.ctqmc.in* file.
