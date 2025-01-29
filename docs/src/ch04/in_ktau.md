@@ -1,4 +1,4 @@
-### solver.ktau.in
+# solver.ktau.in
 
 **Introduction**
 
@@ -6,7 +6,7 @@ The *solver.ktau.in* is used to store the screening function ``K(\tau)`` and its
 
 !!! note
 
-    Only when *isscr* = 99, the *solver.ktau.in* is essential for the **NARCISSUS** component. See [isscr](p_isscr.md) for more details.
+    Only when *isscr* = 99, the *solver.ktau.in* is essential for the **NARCISSUS** component. See [isscr] for more details.
 
 **Format**
 
@@ -36,5 +36,3 @@ do i=1,ntime
 enddo ! over i={1,ntime} loop
 close(mytmp)
 ```
-
-For some typical models, the *solver.ktau.in* file can be generated using the toolbox/makescr tool which is included in the **HIBISCUS** component. See [toolbox/makescr](../ch07/scr.md) for more details.

@@ -1,4 +1,4 @@
-### solver.anydos.in
+# solver.anydos.in
 
 **Introduction**
 
@@ -68,5 +68,3 @@ do i=1,ngrid
 enddo ! over i={1,ngrid} loop
 close(mytmp)
 ```
-
-For some typical models, the *solver.anydos.in* file can be generated using the toolbox/makedos tool which is included in the **HIBISCUS** component. See [toolbox/makedos](../ch07/dos.md) for more details.

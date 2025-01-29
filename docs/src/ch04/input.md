@@ -7,6 +7,6 @@ The standard input files supported by the CT-HYB quantum impurity solvers are as
 * [solver.ctqmc.in](in_ctqmc.md) // Configuration file for CT-QMC quantum impurity solvers.
 * [solver.umat.in](in_umat.md) // Coulomb interaction matrix.
 * [solver.eimp.in](in_eimp.md) // Impurity level and crystal-field splitting.
-* [solver.anydos.in] // Density of states from various lattice or tight-binding models.
-* [solver.ktau.in] // Screening interaction.
-* [atom.cix] // Atomic eigenstates data.
+* [solver.anydos.in](in_anydos.md) // Density of states from various lattice or tight-binding models.
+* [solver.ktau.in](in_ktau.md) // Screening interaction.
+* [atom.cix](in_atom.md) // Atomic eigenstates data.

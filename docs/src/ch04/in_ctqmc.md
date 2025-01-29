@@ -10,7 +10,7 @@ There are many input parameters for the CT-QMC impurity solvers. But all of para
 
 All of the CT-QMC impurity solvers in the iQIST software package share the same *solver.ctqmc.in* file. In other words, you can exchange *solver.ctqmc.in* files between different CT-QMC quantum impurity solvers. The format of the *solver.ctqmc.in* file adopts the simple "key-value" style. The detailed rules are as follows:
 
-1. Anything after "#" and "!" character will be treated as comments and will be ignored completely.
+(1) Anything after "#" and "!" character will be treated as comments and will be ignored completely.
 ```
 example:
 # this is a comment line
@@ -19,7 +19,7 @@ nband = 4 # this is in line comment
 norbs = 8 ! this in line comment
 ```
 
-2. It is not case sensitive.
+(2) It is not case sensitive.
 ```
 example:
 Nband = 4
