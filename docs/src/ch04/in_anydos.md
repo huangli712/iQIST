@@ -2,11 +2,11 @@
 
 **Introduction**
 
-In the CT-QMC impurity solvers contained in the iQIST software package, we provide a mini dynamical mean-field theory engine. This engine implements a self-consistent condition for the Bethe lattice which has a semi-circular density of states with bandwith ``4t``. Sometimes you may want to try the other models with arbitrary density of states.
+In the CT-QMC impurity solvers contained in the iQIST software package, we provide a mini dynamical mean-field theory engine. This engine implements a self-consistent condition for the bethe lattice which has a semi-circular density of states with bandwith ``4t``. Sometimes you may want to try the other models with arbitrary density of states.
 
 Is it possible?
 
-Yes, of course. You can define your density of states in the *solver.anydos.in* file. And then you have to hack the *ctqmc\_dmft.f90* file.
+Yes, of course. You can define your density of states in the *solver.anydos.in* file. And then you have to hack the *iqist/src/ctqmc\_dmft.f90* file.
 
 Change the following codes
 
@@ -14,7 +14,8 @@ Change the following codes
 ......
      use context, only : grnf
 ......
-! calculate new hybridization function using self-consistent condition
+     ! apply the self-consistent condition. here we consider a Hubbard model
+     ! on a bethe lattice. of course you can replace it with your implements
      call ctqmc_dmft_bethe(hybf, grnf)
 ```
 
@@ -24,16 +25,15 @@ to
 ......
      use context, only : grnf, sig2
 ......
-! calculate new hybridization function using self-consistent condition
+     ! calculate new hybridization function using self-consistent condition
      call ctqmc_dmft_anydos(hybf, grnf, sig2)
 ```
 
-You have to be very careful. Finally, recompiling the CT-QMC impurity solvers is necessary.
+You have to be very careful. Finally, recompiling the CT-QMC quantum impurity solvers is necessary.
 
 !!! note
 
-    1. Don't forget to set the *isscf* parameter to 2, or else the CT-QMC impurity solvers will skip the dynamical mean-field theory engine and perform one-shot calculation only.
-    2. The HF-QMC impurity solver (the **DAISY** component) does not support this file/feature.
+    Don't forget to set the *isscf* parameter to 2, or else the CT-QMC impurity solvers will skip the dynamical mean-field theory engine and perform one-shot calculation only.
 
 **Format**
 

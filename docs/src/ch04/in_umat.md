@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The quantum impurity solvers will generate the Coulomb interaction matrix using the ``U`` and ``J`` parameters provided by you automatically. But sometimes you may want to customize the Coulomb interaction matrix by yourself.
+The quantum impurity solvers will automatically generate the Coulomb interaction matrix using the ``U`` and ``J`` parameters provided by you. But sometimes you may want to customize the Coulomb interaction matrix by yourself.
 
 Is it possible within the iQIST code?
 
@@ -12,7 +12,7 @@ You can define your Coulomb interaction matrix in the *solver.umat.in* file. And
 
 !!! warning
 
-    The continuous-time quantum Monte Carlo impurity solvers in the general matrix representation, i.e., the **MANJUSHAKA**, component does not support this file/feature as well.
+    The continuous-time quantum Monte Carlo impurity solvers in the general matrix representation, i.e., the **MANJUSHAKA**, component does not support this file/feature as well. All the information about the interaction matrix is already encapsulated in the *atom.cix* file.
 
 **Format**
 

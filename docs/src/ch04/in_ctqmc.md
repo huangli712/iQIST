@@ -81,6 +81,6 @@ model = anderson, hubbard            ! 2 items
 
 N/A
 
-!!! Tip
+!!! tip
 
     In the [Flink](https://github.com/huangli712/Flink) library, we implement a parser to parse the *solver.ctqmc.in* file.

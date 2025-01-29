@@ -6,7 +6,7 @@ The *solver.ktau.in* is used to store the screening function ``K(\tau)`` and its
 
 !!! note
 
-    Only when *isscr* = 99, the *solver.ktau.in* is essential for the **NARCISSUS** component. See [isscr] for more details.
+    Only when *isscr* = 4, the *solver.ktau.in* is essential for the **NARCISSUS** component. See [isscr] for more details.
 
 **Format**
 
