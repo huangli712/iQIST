@@ -4,6 +4,6 @@ The quantum impurity solvers in the iQIST software package will generate a lot o
 
 See
 
-* [Standard output files] // Output stuffs for CT-HYB quantum impurity solvers.
+* [Standard output files](../ch04/output.md) // Output stuffs for CT-HYB quantum impurity solvers.
 
 for more details.

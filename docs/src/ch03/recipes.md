@@ -31,7 +31,7 @@ Third, an important task is to prepare proper input data for the selected CT-HYB
 **See also**:
 
 * [Prepare input files](create.md) // Are you ready?
-* [Standard input files] // Input stuffs for CT-HYB impurity solvers.
+* [Standard input files](../ch04/input.md) // Input stuffs for CT-HYB quantum impurity solvers.
 * [Standard input files] // Input stuffs for atomic eigenvalue problem solver.
 
 ---

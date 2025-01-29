@@ -30,5 +30,5 @@ for more details.
 
 As for the other input files not mentioned here, please try to generate them by yourself. The detailed format descriptions can be seen in the following sections:
 
-* [Standard input files] // Input stuffs for CT-HYB quantum impurity solvers.
+* [Standard input files](../ch04/input.md) // Input stuffs for CT-HYB quantum impurity solvers.
 * [Standard input files] // Input stuffs for atomic eigenvalue problem solver.
