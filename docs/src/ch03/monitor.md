@@ -1,9 +1,9 @@
 # Monitor the codes
 
-The quantum impurity solvers in the iQIST software package will generate a lot of terminal output and data files (such as *solver.hist.dat*, *solver.status.dat*, *solver.nmat.dat*, etc.) at run time. Through them you can judge the status of the solvers.
+The quantum impurity solvers in the iQIST software package will generate a lot of terminal output and data files (such as *solver.hist.dat*, *solver.status.dat*, *solver.nmat.dat*, etc.) at run time. Through them you can judge the status of the quantum impurity solvers.
 
 See
 
-* [Standard output files] // Output stuffs for CT-HYB/HF-QMC impurity solvers.
+* [Standard output files] // Output stuffs for CT-HYB quantum impurity solvers.
 
 for more details.

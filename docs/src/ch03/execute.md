@@ -8,10 +8,18 @@ There are also several ways to execute the quantum impurity solvers in the iQIST
 $ mpiexec -n num_of_cores iqist/src/ctseg/ctqmc
 ```
 
+```shell
+$ mpiexec -n num_of_cores iqist/src/cthyb/ctqmc
+```
+
 **Sequential mode**
 
 ```shell
 $ ./iqist/src/ctseg/ctqmc
+```
+
+```shell
+$ ./iqist/src/cthyb/ctqmc
 ```
 
 !!! tip

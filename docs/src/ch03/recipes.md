@@ -57,6 +57,6 @@ Finally, when the calculations are finished, users can use the tools contained i
 
 Good luck to you.
 
-!!! info
+!!! tip
 
     A full-fledged analytic continuation toolkit, namely [ACFlow](https://github.com/huangli712/ACFlow), has been developed to deal with the imaginary-time or Matsubara Green's functions to extract the corresponding spectral functions.
