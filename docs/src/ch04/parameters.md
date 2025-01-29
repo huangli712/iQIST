@@ -6,36 +6,33 @@ In this section, we will introduce all of the valid parameters which can be used
 
 * **Parameters for the dynamical mean-field theory engine**
     * [isscf](p_isscf.md)
-    * [isbin](p_isbin.md)
     * [niter](p_niter.md)
     * [alpha](p_alpha.md)
 * **Parameters for the strongly correlated models**
-    * [issun](p_issun.md)
+    * [issun]
     * [isspn](p_isspn.md)
-    * [isscr](p_isscr.md)
+    * [isscr]
     * [nband](p_nband.md)
     * [nspin](p_nspin.md)
     * [norbs](p_norbs.md)
     * [ncfgs](p_ncfgs.md)
-    * [nzero](p_nzero.md)
+    * [nzero]
     * [U](p_u.md)
     * [Uc](p_uc.md)
     * [Uv](p_uv.md)
     * [Jz](p_jz.md)
     * [Js](p_js.md)
     * [Jp](p_jp.md)
-    * [lc](p_lc.md)
-    * [wc](p_wc.md)
+    * [lc]
+    * [wc]
     * [mune](p_mune.md)
     * [beta](p_beta.md)
     * [part](p_part.md)
 * **Parameters for the quantum impurity solvers**
-    * [ifast](p_ifast.md)
-    * [itrun](p_itrun.md)
+    * [ifast]
+    * [itrun]
     * [mkink](p_mkink.md)
-    * [mstep](p_mstep.md)
     * [mfreq](p_mfreq.md)
-    * [nsing](p_nsing.md)
     * [ntime](p_ntime.md)
     * [npart]
     * [nflip](p_nflip.md)
@@ -63,8 +60,6 @@ The following parameters have big influences on the computational efficiency of 
 
 * [ifast]
 * [itrun]
-* [mstep]
-* [nvect]
 * [npart]
 
 ---
@@ -76,7 +71,6 @@ The following parameters will affect the computational accuracy.
 * [ifast]
 * [itrun]
 * [ntime](p_ntime.md)
-* [nvect]
 * [ntherm](p_ntherm.md)
 * [nsweep](p_nsweep.md)
 * [nclean](p_nclean.md)
