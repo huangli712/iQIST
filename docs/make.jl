@@ -39,19 +39,19 @@ ch03 = Any[
 
 ch04 = Any[
             "Contents" => "ch04/index.md",
-        #    "How to choose suitable quantum impurity solvers?" => "ch04/choose.md",
+            "How to choose suitable quantum impurity solvers?" => "ch04/choose.md",
             "Standard input files" => Any[
-        #        "README" => "ch04/input.md",
+                "Contents" => "ch04/input.md",
                 "solver.ctqmc.in" => "ch04/in_ctqmc.md",
                 "solver.hyb.in" => "ch04/in_hyb.md",
                 "solver.umat.in" => "ch04/in_umat.md",
                 "solver.eimp.in" => "ch04/in_eimp.md",
-        #        "solver.anydos.in" => "ch04/in_anydos.md",
-        #        "solver.ktau.in" => "ch04/in_ktau.md",
-        #        "atom.cix" => "ch04/in_atom.md",
+                "solver.anydos.in" => "ch04/in_anydos.md",
+                "solver.ktau.in" => "ch04/in_ktau.md",
+                "atom.cix" => "ch04/in_atom.md",
             ],
             "Standard output files" => Any[
-        #        "README" => "ch04/output.md",
+                "Contents" => "ch04/output.md",
         #        "Terminal output" => "ch04/out_term.md",
                 "solver.green.dat" => "ch04/out_green.md",
         #        "solver.fcorr.dat" => "ch04/out_fcorr.md",
@@ -85,7 +85,7 @@ ch04 = Any[
                 "solver.status.dat" => "ch04/out_stat.md",
             ],
             "Parameters" => Any[
-        #        "README" => "ch04/parameters.md",
+                "Contents" => "ch04/parameters.md",
                 "isscf" => "ch04/p_isscf.md",
         #        "isscr" => "ch04/p_isscr.md",
                 "isbnd" => "ch04/p_isbnd.md",
@@ -95,7 +95,6 @@ ch04 = Any[
         #        "issus" => "ch04/p_isobs.md",
         #        "issus" => "ch04/p_issus.md",
         #        "isvrt" => "ch04/p_isvrt.md",
-        
         #        "ifast" => "ch04/p_ifast.md",
         #        "itrun" => "ch04/p_itrun.md",
                 "nband" => "ch04/p_nband.md",
