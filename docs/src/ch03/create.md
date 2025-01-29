@@ -10,11 +10,11 @@ One is to prepare the input files manually.
 
 Usually, the necessary input file is *solver.ctqmc.in*. It is an ascii text file actually. You can use any text editor to create and edit it in principle. As for the file format of *solver.ctqmc.in*, please read:
 
-* [solver.ctqmc.in](../ch04/in_ctqmc.md) // Configuration file for CT-QMC impurity solvers.
+* [solver.ctqmc.in](../ch04/in_ctqmc.md) // Configuration file for CT-QMC quantum impurity solvers.
 
 Besides the *solver.ctqmc.in* file, some quantum impurity solvers also require the *atom.cix* file as input. You can use the **JASMINE** component to generate it. The necessary input file for the **JASMINE** component is *atom.config.in*. For more details about it, please read:
 
-* [atom.config.in](../ch05/in_atom.md) // Configuration file for the **JASMINE** component.
+* [atom.config.in](../ch05/in_atom.md) // Configuration file for the atomic eigenvalue problem solver.
 
 ---
 
