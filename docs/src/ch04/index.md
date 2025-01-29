@@ -24,4 +24,4 @@ Maybe you are interested in the following related topics:
 
 **See also**:
 
-Besides the above links, you can find many useful examples/cases under the *iqist/working/ctqmc* and *iqist/working/hfqmc* directories.
+Besides the above links, you can find many useful examples/cases under the *iqist/test/* and *iqist/tutor* directories.

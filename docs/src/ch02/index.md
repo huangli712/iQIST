@@ -1,4 +1,4 @@
-# Installation
+# Contents
 
 Are you interested in the iQIST software package?
 
@@ -26,4 +26,4 @@ Advanced recipes:
 
     1. We assume that you are familiar with the basic terminal commands/operations of Linux system.
 
-    2. We assume that the **root directory** of the iQIST software package is just **iqist** in the manual, except stated explicitly. For example, if the iQIST software package was installed at `/home/lihuang/iqist2016`, then we just use **iqist** to denote this directory.
+    2. We assume that the **root directory** of the iQIST software package is just **iqist** in the manual, except stated explicitly. For example, if the iQIST software package was installed at `/home/lihuang/iqist2025`, then we just use **iqist** to denote this directory.
