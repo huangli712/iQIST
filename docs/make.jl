@@ -5,7 +5,7 @@ ch01 = Any[
             "What's iQIST?" => "ch01/what.md",
             "Motivation" => "ch01/motivation.md",
             "Components" => "ch01/components.md",
-            "Software architecture" => "ch01/architecture.md",
+            "Software Architecture" => "ch01/architecture.md",
             "Features" => "ch01/feature.md",
             "Policy" => "ch01/policy.md",
        ]
@@ -14,33 +14,33 @@ ch02 = Any[
             "Contents" => "ch02/index.md",
             "Obtain" => "ch02/obtain.md",
             "Uncompress" => "ch02/uncompress.md",
-            "Directory structures" => "ch02/directory.md",
-            "Compiling environment" => "ch02/envir.md",
-            "Compiling system" => "ch02/system.md",
-            "Explanation of make.inc" => "ch02/inc.md",
-            "Build iQIST at one step" => "ch02/full.md",
-            "Build iQIST at multiple steps" => Any[
+            "Directory Structures" => "ch02/directory.md",
+            "Compiling Environment" => "ch02/envir.md",
+            "Compiling System" => "ch02/system.md",
+            "Explanation Of make.inc" => "ch02/inc.md",
+            "Build iQIST At One Step" => "ch02/full.md",
+            "Build iQIST At Multiple Steps" => Any[
                 "Contents" => "ch02/multi.md",
-                "Build quantum impurity solvers" => "ch02/solvers.md",
-                "Build atomic eigenvalue problem solver" => "ch02/atomic.md",
-                "Build documentation" => "ch02/docs.md",
+                "Build Quantum Impurity Solvers" => "ch02/solvers.md",
+                "Build Atomic Eigenvalue Problem Solver" => "ch02/atomic.md",
+                "Build Documentation" => "ch02/docs.md",
             ],
        ]
 
 ch03 = Any[
             "Contents" => "ch03/index.md",
-            "Configure your system" => "ch03/config.md",
-            "iQIST recipes" => "ch03/recipes.md",
-            "Prepare input files" => "ch03/create.md",
-            "Execute the codes" => "ch03/execute.md",
-            "Monitor the codes" => "ch03/monitor.md",
-            "Profile the codes" => "ch03/profile.md",
+            "Configure Your System" => "ch03/config.md",
+            "iQIST Recipes" => "ch03/recipes.md",
+            "Prepare Input Files" => "ch03/create.md",
+            "Execute The Codes" => "ch03/execute.md",
+            "Monitor The Codes" => "ch03/monitor.md",
+            "Profile The Codes" => "ch03/profile.md",
        ]
 
 ch04 = Any[
             "Contents" => "ch04/index.md",
-            "How to choose suitable quantum impurity solvers?" => "ch04/choose.md",
-            "Standard input files" => Any[
+            "How To Choose Suitable Quantum Impurity Solvers?" => "ch04/choose.md",
+            "Standard Input Files" => Any[
                 "Contents" => "ch04/input.md",
                 "solver.ctqmc.in" => "ch04/in_ctqmc.md",
                 "solver.hyb.in" => "ch04/in_hyb.md",
@@ -50,7 +50,7 @@ ch04 = Any[
                 "solver.ktau.in" => "ch04/in_ktau.md",
                 "atom.cix" => "ch04/in_atom.md",
             ],
-            "Standard output files" => Any[
+            "Standard Output Files" => Any[
                 "Contents" => "ch04/output.md",
         #        "Terminal output" => "ch04/out_term.md",
                 "solver.green.dat" => "ch04/out_green.md",
@@ -142,14 +142,14 @@ ch04 = Any[
 
 ch05 = Any[
         #    "README" => "ch05/README.md",
-            "Standard input files" => Any[
+            "Standard Input Files" => Any[
                 "README" => "ch05/input.md",
                 "atom.config.in" => "ch05/in_atom.md",
                 "atom.cmat.in" => "ch05/in_cmat.md",
                 "atom.emat.in" => "ch05/in_emat.md",
                 "atom.tmat.in" => "ch05/in_tmat.md",
             ],
-            "Standard output files" => Any[
+            "Standard Output Files" => Any[
         #        "README" => "ch05/output.md",
         #        "Terminal output" => "ch05/out_term.md",
         #        "solver.umat.in" => "ch05/out_umat1.md",
@@ -242,16 +242,16 @@ ch07 = Any[
         #        "Orbital-selective Mott transition in two-band Hubbard model" => "ch07/osmt.md",
         #    ],
         #    "Code validation" => "ch07/valid.md",
-            "Successful stories" => "ch07/story.md",
+            "Successful Stories" => "ch07/story.md",
        ]
 
 ch08 = Any[
             #"README" => "ch08/README.md",
-            "Basic theory and methods" => Any[
+            "Basic Theory And Methods" => Any[
                 "Outline" => "ch08/basic.md",
-                "Quantum impurity model" => "ch08/qim.md",
-                "Principles of continuous-time quantum Monte Carlo algorithm" => "ch08/ct.md",
-                "Hybridization expansion" => "ch08/hyb.md",
+                "Quantum Impurity Model" => "ch08/qim.md",
+                "Continuous-Time Quantum Monte Carlo Algorithm" => "ch08/ct.md",
+                "Hybridization Expansion" => "ch08/hyb.md",
             ],
             "Algorithms" => Any[
         #        "README" => "ch08/algo.md",
@@ -261,22 +261,22 @@ ch08 = Any[
         #        "Physical observable" => "ch08/obs.md",
         #        "Orthogonal polynomial representation" => "ch08/ortho.md",
         #        "Kernel polynomial method" => "ch08/kpm.md",
-                "Improved estimator for the self-energy function" => "ch08/sig.md",
+                "Improved Estimator For The Self-Energy Function" => "ch08/sig.md",
         #        "Fast matrix update" => "ch08/fast.md",
         #        "Good quantum number, subspace, and symmetry" => "ch08/symmetry.md",
-                "Truncation approximation" => "ch08/truncation.md",
-                "Lazy trace evaluation" => "ch08/lazy.md",
+                "Truncation Approximation" => "ch08/truncation.md",
+                "Lazy Trace Evaluation" => "ch08/lazy.md",
         #        "Divide-and-conquer algorithm" => "ch08/dac.md",
         #        "Sparse matrix tricks" => "ch08/sparse.md",
-                "Random number generator" => "ch08/rng.md",
-                "Atomic eigenvalue solver" => "ch08/atomic.md",
-                "Single particle basis" => "ch08/basis.md",
-                "Spin-orbit coupling" => "ch08/soc.md",
-                "Coulomb interaction matrix" => "ch08/coulomb.md",
+                "Random Number Generator" => "ch08/rng.md",
+                "Atomic Eigenvalue Solver" => "ch08/atomic.md",
+                "Single Particle Basis" => "ch08/basis.md",
+                "Spin-Orbit Coupling" => "ch08/soc.md",
+                "Coulomb Interaction Matrix" => "ch08/coulomb.md",
             ],
             "Codes" => Any[
         #        "README" => "ch08/code.md",
-                "Development platform" => "ch08/platform.md",
+                "Development Platform" => "ch08/platform.md",
         #        "A guide to the source codes of the CT-HYB components" => "ch08/struct.md",
         #        "How to add new parameter?" => "ch08/new_param.md",
         #        "How to add new observable?" => "ch08/new_obs.md",
