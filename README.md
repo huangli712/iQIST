@@ -14,4 +14,6 @@ GNU General Public License Version 3
 
 ## Documentation
 
-See `iqist/docs`.
+Source: See `iqist/docs`.
+
+Online: https://huangli712.github.io/projects/iqist_new/index.html
