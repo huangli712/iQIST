@@ -82,8 +82,6 @@
 
 !! body]
 
-     STOP
-
      return
   end subroutine ctqmc_print_header
 
