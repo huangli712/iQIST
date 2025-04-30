@@ -49,19 +49,26 @@
      ! obtain current date and time
      call s_time_builder(date_time_string)
 
+     write(mystd,'(2X,a)') pcs('┌┐┌┌─┐┬─┐┌─┐┬┌─┐┌─┐┬ ┬┌─┐', 'red')
+     write(mystd,'(2X,a)') pcs('│││├─┤├┬┘│  │└─┐└─┐│ │└─┐', 'red')
+     write(mystd,'(2X,a)') pcs('┘└┘┴ ┴┴└─└─┘┴└─┘└─┘└─┘└─┘', 'red')
+     write(mystd,'(2X,a)') pcs('-------------------------', 'magenta')
+
 # if defined (MPI)
 
-     write(mystd,'(2X,a)') pcs(cname,'red')//pcs(' (Parallelized Edition)','magenta')
+     write(mystd,'(2X,a)') pcs('  Parallelized Edition','magenta')
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a)') pcs(cname,'red')//pcs(' (Sequential Edition)','magenta')
+     write(mystd,'(2X,a)') pcs('  Sequential Edition','magenta')
 
 # endif  /* MPI */
 
+     write(mystd,'(2X,a)') pcs('-------------------------', 'magenta')
      write(mystd,'(2X,a)') pcs('A Modern Continuous Time Quantum Monte Carlo Impurity Solver','blue')
      write(mystd,*)
 
+     write(mystd,'(2X,a)') 'Program: '//cname
      write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//' '//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: '//V_AUTH//' ('//V_INST//')'
      write(mystd,'(2X,a)') 'Support: '//V_MAIL
