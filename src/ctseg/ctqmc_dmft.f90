@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/01/2023 by li huang (last modified)
+!!!           05/01/2025 by li huang (last modified)
 !!! purpose : implement a hybridization expansion version continuous time
 !!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
 !!!           dynamical mean field theory (DMFT) self-consistent engine.
@@ -24,7 +24,8 @@
 !!
   subroutine ctqmc_dmft_selfer()
      use constants, only : dp
-     use constants, only : one, half, czi
+     use constants, only : one, half
+     use constants, only : czi
      use constants, only : mystd
 
      use control, only : cname
@@ -95,21 +96,26 @@
      ! task 3: calculate new bath weiss's function
      !--------------------------------------------------------------------
      ! determine effective chemical potential using
+     !
      !     \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
+     !
      ! where N is the number of bands
      qmune = mune
      qmune = qmune - ( real(nband) - half ) * Uc
      qmune = qmune + ( real(nband) - one ) * 2.5_dp * Jz
 
      ! apply dyson equation to get G^{-1}_0
+     !
      !     G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
+     !
+     ! where mu is the effective chemical potential
      do i=1,norbs
          do k=1,mfreq
              wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
-     ! calculate inverse matrix
+     ! calculate G_0 via matrix inversion
      do k=1,mfreq
          call s_inv_z(norbs, wssf(k,:,:))
      enddo ! over k={1,mfreq} loop
@@ -202,13 +208,14 @@
      endif ! back if ( myid == master ) block
 
      ! try to calculate diff and norm
-     ! why not using the whole matrix? since sometimes the off-diagonal
-     ! elementes may be NaN!
+     !
+     ! why not using the whole matrix?
+     ! since sometimes the off-diagonal elementes may be NaN!
      diff = zero
      do i=1,norbs
          diff = diff + abs( sum( sig2(:,i,i) - sig1(:,i,i) ) )
      enddo ! over i={1,norbs} loop
-
+     !
      norm = zero
      do i=1,norbs
          norm = norm + abs( sum( sig2(:,i,i) + sig1(:,i,i) ) )
@@ -264,7 +271,10 @@
 !! [body
 
      ! self-consistent condition is
+     !
      !    Delta = t^2 G
+     !
+     ! this equation is valid for bethe lattice only
      hybf = part * part * grnf
 
 !! body]
