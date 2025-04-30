@@ -27,7 +27,29 @@
 
 .SUFFIXES: .f90
 
-include ../../build/make.inc
+define searchfile
+    $(eval INC_DIR=$(patsubst %/,%,$(1)))
+    $(eval INC_FILE=$(wildcard $(INC_DIR)/$(2)))
+    $(info searchfile scanned: $(INC_DIR))
+    $(if $(INC_FILE),
+             $(info searchfile found: $(INC_FILE)),
+                 $(call searchfile,$(dir $(INC_DIR)),$(2)))
+endef
+
+$(eval $(call searchfile,$(CURDIR),build/make.inc))
+
+include $(INC_FILE)
+
+define searchdir
+    $(eval INP_DIR=$(patsubst %/,%,$(1)))
+    $(eval FLINK=$(wildcard $(INP_DIR)/$(2)))
+    $(info searchdir scanned: $(INP_DIR))
+    $(if $(FLINK),
+             $(info searchdir found: $(FLINK)),
+                 $(call searchdir,$(dir $(INP_DIR)),$(2)))
+endef
+
+$(eval $(call searchdir,$(CURDIR),*/Flink/src))
 
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
