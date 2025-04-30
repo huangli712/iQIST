@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 06/20/2024 by li huang (last modified)
+## 04/30/2025 by li huang (last modified)
 ##
 ##
 
@@ -97,14 +97,14 @@ atomic:
 clean-atomic:
 	cd ../src/atomic/; pwd; make clean
 
-# targets for ct-hyb quantum impurity solver: segment version (narcissus)
+# targets for cthyb quantum impurity solver: segment version (narcissus)
 ctseg:
 	cd ../src/ctseg/; pwd; make
 
 clean-ctseg:
 	cd ../src/ctseg/; pwd; make clean
 
-# targets for ct-hyb quantum impurity solver: general version (manjushaka)
+# targets for cthyb quantum impurity solver: general version (manjushaka)
 cthyb:
 	cd ../src/cthyb/; pwd; make
 
