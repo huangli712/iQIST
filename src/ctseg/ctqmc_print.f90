@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           01/25/2025 by li huang (last modified)
+!!!           05/01/2025 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -206,7 +206,7 @@
      use constants, only : mystd
 
      use control, only : cname               ! code name
-                                             !
+     !                                       !
      use control, only : isscf               ! control running scheme
      use control, only : isscr               ! control dynamic interaction
      use control, only : isbnd, isspn        ! control symmetry
