@@ -294,7 +294,7 @@ makedocs(
         size_threshold = 409600, # 400kb
         assets = ["assets/iqist.css"],
         collapselevel = 1,
-        inventory_version = "0.8.2",
+        inventory_version = "0.8.3",
     ),
     remotes = nothing,
     pages = [
