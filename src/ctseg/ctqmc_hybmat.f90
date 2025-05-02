@@ -16,7 +16,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/03/2023 by li huang (last modified)
+!!!           05/02/2023 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -38,7 +38,8 @@
 !!
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
      use constants, only : dp
-     use constants, only : zero, one, czero
+     use constants, only : zero, one
+     use constants, only : czero
 
      use control, only : nfreq
      use control, only : beta
@@ -180,7 +181,8 @@
 !!
   subroutine cat_remove_matrix(flvr, is, ie)
      use constants, only : dp
-     use constants, only : one, czero
+     use constants, only : one
+     use constants, only : czero
 
      use control, only : nfreq
      use control, only : beta
@@ -285,7 +287,8 @@
 !!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
 
      use control, only : mkink
      use control, only : nfreq
@@ -491,7 +494,8 @@
 !!
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
 
      use control, only : mkink
      use control, only : nfreq
@@ -805,7 +809,8 @@
 !!
   subroutine cat_reload_matrix(flvr)
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
 
      use control, only : nfreq
      use control, only : beta
