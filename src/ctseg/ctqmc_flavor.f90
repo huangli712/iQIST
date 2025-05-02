@@ -129,12 +129,12 @@
 
              ! check the position of tau_end and setup cstat
              !
-             ! zero < tau_start < tau_end < beta,
+             ! zero < tau_start < tau_end < beta
              ! turn to segment configuration
              if ( tau_end < beta ) then
                  cstat = 1
              !
-             ! zero < tau_end < tau_start < beta,
+             ! zero < tau_end < tau_start < beta
              ! turn to anti-segment configuration
              else
                  cstat = 2
@@ -164,7 +164,7 @@
              !
              ! case 2A: tau_start is in front of all segments
              !
-             ! zero < tau_start < tau_end < ... < beta,
+             ! zero < tau_start < tau_end < ... < beta
              ! keep segment configuration
              if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) then
                  is = 1
@@ -182,12 +182,12 @@
 
                  ! check the position of tau_end and setup cstat
                  !
-                 ! zero < ... < tau_start < tau_end < beta,
+                 ! zero < ... < tau_start < tau_end < beta
                  ! keep segment configuration
                  if ( tau_end < beta ) then
                      cstat = 1
                  !
-                 ! zero < tau_end < ... < tau_start < beta,
+                 ! zero < tau_end < ... < tau_start < beta
                  ! turn to anti-segment configuration
                  else
                      cstat = 2
@@ -198,7 +198,7 @@
 
              ! case 2C: tau_start is in the middle of two segments
              !
-             ! zero < ... < tau_start < tau_end < ... < beta,
+             ! zero < ... < tau_start < tau_end < ... < beta
              ! keep segment configuration
              else
                  do i=1,ckink-1
@@ -256,7 +256,7 @@
              ! now we know we can insert tau_start, and then tau_end and
              ! tau_max should be determined carefully
              !
-             ! zero < ... < tau_start < tau_end < ... < beta,
+             ! zero < ... < tau_start < tau_end < ... < beta
              ! keep anti-segment configuration
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
@@ -330,7 +330,7 @@
              ! now we know we can insert tau_start, and then tau_end
              ! and tau_max should be determined carefully
              !
-             ! zero < ... < tau_start < tau_end < ... < beta,
+             ! zero < ... < tau_start < tau_end < ... < beta
              ! keep segment configuration
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
@@ -378,12 +378,12 @@
 
                  ! check the position of tau_end and setup cstat
                  !
-                 ! zero < tau_end < tau_start < ... < beta,
+                 ! zero < tau_end < tau_start < ... < beta
                  ! keep anti-segment configuration
                  if ( tau_end > zero ) then
                      cstat = 2
                  !
-                 ! zero < tau_start < ... < tau_end < beta,
+                 ! zero < tau_start < ... < tau_end < beta
                  ! turn to segment configuration
                  else
                      cstat = 1
@@ -394,7 +394,7 @@
 
              ! case 3B: tau_start is in the last segment [tau_s(ckink), beta]
              !
-             ! zero < ... < tau_end < tau_start < beta,
+             ! zero < ... < tau_end < tau_start < beta
              ! keep anti-segment configuration
              else if ( tau_start > time_s(index_s(ckink, flvr), flvr) ) then
                  is = ckink + 1
@@ -406,7 +406,7 @@
              ! case 3C: tau_start is in the immediate region,
              ! maybe in an existing segment
              !
-             ! zero < ... < tau_end < tau_start < ... < beta,
+             ! zero < ... < tau_end < tau_start < ... < beta
              ! keep anti-segment configuration
              else
                  do i=1,ckink-1
@@ -439,12 +439,12 @@
 
              ! check the position of tau_end and setup cstat
              !
-             ! zero < tau_end < tau_start < beta,
+             ! zero < tau_end < tau_start < beta
              ! turn to anti-segment configuration
              if ( tau_end > zero ) then
                  cstat = 2
              !
-             ! zero < tau_start < tau_end < beta,
+             ! zero < tau_start < tau_end < beta
              ! turn to segment configuration
              else
                  cstat = 1
@@ -621,7 +621,7 @@
 
              ! case 1B: there are more than one segments
              else
-                 ! remove a normal anti-segment,
+                 ! remove a normal anti-segment
                  ! not the first anti-segment
                  ! keep segment configuration
                  if ( is > 1 ) then
@@ -630,7 +630,7 @@
                      tau_start = time_s(index_s(is, flvr), flvr)
                      tau_end = time_e(index_e(ie, flvr), flvr)
                      tau_max = tau_start - time_s(index_s(is-1, flvr), flvr)
-                 ! remove the first anti-segment,
+                 ! remove the first anti-segment
                  ! pay special attention to tau_max
                  ! turn to anti-segment configuration
                  else
@@ -666,11 +666,11 @@
                  cstat = 2
                  tau_start = time_s(index_s(is, flvr), flvr)
                  tau_end = time_e(index_e(ie, flvr), flvr)
-                 ! remove a normal anti-segment,
+                 ! remove a normal anti-segment
                  ! not the first anti-segment
                  if ( is > 1 ) then
                      tau_max = tau_start - time_s(index_s(is-1, flvr), flvr)
-                 ! remove the first anti-segment,
+                 ! remove the first anti-segment
                  ! pay special attention to tau_max
                  else
                      tau_max = tau_start - zero + beta - time_s(index_s(ckink, flvr), flvr)
@@ -771,7 +771,7 @@
 
          ! case 1B: there are more than one segments
          else
-             ! not the first segment,
+             ! not the first segment
              ! tau_end2 < tau_start1 (tau_start2) < tau_end1
              ! keep segment configuration
              if ( iso > 1 ) then
@@ -833,7 +833,7 @@
 
          ! case 2B: there are more than one segment or anti-segment
          else
-             ! not the last segment,
+             ! not the last segment
              ! tau_end1 < tau_start1 (tau_start2) < tau_end2
              ! keep anti-segment configuration
              if ( iso < ckink ) then
