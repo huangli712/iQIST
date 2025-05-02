@@ -25,7 +25,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
-!!!           06/24/2024 by li huang (last modified)
+!!!           05/02/2025 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -959,7 +959,7 @@
 
          ! case 1B: there are more than one segments
          else
-             ! not the last segment,
+             ! not the last segment
              ! tau_start1 < tau_end1 (tau_end2) < tau_start2
              ! keep segment configuration
              if ( ieo < ckink ) then
@@ -1021,7 +1021,7 @@
 
          ! case 2B: there are more than one segment or anti-segment
          else
-             ! not the first segment,
+             ! not the first segment
              ! tau_start1 < tau_end1 (tau_end2) < tau_start2
              ! keep anti-segment configuration
              if ( ieo > 1 ) then
