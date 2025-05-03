@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 10/01/2008 by li huang (created)
-!!!           07/05/2023 by li huang (last modified)
+!!!           05/03/2025 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -52,7 +52,8 @@
 !!
   subroutine ctqmc_four_htau(htau, hybf)
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
 
      use control, only : norbs
      use control, only : mfreq
@@ -111,7 +112,8 @@
 !!
   subroutine ctqmc_four_hybf(hybf, htau)
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
      use constants, only : eps6
 
      use control, only : norbs
@@ -844,7 +846,8 @@
 !!
   subroutine ctqmc_tran_grnf(gaux, grnf)
      use constants, only : dp
-     use constants, only : zero, one, two, czero, czi
+     use constants, only : zero, one, two
+     use constants, only : czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1039,7 +1042,8 @@
 !!
   subroutine ctqmc_tran_twop(gaux, grnf)
      use constants, only : dp
-     use constants, only : one, two, czero
+     use constants, only : one, two
+     use constants, only : czero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1721,7 +1725,8 @@
 !!
 !<  subroutine ctqmc_make_fexp(flvr, nfaux, mrank, caux1, caux2)
 !<     use constants, only : dp
-!<     use constants, only : pi, two, czi
+!<     use constants, only : pi, two
+!<     use constants, only : czi
 !<
 !<     use control, only : nffrq
 !<     use control, only : beta
@@ -1811,7 +1816,8 @@
 !!
   subroutine ctqmc_make_bexp(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp
-     use constants, only : pi, two, czi
+     use constants, only : pi, two
+     use constants, only : czi
 
      use control, only : beta
 
