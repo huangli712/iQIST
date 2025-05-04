@@ -42,7 +42,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/02/2023 by li huang (last modified)
+!!!           05/04/2025 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -413,8 +413,8 @@
                  ! evaluate dtau
                  dtau = taue - taus
 
-                 ! get matrix element from mmat, pay special attention to
-                 ! the sign of dtau
+                 ! get matrix element from mmat
+                 ! pay special attention to the sign of dtau
                  maux = mmat(ie, is, flvr) * sign(one, dtau)
 
                  ! adjust dtau, keep it stay in (zero, beta)
@@ -583,8 +583,8 @@
                  ! evaluate dtau
                  dtau = taue - taus
 
-                 ! get matrix element from mmat, pay special attention to
-                 ! the sign of dtau
+                 ! get matrix element from mmat
+                 ! pay special attention to the sign of dtau
                  maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
 
                  ! adjust dtau, keep it stay in (zero, beta)
@@ -897,7 +897,9 @@
      real(dp) :: step
 
      ! integral of Sz(\tau), in order words:
+     !
      !     sint = 1/\beta \int^{\beta}_{0} Sz(\tau) d\tau
+     !
      real(dp) :: sint
 
      ! used to record occupations for current flavor channel and time
@@ -1071,7 +1073,8 @@
 !!
   subroutine ctqmc_record_sp_w()
      use constants, only : dp
-     use constants, only : pi, zero, one, two, czi
+     use constants, only : pi, zero, one, two
+     use constants, only : czi
 
      use control, only : issus
      use control, only : nband, norbs
@@ -1130,15 +1133,18 @@
      call cat_occupy_single(sgmt)
 
      ! calculate sp_w, it must be real
-     ! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
+     !
+     !     < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
+     !
      FLVR_CYCLE: do f1=1,nband
          f2 = f1 + nband
 
 !!
 !! note:
 !!
-!! the contribution from oaux(f1) = one and oaux(f2) = one is zero, and
-!! the contribution from oaux(f1) = zero and oaux(f2) = zero is also zero
+!!     the contribution from oaux(f1) = one and oaux(f2) = one is zero,
+!!     and the contribution from oaux(f1) = zero and oaux(f2) = zero is
+!!     also zero
 !!
 
          ! here oaux(f1) = one; oaux(f2) = zero
@@ -1327,7 +1333,8 @@
 !!
   subroutine ctqmc_record_ch_w()
      use constants, only : dp
-     use constants, only : pi, zero, two, czi
+     use constants, only : pi, zero, two
+     use constants, only : czi
 
      use control, only : issus
      use control, only : norbs
@@ -1612,16 +1619,17 @@
 
          do is=1,rank(flvr)
              do ie=1,rank(flvr)
-
+                 !
                  maux = mmat(ie, is, flvr)
                  naux = mmat(ie, is, flvr) * pref(ie,flvr)
+                 !
                  do w2n=1,nfaux
                      do w1n=1,nfaux
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
                          h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w2n,is) * caux2(w1n,ie)
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
-
+                 !
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
@@ -1678,7 +1686,7 @@
                          if ( btest(isvrt,1) ) then
                              zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                              zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-
+                             !
                              if ( f1 == f2 ) then
                                  zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                                  zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
@@ -1694,7 +1702,7 @@
                          if ( btest(isvrt,2) ) then
                              zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
                              zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-
+                             !
                              if ( f1 == f2 ) then
                                  zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
                                  zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
@@ -1766,7 +1774,8 @@
 !!
   subroutine cat_record_g2ph_leg()
      use constants, only : dp
-     use constants, only : zero, one, two, czero
+     use constants, only : zero, one, two
+     use constants, only : czero
 
      use control, only : isvrt
      use control, only : norbs
@@ -1818,7 +1827,7 @@
      ! dummy complex(dp) variables
      complex(dp) :: ee
 
-     ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
+     ! sqrt(2l-1) sqrt(2l'-1) (-1)^{l'}
      real(dp), allocatable :: lfun(:,:)
 
      ! p_l(x(\tau_e - \tau_s))
@@ -1905,11 +1914,12 @@
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          pp = pfun(l1,ie1,is1,f1,f1) * pfun(l2,ie2,is2,f2,f2) * lfun(l1,l2)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
                          h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
@@ -1945,11 +1955,12 @@
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
                          pp = pfun(l1,ie1,is2,f1,f2) * pfun(l2,ie2,is1,f2,f1) * lfun(l1,l2)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
                          h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
@@ -2018,7 +2029,8 @@
 !!
   subroutine cat_record_g2ph_svd()
      use constants, only : dp
-     use constants, only : zero, one, two, czero
+     use constants, only : zero, one, two
+     use constants, only : czero
 
      use control, only : isvrt
      use control, only : norbs
@@ -2141,11 +2153,12 @@
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          uu = ufun(l1,ie1,is1,f1,f1) * ufun(l2,ie2,is2,f2,f2)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta
                          h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
@@ -2181,11 +2194,12 @@
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
                          uu = ufun(l1,ie1,is2,f1,f2) * ufun(l2,ie2,is1,f2,f1)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta
                          h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
@@ -2402,16 +2416,17 @@
 
          do is=1,rank(flvr)
              do ie=1,rank(flvr)
-
+                 !
                  maux = mmat(ie, is, flvr)
                  naux = mmat(ie, is, flvr) * pref(ie,flvr)
+                 !
                  do w2n=1,nfaux
                      do w1n=1,nfaux
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
                          h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w2n,is) * caux2(w1n,ie)
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
-
+                 !
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
@@ -2468,7 +2483,7 @@
                          if ( btest(isvrt,3) ) then
                              zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                              zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-
+                             !
                              if ( f1 == f2 ) then
                                  zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                                  zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
@@ -2484,7 +2499,7 @@
                          if ( btest(isvrt,4) ) then
                              zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
                              zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-
+                             !
                              if ( f1 == f2 ) then
                                  zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
                                  zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
@@ -2556,7 +2571,8 @@
 !!
   subroutine cat_record_g2pp_leg()
      use constants, only : dp
-     use constants, only : zero, one, two, czero
+     use constants, only : zero, one, two
+     use constants, only : czero
 
      use control, only : isvrt
      use control, only : norbs
@@ -2608,7 +2624,7 @@
      ! dummy complex(dp) variables
      complex(dp) :: ee
 
-     ! sqrt(2l+1) sqrt(2l'+1) (-1)^{(l'+1)}
+     ! sqrt(2l-1) sqrt(2l'-1) (-1)^{l'}
      real(dp), allocatable :: lfun(:,:)
 
      ! p_l(x(\tau_s2 - \tau_s1))
@@ -2731,11 +2747,12 @@
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          pp = pl_s(l1,is2,is1,f2,f1) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
                          h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
@@ -2771,11 +2788,12 @@
                      do l2=1,lemax                 ! legendre polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
                          pp = pl_s(l1,is1,is2,f1,f2) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
                          h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,lemax} loop
@@ -2845,7 +2863,8 @@
 !!
   subroutine cat_record_g2pp_svd()
      use constants, only : dp
-     use constants, only : zero, one, two, czero
+     use constants, only : zero, one, two
+     use constants, only : czero
 
      use control, only : isvrt
      use control, only : norbs
@@ -2999,11 +3018,12 @@
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
                          uu = ul_s(l1,is2,is1,f2,f1) * ul_e(l2,ie2,ie1,f2,f1)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * uu * ee / beta
                          h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * uu * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
@@ -3039,11 +3059,12 @@
                      do l2=1,svmax                 ! svd polynomial index: l'
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
                          uu = ul_s(l1,is1,is2,f1,f2) * ul_e(l2,ie2,ie1,f2,f1)
+                         !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
-
+                         !
                          g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) - mm * uu * ee / beta
                          h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) - mm * uu * ee / beta * pref(ie1,f1)
                      enddo ! over l2={1,svmax} loop
