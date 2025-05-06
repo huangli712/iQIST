@@ -42,7 +42,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/04/2025 by li huang (last modified)
+!!!           05/06/2025 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -3608,7 +3608,8 @@
 !!
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp
-     use constants, only : zero, czero, czi
+     use constants, only : zero
+     use constants, only : czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -3627,7 +3628,8 @@
      complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
 
 !! local variables
-     ! used to store the real and imaginary parts of impurity green's function
+     ! used to store the real and imaginary parts of
+     ! impurity green's function
      real(dp), allocatable :: g_re_err(:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:)
 
@@ -3700,7 +3702,8 @@
 !!
   subroutine ctqmc_reduce_frnf(frnf_mpi, frnf_err)
      use constants, only : dp
-     use constants, only : zero, czero, czi
+     use constants, only : zero
+     use constants, only : czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -3719,7 +3722,8 @@
      complex(dp), intent(out) :: frnf_err(mfreq,norbs,norbs)
 
 !! local variables
-     ! used to store the real and imaginary parts of auxiliary correlation function
+     ! used to store the real and imaginary parts of
+     ! auxiliary correlation function
      real(dp), allocatable :: f_re_err(:,:,:)
      real(dp), allocatable :: f_im_err(:,:,:)
 
@@ -3792,7 +3796,8 @@
 !!
   subroutine ctqmc_reduce_sig2(sig2_mpi, sig2_err)
      use constants, only : dp
-     use constants, only : zero, czero, czi
+     use constants, only : zero
+     use constants, only : czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -4471,7 +4476,8 @@
 !!
   subroutine ctqmc_reduce_g2ph(g2ph_mpi, h2ph_mpi, g2ph_err, h2ph_err)
      use constants, only : dp
-     use constants, only : zero, czero, czi
+     use constants, only : zero
+     use constants, only : czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -4496,11 +4502,13 @@
      complex(dp), intent(out) :: h2ph_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 !! local variables
-     ! used to store the real and imaginary parts of green's function
+     ! used to store the real and imaginary parts of
+     ! two-particle green's function
      real(dp), allocatable :: g_re_err(:,:,:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:,:,:)
 
-     ! used to store the real and imaginary parts of vertex function
+     ! used to store the real and imaginary parts of
+     ! two-particle vertex function
      real(dp), allocatable :: h_re_err(:,:,:,:,:)
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
 
@@ -4596,7 +4604,8 @@
 !!
   subroutine ctqmc_reduce_g2pp(g2pp_mpi, h2pp_mpi, g2pp_err, h2pp_err)
      use constants, only : dp
-     use constants, only : zero, czero, czi
+     use constants, only : zero
+     use constants, only : czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -4621,11 +4630,13 @@
      complex(dp), intent(out) :: h2pp_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 !! local variables
-     ! used to store the real and imaginary parts of green's function
+     ! used to store the real and imaginary parts of
+     ! two-particle green's function
      real(dp), allocatable :: g_re_err(:,:,:,:,:)
      real(dp), allocatable :: g_im_err(:,:,:,:,:)
 
-     ! used to store the real and imaginary parts of vertex function
+     ! used to store the real and imaginary parts of
+     ! two-particle vertex function
      real(dp), allocatable :: h_re_err(:,:,:,:,:)
      real(dp), allocatable :: h_im_err(:,:,:,:,:)
 

@@ -29,7 +29,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/02/2023 by li huang (last modified)
+!!!           05/06/2025 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -386,7 +386,7 @@
      ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gtau(j,i,i), gerr(j,i,i)
+             write(mytmp,'(2i6,3f16.8)') i, j, tmesh(j), gtau(j,i,i), gerr(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -434,7 +434,7 @@
      ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), ftau(j,i,i), ferr(j,i,i)
+             write(mytmp,'(2i6,3f16.8)') i, j, tmesh(j), ftau(j,i,i), ferr(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -482,7 +482,7 @@
      ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), zero
+             write(mytmp,'(2i6,3f16.8)') i, j, tmesh(j), htau(j,i,i), zero
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -530,7 +530,7 @@
      ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
+             write(mytmp,'(2i6,3f16.8)') i, j, tmesh(j), wtau(j,i,i), zero
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -584,7 +584,7 @@
 
      ! write it
      do i=1,ntime
-         write(mytmp,'(i6,5f12.6)') i, tmesh(i), ktau(i), ptau(i), ksed(i), psed(i)
+         write(mytmp,'(i6,5f16.8)') i, tmesh(i), ktau(i), ptau(i), ksed(i), psed(i)
      enddo ! over i={1,ntime} loop
 
      ! close data file
@@ -1094,7 +1094,7 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,ntime
-             write(mytmp,'(3f12.6)') tmesh(i), sp_t(i,j), sbar(i,j)
+             write(mytmp,'(3f16.8)') tmesh(i), sp_t(i,j), sbar(i,j)
          enddo ! over i={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -1102,14 +1102,14 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), schi(i), serr(i)
+         write(mytmp,'(3f16.8)') tmesh(i), schi(i), serr(i)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), sum( sp_t(i,:) ), sum( sbar(i,:) )
+         write(mytmp,'(3f16.8)') tmesh(i), sum( sp_t(i,:) ), sum( sbar(i,:) )
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -1171,7 +1171,7 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,nbfrq
-             write(mytmp,'(3f12.6)') bmesh(i), sp_w(i,j), serr(i,j)
+             write(mytmp,'(3f16.8)') bmesh(i), sp_w(i,j), serr(i,j)
          enddo ! over i={1,nbfrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -1232,7 +1232,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,ntime
-                 write(mytmp,'(3f12.6)') tmesh(i), ch_t(i,j,k), cbar(i,j,k)
+                 write(mytmp,'(3f16.8)') tmesh(i), ch_t(i,j,k), cbar(i,j,k)
              enddo ! over i={1,ntime} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
@@ -1241,14 +1241,14 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), cchi(i), cerr(i)
+         write(mytmp,'(3f16.8)') tmesh(i), cchi(i), cerr(i)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), sum( ch_t(i,:,:) ), sum( cbar(i,:,:) )
+         write(mytmp,'(3f16.8)') tmesh(i), sum( ch_t(i,:,:) ), sum( cbar(i,:,:) )
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -1312,7 +1312,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,nbfrq
-                 write(mytmp,'(3f12.6)') bmesh(i), ch_w(i,j,k), cerr(i,j,k)
+                 write(mytmp,'(3f16.8)') bmesh(i), ch_w(i,j,k), cerr(i,j,k)
              enddo ! over i={1,nbfrq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
