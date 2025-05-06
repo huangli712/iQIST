@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/01/2025 by li huang (last modified)
+!!!           05/06/2025 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -176,7 +176,7 @@
 !!
 !! if p >= 5:
 !!     reserved
-!! 
+!!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
 !! p = 9 8 7 6 5 4 3 2 1
@@ -639,21 +639,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.8.3 @ 2025.04.30D'
+     character(len=20), public, parameter :: V_FULL = 'v0.8.4 @ 2025.05.06D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.8.3'
+     character(len=06), public, parameter :: V_CURR = 'v0.8.4'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2025.04.30'
+     character(len=11), public, parameter :: V_DATE = '2025.05.06'
 
 !!
 !! @var V_STAT
