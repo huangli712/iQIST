@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 04/30/2025 by li huang (last modified)
+## 05/22/2025 by li huang (last modified)
 ##
 ##
 
@@ -40,16 +40,16 @@ $(eval $(call searchfile,$(CURDIR),build/make.inc))
 
 include $(INC_FILE)
 
-define searchdir
+define searchflink
     $(eval INP_DIR=$(patsubst %/,%,$(1)))
     $(eval FLINK=$(wildcard $(INP_DIR)/$(2)))
-    $(info searchdir scanned: $(INP_DIR))
+    $(info searchflink scanned: $(INP_DIR))
     $(if $(FLINK),
-             $(info searchdir found: $(FLINK)),
-                 $(call searchdir,$(dir $(INP_DIR)),$(2)))
+             $(info searchflink found: $(FLINK)),
+                 $(call searchflink,$(dir $(INP_DIR)),$(2)))
 endef
 
-$(eval $(call searchdir,$(CURDIR),*/Flink/src))
+$(eval $(call searchflink,$(CURDIR),*/Flink/src))
 
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
