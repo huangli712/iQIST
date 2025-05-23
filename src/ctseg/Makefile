@@ -21,22 +21,22 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 05/22/2025 by li huang (last modified)
+## 05/23/2025 by li huang (last modified)
 ##
 ##
 
 .SUFFIXES: .f90
 
-define searchfile
+define searchconfig
     $(eval INC_DIR=$(patsubst %/,%,$(1)))
     $(eval INC_FILE=$(wildcard $(INC_DIR)/$(2)))
-    $(info searchfile scanned: $(INC_DIR))
+    $(info searchconfig scanned: $(INC_DIR))
     $(if $(INC_FILE),
-             $(info searchfile found: $(INC_FILE)),
-                 $(call searchfile,$(dir $(INC_DIR)),$(2)))
+             $(info searchconfig found: $(INC_FILE)),
+                 $(call searchconfig,$(dir $(INC_DIR)),$(2)))
 endef
 
-$(eval $(call searchfile,$(CURDIR),build/make.inc))
+$(eval $(call searchconfig,$(CURDIR),build/make.inc))
 
 include $(INC_FILE)
 

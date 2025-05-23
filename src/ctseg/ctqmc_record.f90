@@ -1516,6 +1516,9 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
+!!     see P56 in Lewin Boehnke's thesis
+!!     <<Susceptibilities in materials with multiple strongly correlated orbitals>>
+!!
 !!     G^{(2)}_{abcd,AABB,ph} (\nu, \nu', \omega) = \frac{1}{\beta}
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
@@ -1746,6 +1749,9 @@
 !!     the particle-hole channel and legendre/matsubara representation
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
+!!
+!!     see P56 in Lewin Boehnke's thesis
+!!     <<Susceptibilities in materials with multiple strongly correlated orbitals>>
 !!
 !!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) =  (-1)^l'
 !!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }

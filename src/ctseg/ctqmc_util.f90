@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/03/2025 by li huang (last modified)
+!!!           05/23/2025 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -807,6 +807,7 @@
              do j=1,ntime
                  raux = two * tmesh(j) / beta ! map tmesh to [0,2]
                  curr = nint(raux * step) + 1
+                 ! see Eq. (1) and Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
                  do fleg=1,lemax
                      raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
                      gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fleg,i,i)
@@ -934,6 +935,8 @@
      ! using legendre orthogonal polynomial representation
      !--------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
+
+         ! see Eq. (5) in Phys. Rev. B 84, 075145 (2011)
 
          ! calculate spherical Bessel functions at first
          pfun = zero
@@ -1174,6 +1177,7 @@
 
          ! build two-particle green's function on matsubara frequency
          ! using orthogonal polynomial representation: grnf
+         ! see Eq. (14) in Phys. Rev. B 84, 075145 (2011)
          grnf = czero
          do i=1,nffrq             ! for v' index
              do j=1,nffrq         ! for v  index
@@ -1317,7 +1321,8 @@
 !!
 !! @sub ctqmc_make_umat
 !!
-!! build density-density two-fermions Coulomb interaction matrix: umat
+!! build density-density two-fermions Coulomb interaction matrix: umat.
+!! here the used equation is Eq. (13) in Rev. Mod. Phys. 83, 349 (2011)
 !!
   subroutine ctqmc_make_umat(umat)
      use constants, only : dp
@@ -1576,16 +1581,19 @@
              pref(it,f1) = zero
 
              ! calculate contribution from static interaction
+             ! see Eq. (37) in Phys. Rev. B 89, 235128 (2014)
              do f2=1,norbs
                  call cat_occupy_status(f2, time_e( index_e(it, f1), f1 ), occu)
                  pref(it,f1) = pref(it,f1) + half * ( umat(f1,f2) + umat(f2,f1) ) * occu
              enddo ! over f2={1,norbs} loop
 
              ! calculate contribution from retarded (dynamic) interaction
+             ! see Eq. (38) in Phys. Rev. B 89, 235128 (2014)
              if ( isscr > 1 ) then
                  call ctqmc_make_iret(time_e( index_e(it, f1), f1 ), iret)
                  pref(it,f1) = pref(it,f1) + iret
              endif ! back if ( isscr > 1 ) block
+
          enddo ! over it={1,rank(f1)} loop
      enddo FLVR_CYCLE ! over f1={1,norbs} loop
 
