@@ -65,7 +65,7 @@
 # endif  /* MPI */
 
      write(mystd,'(2X,a)') pcs('-------------------------', 'magenta')
-     write(mystd,'(2X,a)') pcs('A Modern Continuous Time Quantum Monte Carlo Impurity Solver','blue')
+     write(mystd,'(2X,a)') pcs('A Modern Continuous Time Quantum Impurity Solver','blue')
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Program: '//cname
