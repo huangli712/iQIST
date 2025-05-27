@@ -1581,7 +1581,7 @@
 !!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     A, B: block index
+!!     A and B: block index
 !!     a, b, c, d: orbital index
 !!     i, j, k, l: operator index
 !!     \lambda_i, \lambda_j, \lambda_k, \lambda_l: orbital index
@@ -1751,13 +1751,13 @@
              CALC_G2_PH_ABBA: BLOCK
 
                  if ( btest(isvrt,2) ) then
-                     zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-                     zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-                     !
                      if ( f1 == f2 ) then
                          zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
                          zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
                      endif ! back if ( f1 == f2 ) block
+                     !
+                     zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                     zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
                  endif ! back if ( btest(isvrt,2) ) block
 
              END BLOCK CALC_G2_PH_ABBA
@@ -1788,8 +1788,9 @@
 !!
 !! @sub cat_record_g2ph_leg
 !!
-!! record the two-particle green's and vertex functions in the ph channel.
-!! here improved estimator is used to improve the accuracy
+!! record the two-particle green's and vertex functions in the particle-
+!! hole channel. the improved estimator is used to improve the accuracy.
+!! this subroutine implements the legendre representation algorithm
 !!
 !! note:
 !!
@@ -1798,30 +1799,44 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
-!!     see P56 in Lewin Boehnke's thesis
-!!     <<Susceptibilities in materials with multiple strongly correlated orbitals>>
+!!     see Eq. (C24) in Phys. Rev. B 84, 075145 (2011)
 !!
-!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) =  (-1)^l'
+!!     or note for triqs/cthyb
+!!     https://github.com/TRIQS/cthyb/blob/3.3.x/doc/notes/measure_g2.tex
+!!
+!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) = (-1)^l'
 !!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
 !!         \langle
-!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
-!!             p_l( x(\tau'_i - \tau_j) ) p_l'( x(\tau'_k - \tau_l) )
-!!             exp [ i \omega (\tau'_i - \tau_l) ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             p_l ( x(\tau_i - \tau_j) )
+!!             p_l'( x(\tau_k - \tau_l) )
+!!             exp [ i \omega (\tau_i - \tau_l) ]
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) =  (-1)^l'
+!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) = (-1)^l'
 !!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
 !!         \langle
-!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             \sum^{K_A}_{il=1} \sum^{K_B}_{kj=1}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
-!!             p_l( x(\tau'_i - \tau_j) ) p_l'( x(\tau'_k - \tau_l) )
-!!             exp [ i \omega (\tau'_i - \tau_l) ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             p_l ( x(\tau_i - \tau_j) )
+!!             p_l'( x(\tau_k - \tau_l) )
+!!             exp [ i \omega (\tau_i - \tau_l) ]
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     A and B: block index
+!!     a, b, c, d: orbital index
+!!     i, j, k, l: operator index
+!!     \lambda_i, \lambda_j, \lambda_k, \lambda_l: orbital index
+!!     \tau_i and \tau_k: imaginary time for annihilation operators
 !!     \tau_j and \tau_l: imaginary time for creation operators
 !!     p_l and p_l': legendre polynomial
 !!     \omega: bosonic matsubara frequency
@@ -1881,10 +1896,10 @@
      ! dummy complex(dp) variables
      complex(dp) :: ee
 
-     ! sqrt(2l-1) sqrt(2l'-1) (-1)^{l'}
+     ! sqrt( 2l-1 ) sqrt( 2l'-1 ) (-1)^{l'}
      real(dp), allocatable :: lfun(:,:)
 
-     ! p_l(x(\tau_e - \tau_s))
+     ! p_l( x( \tau_e - \tau_s ) )
      real(dp), allocatable :: pfun(:,:,:,:,:)
 
      ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
@@ -1894,10 +1909,11 @@
 
 !! [body
 
-     ! allocate memory
+     ! allocate memory for lfun and pfun, and then initialize them
      allocate( lfun(lemax,lemax) ); lfun = zero
      allocate( pfun(lemax, maxval(rank), maxval(rank), norbs, norbs)); pfun = zero
 
+     ! allocate memory for caux1 and caux2, and then initialize them
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
@@ -1914,33 +1930,37 @@
      ! prepare some important arrays: pfun
      step = real(legrd - 1) / two
      do f1=1,norbs
-         do is1=1,rank(f1)
-             do f2=1,norbs
-                 do ie2=1,rank(f2)
-                     ! determine dt (distance) and ms (sign)
-                     dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
-                     ms = sign(one, dt)
+     do is1=1,rank(f1)
+         !
+         do f2=1,norbs
+         do ie2=1,rank(f2)
 
-                     ! adjust dt, keep it stay in (zero, beta)
-                     if ( dt < zero ) then
-                         dt = dt + beta
-                     endif ! back if ( dt < zero ) block
+             ! determine dt (distance) and ms (sign)
+             dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+             ms = sign(one, dt)
 
-                     ! determine index for imaginary time
-                     curr = nint( ( two * dt / beta ) * step ) + 1
+             ! adjust dt, keep it stay in (zero, beta)
+             if ( dt < zero ) then
+                 dt = dt + beta
+             endif ! back if ( dt < zero ) block
 
-                     ! special tricks for the first point and the last point
-                     if ( curr == 1 .or. curr == legrd ) then
-                         ms = two * ms
-                     endif ! back if ( curr == 1 .or. curr == legrd ) block
+             ! determine index for imaginary time
+             curr = nint( ( two * dt / beta ) * step ) + 1
 
-                     ! fill pfun
-                     do l1=1,lemax
-                         pfun(l1,ie2,is1,f2,f1) = ms * rep_l(curr,l1)
-                     enddo ! over l1={1,lemax} loop
-                 enddo ! over ie2={1,rank(f2)} loop
-             enddo ! over f2={1,norbs} loop
-         enddo ! over is1={1,rank(f1)} loop
+             ! special tricks for the first point and the last point
+             if ( curr == 1 .or. curr == legrd ) then
+                 ms = two * ms
+             endif ! back if ( curr == 1 .or. curr == legrd ) block
+
+             ! fill pfun
+             do l1=1,lemax
+                 pfun(l1,ie2,is1,f2,f1) = ms * rep_l(curr,l1)
+             enddo ! over l1={1,lemax} loop
+
+         enddo ! over ie2={1,rank(f2)} loop
+         enddo ! over f2={1,norbs} loop
+         !
+     enddo ! over is1={1,rank(f1)} loop
      enddo ! over f1={1,norbs} loop
 
      ! prepare some important arrays: caux1 and caux2
@@ -1956,35 +1976,46 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,norbs                         ! block index: A
-                 do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
-                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
-                             do is2=1,rank(f2)     ! \delta -> l: creation operator
-                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
-             !-------------------!
-             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,lemax                     ! legendre polynomial index: l
-                     do l2=1,lemax                 ! legendre polynomial index: l'
+             do f1=1,norbs          ! block index: A
+             do f2=1,f1             ! block index: B
+                 !                  !
+                 do is1=1,rank(f1)  ! \beta  -> j: creation operator
+                 do ie1=1,rank(f1)  ! \alpha -> i: annihilation operator
+                 do is2=1,rank(f2)  ! \delta -> l: creation operator
+                 do ie2=1,rank(f2)  ! \gamma -> k: annihilation operator
+                     !              !
+                     do wbn=1,nbfrq ! bosonic matsubara frequency: w
+                     do l1=1,lemax  ! legendre polynomial index: l
+                     do l2=1,lemax  ! legendre polynomial index: l'
+
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
-                         pp = pfun(l1,ie1,is1,f1,f1) * pfun(l2,ie2,is2,f2,f2) * lfun(l1,l2)
+                         !
+                         associate( p1 => pfun(l1,ie1,is1,f1,f1), &
+                                    p2 => pfun(l2,ie2,is2,f2,f2) )
+                             pp = p1 * p2 * lfun(l1,l2)
+                         end associate
                          !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
                          !
-                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
+                         associate( g2 => g2ph(l2,l1,wbn,f2,f1), &
+                                    h2 => h2ph(l2,l1,wbn,f2,f1) )
+                             g2 = g2 + mm * pp * ee / beta
+                             h2 = h2 + mm * pp * ee / beta * pref(ie1,f1)
+                         end associate
+
                      enddo ! over l2={1,lemax} loop
-                 enddo ! over l1={1,lemax} loop
-             enddo ! over wbn={1,nbfrq} loop
-             !-------------------!
-                                 enddo ! over ie2={1,rank(f2)} loop
-                             enddo ! over is2={1,rank(f2)} loop
-                         enddo ! over ie1={1,rank(f1)} loop
-                     enddo ! is1={1,rank(f1)} loop
-                 enddo ! over f2={1,f1} loop
+                     enddo ! over l1={1,lemax} loop
+                     enddo ! over wbn={1,nbfrq} loop
+                     !
+                 enddo ! over ie2={1,rank(f2)} loop
+                 enddo ! over is2={1,rank(f2)} loop
+                 enddo ! over ie1={1,rank(f1)} loop
+                 enddo ! over is1={1,rank(f1)} loop
+                 !
+             enddo ! over f2={1,f1} loop
              enddo ! over f1={1,norbs} loop
 
          endif ! back if ( btest(isvrt,1) ) block
@@ -1997,35 +2028,46 @@
 
          if ( btest(isvrt,2) ) then
 
-             do f1=1,norbs                         ! block index: A
-                 do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \delta -> l: creation operator
-                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
-                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
-                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
-             !-------------------!
-             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,lemax                     ! legendre polynomial index: l
-                     do l2=1,lemax                 ! legendre polynomial index: l'
+             do f1=1,norbs          ! block index: A
+             do f2=1,f1             ! block index: B
+                 !                  !
+                 do is1=1,rank(f1)  ! \delta -> l: creation operator
+                 do ie1=1,rank(f1)  ! \alpha -> i: annihilation operator
+                 do is2=1,rank(f2)  ! \beta  -> j: creation operator
+                 do ie2=1,rank(f2)  ! \gamma -> k: annihilation operator
+                     !              !
+                     do wbn=1,nbfrq ! bosonic matsubara frequency: w
+                     do l1=1,lemax  ! legendre polynomial index: l
+                     do l2=1,lemax  ! legendre polynomial index: l'
+
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
-                         pp = pfun(l1,ie1,is2,f1,f2) * pfun(l2,ie2,is1,f2,f1) * lfun(l1,l2)
+                         !
+                         associate( p1 => pfun(l1,ie1,is2,f1,f2), &
+                                    p2 => pfun(l2,ie2,is1,f2,f1) )
+                             pp = p1 * p2 * lfun(l1,l2)
+                         end associate
                          !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
                          !
-                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * pp * ee / beta * pref(ie1,f1)
+                         associate( g2 => g2ph(l2,l1,wbn,f2,f1), &
+                                    h2 => h2ph(l2,l1,wbn,f2,f1) )
+                             g2 = g2 - mm * pp * ee / beta
+                             h2 = h2 - mm * pp * ee / beta * pref(ie1,f1)
+                         end associate
+
                      enddo ! over l2={1,lemax} loop
-                 enddo ! over l1={1,lemax} loop
-             enddo ! over wbn={1,nbfrq} loop
-             !-------------------!
-                                 enddo ! over ie2={1,rank(f2)} loop
-                             enddo ! over is2={1,rank(f2)} loop
-                         enddo ! over ie1={1,rank(f1)} loop
-                     enddo ! is1={1,rank(f1)} loop
-                 enddo ! over f2={1,f1} loop
+                     enddo ! over l1={1,lemax} loop
+                     enddo ! over wbn={1,nbfrq} loop
+                     !
+                 enddo ! over ie2={1,rank(f2)} loop
+                 enddo ! over is2={1,rank(f2)} loop
+                 enddo ! over ie1={1,rank(f1)} loop
+                 enddo ! over is1={1,rank(f1)} loop
+                 !
+             enddo ! over f2={1,f1} loop
              enddo ! over f1={1,norbs} loop
 
          endif ! back if ( btest(isvrt,2) ) block
@@ -2046,8 +2088,9 @@
 !!
 !! @sub cat_record_g2ph_svd
 !!
-!! record the two-particle green's and vertex functions in the ph channel.
-!! here improved estimator is used to improve the accuracy
+!! record the two-particle green's and vertex functions in the particle-
+!! -hole channel. the improved estimator is used to improve the accuracy.
+!! this subroutine implements the intermediate representation algorithm
 !!
 !! note:
 !!
@@ -2056,27 +2099,44 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
-!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) =  (-1)^l'
+!!     see Eq. (C24) in Phys. Rev. B 84, 075145 (2011)
+!!
+!!     or note for triqs/cthyb
+!!     https://github.com/TRIQS/cthyb/blob/3.3.x/doc/notes/measure_g2.tex
+!!
+!!     G^{(2)}_{abcd,AABB,ph} (l, l', \omega) = (-1)^l'
 !!         \frac{ 1 }{ \beta }
 !!         \langle
-!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
-!!             u_l( x(\tau'_i - \tau_j) ) u_l'( x(\tau'_k - \tau_l) )
-!!             exp [ i \omega (\tau'_i - \tau_l) ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             u_l ( x(\tau_i - \tau_j) )
+!!             u_l'( x(\tau_k - \tau_l) )
+!!             exp [ i \omega (\tau_i - \tau_l) ]
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) =  (-1)^l'
-!!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
+!!     G^{(2)}_{abcd,ABBA,ph} (l, l', \omega) = (-1)^l'
+!!         \frac{ 1 }{ \beta }
 !!         \langle
-!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             \sum^{K_A}_{il=1} \sum^{K_B}_{kj=1}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
-!!             u_l( x(\tau'_i - \tau_j) ) u_l'( x(\tau'_k - \tau_l) )
-!!             exp [ i \omega (\tau'_i - \tau_l) ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             u_l ( x(\tau_i - \tau_j) )
+!!             u_l'( x(\tau_k - \tau_l) )
+!!             exp [ i \omega (\tau_i - \tau_l) ]
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     A and B: block index
+!!     a, b, c, d: orbital index
+!!     i, j, k, l: operator index
+!!     \lambda_i, \lambda_j, \lambda_k, \lambda_l: orbital index
+!!     \tau_i and \tau_k: imaginary time for annihilation operators
 !!     \tau_j and \tau_l: imaginary time for creation operators
 !!     u_l and u_l': svd polynomial
 !!     \omega: bosonic matsubara frequency
@@ -2136,7 +2196,7 @@
      ! dummy complex(dp) variables
      complex(dp) :: ee
 
-     ! u_l(x(\tau_e - \tau_s))
+     ! u_l( x( \tau_e - \tau_s ) )
      real(dp), allocatable :: ufun(:,:,:,:,:)
 
      ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
@@ -2146,9 +2206,10 @@
 
 !! [body
 
-     ! allocate memory
+     ! allocate memory for ufun, and then initialize it
      allocate( ufun(svmax, maxval(rank), maxval(rank), norbs, norbs)); ufun = zero
 
+     ! allocate memory for caux1 and caux2, and then initialize them
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
@@ -2158,28 +2219,32 @@
      ! prepare some important arrays: ufun
      step = real(svgrd - 1) / two
      do f1=1,norbs
-         do is1=1,rank(f1)
-             do f2=1,norbs
-                 do ie2=1,rank(f2)
-                     ! determine dt (distance) and ms (sign)
-                     dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
-                     ms = sign(one, dt)
+     do is1=1,rank(f1)
+         !
+         do f2=1,norbs
+         do ie2=1,rank(f2)
 
-                     ! adjust dt, keep it stay in (zero, beta)
-                     if ( dt < zero ) then
-                         dt = dt + beta
-                     endif ! back if ( dt < zero ) block
+             ! determine dt (distance) and ms (sign)
+             dt = time_e( index_e(ie2, f2), f2 ) - time_s( index_s(is1, f1), f1 )
+             ms = sign(one, dt)
 
-                     ! determine index for imaginary time
-                     call s_svd_point(two * dt / beta - one, step, curr)
+             ! adjust dt, keep it stay in (zero, beta)
+             if ( dt < zero ) then
+                 dt = dt + beta
+             endif ! back if ( dt < zero ) block
 
-                     ! fill ufun
-                     do l1=1,svmax
-                         ufun(l1,ie2,is1,f2,f1) = ms * rep_s(curr,l1)
-                     enddo ! over l1={1,svmax} loop
-                 enddo ! over ie2={1,rank(f2)} loop
-             enddo ! over f2={1,norbs} loop
-         enddo ! over is1={1,rank(f1)} loop
+             ! determine index for imaginary time
+             call s_svd_point(two * dt / beta - one, step, curr)
+
+             ! fill ufun
+             do l1=1,svmax
+                 ufun(l1,ie2,is1,f2,f1) = ms * rep_s(curr,l1)
+             enddo ! over l1={1,svmax} loop
+
+         enddo ! over ie2={1,rank(f2)} loop
+         enddo ! over f2={1,norbs} loop
+         !
+     enddo ! over is1={1,rank(f1)} loop
      enddo ! over f1={1,norbs} loop
 
      ! prepare some important arrays: caux1 and caux2
@@ -2195,35 +2260,46 @@
 
          if ( btest(isvrt,1) ) then
 
-             do f1=1,norbs                         ! block index: A
-                 do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
-                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
-                             do is2=1,rank(f2)     ! \delta -> l: creation operator
-                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
-             !-------------------!
-             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,svmax                     ! svd polynomial index: l
-                     do l2=1,svmax                 ! svd polynomial index: l'
+             do f1=1,norbs          ! block index: A
+             do f2=1,f1             ! block index: B
+                 !                  !
+                 do is1=1,rank(f1)  ! \beta  -> j: creation operator
+                 do ie1=1,rank(f1)  ! \alpha -> i: annihilation operator
+                 do is2=1,rank(f2)  ! \delta -> l: creation operator
+                 do ie2=1,rank(f2)  ! \gamma -> k: annihilation operator
+                     !              !
+                     do wbn=1,nbfrq ! bosonic matsubara frequency: w
+                     do l1=1,svmax  ! svd polynomial index: l
+                     do l2=1,svmax  ! svd polynomial index: l'
+
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
-                         uu = ufun(l1,ie1,is1,f1,f1) * ufun(l2,ie2,is2,f2,f2)
+                         !
+                         associate( u1 => ufun(l1,ie1,is1,f1,f1), &
+                                    u2 => ufun(l2,ie2,is2,f2,f2) )
+                             uu = u1 * u2
+                         end associate
                          !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
                          !
-                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) + mm * uu * ee / beta * pref(ie1,f1)
+                         associate( g2 => g2ph(l2,l1,wbn,f2,f1), &
+                                    h2 => h2ph(l2,l1,wbn,f2,f1) )
+                             g2 = g2 + mm * uu * ee / beta
+                             h2 = h2 + mm * uu * ee / beta * pref(ie1,f1)
+                         end associate
+
                      enddo ! over l2={1,svmax} loop
-                 enddo ! over l1={1,svmax} loop
-             enddo ! over wbn={1,nbfrq} loop
-             !-------------------!
-                                 enddo ! over ie2={1,rank(f2)} loop
-                             enddo ! over is2={1,rank(f2)} loop
-                         enddo ! over ie1={1,rank(f1)} loop
-                     enddo ! is1={1,rank(f1)} loop
-                 enddo ! over f2={1,f1} loop
+                     enddo ! over l1={1,svmax} loop
+                     enddo ! over wbn={1,nbfrq} loop
+                     !
+                 enddo ! over ie2={1,rank(f2)} loop
+                 enddo ! over is2={1,rank(f2)} loop
+                 enddo ! over ie1={1,rank(f1)} loop
+                 enddo ! over is1={1,rank(f1)} loop
+                 !
+             enddo ! over f2={1,f1} loop
              enddo ! over f1={1,norbs} loop
 
          endif ! back if ( btest(isvrt,1) ) block
@@ -2236,35 +2312,46 @@
 
          if ( btest(isvrt,2) ) then
 
-             do f1=1,norbs                         ! block index: A
-                 do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \delta -> l: creation operator
-                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
-                             do is2=1,rank(f2)     ! \beta  -> j: creation operator
-                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
-             !-------------------!
-             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,svmax                     ! svd polynomial index: l
-                     do l2=1,svmax                 ! svd polynomial index: l'
+             do f1=1,norbs          ! block index: A
+             do f2=1,f1             ! block index: B
+                 !                  !
+                 do is1=1,rank(f1)  ! \delta -> l: creation operator
+                 do ie1=1,rank(f1)  ! \alpha -> i: annihilation operator
+                 do is2=1,rank(f2)  ! \beta  -> j: creation operator
+                 do ie2=1,rank(f2)  ! \gamma -> k: annihilation operator
+                     !              !
+                     do wbn=1,nbfrq ! bosonic matsubara frequency: w
+                     do l1=1,svmax  ! svd polynomial index: l
+                     do l2=1,svmax  ! svd polynomial index: l'
+                    
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
-                         uu = ufun(l1,ie1,is2,f1,f2) * ufun(l2,ie2,is1,f2,f1)
+                         !
+                         associate( u1 => ufun(l1,ie1,is2,f1,f2), &
+                                    u2 => ufun(l2,ie2,is1,f2,f1) )
+                             uu = u1 * u2
+                         end associate
                          !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
                          !
-                         g2ph(l2,l1,wbn,f2,f1) = g2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta
-                         h2ph(l2,l1,wbn,f2,f1) = h2ph(l2,l1,wbn,f2,f1) - mm * uu * ee / beta * pref(ie1,f1)
+                         associate( g2 => g2ph(l2,l1,wbn,f2,f1), &
+                                    h2 => h2ph(l2,l1,wbn,f2,f1) )
+                             g2 = g2 - mm * uu * ee / beta
+                             h2 = h2 - mm * uu * ee / beta * pref(ie1,f1)
+                         end associate
+
                      enddo ! over l2={1,svmax} loop
-                 enddo ! over l1={1,svmax} loop
-             enddo ! over wbn={1,nbfrq} loop
-             !-------------------!
-                                 enddo ! over ie2={1,rank(f2)} loop
-                             enddo ! over is2={1,rank(f2)} loop
-                         enddo ! over ie1={1,rank(f1)} loop
-                     enddo ! is1={1,rank(f1)} loop
-                 enddo ! over f2={1,f1} loop
+                     enddo ! over l1={1,svmax} loop
+                     enddo ! over wbn={1,nbfrq} loop
+                     !
+                 enddo ! over ie2={1,rank(f2)} loop
+                 enddo ! over is2={1,rank(f2)} loop
+                 enddo ! over ie1={1,rank(f1)} loop
+                 enddo ! over is1={1,rank(f1)} loop
+                 !
+             enddo ! over f2={1,f1} loop
              enddo ! over f1={1,norbs} loop
 
          endif ! back if ( btest(isvrt,2) ) block
