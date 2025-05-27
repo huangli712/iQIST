@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/23/2025 by li huang (last modified)
+!!!           05/24/2025 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -801,13 +801,13 @@
      !--------------------------------------------------------------------
      ! using legendre orthogonal polynomial representation
      !--------------------------------------------------------------------
+     ! see Eq. (1) and Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
      LEG_BLOCK: if ( isort == 2 ) then
          step = real(legrd - 1) / two
          do i=1,norbs
              do j=1,ntime
                  raux = two * tmesh(j) / beta ! map tmesh to [0,2]
                  curr = nint(raux * step) + 1
-                 ! see Eq. (1) and Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
                  do fleg=1,lemax
                      raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
                      gtau(j,i,i) = gtau(j,i,i) + raux * gaux(fleg,i,i)
@@ -820,6 +820,7 @@
      !--------------------------------------------------------------------
      ! using svd orthogonal polynomial representation
      !--------------------------------------------------------------------
+     ! see Eq. (14) in Phys. Rev. B 96, 035147 (2017)
      SVD_BLOCK: if ( isort == 3 ) then
          step = real(svgrd - 1) / two
          do i=1,norbs
@@ -934,9 +935,8 @@
      !--------------------------------------------------------------------
      ! using legendre orthogonal polynomial representation
      !--------------------------------------------------------------------
+     ! see Eq. (5) in Phys. Rev. B 84, 075145 (2011)
      LEG_BLOCK: if ( isort == 2 ) then
-
-         ! see Eq. (5) in Phys. Rev. B 84, 075145 (2011)
 
          ! calculate spherical Bessel functions at first
          pfun = zero
@@ -1388,6 +1388,13 @@
 !! shift the Coulomb interaction matrix and the chemical potential if
 !! retarded interaction is considered
 !!
+!! for plasmon pole model and ohmic model, please refer to
+!!     Phys. Rev. Lett. 104, 146401 (2010)
+!!
+!! for general U(\omega), see
+!!     Eq. (58)-(60) in J. Phys.: Condens. Matter 28, 383001 (2016)
+!! or
+!!     Eq. (20)-(21) in Phys. Rev. B 89, 235128 (2014)
   subroutine ctqmc_make_lift(umat, ssign)
      use constants, only : dp
      use constants, only : zero, two
@@ -1619,7 +1626,8 @@
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
 !!     calculate the quantity directly, which is a bit slow, but safe. we
 !!     generally prefer to use the first one. but if you want to use the
-!!     second one, you have to comment out the codes and recompile them
+!!     second one, you have to comment out the relevant codes (see below)
+!!     and recompile them
 !!
 !! version 1
 !!
@@ -1727,7 +1735,8 @@
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
 !!     calculate the quantity directly, which is a bit slow, but safe. we
 !!     generally prefer to use the first one. but if you want to use the
-!!     second one, you have to comment out the codes and recompile them
+!!     second one, you have to comment out the relevant codes (see below)
+!!     and recompile them
 !!
 !! version 2
 !!
@@ -1908,6 +1917,9 @@
 !! function via fast fourier transformation (if isort == 1) or analytical
 !! formula (if isort == 2 or isort == 3). and then, self-energy function
 !! is obtained by using the improved estimator trick
+!!
+!! see Eq. (13) in Phys. Rev. B 85, 205106 (2012)
+!! or  Eq. (30) in Phys. Rev. B 89, 235128 (2014)
 !!
   subroutine ctqmc_make_hub2()
      use constants, only : dp

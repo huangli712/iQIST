@@ -25,7 +25,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/02/2025 by li huang (last modified)
+!!!           05/23/2025 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -2199,6 +2199,8 @@
 !! used to calculate the extra weight factor given by an exponential of
 !! correlators of noninteracting boson operators
 !!
+!! please refer to Eq. (4) in Phys. Rev. Lett. 104, 146401 (2010)
+!!
   subroutine cat_weight_factor(tau, scr)
      use constants, only : dp
      use constants, only : zero
@@ -2279,6 +2281,11 @@
 !! weight factor. this subroutine can be used to calculate K'(\tau)
 !! as well. you should use the 'typ' parameter to control it
 !!
+!! for plasmon pole model and ohmic model, please refer to
+!!     Phys. Rev. Lett. 104, 146401 (2010)
+!!
+!! for general U(\omega), see
+!!     Eq. (58) in J. Phys.: Condens. Matter 28, 383001 (2016)
   subroutine cat_weight_kernel(typ, tau, cur)
      use constants, only : dp
      use constants, only : pi, zero, one, two

@@ -637,8 +637,8 @@
      ! try to generate new configuration
      ! (1) at first, we select iso randomly
      ! (2) obtain tau_start1 according to iso
-     ! (3) based on the existing configuration, we determine tau_start2 and
-     !     related index isn
+     ! (3) based on the existing configuration, we determine tau_start2
+     !     and related index isn
      ! (4) finally ring is evaluated
      call try_lshift_colour(flvr, iso, isn, ring, tau_start1, tau_start2)
 
@@ -747,8 +747,8 @@
      ! try to generate new configuration
      ! (1) at first, we select ieo randomly
      ! (2) obtain tau_end1 according to ieo
-     ! (3) based on the existing configuration, we determine tau_end2 and
-     !     related index ien
+     ! (3) based on the existing configuration, we determine tau_end2
+     !     and related index ien
      ! (4) finally ring is evaluated
      call try_rshift_colour(flvr, ieo, ien, ring, tau_end1, tau_end2)
 

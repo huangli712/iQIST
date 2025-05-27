@@ -42,7 +42,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/06/2025 by li huang (last modified)
+!!!           05/27/2025 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -425,6 +425,7 @@
                  !--------------------------------------------------------
                  ! using standard representation
                  !--------------------------------------------------------
+                 ! see Eq. (C18) in Phys. Rev. B 84, 075145 (2011)
                  STD_BLOCK: if ( isort == 1 ) then
 
                      ! determine index for imaginary time
@@ -444,6 +445,7 @@
                  !--------------------------------------------------------
                  ! using legendre orthogonal polynomial representation
                  !--------------------------------------------------------
+                 ! see Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
                  LEG_BLOCK: if ( isort == 2 ) then
 
                      ! convert dtau in [0,\beta] to daux in [0,2]
@@ -469,6 +471,7 @@
                  !--------------------------------------------------------
                  ! using svd orthogonal polynomial representation
                  !--------------------------------------------------------
+                 ! see Eq. (14) in Phys. Rev. B 96, 035147 (2017)
                  SVD_BLOCK: if ( isort == 3 ) then
 
                      ! convert dtau in [0,\beta] to daux in [-1,1]
@@ -595,6 +598,7 @@
                  !--------------------------------------------------------
                  ! using standard representation
                  !--------------------------------------------------------
+                 ! see Eq. (C18) in Phys. Rev. B 84, 075145 (2011)
                  STD_BLOCK: if ( isort == 1 ) then
 
                      ! determine index for imaginary time
@@ -614,6 +618,7 @@
                  !--------------------------------------------------------
                  ! using legendre orthogonal polynomial representation
                  !--------------------------------------------------------
+                 ! see Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
                  LEG_BLOCK: if ( isort == 2 ) then
 
                      ! convert dtau in [0,\beta] to daux in [0,2]
@@ -639,6 +644,7 @@
                  !--------------------------------------------------------
                  ! using svd orthogonal polynomial representation
                  !--------------------------------------------------------
+                 ! see Eq. (14) in Phys. Rev. B 96, 035147 (2017)
                  SVD_BLOCK: if ( isort == 3 ) then
 
                      ! convert dtau in [0,\beta] to daux in [-1,1]
@@ -788,6 +794,8 @@
 !! @sub ctqmc_record_lrmm
 !!
 !! record the fidelity susceptibility
+!!
+!! see Phys. Rev. B 94, 235110 (2016)
 !!
   subroutine ctqmc_record_lrmm()
      use constants, only : dp
@@ -1432,40 +1440,60 @@
 !!
 !! @sub ctqmc_record_g2ph
 !!
-!! record the two-particle green's and vertex functions in the ph channel.
-!! here improved estimator is used to improve the accuracy
+!! record the two-particle green's and vertex functions in the particle-
+!! hole channel. the improved estimator is used to improve the accuracy
+!!
+!! see Phys. Rev. B 85, 205106 (2012) and Phys. Rev. B 89, 235128 (2014)
+!! for more details about the improved estimator algorithm
 !!
 !! notation:
 !!
-!!     G^{(2)}_{\alpha\beta\gamma\delta} (\tau_1, \tau_2, \tau_3, \tau_4)
+!!     two-particle green's function
+!!     see Eq. (1) in Rev. Mod. Phys. 90, 025003 (2018)
+!!
+!!     G^{(2)}_{abcd} (\tau_1, \tau_2, \tau_3, \tau_4)
 !!         = \langle T_\tau
-!!               c_{\alpha} (\tau_1) c^{\dagger}_{\beta} (\tau_2)
-!!               c_{\gamma} (\tau_3) c^{\dagger}_{\delta} (\tau_4)
+!!               c_{a} (\tau_1) c^{\dagger}_{b} (\tau_2)
+!!               c_{c} (\tau_3) c^{\dagger}_{d} (\tau_4)
 !!           \rangle
 !!
-!!     G^{(2)}_{\alpha\beta\gamma\delta,ph} (\nu, \nu', \omega)
-!!         = \langle
-!!               c_{\alpha} (\nu + \omega) c^{*}_{\beta} (\nu)
-!!               c_{\gamma} (\nu') c^{*}_{\delta} (\nu' + \omega)
+!!     the following definition is also seen in some papers
+!!     see Eq. (3) in Phys. Rev. B 86, 125114 (2012)
+!!
+!!     G^{(2)}_{abcd} (\tau_1, \tau_2, \tau_3, \tau_4)
+!!         = \langle T_\tau
+!!               c^{\dagger}_{a} (\tau_1) c_{b} (\tau_2)
+!!               c^{\dagger}_{c} (\tau_3) c_{d} (\tau_4)
 !!           \rangle
 !!
-!!     \alpha, \beta, \gamma, \delta: orbital index
+!!     a, b, c, d: orbital index
+!!
+!! diagram:
+!!
+!!     particle-hole scattering
+!!     see Fig. 1 in Phys. Rev. B 86, 125114 (2012)
+!!
+!!         v + w    a        d     v'+w
+!!     in  ---->----+--------+---->---- out
+!!                  |i      l|
+!!                  |        |
+!!                  |j      k|
+!!     out ----<----+--------+----<---- in
+!!         v        b        c       v'
+!!
+!!     or (in triqs/cthyb)
+!!
+!!         v + w    b        c     v'+w
+!!     in  ---->----+--------+---->---- out
+!!                  |j      k|
+!!                  |        |
+!!                  |i      l|
+!!     out ----<----+--------+----<---- in
+!!         v        a        d       v'
+!!
+!!     a, b, c, d: orbital index
 !!     \nu and \nu': fermionic matsubara frequency
 !!     \omega: bosonic matsubara frequency
-!!
-!!       in             out
-!!        \              /
-!!     v+w \            / v'+w
-!!          \          /
-!!         i \--------/ l
-!!           |        |
-!!           |        |
-!!           |        |
-!!         j /--------\ k
-!!          /          \
-!!       v /            \ v'
-!!        /              \
-!!       out             in
 !!
   subroutine ctqmc_record_g2ph()
      use control, only : isort
@@ -1506,8 +1534,9 @@
 !!
 !! @sub cat_record_g2ph_std
 !!
-!! record the two-particle green's and vertex functions in the ph channel.
-!! here improved estimator is used to improve the accuracy
+!! record the two-particle green's and vertex functions in the particle-
+!! hole channel. the improved estimator is used to improve the accuracy.
+!! this subroutine implements the standard algorithm
 !!
 !! note:
 !!
@@ -1519,29 +1548,44 @@
 !!     see P56 in Lewin Boehnke's thesis
 !!     <<Susceptibilities in materials with multiple strongly correlated orbitals>>
 !!
-!!     G^{(2)}_{abcd,AABB,ph} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     or note for triqs/cthyb
+!!     https://github.com/TRIQS/cthyb/blob/3.3.x/doc/notes/measure_g2.tex
+!!
+!!     G^{(2)}_{abcd,AABB,ph} (\nu, \nu', \omega) =
+!!         \frac{1}{\beta}
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ i (\nu + \omega) \tau_i ]
 !!             exp [ -i \nu \tau_j ]
-!!             exp [ i \nu' \tau'_k ]
+!!             exp [ i \nu' \tau_k ]
 !!             exp [ -i (\nu' + \omega) \tau_l ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA,ph} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     G^{(2)}_{abcd,ABBA,ph} (\nu, \nu', \omega) =
+!!         \frac{1}{\beta}
 !!         \langle
 !!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\nu + \omega) \tau'_i ]
+!!             exp [ i (\nu + \omega) \tau_i ]
 !!             exp [ -i \nu \tau_j ]
-!!             exp [ i \nu' \tau'_k ]
+!!             exp [ i \nu' \tau_k ]
 !!             exp [ -i (\nu' + \omega) \tau_l ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     A, B: block index
+!!     a, b, c, d: orbital index
+!!     i, j, k, l: operator index
+!!     \lambda_i, \lambda_j, \lambda_k, \lambda_l: orbital index
+!!     \tau_i and \tau_k: imaginary time for annihilation operators
 !!     \tau_j and \tau_l: imaginary time for creation operators
 !!     \nu and \nu': fermionic matsubara frequency
 !!     \omega: bosonic matsubara frequency
@@ -1592,7 +1636,7 @@
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
 
-     ! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ i \omega_n \tau_j ]
+     ! \sum_{ij=1} exp [i \omega_m \tau_i ] M_{ij} exp [ i \omega_n \tau_j ]
      ! where m and n are the first two frequency indices for g2aux and h2aux
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
@@ -1628,8 +1672,11 @@
                  !
                  do w2n=1,nfaux
                      do w1n=1,nfaux
-                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
-                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w2n,is) * caux2(w1n,ie)
+                         associate( g2 => g2aux(w1n,w2n,flvr), &
+                                    h2 => h2aux(w1n,w2n,flvr) )
+                             g2 = g2 + maux * caux1(w2n,is) * caux2(w1n,ie)
+                             h2 = h2 + naux * caux1(w2n,is) * caux2(w1n,ie)
+                         end associate
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
                  !
@@ -1639,89 +1686,90 @@
      enddo FLVR_CYCLE ! over flvr={1,norbs} loop
 !$OMP END DO
 
+!
 ! calculate g2ph and h2ph
 !
 ! note (for G2_PH_AABB component):
 !
 !     g2aux(w1n,w2n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+!         exp [ i (\nu + \omega) \tau_i ] exp [ -i \nu \tau_j ]
 !
 !     g2aux(w3n,w4n,f2) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+!         exp [ i \nu' \tau_k ] exp [ -i (\nu' + \omega) \tau_l ]
 !
 !     g2aux(w1n,w4n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+!         exp [ i (\nu + \omega) \tau_i ] exp [ -i (\nu' + \omega) \tau_l ]
 !
 !     g2aux(w3n,w2n,f1) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!         exp [ i \nu' \tau_k ] exp [ -i \nu \tau_j ]
 !
 ! note (for G2_PH_ABBA component):
 !
 !     g2aux(w1n,w2n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i \nu \tau_j ]
+!         exp [ i (\nu + \omega) \tau_i ] exp [ -i \nu \tau_j ]
 !
 !     g2aux(w3n,w4n,f1) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i (\nu' + \omega) \tau_l ]
+!         exp [ i \nu' \tau_k ] exp [ -i (\nu' + \omega) \tau_l ]
 !
 !     g2aux(w1n,w4n,f1) ->
-!         exp [ i (\nu + \omega) \tau'_i ] exp [ -i (\nu' + \omega) \tau_l ]
+!         exp [ i (\nu + \omega) \tau_i ] exp [ -i (\nu' + \omega) \tau_l ]
 !
 !     g2aux(w3n,w2n,f2) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!         exp [ i \nu' \tau_k ] exp [ -i \nu \tau_j ]
 !
 !$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
-     ORB1_CYCLE: do f1=1,norbs                 ! block index: A
-         ORB2_CYCLE: do f2=1,f1                ! block index: B
-                                               !
-             WB_CYCLE: do wbn=1,nbfrq          ! bosonic matsubara frequency: w
-                                               !
-                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic matsubara frequency: v
-                     WF2_CYCLE: do w3n=1,nffrq ! fermionic matsubara frequency: v'
-                         w1n = w2n + wbn - 1 ! think it carefully
-                         w4n = w3n + wbn - 1
+     ORB1_CYCLE: do f1=1,norbs     ! block index: A
+     ORB2_CYCLE: do f2=1,f1        ! block index: B
+         !                         !
+         WB_CYCLE: do wbn=1,nbfrq  ! bosonic matsubara frequency: w
+         !                         !
+         WF1_CYCLE: do w2n=1,nffrq ! fermionic matsubara frequency: v
+         WF2_CYCLE: do w3n=1,nffrq ! fermionic matsubara frequency: v'
+             w1n = w2n + wbn - 1   ! think it carefully, v + w
+             w4n = w3n + wbn - 1   ! think it carefully, v' + w
 
-                         zg = czero; zh = czero
+             zg = czero; zh = czero
 
-                     ! G2_PH_AABB component
-                     !----------------------------------------------------
-                     CALC_G2_PH_AABB: BLOCK
+             ! G2_PH_AABB component
+             !----------------------------------------------------
+             CALC_G2_PH_AABB: BLOCK
 
-                         if ( btest(isvrt,1) ) then
-                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                             !
-                             if ( f1 == f2 ) then
-                                 zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                                 zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                             endif ! back if ( f1 == f2 ) block
-                         endif ! back if ( btest(isvrt,1) ) block
+                 if ( btest(isvrt,1) ) then
+                     zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                     zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                     !
+                     if ( f1 == f2 ) then
+                         zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                         zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                     endif ! back if ( f1 == f2 ) block
+                 endif ! back if ( btest(isvrt,1) ) block
 
-                     END BLOCK CALC_G2_PH_AABB
+             END BLOCK CALC_G2_PH_AABB
 
-                     ! G2_PH_ABBA component
-                     !----------------------------------------------------
-                     CALC_G2_PH_ABBA: BLOCK
+             ! G2_PH_ABBA component
+             !----------------------------------------------------
+             CALC_G2_PH_ABBA: BLOCK
 
-                         if ( btest(isvrt,2) ) then
-                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-                             !
-                             if ( f1 == f2 ) then
-                                 zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-                                 zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-                             endif ! back if ( f1 == f2 ) block
-                         endif ! back if ( btest(isvrt,2) ) block
+                 if ( btest(isvrt,2) ) then
+                     zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                     zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                     !
+                     if ( f1 == f2 ) then
+                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                     endif ! back if ( f1 == f2 ) block
+                 endif ! back if ( btest(isvrt,2) ) block
 
-                     END BLOCK CALC_G2_PH_ABBA
+             END BLOCK CALC_G2_PH_ABBA
 
-                         g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
-                         h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
-                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
-                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
-
-             enddo WB_CYCLE ! over wbn={1,nbfrq} loop
-
-         enddo ORB2_CYCLE ! over f2={1,f1} loop
+             g2ph(w3n,w2n,wbn,f2,f1) = g2ph(w3n,w2n,wbn,f2,f1) + zg / beta
+             h2ph(w3n,w2n,wbn,f2,f1) = h2ph(w3n,w2n,wbn,f2,f1) + zh / beta
+         enddo WF2_CYCLE ! over w3n={1,nffrq} loop
+         enddo WF1_CYCLE ! over w2n={1,nffrq} loop
+         !
+         enddo WB_CYCLE ! over wbn={1,nbfrq} loop
+         !
+     enddo ORB2_CYCLE ! over f2={1,f1} loop
      enddo ORB1_CYCLE ! over f1={1,norbs} loop
 !$OMP END DO
 !$OMP END PARALLEL
@@ -2236,8 +2284,8 @@
 !!
 !! @sub ctqmc_record_g2pp
 !!
-!! record the two-particle green's and vertex functions in the pp channel.
-!! here improved estimator is used to improve the accuracy
+!! record the two-particle green's and vertex functions in the particle-
+!! particle channel. here improved estimator is used to improve the accuracy
 !!
 !! notation:
 !!
