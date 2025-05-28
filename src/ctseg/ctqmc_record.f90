@@ -2372,38 +2372,59 @@
 !! @sub ctqmc_record_g2pp
 !!
 !! record the two-particle green's and vertex functions in the particle-
-!! particle channel. here improved estimator is used to improve the accuracy
+!! particle channel. the improved estimator is used to improve the accuracy
+!!
+!! see Phys. Rev. B 85, 205106 (2012) and Phys. Rev. B 89, 235128 (2014)
+!! for more details about the improved estimator algorithm
 !!
 !! notation:
 !!
-!!     G^{(2)}_{\alpha\beta\gamma\delta} (\tau_1, \tau_2, \tau_3, \tau_4)
+!!     two-particle green's function
+!!     see Eq. (1) in Rev. Mod. Phys. 90, 025003 (2018)
+!!
+!!     G^{(2)}_{abcd} (\tau_1, \tau_2, \tau_3, \tau_4)
 !!         = \langle T_\tau
-!!               c_{\alpha} (\tau_1) c^{\dagger}_{\beta} (\tau_2)
-!!               c_{\gamma} (\tau_3) c^{\dagger}_{\delta} (\tau_4)
+!!               c_{a} (\tau_1) c^{\dagger}_{b} (\tau_2)
+!!               c_{c} (\tau_3) c^{\dagger}_{d} (\tau_4)
 !!           \rangle
 !!
-!!     G^{(2)}_{\alpha\beta\gamma\delta,pp} (\nu, \nu', \omega)
-!!         = \langle
-!!               c_{\alpha} (\omega - \nu') c^{*}_{\beta} (\nu)
-!!               c_{\gamma} (\nu') c^{*}_{\delta} (\omega - nu)
+!!     the following definition is also seen in some papers
+!!     see Eq. (3) in Phys. Rev. B 86, 125114 (2012)
+!!
+!!     G^{(2)}_{abcd} (\tau_1, \tau_2, \tau_3, \tau_4)
+!!         = \langle T_\tau
+!!               c^{\dagger}_{a} (\tau_1) c_{b} (\tau_2)
+!!               c^{\dagger}_{c} (\tau_3) c_{d} (\tau_4)
 !!           \rangle
 !!
+!!     a, b, c, d: orbital index
+!!
+!! diagram:
+!!
+!!     particle-particle scattering
+!!     see Fig. 2 in Phys. Rev. B 86, 125114 (2012)
+!!
+!!        w-v'     a        d      w-v
+!!     in ---->----+--------+---->---- out
+!!                 |i      l|
+!!                 |        |
+!!                 |j      k|
+!!     in ---->----+--------+---->---- out
+!!        v'       b        c        v
+!!
+!!     or (in triqs/cthyb)
+!!
+!!        w-v'     b        c      w-v
+!!     in ---->----+--------+---->---- out
+!!                 |j      k|
+!!                 |        |
+!!                 |i      l|
+!!     in ---->----+--------+---->---- out
+!!        v'       a        d        v
+!!
+!!     a, b, c, d: orbital index
 !!     \nu and \nu': fermionic matsubara frequency
 !!     \omega: bosonic matsubara frequency
-!!
-!!        in             out
-!!         \              /
-!!     w-v' \            / w-v
-!!           \          /
-!!          i \--------/ l
-!!            |        |
-!!            |        |
-!!            |        |
-!!          j /--------\ k
-!!           /          \
-!!        v /            \ v'
-!!         /              \
-!!        out             in
 !!
   subroutine ctqmc_record_g2pp()
      use control, only : isort
