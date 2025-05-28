@@ -1473,7 +1473,7 @@
 !!     particle-hole scattering
 !!     see Fig. 3 in Rev. Mod. Phys. 90, 025003 (2018)
 !!
-!!         v + w    a        d     v'+w
+!!         v + w    a        d   v' + w
 !!     in  ---->----+========+---->---- out
 !!                  |i      l|
 !!                  V        A
@@ -1483,7 +1483,7 @@
 !!
 !!     or (in triqs/cthyb)
 !!
-!!         v + w    b        c     v'+w
+!!         v + w    b        c   v' + w
 !!     in  ---->----+========+---->---- out
 !!                  |j      k|
 !!                  V        A
@@ -2341,7 +2341,7 @@
                      do wbn=1,nbfrq ! bosonic matsubara frequency: w
                      do l1=1,svmax  ! svd polynomial index: l
                      do l2=1,svmax  ! svd polynomial index: l'
-                    
+
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is1,f1)
                          !
                          associate( u1 => ufun(l1,ie1,is2,f1,f2), &
@@ -2420,25 +2420,25 @@
 !! diagram:
 !!
 !!     particle-particle scattering
-!!     see Fig. 2 in Phys. Rev. B 86, 125114 (2012)
+!!     see Fig. 3 in Rev. Mod. Phys. 90, 025003 (2018)
 !!
-!!         w-v'     a        d      w-v
-!!     in  ---->----+--------+---->---- out
+!!         w - v'   a        d    w - v
+!!     in  ---->----+========+---->---- out
 !!                  |i      l|
-!!                  |        |
+!!                  V        A
 !!                  |j      k|
-!!     out ----<----+--------+----<---- in
+!!     out ----<----+========+----<---- in
 !!         v        b        c       v'
 !!
 !!     or (in triqs/cthyb)
 !!
-!!        w-v'     b        c      w-v
-!!     in ---->----+--------+---->---- out
-!!                 |j      k|
-!!                 |        |
-!!                 |i      l|
-!!     in ---->----+--------+---->---- out
-!!        v'       a        d        v
+!!         w - v'   b        c    w - v
+!!     in  ---->----+========+---->---- out
+!!                  |j      k|
+!!                  V        A
+!!                  |i      l|
+!!     out ----<----+========+----<---- in
+!!         v        a        d       v'
 !!
 !!     a, b, c, d: orbital index
 !!     \nu and \nu': fermionic matsubara frequency
@@ -2483,8 +2483,9 @@
 !!
 !! @sub cat_record_g2pp_std
 !!
-!! record the two-particle green's and vertex functions in the pp channel.
-!! here improved estimator is used to improve the accuracy
+!! record the two-particle green's and vertex functions in the particle-
+!! particle channel. the improved estimator is used to improve the accuracy.
+!! this subroutine implements the standard algorithm
 !!
 !! note:
 !!
@@ -2493,30 +2494,66 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
-!!     G^{(2)}_{abcd,AABB,pp} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     see P56 in Lewin Boehnke's thesis
+!!     <<Susceptibilities in materials with multiple strongly correlated orbitals>>
+!!
+!!     or note for triqs/cthyb
+!!     https://github.com/TRIQS/cthyb/blob/3.3.x/doc/notes/measure_g2.tex
+!!
+!!     G^{(2)}_{abcd,AABB,pp} (\nu, \nu', \omega) =
+!!         \frac{1}{\beta}
 !!         \langle
-!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
-!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\omega - \nu') \tau'_i ]
-!!             exp [ -i \nu \tau_j ]
-!!             exp [ i \nu' \tau'_k ]
-!!             exp [ -i (\omega - \nu) \tau_l ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             (
+!!                 \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!                     M^{A}_{ij} M^{B}_{kl}
+!!                     exp [ i (\omega - \nu') \tau_i ]
+!!                     exp [ -i \nu \tau_j ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i (\omega - \nu) \tau_l ]
+!!                 -
+!!                 \sum^{K_A}_{il=1} \sum^{K_B}_{kj=1}
+!!                     \delta_{AB} M^{A}_{il} M^{B}_{kj}
+!!                     exp [ i (\omega - \nu') \tau_i ]
+!!                     exp [ -i (\omega - \nu) \tau_l ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i \nu \tau_j ]
+!!             )
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA,pp} (\nu, \nu', \omega) = \frac{1}{\beta}
+!!     G^{(2)}_{abcd,ABBA,pp} (\nu, \nu', \omega) =
+!!         \frac{1}{\beta}
 !!         \langle
-!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
-!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\omega - \nu') \tau'_i ]
-!!             exp [ -i \nu \tau_j ]
-!!             exp [ i \nu' \tau'_k ]
-!!             exp [ -i (\omega - \nu) \tau_l ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             (
+!!                 \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!                     \delta_{AB} M^{A}_{ij} M^{B}_{kl}
+!!                     exp [ i (\omega - \nu') \tau_i ]
+!!                     exp [ -i \nu \tau_j ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i (\omega - \nu) \tau_l ]
+!!                 -
+!!                 \sum^{K_A}_{il=1} \sum^{K_B}_{kj=1}
+!!                     M^{A}_{il} M^{B}_{kj}
+!!                     exp [ i (\omega - \nu') \tau_i ]
+!!                     exp [ -i (\omega - \nu) \tau_l ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i \nu \tau_j ]
+!!             )
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     \tau'_i and \tau'_k: imaginary time for annihilation operator
-!!     \tau_j and \tau_l: imaginary time for creation operator
+!!     A and B: block index
+!!     a, b, c, d: orbital index
+!!     i, j, k, l: operator index
+!!     \lambda_i, \lambda_j, \lambda_k, \lambda_l: orbital index
+!!     \tau_i and \tau_k: imaginary time for annihilation operators
+!!     \tau_j and \tau_l: imaginary time for creation operators
 !!     \nu and \nu': fermionic matsubara frequency
 !!     \omega: bosonic matsubara frequency
 !!
