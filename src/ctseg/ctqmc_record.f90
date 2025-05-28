@@ -2574,10 +2574,6 @@
      implicit none
 
 !! local variables
-     ! loop indices for start and end points
-     integer  :: is
-     integer  :: ie
-
      ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
@@ -2591,6 +2587,10 @@
      integer  :: w3n
      integer  :: w4n
 
+     ! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
      ! used to store the element of mmat matrix
      real(dp) :: maux
      real(dp) :: naux
@@ -2603,7 +2603,7 @@
      complex(dp), allocatable :: caux1(:,:)
      complex(dp), allocatable :: caux2(:,:)
 
-     ! \sum_{ij=1} exp [i \omega_m \tau'_i ] M_{ij} exp [ i \omega_n \tau_j ]
+     ! \sum_{ij=1} exp [i \omega_m \tau_i ] M_{ij} exp [ i \omega_n \tau_j ]
      ! where m and n are the first two frequency indices for g2aux and h2aux
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
@@ -2639,8 +2639,11 @@
                  !
                  do w2n=1,nfaux
                      do w1n=1,nfaux
-                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
-                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w2n,is) * caux2(w1n,ie)
+                         associate( g2 => g2aux(w1n,w2n,flvr), &
+                                    h2 => h2aux(w1n,w2n,flvr) )
+                             g2 = g2 + maux * caux1(w2n,is) * caux2(w1n,ie)
+                             h2 = h2 + naux * caux1(w2n,is) * caux2(w1n,ie)
+                         end associate
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
                  !
@@ -2655,30 +2658,30 @@
 ! note (for G2_PP_AABB component):
 !
 !     g2aux(w1n,w2n,f1) ->
-!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i \nu \tau_j ]
+!         exp [ i (\omega - \nu') \tau_i ] exp [ -i \nu \tau_j ]
 !
 !     g2aux(w3n,w4n,f2) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i (\omega - \nu) \tau_l ]
+!         exp [ i \nu' \tau_k ] exp [ -i (\omega - \nu) \tau_l ]
 !
 !     g2aux(w1n,w4n,f1) ->
-!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i (\omega - nu) \tau_l ]
+!         exp [ i (\omega - \nu') \tau_i ] exp [ -i (\omega - nu) \tau_l ]
 !
 !     g2aux(w3n,w2n,f1) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!         exp [ i \nu' \tau_k ] exp [ -i \nu \tau_j ]
 !
 ! note (for G2_PP_ABBA component):
 !
 !     g2aux(w1n,w2n,f1) ->
-!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i \nu \tau_j ]
+!         exp [ i (\omega - \nu') \tau_i ] exp [ -i \nu \tau_j ]
 !
 !     g2aux(w3n,w4n,f1) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i (\omega - \nu) \tau_l ]
+!         exp [ i \nu' \tau_k ] exp [ -i (\omega - \nu) \tau_l ]
 !
 !     g2aux(w1n,w4n,f1) ->
-!         exp [ i (\omega - \nu') \tau'_i ] exp [ -i (\omega - nu) \tau_l ]
+!         exp [ i (\omega - \nu') \tau_i ] exp [ -i (\omega - nu) \tau_l ]
 !
 !     g2aux(w3n,w2n,f2) ->
-!         exp [ i \nu' \tau'_k ] exp [ -i \nu \tau_j ]
+!         exp [ i \nu' \tau_k ] exp [ -i \nu \tau_j ]
 !
 !$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
      ORB1_CYCLE: do f1=1,norbs                 ! block index: A
