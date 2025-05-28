@@ -2984,35 +2984,45 @@
 
          if ( btest(isvrt,3) ) then
 
-             do f1=1,norbs                         ! block index: A
-                 do f2=1,f1                        ! block index: B
-                     do is1=1,rank(f1)             ! \beta  -> j: creation operator
-                         do ie1=1,rank(f1)         ! \alpha -> i: annihilation operator
-                             do is2=1,rank(f2)     ! \delta -> l: creation operator
-                                 do ie2=1,rank(f2) ! \gamma -> k: annihilation operator
-             !-------------------!
-             do wbn=1,nbfrq                        ! bosonic matsubara frequency: w
-                 do l1=1,lemax                     ! legendre polynomial index: l
-                     do l2=1,lemax                 ! legendre polynomial index: l'
+             do f1=1,norbs          ! block index: A
+             do f2=1,f1             ! block index: B
+                 !                  !
+                 do is1=1,rank(f1)  ! \beta  -> j: creation operator
+                 do ie1=1,rank(f1)  ! \alpha -> i: annihilation operator
+                 do is2=1,rank(f2)  ! \delta -> l: creation operator
+                 do ie2=1,rank(f2)  ! \gamma -> k: annihilation operator
+                     !              !
+                     do wbn=1,nbfrq ! bosonic matsubara frequency: w
+                     do l1=1,lemax  ! legendre polynomial index: l
+                     do l2=1,lemax  ! legendre polynomial index: l'
+
                          ee = caux2(wbn,ie1,f1) * caux1(wbn,is2,f2)
-                         pp = pl_s(l1,is2,is1,f2,f1) * pl_e(l2,ie2,ie1,f2,f1) * lfun(l1,l2)
+                         !
+                         associate( ps => pl_s(l1,is2,is1,f2,f1), &
+                                    pe => pl_e(l2,ie2,ie1,f2,f1) )
+                             pp = ps * pe * lfun(l1,l2)
+                         end associate
                          !
                          mm = mmat(ie1, is1, f1) * mmat(ie2, is2, f2)
                          if ( f1 == f2 ) then
                              mm = mm - mmat(ie1, is2, f1) * mmat(ie2, is1, f1)
                          endif ! back if ( f1 == f2 ) block
                          !
-                         g2pp(l2,l1,wbn,f2,f1) = g2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta
-                         h2pp(l2,l1,wbn,f2,f1) = h2pp(l2,l1,wbn,f2,f1) + mm * pp * ee / beta * pref(ie1,f1)
+                         associate( g2 => g2pp(l2,l1,wbn,f2,f1), &
+                                    h2 => h2pp(l2,l1,wbn,f2,f1) )
+                             g2 = g2 + mm * pp * ee / beta
+                             h2 = h2 + mm * pp * ee / beta * pref(ie1,f1)
+                         end associate
+
                      enddo ! over l2={1,lemax} loop
-                 enddo ! over l1={1,lemax} loop
-             enddo ! over wbn={1,nbfrq} loop
-             !-------------------!
-                                 enddo ! over ie2={1,rank(f2)} loop
-                             enddo ! over is2={1,rank(f2)} loop
-                         enddo ! over ie1={1,rank(f1)} loop
-                     enddo ! is1={1,rank(f1)} loop
-                 enddo ! over f2={1,f1} loop
+                     enddo ! over l1={1,lemax} loop
+                     enddo ! over wbn={1,nbfrq} loop
+                     !
+                 enddo ! over ie2={1,rank(f2)} loop
+                 enddo ! over is2={1,rank(f2)} loop
+                 enddo ! over ie1={1,rank(f1)} loop
+                 enddo ! over is1={1,rank(f1)} loop
+             enddo ! over f2={1,f1} loop
              enddo ! over f1={1,norbs} loop
 
          endif ! back if ( btest(isvrt,3) ) block
