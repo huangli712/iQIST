@@ -42,7 +42,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/27/2025 by li huang (last modified)
+!!!           05/28/2025 by li huang (last modified)
 !!! purpose : measure and collect physical observables produced by the
 !!!           hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -1471,24 +1471,24 @@
 !! diagram:
 !!
 !!     particle-hole scattering
-!!     see Fig. 1 in Phys. Rev. B 86, 125114 (2012)
+!!     see Fig. 3 in Rev. Mod. Phys. 90, 025003 (2018)
 !!
 !!         v + w    a        d     v'+w
-!!     in  ---->----+--------+---->---- out
+!!     in  ---->----+========+---->---- out
 !!                  |i      l|
-!!                  |        |
+!!                  V        A
 !!                  |j      k|
-!!     out ----<----+--------+----<---- in
+!!     out ----<----+========+----<---- in
 !!         v        b        c       v'
 !!
 !!     or (in triqs/cthyb)
 !!
 !!         v + w    b        c     v'+w
-!!     in  ---->----+--------+---->---- out
+!!     in  ---->----+========+---->---- out
 !!                  |j      k|
-!!                  |        |
+!!                  V        A
 !!                  |i      l|
-!!     out ----<----+--------+----<---- in
+!!     out ----<----+========+----<---- in
 !!         v        a        d       v'
 !!
 !!     a, b, c, d: orbital index
@@ -1554,12 +1554,21 @@
 !!     G^{(2)}_{abcd,AABB,ph} (\nu, \nu', \omega) =
 !!         \frac{1}{\beta}
 !!         \langle
-!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
-!!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\nu + \omega) \tau_i ]
-!!             exp [ -i \nu \tau_j ]
-!!             exp [ i \nu' \tau_k ]
-!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             (
+!!                 \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!                     M^{A}_{ij} M^{B}_{kl}
+!!                     exp [ i (\nu + \omega) \tau_i ]
+!!                     exp [ -i \nu \tau_j ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i (\nu' + \omega) \tau_l ]
+!!                 -
+!!                 \sum^{K_A}_{il=1} \sum^{K_B}_{kj=1}
+!!                     \delta_{AB} M^{A}_{il} M^{B}_{kj}
+!!                     exp [ i (\nu + \omega) \tau_i ]
+!!                     exp [ -i (\nu' + \omega) \tau_l ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i \nu \tau_j ]
+!!             )
 !!             \delta_{a, \lambda_i}
 !!             \delta_{b, \lambda_j}
 !!             \delta_{c, \lambda_k}
@@ -1569,12 +1578,21 @@
 !!     G^{(2)}_{abcd,ABBA,ph} (\nu, \nu', \omega) =
 !!         \frac{1}{\beta}
 !!         \langle
-!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
-!!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
-!!             exp [ i (\nu + \omega) \tau_i ]
-!!             exp [ -i \nu \tau_j ]
-!!             exp [ i \nu' \tau_k ]
-!!             exp [ -i (\nu' + \omega) \tau_l ]
+!!             (
+!!                 \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
+!!                     \delta_{AB} M^{A}_{ij} M^{B}_{kl}
+!!                     exp [ i (\nu + \omega) \tau_i ]
+!!                     exp [ -i \nu \tau_j ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i (\nu' + \omega) \tau_l ]
+!!                 -
+!!                 \sum^{K_A}_{il=1} \sum^{K_B}_{kj=1}
+!!                     M^{A}_{il} M^{B}_{kj}
+!!                     exp [ i (\nu + \omega) \tau_i ]
+!!                     exp [ -i (\nu' + \omega) \tau_l ]
+!!                     exp [ i \nu' \tau_k ]
+!!                     exp [ -i \nu \tau_j ]
+!!             )
 !!             \delta_{a, \lambda_i}
 !!             \delta_{b, \lambda_j}
 !!             \delta_{c, \lambda_k}
@@ -2404,13 +2422,13 @@
 !!     particle-particle scattering
 !!     see Fig. 2 in Phys. Rev. B 86, 125114 (2012)
 !!
-!!        w-v'     a        d      w-v
-!!     in ---->----+--------+---->---- out
-!!                 |i      l|
-!!                 |        |
-!!                 |j      k|
-!!     in ---->----+--------+---->---- out
-!!        v'       b        c        v
+!!         w-v'     a        d      w-v
+!!     in  ---->----+--------+---->---- out
+!!                  |i      l|
+!!                  |        |
+!!                  |j      k|
+!!     out ----<----+--------+----<---- in
+!!         v        b        c       v'
 !!
 !!     or (in triqs/cthyb)
 !!
