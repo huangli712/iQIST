@@ -2684,58 +2684,58 @@
 !         exp [ i \nu' \tau_k ] exp [ -i \nu \tau_j ]
 !
 !$OMP DO PRIVATE (f1, f2, wbn, w4n, w3n, w2n, w1n, zg, zh)
-     ORB1_CYCLE: do f1=1,norbs                 ! block index: A
-         ORB2_CYCLE: do f2=1,f1                ! block index: B
-                                               !
-             WB_CYCLE: do wbn=1,nbfrq          ! bosonic matsubara frequency: w
-                                               !
-                 WF1_CYCLE: do w2n=1,nffrq     ! fermionic matsubara frequency: v
-                     WF2_CYCLE: do w3n=1,nffrq ! fermionic matsubara frequency: v'
-                         w1n = wbn - w3n + nffrq ! think it carefully
-                         w4n = wbn - w2n + nffrq
+     ORB1_CYCLE: do f1=1,norbs     ! block index: A
+     ORB2_CYCLE: do f2=1,f1        ! block index: B
+         !                         !
+         WB_CYCLE: do wbn=1,nbfrq  ! bosonic matsubara frequency: w
+         !                         !
+         WF1_CYCLE: do w2n=1,nffrq ! fermionic matsubara frequency: v
+         WF2_CYCLE: do w3n=1,nffrq ! fermionic matsubara frequency: v'
+             w1n = wbn - w3n + nffrq ! think it carefully, w - v'
+             w4n = wbn - w2n + nffrq ! think it carefully, w - v
 
-                         zg = czero; zh = czero
+             zg = czero; zh = czero
 
-                     ! G2_PP_AABB component
-                     !----------------------------------------------------
-                     CALC_G2_PP_AABB: BLOCK
+             ! G2_PP_AABB component
+             !----------------------------------------------------
+             CALC_G2_PP_AABB: BLOCK
 
-                         if ( btest(isvrt,3) ) then
-                             zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                             zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                             !
-                             if ( f1 == f2 ) then
-                                 zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                                 zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
-                             endif ! back if ( f1 == f2 ) block
-                         endif ! back if ( btest(isvrt,3) ) block
+                 if ( btest(isvrt,3) ) then
+                     zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                     zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                     !
+                     if ( f1 == f2 ) then
+                         zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                         zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                     endif ! back if ( f1 == f2 ) block
+                 endif ! back if ( btest(isvrt,3) ) block
 
-                     END BLOCK CALC_G2_PP_AABB
+             END BLOCK CALC_G2_PP_AABB
 
-                     ! G2_PP_ABBA component
-                     !----------------------------------------------------
-                     CALC_G2_PP_ABBA: BLOCK
+             ! G2_PP_ABBA component
+             !----------------------------------------------------
+             CALC_G2_PP_ABBA: BLOCK
 
-                         if ( btest(isvrt,4) ) then
-                             zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-                             zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
-                             !
-                             if ( f1 == f2 ) then
-                                 zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-                                 zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
-                             endif ! back if ( f1 == f2 ) block
-                         endif ! back if ( btest(isvrt,4) ) block
+                 if ( btest(isvrt,4) ) then
+                     if ( f1 == f2 ) then
+                         zg = zg + g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                         zh = zh + h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f1)
+                     endif ! back if ( f1 == f2 ) block
+                     !
+                     zg = zg - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                     zh = zh - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f2)
+                 endif ! back if ( btest(isvrt,4) ) block
 
-                     END BLOCK CALC_G2_PP_ABBA
+             END BLOCK CALC_G2_PP_ABBA
 
-                         g2pp(w3n,w2n,wbn,f2,f1) = g2pp(w3n,w2n,wbn,f2,f1) + zg / beta
-                         h2pp(w3n,w2n,wbn,f2,f1) = h2pp(w3n,w2n,wbn,f2,f1) + zh / beta
-                     enddo WF2_CYCLE ! over w3n={1,nffrq} loop
-                 enddo WF1_CYCLE ! over w2n={1,nffrq} loop
-
-             enddo WB_CYCLE ! over wbn={1,nbfrq} loop
-
-         enddo ORB2_CYCLE ! over f2={1,f1} loop
+             g2pp(w3n,w2n,wbn,f2,f1) = g2pp(w3n,w2n,wbn,f2,f1) + zg / beta
+             h2pp(w3n,w2n,wbn,f2,f1) = h2pp(w3n,w2n,wbn,f2,f1) + zh / beta
+         enddo WF2_CYCLE ! over w3n={1,nffrq} loop
+         enddo WF1_CYCLE ! over w2n={1,nffrq} loop
+         !
+         enddo WB_CYCLE ! over wbn={1,nbfrq} loop
+         !
+     enddo ORB2_CYCLE ! over f2={1,f1} loop
      enddo ORB1_CYCLE ! over f1={1,norbs} loop
 !$OMP END DO
 !$OMP END PARALLEL
@@ -2754,8 +2754,9 @@
 !!
 !! @sub cat_record_g2pp_leg
 !!
-!! record the two-particle green's and vertex functions in the pp channel.
-!! here improved estimator is used to improve the accuracy
+!! record the two-particle green's and vertex functions in the particle-
+!! particle channel. the improved estimator is used to improve the accuracy.
+!! this subroutine implements the legendre representation algorithm
 !!
 !! note:
 !!
@@ -2764,27 +2765,44 @@
 !!     in this subroutine. in order to simplify the calculations, we just
 !!     consider the block structure of G^{(2)}
 !!
-!!     G^{(2)}_{abcd,AABB,pp} (l, l', \omega) =  (-1)^l'
+!!     see Eq. (C24) in Phys. Rev. B 84, 075145 (2011)
+!!
+!!     or note for triqs/cthyb
+!!     https://github.com/TRIQS/cthyb/blob/3.3.x/doc/notes/measure_g2.tex
+!!
+!!     G^{(2)}_{abcd,AABB,pp} (l, l', \omega) = (-1)^l'
 !!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
 !!         \langle
-!!             \sum^{K_A}_{ij} \sum^{K_B}_{kl}
+!!             \sum^{K_A}_{ij=1} \sum^{K_B}_{kl=1}
 !!             ( M^{A}_{ij} M^{B}_{kl} - \delta_{AB} M^{A}_{il} M^{B}_{kj} )
-!!             p_l( x(\tau_l - \tau_j) ) p_l'( x(\tau'_k - \tau'_i) )
-!!             exp [ i \omega (\tau'_i - \tau_l) ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             p_l ( x(\tau_l - \tau_j) )
+!!             p_l'( x(\tau_k - \tau_i) )
+!!             exp [ i \omega (\tau_i - \tau_l) ]
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     G^{(2)}_{abcd,ABBA,pp} (l, l', \omega) =  (-1)^l'
+!!     G^{(2)}_{abcd,ABBA,pp} (l, l', \omega) = (-1)^l'
 !!         \frac{ \sqrt{2l - 1} \sqrt{2l' - 1} }{ \beta }
 !!         \langle
-!!             \sum^{K_A}_{il} \sum^{K_B}_{kj}
+!!             \sum^{K_A}_{il=1} \sum^{K_B}_{kj=1}
 !!             ( \delta_{AB} M^{A}_{ij} M^{B}_{kl} - M^{A}_{il} M^{B}_{kj} )
-!!             p_l( x(\tau_l - \tau_j) ) p_l'( x(\tau'_k - \tau'_i) )
-!!             exp [ i \omega (\tau'_i - \tau_l) ]
-!!             \delta_{a,i} \delta_{b,j} \delta_{c,k} \delta_{d,l}
+!!             p_l ( x(\tau_l - \tau_j) )
+!!             p_l'( x(\tau_k - \tau_i) )
+!!             exp [ i \omega (\tau_i - \tau_l) ]
+!!             \delta_{a, \lambda_i}
+!!             \delta_{b, \lambda_j}
+!!             \delta_{c, \lambda_k}
+!!             \delta_{d, \lambda_l}
 !!         \rangle
 !!
-!!     \tau'_i and \tau'_k: imaginary time for annihilation operators
+!!     A and B: block index
+!!     a, b, c, d: orbital index
+!!     i, j, k, l: operator index
+!!     \lambda_i, \lambda_j, \lambda_k, \lambda_l: orbital index
+!!     \tau_i and \tau_k: imaginary time for annihilation operators
 !!     \tau_j and \tau_l: imaginary time for creation operators
 !!     p_l and p_l': legendre polynomial
 !!     \omega: bosonic matsubara frequency
@@ -2844,13 +2862,13 @@
      ! dummy complex(dp) variables
      complex(dp) :: ee
 
-     ! sqrt(2l-1) sqrt(2l'-1) (-1)^{l'}
+     ! sqrt( 2l-1 ) sqrt( 2l'-1 ) (-1)^{l'}
      real(dp), allocatable :: lfun(:,:)
 
-     ! p_l(x(\tau_s2 - \tau_s1))
+     ! p_l( x( \tau_s2 - \tau_s1 ) )
      real(dp), allocatable :: pl_s(:,:,:,:,:)
 
-     ! p_l(x(\tau_e2 - \tau_e1))
+     ! p_l( x( \tau_e2 - \tau_e1 ) )
      real(dp), allocatable :: pl_e(:,:,:,:,:)
 
      ! exp [i \omega_n \tau_s] and exp [i \omega_n \tau_e]
@@ -2860,11 +2878,14 @@
 
 !! [body
 
-     ! allocate memory
+     ! allocate memory for lfun, and then initialize it
      allocate( lfun(lemax,lemax) ); lfun = zero
+
+     ! allocate memory for pl_s and pl_e, and then initialize it
      allocate( pl_s(lemax, maxval(rank), maxval(rank), norbs, norbs)); pl_s = zero
      allocate( pl_e(lemax, maxval(rank), maxval(rank), norbs, norbs)); pl_e = zero
 
+     ! allocate memory for caux1 and caux2, and then initialize them
      allocate( caux1(nbfrq, maxval(rank), norbs) ); caux1 = czero
      allocate( caux2(nbfrq, maxval(rank), norbs) ); caux2 = czero
 
