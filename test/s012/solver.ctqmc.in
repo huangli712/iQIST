@@ -15,6 +15,16 @@
 #    lc = 1.0
 #    wc = 1.0
 #
+# 4. change isort to 1, 2, or 3.
+#
+# 5. verify solver.grn.dat, solver.sgm.dat.
+#
+# 6. verify solver.green.dat.
+#
+# 7. verify solver.sp_t.dat, solver.sp_w.dat.
+#
+# 8. verify solver.ch_t.dat, solver.ch_w.dat.
+#
 
 isscr  = 4
 isspn  = 2
