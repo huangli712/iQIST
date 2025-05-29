@@ -7,7 +7,7 @@
 #
 # 2. please use the following command to generate solver.ktau.in at first
 #
-#    u_ktau.py -m 1 -t 1024 -b 40.0 -l 1.0 -w 1.0 aa.in
+#    u_ktau.py -m 1 -t 1024 -b 40.0 -l 1.0 -w 1.0 solver.ktau.in
 #
 # 3. if you can not find u_ktau.py, you can set isscr to 2, and then add the
 #    following lines
