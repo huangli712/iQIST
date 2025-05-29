@@ -38,7 +38,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 04/03/2025 by li huang (last modified)
+## 05/30/2025 by li huang (last modified)
 ##
 ##
 
@@ -65,8 +65,8 @@ lc = args.lc
 wc = args.wc
 
 # allocate memory
-ktau = numpy.zeros(ntime, dtype = numpy.float)
-ptau = numpy.zeros(ntime, dtype = numpy.float)
+ktau = numpy.zeros(ntime, dtype = float)
+ptau = numpy.zeros(ntime, dtype = float)
 
 # build linear imaginary time mesh
 kmesh = numpy.linspace(0.0, beta, ntime)
@@ -89,6 +89,6 @@ if model == 2: # ohmic model
 
 # write the screening function
 with open(fn, 'w') as f:
-    print >> f, '# u shift: %16.8f mu shift: %16.8f' % ( 2.0 * ptau[0], ptau[0] )
+    print('# u shift: %16.8f mu shift: %16.8f' % ( 2.0 * ptau[0], ptau[0] ), file = f)
     for i in range(ntime):
-        print >> f, '%16.8f %16.8f %16.8f' % ( kmesh[i], ktau[i], ptau[i] )
+        print('%16.8f %16.8f %16.8f' % ( kmesh[i], ktau[i], ptau[i] ), file = f)
