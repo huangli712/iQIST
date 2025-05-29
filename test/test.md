@@ -24,25 +24,25 @@ The following tests are used to benchmark the **ctseg** (**narcissus**) code.
     * density-density interaction (dynamic)
     * Reference: ALPSCore/CT-HYB-SEGMENT
 
-* **v011**
+* **p011**
     * 1-band model
     * density-density interaction (static)
     * two-particle green's function
     * Reference: POMEROL+POMEROL2TRIQS
 
-* **v012**
+* **p012**
     * 1-band model
     * density-density interaction (static)
     * two-particle green's function
     * Reference: POMEROL+POMEROL2TRIQS
 
-* **v013**
+* **p013**
     * 1-band model
     * density-density interaction (dynamic)
     * two-particle green's function
     * Reference: Phys. Rev. B 89, 235128 (2014)
 
-* **v014**
+* **p014**
     * 1-band model
     * density-density interaction (dynamic)
     * two-particle green's function
@@ -74,25 +74,25 @@ The following tests are used to benchmark the **cthyb** (**manjushaka**) and **a
     * rotationally invariant interaction
     * Reference: ALPSCore/CT-HYB
 
-* **v121**
+* **p121**
     * 2-band model
     * rotationally invariant interaction
     * two-particle green's function
     * Reference: TRIQS
 
-* **v122**
+* **p122**
     * 2-band model
     * rotationally invariant interaction
     * two-particle green's function
     * Reference: TRIQS
 
-* **v123**
+* **p123**
     * 2-band model
     * rotationally invariant interaction
     * two-particle green's function
     * Reference: Phys. Rev. B 85, 205106 (2012)
 
-* **v124**
+* **p124**
     * 2-band model
     * rotationally invariant interaction
     * two-particle green's function
