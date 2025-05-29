@@ -29,7 +29,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/06/2025 by li huang (last modified)
+!!!           05/30/2025 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -1355,7 +1355,7 @@
      complex(dp), intent(in) :: g2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
 
-     ! two-particle vertex function and its error bar
+     ! two-particle vertex function and its error bar (auxiliary)
      complex(dp), intent(in) :: h2ph(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
 
@@ -1372,20 +1372,20 @@
      integer :: n
 
      ! dummy integer variables
-     ! jt: \nu, unit is \pi/\beta
      ! it: \nu', unit is \pi/\beta
+     ! jt: \nu, unit is \pi/\beta
      integer :: it
      integer :: jt
 
      ! dummy complex(dp) variables
      ! they are used to store the impurity green's function
-     complex(dp) :: fw
-     complex(dp) :: g1
-     complex(dp) :: g2
-     complex(dp) :: g3
-     complex(dp) :: g4
+     complex(dp) :: fw ! F(v+w)
+     complex(dp) :: g1 ! G(v+w)
+     complex(dp) :: g2 ! G(v)
+     complex(dp) :: g3 ! G(v')
+     complex(dp) :: g4 ! G(v'+w)
 
-     ! two-particle green's function, connected part, \chi_{irr}
+     ! two-particle green's function, connected part, \chi_{conn}
      complex(dp) :: chic
 
      ! true two-particle vertex function, \gamma^{(4)}
@@ -1410,10 +1410,10 @@
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
                  write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
+                 do j=1,nffrq     ! fermionic frequency: v
+                     do i=1,nffrq ! fremionic frequency: v'
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, g2ph(i,j,k,n,m), gerr(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') it, jt, g2ph(i,j,k,n,m), gerr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1438,10 +1438,10 @@
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
                  write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
+                 do j=1,nffrq     ! fremionic frequency: v
+                     do i=1,nffrq ! fremionic frequency: v'
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, h2ph(i,j,k,n,m), herr(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') it, jt, h2ph(i,j,k,n,m), herr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1466,11 +1466,11 @@
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
                  write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
+                 do j=1,nffrq ! fremionic frequency: v
 
                      ! evaluate g1: G(v+w)
                      ! evaluate fw: F(v+w)
-                     p = j + k - 1
+                     p = j + k - 1 ! fremionic frequency: v + w
                      if ( p <= nffrq/2 ) then
                          g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
                          fw = dconjg( frnf(nffrq/2-p+1,m,m) )
@@ -1486,7 +1486,7 @@
                          g2 = grnf(j-nffrq/2,m,m)
                      endif ! back if ( j <= nffrq/2 ) block
 
-                     do i=1,nffrq
+                     do i=1,nffrq ! fremionic frequency: v'
 
                          ! evaluate g3: G(v')
                          if ( i <= nffrq/2 ) then
@@ -1496,7 +1496,7 @@
                          endif ! back if ( i <= nffrq/2 ) block
 
                          ! evaluate g4: G(v'+w)
-                         q = i + k - 1
+                         q = i + k - 1 ! fremionic frequency: v' + w
                          if ( q <= nffrq/2 ) then
                              g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
@@ -1504,13 +1504,15 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
                          ! evaluate chic
+                         ! see Eq. (26) in Phys. Rev. B 85, 205106 (2012)
                          chic = g1 * h2ph(i,j,k,n,m) - fw * g2ph(i,j,k,n,m)
 
                          ! evaluate chig
+                         ! see Eq. (25) in Phys. Rev. B 85, 205106 (2012)
                          chig = chic / (g1 * g2 * g3 * g4)
 
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,2f16.8,2e16.8)') jt, it, chic, chig
+                         write(mytmp,'(2i6,2f16.8,2e16.8)') it, jt, chic, chig
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1551,7 +1553,7 @@
      complex(dp), intent(in) :: g2pp(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
 
-     ! two-particle vertex function and its error bar
+     ! two-particle vertex function and its error bar (auxiliary)
      complex(dp), intent(in) :: h2pp(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
 
@@ -1568,20 +1570,20 @@
      integer :: n
 
      ! dummy integer variables
-     ! jt: \nu, unit is \pi/\beta
      ! it: \nu', unit is \pi/\beta
+     ! jt: \nu, unit is \pi/\beta
      integer :: it
      integer :: jt
 
      ! dummy complex(dp) variables
      ! they are used to store the impurity green's function
-     complex(dp) :: fw
-     complex(dp) :: g1
-     complex(dp) :: g2
-     complex(dp) :: g3
-     complex(dp) :: g4
+     complex(dp) :: fw ! F(w-v')
+     complex(dp) :: g1 ! G(w-v')
+     complex(dp) :: g2 ! G(v)
+     complex(dp) :: g3 ! G(v')
+     complex(dp) :: g4 ! G(w-v)
 
-     ! two-particle green's function, connected part, \chi_{irr}
+     ! two-particle green's function, connected part, \chi_{conn}
      complex(dp) :: chic
 
      ! true two-particle vertex function, \gamma^{(4)}
@@ -1606,10 +1608,10 @@
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
                  write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
+                 do j=1,nffrq     ! fermionic frequency: v
+                     do i=1,nffrq ! fremionic frequency: v'
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, g2pp(i,j,k,n,m), gerr(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') it, jt, g2pp(i,j,k,n,m), gerr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1634,10 +1636,10 @@
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
                  write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
-                     do i=1,nffrq
+                 do j=1,nffrq     ! fremionic frequency: v
+                     do i=1,nffrq ! fremionic frequency: v'
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, h2pp(i,j,k,n,m), herr(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') it, jt, h2pp(i,j,k,n,m), herr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1662,7 +1664,7 @@
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
                  write(mytmp,'(a,i6)') '# nbfrq:', k
-                 do j=1,nffrq
+                 do j=1,nffrq ! fremionic frequency: v
 
                      ! evaluate g2: G(v)
                      if ( j <= nffrq/2 ) then
@@ -1672,18 +1674,18 @@
                      endif ! back if ( j <= nffrq/2 ) block
 
                      ! evaluate g4: G(w-v)
-                     q = k - j + nffrq
+                     q = k - j + nffrq ! fremionic frequency:  w - v
                      if ( q <= nffrq/2 ) then
                          g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                      else
                          g4 = grnf(q-nffrq/2,n,n)
                      endif ! back if ( q <= nffrq/2 ) block
 
-                     do i=1,nffrq
+                     do i=1,nffrq ! fremionic frequency: v'
 
                          ! evaluate g1: G(w-v')
                          ! evaluate fw: F(w-v')
-                         p = k - i + nffrq
+                         p = k - i + nffrq ! fremionic frequency: w - v'
                          if ( p <= nffrq/2 ) then
                              g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
                              fw = dconjg( frnf(nffrq/2-p+1,m,m) )
@@ -1700,13 +1702,15 @@
                          endif ! back if ( i <= nffrq/2 ) block
 
                          ! evaluate chic
+                         ! see Eq. (26) in Phys. Rev. B 85, 205106 (2012)
                          chic = g1 * h2pp(i,j,k,n,m) - fw * g2pp(i,j,k,n,m)
 
                          ! evaluate chig
+                         ! see Eq. (25) in Phys. Rev. B 85, 205106 (2012)
                          chig = chic / (g1 * g2 * g3 * g4)
 
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,2f16.8,2e16.8)') jt, it, chic, chig
+                         write(mytmp,'(2i6,2f16.8,2e16.8)') it, jt, chic, chig
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
