@@ -52,7 +52,7 @@ makedocs(
                 "Monitor The Codes" => "ch03/monitor.md",
                 "Profile The Codes" => "ch03/profile.md",
         ],
-        "Quantum Impurity Solvers" => ch04 = Any[
+        "Quantum Impurity Solvers" => Any[
                 "Contents" => "ch04/index.md",
                 "How To Choose Suitable Quantum Impurity Solvers?" => "ch04/choose.md",
                 "Standard Input Files" => Any[
