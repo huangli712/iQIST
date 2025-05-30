@@ -4,7 +4,7 @@
 
 The iQIST software package is released under the General Public Licence 3.0 (GPL) or later version.
 
-### Technical support
+### Technical Support
 
 We are sorry. We **DO NOT** provide any technical supports now. If you meet some problems when you are using the iQIST. You can write a letter to us or create an issue via github. But we can not guarantee that we will reply you on time.
 

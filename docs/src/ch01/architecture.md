@@ -1,4 +1,4 @@
-# Software architecture
+# Software Architecture
 
 To solve a quantum impurity model is not a straightforward job. Besides the necessary quantum impurity solvers, we need several auxiliary programs or tools. The iQIST is an *all-in-one* software package, which can be used to solve a broad range of quantum impurity problems. Thus, it is not surprising that iQIST is a collection of various codes and scripts. The core components contain about 50000 lines of code.
 
