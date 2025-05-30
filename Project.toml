@@ -1,0 +1,4 @@
+name = "iQIST"
+uuid = "825a09d4-8095-4788-87ba-1c64ffa50a44"
+authors = ["Li Huang <huangli@caep.cn>"]
+version = "0.8.6"
