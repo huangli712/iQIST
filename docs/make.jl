@@ -102,7 +102,7 @@ makedocs(
             "Parameters" => Any[
                 "Summary" => "ch04/parameters.md",
                 "isscf" => "ch04/p_isscf.md",
-            #   "isscr" => "ch04/p_isscr.md",
+                "isscr" => "ch04/p_isscr.md",
                 "isbnd" => "ch04/p_isbnd.md",
                 "isspn" => "ch04/p_isspn.md",
             #   "iswor" => "ch04/p_iswor.md",
@@ -118,10 +118,10 @@ makedocs(
                 "ncfgs" => "ch04/p_ncfgs.md",
             #   "nzero" => "ch04/p_nzero.md",
                 "niter" => "ch04/p_niter.md",
-            #   "lemax" => "ch04/p_lemax.md",
-            #   "legrd" => "ch04/p_legrd.md",
-            #   "chmax" => "ch04/p_chmax.md",
-            #   "chgrd" => "ch04/p_chgrd.md",
+                "lemax" => "ch04/p_lemax.md",
+                "legrd" => "ch04/p_legrd.md",
+            #   "svmax" => "ch04/p_svmax.md",
+            #   "svgrd" => "ch04/p_svgrd.md",
                 "mkink" => "ch04/p_mkink.md",
             #   "mstep" => "ch04/p_mstep.md",
                 "mfreq" => "ch04/p_mfreq.md",
@@ -146,8 +146,8 @@ makedocs(
                 "Jz" => "ch04/p_jz.md",
                 "Js" => "ch04/p_js.md",
                 "Jp" => "ch04/p_jp.md",
-            #   "lc" => "ch04/p_lc.md",
-            #   "wc" => "ch04/p_wc.md",
+                "lc" => "ch04/p_lc.md",
+                "wc" => "ch04/p_wc.md",
                 "mune" => "ch04/p_mune.md",
                 "beta" => "ch04/p_beta.md",
                 "part" => "ch04/p_part.md",
@@ -155,7 +155,7 @@ makedocs(
             ],
         ],
         "Atomic Eigenvalue Problem Solver" => Any[
-            # "Outline" => "ch05/README.md",
+            "Outline" => "ch05/index.md",
             "Standard Input Files" => Any[
                 "Summary" => "ch05/input.md",
                 "atom.config.in" => "ch05/in_atom.md",
@@ -201,7 +201,7 @@ makedocs(
             ],
         ],
         "Auxiliary Tools" => Any[
-            # "Outline" => "ch06/README.md",
+            "Outline" => "ch06/index.md",
             "Toolbox" => Any[
             #   "Summary" => "ch06/toolbox.md",
             #   "toolbox/makechi" => "ch06/chi.md",
@@ -223,7 +223,7 @@ makedocs(
             ],
         ],
         "iQIST In Action" => Any[
-            # "Outline" => "ch07/README.md",
+            "Outline" => "ch07/index.md",
             "Basic Applications" => Any[
             #   "Summary" => "ch07/basic.md",
             #   "Hello iQIST!" => "ch07/hello.md",
@@ -257,7 +257,7 @@ makedocs(
             "Successful Stories" => "ch07/story.md",
         ],
         "Inside iQIST" => Any[
-            # "Outline" => "ch08/README.md",
+            "Outline" => "ch08/index.md",
             "Basic Theory And Methods" => Any[
                 "Summary" => "ch08/basic.md",
                 "Quantum Impurity Model" => "ch08/qim.md",
