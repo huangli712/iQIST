@@ -6,8 +6,8 @@ The iQIST software package is much more complex and powerful than what you can i
 
 **Continuous-Time Quantum Impurity Solvers**
 
-* **NARCISSUS** component
-* **MANJUSHAKA** component
+* **NARCISSUS** Component
+* **MANJUSHAKA** Component
 
 For the details of these quantum impurity solvers, please see the chapter [Quantum impurity solvers](../ch04/index.md).
 
@@ -15,7 +15,7 @@ For the details of these quantum impurity solvers, please see the chapter [Quant
 
 **Atomic Eigenvalue Problem Solver**
 
-* **JASMINE** component
+* **JASMINE** Component
 
 For the details of these tools, please see the chapters [Atomic eigenvalue problem solver].
 
@@ -27,5 +27,5 @@ Besides the above components, the iQIST software package also includes many usef
 
 * **The Reference Manual** (It is me!)
 * **Tutorials**
-* **Many testings**
-* **Useful tools**
+* **Many Testings**
+* **Useful Tools**
