@@ -1,4 +1,4 @@
-# Compiling environment
+# Compiling Environment
 
 !!! note
 
@@ -12,20 +12,20 @@ A modern Fortran compiler supporting ISO Fortran 2003 standard is necessary. We 
 
 Check the following websites for more details:
 
-* [Intel Fortran compiler](https://software.intel.com/en-us/fortran-compilers)
-* [GNU Fortran compiler](http://gcc.gnu.org/fortran/)
+* [Intel Fortran Compiler](https://software.intel.com/en-us/fortran-compilers)
+* [GNU Fortran Compiler](http://gcc.gnu.org/fortran/)
 
 !!! note
 
     Besides ifort and gfortran, in principle the iQIST software package can be compiled by any other Fortran 90 compilers, but we can not guarantee it.
 
-**Parallel environment**
+**Parallel Environment**
 
 We use the message passing interface (MPI) to implement the parallelism in the iQIST software package. Therefore, in order to accelerate the quantum impurity solvers, you have to install a MPI implementation in your system, and setup it to work with the Fortran compiler you choose correctly. There are many MPI implementations in the market provided by various vendors. But we recommend to use the newest versions of MPICH or Openmpi.
 
 Check the following websites for more details:
 
-* [Message passing interface standard](http://mpi-forum.org)
+* [Message Passing Interface Standard](http://mpi-forum.org)
 * [MPICH](http://www.mpich.org)
 * [Openmpi](http://www.open-mpi.org)
 
@@ -34,10 +34,10 @@ Some features in the iQIST software package have been optimized using the OpenMP
 Check the following websites for more details:
 
 * [OpenMP](http://openmp.org/wp/)
-* [OpenMP support in GNU GCC](https://gcc.gnu.org/projects/gomp/)
-* [OpenMP support in Intel compilers](https://software.intel.com/en-us/intel-parallel-studio-xe/details)
+* [OpenMP Support In GNU GCC](https://gcc.gnu.org/projects/gomp/)
+* [OpenMP Support In Intel compilers](https://software.intel.com/en-us/intel-parallel-studio-xe/details)
 
-**Linear algebra library**
+**Linear Algebra Library**
 
 The iQIST software package depends on the BLAS and LAPACK libraries heavily. Then you have to ensure that a compatible math library is installed in your system. We recommend to use the Intel Math Kernel Library (Intel MKL). If you are using the MacOS system, the Accelerate Framework may be an alternate choice. Keep in mind that the running efficiency of iQIST is always benefited from the highly optimized linear algebra library.
 
@@ -49,7 +49,7 @@ Check the following websites for more details:
 * [OpenBLAS](http://www.openblas.net)
 * [Accelerate Framework](https://developer.apple.com/library/mac/documentation/Performance/Conceptual/vecLib/index.html)
 
-**Python environment**
+**Python Environment**
 
 There are a few python scripts in the iQIST software package. In order to run them, you need a Python interpreter. We recommend to install Python 3.8+, and the numpy, scipy, matplotlib packages must be installed as well.
 

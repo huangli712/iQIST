@@ -1,10 +1,10 @@
-# Directory structures
+# Directory Structures
 
 The uncompressed iQIST software package is somewhat complicated, but have a rich content. We think that it is helpful to introduce the detailed directory structure of it. As has been explained before, in the following, we always use the term **iqist** to denote the top folder which contains the uncompressed iQIST software package.
 
 ![dir image](../assets/dir.png)
 
-**Figure** | The directory structures of the iQIST software package.
+**Figure 1** | The directory structures of the iQIST software package.
 
 **Where is the compling system?**
 

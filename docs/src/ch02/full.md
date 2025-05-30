@@ -1,4 +1,4 @@
-# Build iQIST at one step
+# Build iQIST At One Step
 
 When the system is ready and the compiling environment is configured correctly, you can try to compile the iQIST software package right now. Let's start now.
 

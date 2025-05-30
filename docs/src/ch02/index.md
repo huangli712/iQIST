@@ -12,15 +12,15 @@ In this chapter, we will guide you to compile and install the iQIST software pac
 Basic recipes:
 * [Obtain](obtain.md) // How to get the source codes?
 * [Uncompress](uncompress.md) // Hmm, un-tar it.
-* [Directory structures](directory.md) // Where are the quantum impurity solvers?
-* [Compiling environment](envir.md) // Fortran compiler and math library.
-* [Compiling system](system.md) // How to make it?
-* [Build iQIST at one step](full.md) // Quickly build.
+* [Directory Structures](directory.md) // Where are the quantum impurity solvers?
+* [Compiling Environment](envir.md) // Fortran compiler and math library.
+* [Compiling System](system.md) // How to make it?
+* [Build iQIST At One Step](full.md) // Quickly build.
 
 Advanced recipes:
-* [Build quantum impurity solvers](solvers.md) // Core components.
-* [Build atomic eigenvalues solver](atomic.md) // Companion of the quantum impurity solvers.
-* [Build documentation](docs.md) // User manual.
+* [Build Quantum Impurity Solvers](solvers.md) // Core components.
+* [Build Atomic Eigenvalues Solver](atomic.md) // Companion of the quantum impurity solvers.
+* [Build Documentation](docs.md) // User manual.
 
 !!! note
 
