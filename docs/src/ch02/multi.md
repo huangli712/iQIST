@@ -5,7 +5,7 @@ Well, maybe you don't like to compile the whole iQIST at one step. You want more
 Anyway, the compiling procedure can be split into three successive steps:
 
 * [Build Quantum Impurity Solvers](solvers.md)
-* [Build Atomic Eigenvalues Solver](atomic.md)
+* [Build Atomic Eigenvalue Problem Solver](atomic.md)
 * [Build Documentation](docs.md)
 
 These steps are optional. You can do the above jobs in sequence or in a random manner.
