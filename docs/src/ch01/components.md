@@ -9,7 +9,7 @@ The iQIST software package is much more complex and powerful than what you can i
 * **NARCISSUS** Component
 * **MANJUSHAKA** Component
 
-For the details of these quantum impurity solvers, please see the chapter [Quantum impurity solvers](../ch04/index.md).
+For the details of these quantum impurity solvers, please see the chapter [Quantum Impurity Solvers](../ch04/index.md).
 
 ---
 
@@ -17,7 +17,7 @@ For the details of these quantum impurity solvers, please see the chapter [Quant
 
 * **JASMINE** Component
 
-For the details of these tools, please see the chapters [Atomic eigenvalue problem solver].
+For the details of these tools, please see the chapters [Atomic Eigenvalue Problem Solver].
 
 ---
 
