@@ -8,21 +8,22 @@ The main features of the core components (i.e., quantum impurity solvers) of the
     1. Density-density interaction
     2. General interaction (Slater or Kanamori scheme)
     3. Spin-orbital coupling and crystal field splitting
-    4. Hubbard-Holstein model
-    5. Frequency-dependent Coulomb interaction
+    4. Frequency-dependent Coulomb interaction
 
 ---
 
-* **Measurement tricks**
+* **Measurement Tricks**
     1. Orthogonal polynomial representation (Legendre polynomials)
-    2. Improved estimator for self-energy function
+    2. Intermediate representation
+    3. Improved estimator for self-energy function
+    4. Improved estimator for two-particle green's function
 
 ---
 
 * **Observables**
     1. Single-particle Green's function in imaginary time space
     2. Single-particle Green's function in matsubara frequency space
-    3. Two-particle correlation function in matsubara frequency space (*experimental*)
+    3. Two-particle correlation function in matsubara frequency space
     4. Self-energy function in matsubara frequency space
     5. Histogram of perturbation expansion order
     6. Kurtosis and skewness of perturbation expansion order
@@ -40,11 +41,11 @@ The main features of the core components (i.e., quantum impurity solvers) of the
 
 ---
 
-* **Fast algorithms**
+* **Fast Algorithms**
     1. Segment algorithm for density-density interaction
     2. Divide-and-conquer algorithm
     3. Sparse matrix multiplication
-    4. Good quantum numbers (``N, S_z, J_z``, PS)
+    4. Good quantum numbers (``N, S_z, J_z``, PS, automatic partition)
     5. Lazy trace evaluation
     6. Dynamical truncation approximation
 
