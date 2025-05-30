@@ -9,16 +9,16 @@ Are you ready? Let's go!
 * [What's iQIST?](what.md) // Is it a food or an animal?
 * [Motivation](motivation.md) // Why do we need the iQIST software package?
 * [Components](components.md) // What does the iQIST software package include?
-* [Software architecture](architecture.md) // A bird's eye view of the iQIST software package.
+* [Software Architecture](architecture.md) // A bird's eye view of the iQIST software package.
 * [Features](feature.md) // What can we do by using the iQIST software package?
 * [Policy](policy.md) // Some basic rules and tips.
 
 If you are already familiar with the iQIST software package, perhaps you will be interested in the following advanced topics:
 
-* [Quantum impurity solvers](../ch04/index.md) // A comprehensive reference about the impurity solvers.
-* [Atomic eigenvalue problem solver] // A comprehensive reference about the atomic eigenvalue solver.
-* [Auxiliary tools] // Full descriptions about the auxiliary toolbox.
-* [iQIST in action] // Successful stories about the iQIST software package.
+* [Quantum Impurity Solvers](../ch04/index.md) // A comprehensive reference about the impurity solvers.
+* [Atomic Eigenvalue Problem Solver] // A comprehensive reference about the atomic eigenvalue solver.
+* [Auxiliary Tools] // Full descriptions about the auxiliary toolbox.
+* [iQIST In Action] // Successful stories about the iQIST software package.
 
 If you want to learn the secrets of the iQIST software package, then diving into
 
