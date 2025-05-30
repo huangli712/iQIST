@@ -5,7 +5,7 @@ The atomic eigenvalue problem solver is an important preprocessing tool for the 
 The main topics are as follows:
 
 * [Standard Input Files](input.md) // Input stuffs.
-* [Standard Output Files](output.md) // Output stuffs.
+* [Standard Output Files] // Output stuffs.
 * [Parameters](parameters.md) // Really a reference manual.
 
 Maybe you are interested in the following related topics:
@@ -13,8 +13,8 @@ Maybe you are interested in the following related topics:
 * [Getting Started](../ch03/index.md) // To teach you how to setup and use the iQIST software package.
 * [Quantum Monte Carlo Impurity Solvers](../ch04/index.md) // Another reference manual.
 * [Auxiliary Tools](../ch06/index.md) // The companion of quantum impurity solvers.
-* [iQIST In Action](../ch07/index.md) // Some lightweight tutorials.
-* [Inside iQIST](../ch08/index.md) // Unleashing the secrets inside the iQIST.
+* [iQIST In Action] // Some lightweight tutorials.
+* [Inside iQIST] // Unleashing the secrets inside the iQIST.
 
 **See also**:
 
