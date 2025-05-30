@@ -48,8 +48,6 @@ The following tests are used to benchmark the **ctseg** (**narcissus**) code.
     * two-particle green's function
     * Reference: Phys. Rev. B 89, 235128 (2014)
 
----
-
 ## For the cthyb code
 
 The following tests are used to benchmark the **cthyb** (**manjushaka**) code.
@@ -97,3 +95,7 @@ The following tests are used to benchmark the **cthyb** (**manjushaka**) code.
     * rotationally invariant interaction
     * two-particle green's function
     * Reference: Phys. Rev. B 85, 205106 (2012)
+
+## For the atomic code
+
+The following tests are used to benchmark the **atomic** (**jasmine**) code.
