@@ -11,16 +11,24 @@ Reference Manual
 <font color = 'orange'>T</font>oolkit
 </h1>
 
-Draft Version: Jan 27, 2025 (in progress)
+Draft Version: Jun 01, 2025 (in progress)
 </div>
 <br/>
 <br/>
 ```
 
-```text
-Obi-Wan Kenobi:
+!!! info
 
-    1. Use the Manual, Luke! (To Luke Skywalker)
+    Thank you for using iQIST. This documentation will help you to be familiar with and explore the iQIST package. It is just compatible with iQIST v0.8.6-devel.250530.
 
-    2. May the Manual be with you. (To Anakin Skywalker)
-```
+!!! warning
+
+    The iQIST package is in heavy development. Please use it at your own risk. If you encounter any bugs or troubles, or require new features, please consult me directly: **huangli at caep.cn**
+
+!!! tip
+
+    Obi-Wan Kenobi:
+
+    >1. Use the manual, Luke! (To Luke Skywalker)
+    >
+    >2. May the manual be with you. (To Anakin Skywalker)
