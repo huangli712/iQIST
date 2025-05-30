@@ -1,4 +1,4 @@
-# Contents
+# Outline
 
 Hi, welcome to the world of continuous-time quantum impurity solvers.
 
