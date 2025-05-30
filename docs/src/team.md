@@ -1,20 +1,20 @@
 # The iQIST Developer Team
 
-Current Maintainer:
+**Current Maintainer**:
 
-**Li Huang``^\dagger``**
+Li Huang``^\dagger``
 
-Core Developers:
+**Core Developers**:
 
-**Li Huang``^\dagger``** and **Yilin Wang``^\ddagger``**
+Li Huang``^\dagger`` and Yilin Wang``^\ddagger``
 
-Key Contributors:
+**Key Contributors**:
 
-**Liang Du``^\rceil``**
+Liang Du``^\rceil``
 
-Directors and Supervisors:
+**Directors and Supervisors**:
 
-**Philipp Werner``^✶``** and **Xi Dai``^\lceil``**
+Philipp Werner``^✶`` and Xi Dai``^\lceil``
 
 ---
 

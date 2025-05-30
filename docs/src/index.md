@@ -29,6 +29,6 @@ Draft Version: Jun 01, 2025 (in progress)
 
     Obi-Wan Kenobi:
 
-    >1. Use the manual, Luke! (To Luke Skywalker)
-    >
-    >2. May the manual be with you. (To Anakin Skywalker)
+        1. Use the manual, Luke! (To Luke Skywalker)
+    
+        2. May the manual be with you. (To Anakin Skywalker)
