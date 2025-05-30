@@ -6,4 +6,4 @@ The iQIST software package offers a few continuous-time quantum Monte Carlo impu
 
 ![logo image](../assets/logo.png)
 
-**Figure** | The logo of the iQIST software package.
+**Figure 1** | The logo of the iQIST software package.
