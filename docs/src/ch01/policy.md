@@ -2,19 +2,19 @@
 
 **License**
 
-The iQIST software package is released under the General Public Licence 3.0 (GPL) or later version.
+> The iQIST software package is released under the General Public Licence 3.0 (GPL) or later version.
 
 **Technical Support**
 
-We are sorry. We **DO NOT** provide any technical supports now. If you meet some problems when you are using the iQIST. You can write a letter to us or create an issue via github. But we can not guarantee that we will reply you on time.
+> We are sorry. We **DO NOT** provide any technical supports now. If you meet some problems when you are using the iQIST. You can write a letter to us or create an issue via github. But we can not guarantee that we will reply you on time.
 
 **Feedback**
 
-If you have any suggestions, comments, successful stories, or criticisms, welcome! Please write a letter to us or create an issue via github.
+> If you have any suggestions, comments, successful stories, or criticisms, welcome! Please write a letter to us or create an issue via github.
 
 **Contribution**
 
-If you find a bug, want to patch it, or want to contribute your codes to the iQIST, great! Please write a letter to us as soon as possible or create a pull request via github.
+> If you find a bug, want to patch it, or want to contribute your codes to the iQIST, great! Please write a letter to us as soon as possible or create a pull request via github.
 
 **Contact**
 
@@ -26,7 +26,7 @@ If you find a bug, want to patch it, or want to contribute your codes to the iQI
 
 **Citation**
 
-It is really appreciated if you can cite the following paper when you would like to publish your great works by using the iQIST software package. It is really important for us. But, of course, it is also not obligated.
+> It is really appreciated if you can cite the following paper when you would like to publish your great works by using the iQIST software package. It is really important for us. But, of course, it is also not obligated.
 
 > *iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit*
 >
