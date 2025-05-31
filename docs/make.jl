@@ -83,7 +83,7 @@ makedocs(
             #   "solver.paux.dat" => "ch04/out_paux.md",
                 "solver.nmat.dat" => "ch04/out_nmat.md",
                 "solver.kmat.dat" => "ch04/out_kmat.md",
-            #   "solver.lrmm.dat" => "ch04/out_lrmm.md",
+                "solver.lrmm.dat" => "ch04/out_lrmm.md",
             #   "solver.szpw.dat" => "ch04/out_szpw.md",
             #   "solver.sp_t.dat" => "ch04/out_sp_t.md",
             #   "solver.sp_w.dat" => "ch04/out_sp_w.md",
