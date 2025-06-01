@@ -196,7 +196,7 @@ Next we will show some visualized results. The following figures were generated 
 
 * Histogram (*solver.hist.dat*)
 
-![hist image](../figure/11hist.png)
+![hist image](../assets/11hist.png)
 
 **Figure 1** | The histogram for perturbation expansion series.
 
@@ -204,7 +204,7 @@ Next we will show some visualized results. The following figures were generated 
 
 * Imaginary-time Green's function (*solver.green.dat*)
 
-![gtau image](../figure/11gtau.png)
+![gtau image](../assets/11gtau.png)
 
 **Figure 2** | The imaginary-time Green's function ``G(\tau)``.
 
@@ -212,7 +212,7 @@ Next we will show some visualized results. The following figures were generated 
 
 * Matsubara Green's function (*solver.grn.dat*)
 
-![grnf image](../figure/11grnf.png)
+![grnf image](../assets/11grnf.png)
 
 **Figure 3** | The imaginary part of Matsubara Green's function ``\Im G(i\omega_n)``.
 
@@ -220,7 +220,7 @@ Next we will show some visualized results. The following figures were generated 
 
 * Matsubara self-energy function (*solver.sgm.dat*)
 
-![sigf image](../figure/11sigf.png)
+![sigf image](../assets/11sigf.png)
 
 **Figure 4** | The imaginary part of Matsubara self-energy function ``\Im \Sigma(i\omega_n)``.
 
@@ -246,7 +246,7 @@ $ mpiexec -n 8 ctqmc
 
 Pay attention to the numerical noises and data fluctuations of physical observable. Noted that once the CT-HYB quantum impurity solvers are executed parallelly, the error bars of physical observable should be non-zero. Here is a sample plot:
 
-![grnf_error image](../figure/11grnf_err.png)
+![grnf_error image](../assets/11grnf_err.png)
 
 **Figure 5** | The imaginary part of Matsubara Green's function ``\Im G(i\omega_n)``. The error bar data are magnified by a factor of 10 for a better visualization.
 
@@ -266,4 +266,4 @@ this feature is actived. Then redo the calculation, and you will get a *solver.d
 
 **(4)** Try other CT-HYB quantum impurity solvers
 
-In addition to the **NARCISSUS** component, you still can choose the **MANJUSHAKA** component to solve this single-band Hubbard model. The only task you have to do is call the proper executable programs. The *solver.ctqmc.in* file can remain unchanged.
+In addition to the **NARCISSUS** component, you still can choose the **MANJUSHAKA** component to solve this single-band Hubbard model. The only task you have to do is call the proper executable programs. The *solver.ctqmc.in* file can remain almost unchanged.

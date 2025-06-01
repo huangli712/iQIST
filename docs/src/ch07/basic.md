@@ -1,4 +1,4 @@
-## Summary
+# Summary
 
 Well, are you newbie to the iQIST software package? 
 
