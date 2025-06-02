@@ -16,12 +16,12 @@ Are you ready? Let's go!
 If you are already familiar with the iQIST software package, perhaps you will be interested in the following advanced topics:
 
 * [Quantum Impurity Solvers](../ch04/index.md) // A comprehensive reference about the impurity solvers.
-* [Atomic Eigenvalue Problem Solver] // A comprehensive reference about the atomic eigenvalue solver.
-* [Auxiliary Tools] // Full descriptions about the auxiliary toolbox.
-* [iQIST In Action] // Successful stories about the iQIST software package.
+* [Atomic Eigenvalue Problem Solver](../ch05/index.md) // A comprehensive reference about the atomic eigenvalue solver.
+* [Auxiliary Tools](../ch06/index.md) // Full descriptions about the auxiliary toolbox.
+* [iQIST In Action](../ch07/index.md) // Successful stories about the iQIST software package.
 
 If you want to learn the secrets of the iQIST software package, then diving into
 
-* [Inside iQIST] // The principles, tricks, formulations, algorithms that are implemented in iQIST.
+* [Inside iQIST](../ch08/index.md) // The principles, tricks, formulations, algorithms that are implemented in iQIST.
 
 may be the best choices.
