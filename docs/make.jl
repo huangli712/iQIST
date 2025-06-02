@@ -18,6 +18,7 @@ makedocs(
         "Team" => "team.md",
         "Copyright" => "copy.md",
         "Acknowledgements" => "thanks.md",
+        "Glossary" => "glossary.md",
         "Introduction" => Any[
             "Outline" => "ch01/index.md",
             "What's iQIST?" => "ch01/what.md",
@@ -67,7 +68,7 @@ makedocs(
             ],
             "Standard Output Files" => Any[
                 "Summary" => "ch04/output.md",
-            #   "Terminal output" => "ch04/out_term.md",
+                "Terminal output" => "ch04/out_term.md",
                 "solver.green.dat" => "ch04/out_green.md",
             #   "solver.fcorr.dat" => "ch04/out_fcorr.md",
                 "solver.weiss.dat" => "ch04/out_weiss.md",
@@ -85,10 +86,10 @@ makedocs(
                 "solver.kmat.dat" => "ch04/out_kmat.md",
                 "solver.lrmm.dat" => "ch04/out_lrmm.md",
             #   "solver.szpw.dat" => "ch04/out_szpw.md",
-            #   "solver.sp_t.dat" => "ch04/out_sp_t.md",
-            #   "solver.sp_w.dat" => "ch04/out_sp_w.md",
-            #   "solver.ch_t.dat" => "ch04/out_ch_t.md",
-            #   "solver.ch_w.dat" => "ch04/out_ch_w.md",
+                "solver.sp_t.dat" => "ch04/out_sp_t.md",
+                "solver.sp_w.dat" => "ch04/out_sp_w.md",
+                "solver.ch_t.dat" => "ch04/out_ch_t.md",
+                "solver.ch_w.dat" => "ch04/out_ch_w.md",
             #   "solver.g2ph.dat" => "ch04/out_g2ph.md",
             #   "solver.h2ph.dat" => "ch04/out_h2ph.md",
             #   "solver.v4ph.dat" => "ch04/out_v4ph.md",
@@ -96,7 +97,7 @@ makedocs(
             #   "solver.h2pp.dat" => "ch04/out_h2pp.md",
             #   "solver.v4pp.dat" => "ch04/out_v4pp.md",
                 "solver.diag.dat" => "ch04/out_diag.md",
-            #   "solver.kernel.dat" => "ch04/out_kern.md",
+                "solver.kernel.dat" => "ch04/out_kern.md",
                 "solver.status.dat" => "ch04/out_stat.md",
             ],
             "Parameters" => Any[
@@ -225,19 +226,19 @@ makedocs(
         "iQIST In Action" => Any[
             "Outline" => "ch07/index.md",
             "Basic Applications" => Any[
-            #   "Summary" => "ch07/basic.md",
-            #   "Hello iQIST!" => "ch07/hello.md",
-            #   "Mott metal-insulator transition" => "ch07/mott.md",
+                "Summary" => "ch07/basic.md",
+                "Hello iQIST!" => "ch07/hello.md",
+                "Mott Metal-Insulator Transition" => "ch07/mott.md",
             ],
             "Advanced Applications I: Complex Systems" => Any[
-            #   "Summary" => "ch07/complex.md",
+                "Summary" => "ch07/complex.md",
             #   "General Coulomb interaction" => "ch07/general.md",
             #   "Spin-orbital coupling" => "ch07/soc.md",
             #   "Crystal field splitting" => "ch07/cfs.md",
             #   "Retarded interaction and dynamical screening effect" => "ch07/screening.md",
             ],
             "Advanced Applications II: Accurate Measurements" => Any[
-            #   "Summary" => "ch07/accurate.md",
+                "Summary" => "ch07/accurate.md",
             #   "One-shot and self-consistent calculations" => "ch07/self.md",
             #   "Imaginary-time Green's function" => "ch07/gtau.md",
             #   "Matsubara Green's function and self-energy function" => "ch07/matsubara.md",
@@ -245,12 +246,12 @@ makedocs(
             #   "Two-particle Green's function and vertex function" => "ch07/vertex.md",
             ],
             "Advanced Applications III: Post-Processing Procedures" => Any[
-            #   "Summary" => "ch07/post.md",
+                "Summary" => "ch07/post.md",
             #   "Analytical continuation for imaginary-time Green's function" => "ch07/mem.md",
             #   "Analytical continuation for Matsubara self-energy function" => "ch07/swing.md",
             ],
             "Practical Exercises" => Any[
-            #   "Summary" => "ch07/practical.md",
+                "Summary" => "ch07/practical.md",
             #   "Orbital-selective Mott transition in two-band Hubbard model" => "ch07/osmt.md",
             ],
             # "Code validation" => "ch07/valid.md",
@@ -294,6 +295,5 @@ makedocs(
             ],
         ],
         # "Appendix" => "appendix/README.md",
-        "Glossary" => "glossary.md",
     ],
 )
