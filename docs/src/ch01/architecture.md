@@ -22,8 +22,8 @@ The software architecture of iQIST is slightly involved. We just use a layer mod
 
 > The core part of iQIST software package is in the fourth layer -- the component layer -- which contains various quantum impurity solvers as shown before. At present, iQIST contains three different components, including
 >
-> * **NARCISSUS**
-> * **MANJUSHAKA**
-> * **JASMINE**
+> * **NARCISSUS** component
+> * **MANJUSHAKA** component
+> * **JASMINE** component
 >
 > Here, **NARCISSUS** and **MANJUSHAKA** are CT-HYB quantum impurity solvers, and **JASMINE** is an atomic eigenvalue solver. For more details about these components, please consult the following chapters.

@@ -1,4 +1,4 @@
-# Contents
+# Outline
 
 Are you interested in the iQIST software package?
 
