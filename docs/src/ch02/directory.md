@@ -20,8 +20,6 @@ iqist/src
 
 **Where are the quantum impurity solvers?**
 
-* For CT-QMC quantum impurity solvers
-
 ```
 iqist/src/ctseg
 iqist/src/cthyb

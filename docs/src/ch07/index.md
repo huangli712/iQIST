@@ -16,7 +16,7 @@ Now the available tutorials will cover the following topics:
 * [Advanced Applications III: Post-Processing Procedures]
 * [Practical Exercises]
 
-Beyond that，we also introduce some concrete examples to illustrate the correctness of the iQIST software package.
+Beyond that, we also introduce some concrete examples to illustrate the correctness of the iQIST software package.
 
 * [Code Validation]
 
