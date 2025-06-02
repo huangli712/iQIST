@@ -21,6 +21,12 @@
 >
 > *College of Physics and Technology, Guangxi Normal University, Guilin 541004, China*
 >
+
+---
+
+**Supervisors**:
+
+>
 > **Philipp Werner**
 >
 > *Department of Physics, University of Fribourg, 1700 Fribourg, Switzerland*
@@ -28,3 +34,4 @@
 > **Xi Dai**
 >
 > *Department of Physics, The Hongkong University of Science and Technology, Clear Water Bay, Kowloon 999077, Hong Kong, China*
+>
