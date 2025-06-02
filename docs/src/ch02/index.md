@@ -1,11 +1,14 @@
 # Outline
 
-Are you interested in the iQIST software package?
-
-Yes?
-Do you have passion for iQIST and want to have a try?
-
-Yes? Great!
+> Are you interested in the iQIST software package?
+>
+> Yes?
+>
+> Do you have passion for iQIST and want to have a try?
+>
+> Yes?
+>
+> Great!
 
 In this chapter, we will guide you to compile and install the iQIST software package step by step. Supposing that you have installed the iQIST software package successfully, you can skip this chapter and go to the next one.
 
