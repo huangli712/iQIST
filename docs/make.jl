@@ -35,7 +35,6 @@ makedocs(
             "Directory Structures" => "ch02/directory.md",
             "Compiling Environment" => "ch02/envir.md",
             "Compiling System" => "ch02/system.md",
-            "Explanation Of make.inc" => "ch02/inc.md",
             "Build iQIST At One Step" => "ch02/full.md",
             "Build iQIST At Multiple Steps" => Any[
                 "Summary" => "ch02/multi.md",
@@ -43,6 +42,7 @@ makedocs(
                 "Build Atomic Eigenvalue Problem Solver" => "ch02/atomic.md",
                 "Build Documentation" => "ch02/docs.md",
             ],
+            "About make.inc" => "ch02/inc.md",
         ],
         "Getting Started" => Any[
             "Outline" => "ch03/index.md",

@@ -21,6 +21,7 @@ Advanced recipes:
 * [Build Quantum Impurity Solvers](solvers.md) // Core components.
 * [Build Atomic Eigenvalues Solver](atomic.md) // Companion of the quantum impurity solvers.
 * [Build Documentation](docs.md) // User manual.
+* [About make.inc](inc.md) // Detailed explannation of make.inc.
 
 !!! note
 
