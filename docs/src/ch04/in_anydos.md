@@ -35,17 +35,17 @@ You have to be very careful. Finally, recompiling the CT-QMC quantum impurity so
 
     Don't forget to set the *isscf* parameter to 2, or else the CT-QMC impurity solvers will skip the dynamical mean-field theory engine and perform one-shot calculation only.
 
+---
+
 **Format**
 
 The format of the *solver.anydos.in* file is as follows:
 
----
-
-*column 1*: frequency point, ``\epsilon``, double precision
-
-*column 2*: density of states, ``\rho(\epsilon)``, double precision
-
----
+>
+> *column 1*: frequency point, ``\epsilon``, double precision
+>
+> *column 2*: density of states, ``\rho(\epsilon)``, double precision
+>
 
 !!! note
 
@@ -53,6 +53,8 @@ The format of the *solver.anydos.in* file is as follows:
     1. The orbitals are degenerated.
     2. The number of frequency points is 801.
     If you are not satisfied with these assumptions, you have to hack the corresponding *ctqmc\_dmft.f90* by yourself.
+
+---
 
 **Code**
 
