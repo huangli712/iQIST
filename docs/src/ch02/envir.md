@@ -69,3 +69,23 @@ Check the following websites for more details:
 !!! tip
 
     In the near future, all the scripts in the iQIST software package should be rewritten by using the Julia language.
+
+**Flink Library**
+
+The Flink library is a collection of Fortran modules and subroutines for scientific computing. The iQIST software package depends on it.
+
+Check the following websites for more details:
+
+* [Source](https://github.com/huangli712/Flink)
+* [Documentation](https://huangli712.github.io/projects/flink/index.html)
+
+Please download the source codes of this library from github, and then uncompress it into the same directory with the iQIST software package. Next, compile it.
+
+!!! tip
+
+    The iQIST software package uses an automatic algorithm to determine the directory that contains the Flink library. So, to make this algorithm works correctly, please make sure that the source codes of the Flink library are placed at *your_path/Flink* (**case sensitive**).
+
+    If this automatic algorithm fails, please specify the environment variable **FLINK** manually. It should be associated with the *your_path/Flink/src* folder. For example:
+    ```shell
+    $ export FLINK=/home/lihuang/Flink/src
+    ```
