@@ -13,3 +13,9 @@ Then the HTML-version documentation is generated in the *iqist/docs/build* direc
 ```text
 https://huangli712.github.io/projects/iqist/index.html
 ```
+
+!!! tip
+
+    For more information about the Julia language and the Documenter.jl package, please visit the following websites:
+    * [Julia](https://julialang.org/)
+    * [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl)
