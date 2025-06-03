@@ -9,3 +9,7 @@ Anyway, the compiling procedure can be split into three successive steps:
 * [Build Documentation](docs.md)
 
 These steps are optional. You can do the above jobs in sequence or in a random manner.
+
+!!! tip
+
+    The iQIST software package depends on the [Flink](https://github.com/huangli712/Flink) library, so please make sure that the Flink library is correctly installed and the environment variable **FLINK** is correctly setup. See [Compiling Environment](envir.md) for more details.
