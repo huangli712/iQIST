@@ -1,4 +1,4 @@
-# Explanation Of make.inc
+# About make.inc
 
 The make.inc file is the key component of the building system. You have to modify it to fulfill your requirements. If it is not configured correctly, the building system won't work correctly as well. So in the following we would like to provide a detailed explanations for it.
 
