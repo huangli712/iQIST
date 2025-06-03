@@ -135,3 +135,7 @@ Specify where the Flink is. Now the iQIST software package depends on Flink heav
 > * /Users/lihuang/Working/dmft/flink/src
 
 Please download the latest version of [Flink](https://github.com/huangli712/Flink). And then install it on your favourite directory.
+
+!!! tip
+
+    Note that this flag is not necessary. The iQIST software package will automatically scan the directories to find where the Flink library is installed. However, sometimes this algorithm may fail. At this time, there are two methods to circumvent this problem. At first, we can setup the FLINK flag in make.in, just as introduced above. Second, we can setup a environment variable named FLINK, which should be associated with the *your_path/Flink/src* directory. See [Compling Environment](envir.md) for more details. 

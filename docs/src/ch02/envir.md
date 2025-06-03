@@ -68,7 +68,7 @@ Check the following websites for more details:
 
 !!! tip
 
-    In the near future, all the scripts in the iQIST software package should be rewritten by using the Julia language.
+    In the near future, all the scripts in the iQIST software package should be rewritten by using the Julia language. At that time, the Python environment is not necessary any more.
 
 ---
 
