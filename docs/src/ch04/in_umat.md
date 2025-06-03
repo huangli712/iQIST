@@ -34,6 +34,8 @@ The format of the *solver.umat.in* file is as follows:
     $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
     Namely, we put the spin up part before the spin down part.
 
+---
+
 **Code**
 
 The corresponding Fortran code block for the reading of *solver.umat.in* file is as follows:
