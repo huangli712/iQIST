@@ -6,6 +6,8 @@ The *solver.ctqmc.in* file is the only configuration file for the continuous-tim
 
 There are many input parameters for the CT-QMC impurity solvers. But all of parameters have default values. If the *solver.ctqmc.in* file is absent, the quantum impurity solvers will use the default values. If the *solver.ctqmc.in* file is present, the quantum impurity solvers will read it, parse it, and apply the settings in it to initialize the quantum impurity solvers. The default values for the parameters are designed for a single-band Hubbard model. Thus in most cases, you need a *solver.ctqmc.in* file to override the default settings.
 
+---
+
 **Format**
 
 All of the CT-QMC impurity solvers in the iQIST software package share the same *solver.ctqmc.in* file. In other words, you can exchange *solver.ctqmc.in* files between different CT-QMC quantum impurity solvers. The format of the *solver.ctqmc.in* file adopts the simple "key-value" style. The detailed rules are as follows:
@@ -77,6 +79,8 @@ model = anderson, hubbard            ! 2 items
 
     We mention that the quantum impurity solvers will not check whether the settings in the *solver.ctqmc.in* file are reasonable and correct. It is the user's responsibility.
 
+---
+
 **Code**
 
 N/A
@@ -84,3 +88,7 @@ N/A
 !!! tip
 
     In the [Flink](https://github.com/huangli712/Flink) library, we implement a parser to parse the *solver.ctqmc.in* file.
+
+!!! tip
+
+    The [ZenGui](https://github.com/huangli712/Flink) code can be used to generate the *solver.ctqmc.in* file.
