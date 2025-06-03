@@ -9,18 +9,18 @@ The contents in this chapter are related with the following components:
 
 The main topics are as follows:
 
-* [How to choose suitable quantum impurity solvers?](choose.md) // So many CT-HYB quantum impurity solvers!?
+* [How To Choose Suitable Quantum Impurity Solvers?](choose.md) // So many CT-HYB quantum impurity solvers!?
 * [Standard Input Files](input.md) // Input stuffs.
 * [Standard Output Files](output.md) // Output stuffs.
 * [Parameters](parameters.md) // Really a reference manual.
 
 Maybe you are interested in the following related topics:
 
-* [Getting started](../ch03/index.md) // To teach you how to setup and use the iQIST software package.
-* [Atomic eigenvalue problem solver](../ch05/index.md) // Another reference manual.
-* [Auxiliary tools](../ch06/index.md) // The companion of quantum impurity solvers.
-* [iQIST in action] // Some lightweight tutorials.
-* [Inside iQIST] // Unleashing the secrets inside the iQIST.
+* [Getting Started](../ch03/index.md) // To teach you how to setup and use the iQIST software package.
+* [Atomic Eigenvalue Problem Solver](../ch05/index.md) // Another reference manual.
+* [Auxiliary Tools](../ch06/index.md) // The companion of quantum impurity solvers.
+* [iQIST In Action](../ch07/index.md) // Some lightweight tutorials.
+* [Inside iQIST](../ch08/index.md) // Unleashing the secrets inside the iQIST.
 
 **See also**:
 
