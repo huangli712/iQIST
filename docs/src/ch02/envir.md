@@ -66,6 +66,6 @@ Check the following websites for more details:
 * [scipy](http://www.scipy.org)
 * [matplotlib](http://matplotlib.org)
 
-!!! warning
+!!! tip
 
     In the near future, all the scripts in the iQIST software package should be rewritten by using the Julia language.
