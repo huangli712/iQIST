@@ -1,14 +1,18 @@
 # solver.anydos.in
 
+!!! warning
+
+    This feature is already disable. And this page will be removed from this user manual soon.
+
 **Introduction**
 
 In the CT-QMC impurity solvers contained in the iQIST software package, we provide a mini dynamical mean-field theory engine. This engine implements a self-consistent condition for the bethe lattice which has a semi-circular density of states with bandwith ``4t``. Sometimes you may want to try the other models with arbitrary density of states.
 
 Is it possible?
 
-Yes, of course. You can define your density of states in the *solver.anydos.in* file. And then you have to hack the *iqist/src/ctqmc\_dmft.f90* file.
+Yes, of course. You can define your density of states in the *solver.anydos.in* file. And then you have to hack the *iqist/src/ctseg/ctqmc\_dmft.f90* or *iqist/src/cthyb/ctqmc\_dmft.f90* file.
 
-Change the following codes
+Please change the following codes
 
 ```fortran
 ......
