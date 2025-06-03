@@ -1,5 +1,15 @@
 # The iQIST Developer Team
 
+**Current Maintainer**:
+
+>
+> **Li Huang**
+>
+> *Institute of Materials, China Academy of Engineering Physics, Jiangyou 621900, China*
+>
+
+---
+
 **Core Developer**:
 
 >
