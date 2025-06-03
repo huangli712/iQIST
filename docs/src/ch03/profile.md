@@ -1,4 +1,4 @@
-# Profile the codes
+# Profile The Codes
 
 !!! note
 
