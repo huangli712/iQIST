@@ -159,7 +159,7 @@ makedocs(
             "Outline" => "ch05/index.md",
             "Standard Input Files" => Any[
                 "Summary" => "ch05/input.md",
-                "atom.config.in" => "ch05/in_atom.md",
+                "solver.atomic.in" => "ch05/in_atom.md",
                 "atom.cmat.in" => "ch05/in_cmat.md",
                 "atom.emat.in" => "ch05/in_emat.md",
                 "atom.tmat.in" => "ch05/in_tmat.md",

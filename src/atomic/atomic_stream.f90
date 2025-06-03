@@ -29,7 +29,7 @@
 !!
 !! @sub atomic_setup_param
 !!
-!! read control parameters from file atom.config.in
+!! read control parameters from file solver.atomic.in
 !!
   subroutine atomic_setup_param()
      use constants, only : dp
@@ -44,7 +44,7 @@
      implicit none
 
 !! local variables
-     ! file status, if the file atom.config.in exists
+     ! file status, if the file solver.atomic.in exists
      logical :: exists
 
 !! [body
@@ -84,16 +84,16 @@
      ! reset file status
      exists = .false.
 
-     ! inquire the status of input file: atomic.config.in
-     inquire( file = "atom.config.in", exist = exists )
+     ! inquire the status of input file: solver.atomic.in
+     inquire( file = "solver.atomic.in", exist = exists )
 
-     ! read control parameters from atom.config.in
+     ! read control parameters from solver.atomic.in
      if ( exists .eqv. .true. ) then
          ! create the file parser
          call p_create()
 
          ! parse the config file
-         call p_parse('atom.config.in')
+         call p_parse('solver.atomic.in')
 
          ! extract parameters
          call p_get('ibasis', ibasis)
@@ -135,7 +135,7 @@
          call p_destroy()
      else
          call s_print_exception('atomic_setup_param', &
-             & 'file atom.config.in does not exist!')
+             & 'file solver.atomic.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
 !! body]
@@ -338,7 +338,7 @@
      ! final assertion
      if ( lpass .eqv. .false. ) then
          call s_print_error('atomic_check_param','invalid parameters &
-             & found in atom.config.in file!')
+             & found in solver.atomic.in file!')
      endif ! back if ( lpass .eqv. .false. ) block
 
 !! body]
