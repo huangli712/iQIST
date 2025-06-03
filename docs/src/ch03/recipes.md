@@ -1,4 +1,4 @@
-# iQIST recipes
+# iQIST Recipes
 
 Using the iQIST software package is quite easy. Next we will show you the standard workflow for using the iQIST software package.
 
@@ -12,7 +12,7 @@ At first, there are several CT-HYB quantum impurity solvers in the package. Thei
 
 * [Components](../ch01/components.md) // What does the iQIST software package include?
 * [Features](../ch01/feature.md) // Is the required feature supported by the selected component?
-* [How To Choose Suitable Quantum Impurity Solvers?] // A guideline.
+* [How To Choose Suitable Quantum Impurity Solvers?](../ch04/choose.md) // A guideline.
 
 ---
 
@@ -34,6 +34,9 @@ Third, an important task is to prepare proper input data for the selected CT-HYB
 * [Standard Input Files](../ch04/input.md) // Input stuffs for CT-HYB quantum impurity solvers.
 * [Standard Input Files](../ch04/choose.md) // Input stuffs for atomic eigenvalue problem solver.
 
+!!! tip
+
+    We have developed a graphic user interface for the iQIST software package, namely ZenGui, which can be used to generate the essential input file (i.e., *solver.ctqmc.in*) for CT-HYB quantum impurity solver. See [ZenGui](https://github.com/huangli712/ZenGui) for more details.
 ---
 
 ### Let's Go.
@@ -53,7 +56,7 @@ Finally, when the calculations are finished, users can use the tools contained i
 
 **See also**:
 
-* [Auxiliary Tools] // Full descriptions about the auxiliary tools.
+* [Auxiliary Tools](../ch06/index.md) // Full descriptions about the auxiliary tools.
 
 Good luck to you.
 
