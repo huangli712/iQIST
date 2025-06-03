@@ -11,15 +11,21 @@ The data files could be classified as the following kinds:
     * [solver.weiss.dat](out_weiss.md) // ``G_0(\tau)``
     * [solver.grn.dat](out_grn.md) // ``G(i\omega_n)``
     * [solver.wss.dat](out_wss.md) // ``G_0(i\omega_n)``
+* **Auxiliary Green's Function Data**
+    * [solver.fcorr.dat]
+    * [solver.frn.dat]
 * **Hybridization Function Data**
     * [solver.hybri.dat](out_hybri.md) // ``\Delta(\tau)``
     * [solver.hyb.dat](out_hyb.md) // ``\Delta(i\omega_n)``
 * **Self-energy Function Data**
     * [solver.sgm.dat](out_sgm.md) // ``\Sigma(i\omega_n)``
 * **Two-Particle Green's Function Data**
-    * [solver.twop.dat] // Two-particle Green's function and vertex function
-    * [solver.vrtx.dat] // Two-particle Green's function and vertex function
-    * [solver.pair.dat] // Pairing susceptibility
+    * [solver.g2ph.dat]
+    * [solver.g2pp.dat]
+    * [solver.h2ph.dat]
+    * [solver.h2pp.dat]
+    * [solver.v4ph.dat]
+    * [solver.v4pp.dat]
 * **Susceptibility Data**
     * [solver.sp_t.dat](out_sp_t.md) // Spin-spin correlation function in ``\tau`` space
     * [solver.sp_w.dat](out_sp_w.md) // Spin-spin correlation function in Matsubara frequency space
@@ -28,9 +34,12 @@ The data files could be classified as the following kinds:
 * **Physical Observables Data**
     * [solver.hist.dat](out_hist.md) // Histogram for perturbation expansion order
     * [solver.prob.dat](out_prob.md) // Atomic state probability
+    * [solver.paux.dat]
+    * [solver.szpw.dat]
     * [solver.nmat.dat](out_nmat.md) // Occupation number
     * [solver.kmat.dat](out_kmat.md) // ``\langle k \rangle`` and ``\langle k^2 \rangle``
     * [solver.lrmm.dat](out_lrmm.md) // ``\langle k_L \rangle`` and ``\langle k_R \rangle``
+    * [solver.ac_f.dat]
 * **Miscellaneous Data**
     * [solver.kernel.dat](out_kern.md) // Frequency-dependent interaction
     * [solver.status.dat](out_stat.md) // Status of the quantum impurity solvers
