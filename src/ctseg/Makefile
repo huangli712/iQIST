@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 05/23/2025 by li huang (last modified)
+## 06/06/2025 by li huang (last modified)
 ##
 ##
 
@@ -36,7 +36,7 @@ define searchconfig
                  $(call searchconfig,$(dir $(INC_DIR)),$(2)))
 endef
 
-$(eval $(call searchconfig,$(CURDIR),build/make.inc))
+$(if $(INC_FILE), $(info INC_FILE: $(INC_FILE)), $(eval $(call searchconfig,$(CURDIR),build/make.inc)))
 
 include $(INC_FILE)
 
@@ -49,7 +49,7 @@ define searchflink
                  $(call searchflink,$(dir $(INP_DIR)),$(2)))
 endef
 
-$(eval $(call searchflink,$(CURDIR),*/Flink/src))
+$(if $(FLINK), $(info FLINK: $(FLINK)), $(eval $(call searchflink,$(CURDIR),*/Flink/src)))
 
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
