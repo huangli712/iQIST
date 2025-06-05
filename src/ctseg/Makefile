@@ -32,11 +32,13 @@ define searchconfig
     $(eval INC_FILE=$(wildcard $(INC_DIR)/$(2)))
     $(info searchconfig scanned: $(INC_DIR))
     $(if $(INC_FILE),
-             $(info searchconfig found: $(INC_FILE)),
-                 $(call searchconfig,$(dir $(INC_DIR)),$(2)))
+        $(info searchconfig found: $(INC_FILE)),
+            $(call searchconfig,$(dir $(INC_DIR)),$(2)))
 endef
 
-$(if $(INC_FILE), $(info INC_FILE: $(INC_FILE)), $(eval $(call searchconfig,$(CURDIR),build/make.inc)))
+$(if $(INC_FILE), \
+    $(info INC_FILE: $(INC_FILE)), \
+        $(eval $(call searchconfig,$(CURDIR),build/make.inc)))
 
 include $(INC_FILE)
 
@@ -45,11 +47,13 @@ define searchflink
     $(eval FLINK=$(wildcard $(INP_DIR)/$(2)))
     $(info searchflink scanned: $(INP_DIR))
     $(if $(FLINK),
-             $(info searchflink found: $(FLINK)),
-                 $(call searchflink,$(dir $(INP_DIR)),$(2)))
+        $(info searchflink found: $(FLINK)),
+            $(call searchflink,$(dir $(INP_DIR)),$(2)))
 endef
 
-$(if $(FLINK), $(info FLINK: $(FLINK)), $(eval $(call searchflink,$(CURDIR),*/Flink/src)))
+$(if $(FLINK), \
+    $(info FLINK: $(FLINK)), \
+        $(eval $(call searchflink,$(CURDIR),*/Flink/src)))
 
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
