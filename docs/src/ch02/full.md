@@ -1,4 +1,8 @@
-# Build iQIST at one step
+# Build iQIST At One Step
+
+!!! tip
+
+    The iQIST software package depends on the [Flink](https://github.com/huangli712/Flink) library, so please make sure that the Flink library is correctly installed and the environment variable **FLINK** is correctly setup. See [Compiling Environment](envir.md) for more details.
 
 When the system is ready and the compiling environment is configured correctly, you can try to compile the iQIST software package right now. Let's start now.
 

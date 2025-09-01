@@ -20,7 +20,7 @@
      use mmpi, only : mp_barrier   ! barrier to synchronize the data
      use mmpi, only : mp_comm_rank ! get index of current process
      use mmpi, only : mp_comm_size ! get number of processes
-
+     !                             !
      use control, only : isscf     ! self-consistent calculation mode
      use control, only : niter     ! number of self-consistent iterations
      use control, only : nprocs    ! number of processes
@@ -68,7 +68,7 @@
          ! setup the quantum impurity model
          call ctqmc_setup_model()
 
-         ! print the runtime parameters
+         ! print the parameters
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_summary()
          endif ! back if ( myid == master ) block
@@ -81,7 +81,7 @@
 
      DMFT_CYCLE: do iter=1,niter
 
-         ! write the iter to screen
+         ! write the iter information to screen
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block

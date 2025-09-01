@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The quantum impurity solvers will generate the Coulomb interaction matrix using the ``U`` and ``J`` parameters provided by you automatically. But sometimes you may want to customize the Coulomb interaction matrix by yourself.
+The quantum impurity solvers will automatically generate the Coulomb interaction matrix using the ``U`` and ``J`` parameters provided by you. But sometimes you may want to customize the Coulomb interaction matrix by yourself.
 
 Is it possible within the iQIST code?
 
@@ -12,27 +12,29 @@ You can define your Coulomb interaction matrix in the *solver.umat.in* file. And
 
 !!! warning
 
-    The continuous-time quantum Monte Carlo impurity solvers in the general matrix representation, i.e., the **MANJUSHAKA**, component does not support this file/feature as well.
+    The continuous-time quantum Monte Carlo impurity solvers in the general matrix representation, i.e., the **MANJUSHAKA** component (in *iqist/src/cthyb*), does not support this file/feature. All the information about the interaction matrix is already encapsulated in the *atom.cix* file.
+
+---
 
 **Format**
 
 The format of the *solver.umat.in* file is as follows:
 
----
-
-*column 1*: orbital index ``i``, integer
-
-*column 2*: orbital index ``j``, integer
-
-*column 3*: Coulomb interaction matrix element ``U(i,j)``, double precision
-
----
+>
+> *column 1*: orbital index ``i``, integer
+>
+> *column 2*: orbital index ``j``, integer
+>
+> *column 3*: Coulomb interaction matrix element ``U(i,j)``, double precision
+>
 
 !!! tip
 
     In the *solver.umat.in* file, we employed the following orbital sequence:
     $$1\uparrow$$, $$2\uparrow$$, $$3\uparrow$$, $$\cdots$$, $$1\downarrow$$, $$2\downarrow$$, $$3\downarrow$$, $$\cdots$$
     Namely, we put the spin up part before the spin down part.
+
+---
 
 **Code**
 

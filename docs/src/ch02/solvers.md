@@ -1,10 +1,12 @@
-### Build quantum impurity solvers: integrally
+### Build Quantum Impurity Solvers: Integrally
 
-ehh...
-
-I want to compile all of the components of quantum impurity solvers. Is it possible?
-
-Of course. It is just a piece of cake. Please follow the following guidelines.
+>
+> ehh...
+>
+> I want to compile all of the components of quantum impurity solvers. Is it possible?
+>
+> Of course. It is just a piece of cake. Please follow the following guidelines.
+>
 
 **Method**:
 
@@ -22,7 +24,7 @@ Finally, you will see a lot of executable programs, such as *ctqmc*, etc., in th
 
 ---
 
-### Build quantum impurity solvers: individually
+### Build Quantum Impurity Solvers: Individually
 
 Sometimes you only need to use some of the quantum impurity solver components of iQIST and you don't want to compile the whole iQIST software package. Are there any tricks to do? Yes! You will not be disappointed with iQIST.
 
@@ -46,6 +48,8 @@ $ make ctseg
 
 
 After a few minutes, you will find an *ctqmc* file in the *iqist/src/ctseg* directory. That is what you need, the executable program for the **NARCISSUS** component. Then you can add it to the system path, and do your great research.
+
+---
 
 **Method 2**:
 

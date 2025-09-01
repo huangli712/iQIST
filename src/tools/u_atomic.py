@@ -6,7 +6,7 @@
 ## ============
 ##
 ## It is a python script. The purpose of it is to generate essential input
-## file (atom.config.in) for the jasmine code. Note that you can not use
+## file (solver.atomic.in) for the jasmine code. Note that you can not use
 ## it to control the jasmine code directly.
 ##
 ## Usage
@@ -50,7 +50,7 @@ class p_atomic_solver(object):
             # verify the parameters
             p.check()
 
-            # generate the atom.config.in file
+            # generate the solver.atomic.in file
             p.write()
 
             # destroy the instance
@@ -108,9 +108,9 @@ class p_atomic_solver(object):
                 sys.exit('FATAL ERROR: wrong value ' + key + ' = ' + str(self.__p_inp[key]))
 
     def write(self):
-        """ write the parameters to the config file: atom.config.in
+        """ write the parameters to the config file: solver.atomic.in
         """
-        f = open('atom.config.in','w')
+        f = open('solver.atomic.in','w')
         for key in self.__p_inp.iterkeys():
             empty = ( 8 - len(key) ) * ' ' + ': '
             f.write(key + empty + str(self.__p_inp[key]) + '\n')

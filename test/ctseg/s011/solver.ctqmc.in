@@ -1,0 +1,21 @@
+# s011
+
+#
+# note:
+#
+# 1. change isort to 1, 2, or 3.
+#
+# 2. verify solver.grn.dat, solver.sgm.dat.
+#
+# 3. verify solver.green.dat.
+#
+# 4. verify solver.sp_t.dat, solver.sp_w.dat.
+#
+# 5. verify solver.ch_t.dat, solver.ch_w.dat.
+#
+
+isspn  = 2
+isort  = 2
+issus  = 30
+nsweep = 40000000
+beta   = 40.0

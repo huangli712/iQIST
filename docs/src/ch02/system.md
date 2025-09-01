@@ -1,4 +1,4 @@
-# Compiling system
+# Compiling System
 
 In this section, we will illustrate the compiling system of the iQIST software package. In fact, it is completely based on the well-known GNU GCC tool-chain.
 
@@ -41,4 +41,4 @@ We design this file to configure the compiling system. In this file, we have to 
 
     The *make.inc* file is system-dependent, i.e., you have to modify it to fit your systems. Or else, the compiling will fail definitely.
 
-We strongly recommend the users go through the *make.inc* file carefully and check whether the settings are correct before they start to compile the iQIST.
+We strongly recommend the users go through the *make.inc* file carefully and check whether the settings are correct before they start to compile the iQIST software package. See [About make.inc](inc.md) for more information about this file.

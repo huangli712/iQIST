@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           06/20/2024 by li huang (last modified)
+!!!           05/01/2025 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -287,14 +287,14 @@
 !!
 !! @var tmesh
 !!
-!! imaginary time mesh
+!! imaginary time mesh, \tau grid
 !!
      real(dp), public, save, allocatable :: tmesh(:)
 
 !!
 !! @var rmesh
 !!
-!! real matsubara frequency mesh
+!! real matsubara frequency mesh, \omega_n grid
 !!
      real(dp), public, save, allocatable :: rmesh(:)
 
@@ -348,7 +348,8 @@
 !!
 !! a sequence of specified observable which will be used to measure the
 !! autocorrelation function. here the total occupation number is the
-!! chosen observable
+!! chosen observable. but in principle, the other physical observable are
+!! also acceptable
 !!
      real(dp), public, save, allocatable :: ac_v(:)
 
@@ -576,7 +577,7 @@
 !!
 !! @var pref
 !!
-!! prefactor for improved estimator for self-energy
+!! prefactor for improved estimator for self-energy function
 !!
      real(dp), public, save, allocatable :: pref(:,:)
 
@@ -836,7 +837,8 @@
 !!
   module context
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
 
      use control, only : nband, norbs, ncfgs
      use control, only : lemax, legrd

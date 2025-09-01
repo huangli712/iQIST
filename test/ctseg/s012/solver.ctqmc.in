@@ -7,13 +7,23 @@
 #
 # 2. please use the following command to generate solver.ktau.in at first
 #
-#    u_ktau.py -m 1 -t 1024 -b 40.0 -l 1.0 -w 1.0 aa.in
+#    u_ktau.py -m 1 -t 1024 -b 40.0 -l 1.0 -w 1.0 solver.ktau.in
 #
 # 3. if you can not find u_ktau.py, you can set isscr to 2, and then add the
 #    following lines
 #
 #    lc = 1.0
 #    wc = 1.0
+#
+# 4. change isort to 1, 2, or 3.
+#
+# 5. verify solver.grn.dat, solver.sgm.dat.
+#
+# 6. verify solver.green.dat.
+#
+# 7. verify solver.sp_t.dat, solver.sp_w.dat.
+#
+# 8. verify solver.ch_t.dat, solver.ch_w.dat.
 #
 
 isscr  = 4

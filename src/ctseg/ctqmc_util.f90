@@ -24,7 +24,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 10/01/2008 by li huang (created)
-!!!           07/05/2023 by li huang (last modified)
+!!!           05/24/2025 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver.
@@ -52,7 +52,8 @@
 !!
   subroutine ctqmc_four_htau(htau, hybf)
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
 
      use control, only : norbs
      use control, only : mfreq
@@ -111,7 +112,8 @@
 !!
   subroutine ctqmc_four_hybf(hybf, htau)
      use constants, only : dp
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
      use constants, only : eps6
 
      use control, only : norbs
@@ -799,6 +801,7 @@
      !--------------------------------------------------------------------
      ! using legendre orthogonal polynomial representation
      !--------------------------------------------------------------------
+     ! see Eq. (1) and Eq. (C19) in Phys. Rev. B 84, 075145 (2011)
      LEG_BLOCK: if ( isort == 2 ) then
          step = real(legrd - 1) / two
          do i=1,norbs
@@ -817,6 +820,7 @@
      !--------------------------------------------------------------------
      ! using svd orthogonal polynomial representation
      !--------------------------------------------------------------------
+     ! see Eq. (14) in Phys. Rev. B 96, 035147 (2017)
      SVD_BLOCK: if ( isort == 3 ) then
          step = real(svgrd - 1) / two
          do i=1,norbs
@@ -844,7 +848,8 @@
 !!
   subroutine ctqmc_tran_grnf(gaux, grnf)
      use constants, only : dp
-     use constants, only : zero, one, two, czero, czi
+     use constants, only : zero, one, two
+     use constants, only : czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -930,6 +935,7 @@
      !--------------------------------------------------------------------
      ! using legendre orthogonal polynomial representation
      !--------------------------------------------------------------------
+     ! see Eq. (5) in Phys. Rev. B 84, 075145 (2011)
      LEG_BLOCK: if ( isort == 2 ) then
 
          ! calculate spherical Bessel functions at first
@@ -1039,7 +1045,8 @@
 !!
   subroutine ctqmc_tran_twop(gaux, grnf)
      use constants, only : dp
-     use constants, only : one, two, czero
+     use constants, only : one, two
+     use constants, only : czero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1170,6 +1177,7 @@
 
          ! build two-particle green's function on matsubara frequency
          ! using orthogonal polynomial representation: grnf
+         ! see Eq. (14) in Phys. Rev. B 84, 075145 (2011)
          grnf = czero
          do i=1,nffrq             ! for v' index
              do j=1,nffrq         ! for v  index
@@ -1313,7 +1321,8 @@
 !!
 !! @sub ctqmc_make_umat
 !!
-!! build density-density two-fermions Coulomb interaction matrix: umat
+!! build density-density two-fermions Coulomb interaction matrix: umat.
+!! here the used equation is Eq. (13) in Rev. Mod. Phys. 83, 349 (2011)
 !!
   subroutine ctqmc_make_umat(umat)
      use constants, only : dp
@@ -1379,6 +1388,13 @@
 !! shift the Coulomb interaction matrix and the chemical potential if
 !! retarded interaction is considered
 !!
+!! for plasmon pole model and ohmic model, please refer to
+!!     Phys. Rev. Lett. 104, 146401 (2010)
+!!
+!! for general U(\omega), see
+!!     Eq. (58)-(60) in J. Phys.: Condens. Matter 28, 383001 (2016)
+!! or
+!!     Eq. (20)-(21) in Phys. Rev. B 89, 235128 (2014)
   subroutine ctqmc_make_lift(umat, ssign)
      use constants, only : dp
      use constants, only : zero, two
@@ -1572,16 +1588,19 @@
              pref(it,f1) = zero
 
              ! calculate contribution from static interaction
+             ! see Eq. (37) in Phys. Rev. B 89, 235128 (2014)
              do f2=1,norbs
                  call cat_occupy_status(f2, time_e( index_e(it, f1), f1 ), occu)
                  pref(it,f1) = pref(it,f1) + half * ( umat(f1,f2) + umat(f2,f1) ) * occu
              enddo ! over f2={1,norbs} loop
 
              ! calculate contribution from retarded (dynamic) interaction
+             ! see Eq. (38) in Phys. Rev. B 89, 235128 (2014)
              if ( isscr > 1 ) then
                  call ctqmc_make_iret(time_e( index_e(it, f1), f1 ), iret)
                  pref(it,f1) = pref(it,f1) + iret
              endif ! back if ( isscr > 1 ) block
+
          enddo ! over it={1,rank(f1)} loop
      enddo FLVR_CYCLE ! over f1={1,norbs} loop
 
@@ -1607,7 +1626,8 @@
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
 !!     calculate the quantity directly, which is a bit slow, but safe. we
 !!     generally prefer to use the first one. but if you want to use the
-!!     second one, you have to comment out the codes and recompile them
+!!     second one, you have to comment out the relevant codes (see below)
+!!     and recompile them
 !!
 !! version 1
 !!
@@ -1715,13 +1735,15 @@
 !!     larger than nfaux (= nffrq + nbfrq - 1). another one just tries to
 !!     calculate the quantity directly, which is a bit slow, but safe. we
 !!     generally prefer to use the first one. but if you want to use the
-!!     second one, you have to comment out the codes and recompile them
+!!     second one, you have to comment out the relevant codes (see below)
+!!     and recompile them
 !!
 !! version 2
 !!
 !<  subroutine ctqmc_make_fexp(flvr, nfaux, mrank, caux1, caux2)
 !<     use constants, only : dp
-!<     use constants, only : pi, two, czi
+!<     use constants, only : pi, two
+!<     use constants, only : czi
 !<
 !<     use control, only : nffrq
 !<     use control, only : beta
@@ -1811,7 +1833,8 @@
 !!
   subroutine ctqmc_make_bexp(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp
-     use constants, only : pi, two, czi
+     use constants, only : pi, two
+     use constants, only : czi
 
      use control, only : beta
 
@@ -1894,6 +1917,9 @@
 !! function via fast fourier transformation (if isort == 1) or analytical
 !! formula (if isort == 2 or isort == 3). and then, self-energy function
 !! is obtained by using the improved estimator trick
+!!
+!! see Eq. (13) in Phys. Rev. B 85, 205106 (2012)
+!! or  Eq. (30) in Phys. Rev. B 89, 235128 (2014)
 !!
   subroutine ctqmc_make_hub2()
      use constants, only : dp

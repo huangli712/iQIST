@@ -2,7 +2,7 @@
 
 **Introduction**
 
-The purpose of this script is to generate essential input file (*atom.config.in*) for the **JASMINE** code. Note that you can not use it to control the **JASMINE** code directly.
+The purpose of this script is to generate essential input file (*solver.atomic.in*) for the **JASMINE** code. Note that you can not use it to control the **JASMINE** code directly.
 
 **Type**
 
@@ -28,7 +28,7 @@ class p_atomic_solver(object):
         """
 
     def write(self):
-        """ write the parameters to the config file: atom.config.in
+        """ write the parameters to the config file: solver.atomic.in
         """
 ```
 
@@ -50,7 +50,7 @@ p.setp()
 # verify the parameters
 p.check()
 
-# generate the atom.config.in file
+# generate the solver.atomic.in file
 p.write()
 
 # destroy the instance

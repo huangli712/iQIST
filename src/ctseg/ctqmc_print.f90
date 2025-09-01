@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           01/24/2024 by li huang (last modified)
+!!!           05/23/2025 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -27,6 +27,7 @@
 !!
   subroutine ctqmc_print_header()
      use constants, only : mystd
+     use face, only : pcs
 
      use version, only : V_FULL
      use version, only : V_AUTH
@@ -48,19 +49,26 @@
      ! obtain current date and time
      call s_time_builder(date_time_string)
 
+     write(mystd,'(2X,a)') pcs('┌┐┌┌─┐┬─┐┌─┐┬┌─┐┌─┐┬ ┬┌─┐', 'red')
+     write(mystd,'(2X,a)') pcs('│││├─┤├┬┘│  │└─┐└─┐│ │└─┐', 'red')
+     write(mystd,'(2X,a)') pcs('┘└┘┴ ┴┴└─└─┘┴└─┘└─┘└─┘└─┘', 'red')
+     write(mystd,'(2X,a)') pcs('-------------------------', 'magenta')
+
 # if defined (MPI)
 
-     write(mystd,'(2X,a)') cname//' (Parallelized Edition)'
+     write(mystd,'(2X,a)') pcs('  Parallelized Edition','magenta')
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a)') cname//' (Sequential Edition)'
+     write(mystd,'(2X,a)') pcs('  Sequential Edition','magenta')
 
 # endif  /* MPI */
 
-     write(mystd,'(2X,a)') 'A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
+     write(mystd,'(2X,a)') pcs('-------------------------', 'magenta')
+     write(mystd,'(2X,a)') pcs('A Modern Continuous Time Quantum Impurity Solver','blue')
      write(mystd,*)
 
+     write(mystd,'(2X,a)') 'Program: '//cname
      write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//' '//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: '//V_AUTH//' ('//V_INST//')'
      write(mystd,'(2X,a)') 'Support: '//V_MAIL
@@ -205,7 +213,7 @@
      use constants, only : mystd
 
      use control, only : cname               ! code name
-                                             !
+     !                                       !
      use control, only : isscf               ! control running scheme
      use control, only : isscr               ! control dynamic interaction
      use control, only : isbnd, isspn        ! control symmetry

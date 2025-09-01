@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/15/2009 by li huang (created)
-!!!           07/02/2023 by li huang (last modified)
+!!!           05/30/2025 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -119,6 +119,10 @@
 !!     with worm algorithm, slow but more reliable. note that only some
 !!     selected physical observables can be measured by this algorithm
 !!
+!! note:
+!!
+!!     this feature has not been implemented so far
+!!
      integer, public, save :: iswor  = 1
 
 !!
@@ -170,6 +174,9 @@
 !! if p == 4:
 !!     calculate powers of local magnetization < S^n_z >
 !!
+!! if p >= 5:
+!!     reserved
+!!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
 !! p = 9 8 7 6 5 4 3 2 1
@@ -202,16 +209,19 @@
 !!     do nothing
 !!
 !! if p == 2:
-!!     calculate spin-spin correlation function (time space)
+!!     calculate spin-spin correlation function (imaginary time)
 !!
 !! if p == 3:
-!!     calculate charge-charge correlation function (time space)
+!!     calculate charge-charge correlation function (imaginary time)
 !!
 !! if p == 4:
-!!     calculate spin-spin correlation function (frequency space)
+!!     calculate spin-spin correlation function (matsubara frequency)
 !!
 !! if p == 5:
-!!     calculate charge-charge correlation function (frequency space)
+!!     calculate charge-charge correlation function (matsubara frequency)
+!!
+!! if p >= 6:
+!!     reserved
 !!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
@@ -264,6 +274,9 @@
 !!     calculate two-particle green's function
 !!     block: ABBA
 !!     channel: particle-particle
+!!
+!! if p >= 6:
+!!     reserved
 !!
 !! note 1:
 !!
@@ -435,7 +448,7 @@
 !!
 !! @var nsweep
 !!
-!! number of Monte Carlo sweeping steps
+!! number of Monte Carlo sampling steps
 !!
      integer, public, save :: nsweep = 20000000
 
@@ -466,7 +479,10 @@
 !! @var ncarlo
 !!
 !! how often to sample the physical observables
-!! it is reserved for the future
+!!
+!! note:
+!!
+!!     it is reserved for the future
 !!
      integer, public, save :: ncarlo = 10
 
@@ -518,7 +534,7 @@
 !! if isscr == 2:
 !!     wc just means the model parameter \omega^{'}
 !!
-!! if isscr == 3
+!! if isscr == 3:
 !!     wc just means the model parameter \omega_{c}
 !!
 !! if isscr == 4:
@@ -623,21 +639,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.8.2 @ 2023.07.06D'
+     character(len=20), public, parameter :: V_FULL = 'v0.8.6 @ 2025.05.30D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.8.2'
+     character(len=06), public, parameter :: V_CURR = 'v0.8.6'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2023.07.06'
+     character(len=11), public, parameter :: V_DATE = '2025.05.30'
 
 !!
 !! @var V_STAT

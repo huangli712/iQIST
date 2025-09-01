@@ -6,10 +6,10 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/01/2023 by li huang (last modified)
-!!! purpose : the main subroutines for the hybridization expansion version
+!!!           05/02/2025 by li huang (last modified)
+!!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!!!           solver. they implement the initialization, thermalization,
+!!!           solver. it implements the initialization, thermalization,
 !!!           random walk, measurement, and finalization algorithms.
 !!! status  : unstable
 !!! comment :
@@ -31,12 +31,12 @@
      use constants, only : mystd
 
      use control, only : cname               ! code name
-                                             !
+     !                                       !
      use control, only : iswor               ! worm algorithm
      use control, only : isobs               ! control physical observables
      use control, only : issus               ! control spin and charge susceptibility
      use control, only : isvrt               ! control two-particle quantities
-                                             !
+     !                                       !
      use control, only : nband, norbs, ncfgs ! size of model hamiltonian
      use control, only : mkink               ! perturbation expansion order
      use control, only : mfreq               ! matsubara frequency
@@ -45,26 +45,26 @@
      use control, only : nsweep, nwrite      ! monte carlo sampling
      use control, only : nmonte              ! interval between successive measurements
      use control, only : myid, master        ! mpi environment
-                                             !
+     !                                       !
      use context, only : hist                ! histogram
      use context, only : prob                ! atomic eigenstate probability
      use context, only : paux                ! auxiliary physical observables
      use context, only : nimp, nmat          ! occupation and double occupation
-                                             !
+     !                                       !
      use context, only : knop, kmat          ! kinetic energy fluctuation
      use context, only : lnop, rnop, lrmm    ! fidelity susceptibility
      use context, only : szpw                ! binder cumulant
-                                             !
+     !                                       !
      use context, only : schi, sp_t, sp_w    ! spin susceptibility
      use context, only : cchi, ch_t, ch_w    ! charge susceptibility
-                                             !
+     !                                       !
      use context, only : g2ph                ! two-particle green's function (ph)
      use context, only : h2ph                ! two-particle vertex function (ph)
      use context, only : g2pp                ! two-particle green's function (pp)
      use context, only : h2pp                ! two-particle vertex function (pp)
-                                             !
+     !                                       !
      use context, only : symm                ! symmetry indicator
-                                             !
+     !                                       !
      use context, only : gtau, ftau          ! imaginary time green's function
      use context, only : grnf, frnf          ! matsubara green's function
      use context, only : sig2                ! matsubara self-energy function
@@ -330,8 +330,8 @@
 !!========================================================================
 
      ! init the continuous time quantum Monte Carlo quantum impurity
-     ! solver further, retrieving the diagrammatic series produced by
-     ! previous run
+     ! solver further, retrieving the diagrammatic series produced in
+     ! the previous run
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
      endif ! back if ( myid == master ) block
@@ -408,19 +408,21 @@
 !!========================================================================
 
              ! the following physical observables are always measured
+             ! they do not rely on any configuration parameters
+             !
              ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
-
+             !
              ! record the probability of atomic eigenstates
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_prob()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
+             !
              ! record the auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
+             !
              ! record the impurity (double) occupation number (matrix)
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat() ! AN EMPTY CALL
@@ -431,26 +433,28 @@
 !!========================================================================
 
              ! the following physical observables are always measured
+             ! they do not rely on any configuration parameters
+             !
              ! record the impurity green's function in imaginary time space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
+             !
              ! record the auxiliary correlation function in imaginary time space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_ftau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
+             !
              ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
+             !
              ! record the auxiliary correlation function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_frnf() ! AN EMPTY CALL
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
+             !
              ! record the self-energy function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_sig2() ! AN EMPTY CALL
@@ -461,16 +465,18 @@
 !!========================================================================
 
              ! the following physical observables are measured optionally
-             ! (by isobs) record the kinetic energy fluctuation
+             ! they rely on the configuration parameter isobs
+             !
+             ! record the kinetic energy fluctuation
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) then
                  call ctqmc_record_kmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) block
-
+             !
              ! record the fidelity susceptibility
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) then
                  call ctqmc_record_lrmm()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) block
-
+             !
              ! record the powers of local magnetization
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) then
                  call ctqmc_record_szpw()
@@ -481,21 +487,23 @@
 !!========================================================================
 
              ! the following physical observables are measured optionally
-             ! (by issus) record the spin-spin correlation function
+             ! they rely on the configuration parameter issus
+             !
+             ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) then
                  call ctqmc_record_sp_t()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) block
-
+             !
              ! record the charge-charge correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) then
                  call ctqmc_record_ch_t()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) block
-
+             !
              ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) then
                  call ctqmc_record_sp_w()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) block
-
+             !
              ! record the charge-charge correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) then
                  call ctqmc_record_ch_w()
@@ -505,23 +513,27 @@
 !!>>> sampling the physical observables 5 (optional)                   <<<
 !!========================================================================
 
-             ! the following physical observables are measured optionally (by isvrt)
-             ! record the two-particle green's function, particle-hole channel, AABB
+             ! the following physical observables are measured optionally
+             ! they rely on the configuration parameter isvrt
+             !
+             ! record the two-particle green's function
+             !
+             ! for particle-hole channel, AABB
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
-
-             ! record the two-particle green's function, particle-hole channel, ABBA
+             !
+             ! for particle-hole channel, ABBA
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
                  call ctqmc_record_g2ph()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
-
-             ! record the two-particle green's function, particle-particle channel, AABB
+             !
+             ! for particle-particle channel, AABB
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_g2pp()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
-
-             ! record the two-particle green's function, particle-particle channel, ABBA
+             !
+             ! for particle-particle channel, ABBA
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
                  call ctqmc_record_g2pp()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block

@@ -10,7 +10,7 @@ Download it directly from the online repository. Now we *ONLY* maintain one repo
 
 * [Github](https://github.com/huangli712/iQIST)
 
-The newest release of iQIST software package is **v0.8.2-devel.230706**.
+The newest release of iQIST software package is **v0.8.6-devel.250530**.
 
 !!! note
 

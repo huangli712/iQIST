@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli@caep.cn)
 !!! history : 09/16/2009 by li huang (created)
-!!!           07/06/2023 by li huang (last modified)
+!!!           05/06/2025 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -54,15 +54,15 @@
 
      ! setup general control flags
      !--------------------------------------------------------------------
-     isscf  = 1         ! self-consistent scheme
-     isscr  = 1         ! dynamic interaction
-     isbnd  = 1         ! symmetry (band part)
-     isspn  = 1         ! symmetry (spin part)
-     iswor  = 1         ! worm algorithm
-     isort  = 1         ! advanced basis
-     isobs  = 1         ! various physical observables
-     issus  = 1         ! charge/spin susceptibility
-     isvrt  = 1         ! two-particle green's functions
+     isscf  = 1         ! self-consistent scheme: one-shot mode
+     isscr  = 1         ! dynamic interaction: static interaction
+     isbnd  = 1         ! symmetry (band part): not to be symmetrized
+     isspn  = 1         ! symmetry (spin part): not to be symmetrized
+     iswor  = 1         ! worm algorithm: disable
+     isort  = 1         ! advanced basis: standard representation
+     isobs  = 1         ! various physical observables: nothing
+     issus  = 1         ! charge/spin susceptibility: nothing
+     isvrt  = 1         ! two-particle green's functions: nothing
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      ! setup common variables for dynamical mean field theory
@@ -276,7 +276,7 @@
      ! build Coulomb interaction matrix (umat)
      call ctqmc_input_umat_()
 
-     ! build dynamic interaction if available (ktau and ptau)
+     ! build dynamic interaction if necessary (ktau and ptau)
      call ctqmc_input_ktau_()
 
 !! body]
@@ -350,7 +350,8 @@
 !!
   subroutine ctqmc_input_hybf_()
      use constants, only : dp
-     use constants, only : one, two, czi, czero
+     use constants, only : one, two
+     use constants, only : czi, czero
      use constants, only : mytmp
 
      use mmpi, only : mp_bcast
@@ -384,10 +385,15 @@
 
      ! build initial green's function using the analytical expression at
      ! non-interaction limit:
+     !
      !     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
+     !
      ! and then build initial hybridization function using self-consistent
      ! condition for bethe lattice:
-     !     \Delta = t^2 * G
+     !
+     !     \Delta = t^2 * G,
+     !
+     ! where t is the hopping parameter
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
          hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
@@ -681,7 +687,8 @@
 
      ! shift the Coulomb interaction matrix and chemical potential if
      ! retarded interaction or the so-called dynamic screening effect
-     ! is considered
+     ! is considered. this step is very important to get the correct
+     ! occupation number
      call ctqmc_make_lift(umat, one)
 
 !! body]
@@ -729,7 +736,8 @@
 !! impurity solver
 !!
   subroutine ctqmc_reset_array()
-     use constants, only : zero, czero
+     use constants, only : zero
+     use constants, only : czero
      use constants, only : mystd
 
      use spring, only : spring_sfmt_init
@@ -747,8 +755,8 @@
      integer :: i
      integer :: j
 
-     ! system time since 1970, Jan 1, used to generate the random
-     ! number seed
+     ! system time since 1970, Jan 1
+     ! it is used to generate the random number seed
      integer :: system_time
 
      ! random number seed for twist generator
@@ -910,8 +918,8 @@
      !>>> ctqmc_smat module
      !--------------------------------------------------------------------
 
-     ! sig1 should not be reinitialized here, since it is used to keep
-     ! the persistency of self-energy function
+     ! sig1 should not be reinitialized here
+     ! it is used to keep the persistency of self-energy function
 
      ! init self-energy function
 !<   sig1 = czero
@@ -923,23 +931,22 @@
      ! fourier hybridization function from frequency space to time space
      call ctqmc_four_hybf(hybf, htau)
 
-     ! symmetrize the hybridization function on imaginary time
-     ! axis if needed
+     ! symmetrize the hybridization function on imaginary time axis
      call ctqmc_symm_gtau(symm, htau)
 
-     ! calculate the 2nd-derivates of htau, which is used
-     ! in spline subroutines
+     ! calculate the 2nd-derivates of htau
+     ! it is used in spline interpolation
      call ctqmc_eval_hsed(htau, hsed)
 
      !>>> postprocess dynamic interaction
      !--------------------------------------------------------------------
 
-     ! calculate the 2nd-derivates of ktau, which is used
-     ! in spline subroutines
+     ! calculate the 2nd-derivates of ktau
+     ! it is used in spline interpolation
      call ctqmc_eval_ksed(ktau, ksed)
 
-     ! calculate the 2nd-derivates of ptau, which is used
-     ! in spline subroutines
+     ! calculate the 2nd-derivates of ptau
+     ! it is used in spline interpolation
      call ctqmc_eval_ksed(ptau, psed)
 
      !>>> dump the necessary files
@@ -970,7 +977,7 @@
 !!
 !! @sub ctqmc_final_array
 !!
-!! garbage collection for this code, please refer to ctqmc_alloc_array
+!! garbage collection for this code, please refer to ctqmc_alloc_array()
 !!
   subroutine ctqmc_final_array()
      use context ! ALL

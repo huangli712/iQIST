@@ -1,17 +1,25 @@
-# Execute codes
+# Execute The Codes
 
 There are also several ways to execute the quantum impurity solvers in the iQIST software package.
 
-**Parallelism mode**
+**Parallelism Mode**
 
 ```shell
 $ mpiexec -n num_of_cores iqist/src/ctseg/ctqmc
 ```
 
-**Sequential mode**
+```shell
+$ mpiexec -n num_of_cores iqist/src/cthyb/ctqmc
+```
+
+**Sequential Mode**
 
 ```shell
 $ ./iqist/src/ctseg/ctqmc
+```
+
+```shell
+$ ./iqist/src/cthyb/ctqmc
 ```
 
 !!! tip

@@ -15,13 +15,13 @@
 ##
 ## This building system is designed, created, and maintained by
 ##
-## Li Huang // email: lihuang.dmft@gmail.com
+## Li Huang // email: huangli@caep.cn
 ##
 ## History
 ## =======
 ##
 ## 11/03/2014 by li huang (created)
-## 04/15/2019 by li huang (last modified)
+## 04/02/2025 by li huang (last modified)
 ##
 ##
 

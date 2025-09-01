@@ -1,10 +1,10 @@
-# Directory structures
+# Directory Structures
 
 The uncompressed iQIST software package is somewhat complicated, but have a rich content. We think that it is helpful to introduce the detailed directory structure of it. As has been explained before, in the following, we always use the term **iqist** to denote the top folder which contains the uncompressed iQIST software package.
 
-![dir image](../figures/dir.png)
+![dir image](../assets/dir.png)
 
-**Figure** | The directory structures of the iQIST software package.
+**Figure 1** | The directory structures of the iQIST software package.
 
 **Where is the compling system?**
 
@@ -19,8 +19,6 @@ iqist/src
 ```
 
 **Where are the quantum impurity solvers?**
-
-* For CT-QMC quantum impurity solvers
 
 ```
 iqist/src/ctseg
@@ -44,17 +42,6 @@ iqist/src/tools
 ```
 iqist/docs
 ```
-
-!!! warning
-
-    The documentations for the iQIST software package are written by using the *Markdown* language and the *Julia's Documenter.jl* package. You can type the following command in the terminal to build the documentations:
-    ```shell
-    $ julia make.jl
-    ```
-    or you can read the official reference manual in the following website:
-    ```
-    https://huangli712.github.io/projects/acflow/index.html
-    ```
 
 **Where are the tutorials?**
 
